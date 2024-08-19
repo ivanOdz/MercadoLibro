@@ -7,10 +7,9 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class HelloWorldController {
 
-    //@RequestMapping(path = "/", method = RequestMethod.GET, (entrar a la documentacion)
     @RequestMapping("/")
     public ModelAndView index() {
-        final ModelAndView mav = new ModelAndView("index.jsp");
+        final ModelAndView mav = new ModelAndView("/WEB-INF/jsp/helloworld/index.jsp");
         mav.addObject("username", "PAW");
         return mav;
     }
