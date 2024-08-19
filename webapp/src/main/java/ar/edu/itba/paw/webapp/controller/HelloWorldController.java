@@ -9,9 +9,9 @@ public class HelloWorldController {
 
     //@RequestMapping(path = "/", method = RequestMethod.GET, (entrar a la documentacion)
     @RequestMapping("/")
-    public ModelAndView helloWorld() {
+    public ModelAndView index() {
         final ModelAndView mav = new ModelAndView("index.jsp");
-        //mav.addObject("greeting", "PAW");
+        mav.addObject("username", "PAW");
         return mav;
     }
 }
