@@ -10,7 +10,8 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
 @EnableWebMvc
-@ComponentScan({ "ar.edu.itba.paw.webapp.controller" })
+@ComponentScan({ "ar.edu.itba.paw.webapp.controller",
+                 "ar.edu.itba.paw.services"})
 @Configuration
 public class WebConfig {
 
