@@ -7,6 +7,7 @@
   <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>TP_PAW</name>
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>21</maven.compiler.source>
@@ -16,11 +17,17 @@
     <jstl.version>1.2</jstl.version>
     <org.postgresql.version>42.2.5</org.postgresql.version>
   </properties>
+
   <dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-context</artifactId>
+        <version>${org.springframework.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-jdbc</artifactId>
         <version>${org.springframework.version}</version>
       </dependency>
       <dependency>
