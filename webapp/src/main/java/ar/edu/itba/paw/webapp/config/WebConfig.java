@@ -26,7 +26,6 @@ import javax.sql.DataSource;
 })
 @Configuration
 public class WebConfig {
-
     @Value("classpath:schema.sql")
     private Resource schemaSql;
 
