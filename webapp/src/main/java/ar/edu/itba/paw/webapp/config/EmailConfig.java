@@ -9,13 +9,13 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import java.util.Properties;
 
 @EnableWebMvc
 @Configuration
 public class EmailConfig {
-
     @Bean
     public JavaMailSender getJavaMailSender(){
         JavaMailSenderImpl ms = new JavaMailSenderImpl();
