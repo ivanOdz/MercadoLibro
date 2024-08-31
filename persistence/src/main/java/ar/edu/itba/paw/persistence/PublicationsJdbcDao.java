@@ -20,7 +20,6 @@ public class PublicationsJdbcDao implements PublicationsDao {
                     rs.getLong("publicationId"),
                     rs.getInt("bookId"),
                     rs.getInt("userId"),
-                    rs.getInt("publicationState"),
                     rs.getString("location")
             );
 

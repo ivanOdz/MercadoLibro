@@ -7,14 +7,14 @@ public class Publication {
     private final long publicationId;
     private final long bookId;
     private final long userId;
-    private PublicationState publicationState;
+    private int publicationState;
     private final String location;
 
     public Publication(long publicationId, long bookId, long userId, String location) {
         this.publicationId = publicationId;
         this.bookId = bookId;
         this.userId = userId;
-        publicationState = PublicationState.CURRENT;
+        publicationState = PublicationState.CURRENT.getValue();
         this.location = location;
     }
 
@@ -30,7 +30,7 @@ public class Publication {
         return userId;
     }
 
-    public PublicationState getPublicationState() {
+    public int getPublicationState() {
         return publicationState;
     }
 
@@ -39,6 +39,6 @@ public class Publication {
     }
 
     public void terminatePublication() {
-        publicationState = PublicationState.TERMINATED;
+        publicationState = PublicationState.TERMINATED.getValue();
     }
 }
