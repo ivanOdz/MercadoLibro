@@ -21,8 +21,11 @@
 				<p><strong>Location:</strong> ${publication.location}</p>
 
 				<c:url var="publicationUrl" value="publication">
-					<c:param name="publicationId" value="${publication.publicationId}" />
+				<%-- Esta linea de abajo va para cuando hayan usuarios--%>
+				<c:param name="publicationId" value="${publication.publicationId}" />
+				<%--<c:param name="publicationId" value="${book.mail}" />--%>
 				</c:url>
+
 				<a href="${publicationUrl}">
 					<button>Lo quiero!</button>
 				</a>

@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.services.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
