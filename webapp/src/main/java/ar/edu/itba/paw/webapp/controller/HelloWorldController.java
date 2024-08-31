@@ -21,7 +21,7 @@ public class HelloWorldController {
         this.us = us;
     }
 
-    @RequestMapping("/")
+    @RequestMapping("/index")
     public ModelAndView index(@RequestParam(name = "userId", defaultValue = "1") long userId) {
         final ModelAndView mav = new ModelAndView("helloworld/index");
         mav.addObject("username", us.findById(userId).get().getUsername());

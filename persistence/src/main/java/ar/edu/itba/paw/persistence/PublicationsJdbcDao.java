@@ -9,7 +9,9 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.sql.Types;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class PublicationsJdbcDao implements PublicationsDao {
@@ -33,6 +35,12 @@ public class PublicationsJdbcDao implements PublicationsDao {
     public Publications getAllPublications() {
         List<Publication> publicationsList = jdbcTemplate.query("SELECT * FROM publication", ROWMAPPERPUBLICATIONS);
         return new Publications(publicationsList);
+    }
+
+    @Override
+    public Optional<Publication> getPublicationById(long pubId) {
+        return jdbcTemplate.query("SELECT * FROM publication WHERE publicationId = ?", new Object[]{ pubId },
+                new int[]{ Types.BIGINT }, ROWMAPPERPUBLICATIONS).stream().findFirst();
     }
 }
 

@@ -19,6 +19,13 @@
 				<p><strong>User ID:</strong> ${publication.userId}</p>
 				<p><strong>Publication State:</strong> ${publication.publicationState}</p>
 				<p><strong>Location:</strong> ${publication.location}</p>
+
+				<c:url var="publicationUrl" value="publication">
+					<c:param name="publicationId" value="${publication.publicationId}" />
+				</c:url>
+				<a href="${publicationUrl}">
+					<button>Lo quiero!</button>
+				</a>
 			</div>
 		</c:forEach>
 	</div>
