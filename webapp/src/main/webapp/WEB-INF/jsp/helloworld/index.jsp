@@ -2,7 +2,7 @@
 <html lang="es">
     <head>
         <meta charset="UTF-8">
-        <title>Tu Aplicación</title>
+        <title>Tu Aplicacion</title>
         <!-- Fuente iconos de google -->
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
