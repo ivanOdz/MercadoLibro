@@ -1,5 +1,6 @@
-package ar.edu.itba.paw.interfaces.services;
+package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import org.springframework.context.annotation.Primary;
