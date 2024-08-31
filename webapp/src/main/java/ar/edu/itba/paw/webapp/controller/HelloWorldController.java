@@ -1,9 +1,9 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.services.UserService;
+import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.webapp.form.UserForm;
-import ar.edu.itba.paw.services.EmailService;
+import ar.edu.itba.paw.interfaces.services.EmailService;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -67,9 +67,12 @@ public class HelloWorldController {
     public ModelAndView home() {
         final ModelAndView mav = new ModelAndView("helloworld/home");
         Map<String, Object> variables = new HashMap<>();
+        variables.put("requesterEmail", "jtechenski@gmail.com");
+        variables.put("publicationName", "Deutsch Kursbuch");
+        variables.put("validationUrl", "http://localhost:8080/publication?publicationId=3");
         variables.put("username", "Julieta");
         variables.put("signUpDate", "August 31, 2024");
-        emailService.sendEmail("jtechenski@itba.edu.ar", variables, "welcome");
+        emailService.sendEmail("jtechenski@itba.edu.ar", variables, "exchangeRequest", "Book Exchange");
         return mav;
     }
 

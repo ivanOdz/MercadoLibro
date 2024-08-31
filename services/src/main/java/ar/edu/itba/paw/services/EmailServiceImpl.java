@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.services.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -10,6 +12,7 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.util.Locale;
 import java.util.Map;
 
 @Service
@@ -23,24 +26,25 @@ public class EmailServiceImpl implements EmailService {
 
 
     @Async
-    public void sendEmail(final String receiver, Map<String, Object> variables, String templatePath) {
+    public void sendEmail(final String receiver, Map<String, Object> variables, String templatePath, String subject) {
             MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message);
+            Locale locale =  LocaleContextHolder.getLocale();
 
-            Context context = new Context();
+            Context context = new Context(locale);
             context.setVariables(variables);
 
-            String html = templateEngine.process(templatePath, context);
-
             try {
+                MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+                String html = templateEngine.process(templatePath, context);
+
                 helper.setTo(receiver);
-                helper.setSubject("Test email");
+                helper.setSubject(subject);
                 helper.setText(html, true);
                 helper.setFrom("jtechenski@gmail.com");
             } catch (MessagingException e) {
                 e.printStackTrace();
             }
-
             mailSender.send(message);
     }
 }

@@ -24,6 +24,7 @@ public class EmailConfig {
         JavaMailSenderImpl ms = new JavaMailSenderImpl();
         ms.setHost("smtp.gmail.com");
         ms.setPort(587);
+        ms.setDefaultEncoding("UTF-8");
 
         ms.setUsername("jtechenski@gmail.com");
         ms.setPassword("xbfxyrpucaehnkmw");
