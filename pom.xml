@@ -16,6 +16,8 @@
     <servlet-api.version>2.5</servlet-api.version>
     <jstl.version>1.2</jstl.version>
     <org.postgresql.version>42.2.5</org.postgresql.version>
+    <org.thymeleaf.version>3.1.2.RELEASE</org.thymeleaf.version>
+    <com.sun.mail.version>1.6.2</com.sun.mail.version>
   </properties>
 
   <dependencyManagement>
@@ -35,6 +37,12 @@
         <artifactId>spring-webmvc</artifactId>
         <version>${org.springframework.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context-support</artifactId>
+        <version>${org.springframework.version}</version>
+      </dependency>
+
       <dependency>
         <groupId>javax.servlet</groupId>
         <artifactId>servlet-api</artifactId>
@@ -67,6 +75,18 @@
         <version>${project.version}</version>
         <!-- test, compile, provided, runtime-->
         <scope></scope>
+      </dependency>
+
+      <!-- Mail -->
+      <dependency>
+        <groupId>org.thymeleaf</groupId>
+        <artifactId>thymeleaf</artifactId>
+        <version>${org.thymeleaf.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.sun.mail</groupId>
+        <artifactId>javax.mail</artifactId>
+        <version>${com.sun.mail.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

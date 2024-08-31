@@ -1,7 +1,6 @@
-package ar.edu.itba.paw.services;
+package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.User;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
