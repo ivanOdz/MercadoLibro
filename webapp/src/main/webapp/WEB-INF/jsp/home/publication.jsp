@@ -14,3 +14,15 @@
   </div>
   </body>
 </html>
+
+
+<%--Por favor ingrese su mail:--%>
+<%--<BUTTON>SUMBIT</BUTTON>--%>
+<%--  --%>
+<%--if(mail(libro(publicacion id))) = mail ingresado){--%>
+<%--  no puede intercambiar libro con usted mismo  --%>
+<%--}--%>
+<%--else{--%>
+<%--sumbit del libro--%>
+<%--  enviar mail(libro(publicacion id)))--%>
+<%--}--%>

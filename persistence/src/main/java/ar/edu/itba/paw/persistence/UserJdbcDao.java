@@ -1,9 +1,9 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.models.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -21,7 +21,7 @@ import java.util.Optional;
 public class UserJdbcDao implements UserDao {
 
     private static final RowMapper<User> ROWMAPPER =
-            (rs, rowNum) -> new User(rs.getLong("userid"), rs.getString("username"), rs.getString("mail"));
+            (rs, rowNum) -> new User(rs.getLong("userId"), rs.getString("username"), rs.getString("mail"));
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
@@ -35,7 +35,7 @@ public class UserJdbcDao implements UserDao {
 
     @Override
     public Optional<User> findById(long id) {
-        return jdbcTemplate.query("SELECT * FROM users WHERE userid = ?", new Object[]{ id },
+        return jdbcTemplate.query("SELECT * FROM users WHERE userId = ?", new Object[]{ id },
                 new int[]{ Types.BIGINT }, ROWMAPPER).stream().findFirst();
     }
 

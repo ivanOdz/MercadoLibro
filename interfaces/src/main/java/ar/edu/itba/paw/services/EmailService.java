@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.interfaces.services;
+package ar.edu.itba.paw.services;
 
 import org.springframework.stereotype.Service;
 

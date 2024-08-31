@@ -42,7 +42,6 @@
         <artifactId>spring-context-support</artifactId>
         <version>${org.springframework.version}</version>
       </dependency>
-
       <dependency>
         <groupId>javax.servlet</groupId>
         <artifactId>servlet-api</artifactId>
@@ -127,7 +126,6 @@
         <artifactId>thymeleaf-spring6</artifactId>
         <version>${org.thymeleaf.version}</version>
       </dependency>
-
     </dependencies>
   </dependencyManagement>
   <modules>
