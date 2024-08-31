@@ -23,5 +23,4 @@ public class User {
     public String getMail() {
         return mail;
     }
-
 }

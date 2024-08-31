@@ -3,6 +3,7 @@ package ar.edu.itba.paw.models;
 import ar.edu.itba.paw.models.utils.PublicationState;
 
 public class Publication {
+
     private final long publicationId;
     private final long bookId;
     private final long userId;
