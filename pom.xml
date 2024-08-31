@@ -29,11 +29,6 @@
       </dependency>
       <dependency>
         <groupId>org.springframework</groupId>
-        <artifactId>spring-jdbc</artifactId>
-        <version>${org.springframework.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
         <artifactId>spring-webmvc</artifactId>
         <version>${org.springframework.version}</version>
       </dependency>
@@ -74,7 +69,7 @@
         <artifactId>services</artifactId>
         <version>${project.version}</version>
         <!-- test, compile, provided, runtime-->
-        <scope></scope>
+        <!--<scope></scope>-->
       </dependency>
 
       <!-- Mail -->

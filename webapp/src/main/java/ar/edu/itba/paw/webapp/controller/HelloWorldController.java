@@ -38,7 +38,7 @@ public class HelloWorldController {
     }
 
     // home
-    @RequestMapping("/home")
+    @RequestMapping("/mail")
     public ModelAndView home() {
         final ModelAndView mav = new ModelAndView("helloworld/home");
         emailService.sendEmail("jtechenski@itba.edu.ar");
