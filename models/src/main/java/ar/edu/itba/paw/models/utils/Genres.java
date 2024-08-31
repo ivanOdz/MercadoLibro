@@ -31,5 +31,9 @@ public enum Genres {
     TRAVEL,
     TRUE_CRIME,
     HISTORICAL_NON_FICTION;
+
+    public static Genres fromInt(int i) {
+        return Genres.values()[i];
+    }
 }
 
