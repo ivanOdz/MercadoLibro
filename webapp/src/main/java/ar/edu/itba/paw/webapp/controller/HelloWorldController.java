@@ -15,18 +15,22 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+
 import javax.validation.Valid;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class HelloWorldController {
 
-    private UserService us;
+    private final UserService us;
 
-    @Autowired
-    private EmailService emailService;
+    private final EmailService emailService;
 
-    public HelloWorldController(final UserService us) {
+    public HelloWorldController(final UserService us, final EmailService emailService) {
         this.us = us;
+        this.emailService = emailService;
     }
 
     @RequestMapping("/index")
@@ -64,7 +68,10 @@ public class HelloWorldController {
     @RequestMapping("/mail")
     public ModelAndView home() {
         final ModelAndView mav = new ModelAndView("helloworld/home");
-        emailService.sendEmail("jtechenski@itba.edu.ar");
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("username", "Julieta");
+        variables.put("signUpDate", "August 31, 2024");
+        emailService.sendEmail("jtechenski@itba.edu.ar", variables, "welcome");
         return mav;
     }
 }
