@@ -14,7 +14,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 
 import java.util.Properties;
 
-@ComponentScan({ "ar.edu.itba.paw.services" })
+@ComponentScan({"ar.edu.itba.paw.interfaces.services"})
 @EnableWebMvc
 @Configuration
 public class EmailConfig {
