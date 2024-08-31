@@ -3,7 +3,7 @@ package ar.edu.itba.paw.models;
 public class Publication {
 
     private final long publicationId;
-    private final int bookId;
+    private final long bookId;
     private final int userId;
     private final int publicationState;
     private final String location;
@@ -20,7 +20,7 @@ public class Publication {
         return publicationId;
     }
 
-    public int getBookId() {
+    public long getBookId() {
         return bookId;
     }
 

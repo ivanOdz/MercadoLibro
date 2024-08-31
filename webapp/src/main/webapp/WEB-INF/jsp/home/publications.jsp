@@ -20,12 +20,9 @@
 				<p><strong>Publication State:</strong> ${publication.publicationState}</p>
 				<p><strong>Location:</strong> ${publication.location}</p>
 
-				<c:url var="publicationUrl" value="publication">
-				<%-- Esta linea de abajo va para cuando hayan usuarios--%>
+				<c:url var="publicationUrl" value="validation">
 				<c:param name="publicationId" value="${publication.publicationId}" />
-				<%--<c:param name="publicationId" value="${book.mail}" />--%>
 				</c:url>
-
 				<a href="${publicationUrl}">
 					<button>Lo quiero!</button>
 				</a>
