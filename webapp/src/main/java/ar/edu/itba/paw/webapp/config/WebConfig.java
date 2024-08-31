@@ -2,9 +2,11 @@ package ar.edu.itba.paw.webapp.config;
 
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
@@ -12,11 +14,15 @@ import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
 import javax.sql.DataSource;
+import java.nio.charset.StandardCharsets;
 
 @EnableWebMvc
 @ComponentScan({
@@ -25,7 +31,7 @@ import javax.sql.DataSource;
         "ar.edu.itba.paw.persistence"
 })
 @Configuration
-public class WebConfig {
+public class WebConfig extends WebMvcConfigurationSupport {
     @Value("classpath:schema.sql")
     private Resource schemaSql;
 
@@ -41,6 +47,16 @@ public class WebConfig {
     }
 
     @Bean
+    public MessageSource messageSource() {
+        final ReloadableResourceBundleMessageSource ms = new
+                ReloadableResourceBundleMessageSource();
+        ms.setDefaultEncoding(StandardCharsets.UTF_8.displayName());
+        ms.setBasename("classpath:i18n/messages");
+        ms.setCacheSeconds(5);
+        return ms;
+    }
+
+    @Bean
     public DataSource dataSource() {
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
 
@@ -50,6 +66,17 @@ public class WebConfig {
         ds.setPassword("root");
 
         return ds;
+    }
+
+    @Bean
+    public LocaleChangeInterceptor localeInterceptor() {
+        return new LocaleChangeInterceptor();
+    }
+
+    @Override
+    protected void addInterceptors(InterceptorRegistry registry) {
+        super.addInterceptors(registry);
+        registry.addInterceptor(localeInterceptor());
     }
 
     @Bean
