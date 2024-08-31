@@ -3,15 +3,12 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.models.Publications;
-import ar.edu.itba.paw.models.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.Types;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class PublicationsJdbcDao implements PublicationsDao {
@@ -32,15 +29,9 @@ public class PublicationsJdbcDao implements PublicationsDao {
     }
 
     @Override
-    public Optional<Publications> getAllPublications() {
+    public Publications getAllPublications() {
         List<Publication> publicationsList = jdbcTemplate.query("SELECT * FROM publication", ROWMAPPERPUBLICATIONS);
-
-        if (publicationsList.isEmpty()) {
-            return Optional.empty();
-        } else {
-            Publications publications = new Publications(publicationsList);
-            return Optional.of(publications);
-        }
+        return new Publications(publicationsList);
     }
 }
 

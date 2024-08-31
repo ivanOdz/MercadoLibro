@@ -4,8 +4,6 @@ import ar.edu.itba.paw.models.Publications;
 import ar.edu.itba.paw.persistence.PublicationsDao;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 
 @Service
 public class PublicationsServiceImpl implements PublicationsService {
@@ -17,8 +15,7 @@ public class PublicationsServiceImpl implements PublicationsService {
     }
 
     @Override
-    public Optional<Publications> getAllPublications() {
+    public Publications getAllPublications() {
         return pubDao.getAllPublications();
     }
-
 }
