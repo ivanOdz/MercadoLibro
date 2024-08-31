@@ -16,7 +16,7 @@ public class PublicationsController {
 
     @RequestMapping("/home")
     public ModelAndView index() {
-        final ModelAndView mav = new ModelAndView("publications/publications");
+        final ModelAndView mav = new ModelAndView("home/publications");
         mav.addObject("publications", ps.getAllPublications());
         return mav;
     }
