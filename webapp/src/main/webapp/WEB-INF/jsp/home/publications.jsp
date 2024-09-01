@@ -20,7 +20,7 @@
 				<p><strong>Publication State:</strong> ${publication.publicationState}</p>
 				<p><strong>Location:</strong> ${publication.location}</p>
 
-				<c:url var="publicationUrl" value="validation">
+				<c:url var="publicationUrl" value="submitmail">
 				<c:param name="publicationId" value="${publication.publicationId}" />
 				</c:url>
 				<a href="${publicationUrl}">

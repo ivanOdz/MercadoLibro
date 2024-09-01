@@ -1,23 +1,30 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.BookService;
 import ar.edu.itba.paw.services.PublicationsService;
+import ar.edu.itba.paw.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.Optional;
 
 @Controller
 public class PublicationsController {
 
     private PublicationsService ps;
     private BookService bs;
+    private UserService us;
 
-    public PublicationsController(final PublicationsService ps, final BookService bs) {
+    public PublicationsController(final PublicationsService ps, final BookService bs, final UserService us) {
         this.ps = ps;
         this.bs = bs;
+        this.us = us;
     }
 
     @RequestMapping("/")
@@ -37,13 +44,30 @@ public class PublicationsController {
         return mav;
     }
 
-    @RequestMapping("/validation")
-    public ModelAndView validation(@RequestParam(name = "publicationId") long publicationId) {
-        final ModelAndView mav = new ModelAndView("home/validation");
+    @RequestMapping("/submitmail")
+    public ModelAndView submitMail(@RequestParam(name = "publicationId") long publicationId) {
+        final ModelAndView mav = new ModelAndView("home/submitmail");
         if(ps.getPublicationById(publicationId).isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Publication not found");
         }
-        else mav.addObject("book", bs.getBookById(ps.getPublicationById(publicationId).get().getBookId()).get());
+        else mav.addObject("publicationId", publicationId);
         return mav;
     }
+
+    @RequestMapping(value = "/submitmail", method = RequestMethod.POST)
+    public ModelAndView handleMailSubmission(@RequestParam(name = "email") String email, @RequestParam(name = "publicationId") long publicationId) {
+        final ModelAndView mav = new ModelAndView("home/comparemail");
+
+        if (ps.getPublicationById(publicationId).isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Publication not found");
+        }
+        User owner = us.findById(bs.getBookById(ps.getPublicationById(publicationId).get().getBookId()).get().getUserId()).get();
+
+        mav.addObject("ownerMail", owner.getMail());
+        mav.addObject("solicitingEmail", email);
+
+        return mav;
+    }
+
+
 }

@@ -18,8 +18,13 @@
 
 <%--Por favor ingrese su mail:--%>
 <%--<BUTTON>SUMBIT</BUTTON>--%>
-<%--  --%>
-<%--if(mail(libro(publicacion id))) = mail ingresado){--%>
+<%-- Cuando haga post, envio el mail ingresado. Eso lo tomo, y llamo a otro metodo para que le pase a otra vista--%>
+<%-- el mail ingresado, y el mail asociado al al libro de la publicacion que fue seleccionada.--%>
+<%-- Ahi lo que hago es un c:if, si mailIngresado != mailLibro -> me voy a crear un libro --%>
+<%-- Si mailIngresado = mailLibro -> rechazo la operacion y hago un redirect a pagina principal /   --%>
+
+
+<%-- if(mail(libro(publicacion id))) = mail ingresado){--%>
 <%--  no puede intercambiar libro con usted mismo  --%>
 <%--}--%>
 <%--else{--%>
