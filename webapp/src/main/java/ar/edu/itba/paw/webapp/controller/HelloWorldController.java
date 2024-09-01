@@ -1,9 +1,13 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.utils.Genres;
+import ar.edu.itba.paw.models.utils.PublicationState;
+import ar.edu.itba.paw.services.SinglePublicationService;
 import ar.edu.itba.paw.services.UserService;
+import ar.edu.itba.paw.webapp.form.PublicationForm;
 import ar.edu.itba.paw.webapp.form.UserForm;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +46,7 @@ public class HelloWorldController {
         if (errors.hasErrors()){
             return createForm(userForm);
         }
-        final User user = us.create(userForm.getUsername(), userForm.getMail());
+        final User user = us.createUser(userForm.getUsername(), userForm.getMail());
         return new ModelAndView("redirect:/" + user.getId());
     }
 

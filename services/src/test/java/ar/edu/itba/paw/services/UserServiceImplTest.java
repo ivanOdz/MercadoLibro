@@ -2,7 +2,6 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.UserDao;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -34,10 +33,10 @@ public class UserServiceImplTest {
     @Test
     public void testCreate() {
         // 1. Precondiciones
-        Mockito.when(mock.create(eq(USERNAME), eq(MAIL))).thenReturn(new User(1, USERNAME, MAIL));
+        Mockito.when(mock.createUser(eq(USERNAME), eq(MAIL))).thenReturn(new User(1, USERNAME, MAIL));
 
         // 2. Ejercito la class under test
-        User user = userService.create(USERNAME, MAIL);
+        User user = userService.createUser(USERNAME, MAIL);
 
         // 3. Valido las precondiciones
         assertNotNull(user);
@@ -48,10 +47,10 @@ public class UserServiceImplTest {
     @Test(expected = DuplicateKeyException.class)
     public void testCreateDuplicate() {
         // 1. Precondiciones
-        Mockito.when(mock.create(eq(USERNAME), eq(MAIL))).thenThrow(DuplicateKeyException.class);
+        Mockito.when(mock.createUser(eq(USERNAME), eq(MAIL))).thenThrow(DuplicateKeyException.class);
 
         // 2. Ejercito la class under test
-        User user = userService.create(USERNAME, MAIL);
+        User user = userService.createUser(USERNAME, MAIL);
 
         // 3. Valido las precondiciones
         fail();
