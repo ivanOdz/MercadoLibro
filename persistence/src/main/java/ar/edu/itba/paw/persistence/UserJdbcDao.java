@@ -39,7 +39,7 @@ public class UserJdbcDao implements UserDao {
     }
 
     @Override
-    public User create(String username, String mail) {
+    public User createUser(String username, String mail) {
         final Map<String, String> userData = Map.of("username", username, "mail", mail);
         final Number generatedId = jdbcInsert.executeAndReturnKey(userData);
         return new User(generatedId.longValue(), username, mail);

@@ -44,7 +44,7 @@ public class UserJdbcDaoTest {
         // 1. Precondiciones
 
         // 2. Ejercito la class under test
-        User user = userDao.create(USERNAME, MAIL);
+        User user = userDao.createUser(USERNAME, MAIL);
 
         // 3. Postcondiciones
         assertNotNull(user);
