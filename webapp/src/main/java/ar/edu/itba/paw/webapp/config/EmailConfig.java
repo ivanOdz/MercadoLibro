@@ -7,6 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver;
@@ -17,6 +18,7 @@ import java.util.Properties;
 @ComponentScan({"ar.edu.itba.paw.services"})
 @EnableWebMvc
 @Configuration
+@EnableAsync
 public class EmailConfig {
 
     @Bean
@@ -26,8 +28,8 @@ public class EmailConfig {
         ms.setPort(587);
         ms.setDefaultEncoding("UTF-8");
 
-        ms.setUsername("jtechenski@gmail.com");
-        ms.setPassword("xbfxyrpucaehnkmw");
+        ms.setUsername("paw2024b09@gmail.com");
+        ms.setPassword("xezundljivwsqyni");
 
         Properties props = ms.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
