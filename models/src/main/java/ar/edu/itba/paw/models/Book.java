@@ -13,14 +13,14 @@ public class Book {
     private final List<String> author;
     private final String editorial;
     private final String description;
-    private final Genres genre;
-    private final PublicationState publicationState;
+    private final int genre;
+    private int publicationState;
     private final int edition;
     private final int rating;
     private final long image;
     private final long userId;
 
-    public Book(long bookId, String isbn, String title, List<String> author, String editorial, String description, Genres genre, PublicationState publicationState, int edition, int rating, long image, long userId) {
+    public Book(long bookId, String isbn, String title, List<String> author, String editorial, String description, int genre, int publicationState, int edition, int rating, long image, long userId) {
         this.bookId = bookId;
         this.isbn = isbn;
         this.title = title;
@@ -59,11 +59,11 @@ public class Book {
         return description;
     }
 
-    public Genres getGenre() {
+    public int getGenre() {
         return genre;
     }
 
-    public PublicationState getPublicationState() {
+    public int getPublicationState() {
         return publicationState;
     }
 
