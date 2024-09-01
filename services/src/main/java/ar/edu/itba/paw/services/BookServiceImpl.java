@@ -1,7 +1,8 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.services.BookService;
 import ar.edu.itba.paw.models.Book;
-import ar.edu.itba.paw.persistence.BookDao;
+import ar.edu.itba.paw.interfaces.persistence.BookDao;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

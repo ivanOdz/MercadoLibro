@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.services;
+package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.Book;
 import org.springframework.stereotype.Service;

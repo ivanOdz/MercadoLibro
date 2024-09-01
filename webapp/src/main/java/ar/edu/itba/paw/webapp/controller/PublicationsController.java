@@ -1,9 +1,9 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.services.BookService;
-import ar.edu.itba.paw.services.PublicationsService;
-import ar.edu.itba.paw.services.UserService;
+import ar.edu.itba.paw.interfaces.services.BookService;
+import ar.edu.itba.paw.interfaces.services.PublicationsService;
+import ar.edu.itba.paw.interfaces.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.util.Optional;
 
 @Controller
 public class PublicationsController {
