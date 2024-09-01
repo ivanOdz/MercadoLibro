@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.persistence.BookDao;
 import ar.edu.itba.paw.models.Book;
-import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.models.utils.Genres;
 import ar.edu.itba.paw.models.utils.PublicationState;
 import org.springframework.jdbc.core.JdbcTemplate;
