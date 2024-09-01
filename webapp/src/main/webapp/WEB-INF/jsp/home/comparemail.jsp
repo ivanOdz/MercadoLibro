@@ -8,7 +8,6 @@
 
 <c:choose>
     <c:when test="${ownerMail != solicitingEmail}">
-        <p>The email you provided does not match the owner's email.</p>
         <%--Redirigir a la pagina de crear un libro--%>
 
 
