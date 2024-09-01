@@ -40,7 +40,7 @@ public class EmailServiceImpl implements EmailService {
                 helper.setTo(receiver);
                 helper.setSubject(subject);
                 helper.setText(html, true);
-                helper.setFrom("jtechenski@gmail.com");
+                helper.setFrom("paw@mail.com");
             } catch (MessagingException e) {
                 e.printStackTrace();
             }
