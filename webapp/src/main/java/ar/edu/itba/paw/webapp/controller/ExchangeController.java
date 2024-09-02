@@ -67,6 +67,10 @@ public class ExchangeController {
         final ModelAndView mav = new ModelAndView("exchange/accepted");
         exchangeService.acceptExchange(acceptCode);
 
+
+        // TODO: Actualizar dueño del libro
+        // TODO: Rechazar todas las peticiones del mismo libro
+
         Map<String, Object> variables = new HashMap<>();
         long exchangeId = exchangeService.getId(acceptCode);
 
