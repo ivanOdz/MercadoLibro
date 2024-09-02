@@ -2,45 +2,39 @@ package ar.edu.itba.paw.models;
 
 import ar.edu.itba.paw.models.utils.ExchangeState;
 
-import java.util.Random;
-
 public class Exchange {
-    private final long exchangeId;
-    private final long publicationId1;
-    private final long publicationId2;
-    private ExchangeState exchangeState;
-    private final long acceptCode;
+    private long id;
+    private long offerer;
+    private long requester;
+    private int state;
+    private long acceptCode;
 
-    public Exchange(long exchangeId, long publicationId1, long publicationId2) {
-        this.exchangeId = exchangeId;
-        this.publicationId1 = publicationId1;
-        this.publicationId2 = publicationId2;
-        exchangeState = ExchangeState.PENDING;
-        acceptCode = generateAcceptCode();
+
+    public Exchange(long id, long offerer, long requester, int state, long acceptCode) {
+        this.id = id;
+        this.offerer = offerer;
+        this.requester = requester;
+        this.state = state;
+        this.acceptCode = acceptCode;
     }
 
-    public long generateAcceptCode() {
-        Random random = new Random();
-        return (long) random.nextInt(99999);
+    public long getId() {
+        return id;
     }
 
-    public long getExchangeId() {
-        return exchangeId;
+    public int getState() {
+        return state;
     }
 
-    public long getPublicationId() {
-        return publicationId1;
+    public long getAcceptCode() {
+        return acceptCode;
     }
 
-    public long getPublicationId2() {
-        return publicationId2;
+    public long getOfferer() {
+        return offerer;
     }
 
-    public ExchangeState getExchangeState() {
-        return exchangeState;
-    }
-
-    public void setExchangeState(ExchangeState exchangeState) {
-        this.exchangeState = exchangeState;
+    public long getRequester() {
+        return requester;
     }
 }

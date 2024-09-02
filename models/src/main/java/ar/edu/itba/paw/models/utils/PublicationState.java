@@ -13,4 +13,8 @@ public enum PublicationState {
     public int getValue() {
         return value;
     }
+
+    public static PublicationState fromInt(int i) {
+        return PublicationState.values()[i];
+    }
 }

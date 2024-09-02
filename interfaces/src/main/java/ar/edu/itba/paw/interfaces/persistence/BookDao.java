@@ -1,15 +1,13 @@
-package ar.edu.itba.paw.services;
+package ar.edu.itba.paw.interfaces.persistence;
 
 import ar.edu.itba.paw.models.Book;
-import ar.edu.itba.paw.models.utils.Genres;
-import ar.edu.itba.paw.models.utils.PublicationState;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
-@Service
-public interface BookService {
+public interface BookDao {
 
     Book createBook(String isbn, String title, List<String> author, String editorial, String description, int genre, int publicationState, int edition, int rating, long image, long userId);
 
+    Optional<Book> getBookById(long publicationId);
 }

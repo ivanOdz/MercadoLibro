@@ -47,4 +47,8 @@ public enum Genres {
     public String getName() {
         return name;
     }
+
+    public static Genres fromInt(int i) {
+        return Genres.values()[i];
+    }
 }

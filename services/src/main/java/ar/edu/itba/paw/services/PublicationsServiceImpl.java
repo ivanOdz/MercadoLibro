@@ -1,8 +1,12 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.services.PublicationsService;
+import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.models.Publications;
-import ar.edu.itba.paw.persistence.PublicationsDao;
+import ar.edu.itba.paw.interfaces.persistence.PublicationsDao;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 
 @Service
@@ -18,4 +22,15 @@ public class PublicationsServiceImpl implements PublicationsService {
     public Publications getAllPublications() {
         return pubDao.getAllPublications();
     }
+
+    @Override
+    public Optional<Publication> getPublicationById(long publicationId) {
+        return pubDao.getPublicationById(publicationId);
+    }
+
+    @Override
+    public Publications getAllPublicationsFilteredBy(String search) {
+        return pubDao.getAllPublicationsFilteredBy(search);
+    }
+
 }

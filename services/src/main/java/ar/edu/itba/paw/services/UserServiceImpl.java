@@ -1,7 +1,8 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.persistence.UserDao;
+import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserDao userDao;
+
 
     public UserServiceImpl(final UserDao userDao) {
         this.userDao = userDao;

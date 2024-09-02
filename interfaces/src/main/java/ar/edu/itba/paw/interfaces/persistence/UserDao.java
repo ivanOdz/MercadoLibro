@@ -1,16 +1,11 @@
-package ar.edu.itba.paw.services;
-
+package ar.edu.itba.paw.interfaces.persistence;
 
 import ar.edu.itba.paw.models.User;
-import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@Service
-public interface UserService {
-
+public interface UserDao {
     Optional<User> findById(long id);
 
     User createUser(String username, String mail);
-
 }

@@ -1,8 +1,5 @@
 package ar.edu.itba.paw.models;
 
-import ar.edu.itba.paw.models.utils.Genres;
-import ar.edu.itba.paw.models.utils.PublicationState;
-
 import java.util.List;
 
 public class Book {
