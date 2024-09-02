@@ -17,12 +17,12 @@ public class ExchangeServiceImpl implements ExchangeService {
 
     @Override
     public void acceptExchange(long acceptCode){
-        exchangeDao.updateExchangeStatus(acceptCode, 1);
+        exchangeDao.updateExchangeStatus(acceptCode, 0);
     }
 
     @Override
     public void rejectExchange(long acceptCode) {
-        exchangeDao.updateExchangeStatus(acceptCode, 2);
+        exchangeDao.updateExchangeStatus(acceptCode, 1);
     }
 
     @Override

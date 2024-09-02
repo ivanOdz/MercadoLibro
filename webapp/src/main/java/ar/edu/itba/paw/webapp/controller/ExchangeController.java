@@ -65,7 +65,7 @@ public class ExchangeController {
     @RequestMapping("/acceptExchange/{acceptCode:\\d+}")
     public ModelAndView acceptExchange(@PathVariable(name = "acceptCode") long acceptCode) {
         final ModelAndView mav = new ModelAndView("exchange/accepted");
-        exchangeService.rejectExchange(acceptCode);
+        exchangeService.acceptExchange(acceptCode);
 
         Map<String, Object> variables = new HashMap<>();
         long exchangeId = exchangeService.getId(acceptCode);
