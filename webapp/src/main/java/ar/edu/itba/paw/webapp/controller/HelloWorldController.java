@@ -73,7 +73,7 @@ public class HelloWorldController {
         variables.put("offeredPublication", "Harry Potter 1");
         variables.put("rejectionUrl", "http://localhost:8080/publication?publicationId=3");
         variables.put("validationUrl", "http://localhost:8080/publication?publicationId=3");
-        emailService.sendEmail("jtechenski@itba.edu.ar", variables, "exchangeRequest", "Book Exchange");
+        emailService.sendEmail("modzomek@itba.edu.ar", variables, "exchangeRequest", "Book Exchange");
         return mav;
     }
 

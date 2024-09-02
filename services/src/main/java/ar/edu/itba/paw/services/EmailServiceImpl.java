@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -19,9 +20,9 @@ public class EmailServiceImpl implements EmailService {
 
     private final JavaMailSender mailSender;
 
-    private final TemplateEngine templateEngine;
+    private final SpringTemplateEngine templateEngine;
 
-    public EmailServiceImpl(final JavaMailSender javaMailSender, final TemplateEngine templateResolver){
+    public EmailServiceImpl(final JavaMailSender javaMailSender, final SpringTemplateEngine templateResolver){
         this.mailSender = javaMailSender;
         this.templateEngine = templateResolver;
     }
