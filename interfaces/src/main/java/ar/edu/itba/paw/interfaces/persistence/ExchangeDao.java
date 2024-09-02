@@ -7,5 +7,8 @@ import java.util.Optional;
 public interface ExchangeDao {
     void updateExchangeStatus(long exchangeId, int newStatus);
 
-    Exchange findById(long exchangeId);
+    Optional<Exchange> findById(long id);
+
+    long getIdByAcceptCode(long acceptCode);
+
 }

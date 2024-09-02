@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{email.subjectRejection}"></title>
+</head>
+<body style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
+<div style="max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
+    <p th:text="#{email.greeting}" style="font-size: 18px; font-weight: bold;"></p>
+    <p th:text="#{email.rejectionMessage}" style="font-size: 16px;"></p>
+
+    <p>
+        <strong th:text="#{email.requesterName}" style="font-size: 16px; font-weight: bold;"></strong>
+        <span th:text="${requesterName}" style="font-size: 16px;"></span>
+        <span th:text="${requesterEmail}" style="font-size: 16px;"></span>
+    </p>
+
+    <p>
+        <strong th:text="#{email.requestedPublication}" style="font-size: 16px; font-weight: bold;"></strong>
+        <span th:text="${requestedBook}" style="font-size: 16px;"></span>
+    </p>
+
+    <p>
+        <strong th:text="#{email.offeredPublication}" style="font-size: 16px; font-weight: bold;"></strong>
+        <span th:text="${offeredBook}" style="font-size: 16px;"></span>
+    </p>
+
+    <p th:text="#{email.rejectionThankYouMessage}" style="font-size: 16px;"></p>
+</div>
+</body>
+</html>

@@ -3,29 +3,38 @@ package ar.edu.itba.paw.models;
 import ar.edu.itba.paw.models.utils.ExchangeState;
 
 public class Exchange {
-    private int id;
-    private int p1;
-    private int p2;
+    private long id;
+    private long offerer;
+    private long requester;
     private int state;
-    private int acceptCode;
+    private long acceptCode;
 
-    public int getId() {
+
+    public Exchange(long id, long offerer, long requester, int state, long acceptCode) {
+        this.id = id;
+        this.offerer = offerer;
+        this.requester = requester;
+        this.state = state;
+        this.acceptCode = acceptCode;
+    }
+
+    public long getId() {
         return id;
-    }
-
-    public int getP1() {
-        return p1;
-    }
-
-    public int getP2() {
-        return p2;
     }
 
     public int getState() {
         return state;
     }
 
-    public int getAcceptCode() {
+    public long getAcceptCode() {
         return acceptCode;
+    }
+
+    public long getOfferer() {
+        return offerer;
+    }
+
+    public long getRequester() {
+        return requester;
     }
 }

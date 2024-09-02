@@ -34,8 +34,8 @@ CREATE TABLE IF NOT EXISTS publication (
 
 CREATE TABLE IF NOT EXISTS exchanges (
     exchangeId SERIAL PRIMARY KEY,
-    publication1 INTEGER REFERENCES publication(publicationId) NOT NULL,
-    publication2 INTEGER REFERENCES publication(publicationId) NOT NULL,
+    offerer INTEGER REFERENCES publication(publicationId) NOT NULL,
+    requester INTEGER REFERENCES publication(publicationId) NOT NULL,
     exchangeState INTEGER NOT NULL,
     acceptCode INTEGER NOT NULL
 );

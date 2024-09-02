@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Book;
 import ar.edu.itba.paw.models.Exchange;
 import ar.edu.itba.paw.models.Publication;
+import ar.edu.itba.paw.models.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,11 +25,12 @@ public class ExchangeController {
     PublicationsService publicationsService;
     BookService bookService;
 
-    public ExchangeController(final ExchangeService exchangeService, final EmailService emailService, final UserService userService, final BookService bookService){
+    public ExchangeController(final ExchangeService exchangeService, final EmailService emailService, final UserService userService, final BookService bookService, final PublicationsService publicationsService) {
         this.exchangeService = exchangeService;
         this.emailService = emailService;
         this.userService = userService;
         this.bookService = bookService;
+        this.publicationsService = publicationsService;
     }
 
     @RequestMapping("/rejectExchange/{acceptCode:\\d+}")
@@ -37,45 +39,55 @@ public class ExchangeController {
         exchangeService.rejectExchange(acceptCode);
 
         Map<String, Object> variables = new HashMap<>();
-        int exchangeId = exchangeService.getId(acceptCode);
+        long exchangeId = exchangeService.getId(acceptCode);
 
-        Exchange exchange = exchangeService.getExchangeById(exchangeId);
-        Publication offerer = publicationsService.getPublicationById(exchange.getOfferer());
-        Publication requester = publicationsService.getPublicationById(exchange.getRequester());
+        Exchange exchange = exchangeService.getExchangeById(exchangeId).get();
+        Publication offererPub = publicationsService.getPublicationById(exchange.getOfferer()).get();
+        Publication requesterPub = publicationsService.getPublicationById(exchange.getRequester()).get();
 
-        Book bookOffered = bookService.getBookById(offerer.getBookId());
-        Book bookRequested = bookService.getBookById(requester.getBookId());
+        Book bookOffered = bookService.getBookById(offererPub.getBookId()).get();
+        Book bookRequested = bookService.getBookById(requesterPub.getBookId()).get();
 
+        User requester = userService.findById(requesterPub.getUserId()).get();
 
+        String requesterEmail = requester.getMail();
 
-        variables.put("requesterEmail", exchangeService.getRequesterEmail(acceptCode));
-        variables.put("publicationName", bookOffered.getDescription());
-//        variables.put("validationUrl", "http://localhost:8080/publication?publicationId=3");
-//        variables.put("username", "Julieta");
-//        variables.put("signUpDate", "August 31, 2024");
-        emailService.sendEmail("jtechenski@itba.edu.ar", variables, "exchangeRequest", "Book Exchange");
+        variables.put("requesterEmail", requesterEmail);
+        variables.put("requesterName", requester.getUsername());
+        variables.put("requestedBook", bookRequested.getDescription());
+        variables.put("offeredBook", bookOffered.getDescription());
+        emailService.sendEmail(requesterEmail, variables, "exchangeRejected", "Book Exchange Rejected");
 
-
-//         ms.sendRejectedExchange(); // al usuario que le rechazaron el intercambio
-
-        mav.addObject("exchangeId", acceptCode);
+        mav.addObject("acceptCode", acceptCode);
         return mav;
     }
 
     @RequestMapping("/acceptExchange/{acceptCode:\\d+}")
     public ModelAndView acceptExchange(@PathVariable(name = "acceptCode") long acceptCode) {
         final ModelAndView mav = new ModelAndView("exchange/accepted");
+        exchangeService.rejectExchange(acceptCode);
 
-         exchangeService.acceptExchange(acceptCode);
-//         publicationsService.closePublication();
-         // modificar estado de la publicacion -> mi duda es si defino una varibale que sea PublicationDao o como sería lo "correcto"
+        Map<String, Object> variables = new HashMap<>();
+        long exchangeId = exchangeService.getId(acceptCode);
 
+        Exchange exchange = exchangeService.getExchangeById(exchangeId).get();
+        Publication offererPub = publicationsService.getPublicationById(exchange.getOfferer()).get();
+        Publication requesterPub = publicationsService.getPublicationById(exchange.getRequester()).get();
 
+        Book bookOffered = bookService.getBookById(offererPub.getBookId()).get();
+        Book bookRequested = bookService.getBookById(requesterPub.getBookId()).get();
 
-//         ms.sendEmail(); // enviamos mail al usuario al que le acceptaron el intercambio
-        // ???? enviamos tmb mail a los usuarios que habian "aplicado" para el intercambio
+        User requester = userService.findById(requesterPub.getUserId()).get();
 
-        mav.addObject("exchangeId", acceptCode);
+        String requesterEmail = requester.getMail();
+
+        variables.put("requesterEmail", requesterEmail);
+        variables.put("requesterName", requester.getUsername());
+        variables.put("requestedBook", bookRequested.getDescription());
+        variables.put("offeredBook", bookOffered.getDescription());
+        emailService.sendEmail(requesterEmail, variables, "exchangeAccepted", "Book Exchange Accepted");
+
+        mav.addObject("acceptCode", acceptCode);
         return mav;
     }
 

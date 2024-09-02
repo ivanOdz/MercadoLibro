@@ -20,12 +20,7 @@ public class BookServiceImpl implements BookService {
 
 
     @Override
-    public Book getBookById(long publicationId) {
-        Optional<Book> book = bookDao.getBookById(publicationId);
-
-        if (book.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Publication not found");
-        }
-        return book.get();
+    public Optional<Book> getBookById(long publicationId) {
+        return bookDao.getBookById(publicationId);
     }
 }

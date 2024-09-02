@@ -9,6 +9,6 @@ import java.util.Optional;
 public interface ExchangeService {
     void acceptExchange(long acceptCode);
     void rejectExchange(long acceptCode);
-    Exchange getExchangeById(long exchangeId);
-    int getId(long acceptCode);
+    Optional<Exchange> getExchangeById(long exchangeId);
+    long getId(long acceptCode);
 }
