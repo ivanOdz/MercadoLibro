@@ -27,13 +27,19 @@ public class PublicationsController {
     }
 
     @RequestMapping("/")
-    public ModelAndView index() {
+    public ModelAndView index(@RequestParam(name = "search", defaultValue = "") String search) {
         final ModelAndView mav = new ModelAndView("home/publications");
-        mav.addObject("publications", ps.getAllPublications());
+        mav.addObject("publications", ps.getAllPublicationsFilteredBy(search));
         return mav;
     }
 
-    @RequestMapping("/publication")
+    @RequestMapping(path = "/", method = RequestMethod.GET)
+    public ModelAndView search(@RequestParam(name = "search", defaultValue = "") String search) {
+        return index(search);
+    }
+
+
+        @RequestMapping("/publication")
     public ModelAndView publication(@RequestParam(name = "publicationId") long publicationId) {
         final ModelAndView mav = new ModelAndView("home/publication");
         if(ps.getPublicationById(publicationId).isEmpty()) {

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,8 +43,19 @@ public class PublicationsJdbcDao implements PublicationsDao {
         return jdbcTemplate.query("SELECT * FROM publication WHERE publicationId = ?", new Object[]{ pubId },
                 new int[]{ Types.BIGINT }, ROWMAPPERPUBLICATIONS).stream().findFirst();
     }
-}
 
+    @Override
+    public Publications getAllPublicationsFilteredBy(String search) {
+        if(search.compareTo("") == 0) {
+            return getAllPublications();
+        }
+        // Matecheo exacto del titulo del libro con lo que se busca.
+        List<Publication> publicationsList = jdbcTemplate.query(
+                "SELECT * FROM publication WHERE bookId IN (SELECT bookId from books WHERE title = ?)",
+                new Object[]{ search }, new int[]{ Types.VARCHAR }, ROWMAPPERPUBLICATIONS);
+        return new Publications(publicationsList);
+    }
+}
 
 
 

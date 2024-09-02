@@ -12,4 +12,7 @@ public interface PublicationsService {
     Publications getAllPublications();
 
     Optional<Publication> getPublicationById(long publicationId);
+
+    Publications getAllPublicationsFilteredBy(String search);
+
 }

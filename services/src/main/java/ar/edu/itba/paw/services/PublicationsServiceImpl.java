@@ -23,8 +23,14 @@ public class PublicationsServiceImpl implements PublicationsService {
         return pubDao.getAllPublications();
     }
 
+    @Override
     public Optional<Publication> getPublicationById(long publicationId) {
         return pubDao.getPublicationById(publicationId);
+    }
+
+    @Override
+    public Publications getAllPublicationsFilteredBy(String search) {
+        return pubDao.getAllPublicationsFilteredBy(search);
     }
 
 }

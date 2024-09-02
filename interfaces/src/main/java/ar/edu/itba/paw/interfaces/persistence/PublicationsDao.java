@@ -11,4 +11,6 @@ public interface PublicationsDao {
 
     Optional<Publication> getPublicationById(long publicationId);
 
+    Publications getAllPublicationsFilteredBy(String search);
+
 }

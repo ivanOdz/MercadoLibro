@@ -10,6 +10,11 @@
 
 <h1>Publications</h1>
 
+<form action="/" method="get">
+	<input type="text" id="search" name="search">
+	<button type="submit">Buscar</button>
+</form>
+
 <c:if test="${not empty publications.publications}">
 	<div>
 		<c:forEach var="publication" items="${publications.publications}">
