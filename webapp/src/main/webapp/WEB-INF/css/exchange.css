@@ -1,0 +1,23 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f5f5f5;
+}
+
+.icon-container {
+    text-align: center;
+}
+
+.icon {
+    font-size: 100px;
+    color: #4CAF50;
+}
+
+.message {
+    font-size: 24px;
+    margin-top: 20px;
+    color: #333;
+}

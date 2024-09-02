@@ -10,16 +10,31 @@
   <p th:text="#{email.message}" style="font-size: 16px;"></p>
 
   <p>
-    <strong th:text="#{email.requesterEmail}" style="font-size: 16px; font-weight: bold;"></strong>
-    <span th:text="${requesterEmail}" style="font-size: 16px;"></span>
+    <strong th:text="#{email.requesterName}" style="font-size: 16px; font-weight: bold;"></strong>
+    <span th:text="${requesterName} (${requesterEmail})" style="font-size: 16px;"></span>
   </p>
+
+  <!-- Datos del libro solicitado -->
   <p>
-    <strong th:text="#{email.publicationName}" style="font-size: 16px; font-weight: bold;"></strong>
-    <span th:text="${publicationName}" style="font-size: 16px;"></span>
+    <strong th:text="#{email.requestedPublication}" style="font-size: 16px; font-weight: bold;"></strong>
+    <span th:text="${requestedPublication}" style="font-size: 16px;"></span>
+  </p>
+
+  <!-- Datos del libro ofrecido -->
+  <p>
+    <strong th:text="#{email.offeredPublication}" style="font-size: 16px; font-weight: bold;"></strong>
+    <span th:text="${offeredPublication}" style="font-size: 16px;"></span>
   </p>
 
   <p th:text="#{email.actionMessage}" style="font-size: 16px;"></p>
 
+  <!-- Botón de Rechazar -->
+  <a th:href="@{${rejectionUrl}}"
+     style="display: inline-block; padding: 10px 20px; font-size: 16px; color: #ffffff; background-color: #dc3545; text-decoration: none; border-radius: 5px; text-align: center; margin-top: 20px; margin-left: 10px;"
+     th:text="#{email.rejectButton}">
+  </a>
+
+  <!-- Botón de Validar -->
   <a th:href="@{${validationUrl}}"
      style="display: inline-block; padding: 10px 20px; font-size: 16px; color: #ffffff; background-color: #28a745; text-decoration: none; border-radius: 5px; text-align: center; margin-top: 20px;"
      th:text="#{email.validateButton}">
