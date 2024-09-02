@@ -39,7 +39,7 @@ public class PublicationForm {
     @Max(5)
     private int rating;
 
-    @NotBlank
+    @NotNull
     private long image;
 
     @NotBlank
@@ -85,7 +85,7 @@ public class PublicationForm {
         return rating;
     }
 
-    @NotBlank
+    @NotNull
     public long getImage() {
         return image;
     }
@@ -130,7 +130,7 @@ public class PublicationForm {
         this.rating = rating;
     }
 
-    public void setImage(@NotBlank long image) {
+    public void setImage(@NotNull long image) {
         this.image = image;
     }
 
