@@ -8,6 +8,6 @@ import java.util.Optional;
 @Service
 public interface BookService {
 
-    Optional<Book> getBookById(long publicationId);
+    Book getBookById(long publicationId);
 
 }

@@ -24,8 +24,8 @@ public class EmailServiceImpl implements EmailService {
     @Autowired
     private SpringTemplateEngine templateEngine;
 
-
     @Async
+    @Override
     public void sendEmail(final String receiver, Map<String, Object> variables, String templatePath, String subject) {
             MimeMessage message = mailSender.createMimeMessage();
             Locale locale =  LocaleContextHolder.getLocale();
