@@ -71,6 +71,7 @@ public class ExchangeController {
         // TODO: Actualizar dueño del libro
         // TODO: Rechazar todas las peticiones del mismo libro
 
+
         Map<String, Object> variables = new HashMap<>();
         long exchangeId = exchangeService.getId(acceptCode);
 

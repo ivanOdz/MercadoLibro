@@ -2,22 +2,22 @@ package ar.edu.itba.paw.models;
 
 public class User {
 
-    private final long id;
+    private final long userId;
     private final String username;
     private final String mail;
 
-    public User(long id, String username, String mail) {
-        this.id = id;
+    public User(long userId, String username, String mail) {
+        this.userId = userId;
         this.username = username;
         this.mail = mail;
     }
 
-    public String getUsername() {
-        return username;
+    public long getId() {
+        return userId;
     }
 
-    public long getId() {
-        return id;
+    public String getUsername() {
+        return username;
     }
 
     public String getMail() {
