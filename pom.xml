@@ -121,11 +121,6 @@
         <artifactId>thymeleaf</artifactId>
         <version>${org.thymeleaf.version}</version>
       </dependency>
-      <dependency>
-        <groupId>org.thymeleaf</groupId>
-        <artifactId>thymeleaf-spring6</artifactId>
-        <version>${org.thymeleaf.version}</version>
-      </dependency>
     </dependencies>
   </dependencyManagement>
   <modules>
