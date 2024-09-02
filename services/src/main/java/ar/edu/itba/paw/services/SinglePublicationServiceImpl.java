@@ -1,11 +1,13 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.persistence.BookDao;
 import ar.edu.itba.paw.models.Book;
 import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.persistence.BookDao;
 import ar.edu.itba.paw.persistence.SinglePublicationDao;
-import ar.edu.itba.paw.persistence.UserDao;
+import ar.edu.itba.paw.interfaces.persistence.UserDao;
+import ar.edu.itba.paw.interfaces.services.SinglePublicationService;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;

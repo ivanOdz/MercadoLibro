@@ -29,8 +29,8 @@ public class BookJdbcDao implements BookDao {
             Arrays.asList((String[]) rs.getArray("authors").getArray()),  // Convertir el array SQL a una lista de Strings
             rs.getString("editorial"),
             rs.getString("description"),
-            Genres.fromInt(rs.getInt("genre")),
-            PublicationState.fromInt(rs.getInt("publicationState")), // Mapea el valor entero al enum PublicationState
+            (rs.getInt("genre")),
+            rs.getInt("publicationState"), // Mapea el valor entero al enum PublicationState
             rs.getInt("edition"),
             rs.getInt("rating"),
             rs.getLong("image"),

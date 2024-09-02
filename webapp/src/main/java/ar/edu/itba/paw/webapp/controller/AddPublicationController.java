@@ -3,7 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.models.utils.Genres;
 import ar.edu.itba.paw.models.utils.PublicationState;
-import ar.edu.itba.paw.services.SinglePublicationService;
+import ar.edu.itba.paw.interfaces.services.SinglePublicationService;
 import ar.edu.itba.paw.webapp.form.PublicationForm;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;

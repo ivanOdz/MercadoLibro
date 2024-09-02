@@ -4,7 +4,7 @@ import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.utils.Genres;
 import ar.edu.itba.paw.models.utils.PublicationState;
-import ar.edu.itba.paw.services.SinglePublicationService;
+import ar.edu.itba.paw.interfaces.services.SinglePublicationService;
 import ar.edu.itba.paw.webapp.form.PublicationForm;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.webapp.form.UserForm;
