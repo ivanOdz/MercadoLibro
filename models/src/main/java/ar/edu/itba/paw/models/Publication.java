@@ -1,18 +1,20 @@
 package ar.edu.itba.paw.models;
 
+import ar.edu.itba.paw.models.utils.PublicationState;
+
 public class Publication {
 
     private final long publicationId;
     private final long bookId;
-    private final int userId;
-    private final int publicationState;
+    private final long userId;
+    private int publicationState;
     private final String location;
 
-    public Publication(long publicationId, int bookId, int userId, int publicationState, String location) {
+    public Publication(long publicationId, long bookId, long userId, String location) {
         this.publicationId = publicationId;
         this.bookId = bookId;
         this.userId = userId;
-        this.publicationState = publicationState;
+        publicationState = PublicationState.CURRENT.getValue();
         this.location = location;
     }
 
@@ -24,7 +26,7 @@ public class Publication {
         return bookId;
     }
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 
@@ -36,4 +38,7 @@ public class Publication {
         return location;
     }
 
+    public void terminatePublication() {
+        publicationState = PublicationState.TERMINATED.getValue();
+    }
 }

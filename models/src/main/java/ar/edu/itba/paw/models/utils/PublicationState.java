@@ -1,8 +1,18 @@
 package ar.edu.itba.paw.models.utils;
 
 public enum PublicationState {
-    CURRENT,
-    TERMINATED;
+    CURRENT(1),
+    TERMINATED(0);
+
+    private final int value;
+
+    PublicationState(int value) {
+        this.value = value;
+    }
+
+    public int getValue() {
+        return value;
+    }
 
     public static PublicationState fromInt(int i) {
         return PublicationState.values()[i];
