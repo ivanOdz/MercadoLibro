@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS books (
     editorial           VARCHAR(255) NOT NULL,
     description         TEXT,
     genre               INTEGER,
+    bookState			INTEGER NOT NULL,
     publicationState    INTEGER NOT NULL,
     edition             INTEGER,
     rating              INTEGER,
@@ -39,3 +40,4 @@ CREATE TABLE IF NOT EXISTS exchanges (
     exchangeState       INTEGER NOT NULL,
     acceptCode          INTEGER NOT NULL
 );
+
