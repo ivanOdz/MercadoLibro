@@ -11,16 +11,22 @@
 
 <body>
 	<nav class="background-nav">
-		<div class="nav-wrapper">
-			<a href="${pageContext.request.contextPath}/" class="brand-logo brown-text darken-4-text">BookSwap</a>
-			<div class="right inline-form">
-				<form class="input-field search-form" action="${pageContext.request.contextPath}/" method="get">
-					<div class="search-container">
-						<input type="text" id="search" name="search" class="search-input">
-					</div>
-					<button class="btn-flat search-button"><i class="material-icons tiny">search</i></button>
-				</form>
+		<div class="row">
+			<div class="col s4">
+				<a href="${pageContext.request.contextPath}/" class="brand-logo brown-text darken-4-text s4">BookSwap</a>
+			</div>
+			<div class="s4 col">
+				<div class="row">
+					<form class="col s12" action="${pageContext.request.contextPath}/" method="get">
+						<div class="row inline-form">
+							<input type="text" id="search" name="search">
+							<i style="color: black" class="material-icons tiny suffix search-button">search</i>
+						</div>
+					</form>
+				</div>
+			</div>
 
+			<div class="s4 col">
 				<ul id="nav-mobile" class="right hide-on-med-and-down">
 					<li><a href="#profile" class="nav-bar-text">Profile</a></li>
 				</ul>
@@ -46,11 +52,6 @@
 									<p><strong>User ID:</strong> ${publication.userId}</p>
 									<p><strong>Publication State:</strong> ${publication.publicationState}</p>
 									<p><strong>Location:</strong> ${publication.location}</p>
-								</div>
-								<div class="card-action">
-									<a href="${publicationUrl}">
-										<button class="btn">Lo quiero!</button>
-									</a>
 								</div>
 							</div>
 						</a>
