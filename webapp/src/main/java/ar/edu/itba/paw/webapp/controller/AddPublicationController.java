@@ -1,54 +1,69 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.models.Book;
 import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.models.utils.BookState;
+import ar.edu.itba.paw.models.utils.GenreWrapper;
 import ar.edu.itba.paw.models.utils.Genres;
 import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.webapp.form.PublicationForm;
+import ar.edu.itba.paw.interfaces.services.GenreService;
 import ar.edu.itba.paw.interfaces.services.SinglePublicationService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Locale;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 @Controller
 public class AddPublicationController {
-
-    private SinglePublicationService ps;
-
-    public AddPublicationController(final SinglePublicationService ps) {
-        this.ps = ps;
-    }
-
-    @GetMapping(path = "/createPublication")
-    public ModelAndView createPublicationForm(@ModelAttribute("publicationForm") PublicationForm publicationForm) {
+	
+	private SinglePublicationService ps;
+	@Autowired
+    private GenreService genreService;
+	
+	public AddPublicationController(final SinglePublicationService ps) {
+		this.ps = ps;
+	}
+	
+	@GetMapping(path = "/createPublication")
+	public ModelAndView createPublicationForm(@ModelAttribute("publicationForm") PublicationForm publicationForm) {
 		
-    	Locale locale = new Locale("es");
-        final ModelAndView mav = new ModelAndView("/add/createPublication");
-        
-        mav.addObject("bookStates", BookState.getNames(locale));
-        mav.addObject("genres", Genres.getNames(locale));
-        
-        return mav;
+		final ModelAndView mav = new ModelAndView("/add/createPublication");
+			
+		if (publicationForm.getAuthors().isEmpty()) {
+			
+			publicationForm.getAuthors().add("");
+		}
+		
+		mav.addObject("publicationForm", publicationForm);
+		mav.addObject("genres", List.of(Genres.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
+
+		return mav;
     }
-    
-    @PostMapping(path = "/createPublication")
-    public ModelAndView addPublication(@Valid @ModelAttribute("publicationForm") PublicationForm publicationForm, BindingResult errors) {
-    	
-        if (errors.hasErrors()) {
-            return createPublicationForm(publicationForm);
-        }
-        
-        final Publication publication = ps.createPublication(	publicationForm.getUsername(),
+	
+	@PostMapping(path = "/createPublication")
+	public ModelAndView addPublication(@Valid @ModelAttribute("publicationForm") PublicationForm publicationForm, BindingResult errors) {
+		
+		List<String> authors = publicationForm.getAuthors(); // [!] Debug
+		Genres genre = publicationForm.getGenre();			 // [!] Debug
+		BookState state = publicationForm.getBookState();	 // [!] Debug
+		System.out.println("Autores recibidos: " + authors); // [!] Debug
+		System.out.println("Genero: " + genre);				 // [!] Debug
+		System.out.println("Estado: " + state);				 // [!] Debug
+		
+		if (errors.hasErrors()) {
+			return createPublicationForm(publicationForm);
+		}
+		
+		final Publication publication = ps.createPublication(	publicationForm.getUsername(),
         														publicationForm.getMail(),
         														publicationForm.getIsbn(),
         														publicationForm.getTitle(),
@@ -63,8 +78,7 @@ public class AddPublicationController {
         														publicationForm.getImage(),
         														publicationForm.getLocation()
         													);
-        
-        
-        return new ModelAndView("redirect:/");
+
+		return new ModelAndView("redirect:/");
     }
 }
