@@ -28,8 +28,8 @@ public class AddPublicationController {
         if(errors.hasErrors()){
             return createPublicationForm(publicationForm);
         }
-        final Publication publication = ps.createPublication(publicationForm.getUsername(), publicationForm.getMail(), publicationForm.getIsbn(), publicationForm.getTitle(), publicationForm.getAuthor(), publicationForm.getEditorial(), publicationForm.getDescription(), Genres.ADVENTURE.getValue(), PublicationState.CURRENT.getValue(), publicationForm.getEdition(), publicationForm.getRating(), publicationForm.getImage(), publicationForm.getLocation());
-        return new ModelAndView("redirect:/" + publication.getPublicationId());
+        final Publication publication = ps.createPublication(publicationForm.getUsername(), publicationForm.getMail(), publicationForm.getIsbn(), publicationForm.getTitle(), publicationForm.getAuthors(), publicationForm.getEditorial(), publicationForm.getDescription(), Genres.ADVENTURE.getValue(), PublicationState.CURRENT.getValue(), publicationForm.getEdition(), publicationForm.getRating(), publicationForm.getImage(), publicationForm.getLocation());
+        return new ModelAndView("redirect:/");
     }
 
     @RequestMapping(path = "/singlePublication", method = RequestMethod.GET)

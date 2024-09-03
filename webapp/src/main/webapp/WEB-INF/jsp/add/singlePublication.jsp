@@ -43,10 +43,10 @@
 
     <div>
         <label>
-            <spring:message code="add.publication.author"/>
-            <form:input path="author" type="text"/>
+            <spring:message code="add.publication.authors"/>
+            <form:input path="authors" type="text"/>
         </label>
-        <form:errors path="author" element="p" cssStyle="color: red;"/>
+        <form:errors path="authors" element="p" cssStyle="color: red;"/>
     </div>
 
     <div>

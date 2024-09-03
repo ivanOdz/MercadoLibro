@@ -9,12 +9,12 @@ public class PublicationForm {
     private String username;
 
     @NotBlank
-    @Size(min = 15, max = 100)
+    @Size(min = 10, max = 100)
     @Pattern(regexp = "^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$")
     private String mail;
 
     @NotBlank
-    @Pattern(regexp = "^(97[89])-\\d{1,5}-\\d{1,7}-\\d{1,7}-\\d$\n")
+    @Pattern(regexp = "^(97[89])\\d{1,5}\\d{1,7}\\d{1,7}\\d$")
     private String isbn;
 
     @NotBlank
@@ -22,7 +22,7 @@ public class PublicationForm {
     private String title;
 
     @NotEmpty
-    private List<String> author;
+    private List<String> authors;
 
     @NotBlank
     @Size(min = 1, max = 100)
@@ -49,11 +49,11 @@ public class PublicationForm {
         return username;
     }
 
-    public @NotBlank @Size(min = 15, max = 100) @Pattern(regexp = "^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$") String getMail() {
+    public @NotBlank @Size(min = 10, max = 100) @Pattern(regexp = "^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$") String getMail() {
         return mail;
     }
 
-    public @NotBlank @Pattern(regexp = "^(97[89])-\\d{1,5}-\\d{1,7}-\\d{1,7}-\\d$\n") String getIsbn() {
+    public @NotBlank @Pattern(regexp = "^(97[89])\\d{1,5}\\d{1,7}\\d{1,7}\\d$") String getIsbn() {
         return isbn;
     }
 
@@ -61,8 +61,8 @@ public class PublicationForm {
         return title;
     }
 
-    public @NotEmpty List<String> getAuthor() {
-        return author;
+    public @NotEmpty List<String> getAuthors() {
+        return authors;
     }
 
     public @NotBlank @Size(min = 1, max = 100) String getEditorial() {
@@ -98,11 +98,11 @@ public class PublicationForm {
         this.username = username;
     }
 
-    public void setMail(@NotBlank @Size(min = 15, max = 100) @Pattern(regexp = "^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$") String mail) {
+    public void setMail(@NotBlank @Size(min = 10, max = 100) @Pattern(regexp = "^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$") String mail) {
         this.mail = mail;
     }
 
-    public void setIsbn(@NotBlank @Pattern(regexp = "^(97[89])-\\d{1,5}-\\d{1,7}-\\d{1,7}-\\d$\n") String isbn) {
+    public void setIsbn(@NotBlank @Pattern(regexp = "^(97[89])\\d{1,5}\\d{1,7}\\d{1,7}\\d$") String isbn) {
         this.isbn = isbn;
     }
 
@@ -110,8 +110,8 @@ public class PublicationForm {
         this.title = title;
     }
 
-    public void setAuthor(@NotEmpty List<String> author) {
-        this.author = author;
+    public void setAuthors(@NotEmpty List<String> authors) {
+        this.authors = authors;
     }
 
     public void setEditorial(@NotBlank @Size(min = 1, max = 100) String editorial) {
