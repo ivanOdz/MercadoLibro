@@ -11,51 +11,56 @@
 
 <body>
 	<nav class="background-nav">
-		<div class="nav-wrapper">
-			<a href="${pageContext.request.contextPath}/" class="brand-logo brown-text darken-4-text">BookSwap</a>
-			<div class="right inline-form">
-				<form class="input-field search-form" action="${pageContext.request.contextPath}/" method="get">
-					<div class="search-container">
-						<input type="text" id="search" name="search" class="search-input">
-					</div>
-					<button class="btn-flat search-button"><i class="material-icons tiny">search</i></button>
-				</form>
-
-				<ul id="nav-mobile" class="right hide-on-med-and-down">
-					<li><a href="#profile" class="nav-bar-text">Profile</a></li>
-				</ul>
+		<div style="margin-top: 3vh;" class="row">
+			<div class="col s4 align-content">
+				<a href="${pageContext.request.contextPath}/" class="brand-logo brown-text darken-4-text s4">BookSwap</a>
+			</div>
+			<div class="s4 col">
+				<div class="row">
+					<form class="col s12" action="${pageContext.request.contextPath}/" method="get">
+						<div class="row inline-form">
+							<input type="text" id="search" name="search">
+							<i style="color: black" class="material-icons tiny suffix search-button">search</i>
+						</div>
+					</form>
+				</div>
 			</div>
 		</div>
+
+			<div style="height: 100%" class="s4 col">
+
+			</div>
 	</nav>
 	<!-- Contenido de la página-->
-	<div class="row">
-		<div class="col s12 background-primary">
-			<div class="main-container">
-				<c:forEach var="publication" items="${publications.publications}">
-					<div class="col s12 m6 l3"> <!-- Columna para cuadrícula -->
-						<a href="<c:url value='submitmail'>
-                    <c:param name='publicationId' value='${publication.publicationId}'/>
-                    </c:url>" class="card-link">
-							<div class="card">
-								<div class="card-image waves-effect waves-block waves-light">
-									<img class="activator custom-image" src="images/book.jpg" alt="book">
-								</div>
-								<div class="card-content">
-									<h5>Publication ID: ${publication.publicationId}</h5>
-									<p><strong>Book ID:</strong> ${publication.bookId}</p>
-									<p><strong>User ID:</strong> ${publication.userId}</p>
-									<p><strong>Publication State:</strong> ${publication.publicationState}</p>
-									<p><strong>Location:</strong> ${publication.location}</p>
-								</div>
-								<div class="card-action">
-									<a href="${publicationUrl}">
-										<button class="btn">Lo quiero!</button>
-									</a>
-								</div>
-							</div>
-						</a>
+	<div class="background-primary">
+		<div class="row main-background ">
+			<div class="col s12">
+				<div class="main-container">
+					<div class="row">
+						<h5 class="text">Publicaciones disponibles</h5>
+						<h8 class="text">Seleccione el libro con el que desea intercambian</h8>
 					</div>
-				</c:forEach>
+					<c:forEach var="publication" items="${publications.publications}">
+						<div class="col s12 m6 l3">
+							<a href="<c:url value='submitmail'>
+										<c:param name='publicationId' value='${publication.publicationId}'/>
+										</c:url>" class="card-link">
+								<div class="card hoverable">
+									<div class="card-image waves-effect waves-block waves-light">
+										<img class="activator custom-image" src="images/book.jpg" alt="book">
+									</div>
+									<div class="card-content">
+										<h5 class="card-text">Publication ID: ${publication.publicationId}</h5>
+										<p class="card-text"><strong>Book ID:</strong> ${publication.bookId}</p>
+										<p class="card-text"><strong>User ID:</strong> ${publication.userId}</p>
+										<p class="card-text"><strong>Publication State:</strong> ${publication.publicationState}</p>
+										<p class="card-text"><strong>Location:</strong> ${publication.location}</p>
+									</div>
+								</div>
+							</a>
+						</div>
+					</c:forEach>
+				</div>
 			</div>
 		</div>
 	</div>
