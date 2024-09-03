@@ -10,65 +10,65 @@
 </head>
 
 <body>
-	<nav style="background-color: #F7E7DC">
-		<div class="container">
-			<a href="#" class="brand-logo">BookSwap</a>
-			<ul id="nav-mobile" class="right hide-on-med-and-down">
-				<li><a href="#profile" class="nav-bar-text">Profile</a></li>
-			</ul>
+	<nav class="background-nav">
+		<div class="nav-wrapper">
+			<a href="${pageContext.request.contextPath}/" class="brand-logo brown-text darken-4-text">BookSwap</a>
+			<div class="right inline-form">
+				<form class="input-field search-form" action="${pageContext.request.contextPath}/" method="get">
+					<div class="search-container">
+						<input type="text" id="search" name="search" class="search-input">
+					</div>
+					<button class="btn-flat search-button"><i class="material-icons tiny">search</i></button>
+				</form>
+
+				<ul id="nav-mobile" class="right hide-on-med-and-down">
+					<li><a href="#profile" class="nav-bar-text">Profile</a></li>
+				</ul>
+			</div>
 		</div>
 	</nav>
-<%--	<nav style="background-color: #EBE3D5;">--%>
-<%--		<div class="nav-bar">--%>
-<%--			<a href="#" class="brand-logo">BookExchange</a>--%>
-<%--			<form action="/" method="get">--%>
-<%--				<input type="text" id="search" name="search">--%>
-<%--				<button type="submit">Buscar</button>--%>
-<%--			</form>--%>
-<%--			<ul id="nav-mobile" class="right hide-on-med-and-down">--%>
-<%--			</ul>--%>
-<%--		</div>--%>
-<%--	</nav>--%>
-<div class="row">
-	<div class="col s3 background-primary">
-		<p>hole</p>
+	<!-- Contenido de la página-->
+	<div class="row">
+		<div class="col s12 background-primary">
+			<div class="main-container">
+				<c:forEach var="publication" items="${publications.publications}">
+					<div class="col s12 m6 l3"> <!-- Columna para cuadrícula -->
+						<a href="<c:url value='submitmail'>
+                    <c:param name='publicationId' value='${publication.publicationId}'/>
+                    </c:url>" class="card-link">
+							<div class="card">
+								<div class="card-image waves-effect waves-block waves-light">
+									<img class="activator custom-image" src="images/book.jpg" alt="book">
+								</div>
+								<div class="card-content">
+									<h5>Publication ID: ${publication.publicationId}</h5>
+									<p><strong>Book ID:</strong> ${publication.bookId}</p>
+									<p><strong>User ID:</strong> ${publication.userId}</p>
+									<p><strong>Publication State:</strong> ${publication.publicationState}</p>
+									<p><strong>Location:</strong> ${publication.location}</p>
+								</div>
+								<div class="card-action">
+									<a href="${publicationUrl}">
+										<button class="btn">Lo quiero!</button>
+									</a>
+								</div>
+							</div>
+						</a>
+					</div>
+				</c:forEach>
+			</div>
+		</div>
 	</div>
 
-	<div class="col s9 background-secondary">
-		<!-- Page content with #EBE3D5 -->
-		<p>holi</p>
-	</div>
-
-</div>
 
 </body>
 
 </html>
 
 
-
-<%--<h1>Publications</h1>--%>
-
-
-
 <%--<c:if test="${not empty publications.publications}">--%>
 <%--	<div>--%>
-<%--		<c:forEach var="publication" items="${publications.publications}">--%>
-<%--			<div style="border: 1px solid #000; padding: 10px; margin: 10px; display: inline-block; width: 200px; vertical-align: top;">--%>
-<%--				<h2>Publication ID: ${publication.publicationId}</h2>--%>
-<%--				<p><strong>Book ID:</strong> ${publication.bookId}</p>--%>
-<%--				<p><strong>User ID:</strong> ${publication.userId}</p>--%>
-<%--				<p><strong>Publication State:</strong> ${publication.publicationState}</p>--%>
-<%--				<p><strong>Location:</strong> ${publication.location}</p>--%>
 
-<%--				<c:url var="publicationUrl" value="submitmail">--%>
-<%--				<c:param name="publicationId" value="${publication.publicationId}" />--%>
-<%--				</c:url>--%>
-<%--				<a href="${publicationUrl}">--%>
-<%--					<button>Lo quiero!</button>--%>
-<%--				</a>--%>
-<%--			</div>--%>
-<%--		</c:forEach>--%>
 <%--	</div>--%>
 <%--</c:if>--%>
 
