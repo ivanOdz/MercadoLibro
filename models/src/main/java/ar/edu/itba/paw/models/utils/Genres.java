@@ -36,7 +36,8 @@ public enum Genres {
 	SCIENCE(27, "Science", "Ciencia"),
 	TRAVEL(28, "Travel", "Viajes"),
 	TRUE_CRIME(29, "True Crime", "Crimen Verdadero"),
-	HISTORICAL_NON_FICTION(30, "Historical Non-Fiction", "No Ficción Histórica");
+	HISTORICAL_NON_FICTION(30, "Historical Non-Fiction", "No Ficción Histórica"),
+	OTHER(31, "Other", "Otro");
 	
 	private final int value;
 	private final String englishName;

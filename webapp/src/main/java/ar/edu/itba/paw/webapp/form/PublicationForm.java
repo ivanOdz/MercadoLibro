@@ -1,6 +1,10 @@
 package ar.edu.itba.paw.webapp.form;
 
 import javax.validation.constraints.*;
+
+import ar.edu.itba.paw.models.utils.BookState;
+import ar.edu.itba.paw.models.utils.Genres;
+
 import java.util.List;
 
 public class PublicationForm {
@@ -20,10 +24,10 @@ public class PublicationForm {
     @NotBlank
     @Size(min = 1, max = 255)
     private String title;
-
+    
     @NotEmpty
     private List<String> authors;
-
+    
     @NotBlank
     @Size(min = 1, max = 100)
     private String editorial;
@@ -31,6 +35,12 @@ public class PublicationForm {
     @Size(min = 10, max = 2000)
     private String description;
 
+    @NotNull
+    private Genres genre;
+    
+    @NotNull
+    private BookState bookState;
+    
     @Min(1)
     @Max(99)
     private int edition;
@@ -72,7 +82,17 @@ public class PublicationForm {
     public @Size(min = 10, max = 2000) String getDescription() {
         return description;
     }
-
+    
+    @NotNull
+    public Genres getGenre() {
+    	return genre;
+    }
+    
+    @NotNull
+    public BookState getBookState() {
+    	return bookState;
+    }
+    
     @Min(1)
     @Max(99)
     public int getEdition() {
@@ -85,7 +105,7 @@ public class PublicationForm {
         return rating;
     }
 
-    @NotNull
+
     public long getImage() {
         return image;
     }
@@ -121,7 +141,15 @@ public class PublicationForm {
     public void setDescription(@Size(min = 10, max = 2000) String description) {
         this.description = description;
     }
-
+    
+    public void setGenre(@NotNull Genres genre) {
+    	this.genre = genre;
+    }
+    
+    public void serBookSate(@NotNull BookState bookState) {
+    	this.bookState = bookState;
+    }
+    
     public void setEdition(@Min(1) @Max(99) int edition) {
         this.edition = edition;
     }
