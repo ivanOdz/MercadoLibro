@@ -4,7 +4,7 @@ import ar.edu.itba.paw.interfaces.persistence.BookDao;
 import ar.edu.itba.paw.models.Book;
 import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.persistence.SinglePublicationDao;
+import ar.edu.itba.paw.interfaces.persistence.SinglePublicationDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.SinglePublicationService;
 
@@ -26,10 +26,10 @@ public class SinglePublicationServiceImpl implements SinglePublicationService {
     }
 
     @Override
-    public Publication createPublication(String username, String mail, String isbn, String title, List<String> author, String editorial, String description, int genre, int publicationState, int edition, int rating, long image, String location) {
+    public Publication createPublication(String username, String mail, String isbn, String title, List<String> authors, String editorial, String description, int genre, int publicationState, int edition, int rating, long image, String location) {
         User user = userDao.createUser(username, mail);
 
-        Book book = bookDao.createBook(isbn, title, author, editorial, description, genre, publicationState, edition, rating, image, user.getId());
+        Book book = bookDao.createBook(isbn, title, authors, editorial, description, genre, publicationState, edition, rating, image, user.getId());
 
         return publicationDao.createPublication(book.getBookId(), user.getId(), location);
     }

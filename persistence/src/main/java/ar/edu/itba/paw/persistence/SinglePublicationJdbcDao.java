@@ -4,8 +4,10 @@ import ar.edu.itba.paw.models.Publication;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import ar.edu.itba.paw.interfaces.persistence.SinglePublicationDao;
 
 import javax.sql.DataSource;
+import java.util.HashMap;
 import java.util.Map;
 
 @Repository
@@ -23,7 +25,7 @@ public class SinglePublicationJdbcDao implements SinglePublicationDao {
 
     @Override
     public Publication createPublication(long bookId, long userId, String location) {
-        final Map<String, Object> publicationData = Map.of();
+        final Map<String, Object> publicationData = new HashMap<>();
         publicationData.put("bookId", bookId);
         publicationData.put("userId", userId);
         publicationData.put("location", location);

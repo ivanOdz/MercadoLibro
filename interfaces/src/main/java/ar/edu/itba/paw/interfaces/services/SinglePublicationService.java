@@ -8,6 +8,6 @@ import java.util.List;
 @Service
 public interface SinglePublicationService {
 
-    Publication createPublication(String username, String mail, String isbn, String title, List<String> author, String editorial, String description, int genre, int publicationState, int edition, int rating, long image, String location);
+    Publication createPublication(String username, String mail, String isbn, String title, List<String> authors, String editorial, String description, int genre, int publicationState, int edition, int rating, long image, String location);
 
 }
