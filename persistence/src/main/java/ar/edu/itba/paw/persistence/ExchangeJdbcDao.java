@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.Types;
-import java.util.Map;
 import java.util.Optional;
 
 @Repository
@@ -20,8 +19,6 @@ public class ExchangeJdbcDao implements ExchangeDao {
     private final JdbcTemplate jdbcTemplate;
     private final PublicationsJdbcDao publicationsJdbcDao;
     private final BookJdbcDao bookJdbcDao;
-    private final SimpleJdbcInsert jdbcInsert;
-
 
     private static final RowMapper<Exchange> ROWMAPPER =
             (rs, rowNum) -> new Exchange(rs.getLong("exchangeId"), rs.getLong("offerer"), rs.getLong("requester"), rs.getInt("exchangeState"), rs.getLong("acceptCode"));
@@ -31,7 +28,6 @@ public class ExchangeJdbcDao implements ExchangeDao {
         jdbcTemplate = new JdbcTemplate(ds);
         this.publicationsJdbcDao = publicationsJdbcDao;
         this.bookJdbcDao = bookJdbcDao;
-        jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).usingGeneratedKeyColumns("exchangeId").withTableName("exchanges");
     }
 
     @Override
