@@ -1,10 +1,5 @@
 package ar.edu.itba.paw.models.utils;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 public enum Genres {
 
 	FICTION(1),

@@ -1,10 +1,5 @@
 package ar.edu.itba.paw.models.utils;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 public enum BookState {
 	
 	NEW(1),
@@ -31,8 +26,8 @@ public enum BookState {
 		return this.value;
 	}
 	
-	public String getDisplayName(Locale locale, MessageSource messageSource) {
+	public String getKey() {
 		
-		return messageSource.getMessage("bookState." + name(), null, locale);
+		return "genre." + name();
 	}
 }

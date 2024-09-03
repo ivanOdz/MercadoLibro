@@ -82,137 +82,139 @@
 
 	<c:url var="postUrl" value="/createPublication"/>
 
-
-	
-	<form:form class="form-container" modelAttribute="publicationForm" action="${postUrl}" method="post">
-	
-		<h1 class="label">Publicar un nuevo libro</h1>
+	<div>
 		
-	    <div>
-	    <label class="form-group">
-	        <spring:message code="add.publication.username"/>
-	        <form:input path="username" type="text" class="form-input"/>
-	    </label>
-	        <form:errors path="username" element="p" cssStyle="color: red;"/>
-	    </div>
+		<form:form class="form-container" modelAttribute="publicationForm" action="${postUrl}" method="post">
+		
+			<h1 class="label">Publicar un nuevo libro</h1>
+			
+		    <div>
+		    <label class="form-group">
+		        <spring:message code="add.publication.username"/>
+		        <form:input path="username" type="text" class="form-input"/>
+		    </label>
+		        <form:errors path="username" element="p" cssStyle="color: red;"/>
+		    </div>
+		
+		    <div>
+		        <label class="form-group">
+		            <spring:message code="add.publication.mail"/>
+		            <form:input path="mail" type="text" class="form-input"/>
+		        </label>
+		        <form:errors path="mail" element="p" cssStyle="color: red;"/>
+		    </div>
+		
+		    <div>
+		        <label class="form-group">
+		            <spring:message code="add.publication.isbn"/>
+		            <form:input path="isbn" type="text" class="form-input"/>
+		        </label>
+		        <form:errors path="isbn" element="p" cssStyle="color: red;"/>
+		    </div>
+		
+		    <div>
+		        <label class="form-group">
+		            <spring:message code="add.publication.title"/>
+		            <form:input path="title" type="text" class="form-input"/>
+		        </label>
+		        <form:errors path="title" element="p" cssStyle="color: red;"/>
+		    </div>
+		
+		    <div id="author-container">
+		    
+		        <label class="form-group">
+		            <spring:message code="add.publication.authors"/>
+		        </label>
+		        
+	            <c:forEach var="author" items="${authors}" varStatus="status">
+		            <div>
+		            	<input type="text" name="authors[${status.index}]" value="${author}" class="form-input"/>
+		            	<c:if test="${status.index > 1}">
+		            		<button type="button" onclick="removeAuthorField(this)">Eliminar</button>
+		            	</c:if>
+		            </div>
+	            </c:forEach>
+		        
+		    </div>
+		    
+		    <div class="form-group">
+	       		<button type="button" onclick="addAuthorField()">Añadir Autor</button>
+	    	</div>
+	    	
+		    <div>
+		    	<form:label path="genre">Género:</form:label>
+		    	<form:select class="form-group" path="genre">
+		    		<c:forEach var="genreWrapper" items="${genres}">
+		    			<form:option value="${genreWrapper.genre}" label="${genreWrapper.displayName}" />
+		    		</c:forEach>
+		    	</form:select>
+		    </div>
+		    
+		    <div>
+		    	<form:label path="genre">Estado del Libro:</form:label>
+		    	<form:select class="form-group" path="bookState">
+		    		<c:forEach var="bookStateWrapper" items="${bookStates}">
+		    			<form:option value="${bookStateWrapper.bookState}" label="${bookStateWrapper.displayName}" />
+		    		</c:forEach>
+		    	</form:select>
+		    </div>
+		    
+		    <div>
+		        <label class="form-group">
+		            <spring:message code="add.publication.editorial"/>
+		            <form:input path="editorial" type="text" class="form-input"/>
+		        </label>
+		        <form:errors path="editorial" element="p" cssStyle="color: red;"/>
+		    </div>
+		
+		    <div>
+		        <label class="form-group">
+		            <spring:message code="add.publication.description"/>
+		            <form:input path="description" type="text" class="form-input"/>
+		        </label>
+		        <form:errors path="description" element="p" cssStyle="color: red;"/>
+		    </div>
+		
+		    <div>
+		        <label class="form-group">
+		            <spring:message code="add.publication.edition"/>
+		            <form:input path="edition" type="text" class="form-input"/>
+		        </label>
+		        <form:errors path="edition" element="p" cssStyle="color: red;"/>
+		    </div>
+		
+		    <div>
+		        <label class="form-group">
+		            <spring:message code="add.publication.rating"/>
+		            <form:input path="rating" type="text" class="form-input"/>
+		        </label>
+		        <form:errors path="rating" element="p" cssStyle="color: red;"/>
+		    </div>
+		
+		    <div>
+		        <label  class="form-group">
+		            <spring:message code="add.publication.image"/>
+		            <form:input path="image" type="text" class="form-input"/>
+		        </label>
+		        <form:errors path="image" element="p" cssStyle="color: red;"/>
+		    </div>
+		
+		    <div>
+		        <label class="form-group">
+		            <spring:message code="add.publication.location"/>
+		            <form:input path="location" type="text" class="form-input"/>
+		        </label>
+		        <form:errors path="location" element="p" cssStyle="color: red;"/>
+		    </div>
+		    
+			<div  class="form-group">
+				<button type="submit">Publicar</button>
+			</div>
+		
+		</form:form>
+		
+	</div>
 	
-	    <div>
-	        <label class="form-group">
-	            <spring:message code="add.publication.mail"/>
-	            <form:input path="mail" type="text" class="form-input"/>
-	        </label>
-	        <form:errors path="mail" element="p" cssStyle="color: red;"/>
-	    </div>
-	
-	    <div>
-	        <label class="form-group">
-	            <spring:message code="add.publication.isbn"/>
-	            <form:input path="isbn" type="text" class="form-input"/>
-	        </label>
-	        <form:errors path="isbn" element="p" cssStyle="color: red;"/>
-	    </div>
-	
-	    <div>
-	        <label class="form-group">
-	            <spring:message code="add.publication.title"/>
-	            <form:input path="title" type="text" class="form-input"/>
-	        </label>
-	        <form:errors path="title" element="p" cssStyle="color: red;"/>
-	    </div>
-	
-	    <div id="author-container">
-	    
-	        <label class="form-group">
-	            <spring:message code="add.publication.authors"/>
-	        </label>
-	        
-            <c:forEach var="author" items="${authors}" varStatus="status">
-	            <div>
-	            	<input type="text" name="authors[${status.index}]" value="${author}" class="form-input"/>
-	            	<c:if test="${status.index > 1}">
-	            		<button type="button" onclick="removeAuthorField(this)">Eliminar</button>
-	            	</c:if>
-	            </div>
-            </c:forEach>
-	        
-	    </div>
-	    
-	    <div class="form-group">
-       		<button type="button" onclick="addAuthorField()">Añadir Autor</button>
-    	</div>
-    	
-	    <div>
-	    	<form:label path="genre">Género:</form:label>
-	    	<form:select class="form-group" path="genre">
-	    		<c:forEach var="genreWrapper" items="${genres}">
-	    			<form:option value="${genreWrapper.genre}" label="${genreWrapper.displayName}" />
-	    		</c:forEach>
-	    	</form:select>
-	    </div>
-	    <br>
-	   	<div>
-	    	<form:label class="form-group" path="bookState">Estado del libro:</form:label>
-	    		<form:select path="bookState">
-	    		<form:options items="${bookStates}" />
-	    	</form:select>
-	    </div>
-	    <br>
-	    <div>
-	        <label class="form-group">
-	            <spring:message code="add.publication.editorial"/>
-	            <form:input path="editorial" type="text" class="form-input"/>
-	        </label>
-	        <form:errors path="editorial" element="p" cssStyle="color: red;"/>
-	    </div>
-	
-	    <div>
-	        <label class="form-group">
-	            <spring:message code="add.publication.description"/>
-	            <form:input path="description" type="text" class="form-input"/>
-	        </label>
-	        <form:errors path="description" element="p" cssStyle="color: red;"/>
-	    </div>
-	
-	    <div>
-	        <label class="form-group">
-	            <spring:message code="add.publication.edition"/>
-	            <form:input path="edition" type="text" class="form-input"/>
-	        </label>
-	        <form:errors path="edition" element="p" cssStyle="color: red;"/>
-	    </div>
-	
-	    <div>
-	        <label class="form-group">
-	            <spring:message code="add.publication.rating"/>
-	            <form:input path="rating" type="text" class="form-input"/>
-	        </label>
-	        <form:errors path="rating" element="p" cssStyle="color: red;"/>
-	    </div>
-	
-	    <div>
-	        <label  class="form-group">
-	            <spring:message code="add.publication.image"/>
-	            <form:input path="image" type="text" class="form-input"/>
-	        </label>
-	        <form:errors path="image" element="p" cssStyle="color: red;"/>
-	    </div>
-	
-	    <div>
-	        <label class="form-group">
-	            <spring:message code="add.publication.location"/>
-	            <form:input path="location" type="text" class="form-input"/>
-	        </label>
-	        <form:errors path="location" element="p" cssStyle="color: red;"/>
-	    </div>
-	    
-	    <br>
-	    
-		<div  class="form-group">
-			<button type="submit">Publicar</button>
-		</div>
-	
-	</form:form>
-
 </body>
 
 </html>

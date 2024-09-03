@@ -2,10 +2,12 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.models.utils.BookState;
+import ar.edu.itba.paw.models.utils.BookStateWrapper;
 import ar.edu.itba.paw.models.utils.GenreWrapper;
 import ar.edu.itba.paw.models.utils.Genres;
 import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.webapp.form.PublicationForm;
+import ar.edu.itba.paw.interfaces.services.BookStateService;
 import ar.edu.itba.paw.interfaces.services.GenreService;
 import ar.edu.itba.paw.interfaces.services.SinglePublicationService;
 
@@ -28,6 +30,8 @@ public class AddPublicationController {
 	private SinglePublicationService ps;
 	@Autowired
     private GenreService genreService;
+	@Autowired
+	private BookStateService bookStateService;
 	
 	public AddPublicationController(final SinglePublicationService ps) {
 		this.ps = ps;
@@ -45,6 +49,7 @@ public class AddPublicationController {
 		
 		mav.addObject("publicationForm", publicationForm);
 		mav.addObject("genres", List.of(Genres.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
+		mav.addObject("bookStates", List.of(BookState.values()).stream().map(bookStatus -> new BookStateWrapper(bookStatus, bookStateService.getBookStateDisplayName(bookStatus))).collect(Collectors.toList()));
 
 		return mav;
     }
@@ -55,7 +60,7 @@ public class AddPublicationController {
 		List<String> authors = publicationForm.getAuthors(); // [!] Debug
 		Genres genre = publicationForm.getGenre();			 // [!] Debug
 		BookState state = publicationForm.getBookState();	 // [!] Debug
-		System.out.println("Autores recibidos: " + authors); // [!] Debug
+		System.out.println("Autores: " + authors); 			 // [!] Debug
 		System.out.println("Genero: " + genre);				 // [!] Debug
 		System.out.println("Estado: " + state);				 // [!] Debug
 		
