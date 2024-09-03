@@ -57,26 +57,20 @@ public class ExchangeJdbcDao implements ExchangeDao {
                 new int[]{ Types.BIGINT }, ROWMAPPER).stream().findFirst();
 
         if(ex.isEmpty()) {
-            // Accept code is invalid, redirect to invalid code view
             // TODO: mandar a una pagina que diga accept code invalido
             return ResponseState.INVALID;
         }
         if(ex.get().getState() == ExchangeState.REJECTED.getValue()){
-            // It had been already rejected
             return ResponseState.REJECTED;
         }
         if(ex.get().getState() == ExchangeState.ACCEPTED.getValue()){
-            // It had been already acepted
             return ResponseState.ACCEPTED;
         }
         if(!state) {
-            // Reject, send rejection email and redirect.
             jdbcTemplate.update("UPDATE exchanges SET exchangeState = ? WHERE acceptCode = ?", ExchangeState.REJECTED.getValue(), acceptCode);
             return ResponseState.REJECTED;
         }
 
-        // In case state = true and a valid accept code:
-        // Exchange ownership of books (In BookDao)
         long pubId1 = ex.get().getOfferer();
         long pubId2 = ex.get().getRequester();
         long b1 = publicationsJdbcDao.getPublicationById(pubId1).get().getBookId();
@@ -84,11 +78,8 @@ public class ExchangeJdbcDao implements ExchangeDao {
 
         bookJdbcDao.exchangeOwnership(b1, b2);
 
-        // Update exchangeState
         jdbcTemplate.update("UPDATE exchanges SET exchangeState = ? WHERE acceptCode = ?", ExchangeState.ACCEPTED.getValue(), acceptCode);
         return ResponseState.ACCEPTED;
 
-        //final Map<String, String> exchangeData = Map.of("offerer", userId1, "requester", userId2,"exchangeState",,"acceptCode",,);
-        //final Number gerenatedId = jdbcInsert.executeAndReturnKey(exchangeData);
     }
 }

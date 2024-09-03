@@ -4,7 +4,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title><fmt:message key="exchange.rejected"/></title>
+    <title><fmt:message key="exchange.invalid"/></title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/WEB-INF/css/exchange.css" rel="stylesheet">
@@ -12,7 +12,7 @@
 <body>
 <div class="icon-container">
     <i class="material-icons large icon">cancel</i> <!-- Ícono de rechazo -->
-    <div class="message"><fmt:message key="exchange.rejected"/></div>
+    <div class="message"><fmt:message key="exchange.invalid"/></div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
