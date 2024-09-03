@@ -1,8 +1,10 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.ExchangeDao;
+import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.ExchangeService;
 import ar.edu.itba.paw.models.Exchange;
+import ar.edu.itba.paw.models.utils.ResponseState;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -33,5 +35,18 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Override
     public long getId(long acceptCode) {
         return exchangeDao.getIdByAcceptCode(acceptCode);
+    }
+
+    @Override
+    public String exchange(long acceptCode, boolean state) {
+        switch (exchangeDao.exchange(acceptCode, state)){
+            case ResponseState.ACCEPTED: {
+                return "exchange/accepted";
+            }
+            case ResponseState.REJECTED: {
+                return "exchange/rejected";
+            }
+            default: return "exchange/invalid";
+        }
     }
 }

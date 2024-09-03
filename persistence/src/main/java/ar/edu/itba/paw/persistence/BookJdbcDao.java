@@ -70,4 +70,12 @@ public class BookJdbcDao implements BookDao {
                 new int[]{ Types.BIGINT }, ROWMAPPERBOOKS).stream().findFirst();
     }
 
+    @Override
+    public void exchangeOwnership(long b1, long b2) {
+        Book book1 = getBookById(b1).get();
+        Book book2 = getBookById(b2).get();
+
+        jdbcTemplate.update("UPDATE books SET owner = ? WHERE bookId = ?", book2.getUserId(), book1.getBookId());
+        jdbcTemplate.update("UPDATE books SET owner = ? WHERE bookId = ?", book1.getUserId(), book2.getBookId());
+    }
 }

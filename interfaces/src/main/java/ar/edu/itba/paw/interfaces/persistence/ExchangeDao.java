@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
 import ar.edu.itba.paw.models.Exchange;
+import ar.edu.itba.paw.models.utils.ResponseState;
 
 import java.util.Optional;
 
@@ -11,4 +12,5 @@ public interface ExchangeDao {
 
     long getIdByAcceptCode(long acceptCode);
 
+    ResponseState exchange(long acceptCode, boolean state);
 }

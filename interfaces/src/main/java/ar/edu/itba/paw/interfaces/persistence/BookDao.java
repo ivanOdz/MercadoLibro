@@ -13,4 +13,5 @@ public interface BookDao {
     Book createBook(String isbn, String title, List<String> authors, String editorial, String description, Genres genre, BookState bookState, PublicationState publicationState, int edition, int rating, long image, long userId);
 
     Optional<Book> getBookById(long publicationId);
+    void exchangeOwnership(long b1, long b2);
 }

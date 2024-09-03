@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.models.User;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,10 +24,9 @@ public class UserJdbcDaoTest {
     private static final String USERNAME = "username";
     private static final String MAIL = "mail";
 
-    //@Autowired
     private UserJdbcDao userDao;
 
-    //@Autowired
+//    @Autowired
     private DataSource ds;
 
     private JdbcTemplate jdbcTemplate;

@@ -9,4 +9,7 @@ import java.util.Map;
 public interface EmailService {
     @Async
     void sendEmail(String receiver, Map<String, Object> variables, String templatePath, String subject);
+
+    @Async
+    void sendExchangeEmail(final String receiver, Map<String, Object> variables, boolean state);
 }

@@ -1,13 +1,14 @@
 package ar.edu.itba.paw.models.utils;
 
-public enum ExchangeState {
-    PENDING(0),
+
+public enum ResponseState {
+    REJECTED(0),
     ACCEPTED(1),
-    REJECTED(2);
+    INVALID(2);
 
     private final int value;
 
-    ExchangeState(int value) {
+    ResponseState(int value) {
         this.value = value;
     }
 

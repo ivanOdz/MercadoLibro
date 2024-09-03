@@ -1,0 +1,84 @@
+.background-primary {
+    background-color: #f8f8e2;
+}
+.background-secondary {
+    background-color: #EBE3D5;
+}
+.nav-bar-text {
+    color: #333333;
+    padding: 0 10vh 0 10vh;
+}
+.brand-logo {
+    color: #333333;
+    margin: 0 0 0 10vh;
+}
+.background-nav {
+    background-color: #F7E7DC;
+    height: 12vh;
+}
+.nav-bar-container {
+    display: inline-flex;
+}
+.inline-form {
+    display: flex;
+    align-items: center;
+    height: 70%;
+    margin: 2vh 0 2vh 0;
+}
+
+
+.search-form {
+    display: flex;
+    align-items: center;
+    background-color: white; /* Fondo blanco */
+    border: 1px solid #ccc; /* Borde gris claro */
+    border-radius: 2vh; /* Bordes redondeados */
+    padding: 5px 10px; /* Espaciado interno */
+}
+
+.search-input::placeholder {
+    color: #999; /* Color del placeholder */
+}
+
+.search-form button {
+    margin-left: 10px; /* Espacio entre el campo de búsqueda y el botón */
+    border-radius: 1vh; /* Bordes redondeados del botón */
+}
+
+.search-container {
+    flex: 1;
+}
+
+.search-button {
+    align-items: flex-start;
+    justify-content: flex-start;
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    height: 100%;
+    cursor: pointer;
+
+
+}
+
+.search-button i {
+    color: #000; /* Cambia el color del icono si es necesario */
+    font-size: 12px; /* Tamaño del ícono */
+}
+
+.search-button i.material-icons {
+    font-size: 24px; /* Tamaño del ícono */
+    line-height: 2; /* Ajuste del alto de línea para centrar mejor */
+    color: #000; /* Color del ícono */
+}
+
+.main-container {
+    margin: 10vh;
+
+}
+
+.custom-image {
+    width: 50px; /* Ajusta el ancho deseado */
+    height: 50px; /* Mantiene la proporción de la imagen */
+    object-fit: cover; /* Asegura que la imagen se recorte si es necesario */
+}
