@@ -4,6 +4,9 @@ import ar.edu.itba.paw.interfaces.persistence.BookDao;
 import ar.edu.itba.paw.models.Book;
 import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.utils.BookState;
+import ar.edu.itba.paw.models.utils.Genres;
+import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.interfaces.persistence.SinglePublicationDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.SinglePublicationService;
@@ -20,16 +23,18 @@ public class SinglePublicationServiceImpl implements SinglePublicationService {
     private final BookDao bookDao;
 
     public SinglePublicationServiceImpl(SinglePublicationDao publicationDao, UserDao userDao, BookDao bookDao) {
+    	
         this.publicationDao = publicationDao;
         this.userDao = userDao;
         this.bookDao = bookDao;
     }
 
     @Override
-    public Publication createPublication(String username, String mail, String isbn, String title, List<String> authors, String editorial, String description, int genre, int publicationState, int edition, int rating, long image, String location) {
-        User user = userDao.createUser(username, mail);
+    public Publication createPublication(String username, String mail, String isbn, String title, List<String> authors, String editorial, String description, Genres genre, BookState bookState, PublicationState publicationState, int edition, int rating, long image, String location) {
+        
+    	User user = userDao.createUser(username, mail);
 
-        Book book = bookDao.createBook(isbn, title, authors, editorial, description, genre, publicationState, edition, rating, image, user.getId());
+        Book book = bookDao.createBook(isbn, title, authors, editorial, description, genre, bookState, publicationState, edition, rating, image, user.getId());
 
         return publicationDao.createPublication(book.getBookId(), user.getId(), location);
     }

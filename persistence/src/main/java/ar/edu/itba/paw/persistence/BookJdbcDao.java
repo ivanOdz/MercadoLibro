@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.BookDao;
 import ar.edu.itba.paw.models.Book;
+import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.models.utils.Genres;
 import ar.edu.itba.paw.models.utils.PublicationState;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,37 +21,39 @@ public class BookJdbcDao implements BookDao {
     private final SimpleJdbcInsert jdbcInsert;
 
     private static final RowMapper<Book> ROWMAPPERBOOKS = (rs, rowNum) -> new Book(
+    		
             rs.getLong("bookId"),
             rs.getString("isbn"),
             rs.getString("title"),
-            Arrays.asList((String[]) rs.getArray("authors").getArray()),  // Convertir el array SQL a una lista de Strings
+            Arrays.asList((String[]) rs.getArray("authors").getArray()),	// Convertir el array SQL a una lista de Strings
             rs.getString("editorial"),
             rs.getString("description"),
-            (rs.getInt("genre")),
-            rs.getInt("publicationState"), // Mapea el valor entero al enum PublicationState
+            Genres.fromInt(rs.getInt("genre")),
+            BookState.fromInt(rs.getInt("bookState")),
+            PublicationState.fromInt(rs.getInt("publicationState")),		// Mapea el valor entero al enum PublicationState
             rs.getInt("edition"),
             rs.getInt("rating"),
             rs.getLong("image"),
             rs.getLong("owner")
     );
-
-
+    
     public BookJdbcDao(final DataSource ds) {
-        jdbcTemplate = new JdbcTemplate(ds);
-        jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .usingGeneratedKeyColumns("bookid")
-                .withTableName("books");
+       
+    	jdbcTemplate = new JdbcTemplate(ds);
+        jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).usingGeneratedKeyColumns("bookid").withTableName("books");
     }
 
     @Override
-    public Book createBook(String isbn, String title, List<String> authors, String editorial, String description, int genre, int publicationState, int edition, int rating, long image, long userId) {
-        final Map<String, Object> bookData = new HashMap<>();
+    public Book createBook(String isbn, String title, List<String> authors, String editorial, String description, Genres genre, BookState bookState, PublicationState publicationState, int edition, int rating, long image, long userId) {
+        
+    	final Map<String, Object> bookData = new HashMap<>();
         bookData.put("isbn", isbn);
         bookData.put("title", title);
         bookData.put("authors", String.join(",", authors));
         bookData.put("editorial", editorial);
         bookData.put("description", description);
         bookData.put("genre", genre);
+        bookData.put("bookState", bookState);
         bookData.put("publicationState", publicationState);
         bookData.put("edition", edition);
         bookData.put("rating", rating);
@@ -58,7 +61,7 @@ public class BookJdbcDao implements BookDao {
         bookData.put("userId", userId);
 
         final Number generatedId = jdbcInsert.executeAndReturnKey(bookData);
-        return new Book(generatedId.longValue(), isbn, title, authors, editorial, description, genre, publicationState, edition, rating, image, userId);
+        return new Book(generatedId.longValue(), isbn, title, authors, editorial, description, genre, bookState, publicationState, edition, rating, image, userId);
     }
 
     @Override
