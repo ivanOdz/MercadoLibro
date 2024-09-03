@@ -44,6 +44,8 @@ public class HelloWorldController {
         return mav;
     }
 
+
+
     @RequestMapping("/{userId:\\d+}")
     public ModelAndView profile(@PathVariable(name = "userId") long userId) {
         final ModelAndView mav = new ModelAndView("helloworld/profile");
@@ -67,6 +69,11 @@ public class HelloWorldController {
         return new ModelAndView("helloworld/create");
     }
 
+    @RequestMapping("/login")
+    public ModelAndView login(){
+        return new ModelAndView("helloworld/login");
+    }
+
     // home
     @RequestMapping("/mail")
     public ModelAndView home() {
@@ -81,5 +88,4 @@ public class HelloWorldController {
         emailService.sendEmail("modzomek@itba.edu.ar", variables, "exchangeRequest", "Book Exchange");
         return mav;
     }
-
 }

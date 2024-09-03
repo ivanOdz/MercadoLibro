@@ -41,4 +41,9 @@ public class UserJdbcDao implements UserDao {
         final Number generatedId = jdbcInsert.executeAndReturnKey(userData);
         return new User(generatedId.longValue(), username, mail);
     }
+
+    @Override
+    public Optional<User> findByUsername(String username) {
+        return jdbcTemplate.query("SELECT * FROM users WHERE username = ? ", new Object[]{ username }, new int[] {Types.VARCHAR}, ROWMAPPER).stream().findFirst();
+    }
 }
