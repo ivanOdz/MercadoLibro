@@ -2,8 +2,6 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.BookDao;
 import ar.edu.itba.paw.models.Book;
-import ar.edu.itba.paw.models.utils.Genres;
-import ar.edu.itba.paw.models.utils.PublicationState;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.core.RowMapper;
@@ -70,4 +68,12 @@ public class BookJdbcDao implements BookDao {
                 new int[]{ Types.BIGINT }, ROWMAPPERBOOKS).stream().findFirst();
     }
 
+    @Override
+    public void exchangeOwnership(long b1, long b2) {
+        Book book1 = getBookById(b1).get();
+        Book book2 = getBookById(b2).get();
+
+        jdbcTemplate.update("UPDATE books SET owner = ? WHERE bookId = ?", book2.getUserId(), book1.getBookId());
+        jdbcTemplate.update("UPDATE books SET owner = ? WHERE bookId = ?", book1.getUserId(), book2.getBookId());
+    }
 }

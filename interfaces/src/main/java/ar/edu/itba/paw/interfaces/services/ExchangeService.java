@@ -11,4 +11,5 @@ public interface ExchangeService {
     void rejectExchange(long acceptCode);
     Optional<Exchange> getExchangeById(long exchangeId);
     long getId(long acceptCode);
+    String exchange(long acceptCode, boolean state);
 }
