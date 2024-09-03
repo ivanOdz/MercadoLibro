@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.config;
 
 // https://howtodoinjava.com/spring-core/send-email-with-spring-javamailsenderimpl-example/
 // https://docs.spring.io/spring-framework/reference/integration/email.html#mail-usage-mime
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -9,7 +10,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.thymeleaf.templateresolver.ITemplateResolver;
@@ -21,6 +22,12 @@ import java.util.Properties;
 @Configuration
 @EnableAsync
 public class EmailConfig {
+
+    MessageSource messageSource;
+
+    public EmailConfig(final MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
 
     @Bean
     public JavaMailSender getJavaMailSender(){
@@ -43,8 +50,8 @@ public class EmailConfig {
 
 
     @Bean
-    public TemplateEngine templateEngine() {
-        TemplateEngine templateEngine = new TemplateEngine();
+    public SpringTemplateEngine templateEngine() {
+        SpringTemplateEngine templateEngine = new SpringTemplateEngine();
         templateEngine.setTemplateResolver(templateResolver());
         return templateEngine;
     }
