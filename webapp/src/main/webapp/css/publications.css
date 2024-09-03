@@ -1,5 +1,9 @@
 .background-primary {
     background-color: #f8f8e2;
+    position: relative;
+    height: 100%;
+    width: 100%;
+    display: flex;
 }
 .background-secondary {
     background-color: #EBE3D5;
@@ -10,11 +14,15 @@
 }
 .brand-logo {
     color: #333333;
-    margin: 0 0 0 10vh;
+    margin: 8vh 0 0 5vh;
 }
 .background-nav {
     background-color: #F7E7DC;
-    height: 12vh;
+    height: 15vh;
+    align-items: center;
+    align-content: center;
+    margin: 0;
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.3);
 }
 .nav-bar-container {
     display: inline-flex;
@@ -22,10 +30,14 @@
 .inline-form {
     display: flex;
     align-items: center;
+    justify-content: center;
     height: 70%;
-    margin: 2vh 0 2vh 0;
+    margin: 0;
 }
 
+.row {
+    margin:0;
+}
 
 .search-form {
     align-items: center;
@@ -48,16 +60,47 @@
 .search-button {
     color: #333333;
 }
-.search-button i.material-icons {
-    color: #FF5722; /* Cambia este valor al color que desees */
-}
-.main-container {
-    margin: 10vh;
 
+.main-container {
+    margin: 5vh 10vh 0 10vh;
+    height: 100%;
 }
 
 .custom-image {
     width: 50px; /* Ajusta el ancho deseado */
     height: 100px; /* Mantiene la proporción de la imagen */
     object-fit: cover; /* Asegura que la imagen se recorte si es necesario */
+}
+
+.main-background {
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.text {
+    color: #4e342e;
+    padding: 3vh;
+}
+
+.card-text {
+    color: #4e342e;
+}
+
+.card {
+    height: 50vh;
+    width: 40vh;
+    overflow: hidden;
+}
+
+
+.align-content {
+    display: flex;
+    align-items: center;
+}
+
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
