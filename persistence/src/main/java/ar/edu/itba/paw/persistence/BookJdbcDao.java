@@ -10,11 +10,8 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.sql.Types;
-import java.util.Arrays;
-import java.util.Optional;
 
 @Repository
 public class BookJdbcDao implements BookDao {
@@ -46,11 +43,11 @@ public class BookJdbcDao implements BookDao {
     }
 
     @Override
-    public Book createBook(String isbn, String title, List<String> author, String editorial, String description, int genre, int publicationState, int edition, int rating, long image, long userId) {
-        final Map<String, Object> bookData = Map.of();
+    public Book createBook(String isbn, String title, List<String> authors, String editorial, String description, int genre, int publicationState, int edition, int rating, long image, long userId) {
+        final Map<String, Object> bookData = new HashMap<>();
         bookData.put("isbn", isbn);
         bookData.put("title", title);
-        bookData.put("author", String.join(",", author));
+        bookData.put("authors", String.join(",", authors));
         bookData.put("editorial", editorial);
         bookData.put("description", description);
         bookData.put("genre", genre);
@@ -61,7 +58,7 @@ public class BookJdbcDao implements BookDao {
         bookData.put("userId", userId);
 
         final Number generatedId = jdbcInsert.executeAndReturnKey(bookData);
-        return new Book(generatedId.longValue(), isbn, title, author, editorial, description, genre, publicationState, edition, rating, image, userId);
+        return new Book(generatedId.longValue(), isbn, title, authors, editorial, description, genre, publicationState, edition, rating, image, userId);
     }
 
     @Override

@@ -7,7 +7,7 @@ public class Book {
     private final long bookId;
     private final String isbn;
     private final String title;
-    private final List<String> author;
+    private final List<String> authors;
     private final String editorial;
     private final String description;
     private final int genre;
@@ -17,11 +17,11 @@ public class Book {
     private final long image;
     private final long userId;
 
-    public Book(long bookId, String isbn, String title, List<String> author, String editorial, String description, int genre, int publicationState, int edition, int rating, long image, long userId) {
+    public Book(long bookId, String isbn, String title, List<String> authors, String editorial, String description, int genre, int publicationState, int edition, int rating, long image, long userId) {
         this.bookId = bookId;
         this.isbn = isbn;
         this.title = title;
-        this.author = author;
+        this.authors = authors;
         this.editorial = editorial;
         this.description = description;
         this.genre = genre;
@@ -44,8 +44,8 @@ public class Book {
         return title;
     }
 
-    public List<String> getAuthor() {
-        return author;
+    public List<String> getAuthors() {
+        return authors;
     }
 
     public String getEditorial() {
