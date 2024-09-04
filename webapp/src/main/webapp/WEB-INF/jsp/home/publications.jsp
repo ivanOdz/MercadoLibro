@@ -43,7 +43,7 @@
 </nav>
 
 <div class="fixed-action-btn">
-	<a href="${pageContext.request.contextPath}/createPublication?publicationId=0&isForExchange=false" class="btn-floating btn-large waves-effect waves-light red">
+	<a href="${pageContext.request.contextPath}/createPublication?publicationId=0&isForExchange=false" class="btn-floating btn-large waves-effect waves-light pink">
 		<i class="material-icons">add</i>
 	</a>
 </div>
@@ -63,7 +63,12 @@
 							</c:url>" class="card-link">
 							<div class="card hoverable">
 								<div class="card-image waves-effect waves-block waves-light">
-									<img class="activator custom-image" src="images/book.jpg" alt="book"/>
+									<c:if test="${card.image != null}">
+										<img class="activator custom-image" src="${pageContext.request.contextPath}/images/${card.image.imageId}" alt="bookImage"/>
+									</c:if>
+									<c:if test="${card.image == null}">
+										<img class="activator custom-image" src="images/book.jpg" alt="book"/>
+									</c:if>
 								</div>
 								<div class="card-content">
 									<h5 class="card-text">${card.book.title}</h5>
