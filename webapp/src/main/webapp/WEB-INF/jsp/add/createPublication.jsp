@@ -254,6 +254,7 @@
 		<br>
 
 		<div class="form-container">
+			<input type="hidden" name="publicationId" value="${publicationId}">
 			<button type="submit"><spring:message code="add.publication.submit"/></button>
 		</div>
 

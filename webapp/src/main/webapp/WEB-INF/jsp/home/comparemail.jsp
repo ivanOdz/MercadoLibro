@@ -12,6 +12,7 @@
         <%-- Redirigir a la página de crear un libro --%>
         <p><spring:message code="compare.emails.different"/></p>
         <form action="<c:url value='/createPublication'/>" method="get">
+            <input type="hidden" name="publicationId" value="${publicationId}">
             <button type="submit"><spring:message code="compare.emails.createBookButton"/></button>
         </form>
     </c:when>

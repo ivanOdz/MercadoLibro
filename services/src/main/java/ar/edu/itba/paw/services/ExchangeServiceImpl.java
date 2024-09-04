@@ -6,8 +6,8 @@ import ar.edu.itba.paw.interfaces.services.ExchangeService;
 import ar.edu.itba.paw.models.Exchange;
 import ar.edu.itba.paw.models.utils.ResponseState;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class ExchangeServiceImpl implements ExchangeService {
@@ -48,5 +48,15 @@ public class ExchangeServiceImpl implements ExchangeService {
             }
             default: return "exchange/invalid";
         }
+    }
+
+    @Override
+    public Exchange initializeExchange(boolean isForExchange, long offererId, long requesterId) {
+        if(isForExchange) {
+            Random random = new Random();
+            long acceptCode = random.nextLong();
+            return exchangeDao.createExchange(offererId, requesterId, acceptCode);
+        }
+        return null;
     }
 }
