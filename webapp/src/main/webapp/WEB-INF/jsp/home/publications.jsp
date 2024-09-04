@@ -56,21 +56,19 @@
 					<h5 class="text"><spring:message code="publications.list.available"/></h5>
 					<h8 class="text"><spring:message code="publications.list.select"/></h8>
 				</div>
-				<c:forEach var="publication" items="${publications.publications}">
+				<c:forEach var="card" items="${publications}">
 					<div class="col s12 m6 l3">
 						<a href="<c:url value='submitmail'>
-							<c:param name='publicationId' value='${publication.publicationId}'/>
+							<c:param name='publicationId' value='${card.publication.publicationId}'/>
 							</c:url>" class="card-link">
 							<div class="card hoverable">
 								<div class="card-image waves-effect waves-block waves-light">
 									<img class="activator custom-image" src="images/book.jpg" alt="book"/>
 								</div>
 								<div class="card-content">
-									<h5 class="card-text"><spring:message code="publication.id"/>: ${publication.publicationId}</h5>
-									<p class="card-text"><strong><spring:message code="book.id"/></strong>: ${publication.bookId}</p>
-									<p class="card-text"><strong><spring:message code="user.id"/></strong>: ${publication.userId}</p>
-									<p class="card-text"><strong><spring:message code="publication.state"/></strong>: ${publication.publicationState}</p>
-									<p class="card-text"><strong><spring:message code="publication.location"/></strong>: ${publication.location}</p>
+									<h5 class="card-text">${card.book.title}</h5>
+									<p class="card-text"><strong><spring:message code="book.description"/></strong>: ${card.book.description}</p>
+									<p class="card-text"><strong><spring:message code="publication.location"/></strong>: ${card.publication.location}</p>
 								</div>
 							</div>
 						</a>
