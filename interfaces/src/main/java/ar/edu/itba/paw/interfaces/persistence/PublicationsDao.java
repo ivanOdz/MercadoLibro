@@ -13,4 +13,8 @@ public interface PublicationsDao {
 
     Publications getAllPublicationsFilteredBy(String search);
 
+    Publications getAllPublicationsAvailable();
+
+    void terminatePublication(long pubId);
+
 }

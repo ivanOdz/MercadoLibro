@@ -6,19 +6,19 @@
 
 <head>
 
-	<title><spring:message code="add.publication.header"/></title>
+    <title><spring:message code="add.publication.header"/></title>
 
-	<script type="text/javascript">
+    <script type="text/javascript">
 
-		var authorIndex = 0;
+		let authorIndex = 0;
 
 		function addAuthorField() {
 
-			var container = document.getElementById("author-container");
-			var newField = document.createElement("div");
+			let container = document.getElementById("author-container");
+			let newField = document.createElement("div");
 
-			newField.innerHTML = '<input type="text" name="authors[${authorCount}]" />' +
-					'<button type="button" onclick="removeAuthorField(this)"><spring:message code="add.publication.remove.author"/></button>';
+			newField.innerHTML = `	<input type="text" name="authors[${authorIndex}]" class="form-input"/>
+									<button type="button" onclick="removeAuthorField(this)">Eliminar</button>	`;
 
 			container.appendChild(newField);
 			authorIndex++;
@@ -26,37 +26,51 @@
 
 		function removeAuthorField(button) {
 
-			if (authorIndex >= 1)
-			{
-				var container = document.getElementById("author-container");
-				container.removeChild(button.parentNode);
-			}
+			var container = document.getElementById("author-container");
+			container.removeChild(button.parentNode);
+			authorIndex--;
 		}
 
 	</script>
 
 	<style>
 
+		body {
+
+			font-family: Arial, sans-serif;
+			margin: 0;
+			padding: 0;
+			background-color: #f8f9fa;
+		}
+
 		.form-container {
 
 			display: flex;
 			flex-direction: column;
 			align-items: center;
+			max-width: 600px;
+			margin: auto;
+			padding: 20px;
+			background-color: #fff;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
 		}
 
 		.form-group label {
 
+			width: 100%;
 			display: flex;
-			align-items: center;
+			flex-direction: column;
 			margin-bottom: 15px;
-			margin-top: 15px;
-			width: 160px;
+			width: 100%;
+			color: #333;
 		}
 
 		.form-input {
 
-			display: flex;
-			align-items: flex-end;
+			width: 100%;
+			padding: 5px;
+			border: 2px solid #ccc;
+			border-radius: 4px;
 		}
 
 		.form-container button[type="submit"] {
@@ -67,13 +81,41 @@
 			background-color: #007bff;
 			color: white;
 			border-radius: 5px;
+			margin-top: 20px;
 			cursor: pointer;
 			transition: background-color 0.3s;
-		}
+		 }
 
 		.form-container button[type="submit"]:hover {
 
 			background-color: #0056b3;
+		}
+
+		.form-container .add-author-button:hover {
+
+			background-color: #218838;
+		}
+
+		.form-group button:hover {
+
+			background-color: #0056b3;
+		}
+
+		.form-group .form-errors {
+			color: red;
+			font-size: 14px;
+			margin-top: 5px;
+		}
+
+		#author-container div {
+
+			margin-bottom: 10px;
+		}
+
+		#author-container input {
+
+			display: inline-block;
+			width: calc(100% - 110px);
 		}
 
 	</style>
@@ -82,7 +124,7 @@
 
 <body>
 
-<c:url var="postUrl" value="/createPublication"/>
+	<c:url var="postUrl" value="/createPublication"/>
 
 <div class="form-container">
 

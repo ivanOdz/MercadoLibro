@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.models.utils.Genres;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PublicationForm {
@@ -27,7 +28,7 @@ public class PublicationForm {
     private String title;
     
     @NotEmpty
-    private List<String> authors;
+    private List<String> authors = new ArrayList<String>();
     
     @NotBlank
     @Size(min = 1, max = 100)
@@ -147,7 +148,7 @@ public class PublicationForm {
     	this.genre = genre;
     }
     
-    public void serBookSate(@NotNull BookState bookState) {
+    public void setBookState(@NotNull BookState bookState) {
     	this.bookState = bookState;
     }
     
