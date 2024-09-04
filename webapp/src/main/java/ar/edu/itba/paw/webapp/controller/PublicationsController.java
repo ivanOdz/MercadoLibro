@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.services.CardService;
+import ar.edu.itba.paw.models.Card;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.interfaces.services.BookService;
 import ar.edu.itba.paw.interfaces.services.PublicationsService;
@@ -12,23 +14,28 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
+
 @Controller
 public class PublicationsController {
 
     private PublicationsService ps;
     private BookService bs;
     private UserService us;
+    private CardService cs;
 
-    public PublicationsController(final PublicationsService ps, final BookService bs, final UserService us) {
+    public PublicationsController(PublicationsService ps, BookService bs, UserService us, CardService cs) {
         this.ps = ps;
         this.bs = bs;
         this.us = us;
+        this.cs = cs;
     }
 
     @RequestMapping("/")
     public ModelAndView index(@RequestParam(name = "search", defaultValue = "") String search) {
         final ModelAndView mav = new ModelAndView("home/publications");
-        mav.addObject("publications", ps.getAllPublicationsFilteredBy(search));
+        List<Card> cardList = cs.buildCardList(ps.getAllPublicationsFilteredBy(search).getPublications());
+        mav.addObject("publications", cardList);
         return mav;
     }
 
