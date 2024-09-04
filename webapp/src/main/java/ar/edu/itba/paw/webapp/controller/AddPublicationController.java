@@ -62,14 +62,14 @@ public class AddPublicationController {
 		mav.addObject("publicationForm", publicationForm);
 		mav.addObject("genres", List.of(Genres.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
 		mav.addObject("bookStates", List.of(BookState.values()).stream().map(bookStatus -> new BookStateWrapper(bookStatus, bookStateService.getBookStateDisplayName(bookStatus))).collect(Collectors.toList()));
-
+		
 		return mav;
     }
 
     @PostMapping(path = "/createPublication")
     public ModelAndView addPublication(@Valid @ModelAttribute("publicationForm") PublicationForm publicationForm,
                                        BindingResult errors,
-                                       @RequestParam("imageFile") MultipartFile imageFile) {
+                                       MultipartFile imageFile) {
 
         List<String> authors = publicationForm.getAuthors(); // [!] Debug
         Genres genre = publicationForm.getGenre();			 // [!] Debug
@@ -78,9 +78,13 @@ public class AddPublicationController {
         System.out.println("Genero: " + genre);				 // [!] Debug
         System.out.println("Estado: " + state);				 // [!] Debug
 
+		if (errors.hasErrors()) {
+			return createPublicationForm(publicationForm);
+		}
+		
         final Image image = imageService.saveImage(imageFile);
 
-        final Publication publication = ps.createPublication(	publicationForm.getUsername(),
+        final Publication publication = ps.createPublication(publicationForm.getUsername(),
                 publicationForm.getMail(),
                 publicationForm.getIsbn(),
                 publicationForm.getTitle(),

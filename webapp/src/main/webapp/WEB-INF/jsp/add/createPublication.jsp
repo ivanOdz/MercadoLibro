@@ -18,7 +18,7 @@
 			let newField = document.createElement("div");
 
 			newField.innerHTML = `	<input type="text" name="authors[${authorIndex}]" class="form-input"/>
-									<button type="button" onclick="removeAuthorField(this)">Eliminar</button>	`;
+									<button type="button" onclick="removeAuthorField(this)"> X </button>	`;
 
 			container.appendChild(newField);
 			authorIndex++;
@@ -124,13 +124,13 @@
 
 <body>
 
-	<c:url var="postUrl" value="/createPublication"/>
+<c:url var="postUrl" value="/createPublication"/>
 
 <div class="form-container">
 
 	<h1 class="label"><spring:message code="add.publication.header.title"/></h1>
 
-	<form:form modelAttribute="publicationForm" action="${postUrl}" method="post">
+	<form:form modelAttribute="publicationForm" action="${postUrl}" method="post" enctype="multipart/form-data">
 
 		<div>
 			<label class="form-group">
