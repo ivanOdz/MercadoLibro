@@ -33,8 +33,11 @@ public class SinglePublicationServiceImpl implements SinglePublicationService {
 
     @Override
     public Publication createPublication(String username, String mail, String isbn, String title, List<String> authors, String editorial, String description, Genres genre, BookState bookState, PublicationState publicationState, int edition, int rating, long image, String location) {
-        
-    	User user = userDao.createUser(username, mail);
+
+        System.out.print( "Single ¿Pub . " + username + mail);
+
+        User user = userDao.createUser(username, mail);
+        System.out.print(user.getId());
         Book book = bookDao.createBook(isbn, title, editorial, description, genre, bookState, publicationState, edition, rating, image, user.getId());
 
         for (String author : authors) {
