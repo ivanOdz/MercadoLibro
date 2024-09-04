@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 public interface BookService {
 
-    Optional<Book> getBookById(long publicationId);
+    Optional<Book> getBookById(long bookId);
     
     Book createBook(String isbn, String title, String editorial, String description, Genres genre, BookState bookState, PublicationState publicationState, int edition, int rating, long image, long userId);
 
