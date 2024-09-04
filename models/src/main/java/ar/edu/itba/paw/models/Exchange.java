@@ -7,10 +7,10 @@ public class Exchange {
     private long offerer;
     private long requester;
     private int state;
-    private long acceptCode;
+    private int acceptCode;
 
 
-    public Exchange(long id, long offerer, long requester, int state, long acceptCode) {
+    public Exchange(long id, long offerer, long requester, int state, int acceptCode) {
         this.id = id;
         this.offerer = offerer;
         this.requester = requester;
@@ -26,7 +26,7 @@ public class Exchange {
         return state;
     }
 
-    public long getAcceptCode() {
+    public int getAcceptCode() {
         return acceptCode;
     }
 
