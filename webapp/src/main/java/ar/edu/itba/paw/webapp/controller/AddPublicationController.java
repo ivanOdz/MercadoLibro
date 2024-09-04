@@ -121,8 +121,7 @@ public class AddPublicationController {
              Book bookOffered = bookService.getBookById(offererPub.getBookId()).get();
              Book bookRequested = bookService.getBookById(requesterPub.getBookId()).get();
 
-             User oferrer = userService.findById(ex.getOfferer()).get();
-//             User requester = userService.findById(ex.getRequester()).get();
+             User oferrer = userService.findById(offererPub.getUserId()).get();
 
 
              String oferrerEmail = oferrer.getMail();

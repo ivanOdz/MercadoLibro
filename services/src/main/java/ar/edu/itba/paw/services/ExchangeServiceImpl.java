@@ -54,7 +54,7 @@ public class ExchangeServiceImpl implements ExchangeService {
     public Exchange initializeExchange(boolean isForExchange, long offererId, long requesterId) {
 //        if(isForExchange) {
             Random random = new Random();
-            long acceptCode = random.nextLong();
+            long acceptCode = Math.abs(random.nextLong());
             return exchangeDao.createExchange(offererId, requesterId, acceptCode);
 //        }
 //        return null;

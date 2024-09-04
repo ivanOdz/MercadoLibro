@@ -24,7 +24,6 @@ public class SinglePublicationServiceImpl implements SinglePublicationService {
     private final BookAuthorDao book_authorDao;
 
     public SinglePublicationServiceImpl(SinglePublicationDao publicationDao, UserDao userDao, BookDao bookDao, AuthorDao authorDao, BookAuthorDao bookAuthorDao) {
-    	
         this.publicationDao = publicationDao;
         this.userDao = userDao;
         this.bookDao = bookDao;
@@ -36,7 +35,6 @@ public class SinglePublicationServiceImpl implements SinglePublicationService {
     public Publication createPublication(String username, String mail, String isbn, String title, List<String> authors, String editorial, String description, Genres genre, BookState bookState, PublicationState publicationState, int edition, int rating, long image, String location) {
         
     	User user = userDao.createUser(username, mail);
-
         Book book = bookDao.createBook(isbn, title, editorial, description, genre, bookState, publicationState, edition, rating, image, user.getId());
 
         for (String author : authors) {
@@ -45,7 +43,6 @@ public class SinglePublicationServiceImpl implements SinglePublicationService {
             book_authorDao.createBook_Author(book.getBookId(), auth.getAuthorId());
 
         }
-
         return publicationDao.createPublication(book.getBookId(), user.getId(), location);
     }
 }
