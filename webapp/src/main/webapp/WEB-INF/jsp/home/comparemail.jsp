@@ -13,6 +13,7 @@
         <p><spring:message code="compare.emails.different"/></p>
         <form action="<c:url value='/createPublication'/>" method="get">
             <input type="hidden" name="publicationId" value="${publicationId}">
+            <input type="hidden" name="isForExchange" value="${isForExchange}">
             <button type="submit"><spring:message code="compare.emails.createBookButton"/></button>
         </form>
     </c:when>

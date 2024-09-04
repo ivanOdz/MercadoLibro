@@ -255,6 +255,7 @@
 
 		<div class="form-container">
 			<input type="hidden" name="publicationId" value="${publicationId}">
+			<input type="hidden" name="isForExchange" value="${isForExchange}">
 			<button type="submit"><spring:message code="add.publication.submit"/></button>
 		</div>
 

@@ -63,7 +63,7 @@ public class AddPublicationController {
     }
 
     @GetMapping(path = "/createPublication")
-    public ModelAndView createPublicationForm(@ModelAttribute("publicationForm") PublicationForm publicationForm, @RequestParam(name = "publicationId") long publicationId) {
+    public ModelAndView createPublicationForm(@ModelAttribute("publicationForm") PublicationForm publicationForm, @RequestParam(name = "publicationId") long publicationId,  @RequestParam(name = "isForExchange") boolean isForExchange) {
 		
 		final ModelAndView mav = new ModelAndView("/add/createPublication");
 			
@@ -76,6 +76,8 @@ public class AddPublicationController {
 		mav.addObject("genres", List.of(Genres.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
 		mav.addObject("bookStates", List.of(BookState.values()).stream().map(bookStatus -> new BookStateWrapper(bookStatus, bookStateService.getBookStateDisplayName(bookStatus))).collect(Collectors.toList()));
         mav.addObject("publicationId", publicationId);
+        mav.addObject("isForExchange", isForExchange);
+
 
 		return mav;
     }
@@ -83,13 +85,10 @@ public class AddPublicationController {
     @PostMapping(path = "/createPublication")
     public ModelAndView addPublication(@Valid @ModelAttribute("publicationForm") PublicationForm publicationForm,
                                        BindingResult errors,
-                                       @RequestParam(name = "publicationId") long publicationId/*, @RequestParam(name = "isForExchange") boolean isForExchange*/) {
-
-        List<String> authors = publicationForm.getAuthors(); // [!] Debug
-        System.out.println("Autores: " + authors); 			 // [!] Debug
+                                       @RequestParam(name = "publicationId") long publicationId, @RequestParam(name = "isForExchange") boolean isForExchange) {
 
 		if (errors.hasErrors()) {
-			return createPublicationForm(publicationForm, publicationId);
+			return createPublicationForm(publicationForm, publicationId, isForExchange);
 		}
 
         final Publication publication = ps.createPublication(publicationForm.getUsername(),
@@ -112,7 +111,7 @@ public class AddPublicationController {
         // Crear intercambio en la tabla exchange,
         // Si vengo de un intercambio, mandar mail de solicitud al que publico el libro.
 
-         /*Exchange ex = exchangeService.initializeExchange(isForExchange, publicationId, publication.getPublicationId());
+         Exchange ex = exchangeService.initializeExchange(isForExchange, publicationId, publication.getPublicationId());
 
          if(isForExchange) {
              Map<String, Object> variables = new HashMap<>();
@@ -123,7 +122,7 @@ public class AddPublicationController {
              Book bookRequested = bookService.getBookById(requesterPub.getBookId()).get();
 
              User oferrer = userService.findById(ex.getOfferer()).get();
-             User requester = userService.findById(ex.getRequester()).get();
+//             User requester = userService.findById(ex.getRequester()).get();
 
 
              String oferrerEmail = oferrer.getMail();
@@ -136,7 +135,7 @@ public class AddPublicationController {
              variables.put("rejectionUrl", "http://localhost:8080/exchange?acceptCode=" + ex.getAcceptCode() +"&state=false");
 
              emailService.sendEmail(oferrerEmail, variables, "exchangeRequest", "Requesting");
-         }*/
+         }
 
 
         return new ModelAndView("redirect:/");

@@ -33,7 +33,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
         this.publicationsJdbcDao = publicationsJdbcDao;
         this.bookJdbcDao = bookJdbcDao;
         jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .usingGeneratedKeyColumns("exchangeId")
+                .usingGeneratedKeyColumns("exchangeid")
                 .withTableName("exchanges");
     }
 
@@ -51,7 +51,8 @@ public class ExchangeJdbcDao implements ExchangeDao {
 
     @Override
     public long getIdByAcceptCode(long acceptCode) {
-            return jdbcTemplate.queryForObject("SELECT exchangeId FROM exchanges WHERE acceptCode = ?", new Object[]{ acceptCode }, Long.class);
+        return jdbcTemplate.query("SELECT * FROM exchanges WHERE exchangeId = ?", new Object[]{ acceptCode },
+                new int[]{ Types.BIGINT }, ROWMAPPER).stream().findFirst().get().getId();
     }
 
     @Override
@@ -96,7 +97,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
         exchangeData.put("offerer", offererId);
         exchangeData.put("requester", requesterId);
         exchangeData.put("acceptCode", acceptCode);
-        exchangeData.put("exchangeState", ExchangeState.PENDING);
+        exchangeData.put("exchangeState", ExchangeState.PENDING.getValue());
 
         final Number generatedId = jdbcInsert.executeAndReturnKey(exchangeData);
         return new Exchange(generatedId.longValue(),  offererId,  requesterId,  ExchangeState.PENDING.getValue(), acceptCode);

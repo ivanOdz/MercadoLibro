@@ -70,6 +70,7 @@ public class PublicationsController {
         mav.addObject("ownerMail", owner.getMail());
         mav.addObject("solicitingEmail", email);
         mav.addObject("publicationId", publicationId);
+        mav.addObject("isForExchange", true);
 
         return mav;
     }
