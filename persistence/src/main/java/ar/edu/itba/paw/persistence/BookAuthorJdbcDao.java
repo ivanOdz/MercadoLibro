@@ -24,10 +24,11 @@ public class BookAuthorJdbcDao implements BookAuthorDao {
     @Override
     public BookAuthor createBook_Author(long bookId, long authorId) {
         System.out.println("bookId: " + bookId + " authorId: " + authorId);
-        final Map<String, Long> b_aData = Map.of("bookId", bookId, "authorId", authorId);
 
-        final Number generatedId = jdbcInsert.executeAndReturnKey(b_aData);
-        System.out.println("bookId: " + bookId + " authorId: " + authorId + "segundaChance");
+        final String sql = "INSERT INTO book_author (bookid, authorid) VALUES (?, ?)";
+        jdbcTemplate.update(sql, bookId, authorId);
+
+        System.out.println("bookId2: " + bookId + " authorId2: " + authorId + " segundaChance");
         return new BookAuthor(bookId, authorId);
     }
 }
