@@ -110,9 +110,10 @@ public class AddPublicationController {
         // Crear intercambio en la tabla exchange,
         // Si vengo de un intercambio, mandar mail de solicitud al que publico el libro.
 
-         Exchange ex = exchangeService.initializeExchange(isForExchange, publicationId, publication.getPublicationId());
-
          if(isForExchange) {
+        	 
+             Exchange ex = exchangeService.initializeExchange(isForExchange, publicationId, publication.getPublicationId());
+             
              Map<String, Object> variables = new HashMap<>();
              Publication offererPub = publicationsService.getPublicationById(ex.getOfferer()).get();
              Publication requesterPub = publicationsService.getPublicationById(ex.getRequester()).get();
