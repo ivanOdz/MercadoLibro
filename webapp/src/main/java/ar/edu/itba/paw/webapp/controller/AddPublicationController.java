@@ -78,7 +78,6 @@ public class AddPublicationController {
         mav.addObject("publicationId", publicationId);
         mav.addObject("isForExchange", isForExchange);
 
-
 		return mav;
     }
 

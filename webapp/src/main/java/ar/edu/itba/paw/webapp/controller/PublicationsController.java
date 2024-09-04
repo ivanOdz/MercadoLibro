@@ -38,13 +38,15 @@ public class PublicationsController {
     }
 
 
-        @RequestMapping("/publication")
+    @RequestMapping("/publication")
     public ModelAndView publication(@RequestParam(name = "publicationId") long publicationId) {
         final ModelAndView mav = new ModelAndView("home/publication");
-        if(ps.getPublicationById(publicationId).isEmpty()) {
+        
+        if (ps.getPublicationById(publicationId).isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Publication not found");
         }
         else mav.addObject("publication", ps.getPublicationById(publicationId).get());
+        
         return mav;
     }
 
@@ -65,7 +67,9 @@ public class PublicationsController {
         if (ps.getPublicationById(publicationId).isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Publication not found");
         }
-        User owner = us.findById(bs.getBookById(ps.getPublicationById(publicationId).get().getBookId()).get().getUserId()).get();
+        
+        long userId = ps.getPublicationById(publicationId).get().getUserId();
+        User owner = us.findById(userId).get();
 
         mav.addObject("ownerMail", owner.getMail());
         mav.addObject("solicitingEmail", email);

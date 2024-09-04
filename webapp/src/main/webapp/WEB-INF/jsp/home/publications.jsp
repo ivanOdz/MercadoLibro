@@ -4,10 +4,19 @@
 <html lang="es">
 
 <head>
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<link href="${pageContext.request.contextPath}/css/publications.css" rel="stylesheet">
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+	<link href="${pageContext.request.contextPath}/css/publications.css" rel="stylesheet"/>
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet"/>
 	<title><spring:message code="publications.list.title"/></title>
+	
+	<style>
+		.fixed-action-btn {
+			position: fixed;
+			right: 20px;
+			bottom: 20px;
+		}
+	</style>
+	
 </head>
 
 <body>
@@ -20,7 +29,7 @@
 			<div class="row">
 				<form class="col s12" action="${pageContext.request.contextPath}/" method="get">
 					<div class="row inline-form">
-						<input type="text" id="search" name="search">
+						<input type="text" id="search" name="search"/>
 						<i style="color: black" class="material-icons tiny suffix search-button">search</i>
 					</div>
 				</form>
@@ -32,7 +41,13 @@
 
 	</div>
 </nav>
-<!-- Contenido de la página-->
+
+<div class="fixed-action-btn">
+	<a href="${pageContext.request.contextPath}/createPublication?publicationId=0&isForExchange=false" class="btn-floating btn-large waves-effect waves-light red">
+		<i class="material-icons">add</i>
+	</a>
+</div>
+
 <div class="background-primary">
 	<div class="row main-background ">
 		<div class="col s12">
@@ -44,11 +59,11 @@
 				<c:forEach var="publication" items="${publications.publications}">
 					<div class="col s12 m6 l3">
 						<a href="<c:url value='submitmail'>
-										<c:param name='publicationId' value='${publication.publicationId}'/>
-										</c:url>" class="card-link">
+							<c:param name='publicationId' value='${publication.publicationId}'/>
+							</c:url>" class="card-link">
 							<div class="card hoverable">
 								<div class="card-image waves-effect waves-block waves-light">
-									<img class="activator custom-image" src="images/book.jpg" alt="book">
+									<img class="activator custom-image" src="images/book.jpg" alt="book"/>
 								</div>
 								<div class="card-content">
 									<h5 class="card-text"><spring:message code="publication.id"/>: ${publication.publicationId}</h5>
@@ -63,6 +78,7 @@
 				</c:forEach>
 			</div>
 		</div>
+
 	</div>
 </div>
 </body>
