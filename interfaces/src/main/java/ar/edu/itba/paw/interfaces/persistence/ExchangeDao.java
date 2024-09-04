@@ -6,7 +6,7 @@ import ar.edu.itba.paw.models.utils.ResponseState;
 import java.util.Optional;
 
 public interface ExchangeDao {
-    void updateExchangeStatus(long exchangeId, int newStatus);
+    void updateExchangeStatus(int acceptCode, int newStatus);
 
     Optional<Exchange> findById(long id);
 
@@ -14,6 +14,6 @@ public interface ExchangeDao {
 
     ResponseState exchange(int acceptCode, boolean state);
 
-    Exchange createExchange(long offererId, long requesterId, long acceptCode);
+    Exchange createExchange(long offererId, long requesterId, int acceptCode);
 
 }

@@ -16,15 +16,6 @@ public class ExchangeServiceImpl implements ExchangeService {
         this.exchangeDao = exchangeDao;
     }
 
-    @Override
-    public void acceptExchange(long acceptCode){
-        exchangeDao.updateExchangeStatus(acceptCode, 0);
-    }
-
-    @Override
-    public void rejectExchange(long acceptCode) {
-        exchangeDao.updateExchangeStatus(acceptCode, 1);
-    }
 
     @Override
     public Optional<Exchange> getExchangeById(long exchangeId) {
