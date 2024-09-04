@@ -7,7 +7,7 @@
 <head>
 
     <title><spring:message code="add.publication.header"/></title>
-
+	<meta charset="UTF-8">
     <script type="text/javascript">
 
 		let authorIndex = 0;
