@@ -13,4 +13,7 @@ public interface ExchangeDao {
     long getIdByAcceptCode(long acceptCode);
 
     ResponseState exchange(long acceptCode, boolean state);
+
+    Exchange createExchange(long offererId, long requesterId, long acceptCode);
+
 }

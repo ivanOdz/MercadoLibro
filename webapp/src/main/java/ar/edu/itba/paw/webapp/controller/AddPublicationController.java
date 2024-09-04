@@ -3,15 +3,14 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.Publication;
+import ar.edu.itba.paw.interfaces.services.*;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.models.utils.BookStateWrapper;
 import ar.edu.itba.paw.models.utils.GenreWrapper;
 import ar.edu.itba.paw.models.utils.Genres;
 import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.webapp.form.PublicationForm;
-import ar.edu.itba.paw.interfaces.services.BookStateService;
-import ar.edu.itba.paw.interfaces.services.GenreService;
-import ar.edu.itba.paw.interfaces.services.SinglePublicationService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,11 +19,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -36,19 +38,34 @@ public class AddPublicationController {
 
     private ImageService imageService;
 
+    private EmailService emailService;
+
+    private ExchangeService exchangeService;
+
+    private PublicationsService publicationsService;
+
+    private BookService bookService;
+
+    private UserService userService;
+
     @Autowired
     private GenreService genreService;
     @Autowired
     private BookStateService bookStateService;
 
 
-    public AddPublicationController(final SinglePublicationService ps, final ImageService imageService) {
+    public AddPublicationController(final SinglePublicationService ps, final ImageService imageService, final EmailService emailService, final ExchangeService exchangeService, PublicationsService publicationsService, BookService bookService, UserService userService) {
         this.ps = ps;
         this.imageService = imageService;
+        this.emailService = emailService;
+        this.exchangeService = exchangeService;
+        this.publicationsService = publicationsService;
+        this.bookService = bookService;
+        this.userService = userService;
     }
 
     @GetMapping(path = "/createPublication")
-    public ModelAndView createPublicationForm(@ModelAttribute("publicationForm") PublicationForm publicationForm) {
+    public ModelAndView createPublicationForm(@ModelAttribute("publicationForm") PublicationForm publicationForm, @RequestParam(name = "publicationId") long publicationId) {
 		
 		final ModelAndView mav = new ModelAndView("/add/createPublication");
 			
@@ -60,14 +77,15 @@ public class AddPublicationController {
 		mav.addObject("publicationForm", publicationForm);
 		mav.addObject("genres", List.of(Genres.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
 		mav.addObject("bookStates", List.of(BookState.values()).stream().map(bookStatus -> new BookStateWrapper(bookStatus, bookStateService.getBookStateDisplayName(bookStatus))).collect(Collectors.toList()));
-		
+        mav.addObject("publicationId", publicationId);
+
 		return mav;
     }
 
     @PostMapping(path = "/createPublication")
     public ModelAndView addPublication(@Valid @ModelAttribute("publicationForm") PublicationForm publicationForm,
                                        BindingResult errors,
-                                       MultipartFile imageFile) {
+                                       MultipartFile imageFile, @RequestParam(name = "publicationId") long publicationId, @RequestParam(name = "isForExchange") boolean isForExchange) {
 
         List<String> authors = publicationForm.getAuthors(); // [!] Debug
         Genres genre = publicationForm.getGenre();			 // [!] Debug
@@ -77,9 +95,9 @@ public class AddPublicationController {
         System.out.println("Estado: " + state);				 // [!] Debug
 
 		if (errors.hasErrors()) {
-			return createPublicationForm(publicationForm);
+			return createPublicationForm(publicationForm, publicationId);
 		}
-		
+
         final Image image = imageService.saveImage(imageFile);
 
         final Publication publication = ps.createPublication(publicationForm.getUsername(),
@@ -97,6 +115,37 @@ public class AddPublicationController {
                 image.getImageId(),
                 publicationForm.getLocation()
         );
+
+        // TODO:
+        // Crear intercambio en la tabla exchange,
+        // Si vengo de un intercambio, mandar mail de solicitud al que publico el libro.
+
+         Exchange ex = exchangeService.initializeExchange(isForExchange, publicationId, publication.getPublicationId());
+
+         if(isForExchange) {
+             Map<String, Object> variables = new HashMap<>();
+             Publication offererPub = publicationsService.getPublicationById(ex.getOfferer()).get();
+             Publication requesterPub = publicationsService.getPublicationById(ex.getRequester()).get();
+
+             Book bookOffered = bookService.getBookById(offererPub.getBookId()).get();
+             Book bookRequested = bookService.getBookById(requesterPub.getBookId()).get();
+
+             User oferrer = userService.findById(ex.getOfferer()).get();
+             User requester = userService.findById(ex.getRequester()).get();
+
+
+             String oferrerEmail = oferrer.getMail();
+
+             variables.put("requesterEmail", oferrerEmail);
+             variables.put("requesterName", oferrer.getUsername());
+             variables.put("requestedPublication", bookRequested.getTitle());
+             variables.put("offeredPublication", bookOffered.getTitle());
+             variables.put("validationUrl", "http://localhost:8080/exchange?acceptCode=" + ex.getAcceptCode() + "&state=true");
+             variables.put("rejectionUrl", "http://localhost:8080/exchange?acceptCode=" + ex.getAcceptCode() +"&state=false");
+
+             emailService.sendEmail(oferrerEmail, variables, "exchangeRequest", "Requesting");
+         }
+
 
         return new ModelAndView("redirect:/");
     }
