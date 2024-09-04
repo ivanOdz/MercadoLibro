@@ -12,7 +12,6 @@ public class Book {
 	private long bookId;
 	private String isbn;
 	private String title;
-	private List<String> authors;
 	private String editorial;
 	private String description;
 	private Genres genre;
@@ -22,18 +21,12 @@ public class Book {
 	private int rating;
 	private long image;
 	private long userId;
-    
-	public Book() {
-		
-		this.authors = new ArrayList<>();
-    }
 	
-	public Book(long bookId, String isbn, String title, List<String> authors, String editorial, String description, Genres genre, BookState bookState, PublicationState publicationState, int edition, int rating, long image, long userId) {
+	public Book(long bookId, String isbn, String title, String editorial, String description, Genres genre, BookState bookState, PublicationState publicationState, int edition, int rating, long image, long userId) {
 		
 		this.bookId = bookId;
 		this.isbn = isbn;
 		this.title = title;
-		this.authors = authors;
 		this.editorial = editorial;
 		this.description = description;
 		this.genre = genre;
@@ -73,21 +66,6 @@ public class Book {
 	public void setTitle(String title) {
 		
 		this.title = title;
-	}
-
-	public List<String> getAuthors() {
-		
-		return authors;
-	}
-
-	public void setAuthors(List<String> authors) {
-		
-		this.authors = authors;
-	}
-
-	public void addAuthor(String author) {
-		
-		this.authors.add(author);
 	}
 
 	public String getEditorial() {

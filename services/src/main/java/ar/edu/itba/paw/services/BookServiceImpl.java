@@ -23,8 +23,8 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book createBook(String isbn, String title, List<String> authors, String editorial, String description, Genres genre, BookState bookState, PublicationState publicationState, int edition, int rating, long image, long userId) {
-        return bookDao.createBook(isbn, title, authors, editorial, description, genre, bookState, publicationState, edition, rating, image, userId);
+    public Book createBook(String isbn, String title, String editorial, String description, Genres genre, BookState bookState, PublicationState publicationState, int edition, int rating, long image, long userId) {
+        return bookDao.createBook(isbn, title, editorial, description, genre, bookState, publicationState, edition, rating, image, userId);
     }
 
     @Override
