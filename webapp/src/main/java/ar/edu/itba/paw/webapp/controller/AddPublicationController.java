@@ -90,7 +90,10 @@ public class AddPublicationController {
 			return createPublicationForm(publicationForm, publicationId, isForExchange);
 		}
 
-        final Publication publication = ps.createPublication(publicationForm.getUsername(),
+
+
+        final Publication publication = ps.createPublication(
+                publicationForm.getUsername(),
                 publicationForm.getMail(),
                 publicationForm.getIsbn(),
                 publicationForm.getTitle(),
