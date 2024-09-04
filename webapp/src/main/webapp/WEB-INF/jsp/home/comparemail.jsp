@@ -2,6 +2,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <html>
 <head>
+    <link href="${pageContext.request.contextPath}/css/comparemail.css" rel="stylesheet"/>
     <title><spring:message code="compare.emails.title"/></title>
 </head>
 <body>
