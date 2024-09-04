@@ -188,9 +188,9 @@
 		<div>
 			<label class="form-group">
 				<spring:message code="add.publication.image"/>
-				<form:input path="image" type="text" class="form-input"/>
+				<form:input path="imageFile" type="file" class="form-input"/>
 			</label>
-			<form:errors path="image" element="p" cssStyle="color: red;"/>
+			<form:errors path="imageFile" element="p" cssStyle="color: red;"/>
 		</div>
 
 		<div>
