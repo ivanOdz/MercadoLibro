@@ -56,7 +56,7 @@ public class BookJdbcDao implements BookDao {
         bookData.put("edition", edition);
         bookData.put("rating", rating);
         bookData.put("image", image);
-        bookData.put("userId", userId);
+        bookData.put("owner", userId);
 
         final Number generatedId = jdbcInsert.executeAndReturnKey(bookData);
         return new Book(generatedId.longValue(), isbn, title, editorial, description, genre, bookState, publicationState, edition, rating, image, userId);
@@ -70,9 +70,16 @@ public class BookJdbcDao implements BookDao {
 
     @Override
     public void exchangeOwnership(long b1, long b2) {
+
+
         Book book1 = getBookById(b1).get();
         Book book2 = getBookById(b2).get();
 
+        System.out.print("bookid1:" + b1);
+        System.out.print("bookid2:" + b2);
+
+        System.out.print("owner1:" + book1.getUserId());
+        System.out.print("owner2:" + book2.getUserId());
         jdbcTemplate.update("UPDATE books SET owner = ? WHERE bookId = ?", book2.getUserId(), book1.getBookId());
         jdbcTemplate.update("UPDATE books SET owner = ? WHERE bookId = ?", book1.getUserId(), book2.getBookId());
     }
