@@ -17,14 +17,16 @@ public class BookAuthorJdbcDao implements BookAuthorDao {
 
     public BookAuthorJdbcDao(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
-        jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).usingGeneratedKeyColumns("bookid").usingGeneratedKeyColumns("authorid").withTableName("author");
+        jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).usingGeneratedKeyColumns("bookid").usingGeneratedKeyColumns("authorid").withTableName("book_author");
     }
 
     @Override
     public BookAuthor createBook_Author(long bookId, long authorId) {
+        System.out.println("bookId: " + bookId + " authorId: " + authorId);
         final Map<String, Long> b_aData = Map.of("bookId", bookId, "authorId", authorId);
 
         final Number generatedId = jdbcInsert.executeAndReturnKey(b_aData);
+        System.out.println("bookId: " + bookId + " authorId: " + authorId + "segundaChance");
         return new BookAuthor(bookId, authorId);
     }
 }

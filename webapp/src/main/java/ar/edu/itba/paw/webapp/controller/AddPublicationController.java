@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ImageService;
-import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
@@ -85,20 +83,14 @@ public class AddPublicationController {
     @PostMapping(path = "/createPublication")
     public ModelAndView addPublication(@Valid @ModelAttribute("publicationForm") PublicationForm publicationForm,
                                        BindingResult errors,
-                                       MultipartFile imageFile, @RequestParam(name = "publicationId") long publicationId, @RequestParam(name = "isForExchange") boolean isForExchange) {
+                                       @RequestParam(name = "publicationId") long publicationId/*, @RequestParam(name = "isForExchange") boolean isForExchange*/) {
 
         List<String> authors = publicationForm.getAuthors(); // [!] Debug
-        Genres genre = publicationForm.getGenre();			 // [!] Debug
-        BookState state = publicationForm.getBookState();	 // [!] Debug
         System.out.println("Autores: " + authors); 			 // [!] Debug
-        System.out.println("Genero: " + genre);				 // [!] Debug
-        System.out.println("Estado: " + state);				 // [!] Debug
 
 		if (errors.hasErrors()) {
 			return createPublicationForm(publicationForm, publicationId);
 		}
-
-        final Image image = imageService.saveImage(imageFile);
 
         final Publication publication = ps.createPublication(publicationForm.getUsername(),
                 publicationForm.getMail(),
@@ -112,7 +104,7 @@ public class AddPublicationController {
                 PublicationState.CURRENT,
                 publicationForm.getEdition(),
                 publicationForm.getRating(),
-                image.getImageId(),
+                imageService.saveImage(publicationForm.getImageFile()).getImageId(),
                 publicationForm.getLocation()
         );
 
@@ -120,7 +112,7 @@ public class AddPublicationController {
         // Crear intercambio en la tabla exchange,
         // Si vengo de un intercambio, mandar mail de solicitud al que publico el libro.
 
-         Exchange ex = exchangeService.initializeExchange(isForExchange, publicationId, publication.getPublicationId());
+         /*Exchange ex = exchangeService.initializeExchange(isForExchange, publicationId, publication.getPublicationId());
 
          if(isForExchange) {
              Map<String, Object> variables = new HashMap<>();
@@ -144,7 +136,7 @@ public class AddPublicationController {
              variables.put("rejectionUrl", "http://localhost:8080/exchange?acceptCode=" + ex.getAcceptCode() +"&state=false");
 
              emailService.sendEmail(oferrerEmail, variables, "exchangeRequest", "Requesting");
-         }
+         }*/
 
 
         return new ModelAndView("redirect:/");

@@ -22,9 +22,11 @@ public class AuthorJdbcDao implements AuthorDao {
 
     @Override
     public Author createAuthor(String authorName) {
-        final Map<String, Object> authorData = Map.of("authorName", authorName);
+        System.out.println("autorName: " + authorName);
+        final Map<String, String> authorData = Map.of("authorName", authorName);
 
         final Number generatedId = jdbcInsert.executeAndReturnKey(authorData);
+        System.out.println("generatedId: " + generatedId);
         return new Author(generatedId.longValue(), authorName);
     }
 }

@@ -131,7 +131,7 @@
 
 	<h1 class="label"><spring:message code="add.publication.header.title"/></h1>
 
-	<form:form modelAttribute="publicationForm" action="${postUrl}" method="post">
+	<form:form modelAttribute="publicationForm" action="${postUrl}" method="post" enctype="multipart/form-data">
 
 		<div>
 			<label class="form-group">

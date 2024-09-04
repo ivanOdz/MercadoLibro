@@ -40,6 +40,7 @@ public class SinglePublicationServiceImpl implements SinglePublicationService {
         Book book = bookDao.createBook(isbn, title, editorial, description, genre, bookState, publicationState, edition, rating, image, user.getId());
 
         for (String author : authors) {
+            System.out.println("autor: " + author);
             Author auth = authorDao.createAuthor(author);
             book_authorDao.createBook_Author(book.getBookId(), auth.getAuthorId());
 

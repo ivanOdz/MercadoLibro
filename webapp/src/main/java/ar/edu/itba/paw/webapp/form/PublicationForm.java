@@ -51,7 +51,6 @@ public class PublicationForm {
     @Max(5)
     private int rating;
 
-    @NotNull
     private MultipartFile imageFile;
 
     @NotBlank
@@ -107,7 +106,6 @@ public class PublicationForm {
         return rating;
     }
 
-    @NotNull
     public MultipartFile getImageFile() {
         return imageFile;
     }
@@ -160,7 +158,7 @@ public class PublicationForm {
         this.rating = rating;
     }
 
-    public void setImage(@NotNull MultipartFile imageFile) {
+    public void setImageFile(MultipartFile imageFile) {
         this.imageFile = imageFile;
     }
 

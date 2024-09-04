@@ -50,9 +50,9 @@ public class BookJdbcDao implements BookDao {
         bookData.put("title", title);
         bookData.put("editorial", editorial);
         bookData.put("description", description);
-        bookData.put("genre", genre);
-        bookData.put("bookState", bookState);
-        bookData.put("publicationState", publicationState);
+        bookData.put("genre", genre.getValue());
+        bookData.put("bookState", bookState.getValue());
+        bookData.put("publicationState", publicationState.getValue());
         bookData.put("edition", edition);
         bookData.put("rating", rating);
         bookData.put("image", image);
