@@ -25,7 +25,6 @@ public class BookJdbcDao implements BookDao {
             rs.getLong("bookId"),
             rs.getString("isbn"),
             rs.getString("title"),
-            Arrays.asList((String[]) rs.getArray("authors").getArray()),	// Convertir el array SQL a una lista de Strings
             rs.getString("editorial"),
             rs.getString("description"),
             Genres.fromInt(rs.getInt("genre")),
@@ -44,12 +43,11 @@ public class BookJdbcDao implements BookDao {
     }
 
     @Override
-    public Book createBook(String isbn, String title, List<String> authors, String editorial, String description, Genres genre, BookState bookState, PublicationState publicationState, int edition, int rating, long image, long userId) {
+    public Book createBook(String isbn, String title, String editorial, String description, Genres genre, BookState bookState, PublicationState publicationState, int edition, int rating, long image, long userId) {
         
     	final Map<String, Object> bookData = new HashMap<>();
         bookData.put("isbn", isbn);
         bookData.put("title", title);
-        bookData.put("authors", String.join(",", authors));
         bookData.put("editorial", editorial);
         bookData.put("description", description);
         bookData.put("genre", genre);
@@ -61,7 +59,7 @@ public class BookJdbcDao implements BookDao {
         bookData.put("userId", userId);
 
         final Number generatedId = jdbcInsert.executeAndReturnKey(bookData);
-        return new Book(generatedId.longValue(), isbn, title, authors, editorial, description, genre, bookState, publicationState, edition, rating, image, userId);
+        return new Book(generatedId.longValue(), isbn, title, editorial, description, genre, bookState, publicationState, edition, rating, image, userId);
     }
 
     @Override
