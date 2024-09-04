@@ -1,10 +1,8 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ImageService;
-import ar.edu.itba.paw.models.Book;
 import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.Publication;
-import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.models.utils.BookStateWrapper;
 import ar.edu.itba.paw.models.utils.GenreWrapper;
@@ -21,7 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.*;
+
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 

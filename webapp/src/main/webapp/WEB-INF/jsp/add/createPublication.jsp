@@ -8,9 +8,10 @@
 
     <title><spring:message code="add.publication.header"/></title>
 	<meta charset="UTF-8">
+	
     <script type="text/javascript">
 
-		let authorIndex = 0;
+		let authorIndex = authors.lenght;
 
 		function addAuthorField() {
 
@@ -130,7 +131,7 @@
 
 	<h1 class="label"><spring:message code="add.publication.header.title"/></h1>
 
-	<form:form modelAttribute="publicationForm" action="${postUrl}" method="post" enctype="multipart/form-data">
+	<form:form modelAttribute="publicationForm" action="${postUrl}" method="post">
 
 		<div>
 			<label class="form-group">
@@ -167,12 +168,12 @@
 		<div id="author-container">
 			<label class="form-group">
 				<spring:message code="add.publication.authors"/>
-				<c:forEach var="i" begin="0" end="${book.authors.size()}">
-					<div>
-						<form:input path="authors[${i}]"/>
-						<button type="button" onclick="removeAuthorField(this)"><spring:message code="add.publication.remove.author"/></button>
-					</div>
-				</c:forEach>
+				<c:forEach var="author" items="${publicationForm.authors}" varStatus="status">
+					<input type="text" name="authors[${status.index}]" value="${author}" class="form-input"/>
+						<c:if test="${status.index > 0}">
+							<button type="button" onclick="removeAuthorField(this)"> X </button>
+						</c:if>
+					</c:forEach>
 			</label>
 		</div>
 
