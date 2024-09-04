@@ -180,20 +180,27 @@
 			<button type="button" onclick="addAuthorField()"><spring:message code="add.publication.add.author"/></button>
 		</div>
 
-		<div class="form-group">
-			<form:label path="genre"><spring:message code="add.publication.genre"/></form:label>
-			<form:select path="genre">
-				<form:options items="${genres}" />
-			</form:select>
-		</div>
+	    <div class="form-group">
+	    	<form:label path="genre">
+	    		<spring:message code="add.publication.genre"/>
+	    	</form:label>
+	    	<form:select path="genre" class="form-input">
+	    		<c:forEach var="genreWrapper" items="${genres}">
+	    			<form:option value="${genreWrapper.genre}" label="${genreWrapper.displayName}"/>
+	    		</c:forEach>
+	    	</form:select>
+	    </div>
 
-		<div class="form-group">
-			<form:label path="bookState"><spring:message code="add.publication.book.state"/></form:label>
-			<form:select path="bookState">
-				<form:options items="${bookStates}" />
-			</form:select>
-		</div>
-		<br>
+	    <div class="form-group">
+	    	<form:label path="genre">
+	    		<spring:message code="add.publication.book.state"/>
+	    	</form:label>
+	    	<form:select path="bookState" class="form-input">
+	    		<c:forEach var="bookStateWrapper" items="${bookStates}">
+	    			<form:option value="${bookStateWrapper.bookState}" label="${bookStateWrapper.displayName}" />
+	    		</c:forEach>
+	    	</form:select>
+	    </div>
 
 		<div>
 			<label class="form-group">

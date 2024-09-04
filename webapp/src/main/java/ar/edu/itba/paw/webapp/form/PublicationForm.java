@@ -28,7 +28,7 @@ public class PublicationForm {
     private String title;
     
     @NotEmpty
-    private List<String> authors = new ArrayList<String>();
+    private List<String> authors;
     
     @NotBlank
     @Size(min = 1, max = 100)
