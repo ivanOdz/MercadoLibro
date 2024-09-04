@@ -25,7 +25,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
 
 
     private static final RowMapper<Exchange> ROWMAPPER =
-            (rs, rowNum) -> new Exchange(rs.getLong("exchangeId"), rs.getLong("offerer"), rs.getLong("requester"), rs.getInt("exchangeState"), rs.getLong("acceptCode"));
+            (rs, rowNum) -> new Exchange(rs.getLong("exchangeId"), rs.getLong("offerer"), rs.getLong("requester"), rs.getInt("exchangeState"), rs.getInt("acceptCode"));
 
 
     public ExchangeJdbcDao(final DataSource ds, PublicationsJdbcDao publicationsJdbcDao, BookJdbcDao bookJdbcDao) {
@@ -38,10 +38,11 @@ public class ExchangeJdbcDao implements ExchangeDao {
     }
 
     @Override
-    public void updateExchangeStatus(long acceptCode, int newStatus) {
+    public void updateExchangeStatus(int acceptCode, int newStatus) {
         String sql = "UPDATE exchanges SET exchangestate = ? WHERE acceptCode = ?";
         jdbcTemplate.update(sql, newStatus, acceptCode);
     }
+
 
     @Override
     public Optional<Exchange> findById(long id) {
@@ -52,8 +53,8 @@ public class ExchangeJdbcDao implements ExchangeDao {
     @Override
     public long getIdByAcceptCode(int acceptCode) {
         System.out.println(acceptCode);
-        return jdbcTemplate.query("SELECT * FROM exchanges WHERE exchangeId = ?", new Object[]{ acceptCode },
-                new int[]{ Types.BIGINT }, ROWMAPPER).stream().findFirst().get().getId();
+        return jdbcTemplate.query("SELECT * FROM exchanges WHERE acceptCode = ?", new Object[]{ acceptCode },
+                new int[]{ Types.INTEGER }, ROWMAPPER).stream().findFirst().get().getId();
     }
 
     @Override
@@ -93,7 +94,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
     }
 
     @Override
-    public Exchange createExchange(long offererId, long requesterId, long acceptCode) {
+    public Exchange createExchange(long offererId, long requesterId, int acceptCode) {
         final Map<String, Object> exchangeData = new HashMap<>();
         exchangeData.put("offerer", offererId);
         exchangeData.put("requester", requesterId);

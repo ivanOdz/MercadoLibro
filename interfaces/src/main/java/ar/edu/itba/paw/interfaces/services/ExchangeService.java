@@ -7,8 +7,6 @@ import java.util.Optional;
 
 @Service
 public interface ExchangeService {
-    void acceptExchange(long acceptCode);
-    void rejectExchange(long acceptCode);
     Optional<Exchange> getExchangeById(long exchangeId);
 
     long getId(int acceptCode);

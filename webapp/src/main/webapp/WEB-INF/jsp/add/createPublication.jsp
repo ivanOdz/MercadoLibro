@@ -41,7 +41,7 @@
 			font-family: Arial, sans-serif;
 			margin: 0;
 			padding: 0;
-			background-color: #f8f9fa;
+			background-color: #ebe3d5;
 		}
 
 		.form-container {
@@ -52,7 +52,7 @@
 			max-width: 600px;
 			margin: auto;
 			padding: 20px;
-			background-color: #fff;
+			background-color: #f8f8e2;
 			box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
 		}
 
@@ -69,6 +69,7 @@
 		.form-input {
 
 			width: 100%;
+			margin-bottom: 12px;
 			padding: 5px;
 			border: 2px solid #ccc;
 			border-radius: 4px;
