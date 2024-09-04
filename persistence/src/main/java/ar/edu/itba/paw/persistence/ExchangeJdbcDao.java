@@ -76,6 +76,9 @@ public class ExchangeJdbcDao implements ExchangeDao {
 
         jdbcTemplate.update("UPDATE exchanges SET exchangeState = ? WHERE acceptCode = ?", ExchangeState.ACCEPTED.getValue(), acceptCode);
         jdbcTemplate.update("UPDATE exchanges SET exchangeState = ? WHERE offerer = ? AND acceptCode <> ?", ExchangeState.REJECTED.getValue(), ex.get().getOfferer(), acceptCode);
+        publicationsJdbcDao.terminatePublication(ex.get().getOfferer());
+        publicationsJdbcDao.terminatePublication(ex.get().getRequester());
+
         return ResponseState.ACCEPTED;
 
     }
