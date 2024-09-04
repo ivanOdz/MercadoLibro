@@ -19,7 +19,7 @@ public class ImageJdbcDao implements ImageDao {
     public ImageJdbcDao(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .usingGeneratedKeyColumns("imageId")
+                .usingGeneratedKeyColumns("imageid")
                 .withTableName("images");
     }
 
