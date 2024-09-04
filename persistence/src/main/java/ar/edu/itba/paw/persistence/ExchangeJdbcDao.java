@@ -50,15 +50,16 @@ public class ExchangeJdbcDao implements ExchangeDao {
     }
 
     @Override
-    public long getIdByAcceptCode(long acceptCode) {
+    public long getIdByAcceptCode(int acceptCode) {
+        System.out.println(acceptCode);
         return jdbcTemplate.query("SELECT * FROM exchanges WHERE exchangeId = ?", new Object[]{ acceptCode },
                 new int[]{ Types.BIGINT }, ROWMAPPER).stream().findFirst().get().getId();
     }
 
     @Override
-    public ResponseState exchange(long acceptCode, boolean state) {
+    public ResponseState exchange(int acceptCode, boolean state) {
         Optional<Exchange> ex = jdbcTemplate.query("SELECT * FROM exchanges WHERE acceptCode = ?", new Object[]{ acceptCode },
-                new int[]{ Types.BIGINT }, ROWMAPPER).stream().findFirst();
+                new int[]{ Types.INTEGER }, ROWMAPPER).stream().findFirst();
 
         if(ex.isEmpty()) {
             // TODO: mandar a una pagina que diga accept code invalido

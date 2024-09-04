@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.ExchangeDao;
-import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.ExchangeService;
 import ar.edu.itba.paw.models.Exchange;
 import ar.edu.itba.paw.models.utils.ResponseState;
@@ -33,12 +32,12 @@ public class ExchangeServiceImpl implements ExchangeService {
     }
 
     @Override
-    public long getId(long acceptCode) {
+    public long getId(int acceptCode) {
         return exchangeDao.getIdByAcceptCode(acceptCode);
     }
 
     @Override
-    public String exchange(long acceptCode, boolean state) {
+    public String exchange(int acceptCode, boolean state) {
         switch (exchangeDao.exchange(acceptCode, state)){
             case ResponseState.ACCEPTED: {
                 return "exchange/accepted";
@@ -54,7 +53,7 @@ public class ExchangeServiceImpl implements ExchangeService {
     public Exchange initializeExchange(boolean isForExchange, long offererId, long requesterId) {
 //        if(isForExchange) {
             Random random = new Random();
-            long acceptCode = Math.abs(random.nextLong());
+            int acceptCode = Math.abs(random.nextInt());
             return exchangeDao.createExchange(offererId, requesterId, acceptCode);
 //        }
 //        return null;

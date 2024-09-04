@@ -10,9 +10,9 @@ public interface ExchangeDao {
 
     Optional<Exchange> findById(long id);
 
-    long getIdByAcceptCode(long acceptCode);
+    long getIdByAcceptCode(int acceptCode);
 
-    ResponseState exchange(long acceptCode, boolean state);
+    ResponseState exchange(int acceptCode, boolean state);
 
     Exchange createExchange(long offererId, long requesterId, long acceptCode);
 
