@@ -5,7 +5,7 @@
 <head>
     <title><spring:message code="form.title"/></title>
     
-    <style type="text/css">
+    <style>
     
 	    .form-container {
 	
@@ -42,8 +42,8 @@
 	    <label for="email"><spring:message code="form.label.email"/></label>
 	    <input type="email" id="email" name="email" required>
 	    <input type="hidden" name="publicationId" value="${publicationId}">
+	    <button type="submit"><spring:message code="form.button.submit"/></button>
 	</form>
-	<button type="submit"><spring:message code="form.button.submit"/></button>
 </div>
 </body>
 </html>
