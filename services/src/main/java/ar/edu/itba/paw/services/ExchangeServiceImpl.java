@@ -41,7 +41,7 @@ public class ExchangeServiceImpl implements ExchangeService {
     }
 
     @Override
-    public Exchange initializeExchange(boolean isForExchange, long offererId, long requesterId) {
+    public Exchange initializeExchange(boolean isForExchange, long requesterId, long offererId) {
 //        if(isForExchange) {
             Random random = new Random();
             int acceptCode = Math.abs(random.nextInt());

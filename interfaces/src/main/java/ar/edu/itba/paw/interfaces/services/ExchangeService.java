@@ -12,6 +12,5 @@ public interface ExchangeService {
     long getId(int acceptCode);
 
     String exchange(int acceptCode, boolean state);
-    Exchange initializeExchange(boolean isForExchange, long offererId, long requesterId);
-
+    Exchange initializeExchange(boolean isForExchange, long requesterId, long offererId);
 }

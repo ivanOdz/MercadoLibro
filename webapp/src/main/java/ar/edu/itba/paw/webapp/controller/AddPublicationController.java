@@ -109,13 +109,9 @@ public class AddPublicationController {
                 publicationForm.getLocation()
         );
 
-        // TODO:
-        // Crear intercambio en la tabla exchange,
-        // Si vengo de un intercambio, mandar mail de solicitud al que publico el libro.
-
          if(isForExchange) {
         	 
-             Exchange ex = exchangeService.initializeExchange(isForExchange, publicationId, publication.getPublicationId());
+             Exchange ex = exchangeService.initializeExchange(isForExchange, publication.getPublicationId(), publicationId);
              
              Map<String, Object> variables = new HashMap<>();
              Publication offererPub = publicationsService.getPublicationById(ex.getOfferer()).get();
@@ -125,12 +121,12 @@ public class AddPublicationController {
              Book bookRequested = bookService.getBookById(requesterPub.getBookId()).get();
 
              User oferrer = userService.findById(offererPub.getUserId()).get();
-
+             User requester = userService.findById(requesterPub.getUserId()).get();
 
              String oferrerEmail = oferrer.getMail();
 
-             variables.put("requesterEmail", oferrerEmail);
-             variables.put("requesterName", oferrer.getUsername());
+             variables.put("requesterEmail", requester.getMail());
+             variables.put("requesterName", requester.getUsername());
              variables.put("requestedPublication", bookRequested.getTitle());
              variables.put("offeredPublication", bookOffered.getTitle());
              variables.put("validationUrl", "http://localhost:8080/exchange?acceptCode=" + ex.getAcceptCode() + "&state=true");
