@@ -51,8 +51,8 @@ public class ExchangeController {
 
         variables.put("requesterEmail", requesterEmail);
         variables.put("requesterName", requester.getUsername());
-        variables.put("requestedBook", bookRequested.getDescription());
-        variables.put("offeredBook", bookOffered.getDescription());
+        variables.put("requestedBook", bookRequested.getTitle());
+        variables.put("offeredBook", bookOffered.getTitle());
 
         emailService.sendExchangeEmail(requesterEmail, variables, state);
 
