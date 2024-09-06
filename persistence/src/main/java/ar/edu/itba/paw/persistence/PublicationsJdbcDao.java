@@ -59,8 +59,8 @@ public class PublicationsJdbcDao implements PublicationsDao {
         }
 
         List<Publication> publicationsList = jdbcTemplate.query(
-                "SELECT * FROM publication WHERE publicationState = ? AND bookId IN (SELECT bookId from books WHERE title = ?)",
-                new Object[]{ PublicationState.CURRENT.getValue(), search }, new int[]{ Types.INTEGER, Types.VARCHAR }, ROWMAPPERPUBLICATIONS);
+                "SELECT * FROM publication WHERE publicationState = ? AND bookId IN (SELECT bookId from books WHERE LOWER(title) LIKE LOWER(?))",
+                new Object[]{ PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%" }, new int[]{ Types.INTEGER, Types.VARCHAR }, ROWMAPPERPUBLICATIONS);
         return new Publications(publicationsList);
     }
 
