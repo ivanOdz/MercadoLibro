@@ -46,6 +46,7 @@ public class ExchangeController {
         Book bookRequested = bookService.getBookById(requesterPub.getBookId()).get();
 
         User requester = userService.findById(requesterPub.getUserId()).get();
+        User offerer = userService.findById(offererPub.getUserId()).get();
 
         String requesterEmail = requester.getMail();
 
@@ -53,6 +54,8 @@ public class ExchangeController {
         variables.put("requesterName", requester.getUsername());
         variables.put("requestedBook", bookRequested.getTitle());
         variables.put("offeredBook", bookOffered.getTitle());
+        variables.put("offererName", offerer.getUsername());
+        variables.put("offererEmail", offerer.getMail());
 
         emailService.sendExchangeEmail(requesterEmail, variables, state);
 

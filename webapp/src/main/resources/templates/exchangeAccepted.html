@@ -27,6 +27,13 @@
         <span th:text="${offeredBook}" style="font-size: 16px;"></span>
     </p>
 
+    <!-- Datos del la otra persona para que se contacten -->
+    <p>
+        <span th:text="#{email.offererContact(${offererName}, ${offererEmail})}" style="font-size: 16px;"></span>
+    </p>
+
+
+
     <p th:text="#{email.acceptanceThankYouMessage}" style="font-size: 16px;"></p>
 </div>
 </body>
