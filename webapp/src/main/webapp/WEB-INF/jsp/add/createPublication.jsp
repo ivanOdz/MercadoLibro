@@ -8,8 +8,9 @@
 
     <title><spring:message code="add.publication.header"/></title>
 	<meta charset="UTF-8">
-	
-    <script type="text/javascript">
+	<link href="${pageContext.request.contextPath}/css/publicationForm.css" rel="stylesheet"/>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+	<script type="text/javascript">
 
 		let authorIndex = authors.lenght;
 
@@ -31,96 +32,7 @@
 			container.removeChild(button.parentNode);
 			authorIndex--;
 		}
-
 	</script>
-
-	<style>
-
-		body {
-
-			font-family: Arial, sans-serif;
-			margin: 0;
-			padding: 0;
-			background-color: #ebe3d5;
-		}
-
-		.form-container {
-
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			max-width: 600px;
-			margin: auto;
-			padding: 20px;
-			background-color: #f8f8e2;
-			box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-		}
-
-		.form-group label {
-
-			width: 100%;
-			display: flex;
-			flex-direction: column;
-			margin-bottom: 15px;
-			width: 100%;
-			color: #333;
-		}
-
-		.form-input {
-
-			width: 100%;
-			margin-bottom: 12px;
-			padding: 5px;
-			border: 2px solid #ccc;
-			border-radius: 4px;
-		}
-
-		.form-container button[type="submit"] {
-
-			font-size: 18px;
-			padding: 10px 20px;
-			border: none;
-			background-color: #007bff;
-			color: white;
-			border-radius: 5px;
-			margin-top: 20px;
-			cursor: pointer;
-			transition: background-color 0.3s;
-		 }
-
-		.form-container button[type="submit"]:hover {
-
-			background-color: #0056b3;
-		}
-
-		.form-container .add-author-button:hover {
-
-			background-color: #218838;
-		}
-
-		.form-group button:hover {
-
-			background-color: #0056b3;
-		}
-
-		.form-group .form-errors {
-			color: red;
-			font-size: 14px;
-			margin-top: 5px;
-		}
-
-		#author-container div {
-
-			margin-bottom: 10px;
-		}
-
-		#author-container input {
-
-			display: inline-block;
-			width: calc(100% - 110px);
-		}
-
-	</style>
 
 </head>
 
@@ -134,8 +46,13 @@
 	<c:set var="usernameFieldIsReadOnly" value="${not empty username}" />
 	<c:set var="emailFieldIsReadOnly" value="${not empty submited_mail}" />
 
+<%--	<small class="description">--%>
+<%--		<spring:message code="add.publication.description.required_fields"/>--%>
+<%--	</small>--%>
 
 	<form:form modelAttribute="publicationForm" action="${postUrl}" method="post" enctype="multipart/form-data">
+
+		<h4 class="label"><spring:message code="add.publication.subheader.user"/></h4>
 
 		<div>
 			<label class="form-group">
@@ -146,24 +63,38 @@
 			</label>
 			<form:errors path="username" element="p" cssStyle="color: red;"/>
 		</div>
+
 		<div>
 			<label class="form-group">
 				<spring:message code="add.publication.mail"/>
 				<form:input path="mail" type="text" class="form-input"
 							value="${submited_mail}" readonly="${emailFieldIsReadOnly}" />
-			</label>
+                <small class="description">
+                    <spring:message code="add.publication.username_email.description"/>
+                </small>
+            </label>
 			<form:errors path="mail" element="p" cssStyle="color: red;"/>
 		</div>
 
-		<div>
+
+
+		<h4 class="label"><spring:message code="add.publication.subheader.book"/></h4>
+
+		<div style="margin-bottom: 10px">
 			<label class="form-group">
 				<spring:message code="add.publication.isbn"/>
 				<form:input path="isbn" type="text" class="form-input"/>
+				<small class="description">
+					<spring:message code="add.publication.description.isbn"/>
+				</small>
 			</label>
 			<form:errors path="isbn" element="p" cssStyle="color: red;"/>
+
 		</div>
 
-		<div>
+
+
+		<div  class="form-field">
 			<label class="form-group">
 				<spring:message code="add.publication.title"/>
 				<form:input path="title" type="text" class="form-input"/>
@@ -171,7 +102,7 @@
 			<form:errors path="title" element="p" cssStyle="color: red;"/>
 		</div>
 
-		<div id="author-container">
+		<div id="author-container" class="form-field">
 			<label class="form-group">
 				<spring:message code="add.publication.authors"/>
 				<c:forEach var="author" items="${publicationForm.authors}" varStatus="status">
@@ -183,8 +114,11 @@
 			</label>
 		</div>
 
-		<div class="form-container">
+		<div class="form-container" style="margin-bottom: 10px">
 			<button type="button" onclick="addAuthorField()"><spring:message code="add.publication.add.author"/></button>
+			<small class="description">
+				<spring:message code="add.publication.description.authors"/>
+			</small>
 		</div>
 
 	    <div class="form-group">
@@ -217,29 +151,64 @@
 			<form:errors path="editorial" element="p" cssStyle="color: red;"/>
 		</div>
 
-		<div>
+		<div style="margin-bottom: 10px">
 			<label class="form-group">
 				<spring:message code="add.publication.description"/>
 				<form:input path="description" type="text" class="form-input"/>
 			</label>
 			<form:errors path="description" element="p" cssStyle="color: red;"/>
+			<small class="description">
+				<spring:message code="add.publication.description.description"/>
+			</small>
 		</div>
 
-		<div>
+		<div  style="margin-bottom: 10px">
 			<label class="form-group">
 				<spring:message code="add.publication.edition"/>
 				<form:input path="edition" type="text" class="form-input"/>
 			</label>
 			<form:errors path="edition" element="p" cssStyle="color: red;"/>
+			<small class="description">
+				<spring:message code="add.publication.description.edition"/>
+			</small>
 		</div>
 
-		<div>
-			<label class="form-group">
+		<div class="form-group">
+			<label>
 				<spring:message code="add.publication.rating"/>
-				<form:input path="rating" type="text" class="form-input"/>
 			</label>
-			<form:errors path="rating" element="p" cssStyle="color: red;"/>
+
+			<div class="star-rating">
+				<form:radiobutton path="rating" value="5" id="star5" />
+				<label for="star5" title="5 stars">
+					<i class="material-icons">star</i>
+				</label>
+
+				<form:radiobutton path="rating" value="4" id="star4" />
+				<label for="star4" title="4 stars">
+					<i class="material-icons">star</i>
+				</label>
+
+				<form:radiobutton path="rating" value="3" id="star3" />
+				<label for="star3" title="3 stars">
+					<i class="material-icons">star</i>
+				</label>
+
+				<form:radiobutton path="rating" value="2" id="star2" />
+				<label for="star2" title="2 stars">
+					<i class="material-icons">star</i>
+				</label>
+
+				<form:radiobutton path="rating" value="1" id="star1" />
+				<label for="star1" title="1 star">
+					<i class="material-icons">star</i>
+				</label>
+			</div>
+
+			<!-- Mostrar errores de validación -->
+			<form:errors path="rating" element="p" cssStyle="color: red;" />
 		</div>
+
 
 		<div>
 			<label class="form-group">

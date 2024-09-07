@@ -92,6 +92,7 @@ public class AddPublicationController {
 			return createPublicationForm(publicationForm, publicationId, isForExchange, submited_mail);
 		}
 
+        System.out.print("RATING:" +publicationForm.getRating());
 
         final Publication publication = ps.createPublication(
                 publicationForm.getUsername(),
