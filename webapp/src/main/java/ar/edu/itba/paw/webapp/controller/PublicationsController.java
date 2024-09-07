@@ -68,7 +68,7 @@ public class PublicationsController {
     }
 
     @RequestMapping(value = "/submitmail", method = RequestMethod.POST)
-    public ModelAndView handleMailSubmission(@RequestParam(name = "email") String email, @RequestParam(name = "publicationId") long publicationId) {
+    public ModelAndView handleMailSubmission(@RequestParam(name = "submited_mail") String submited_mail, @RequestParam(name = "publicationId") long publicationId) {
         final ModelAndView mav = new ModelAndView("home/comparemail");
 
         if (ps.getPublicationById(publicationId).isEmpty()) {
@@ -79,7 +79,7 @@ public class PublicationsController {
         User owner = us.findById(userId).get();
 
         mav.addObject("ownerMail", owner.getMail());
-        mav.addObject("solicitingEmail", email);
+        mav.addObject("submited_mail", submited_mail);
         mav.addObject("publicationId", publicationId);
         mav.addObject("isForExchange", true);
 

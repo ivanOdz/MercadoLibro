@@ -37,11 +37,10 @@
 <body>
 
 <div class="form-container">
-
 	<form action="submitmail" method="post">
-	    <label for="email"><spring:message code="form.label.email"/></label>
-	    <input type="email" id="email" name="email" required>
-	    <input type="hidden" name="publicationId" value="${publicationId}">
+	    <label for="submited_mail"><spring:message code="form.label.email"/></label>
+		<input type="email" id="submited_mail" name="submited_mail" required>
+		<input type="hidden" name="publicationId" value="${publicationId}">
 	    <button type="submit"><spring:message code="form.button.submit"/></button>
 	</form>
 </div>

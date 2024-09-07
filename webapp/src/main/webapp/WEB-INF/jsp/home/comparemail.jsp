@@ -12,12 +12,13 @@
 	<h1><spring:message code="compare.emails.header"/></h1>
 	
 	<c:choose>
-	    <c:when test="${ownerMail != solicitingEmail}">
+	    <c:when test="${ownerMail != submited_mail}">
 	        <%-- Redirigir a la página de crear un libro --%>
 	        <p><spring:message code="compare.emails.different"/></p>
 	        <form action="<c:url value='/createPublication'/>" method="get">
 	            <input type="hidden" name="publicationId" value="${publicationId}">
 	            <input type="hidden" name="isForExchange" value="${isForExchange}">
+	            <input type="hidden" name="submited_mail" value="${submited_mail}">
 	            <button type="submit"><spring:message code="compare.emails.createBookButton"/></button>
 	        </form>
 	    </c:when>

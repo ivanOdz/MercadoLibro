@@ -131,21 +131,25 @@
 <div class="form-container">
 
 	<h1 class="label"><spring:message code="add.publication.header.title"/></h1>
+	<c:set var="isReadOnly" value="${not empty username}" />
+
 
 	<form:form modelAttribute="publicationForm" action="${postUrl}" method="post" enctype="multipart/form-data">
 
 		<div>
 			<label class="form-group">
 				<spring:message code="add.publication.username"/>
-				<form:input path="username" type="text" class="form-input"/>
+				<form:input path="username" type="text" class="form-input"
+							value="${username}"
+							readonly="${isReadOnly}" />
 			</label>
 			<form:errors path="username" element="p" cssStyle="color: red;"/>
 		</div>
-
 		<div>
 			<label class="form-group">
 				<spring:message code="add.publication.mail"/>
-				<form:input path="mail" type="text" class="form-input"/>
+				<form:input path="mail" type="text" class="form-input"
+							value="${submited_mail}" readonly="true" />
 			</label>
 			<form:errors path="mail" element="p" cssStyle="color: red;"/>
 		</div>
@@ -257,6 +261,7 @@
 		<div class="form-container">
 			<input type="hidden" name="publicationId" value="${publicationId}">
 			<input type="hidden" name="isForExchange" value="${isForExchange}">
+			<input type="hidden" name="		submited_mail" value="${submited_mail}">
 			<button type="submit"><spring:message code="add.publication.submit"/></button>
 		</div>
 

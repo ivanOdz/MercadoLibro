@@ -9,5 +9,5 @@ public interface UserDao {
 
     User createUser(String username, String mail);
     
-    public Optional<User> find(String username, String mail);
+    Optional<User> find(String mail);
 }

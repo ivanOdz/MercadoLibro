@@ -63,38 +63,39 @@ public class AddPublicationController {
     }
 
     @GetMapping(path = "/createPublication")
-    public ModelAndView createPublicationForm(@ModelAttribute("publicationForm") PublicationForm publicationForm, @RequestParam(name = "publicationId") long publicationId,  @RequestParam(name = "isForExchange") boolean isForExchange) {
-		
-		final ModelAndView mav = new ModelAndView("/add/createPublication");
-			
-		if (publicationForm.getAuthors() == null) {
-			
-			publicationForm.setAuthors(new ArrayList<String>());
-		}
-		
-		mav.addObject("publicationForm", publicationForm);
-		mav.addObject("genres", List.of(Genres.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
-		mav.addObject("bookStates", List.of(BookState.values()).stream().map(bookStatus -> new BookStateWrapper(bookStatus, bookStateService.getBookStateDisplayName(bookStatus))).collect(Collectors.toList()));
+    public ModelAndView createPublicationForm(@ModelAttribute("publicationForm") PublicationForm publicationForm, @RequestParam(name = "publicationId") long publicationId,  @RequestParam(name = "isForExchange") boolean isForExchange, @RequestParam(name = "submited_mail", defaultValue = "") String submited_mail) {
+
+        final ModelAndView mav = new ModelAndView("/add/createPublication");
+
+        if (publicationForm.getAuthors() == null) {
+            publicationForm.setAuthors(new ArrayList<>());
+        }
+
+        String username = userService.findUsernameByEmail(submited_mail);
+        mav.addObject("publicationForm", publicationForm);
+        mav.addObject("genres", List.of(Genres.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
+        mav.addObject("bookStates", List.of(BookState.values()).stream().map(bookStatus -> new BookStateWrapper(bookStatus, bookStateService.getBookStateDisplayName(bookStatus))).collect(Collectors.toList()));
         mav.addObject("publicationId", publicationId);
         mav.addObject("isForExchange", isForExchange);
+        mav.addObject("submited_mail", submited_mail);
+        mav.addObject("username", username);
 
-		return mav;
+        return mav;
     }
 
     @PostMapping(path = "/createPublication")
     public ModelAndView addPublication(@Valid @ModelAttribute("publicationForm") PublicationForm publicationForm,
                                        BindingResult errors,
-                                       @RequestParam(name = "publicationId") long publicationId, @RequestParam(name = "isForExchange") boolean isForExchange) {
+                                       @RequestParam(name = "publicationId") long publicationId, @RequestParam(name = "isForExchange") boolean isForExchange, @RequestParam(name = "submited_mail", defaultValue = "") String submited_mail) {
 
 		if (errors.hasErrors()) {
-			return createPublicationForm(publicationForm, publicationId, isForExchange);
+			return createPublicationForm(publicationForm, publicationId, isForExchange, submited_mail);
 		}
-
 
 
         final Publication publication = ps.createPublication(
                 publicationForm.getUsername(),
-                publicationForm.getMail(),
+                submited_mail,
                 publicationForm.getIsbn(),
                 publicationForm.getTitle(),
                 publicationForm.getAuthors(),
