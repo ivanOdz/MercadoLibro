@@ -110,9 +110,7 @@
 								</div>
 								<div class="card-content">
 									<h5 class="card-text">${card.book.title}</h5>
-									<p class="card-text small-gray-text">
-										<spring:message code="publication.details.authors"/>${card.authorsString}
-									</p>
+									<p class="card-text small-gray-text">${card.authorsString}</p>
 								</div>
 							</div>
 						</a>
