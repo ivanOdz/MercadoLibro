@@ -2,33 +2,30 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.BookDao;
 import ar.edu.itba.paw.interfaces.persistence.ImageDao;
-import ar.edu.itba.paw.interfaces.services.BookService;
-import ar.edu.itba.paw.interfaces.services.CardService;
-import ar.edu.itba.paw.interfaces.services.ImageService;
-import ar.edu.itba.paw.interfaces.services.PublicationsService;
-import ar.edu.itba.paw.models.Book;
-import ar.edu.itba.paw.models.Card;
-import ar.edu.itba.paw.models.Image;
-import ar.edu.itba.paw.models.Publication;
+import ar.edu.itba.paw.interfaces.services.*;
+import ar.edu.itba.paw.models.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CardServiceImpl implements CardService {
 
     private final BookService bookService;
     private final ImageService imageService;
+    private final BookAuthorService bookAuthorService;
 
-    public CardServiceImpl(BookService bookService, ImageService imageService) {
+    public CardServiceImpl(BookService bookService, ImageService imageService, BookAuthorService bookAuthorService) {
         this.bookService = bookService;
         this.imageService = imageService;
+        this.bookAuthorService = bookAuthorService;
     }
 
     @Override
-    public Card createCard(Publication publication, Book book, Image image) {
-        return new Card(publication, book, image);
+    public Card createCard(Publication publication, Book book, Image image, List<Author> authors) {
+        return new Card(publication, book, image, authors);
     }
 
     @Override
@@ -37,7 +34,8 @@ public class CardServiceImpl implements CardService {
         for (Publication publication : publicationsList) {
             Book book = bookService.getBookById(publication.getBookId()).get();
             Image image = imageService.getImageById(book.getImage()).orElse(null);
-            cardList.add(new Card(publication, book, image));
+            List<Author> authors = bookAuthorService.getAuthorsByBookId(book.getBookId());
+            cardList.add(new Card(publication, book, image, authors));
         }
         return cardList;
     }
