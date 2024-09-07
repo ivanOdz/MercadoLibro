@@ -29,11 +29,21 @@ public class Card {
         return image;
     }
 
-    public List<Author> getBookAuthors() {return bookAuthors;}
+    public List<Author> getBookAuthors() {
+        return bookAuthors;
+    }
 
     public String getAuthorsString() {
-        return bookAuthors.stream()
+        List<String> authorNames = bookAuthors.stream()
                 .map(Author::getAuthorName)
-                .collect(Collectors.joining(", "));
+                .limit(3) // Limita a los primeros 3 autores
+                .collect(Collectors.toList());
+
+        String authorsString = String.join(", ", authorNames);
+
+        if (bookAuthors.size() > 3) {
+            authorsString += ", ...";
+        }
+        return authorsString;
     }
 }
