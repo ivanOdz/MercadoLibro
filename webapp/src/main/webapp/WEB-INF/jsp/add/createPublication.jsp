@@ -131,7 +131,8 @@
 <div class="form-container">
 
 	<h1 class="label"><spring:message code="add.publication.header.title"/></h1>
-	<c:set var="isReadOnly" value="${not empty username}" />
+	<c:set var="usernameFieldIsReadOnly" value="${not empty username}" />
+	<c:set var="emailFieldIsReadOnly" value="${not empty submited_mail}" />
 
 
 	<form:form modelAttribute="publicationForm" action="${postUrl}" method="post" enctype="multipart/form-data">
@@ -141,7 +142,7 @@
 				<spring:message code="add.publication.username"/>
 				<form:input path="username" type="text" class="form-input"
 							value="${username}"
-							readonly="${isReadOnly}" />
+							readonly="${usernameFieldIsReadOnly}" />
 			</label>
 			<form:errors path="username" element="p" cssStyle="color: red;"/>
 		</div>
@@ -149,7 +150,7 @@
 			<label class="form-group">
 				<spring:message code="add.publication.mail"/>
 				<form:input path="mail" type="text" class="form-input"
-							value="${submited_mail}" readonly="true" />
+							value="${submited_mail}" readonly="${emailFieldIsReadOnly}" />
 			</label>
 			<form:errors path="mail" element="p" cssStyle="color: red;"/>
 		</div>
