@@ -31,9 +31,20 @@
 			bottom: 20px;
 		}
 		.small-gray-text {
-			color: gray; /* Color gris */
-			font-size: 0.8em; /* Tamaño de fuente más pequeño */
+			color: gray;
+			font-size: 0.8em;
 		}
+
+		.book-image {
+			width: 100%;
+			height: 200px;
+			object-fit: contain;
+		}
+
+		.card {
+			min-height: 400px;
+		}
+
 	</style>
 
 </head>
@@ -84,16 +95,16 @@
 				<c:forEach var="card" items="${publications}">
 					<div class="col s12 m6 l3">
 						<a href="<c:url value='submitmail'>
-                            <c:param name='publicationId' value='${card.publication.publicationId}'/>
-                            </c:url>" class="card-link">
+        					<c:param name='publicationId' value='${card.publication.publicationId}'/>
+        					</c:url>" class="card-link">
 							<div class="card hoverable">
 								<div class="card-image waves-effect waves-block waves-light">
 									<c:choose>
 										<c:when test="${card.image != null}">
-											<img class="activator custom-image" src="${pageContext.request.contextPath}/images/${card.image.imageId}" alt="bookImage"/>
+											<img class="activator custom-image book-image" src="${pageContext.request.contextPath}/images/${card.image.imageId}" alt="bookImage"/>
 										</c:when>
 										<c:otherwise>
-											<img class="activator custom-image" src="${pageContext.request.contextPath}/images/book.jpg" alt="book"/>
+											<img class="activator custom-image book-image" src="${pageContext.request.contextPath}/images/book.jpg" alt="book"/>
 										</c:otherwise>
 									</c:choose>
 								</div>
