@@ -7,9 +7,10 @@ import java.util.Optional;
 
 @Service
 public interface ExchangeService {
-    void acceptExchange(long acceptCode);
-    void rejectExchange(long acceptCode);
     Optional<Exchange> getExchangeById(long exchangeId);
-    long getId(long acceptCode);
-    String exchange(long acceptCode, boolean state);
+
+    long getId(int acceptCode);
+
+    String exchange(int acceptCode, boolean state);
+    Exchange initializeExchange(boolean isForExchange, long requesterId, long offererId);
 }

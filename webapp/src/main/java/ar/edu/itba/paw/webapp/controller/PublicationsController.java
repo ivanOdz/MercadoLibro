@@ -1,17 +1,20 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.services.CardService;
+import ar.edu.itba.paw.models.Card;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.interfaces.services.BookService;
 import ar.edu.itba.paw.interfaces.services.PublicationsService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
 
 @Controller
 public class PublicationsController {
@@ -19,17 +22,20 @@ public class PublicationsController {
     private PublicationsService ps;
     private BookService bs;
     private UserService us;
+    private CardService cs;
 
-    public PublicationsController(final PublicationsService ps, final BookService bs, final UserService us) {
+    public PublicationsController(PublicationsService ps, BookService bs, UserService us, CardService cs) {
         this.ps = ps;
         this.bs = bs;
         this.us = us;
+        this.cs = cs;
     }
 
     @RequestMapping("/")
     public ModelAndView index(@RequestParam(name = "search", defaultValue = "") String search) {
         final ModelAndView mav = new ModelAndView("home/publications");
-        mav.addObject("publications", ps.getAllPublicationsFilteredBy(search));
+        List<Card> cardList = cs.buildCardList(ps.getAllPublicationsFilteredBy(search).getPublications());
+        mav.addObject("publications", cardList);
         return mav;
     }
 
@@ -39,13 +45,15 @@ public class PublicationsController {
     }
 
 
-        @RequestMapping("/publication")
+    @RequestMapping("/publication")
     public ModelAndView publication(@RequestParam(name = "publicationId") long publicationId) {
         final ModelAndView mav = new ModelAndView("home/publication");
-        if(ps.getPublicationById(publicationId).isEmpty()) {
+        
+        if (ps.getPublicationById(publicationId).isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Publication not found");
         }
         else mav.addObject("publication", ps.getPublicationById(publicationId).get());
+        
         return mav;
     }
 
@@ -60,16 +68,20 @@ public class PublicationsController {
     }
 
     @RequestMapping(value = "/submitmail", method = RequestMethod.POST)
-    public ModelAndView handleMailSubmission(@RequestParam(name = "email") String email, @RequestParam(name = "publicationId") long publicationId) {
+    public ModelAndView handleMailSubmission(@RequestParam(name = "submited_mail") String submited_mail, @RequestParam(name = "publicationId") long publicationId) {
         final ModelAndView mav = new ModelAndView("home/comparemail");
 
         if (ps.getPublicationById(publicationId).isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Publication not found");
         }
-        User owner = us.findById(bs.getBookById(ps.getPublicationById(publicationId).get().getBookId()).get().getUserId()).get();
+        
+        long userId = ps.getPublicationById(publicationId).get().getUserId();
+        User owner = us.findById(userId).get();
 
         mav.addObject("ownerMail", owner.getMail());
-        mav.addObject("solicitingEmail", email);
+        mav.addObject("submited_mail", submited_mail);
+        mav.addObject("publicationId", publicationId);
+        mav.addObject("isForExchange", true);
 
         return mav;
     }

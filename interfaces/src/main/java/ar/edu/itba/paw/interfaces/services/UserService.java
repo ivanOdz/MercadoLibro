@@ -11,6 +11,10 @@ public interface UserService {
 
     Optional<User> findById(long id);
 
+    Optional<User> findUserByEmail(String mail);
+
+    String findUsernameByEmail(String mail);
+
     User createUser(String username, String mail);
 
     Optional<User> findByUsername(String username);

@@ -4,7 +4,9 @@ import javax.validation.constraints.*;
 
 import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.models.utils.Genres;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PublicationForm {
@@ -49,8 +51,7 @@ public class PublicationForm {
     @Max(5)
     private int rating;
 
-    @NotNull
-    private long image;
+    private MultipartFile imageFile;
 
     @NotBlank
     private String location;
@@ -87,7 +88,7 @@ public class PublicationForm {
     public Genres getGenre() {
     	return genre;
     }
-    
+
     @NotNull
     public BookState getBookState() {
     	return bookState;
@@ -105,9 +106,8 @@ public class PublicationForm {
         return rating;
     }
 
-
-    public long getImage() {
-        return image;
+    public MultipartFile getImageFile() {
+        return imageFile;
     }
 
     public @NotBlank String getLocation() {
@@ -146,7 +146,7 @@ public class PublicationForm {
     	this.genre = genre;
     }
     
-    public void serBookSate(@NotNull BookState bookState) {
+    public void setBookState(@NotNull BookState bookState) {
     	this.bookState = bookState;
     }
     
@@ -158,8 +158,8 @@ public class PublicationForm {
         this.rating = rating;
     }
 
-    public void setImage(@NotNull long image) {
-        this.image = image;
+    public void setImageFile(MultipartFile imageFile) {
+        this.imageFile = imageFile;
     }
 
     public void setLocation(@NotBlank String location) {

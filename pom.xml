@@ -25,6 +25,7 @@
     <com.sun.mail.version>1.6.2</com.sun.mail.version>
     <commons.version>2.16.1</commons.version>
     <org.slf4j.version>2.0.13</org.slf4j.version>
+    <commons-fileupload-version>1.5</commons-fileupload-version>
     <spring.security.version>4.0.4.RELEASE</spring.security.version>
   </properties>
 
@@ -109,6 +110,11 @@
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-validator</artifactId>
         <version>${org.hibernate.validator}</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-fileupload</groupId>
+        <artifactId>commons-fileupload</artifactId>
+        <version>${commons-fileupload-version}</version>
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>

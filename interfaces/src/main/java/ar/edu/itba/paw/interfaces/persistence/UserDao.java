@@ -8,6 +8,6 @@ public interface UserDao {
     Optional<User> findById(long id);
 
     User createUser(String username, String mail);
-
-    Optional<User> findByUsername(String username);
+    
+    Optional<User> find(String mail);
 }

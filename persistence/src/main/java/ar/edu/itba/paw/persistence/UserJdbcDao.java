@@ -36,10 +36,27 @@ public class UserJdbcDao implements UserDao {
     }
 
     @Override
+    public Optional<User> find(String mail) {
+        return jdbcTemplate.query("SELECT * FROM users WHERE mail = ?", new Object[]{ mail },
+        		new int[]{ Types.VARCHAR }, ROWMAPPER).stream().findFirst();
+    }
+    
+    @Override
     public User createUser(String username, String mail) {
-        final Map<String, String> userData = Map.of("username", username, "mail", mail);
-        final Number generatedId = jdbcInsert.executeAndReturnKey(userData);
-        return new User(generatedId.longValue(), username, mail);
+    	
+        final Map<String, String> userData = Map.of("mail", mail);
+        final Number userId;
+
+        Optional<User> user = find(mail);
+
+        if (user.isPresent()) {
+            return user.get();
+        }
+        else {
+        	userId = jdbcInsert.executeAndReturnKey(userData);
+        }
+
+        return new User(userId.longValue(), username, mail);
     }
 
     @Override

@@ -12,6 +12,7 @@ import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.*;
@@ -78,7 +79,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     }
 
 
-    @Override 
+    @Override
     public void addInterceptors(InterceptorRegistry registry) {
         super.addInterceptors(registry);
         registry.addInterceptor(localeInterceptor());
@@ -90,6 +91,13 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         dsi.setDataSource(ds);
         dsi.setDatabasePopulator(dsPopulator());
         return dsi;
+    }
+
+    @Bean
+    public CommonsMultipartResolver multipartResolver() {
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+        multipartResolver.setMaxUploadSize(10485760); // Tamaño máximo del archivo (10MB en este ejemplo)
+        return multipartResolver;
     }
 
     private DatabasePopulator dsPopulator() {

@@ -25,7 +25,6 @@ public class BookJdbcDao implements BookDao {
             rs.getLong("bookId"),
             rs.getString("isbn"),
             rs.getString("title"),
-            Arrays.asList((String[]) rs.getArray("authors").getArray()),	// Convertir el array SQL a una lista de Strings
             rs.getString("editorial"),
             rs.getString("description"),
             Genres.fromInt(rs.getInt("genre")),
@@ -44,24 +43,23 @@ public class BookJdbcDao implements BookDao {
     }
 
     @Override
-    public Book createBook(String isbn, String title, List<String> authors, String editorial, String description, Genres genre, BookState bookState, PublicationState publicationState, int edition, int rating, long image, long userId) {
+    public Book createBook(String isbn, String title, String editorial, String description, Genres genre, BookState bookState, PublicationState publicationState, int edition, int rating, long image, long userId) {
         
     	final Map<String, Object> bookData = new HashMap<>();
         bookData.put("isbn", isbn);
         bookData.put("title", title);
-        bookData.put("authors", String.join(",", authors));
         bookData.put("editorial", editorial);
         bookData.put("description", description);
-        bookData.put("genre", genre);
-        bookData.put("bookState", bookState);
-        bookData.put("publicationState", publicationState);
+        bookData.put("genre", genre.getValue());
+        bookData.put("bookState", bookState.getValue());
+        bookData.put("publicationState", publicationState.getValue());
         bookData.put("edition", edition);
         bookData.put("rating", rating);
         bookData.put("image", image);
-        bookData.put("userId", userId);
+        bookData.put("owner", userId);
 
         final Number generatedId = jdbcInsert.executeAndReturnKey(bookData);
-        return new Book(generatedId.longValue(), isbn, title, authors, editorial, description, genre, bookState, publicationState, edition, rating, image, userId);
+        return new Book(generatedId.longValue(), isbn, title, editorial, description, genre, bookState, publicationState, edition, rating, image, userId);
     }
 
     @Override
@@ -72,9 +70,16 @@ public class BookJdbcDao implements BookDao {
 
     @Override
     public void exchangeOwnership(long b1, long b2) {
+
+
         Book book1 = getBookById(b1).get();
         Book book2 = getBookById(b2).get();
 
+        System.out.print("bookid1:" + b1);
+        System.out.print("bookid2:" + b2);
+
+        System.out.print("owner1:" + book1.getUserId());
+        System.out.print("owner2:" + book2.getUserId());
         jdbcTemplate.update("UPDATE books SET owner = ? WHERE bookId = ?", book2.getUserId(), book1.getBookId());
         jdbcTemplate.update("UPDATE books SET owner = ? WHERE bookId = ?", book1.getUserId(), book2.getBookId());
     }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.Types;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -24,21 +25,24 @@ public class ExchangeJdbcDao implements ExchangeDao {
 
 
     private static final RowMapper<Exchange> ROWMAPPER =
-            (rs, rowNum) -> new Exchange(rs.getLong("exchangeId"), rs.getLong("offerer"), rs.getLong("requester"), rs.getInt("exchangeState"), rs.getLong("acceptCode"));
+            (rs, rowNum) -> new Exchange(rs.getLong("exchangeId"), rs.getLong("offerer"), rs.getLong("requester"), rs.getInt("exchangeState"), rs.getInt("acceptCode"));
 
 
     public ExchangeJdbcDao(final DataSource ds, PublicationsJdbcDao publicationsJdbcDao, BookJdbcDao bookJdbcDao) {
         jdbcTemplate = new JdbcTemplate(ds);
         this.publicationsJdbcDao = publicationsJdbcDao;
         this.bookJdbcDao = bookJdbcDao;
-        jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).usingGeneratedKeyColumns("exchangeId").withTableName("exchanges");
+        jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .usingGeneratedKeyColumns("exchangeid")
+                .withTableName("exchanges");
     }
 
     @Override
-    public void updateExchangeStatus(long acceptCode, int newStatus) {
+    public void updateExchangeStatus(int acceptCode, int newStatus) {
         String sql = "UPDATE exchanges SET exchangestate = ? WHERE acceptCode = ?";
         jdbcTemplate.update(sql, newStatus, acceptCode);
     }
+
 
     @Override
     public Optional<Exchange> findById(long id) {
@@ -47,14 +51,16 @@ public class ExchangeJdbcDao implements ExchangeDao {
     }
 
     @Override
-    public long getIdByAcceptCode(long acceptCode) {
-            return jdbcTemplate.queryForObject("SELECT exchangeId FROM exchanges WHERE acceptCode = ?", new Object[]{ acceptCode }, Long.class);
+    public long getIdByAcceptCode(int acceptCode) {
+        System.out.println(acceptCode);
+        return jdbcTemplate.query("SELECT * FROM exchanges WHERE acceptCode = ?", new Object[]{ acceptCode },
+                new int[]{ Types.INTEGER }, ROWMAPPER).stream().findFirst().get().getId();
     }
 
     @Override
-    public ResponseState exchange(long acceptCode, boolean state) {
+    public ResponseState exchange(int acceptCode, boolean state) {
         Optional<Exchange> ex = jdbcTemplate.query("SELECT * FROM exchanges WHERE acceptCode = ?", new Object[]{ acceptCode },
-                new int[]{ Types.BIGINT }, ROWMAPPER).stream().findFirst();
+                new int[]{ Types.INTEGER }, ROWMAPPER).stream().findFirst();
 
         if(ex.isEmpty()) {
             // TODO: mandar a una pagina que diga accept code invalido
@@ -79,7 +85,25 @@ public class ExchangeJdbcDao implements ExchangeDao {
         bookJdbcDao.exchangeOwnership(b1, b2);
 
         jdbcTemplate.update("UPDATE exchanges SET exchangeState = ? WHERE acceptCode = ?", ExchangeState.ACCEPTED.getValue(), acceptCode);
+        jdbcTemplate.update("UPDATE exchanges SET exchangeState = ? WHERE offerer = ? AND acceptCode <> ?", ExchangeState.REJECTED.getValue(), ex.get().getOfferer(), acceptCode);
+        publicationsJdbcDao.terminatePublication(ex.get().getOfferer());
+        publicationsJdbcDao.terminatePublication(ex.get().getRequester());
+
         return ResponseState.ACCEPTED;
 
     }
+
+    @Override
+    public Exchange createExchange(long offererId, long requesterId, int acceptCode) {
+        final Map<String, Object> exchangeData = new HashMap<>();
+        exchangeData.put("offerer", offererId);
+        exchangeData.put("requester", requesterId);
+        exchangeData.put("acceptCode", acceptCode);
+        exchangeData.put("exchangeState", ExchangeState.PENDING.getValue());
+
+        final Number generatedId = jdbcInsert.executeAndReturnKey(exchangeData);
+        return new Exchange(generatedId.longValue(),  offererId,  requesterId,  ExchangeState.PENDING.getValue(), acceptCode);
+    }
+
+
 }

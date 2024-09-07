@@ -13,7 +13,6 @@ CREATE TABLE IF NOT EXISTS books (
     bookId              SERIAL PRIMARY KEY,
     isbn                VARCHAR(13) NOT NULL,
     title               VARCHAR(255) NOT NULL,
-    authors             TEXT[] NOT NULL,
     editorial           VARCHAR(255) NOT NULL,
     description         TEXT,
     genre               INTEGER,
@@ -24,6 +23,20 @@ CREATE TABLE IF NOT EXISTS books (
     image               INTEGER REFERENCES images(imageId),
     owner               INTEGER REFERENCES users(userId)
 );
+
+CREATE TABLE IF NOT EXISTS author (
+    authorId            SERIAL PRIMARY KEY,
+    authorName          VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS book_author (
+    bookId              INTEGER,
+    authorId            INTEGER,
+    PRIMARY KEY (bookId, authorId),
+    FOREIGN KEY (bookId) REFERENCES books(bookId) ON DELETE CASCADE,
+    FOREIGN KEY (authorId) REFERENCES author(authorId) ON DELETE CASCADE
+);
+
 
 CREATE TABLE IF NOT EXISTS publication (
     publicationId       SERIAL PRIMARY KEY,

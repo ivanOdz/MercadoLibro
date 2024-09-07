@@ -24,6 +24,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<User> findUserByEmail(String mail) {
+        return userDao.find(mail);
+    }
+
+    @Override
+    public String findUsernameByEmail(String mail){
+        return findUserByEmail(mail).map(User::getUsername).orElse("");
+    }
+
+    @Override
     public User createUser(String username, String mail) {
         //register user
         //TODO

@@ -32,7 +32,7 @@ public class ExchangeController {
     }
 
     @RequestMapping("/exchange")
-    public ModelAndView exchange(@RequestParam(name = "acceptCode") long acceptCode, @RequestParam(name = "state") boolean state) {
+    public ModelAndView exchange(@RequestParam(name = "acceptCode") int acceptCode, @RequestParam(name = "state") boolean state) {
         final ModelAndView mav = new ModelAndView(exchangeService.exchange(acceptCode, state));
 
         Map<String, Object> variables = new HashMap<>();
@@ -46,13 +46,16 @@ public class ExchangeController {
         Book bookRequested = bookService.getBookById(requesterPub.getBookId()).get();
 
         User requester = userService.findById(requesterPub.getUserId()).get();
+        User offerer = userService.findById(offererPub.getUserId()).get();
 
         String requesterEmail = requester.getMail();
 
         variables.put("requesterEmail", requesterEmail);
         variables.put("requesterName", requester.getUsername());
-        variables.put("requestedBook", bookRequested.getDescription());
-        variables.put("offeredBook", bookOffered.getDescription());
+        variables.put("requestedBook", bookRequested.getTitle());
+        variables.put("offeredBook", bookOffered.getTitle());
+        variables.put("offererName", offerer.getUsername());
+        variables.put("offererEmail", offerer.getMail());
 
         emailService.sendExchangeEmail(requesterEmail, variables, state);
 

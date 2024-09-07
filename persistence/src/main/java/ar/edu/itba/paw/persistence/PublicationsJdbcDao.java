@@ -4,6 +4,8 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.persistence.PublicationsDao;
 import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.models.Publications;
+import ar.edu.itba.paw.models.utils.ExchangeState;
+import ar.edu.itba.paw.models.utils.PublicationState;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -38,6 +40,13 @@ public class PublicationsJdbcDao implements PublicationsDao {
     }
 
     @Override
+    public Publications getAllPublicationsAvailable() {
+        List<Publication> publicationsList = jdbcTemplate.query("SELECT * FROM publication WHERE publicationState = ?", ROWMAPPERPUBLICATIONS, PublicationState.CURRENT.getValue());
+        return new Publications(publicationsList);
+    }
+
+
+    @Override
     public Optional<Publication> getPublicationById(long pubId) {
         return jdbcTemplate.query("SELECT * FROM publication WHERE publicationId = ?", new Object[]{ pubId },
                 new int[]{ Types.BIGINT }, ROWMAPPERPUBLICATIONS).stream().findFirst();
@@ -46,13 +55,19 @@ public class PublicationsJdbcDao implements PublicationsDao {
     @Override
     public Publications getAllPublicationsFilteredBy(String search) {
         if(search.compareTo("") == 0) {
-            return getAllPublications();
+            return getAllPublicationsAvailable();
         }
-        // Matecheo exacto del titulo del libro con lo que se busca.
+
         List<Publication> publicationsList = jdbcTemplate.query(
-                "SELECT * FROM publication WHERE bookId IN (SELECT bookId from books WHERE title = ?)",
-                new Object[]{ search }, new int[]{ Types.VARCHAR }, ROWMAPPERPUBLICATIONS);
+                "SELECT * FROM publication WHERE publicationState = ? AND bookId IN (SELECT bookId from books WHERE LOWER(title) LIKE LOWER(?))",
+                new Object[]{ PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%" }, new int[]{ Types.INTEGER, Types.VARCHAR }, ROWMAPPERPUBLICATIONS);
         return new Publications(publicationsList);
+    }
+
+    @Override
+    public void terminatePublication(long pubId) {
+        jdbcTemplate.update("UPDATE publication SET publicationState = ? WHERE publicationId = ?",PublicationState.TERMINATED.getValue(), pubId);
+
     }
 }
 

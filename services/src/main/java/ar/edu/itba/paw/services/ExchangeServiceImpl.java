@@ -1,13 +1,12 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.ExchangeDao;
-import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.ExchangeService;
 import ar.edu.itba.paw.models.Exchange;
 import ar.edu.itba.paw.models.utils.ResponseState;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class ExchangeServiceImpl implements ExchangeService {
@@ -17,15 +16,6 @@ public class ExchangeServiceImpl implements ExchangeService {
         this.exchangeDao = exchangeDao;
     }
 
-    @Override
-    public void acceptExchange(long acceptCode){
-        exchangeDao.updateExchangeStatus(acceptCode, 0);
-    }
-
-    @Override
-    public void rejectExchange(long acceptCode) {
-        exchangeDao.updateExchangeStatus(acceptCode, 1);
-    }
 
     @Override
     public Optional<Exchange> getExchangeById(long exchangeId) {
@@ -33,12 +23,12 @@ public class ExchangeServiceImpl implements ExchangeService {
     }
 
     @Override
-    public long getId(long acceptCode) {
+    public long getId(int acceptCode) {
         return exchangeDao.getIdByAcceptCode(acceptCode);
     }
 
     @Override
-    public String exchange(long acceptCode, boolean state) {
+    public String exchange(int acceptCode, boolean state) {
         switch (exchangeDao.exchange(acceptCode, state)){
             case ResponseState.ACCEPTED: {
                 return "exchange/accepted";
@@ -48,5 +38,15 @@ public class ExchangeServiceImpl implements ExchangeService {
             }
             default: return "exchange/invalid";
         }
+    }
+
+    @Override
+    public Exchange initializeExchange(boolean isForExchange, long requesterId, long offererId) {
+//        if(isForExchange) {
+            Random random = new Random();
+            int acceptCode = Math.abs(random.nextInt());
+            return exchangeDao.createExchange(offererId, requesterId, acceptCode);
+//        }
+//        return null;
     }
 }
