@@ -5,7 +5,8 @@
 <html lang="es">
 
 <head>
-	<link href="${pageContext.request.contextPath}/css/publications.css" rel="stylesheet"/>
+	<link href="${pageContext.request.contextPath}/css/publications.css?v=1.0" rel="stylesheet"/>
+
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
@@ -13,84 +14,9 @@
 
 	<title><spring:message code="publications.list.title"/></title>
 
-	<style>
-		.fixed-action-btn {
-			position: fixed;
-			right: 20px;
-			bottom: 20px;
-		}
-
-		.small-gray-text {
-			color: gray;
-			font-size: 0.8em;
-		}
-
-		.book-image {
-			width: 100%;
-			height: 200px;
-			object-fit: contain;
-		}
-
-		.filter-section {
-			margin: 1rem;
-			padding: 1rem;
-			background-color: white;
-			border-radius: 8px;
-		}
-
-		.col-content {
-			flex: 1;
-		}
-
-		.navbar-logo {
-			text-align: left;
-		}
-		.ml-9{
-			margin-left: 9rem;
-		}
-
-		.mt-1 {
-			margin-top: 1rem;
-		}
-
-		.mb-1 {
-			margin-bottom: 1rem;
-		}
-
-		.custom-link:hover {
-			text-decoration: none;
-		}
-
-		.custom-search-form .uk-search-input {
-			border-radius: 20px;
-		}
-
-		.custom-search-form button.uk-search-icon-flip {
-			border-radius: 20px;
-		}
-
-		.fixed-action-btn a {
-			border-radius: 50%;
-			width: 60px;
-			height: 60px;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			text-align: center;
-			padding: 0;
-			box-shadow: none;
-			z-index: 1000;
-		}
-
-		.fixed-action-btn .uk-button-primary {
-			border-radius: 50%;
-			padding: 0; /
-		}
-	</style>
-
 </head>
 <body>
-<nav class="uk-navbar-container" uk-navbar>
+<nav class="uk-navbar-container uk-background-primary" uk-navbar>
 	<div class="uk-navbar-left ml-9">
 		<a class="uk-navbar-item uk-logo navbar-logo" href="${pageContext.request.contextPath}/">
 			<spring:message code="publications.list.brand.logo"/>
@@ -122,7 +48,7 @@
 <div class="uk-background-muted">
 	<div class="uk-container uk-margin-top">
 		<div class="uk-grid" uk-grid>
-			<div class="uk-width-1-4@s filter-section uk-border-rounded uk-box-shadow-small">
+			<div class="uk-width-1-4@s filter-section uk-border-rounded uk-box-shadow-small mt-1 mb-1">
 				<ul uk-accordion="multiple: true">
 					<li class="uk-open">
 						<a class="uk-accordion-title" href><spring:message code="filter.genre"/></a>
@@ -196,13 +122,13 @@
 				</ul>
 			</div>
 
-			<div class="uk-width-3-4@s col-content mb-1">
+			<div class="uk-width-3-4@s col-content">
 				<div class="uk-card uk-card-default uk-card-body uk-margin-bottom mt-1 uk-border-rounded uk-border-rounded-medium">
 					<h5 class="uk-text-large"><spring:message code="publications.list.available"/></h5>
 					<h6 class="uk-text-muted"><spring:message code="publications.list.select"/></h6>
 				</div>
 
-				<div class="uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m" uk-grid>
+				<div class="uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m mb-1" uk-grid>
 					<c:forEach var="card" items="${publications}">
 						<div>
 							<a href="<c:url value='submitmail'>
