@@ -57,4 +57,5 @@ Thumbs.db
 /dataSources/
 /dataSources.local.xml
 
-/webapp/target
+/webapp/src/main/resources/rememberme.key
+
