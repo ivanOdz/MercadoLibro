@@ -3,7 +3,7 @@ package ar.edu.itba.paw.models;
 public class User {
 
     private final long userId;
-    private final String username;
+    private String username;
     private final String mail;
     private final String password;
 
