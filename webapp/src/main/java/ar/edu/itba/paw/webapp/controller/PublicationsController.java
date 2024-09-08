@@ -46,7 +46,7 @@ public class PublicationsController {
 
 
     @RequestMapping("/publication")
-    public ModelAndView publication(@RequestParam(name = "publicationId") long publicationId) {
+    public ModelAndView publication(@RequestParam(name = "publication_id") long publicationId) {
         final ModelAndView mav = new ModelAndView("home/publication");
         
         if (ps.getPublicationById(publicationId).isEmpty()) {
@@ -58,17 +58,17 @@ public class PublicationsController {
     }
 
     @RequestMapping("/submitmail")
-    public ModelAndView submitMail(@RequestParam(name = "publicationId") long publicationId) {
+    public ModelAndView submitMail(@RequestParam(name = "publication_id") long publicationId) {
         final ModelAndView mav = new ModelAndView("home/submitmail");
         if(ps.getPublicationById(publicationId).isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Publication not found");
         }
-        else mav.addObject("publicationId", publicationId);
+        else mav.addObject("publication_id", publicationId);
         return mav;
     }
 
     @RequestMapping(value = "/submitmail", method = RequestMethod.POST)
-    public ModelAndView handleMailSubmission(@RequestParam(name = "submited_mail") String submited_mail, @RequestParam(name = "publicationId") long publicationId) {
+    public ModelAndView handleMailSubmission(@RequestParam(name = "submited_mail") String submited_mail, @RequestParam(name = "publication_id") long publicationId) {
         final ModelAndView mav = new ModelAndView("home/comparemail");
 
         if (ps.getPublicationById(publicationId).isEmpty()) {
@@ -80,8 +80,8 @@ public class PublicationsController {
 
         mav.addObject("ownerMail", owner.getMail());
         mav.addObject("submited_mail", submited_mail);
-        mav.addObject("publicationId", publicationId);
-        mav.addObject("isForExchange", true);
+        mav.addObject("publication_id", publicationId);
+        mav.addObject("is_for_exchange", true);
 
         return mav;
     }
