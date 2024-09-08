@@ -33,17 +33,13 @@
 
 		.filter-section {
 			margin: 1rem;
-			padding: 1rem; /* Opcional: Añade espacio interno si es necesario */
-			background-color: white; /* Opcional: Añade un color de fondo si deseas diferenciarlo del resto */
-			border-radius: 8px; /* Opcional: Añade bordes redondeados */
+			padding: 1rem;
+			background-color: white;
+			border-radius: 8px;
 		}
 
 		.col-content {
-			flex: 1; /* Ocupa el resto del espacio disponible */
-		}
-
-		.checkbox-container {
-			margin-left: 8rem; /* Ajusta el margen izquierdo específico para los checkboxes */
+			flex: 1;
 		}
 
 		.navbar-logo {
@@ -62,40 +58,34 @@
 		}
 
 		.custom-link:hover {
-			text-decoration: none; /* Quita el subrayado */
+			text-decoration: none;
 		}
 
 		.custom-search-form .uk-search-input {
-			border-radius: 20px; /* Ajusta el valor según el grado de redondeo deseado */
+			border-radius: 20px;
 		}
 
 		.custom-search-form button.uk-search-icon-flip {
-			border-radius: 20px; /* Si deseas redondear también el botón */
+			border-radius: 20px;
 		}
 
 		.fixed-action-btn a {
-			border-radius: 50%; /* Redondea el botón a forma de círculo */
-			width: 60px; /* Ajusta el ancho del botón */
-			height: 60px; /* Ajusta la altura del botón */
-			display: flex; /* Usa flexbox para centrar el icono */
-			align-items: center; /* Centra verticalmente el icono */
-			justify-content: center; /* Centra horizontalmente el icono */
-			text-align: center; /* Alinea el texto (o icono) en el centro */
-			padding: 0; /* Elimina el padding del botón */
-			box-shadow: none; /* Opcional: Elimina cualquier sombra si es necesario */
+			border-radius: 50%;
+			width: 60px;
+			height: 60px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			text-align: center;
+			padding: 0;
+			box-shadow: none;
+			z-index: 1000;
 		}
 
 		.fixed-action-btn .uk-button-primary {
-			border-radius: 50%; /* Asegura que el botón tenga bordes redondeados */
-			padding: 0; /* Elimina el padding adicional */
+			border-radius: 50%;
+			padding: 0; /
 		}
-
-		.uk-chip-container {
-			display: flex;
-			flex-wrap: wrap;
-			gap: 0.5rem; /* Espacio entre chips */
-		}
-
 	</style>
 
 </head>
@@ -211,19 +201,12 @@
 					<h5 class="uk-text-large"><spring:message code="publications.list.available"/></h5>
 					<h6 class="uk-text-muted"><spring:message code="publications.list.select"/></h6>
 				</div>
-				<c:forEach var="card" items="${publications}">
-					<div class="col s12 m6 l3">
-						<a href="<c:url value='submitmail'>
-        					<c:param name='publication_id' value='${card.publication.publicationId}'/>
-        					</c:url>" class="card-link">
-							<div class="card hoverable">
-								<div class="card-image waves-effect waves-block waves-light">
 
 				<div class="uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m" uk-grid>
 					<c:forEach var="card" items="${publications}">
 						<div>
 							<a href="<c:url value='submitmail'>
-								<c:param name='publicationId' value='${card.publication.publicationId}'/>
+								<c:param name='publication_id' value='${card.publication.publicationId}'/>
 								</c:url>" class="uk-card uk-card-default uk-card-hover uk-card-body uk-border-rounded custom-link">
 								<figure class="uk-margin-bottom">
 									<c:choose>
