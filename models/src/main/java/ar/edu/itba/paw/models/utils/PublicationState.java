@@ -1,8 +1,11 @@
 package ar.edu.itba.paw.models.utils;
 
 public enum PublicationState {
+    TERMINATED(0),
     CURRENT(1),
-    TERMINATED(0);
+    OFFERED(2),
+    ACCEPTED(3);
+
 
     private final int value;
 
