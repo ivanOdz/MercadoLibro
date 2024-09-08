@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.form;
 
 
+import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -35,6 +36,11 @@ public class UserForm {
 
     public void setRepeatedPassword(String repeatedPassword) {
         this.repeatedPassword = repeatedPassword;
+    }
+
+    @AssertTrue(message = "{userForm.passwords.mismatch}")
+    public boolean isPasswordsMatching() {
+        return password != null && password.equals(repeatedPassword);
     }
 
     public String getUsername() {

@@ -36,6 +36,11 @@
         <form:errors path="repeatedPassword" element="p" cssStyle="color: red;"/>
     </div>
 
+
+    <c:if test="${!empty userForm.password && !empty userForm.repeatedPassword && userForm.password != userForm.repeatedPassword}">
+        <span class="error" style="color:red"><spring:message code="userForm.passwords.mismatch"/></span>
+    </c:if>
+
     <div>
         <label>
             <input type="submit"/>
