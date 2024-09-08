@@ -12,6 +12,6 @@ import java.util.List;
 @Service
 public interface SinglePublicationService {
 
-    Publication createPublication(String username, String mail, String isbn, String title, List<String> authors, String editorial, String description, Genres genre, BookState bookState, PublicationState publicationState, int edition, int rating, long image, String location);
+    Publication createPublication(String username, String mail, String password,String isbn, String title, List<String> authors, String editorial, String description, Genres genre, BookState bookState, PublicationState publicationState, int edition, int rating, long image, String location);
 
 }

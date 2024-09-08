@@ -5,10 +5,16 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.utils.Genres;
 import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.interfaces.services.SinglePublicationService;
+import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 import ar.edu.itba.paw.webapp.form.PublicationForm;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.webapp.form.UserForm;
 import ar.edu.itba.paw.interfaces.services.EmailService;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -31,9 +37,12 @@ public class HelloWorldController {
 
     private final EmailService emailService;
 
-    public HelloWorldController(final UserService us, final EmailService emailService) {
+    private AuthenticationManager auth;
+
+    public HelloWorldController(final UserService us, final EmailService emailService, AuthenticationManager auth) {
         this.us = us;
         this.emailService = emailService;
+        this.auth = auth;
     }
 
     @RequestMapping("/index")
@@ -41,6 +50,11 @@ public class HelloWorldController {
         final ModelAndView mav = new ModelAndView("helloworld/index");
         mav.addObject("username", us.findById(userId).get().getUsername());
         mav.addObject("userId", userId);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.getPrincipal() instanceof PawUserDetails pud) {
+            mav.addObject("loggedUser", pud.getUser());
+        }
         return mav;
     }
 
@@ -57,10 +71,17 @@ public class HelloWorldController {
 
     @RequestMapping(path = "/create", method = RequestMethod.POST)
     public ModelAndView create(@Valid @ModelAttribute("userForm") UserForm userForm, BindingResult errors) {
+
         if (errors.hasErrors()){
+            System.out.println(errors.getAllErrors());
             return createForm(userForm);
         }
-        final User user = us.createUser(userForm.getUsername(), userForm.getMail());
+        final User user = us.createUser(userForm.getUsername(), userForm.getMail(), userForm.getPassword());
+
+        // Creamos una sesión y dejamos logeado al usuario
+        final Authentication authenticationToken = new UsernamePasswordAuthenticationToken(userForm.getUsername(), userForm.getPassword(), null);
+        SecurityContextHolder.getContext().setAuthentication(auth.authenticate(authenticationToken));
+
         return new ModelAndView("redirect:/" + user.getId());
     }
 
@@ -72,6 +93,17 @@ public class HelloWorldController {
     @RequestMapping("/login")
     public ModelAndView login(){
         return new ModelAndView("helloworld/login");
+    }
+
+
+    // binding=false -> read only attribute
+    @ModelAttribute(name="loggedUser", binding = false)
+    public User getLoggedUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal() instanceof PawUserDetails pud){
+            return pud.getUser();
+        }
+        return null;
     }
 
     // home

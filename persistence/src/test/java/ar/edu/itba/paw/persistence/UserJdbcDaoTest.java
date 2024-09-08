@@ -23,6 +23,7 @@ public class UserJdbcDaoTest {
     private static final int PREEXISTING_USER_ID = 500;
     private static final String USERNAME = "username";
     private static final String MAIL = "mail";
+    private static final String PASSWORD = "password";
 
     private UserJdbcDao userDao;
 
@@ -41,7 +42,7 @@ public class UserJdbcDaoTest {
         // 1. Precondiciones
 
         // 2. Ejercito la class under test
-        User user = userDao.createUser(USERNAME, MAIL);
+        User user = userDao.createUser(USERNAME, MAIL, PASSWORD);
 
         // 3. Postcondiciones
         assertNotNull(user);

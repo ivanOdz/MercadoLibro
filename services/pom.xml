@@ -70,6 +70,12 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
     </dependency>
+
+    <!-- Security -->
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-core</artifactId>
+    </dependency>
   </dependencies>
 
   <build>

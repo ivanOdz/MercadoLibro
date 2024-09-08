@@ -15,7 +15,7 @@ public interface UserService {
 
     String findUsernameByEmail(String mail);
 
-    User createUser(String username, String mail);
+    User createUser(String username, String mail, String password);
 
     Optional<User> findByUsername(String username);
 }

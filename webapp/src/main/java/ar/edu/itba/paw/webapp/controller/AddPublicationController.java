@@ -97,6 +97,7 @@ public class AddPublicationController {
         final Publication publication = ps.createPublication(
                 publicationForm.getUsername(),
                 submited_mail,
+                "root",   //TODO
                 publicationForm.getIsbn(),
                 publicationForm.getTitle(),
                 publicationForm.getAuthors(),

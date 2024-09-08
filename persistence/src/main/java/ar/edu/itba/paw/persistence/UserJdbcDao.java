@@ -17,7 +17,7 @@ import java.util.Optional;
 public class UserJdbcDao implements UserDao {
 
     private static final RowMapper<User> ROWMAPPER =
-            (rs, rowNum) -> new User(rs.getLong("userId"), rs.getString("username"), rs.getString("mail"));
+            (rs, rowNum) -> new User(rs.getLong("userid"), rs.getString("username"), rs.getString("mail"), rs.getString("password"));
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
@@ -42,9 +42,9 @@ public class UserJdbcDao implements UserDao {
     }
     
     @Override
-    public User createUser(String username, String mail) {
+    public User createUser(String username, String mail, String password) {
     	
-        final Map<String, String> userData = Map.of("mail", mail);
+        final Map<String, String> userData = Map.of("username", username,"mail", mail, "password", password);
         final Number userId;
 
         Optional<User> user = find(mail);
@@ -56,7 +56,7 @@ public class UserJdbcDao implements UserDao {
         	userId = jdbcInsert.executeAndReturnKey(userData);
         }
 
-        return new User(userId.longValue(), username, mail);
+        return new User(userId.longValue(), username, mail, password);
     }
 
     @Override

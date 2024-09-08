@@ -18,6 +18,7 @@ public class UserServiceImplTest {
 
     private static final String USERNAME = "username";
     private static final String MAIL = "mail";
+    private static final String PASSWORD = "password";
 //----------------------------------------------
     @InjectMocks
     private UserServiceImpl userService;
@@ -33,24 +34,25 @@ public class UserServiceImplTest {
     @Test
     public void testCreate() {
         // 1. Precondiciones
-        Mockito.when(mock.createUser(eq(USERNAME), eq(MAIL))).thenReturn(new User(1, USERNAME, MAIL));
+        Mockito.when(mock.createUser(eq(USERNAME), eq(MAIL), eq(PASSWORD))).thenReturn(new User(1, USERNAME, MAIL, PASSWORD));
 
         // 2. Ejercito la class under test
-        User user = userService.createUser(USERNAME, MAIL);
+        User user = userService.createUser(USERNAME, MAIL, PASSWORD);
 
         // 3. Valido las precondiciones
         assertNotNull(user);
         assertEquals(USERNAME, user.getUsername());
         assertEquals(MAIL, user.getMail());
+        assertEquals(PASSWORD, user.getPassword());
     }
 
     @Test(expected = DuplicateKeyException.class)
     public void testCreateDuplicate() {
         // 1. Precondiciones
-        Mockito.when(mock.createUser(eq(USERNAME), eq(MAIL))).thenThrow(DuplicateKeyException.class);
+        Mockito.when(mock.createUser(eq(USERNAME), eq(MAIL), eq(PASSWORD))).thenThrow(DuplicateKeyException.class);
 
         // 2. Ejercito la class under test
-        User user = userService.createUser(USERNAME, MAIL);
+        User user = userService.createUser(USERNAME, MAIL, PASSWORD);
 
         // 3. Valido las precondiciones
         fail();

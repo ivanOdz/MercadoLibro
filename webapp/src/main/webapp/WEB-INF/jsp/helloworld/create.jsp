@@ -22,7 +22,24 @@
         <form:errors path="mail" element="p" cssStyle="color: red;"/>
     </div>
     <div>
-        <input type="submit"/>
+        <label>
+            <spring:message code="hwc.create.password"/>
+            <form:input path="password" type="password"/>
+        </label>
+        <form:errors path="password" element="p" cssStyle="color: red;"/>
+    </div>
+    <div>
+        <label>
+            <spring:message code="hwc.create.confirm_password"/>
+            <form:input path="repeatedPassword" type="password"/>
+        </label>
+        <form:errors path="repeatedPassword" element="p" cssStyle="color: red;"/>
+    </div>
+
+    <div>
+        <label>
+            <input type="submit"/>
+        </label>
     </div>
 </form:form>
 </body>

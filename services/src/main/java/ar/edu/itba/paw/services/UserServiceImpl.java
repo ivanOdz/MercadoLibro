@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import org.springframework.context.annotation.Primary;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -14,9 +15,12 @@ public class UserServiceImpl implements UserService {
 
     private final UserDao userDao;
 
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(final UserDao userDao) {
+
+    public UserServiceImpl(final UserDao userDao, final PasswordEncoder passwordEncoder) {
         this.userDao = userDao;
+        this.passwordEncoder = passwordEncoder;
     }
     @Override
     public Optional<User> findById(long id) {
@@ -34,7 +38,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User createUser(String username, String mail) {
+    public User createUser(String username, String mail, String password) {
         //register user
         //TODO
         //  1. validar inputs
@@ -42,7 +46,7 @@ public class UserServiceImpl implements UserService {
         //  3. generar un Token de validacion y guardarlo en la base de datos
         //  4. enviar el token de validacion en un correo de bienvenida
         //  5. agregar al usuario a una cola de verificacion manual
-        return userDao.createUser(username, mail);
+        return userDao.createUser(username, mail, passwordEncoder.encode(password));
     }
 
     @Override

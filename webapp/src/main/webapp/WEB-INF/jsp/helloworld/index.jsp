@@ -12,6 +12,7 @@
     <body>
         <h2>Hello <c:out value="${username}"/>!</h2>
         <h5>Your user id is <c:out value="${userId}"/></h5>
+        <h5>Your logged user <c:out value="${loggedUser.id}"/>, <c:out value="${loggedUser.username}"/></h5>
         <button class="btn waves-effect waves-light" type="submit" name="action">Submit
             <i class="material-icons right">send</i>
         </button>

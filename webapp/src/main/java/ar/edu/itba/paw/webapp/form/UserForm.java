@@ -15,12 +15,26 @@ public class UserForm {
     @Pattern(regexp = "^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$")
     private String mail;
 
+    @NotBlank
+    private String password;
+
+    @NotBlank
+    private String repeatedPassword;
+
     public void setUsername(String username) {
         this.username = username;
     }
 
     public void setMail(String mail) {
         this.mail = mail;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setRepeatedPassword(String repeatedPassword) {
+        this.repeatedPassword = repeatedPassword;
     }
 
     public String getUsername() {
@@ -30,4 +44,14 @@ public class UserForm {
     public String getMail() {
         return mail;
     }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getRepeatedPassword() {
+        return repeatedPassword;
+
+    }
 }
+
