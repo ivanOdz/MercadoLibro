@@ -7,22 +7,11 @@
 <head>
 	<link href="${pageContext.request.contextPath}/css/publications.css" rel="stylesheet"/>
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet"/>
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
+
 	<title><spring:message code="publications.list.title"/></title>
-
-	<script type="text/javascript">
-		document.addEventListener('DOMContentLoaded', function() {
-			var selectElement = document.getElementById('filter');
-			selectElement.addEventListener('change', function() {
-				var selectedValue = selectElement.value;
-
-				//window.selectedOption = selectedValue;
-			});
-
-			var elems = document.querySelectorAll('select');
-			var instances = M.FormSelect.init(elems, options); // Asegúrate de que 'options' esté definido si es necesario
-		});
-	</script>
 
 	<style>
 		.fixed-action-btn {
@@ -30,6 +19,7 @@
 			right: 20px;
 			bottom: 20px;
 		}
+
 		.small-gray-text {
 			color: gray;
 			font-size: 0.8em;
@@ -41,81 +31,209 @@
 			object-fit: contain;
 		}
 
-		.card {
-			min-height: 400px;
+		.filter-section {
+			margin: 1rem;
+			padding: 1rem; /* Opcional: Añade espacio interno si es necesario */
+			background-color: white; /* Opcional: Añade un color de fondo si deseas diferenciarlo del resto */
+			border-radius: 8px; /* Opcional: Añade bordes redondeados */
+		}
+
+		.col-content {
+			flex: 1; /* Ocupa el resto del espacio disponible */
+		}
+
+		.checkbox-container {
+			margin-left: 8rem; /* Ajusta el margen izquierdo específico para los checkboxes */
+		}
+
+		.navbar-logo {
+			text-align: left;
+		}
+		.ml-9{
+			margin-left: 9rem;
+		}
+
+		.mt-1 {
+			margin-top: 1rem;
+		}
+
+		.mb-1 {
+			margin-bottom: 1rem;
+		}
+
+		.custom-link:hover {
+			text-decoration: none; /* Quita el subrayado */
+		}
+
+		.custom-search-form .uk-search-input {
+			border-radius: 20px; /* Ajusta el valor según el grado de redondeo deseado */
+		}
+
+		.custom-search-form button.uk-search-icon-flip {
+			border-radius: 20px; /* Si deseas redondear también el botón */
+		}
+
+		.fixed-action-btn a {
+			border-radius: 50%; /* Redondea el botón a forma de círculo */
+			width: 60px; /* Ajusta el ancho del botón */
+			height: 60px; /* Ajusta la altura del botón */
+			display: flex; /* Usa flexbox para centrar el icono */
+			align-items: center; /* Centra verticalmente el icono */
+			justify-content: center; /* Centra horizontalmente el icono */
+			text-align: center; /* Alinea el texto (o icono) en el centro */
+			padding: 0; /* Elimina el padding del botón */
+			box-shadow: none; /* Opcional: Elimina cualquier sombra si es necesario */
+		}
+
+		.fixed-action-btn .uk-button-primary {
+			border-radius: 50%; /* Asegura que el botón tenga bordes redondeados */
+			padding: 0; /* Elimina el padding adicional */
+		}
+
+		.uk-chip-container {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.5rem; /* Espacio entre chips */
 		}
 
 	</style>
 
 </head>
-
 <body>
-<nav class="background-nav">
-	<div style="margin-top: 3vh;" class="row">
-		<div class="col s4 align-content">
-			<a href="${pageContext.request.contextPath}/" class="brand-logo brown-text darken-4-text s4">
-				<spring:message code="publications.list.brand.logo"/>
-			</a>
-		</div>
-		<div class="s4 col">
-			<div class="row">
-				<form class="col s12" action="${pageContext.request.contextPath}/" method="get">
-					<div class="row inline-form">
-						<input type="text" id="search" name="search"/>
-						<i style="color: black" class="material-icons tiny suffix search-button">search</i>
-					</div>
-				</form>
-			</div>
-		</div>
-		<div class="s4 col">
-			<select id="filter" class="browser-default">
-				<option value="" disabled selected>Choose your option</option>
-				<option value="1">Option 1</option>
-				<option value="2">Option 2</option>
-				<option value="3">Option 3</option>
-			</select>
+<nav class="uk-navbar-container" uk-navbar>
+	<div class="uk-navbar-left ml-9">
+		<a class="uk-navbar-item uk-logo navbar-logo" href="${pageContext.request.contextPath}/">
+			<spring:message code="publications.list.brand.logo"/>
+		</a>
+	</div>
+	<div class="uk-navbar-center uk-flex uk-flex-middle">
+		<div>
+			<form class="uk-search uk-search-default custom-search-form" method="get" action="${pageContext.request.contextPath}">
+				<input class="uk-search-input" type="search"
+					   placeholder="Search"
+					   aria-label="Search"
+					   name="search"
+					   id="search"
+					   value="${param.search != null ? param.search : ''}">
+				<button class="uk-search-icon-flip" uk-search-icon></button>
+			</form>
+
 		</div>
 	</div>
 </nav>
 
 <div class="fixed-action-btn">
-	<a href="${pageContext.request.contextPath}/createPublication?publicationId=0&isForExchange=false" class="btn-floating btn-large waves-effect waves-light pink">
-		<i class="material-icons">add</i>
+	<a href="${pageContext.request.contextPath}/createPublication?publicationId=0&isForExchange=false" class="uk-button uk-button-large uk-button-primary">
+		<span uk-icon="icon: plus"></span>
 	</a>
 </div>
 
-<div class="background-primary">
-	<div class="row main-background">
-		<div class="col s12">
-			<div class="main-container">
-				<div class="row">
-					<h5 class="text"><spring:message code="publications.list.available"/></h5>
-					<h8 class="text"><spring:message code="publications.list.select"/></h8>
+
+<div class="uk-background-muted">
+	<div class="uk-container uk-margin-top">
+		<div class="uk-grid" uk-grid>
+			<div class="uk-width-1-4@s filter-section uk-border-rounded uk-box-shadow-small">
+				<ul uk-accordion="multiple: true">
+					<li class="uk-open">
+						<a class="uk-accordion-title" href><spring:message code="filter.genre"/></a>
+						<div class="uk-accordion-content">
+							<div class="uk-margin">
+								<label>
+									<input class="uk-checkbox" type="checkbox" checked="checked" />
+									Option 1
+								</label>
+							</div>
+							<div class="uk-margin">
+								<label>
+									<input class="uk-checkbox" type="checkbox" />
+									Option 2
+								</label>
+							</div>
+							<div class="uk-margin">
+								<label>
+									<input class="uk-checkbox" type="checkbox" />
+									Option 3
+								</label>
+							</div>
+						</div>
+					</li>
+					<li>
+						<a class="uk-accordion-title" href><spring:message code="filter.condition"/></a>
+						<div class="uk-accordion-content">
+							<div class="uk-margin">
+								<label>
+									<input class="uk-checkbox" type="checkbox" checked="checked" />
+									Option 1
+								</label>
+							</div>
+							<div class="uk-margin">
+								<label>
+									<input class="uk-checkbox" type="checkbox" />
+									Option 2
+								</label>
+							</div>
+							<div class="uk-margin">
+								<label>
+									<input class="uk-checkbox" type="checkbox" />
+									Option 3
+								</label>
+							</div>
+						</div>
+					</li>
+					<li>
+						<a class="uk-accordion-title" href><spring:message code="filter.location"/></a>
+						<div class="uk-accordion-content">
+							<div class="uk-margin">
+								<label>
+									<input class="uk-checkbox" type="checkbox" checked="checked" />
+									Option 1
+								</label>
+							</div>
+							<div class="uk-margin">
+								<label>
+									<input class="uk-checkbox" type="checkbox" />
+									Option 2
+								</label>
+							</div>
+							<div class="uk-margin">
+								<label>
+									<input class="uk-checkbox" type="checkbox" />
+									Option 3
+								</label>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+
+			<div class="uk-width-3-4@s col-content mb-1">
+				<div class="uk-card uk-card-default uk-card-body uk-margin-bottom mt-1 uk-border-rounded uk-border-rounded-medium">
+					<h5 class="uk-text-large"><spring:message code="publications.list.available"/></h5>
+					<h6 class="uk-text-muted"><spring:message code="publications.list.select"/></h6>
 				</div>
-				<c:forEach var="card" items="${publications}">
-					<div class="col s12 m6 l3">
-						<a href="<c:url value='submitmail'>
-        					<c:param name='publicationId' value='${card.publication.publicationId}'/>
-        					</c:url>" class="card-link">
-							<div class="card hoverable">
-								<div class="card-image waves-effect waves-block waves-light">
+
+				<div class="uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m" uk-grid>
+					<c:forEach var="card" items="${publications}">
+						<div>
+							<a href="<c:url value='submitmail'>
+								<c:param name='publicationId' value='${card.publication.publicationId}'/>
+								</c:url>" class="uk-card uk-card-default uk-card-hover uk-card-body uk-border-rounded custom-link">
+								<figure class="uk-margin-bottom">
 									<c:choose>
 										<c:when test="${card.image != null}">
-											<img class="activator custom-image book-image" src="${pageContext.request.contextPath}/images/${card.image.imageId}" alt="bookImage"/>
+											<img class="book-image" src="${pageContext.request.contextPath}/images/${card.image.imageId}" alt="bookImage"/>
 										</c:when>
 										<c:otherwise>
-											<img class="activator custom-image book-image" src="${pageContext.request.contextPath}/images/book.jpg" alt="book"/>
+											<img class="book-image" src="${pageContext.request.contextPath}/images/book.jpg" alt="book"/>
 										</c:otherwise>
 									</c:choose>
-								</div>
-								<div class="card-content">
-									<h5 class="card-text">${card.book.title}</h5>
-									<p class="card-text small-gray-text">${card.authorsString}</p>
-								</div>
-							</div>
-						</a>
-					</div>
-				</c:forEach>
+								</figure>
+								<h5 class="uk-card-title custom-link">${card.book.title}</h5>
+								<p class="small-gray-text custom-link">${card.authorsString}</p>
+							</a>
+						</div>
+					</c:forEach>
+				</div>
 			</div>
 		</div>
 	</div>
