@@ -54,10 +54,9 @@ public class UserJdbcDao implements UserDao {
 
         Optional<User> user = find(mail);
         if (user.isPresent()) {
-            return user.get();
-        }
-        else if (user.get().getMail().compareTo(mail) == 0 && user.get().getUsername().compareTo(username) != 0) {
-            updateUsername(user.get(), username);
+            if (user.get().getMail().compareTo(mail) == 0 && user.get().getUsername().compareTo(username) != 0) {
+                updateUsername(user.get(), username);
+            }
             return user.get();
         } else {
             userId = jdbcInsert.executeAndReturnKey(userData);
