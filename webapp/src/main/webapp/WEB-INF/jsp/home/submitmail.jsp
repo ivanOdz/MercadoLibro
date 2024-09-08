@@ -40,7 +40,7 @@
 	<form action="submitmail" method="post">
 	    <label for="submited_mail"><spring:message code="form.label.email"/></label>
 		<input type="email" id="submited_mail" name="submited_mail" required>
-		<input type="hidden" name="publicationId" value="${publicationId}">
+		<input type="hidden" name="publication_id" value="${publication_id}">
 	    <button type="submit"><spring:message code="form.button.submit"/></button>
 	</form>
 </div>

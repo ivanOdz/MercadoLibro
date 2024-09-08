@@ -38,7 +38,7 @@
 
 <body>
 
-<c:url var="postUrl" value="/createPublication"/>
+<c:url var="postUrl" value="/createpublication"/>
 
 <div class="form-container">
 
@@ -59,7 +59,7 @@
 				<spring:message code="add.publication.username"/>
 				<form:input path="username" type="text" class="form-input"
 							value="${username}"
-							readonly="${usernameFieldIsReadOnly}" />
+							 />
 			</label>
 			<form:errors path="username" element="p" cssStyle="color: red;"/>
 		</div>
@@ -229,9 +229,9 @@
 		<br>
 
 		<div class="form-container">
-			<input type="hidden" name="publicationId" value="${publicationId}">
-			<input type="hidden" name="isForExchange" value="${isForExchange}">
-			<input type="hidden" name="		submited_mail" value="${submited_mail}">
+			<input type="hidden" name="publication_id" value="${publicationId}">
+			<input type="hidden" name="is_for_exchange" value="${isForExchange}">
+			<input type="hidden" name="submited_mail" value="${submited_mail}">
 			<button type="submit"><spring:message code="add.publication.submit"/></button>
 		</div>
 

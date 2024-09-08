@@ -2,12 +2,12 @@ package ar.edu.itba.paw.models.utils;
 
 public enum BookState {
 	
-	NEW(1),
-	LIKE_NEW(2),
-	VERY_GOOD(3),
-	GOOD(4),
-	ACCEPTABLE(5),
-	WORN(6);
+	NEW(0),
+	LIKE_NEW(1),
+	VERY_GOOD(2),
+	GOOD(3),
+	ACCEPTABLE(4),
+	WORN(5);
 	
 	private final int value;
 	
@@ -17,8 +17,12 @@ public enum BookState {
     }
 	
 	public static BookState fromInt(int i) {
-		
-		return BookState.values()[i];
+		for (BookState state : BookState.values()) {
+			if (state.getValue() == i) {
+				return state;
+			}
+		}
+		return null;
 	}
 	
 	public int getValue() {

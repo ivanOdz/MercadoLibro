@@ -112,11 +112,11 @@ public class HelloWorldController {
         final ModelAndView mav = new ModelAndView("helloworld/home");
         Map<String, Object> variables = new HashMap<>();
         variables.put("requesterName", "Julieta Techenski");
-        variables.put("requesterEmail", "jtechenski@gmail.com");
+        variables.put("requesterEmail", "mtaurian@gmail.com");
         variables.put("requestedPublication", "Deutsch Kursbuch");
         variables.put("offeredPublication", "Harry Potter 1");
-        variables.put("rejectionUrl", "http://localhost:8080/publication?publicationId=3");
-        variables.put("validationUrl", "http://localhost:8080/publication?publicationId=3");
+        variables.put("rejectionUrl", "http://localhost:8080/publication?publication_id=3");
+        variables.put("validationUrl", "http://localhost:8080/publication?publication_id=3");
         emailService.sendEmail("modzomek@itba.edu.ar", variables, "exchangeRequest", "Book Exchange");
         return mav;
     }

@@ -1,106 +1,78 @@
-.background-primary {
-    background-color: #f8f8e2;
-    position: relative;
-    height: 100%;
+:root {
+    --uk-color-primary: #D6D0C2;
+}
+
+
+.fixed-action-btn {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+}
+
+.small-gray-text {
+    color: gray;
+    font-size: 0.8em;
+}
+
+.book-image {
     width: 100%;
-    display: flex;
-}
-.background-secondary {
-    background-color: #EBE3D5;
-}
-.nav-bar-text {
-    color: #333333;
-    padding: 0 10vh 0 10vh;
-}
-.brand-logo {
-    color: #333333;
-    margin: 8vh 0 0 5vh;
-}
-.background-nav {
-    background-color: #F7E7DC;
-    height: 15vh;
-    align-items: center;
-    align-content: center;
-    margin: 0;
-    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.3);
-}
-.nav-bar-container {
-    display: inline-flex;
-}
-.inline-form {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 70%;
-    margin: 0;
+    height: 200px;
+    object-fit: contain;
 }
 
-.row {
-    margin:0;
+.filter-section {
+    margin: 1rem;
+    padding: 1rem;
+    background-color: white;
+    border-radius: 8px;
 }
 
-.search-form {
-    align-items: center;
-    justify-content: center;
-    background-color: white; /* Fondo blanco */
-    border: 1px solid #ccc; /* Borde gris claro */
-    border-radius: 2vh; /* Bordes redondeados */
-    padding: 5px 10px; /* Espaciado interno */
-}
-
-.search-form button {
-    margin-left: 10px; /* Espacio entre el campo de búsqueda y el botón */
-    border-radius: 1vh; /* Bordes redondeados del botón */
-}
-
-.search-container {
+.col-content {
     flex: 1;
 }
 
-.search-button {
-    color: #333333;
+.navbar-logo {
+    text-align: left;
 }
 
-.main-container {
-    margin: 5vh 10vh 0 10vh;
-    height: 100%;
+.ml-9 {
+    margin-left: 9rem;
 }
 
-.custom-image {
-    width: 50px; /* Ajusta el ancho deseado */
-    height: 100px; /* Mantiene la proporción de la imagen */
-    object-fit: cover; /* Asegura que la imagen se recorte si es necesario */
+.mt-1 {
+    margin-top: 1rem !important;
 }
 
-.main-background {
-    width: 100%;
-    height: 100%;
-    display: flex;
+.mb-1 {
+    margin-bottom: 1rem !important;
 }
 
-.text {
-    color: #4e342e;
-    padding: 3vh;
+.custom-link:hover {
+    text-decoration: none;
 }
 
-.card-text {
-    color: #4e342e;
+.custom-search-form .uk-search-input {
+    border-radius: 20px;
 }
 
-.card {
-    height: 50vh;
-    width: 40vh;
-    overflow: hidden;
+.custom-search-form button.uk-search-icon-flip {
+    border-radius: 20px;
 }
 
-
-.align-content {
+.fixed-action-btn a {
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
     display: flex;
     align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0;
+    box-shadow: none;
+    z-index: 1000;
 }
 
-body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
+.fixed-action-btn .uk-button-primary {
+    border-radius: 50%;
+    padding: 0; /
 }

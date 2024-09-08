@@ -40,20 +40,27 @@ public class UserJdbcDao implements UserDao {
         return jdbcTemplate.query("SELECT * FROM users WHERE mail = ?", new Object[]{ mail },
         		new int[]{ Types.VARCHAR }, ROWMAPPER).stream().findFirst();
     }
-    
+
+    private void updateUsername(User user, String newUsername) {
+        jdbcTemplate.update("UPDATE users SET username = ? WHERE userId = ?", new Object[]{ newUsername, user.getId() },
+                new int[]{ Types.VARCHAR, Types.BIGINT });
+        user.setUsername(newUsername);
+    }
+
     @Override
     public User createUser(String username, String mail, String password) {
-    	
+
         final Map<String, String> userData = Map.of("username", username,"mail", mail, "password", password);
         final Number userId;
 
         Optional<User> user = find(mail);
-
         if (user.isPresent()) {
+            if (user.get().getMail().compareTo(mail) == 0 && user.get().getUsername().compareTo(username) != 0) {
+                updateUsername(user.get(), username);
+            }
             return user.get();
-        }
-        else {
-        	userId = jdbcInsert.executeAndReturnKey(userData);
+        } else {
+            userId = jdbcInsert.executeAndReturnKey(userData);
         }
 
         return new User(userId.longValue(), username, mail, password);

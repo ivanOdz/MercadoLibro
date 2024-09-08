@@ -26,6 +26,10 @@ public class User {
         return mail;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public String getPassword() {
         //TODO
         return password;
