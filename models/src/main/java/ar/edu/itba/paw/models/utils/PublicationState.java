@@ -3,8 +3,7 @@ package ar.edu.itba.paw.models.utils;
 public enum PublicationState {
     TERMINATED(0),
     CURRENT(1),
-    OFFERED(2),
-    ACCEPTED(3);
+    OFFERED(2);
 
 
     private final int value;
