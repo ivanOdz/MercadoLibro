@@ -40,7 +40,7 @@
 </nav>
 
 <div class="fixed-action-btn">
-	<a href="${pageContext.request.contextPath}/createPublication?publication_id=0&is_for_exchange=false" class="uk-button uk-button-large uk-button-primary">
+	<a href="${pageContext.request.contextPath}/createpublication?publication_id=0&is_for_exchange=false" class="uk-button uk-button-large uk-button-primary">
 		<span uk-icon="icon: plus"></span>
 	</a>
 </div>
