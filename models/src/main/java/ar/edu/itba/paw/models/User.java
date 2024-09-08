@@ -3,7 +3,7 @@ package ar.edu.itba.paw.models;
 public class User {
 
     private final long userId;
-    private final String username;
+    private String username;
     private final String mail;
 
     public User(long userId, String username, String mail) {
@@ -22,5 +22,9 @@ public class User {
 
     public String getMail() {
         return mail;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }
