@@ -6,7 +6,10 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.interfaces.services.BookService;
 import ar.edu.itba.paw.interfaces.services.PublicationsService;
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -36,6 +39,13 @@ public class PublicationsController {
         final ModelAndView mav = new ModelAndView("home/publications");
         List<Card> cardList = cs.buildCardList(ps.getAllPublicationsFilteredBy(search).getPublications());
         mav.addObject("publications", cardList);
+
+        // user profile data
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.getPrincipal() instanceof PawUserDetails pud) {
+            mav.addObject("loggedUser", pud.getUser());
+        }
+
         return mav;
     }
 
@@ -52,8 +62,10 @@ public class PublicationsController {
         if (ps.getPublicationById(publicationId).isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Publication not found");
         }
-        else mav.addObject("publication", ps.getPublicationById(publicationId).get());
-        
+        else {
+            mav.addObject("publication", ps.getPublicationById(publicationId).get());
+        }
+
         return mav;
     }
 

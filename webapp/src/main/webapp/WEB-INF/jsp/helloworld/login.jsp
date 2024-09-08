@@ -3,6 +3,7 @@
 <html>
 <body>
 <c:url value="/login" var="loginUrl"/>
+<c:url value="/create" var="signUpUrl"/>
 <form action="${loginUrl}" method="post">
     <div>
         <label>
@@ -28,5 +29,13 @@
         </label>
     </div>
 </form>
+
+
+    <p><spring:message code="hwc.signup.prompt"/>:</p>
+    <a href="${signUpUrl}">
+        <button type="button">
+            <spring:message code="hwc.signup.button"/>
+        </button>
+    </a>
 </body>
 </html>

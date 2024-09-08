@@ -52,6 +52,7 @@
 <body>
 <nav class="background-nav">
 	<div style="margin-top: 3vh;" class="row">
+		<h2><spring:message code="home.profile.welcome"/><c:out value="${loggedUser.username}"/>!</h2>
 		<div class="col s4 align-content">
 			<a href="${pageContext.request.contextPath}/" class="brand-logo brown-text darken-4-text s4">
 				<spring:message code="publications.list.brand.logo"/>

@@ -82,7 +82,7 @@ public class HelloWorldController {
         final Authentication authenticationToken = new UsernamePasswordAuthenticationToken(userForm.getUsername(), userForm.getPassword(), null);
         SecurityContextHolder.getContext().setAuthentication(auth.authenticate(authenticationToken));
 
-        return new ModelAndView("redirect:/" + user.getId());
+        return new ModelAndView("redirect:/");
     }
 
     @RequestMapping(path = "/create", method = RequestMethod.GET)
