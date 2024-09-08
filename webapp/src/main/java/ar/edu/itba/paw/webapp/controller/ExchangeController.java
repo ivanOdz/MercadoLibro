@@ -32,7 +32,7 @@ public class ExchangeController {
     }
 
     @RequestMapping("/exchange")
-    public ModelAndView exchange(@RequestParam(name = "acceptCode") int acceptCode, @RequestParam(name = "state") boolean state) {
+    public ModelAndView exchange(@RequestParam(name = "accept_code") int acceptCode, @RequestParam(name = "state") boolean state) {
         final ModelAndView mav = new ModelAndView(exchangeService.exchange(acceptCode, state));
 
         Map<String, Object> variables = new HashMap<>();

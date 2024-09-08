@@ -123,7 +123,7 @@
 </nav>
 
 <div class="fixed-action-btn">
-	<a href="${pageContext.request.contextPath}/createPublication?publicationId=0&isForExchange=false" class="uk-button uk-button-large uk-button-primary">
+	<a href="${pageContext.request.contextPath}/createPublication?publication_id=0&is_for_exchange=false" class="uk-button uk-button-large uk-button-primary">
 		<span uk-icon="icon: plus"></span>
 	</a>
 </div>
@@ -211,6 +211,13 @@
 					<h5 class="uk-text-large"><spring:message code="publications.list.available"/></h5>
 					<h6 class="uk-text-muted"><spring:message code="publications.list.select"/></h6>
 				</div>
+				<c:forEach var="card" items="${publications}">
+					<div class="col s12 m6 l3">
+						<a href="<c:url value='submitmail'>
+        					<c:param name='publication_id' value='${card.publication.publicationId}'/>
+        					</c:url>" class="card-link">
+							<div class="card hoverable">
+								<div class="card-image waves-effect waves-block waves-light">
 
 				<div class="uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m" uk-grid>
 					<c:forEach var="card" items="${publications}">

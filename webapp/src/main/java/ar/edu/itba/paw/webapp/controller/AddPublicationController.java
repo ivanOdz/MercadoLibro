@@ -62,8 +62,8 @@ public class AddPublicationController {
         this.userService = userService;
     }
 
-    @GetMapping(path = "/createPublication")
-    public ModelAndView createPublicationForm(@ModelAttribute("publicationForm") PublicationForm publicationForm, @RequestParam(name = "publicationId") long publicationId,  @RequestParam(name = "isForExchange") boolean isForExchange, @RequestParam(name = "submited_mail", defaultValue = "") String submited_mail) {
+    @GetMapping(path = "/createpublication")
+    public ModelAndView createPublicationForm(@ModelAttribute("publicationForm") PublicationForm publicationForm, @RequestParam(name = "publication_id") long publicationId,  @RequestParam(name = "is_for_exchange") boolean isForExchange, @RequestParam(name = "submited_mail", defaultValue = "") String submited_mail) {
 
         final ModelAndView mav = new ModelAndView("/add/createPublication");
 
@@ -83,17 +83,17 @@ public class AddPublicationController {
         return mav;
     }
 
-    @PostMapping(path = "/createPublication")
+    @PostMapping(path = "/createpublication")
     public ModelAndView addPublication(@Valid @ModelAttribute("publicationForm") PublicationForm publicationForm,
                                        BindingResult errors,
-                                       @RequestParam(name = "publicationId") long publicationId, @RequestParam(name = "isForExchange") boolean isForExchange, @RequestParam(name = "submited_mail", defaultValue = "") String submited_mail) {
+                                       @RequestParam(name = "publication_id") long publicationId, @RequestParam(name = "is_for_exchange") boolean isForExchange, @RequestParam(name = "submited_mail", defaultValue = "") String submited_mail) {
 
 		if (errors.hasErrors()) {
 			return createPublicationForm(publicationForm, publicationId, isForExchange, submited_mail);
 		}
 
-        System.out.print("RATING:" +publicationForm.getRating());
-
+        System.out.println("RATING:" +publicationForm.getRating());
+        System.out.println("USERNAME:" + publicationForm.getUsername());
         final Publication publication = ps.createPublication(
                 publicationForm.getUsername(),
                 submited_mail,
@@ -131,8 +131,8 @@ public class AddPublicationController {
              variables.put("requesterName", requester.getUsername());
              variables.put("requestedPublication", bookRequested.getTitle());
              variables.put("offeredPublication", bookOffered.getTitle());
-             variables.put("validationUrl", "http://localhost:8080/exchange?acceptCode=" + ex.getAcceptCode() + "&state=true");
-             variables.put("rejectionUrl", "http://localhost:8080/exchange?acceptCode=" + ex.getAcceptCode() +"&state=false");
+             variables.put("validationUrl", "http://localhost:8080/exchange?accept_code=" + ex.getAcceptCode() + "&state=true");
+             variables.put("rejectionUrl", "http://localhost:8080/exchange?accept_code=" + ex.getAcceptCode() +"&state=false");
 
              emailService.sendEmail(oferrerEmail, variables, "exchangeRequest", "Requesting");
          }

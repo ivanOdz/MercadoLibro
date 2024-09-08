@@ -15,9 +15,9 @@
 	    <c:when test="${ownerMail != submited_mail}">
 	        <%-- Redirigir a la página de crear un libro --%>
 	        <p><spring:message code="compare.emails.different"/></p>
-	        <form action="<c:url value='/createPublication'/>" method="get">
-	            <input type="hidden" name="publicationId" value="${publicationId}">
-	            <input type="hidden" name="isForExchange" value="${isForExchange}">
+	        <form action="<c:url value='/createpublication'/>" method="get">
+	            <input type="hidden" name="publication_id" value="${publication_id}">
+	            <input type="hidden" name="is_for_exchange" value="${is_for_exchange}">
 	            <input type="hidden" name="submited_mail" value="${submited_mail}">
 	            <button type="submit"><spring:message code="compare.emails.createBookButton"/></button>
 	        </form>
