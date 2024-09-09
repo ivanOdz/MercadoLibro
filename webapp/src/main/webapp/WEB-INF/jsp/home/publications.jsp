@@ -1,13 +1,14 @@
-<!DOCTYPE html>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
+<!DOCTYPE html>
 <html lang="es">
 
 <head>
 	<link href="${pageContext.request.contextPath}/css/publications.css?v=1.0" rel="stylesheet"/>
-
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
@@ -52,53 +53,29 @@
 			<div class="uk-width-1-4@s filter-section uk-border-rounded uk-box-shadow-small mt-1 mb-1">
 				<ul uk-accordion="multiple: true">
 					<li class="uk-open">
-						<a class="uk-accordion-title" href><spring:message code="filter.genre"/></a>
+						<a class="uk-accordion-title"><spring:message code="filter.genre"/></a>
 						<div class="uk-accordion-content">
 							<div class="uk-margin">
-								<label>
-									<input class="uk-checkbox" type="checkbox" checked="checked" />
-									Option 1
-								</label>
-							</div>
-							<div class="uk-margin">
-								<label>
-									<input class="uk-checkbox" type="checkbox" />
-									Option 2
-								</label>
-							</div>
-							<div class="uk-margin">
-								<label>
-									<input class="uk-checkbox" type="checkbox" />
-									Option 3
-								</label>
+								<c:forEach var="genreWrapper" items="${genres}">
+									<input class="uk-checkbox" type="checkbox" checked="checked" name="genre" value="${genreWrapper.genre}" />
+									<label>${genreWrapper.displayName}</label>
+								</c:forEach>
 							</div>
 						</div>
 					</li>
 					<li>
-						<a class="uk-accordion-title" href><spring:message code="filter.condition"/></a>
+						<a class="uk-accordion-title"><spring:message code="filter.condition"/></a>
 						<div class="uk-accordion-content">
 							<div class="uk-margin">
-								<label>
-									<input class="uk-checkbox" type="checkbox" checked="checked" />
-									Option 1
-								</label>
-							</div>
-							<div class="uk-margin">
-								<label>
-									<input class="uk-checkbox" type="checkbox" />
-									Option 2
-								</label>
-							</div>
-							<div class="uk-margin">
-								<label>
-									<input class="uk-checkbox" type="checkbox" />
-									Option 3
-								</label>
+								<c:forEach var="genreWrapper" items="${bookStates}">
+									<input class="uk-checkbox" type="checkbox" checked="checked" name="genre" value="${bookStateWrapper.bookState}" />
+									<label>${bookStateWrapper.displayName}</label>
+								</c:forEach>
 							</div>
 						</div>
 					</li>
 					<li>
-						<a class="uk-accordion-title" href><spring:message code="filter.location"/></a>
+						<a class="uk-accordion-title"><spring:message code="filter.location"/></a>
 						<div class="uk-accordion-content">
 							<div class="uk-margin">
 								<label>
