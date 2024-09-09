@@ -70,7 +70,7 @@ public class UserController {
         final Authentication authenticationToken = new UsernamePasswordAuthenticationToken(userForm.getUsername(), userForm.getPassword(), null);
         SecurityContextHolder.getContext().setAuthentication(auth.authenticate(authenticationToken));
 
-        return new ModelAndView("redirect:/logout");  // TODO: send the user to a page 'Your user was created. Please check your email box to verify your account'
+        return new ModelAndView("redirect:/logout");  // TODO: send the user to a page 'Your user was created. Please check your inbox to verify your account'
     }
 
     @RequestMapping(path = "/create", method = RequestMethod.GET)
