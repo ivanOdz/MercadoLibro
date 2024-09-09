@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{email.subjectAcceptance}"></title>
+</head>
+<body style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
+<div style="max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
+    <div style="flex-direction: row">
+        <p th:text="#{email.greeting}" style="font-size: 18px; font-weight: bold;"></p>
+        <p th:text="${username} + '!'" style="font-size: 18px; font-weight: bold;"/>
+    </div>
+    <p th:text="#{email.verificationMessage}" style="font-size: 16px;"></p>
+
+    <!-- Botón de Validar -->
+    <a th:href="@{${validationUrl}}"
+       style="display: inline-block; padding: 10px 20px; font-size: 16px; color: #ffffff; background-color: #28a745; text-decoration: none; border-radius: 5px; text-align: center; margin-top: 20px;"
+       th:text="#{email.verifyButton}">
+    </a>
+</div>
+</body>
+</html>

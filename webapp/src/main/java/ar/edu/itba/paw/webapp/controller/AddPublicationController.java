@@ -9,9 +9,12 @@ import ar.edu.itba.paw.models.utils.BookStateWrapper;
 import ar.edu.itba.paw.models.utils.GenreWrapper;
 import ar.edu.itba.paw.models.utils.Genre;
 import ar.edu.itba.paw.models.utils.PublicationState;
+import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 import ar.edu.itba.paw.webapp.form.PublicationForm;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -94,52 +97,57 @@ public class AddPublicationController {
 
         System.out.println("RATING:" +publicationForm.getRating());
         System.out.println("USERNAME:" + publicationForm.getUsername());
-        /*final Publication publication = ps.createPublication(
 
-                publicationForm.getUsername(),
-                submited_mail,
-                "root",   //TODO
-                publicationForm.getIsbn(),
-                publicationForm.getTitle(),
-                publicationForm.getAuthors(),
-                publicationForm.getEditorial(),
-                publicationForm.getDescription(),
-                publicationForm.getGenre(),
-                publicationForm.getBookState(),
-                PublicationState.CURRENT,
-                publicationForm.getEdition(),
-                publicationForm.getRating(),
-                imageService.saveImage(publicationForm.getImageFile()).getImageId(),
-                publicationForm.getLocation()
-        );*/
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user;
 
-         if(isForExchange) {
-        	 
-             /*Exchange ex = exchangeService.initializeExchange(isForExchange, publication.getPublicationId(), publicationId);
-             
-             Map<String, Object> variables = new HashMap<>();
-             Publication offererPub = publicationsService.getPublicationById(ex.getOffererPubId()).get();
-             Publication requesterPub = publicationsService.getPublicationById(ex.getRequesterPubId()).get();
+        Publication publication;
+        if (authentication.getPrincipal() instanceof PawUserDetails pud){
+            user = pud.getUser();
+            publication = ps.createPublication(
+                    user.getId(),
+                    publicationForm.getIsbn(),
+                    publicationForm.getTitle(),
+                    publicationForm.getAuthors(),
+                    publicationForm.getEditorial(),
+                    publicationForm.getDescription(),
+                    publicationForm.getGenre(),
+                    publicationForm.getBookState(),
+                    PublicationState.CURRENT,
+                    publicationForm.getEdition(),
+                    publicationForm.getRating(),
+                    imageService.saveImage(publicationForm.getImageFile()).getImageId(),
+                    publicationForm.getLocation()
+            );
 
-             Book bookOffered = bookService.getBookById(offererPub.getBookId()).get();
-             Book bookRequested = bookService.getBookById(requesterPub.getBookId()).get();
+            if(isForExchange) {
 
-             User oferrer = userService.findById(offererPub.getUserId()).get();
-             User requester = userService.findById(requesterPub.getUserId()).get();
+                Exchange ex = exchangeService.initializeExchange(isForExchange, publication.getPublicationId(), publicationId);
 
-             String oferrerEmail = oferrer.getMail();
+                Map<String, Object> variables = new HashMap<>();
+                Publication offererPub = publicationsService.getPublicationById(ex.getOfferer()).get();
+                Publication requesterPub = publicationsService.getPublicationById(ex.getRequester()).get();
 
-             variables.put("requesterEmail", requester.getMail());
-             variables.put("requesterName", requester.getUsername());
-             //variables.put("requestedPublication", bookRequested.getTitle());
-             //variables.put("offeredPublication", bookOffered.getTitle());
-             variables.put("validationUrl", "http://localhost:8080/exchange?accept_code=" + ex.getAcceptCode() + "&state=true");
-             variables.put("rejectionUrl", "http://localhost:8080/exchange?accept_code=" + ex.getAcceptCode() +"&state=false");
+                Book bookOffered = bookService.getBookById(offererPub.getBookId()).get();
+                Book bookRequested = bookService.getBookById(requesterPub.getBookId()).get();
 
-             emailService.sendEmail(oferrerEmail, variables, "exchangeRequest", "Requesting");
-            */
-         }
+                User oferrer = userService.findById(offererPub.getUserId()).get();
+                User requester = userService.findById(requesterPub.getUserId()).get();
 
-        return new ModelAndView("redirect:/");
+                String oferrerEmail = oferrer.getMail();
+
+                variables.put("requesterEmail", requester.getMail());
+                variables.put("requesterName", requester.getUsername());
+                variables.put("requestedPublication", bookRequested.getTitle());
+                variables.put("offeredPublication", bookOffered.getTitle());
+                variables.put("validationUrl", "http://localhost:8080/exchange?accept_code=" + ex.getAcceptCode() + "&state=true");
+                variables.put("rejectionUrl", "http://localhost:8080/exchange?accept_code=" + ex.getAcceptCode() +"&state=false");
+
+                emailService.sendEmail(oferrerEmail, variables, "exchangeRequest", "Requesting");
+            }
+            return new ModelAndView("redirect:/");
+        } else {
+            return new ModelAndView("redirect:/login");
+        }
     }
 }

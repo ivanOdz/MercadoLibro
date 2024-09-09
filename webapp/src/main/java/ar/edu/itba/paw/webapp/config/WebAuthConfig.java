@@ -54,7 +54,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 // recursos por roles ==> accept
                 // importante orden de definicion de reglas
                 .and().authorizeRequests()
-                    .antMatchers("/create","/login", "/change_password").anonymous()
+                    .antMatchers("/create","/login","/mail_input", "/change_password_solicited","/change_password").anonymous()
                     .antMatchers("/post/edit").hasRole("EDITOR")
                     .antMatchers("/post/{postId}").access("@accessHelper.isOwner(#pricipal, #postId)") // para areas de acceso a un admin
                     .antMatchers("/**").authenticated()
@@ -62,10 +62,10 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .usernameParameter("username")
                     .passwordParameter("password")
                     .loginPage("/login")
-                    .defaultSuccessUrl("/", false)
+                    .defaultSuccessUrl("/check_verify", false)
                 .and().rememberMe()
                     .rememberMeParameter("remember_me")
-                    .key(new String(rememberMeKey.getInputStream().readAllBytes()))
+//                    .key(new String(rememberMeKey.getInputStream().readAllBytes()))
                     .userDetailsService(userDetails)
                     .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30))
                 .and().logout()

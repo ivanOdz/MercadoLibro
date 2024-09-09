@@ -53,26 +53,40 @@ public class UserJdbcDao implements UserDao {
     }
 
     @Override
-    public User createUser(String username, String mail, String password) {
-
+    public User createUser(String username, String mail, String password, int verificationCode) {
+        final Map<String, Object> userData = Map.of("username", username,"mail", mail, "password", password, "imageId", null, "verificationCode", verificationCode, "isVerified", true);
         final Number userId;
-        final Map<String, Object> userData = Map.of("username", username,"mail", mail, "password", password, "imageId", null, "verificationCode", null, "isVerified", true);
 
-        Optional<User> user = find(mail);
-        if (user.isPresent()) {
-            if (user.get().getMail().compareTo(mail) == 0 && user.get().getUsername().compareTo(username) != 0) {
-                updateUsername(user.get(), username);
-            }
-            return user.get();
-        } else {
-            userId = jdbcInsert.executeAndReturnKey(userData);
-        }
 
-        return new User(userId.longValue(), username, mail, password, null, null, false);
+        userId = jdbcInsert.executeAndReturnKey(userData);
+
+        return new User(userId.longValue(), username, mail, password, null, verificationCode, false);
     }
 
     @Override
     public Optional<User> findByUsername(String username) {
         return jdbcTemplate.query("SELECT * FROM users WHERE username = ? ", new Object[]{ username }, new int[] {Types.VARCHAR}, ROWMAPPER).stream().findFirst();
+    }
+
+    @Override
+    public void verifyUser(int verificationCode) {
+        jdbcTemplate.update("UPDATE users SET isVerified = ? WHERE verificationCode = ?", new Object[]{ true, verificationCode },
+                new int[]{ Types.BOOLEAN, Types.INTEGER });
+
+        jdbcTemplate.update("UPDATE users SET verificationCode = ? WHERE verificationCode = ?", new Object[]{ null, verificationCode },
+                new int[]{ Types.NULL, Types.INTEGER });
+    }
+
+    @Override
+    public void changePasswordSolicited(String email, int verificationCode) {
+        jdbcTemplate.update("UPDATE users SET verificationCode = ? WHERE mail = ?", new Object[]{ verificationCode, email },
+                new int[]{ Types.INTEGER, Types.VARCHAR });
+
+    }
+
+    @Override
+    public void changePassword(int verificationCode, String newPassword) {
+        jdbcTemplate.update("UPDATE users SET password = ? WHERE verificationCode = ?", new Object[]{ newPassword, verificationCode },
+                new int[]{ Types.VARCHAR, Types.INTEGER });
     }
 }
