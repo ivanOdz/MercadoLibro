@@ -23,6 +23,9 @@
 		<div class="uk-navbar-left">
 			<ul class="uk-navbar-nav">
 				<li>
+					<img src="${pageContext.request.contextPath}/images/mercado_libro.webp" alt="Logo Icon" class="icon-style">
+				</li>
+				<li>
 					<a class="uk-navbar-item uk-logo" href="${pageContext.request.contextPath}/">
 						<strong>
 							<spring:message code="publications.list.brand.logo"/>
@@ -59,11 +62,11 @@
 	</div>
 </nav>
 
-<div class="fixed-action-btn">
-	<a href="${pageContext.request.contextPath}/createpublication?publication_id=0&is_for_exchange=false" class="uk-button uk-button-large uk-button-primary">
-		<span uk-icon="icon: plus"></span>
-	</a>
-</div>
+<%--<div class="fixed-action-btn">--%>
+<%--	<a href="${pageContext.request.contextPath}/createpublication?publication_id=0&is_for_exchange=false" class="uk-button uk-button-large uk-button-primary">--%>
+<%--		<span uk-icon="icon: plus"></span>--%>
+<%--	</a>--%>
+<%--</div>--%>
 
 
 <div class="uk-background-muted">

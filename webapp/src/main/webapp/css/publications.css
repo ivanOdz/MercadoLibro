@@ -55,6 +55,10 @@
     gap: 0 !important;
 }
 
+.icon-style {
+    height: 80px;
+    margin-right: 10px;
+}
 
 .pl-1 {
     padding-left: 1rem !important;
