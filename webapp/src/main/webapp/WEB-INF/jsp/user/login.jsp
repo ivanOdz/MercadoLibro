@@ -3,6 +3,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <html>
+<link rel="icon" href="${pageContext.request.contextPath}/images/favicon.ico" type="image/x-icon"/>
 <body>
 <c:url value="/login" var="loginUrl"/>
 <c:url value="/create" var="signUpUrl"/>
