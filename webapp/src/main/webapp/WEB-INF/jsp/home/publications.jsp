@@ -15,7 +15,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
 
-	<title><spring:message code="publications.list.title"/></title>
+	<title><spring:message code="publications.list.brand.logo"/></title>
 
 </head>
 <body>
@@ -44,7 +44,7 @@
 				<li>
 					<form class="uk-search uk-search-default custom-search-form" method="get" action="${pageContext.request.contextPath}">
 						<input class="uk-search-input" type="search"
-							   placeholder="Search"
+							   placeholder="<spring:message code='home.search.text'/>"
 							   aria-label="Search"
 							   name="search"
 							   id="search"
