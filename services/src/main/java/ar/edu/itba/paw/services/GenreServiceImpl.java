@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
 import ar.edu.itba.paw.interfaces.services.GenreService;
@@ -14,12 +15,12 @@ public class GenreServiceImpl implements GenreService {
 	
 	@Autowired
 	private MessageSource messageSource;
-	
+
+    @Override
 	public String getGenreDisplayName(Genre genre) {
 		
-		Locale locale = new Locale("es");
+		Locale locale = LocaleContextHolder.getLocale();
 		String key = "genre." + genre.name().toLowerCase().replace("_", ".");
-		
 		return messageSource.getMessage(key, null, locale);
 	}
 }
