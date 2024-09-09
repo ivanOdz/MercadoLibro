@@ -36,7 +36,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
         this.publicationsJdbcDao = publicationsJdbcDao;
         this.bookJdbcDao = bookJdbcDao;
         jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .usingGeneratedKeyColumns("exchangeId")
+                .usingGeneratedKeyColumns("exchangeid")
                 .withTableName("exchange");
     }
 

@@ -7,7 +7,7 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.models.utils.BookStateWrapper;
 import ar.edu.itba.paw.models.utils.GenreWrapper;
-import ar.edu.itba.paw.models.utils.Genres;
+import ar.edu.itba.paw.models.utils.Genre;
 import ar.edu.itba.paw.interfaces.services.BookService;
 import ar.edu.itba.paw.interfaces.services.BookStateService;
 import ar.edu.itba.paw.interfaces.services.PublicationsService;
@@ -52,7 +52,7 @@ public class PublicationsController {
         final ModelAndView mav = new ModelAndView("home/publications");
         List<Card> cardList = cs.buildCardList(ps.getAllPublicationsFilteredBy(search).getPublications());
         mav.addObject("publications", cardList);
-        mav.addObject("genres", List.of(Genres.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
+        mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
         mav.addObject("bookStates", List.of(BookState.values()).stream().map(bookStatus -> new BookStateWrapper(bookStatus, bookStateService.getBookStateDisplayName(bookStatus))).collect(Collectors.toList()));
        
         // user profile data

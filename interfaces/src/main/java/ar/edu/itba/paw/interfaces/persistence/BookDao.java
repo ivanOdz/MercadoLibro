@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface BookDao {
 
-    Book createBook(int bookModelId, int ownerId, BookState bookState, int exchangesQty, int rating);
+    Book createBook(int bookModelId, long ownerId, BookState bookState, int exchangesQty, int rating);
     Optional<Book> getBookById(long bookId);
     void exchangeOwnership(long b1, long b2);
 }

@@ -42,12 +42,12 @@ public class SinglePublicationServiceImpl implements SinglePublicationService {
         // Dado el bookModelId, tomar el authorId de la tabla book_author
         //List<Author> authors =
 
-        for (String author : authors) {
+        /*for (String author : authors) {
             //System.out.println("autor: " + author);
             Author auth = authorDao.createAuthor(author);
             book_authorDao.createBookAuthor(book.getBookId(), auth.getAuthorId());
 
-        }
+        }*/
         //return publicationDao.createPublication(book.getBookId(), ownerId, location);
         return new Publication(1,1, BookState.NEW.getValue(), PublicationState.CURRENT, new Timestamp(new Date().getTime()), 1);
     }

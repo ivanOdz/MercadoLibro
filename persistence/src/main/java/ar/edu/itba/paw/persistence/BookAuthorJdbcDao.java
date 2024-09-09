@@ -33,7 +33,7 @@ public class BookAuthorJdbcDao implements BookAuthorDao {
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("book_author")
-                .usingColumns("bookModelId", "authorId");
+                .usingColumns("bookmodelid", "authorid");
         this.authorDao = authorDao;
     }
 

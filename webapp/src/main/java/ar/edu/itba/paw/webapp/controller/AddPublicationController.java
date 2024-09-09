@@ -104,8 +104,8 @@ public class AddPublicationController {
         Publication publication;
         if (authentication.getPrincipal() instanceof PawUserDetails pud){
             user = pud.getUser();
-            publication = ps.createPublication(
-                    user.getId(),
+           /* publication = ps.createPublication(
+                    user.getUserId(),
                     publicationForm.getIsbn(),
                     publicationForm.getTitle(),
                     publicationForm.getAuthors(),
@@ -125,8 +125,8 @@ public class AddPublicationController {
                 Exchange ex = exchangeService.initializeExchange(isForExchange, publication.getPublicationId(), publicationId);
 
                 Map<String, Object> variables = new HashMap<>();
-                Publication offererPub = publicationsService.getPublicationById(ex.getOfferer()).get();
-                Publication requesterPub = publicationsService.getPublicationById(ex.getRequester()).get();
+                Publication offererPub = publicationsService.getPublicationById(ex.getOffererPubId()).get();
+                Publication requesterPub = publicationsService.getPublicationById(ex.getRequesterPubId()).get();
 
                 Book bookOffered = bookService.getBookById(offererPub.getBookId()).get();
                 Book bookRequested = bookService.getBookById(requesterPub.getBookId()).get();
@@ -138,13 +138,13 @@ public class AddPublicationController {
 
                 variables.put("requesterEmail", requester.getMail());
                 variables.put("requesterName", requester.getUsername());
-                variables.put("requestedPublication", bookRequested.getTitle());
-                variables.put("offeredPublication", bookOffered.getTitle());
+                //variables.put("requestedPublication", bookRequested.getTitle());
+                //variables.put("offeredPublication", bookOffered.getTitle());
                 variables.put("validationUrl", "http://localhost:8080/exchange?accept_code=" + ex.getAcceptCode() + "&state=true");
                 variables.put("rejectionUrl", "http://localhost:8080/exchange?accept_code=" + ex.getAcceptCode() +"&state=false");
 
                 emailService.sendEmail(oferrerEmail, variables, "exchangeRequest", "Requesting");
-            }
+            }*/
             return new ModelAndView("redirect:/");
         } else {
             return new ModelAndView("redirect:/login");

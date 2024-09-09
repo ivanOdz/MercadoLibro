@@ -24,7 +24,7 @@ public class AuthorJdbcDao implements AuthorDao {
 
     public AuthorJdbcDao(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
-        jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).usingGeneratedKeyColumns("authorId").withTableName("author");
+        jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).usingGeneratedKeyColumns("authorid").withTableName("author");
     }
 
     @Override

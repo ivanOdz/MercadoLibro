@@ -22,7 +22,7 @@ public class SinglePublicationJdbcDao implements SinglePublicationDao {
     public SinglePublicationJdbcDao(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .usingGeneratedKeyColumns("publicationId")
+                .usingGeneratedKeyColumns("publicationid")
                 .withTableName("publication");
     }
 

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.Types;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -31,7 +32,7 @@ public class UserJdbcDao implements UserDao {
     public UserJdbcDao(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .usingGeneratedKeyColumns("userId")
+                .usingGeneratedKeyColumns("userid")
                 .withTableName("users");
     }
 
@@ -54,14 +55,19 @@ public class UserJdbcDao implements UserDao {
 
     @Override
     public User createUser(String username, String mail, String password, int verificationCode) {
-        final Map<String, Object> userData = Map.of("username", username,"mail", mail, "password", password, "imageId", null, "verificationCode", verificationCode, "isVerified", true);
-        final Number userId;
+        final Map<String, Object> userData = new HashMap<>();
+        userData.put("username", username);
+        userData.put("mail", mail);
+        userData.put("password", password);
+        userData.put("imageId", null); // Permite null
+        userData.put("verificationCode", verificationCode);
+        userData.put("isVerified", true);
 
-
-        userId = jdbcInsert.executeAndReturnKey(userData);
+        final Number userId = jdbcInsert.executeAndReturnKey(userData);
 
         return new User(userId.longValue(), username, mail, password, null, verificationCode, false);
     }
+
 
     @Override
     public Optional<User> findByUsername(String username) {
