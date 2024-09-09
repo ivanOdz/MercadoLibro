@@ -25,20 +25,11 @@ import java.util.Map;
 public class EmailServiceImpl implements EmailService {
 
     private final JavaMailSender mailSender;
-
     private final SpringTemplateEngine templateEngine;
-    private final ExchangeService exchangeService;
-    private final PublicationsService publicationsService;
-    private final BookService bookService;
-    private final UserService userService;
 
-    public EmailServiceImpl(final JavaMailSender javaMailSender, final SpringTemplateEngine templateResolver, final ExchangeService exchangeService, PublicationsService publicationsService, BookService bookService, UserService userService) {
+    public EmailServiceImpl(final JavaMailSender javaMailSender, final SpringTemplateEngine templateResolver) {
         this.mailSender = javaMailSender;
         this.templateEngine = templateResolver;
-        this.exchangeService = exchangeService;
-        this.publicationsService = publicationsService;
-        this.bookService = bookService;
-        this.userService = userService;
     }
 
     @Async

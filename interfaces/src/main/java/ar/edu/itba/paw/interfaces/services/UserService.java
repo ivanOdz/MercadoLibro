@@ -18,4 +18,6 @@ public interface UserService {
     User createUser(String username, String mail, String password);
 
     Optional<User> findByUsername(String username);
+
+    void verifyUser(int verificationCode);
 }

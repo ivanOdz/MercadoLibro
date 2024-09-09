@@ -1,19 +1,12 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.models.utils.Genres;
-import ar.edu.itba.paw.models.utils.PublicationState;
-import ar.edu.itba.paw.interfaces.services.SinglePublicationService;
 import ar.edu.itba.paw.webapp.auth.PawUserDetails;
-import ar.edu.itba.paw.webapp.form.PublicationForm;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.webapp.form.UserForm;
-import ar.edu.itba.paw.interfaces.services.EmailService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -26,28 +19,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 
-import java.util.HashMap;
-import java.util.Map;
-
 
 @Controller
-public class HelloWorldController {
-
+public class UserController {
     private final UserService us;
-
-    private final EmailService emailService;
 
     private AuthenticationManager auth;
 
-    public HelloWorldController(final UserService us, final EmailService emailService, AuthenticationManager auth) {
+    public UserController(final UserService us, AuthenticationManager auth) {
         this.us = us;
-        this.emailService = emailService;
         this.auth = auth;
     }
 
     @RequestMapping("/index")
     public ModelAndView index(@RequestParam(name = "userId", defaultValue = "1") long userId) {
-        final ModelAndView mav = new ModelAndView("helloworld/index");
+        final ModelAndView mav = new ModelAndView("user/index");
         mav.addObject("username", us.findById(userId).get().getUsername());
         mav.addObject("userId", userId);
 
@@ -62,7 +48,7 @@ public class HelloWorldController {
 
     @RequestMapping("/{userId:\\d+}")
     public ModelAndView profile(@PathVariable(name = "userId") long userId) {
-        final ModelAndView mav = new ModelAndView("helloworld/profile");
+        final ModelAndView mav = new ModelAndView("user/profile");
         mav.addObject("username", us.findById(userId).get().getUsername());
         mav.addObject("mail", us.findById(userId).get());
         mav.addObject("userId", userId);
@@ -76,25 +62,44 @@ public class HelloWorldController {
             System.out.println(errors.getAllErrors());
             return createForm(userForm);
         }
+
+        // verify date, create an user and send a verification email
         final User user = us.createUser(userForm.getUsername(), userForm.getMail(), userForm.getPassword());
 
-        // Creamos una sesión y dejamos logeado al usuario
+        // create a session and keep the user logged in
         final Authentication authenticationToken = new UsernamePasswordAuthenticationToken(userForm.getUsername(), userForm.getPassword(), null);
         SecurityContextHolder.getContext().setAuthentication(auth.authenticate(authenticationToken));
 
-        return new ModelAndView("redirect:/");
+        return new ModelAndView("redirect:/logout");  // TODO: send the user to a page 'Your user was created. Please check your email box to verify your account'
     }
 
     @RequestMapping(path = "/create", method = RequestMethod.GET)
     public ModelAndView createForm(@ModelAttribute("userForm") UserForm userForm){
-        return new ModelAndView("helloworld/create");
+        return new ModelAndView("user/create");
     }
 
     @RequestMapping("/login")
     public ModelAndView login(){
-        return new ModelAndView("helloworld/login");
+        return new ModelAndView("user/login");
     }
 
+
+    @RequestMapping("/verification")
+    public ModelAndView verificationController(@RequestParam(name = "verification_code") int verificationCode){
+        us.verifyUser(verificationCode);
+        return new ModelAndView("user/login");
+    }
+
+    @RequestMapping("/check_verify")
+    public ModelAndView checkVerify(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.getPrincipal() instanceof PawUserDetails pud) {
+            if(pud.getUser().isVerified()){
+                return new ModelAndView("redirect:/");
+            }
+        }
+        return new ModelAndView("redirect:/logout");
+    }
 
     // binding=false -> read only attribute
     @ModelAttribute(name="loggedUser", binding = false)
@@ -106,18 +111,18 @@ public class HelloWorldController {
         return null;
     }
 
-    // home
-    @RequestMapping("/mail")
-    public ModelAndView home() {
-        final ModelAndView mav = new ModelAndView("helloworld/home");
-        Map<String, Object> variables = new HashMap<>();
-        variables.put("requesterName", "Julieta Techenski");
-        variables.put("requesterEmail", "mtaurian@gmail.com");
-        variables.put("requestedPublication", "Deutsch Kursbuch");
-        variables.put("offeredPublication", "Harry Potter 1");
-        variables.put("rejectionUrl", "http://localhost:8080/publication?publication_id=3");
-        variables.put("validationUrl", "http://localhost:8080/publication?publication_id=3");
-        emailService.sendEmail("modzomek@itba.edu.ar", variables, "exchangeRequest", "Book Exchange");
-        return mav;
-    }
+//    // home
+//    @RequestMapping("/mail")
+//    public ModelAndView home() {
+//        final ModelAndView mav = new ModelAndView("helloworld/home");
+//        Map<String, Object> variables = new HashMap<>();
+//        variables.put("requesterName", "Julieta Techenski");
+//        variables.put("requesterEmail", "mtaurian@gmail.com");
+//        variables.put("requestedPublication", "Deutsch Kursbuch");
+//        variables.put("offeredPublication", "Harry Potter 1");
+//        variables.put("rejectionUrl", "http://localhost:8080/publication?publication_id=3");
+//        variables.put("validationUrl", "http://localhost:8080/publication?publication_id=3");
+//        emailService.sendEmail("modzomek@itba.edu.ar", variables, "exchangeRequest", "Book Exchange");
+//        return mav;
+//    }
 }

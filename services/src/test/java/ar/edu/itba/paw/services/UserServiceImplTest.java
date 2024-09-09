@@ -19,6 +19,7 @@ public class UserServiceImplTest {
     private static final String USERNAME = "username";
     private static final String MAIL = "mail";
     private static final String PASSWORD = "password";
+    private static final int VERIFICATIONCODE = 10;
 //----------------------------------------------
     @InjectMocks
     private UserServiceImpl userService;
@@ -34,7 +35,7 @@ public class UserServiceImplTest {
     @Test
     public void testCreate() {
         // 1. Precondiciones
-        Mockito.when(mock.createUser(eq(USERNAME), eq(MAIL), eq(PASSWORD))).thenReturn(new User(1, USERNAME, MAIL, PASSWORD));
+        Mockito.when(mock.createUser(eq(USERNAME), eq(MAIL), eq(PASSWORD), eq(VERIFICATIONCODE))).thenReturn(new User(1, USERNAME, MAIL, PASSWORD, 10, false));
 
         // 2. Ejercito la class under test
         User user = userService.createUser(USERNAME, MAIL, PASSWORD);
@@ -49,7 +50,7 @@ public class UserServiceImplTest {
     @Test(expected = DuplicateKeyException.class)
     public void testCreateDuplicate() {
         // 1. Precondiciones
-        Mockito.when(mock.createUser(eq(USERNAME), eq(MAIL), eq(PASSWORD))).thenThrow(DuplicateKeyException.class);
+        Mockito.when(mock.createUser(eq(USERNAME), eq(MAIL), eq(PASSWORD), eq(VERIFICATIONCODE))).thenThrow(DuplicateKeyException.class);
 
         // 2. Ejercito la class under test
         User user = userService.createUser(USERNAME, MAIL, PASSWORD);
