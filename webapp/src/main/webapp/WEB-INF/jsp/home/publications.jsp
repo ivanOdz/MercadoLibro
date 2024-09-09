@@ -23,7 +23,9 @@
 		<div class="uk-navbar-left">
 			<ul class="uk-navbar-nav">
 				<li>
-					<img src="${pageContext.request.contextPath}/images/mercado_libro.webp" alt="Logo Icon" class="icon-style">
+					<a href="${pageContext.request.contextPath}/">
+						<img src="${pageContext.request.contextPath}/images/mercado_libro.webp" alt="Logo Icon" class="icon-style">
+					</a>
 				</li>
 				<li>
 					<a class="uk-navbar-item uk-logo" href="${pageContext.request.contextPath}/">
