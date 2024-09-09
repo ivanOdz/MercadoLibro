@@ -1,26 +1,32 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.models.Book;
+import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 
 @Primary
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserDao userDao;
-
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
-
-    public UserServiceImpl(final UserDao userDao, final PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(final UserDao userDao, final PasswordEncoder passwordEncoder, final EmailService emailService) {
         this.userDao = userDao;
         this.passwordEncoder = passwordEncoder;
+        this.emailService = emailService;
     }
     @Override
     public Optional<User> findById(long id) {
@@ -46,7 +52,18 @@ public class UserServiceImpl implements UserService {
         //  3. generar un Token de validacion y guardarlo en la base de datos
         //  4. enviar el token de validacion en un correo de bienvenida
         //  5. agregar al usuario a una cola de verificacion manual
-        return userDao.createUser(username, mail, passwordEncoder.encode(password));
+
+        User user = userDao.createUser(username, mail, passwordEncoder.encode(password), generateVerificationCode());
+
+        Map<String, Object> variables = new HashMap<>();
+
+        variables.put("username", user.getUsername());
+        variables.put("validationUrl", "http://localhost:8080/verification?verification_code=" + user.getVerificationCode());
+
+        emailService.sendEmail(user.getMail(), variables, "verification", "User verification");
+
+        return user;
+
     }
 
     @Override
@@ -54,5 +71,40 @@ public class UserServiceImpl implements UserService {
         return userDao.findByUsername(username);
     }
 
+    @Override
+    public void verifyUser(int verificationCode) {
+        userDao.verifyUser(verificationCode);
+    }
 
+    @Override
+    public void changePasswordSolicited(String email) {
+        int verificationCode = generateVerificationCode();
+        userDao.changePasswordSolicited(email, verificationCode);
+
+        Map<String, Object> variables = new HashMap<>();
+
+        variables.put("validationUrl", "http://localhost:8080/change_password?verification_code=" + verificationCode);
+
+        emailService.sendEmail(email, variables, "changePassword", "Password change");
+    }
+
+    @Override
+    public void changePassword(int verificationCode, String newPassword) {
+        userDao.changePassword(verificationCode,passwordEncoder.encode(newPassword));
+    }
+
+//    @Override
+//    public void changePassword(String email, String newPassword) {
+//        userDao.changePassword(passwordEncoder.encode(newPassword))
+//    }
+
+
+    /**
+     * Generates random verification code when verifying user or updating password
+     * @return verification code
+     */
+    private int generateVerificationCode(){
+        Random random = new Random();
+        return Math.abs(random.nextInt());
+    }
 }

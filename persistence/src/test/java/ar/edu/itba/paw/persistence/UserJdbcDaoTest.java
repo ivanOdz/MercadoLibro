@@ -24,6 +24,8 @@ public class UserJdbcDaoTest {
     private static final String USERNAME = "username";
     private static final String MAIL = "mail";
     private static final String PASSWORD = "password";
+    private static final int VERIFICATIONCODE = 10;
+
 
     private UserJdbcDao userDao;
 
@@ -42,7 +44,7 @@ public class UserJdbcDaoTest {
         // 1. Precondiciones
 
         // 2. Ejercito la class under test
-        User user = userDao.createUser(USERNAME, MAIL, PASSWORD);
+        User user = userDao.createUser(USERNAME, MAIL, PASSWORD, VERIFICATIONCODE);
 
         // 3. Postcondiciones
         assertNotNull(user);

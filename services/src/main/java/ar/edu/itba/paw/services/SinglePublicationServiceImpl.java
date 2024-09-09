@@ -32,10 +32,9 @@ public class SinglePublicationServiceImpl implements SinglePublicationService {
     }
 
     @Override
-    public Publication createPublication(String username, String mail, String password, String isbn, String title, List<String> authors, String editorial, String description, Genres genre, BookState bookState, PublicationState publicationState, int edition, int rating, long image, String location) {
+    public Publication createPublication(long userId, String isbn, String title, List<String> authors, String editorial, String description, Genres genre, BookState bookState, PublicationState publicationState, int edition, int rating, long image, String location) {
         
-    	User user = userDao.createUser(username, mail, "root");
-        Book book = bookDao.createBook(isbn, title, editorial, description, genre, bookState, publicationState, edition, rating, image, user.getId());
+        Book book = bookDao.createBook(isbn, title, editorial, description, genre, bookState, publicationState, edition, rating, image, userId);
 
         for (String author : authors) {
             System.out.println("autor: " + author);
@@ -43,6 +42,6 @@ public class SinglePublicationServiceImpl implements SinglePublicationService {
             book_authorDao.createBook_Author(book.getBookId(), auth.getAuthorId());
 
         }
-        return publicationDao.createPublication(book.getBookId(), user.getId(), location);
+        return publicationDao.createPublication(book.getBookId(), userId, location);
     }
 }
