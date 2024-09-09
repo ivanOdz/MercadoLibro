@@ -4,6 +4,7 @@
 <body>
 <c:url value="/login" var="loginUrl"/>
 <c:url value="/create" var="signUpUrl"/>
+<c:url value="/mail_input" var="changePasswordUrl"/>
 <form action="${loginUrl}" method="post">
     <div>
         <label>
@@ -37,5 +38,12 @@
             <spring:message code="hwc.signup.button"/>
         </button>
     </a>
+
+    <a href="${changePasswordUrl}">
+        <button type="button">
+            <spring:message code="hwc.change_password.button"/>
+        </button>
+    </a>
+
 </body>
 </html>

@@ -76,6 +76,28 @@ public class UserServiceImpl implements UserService {
         userDao.verifyUser(verificationCode);
     }
 
+    @Override
+    public void changePasswordSolicited(String email) {
+        int verificationCode = generateVerificationCode();
+        userDao.changePasswordSolicited(email, verificationCode);
+
+        Map<String, Object> variables = new HashMap<>();
+
+        variables.put("validationUrl", "http://localhost:8080/change_password?verification_code=" + verificationCode);
+
+        emailService.sendEmail(email, variables, "changePassword", "Password change");
+    }
+
+    @Override
+    public void changePassword(int verificationCode, String newPassword) {
+        userDao.changePassword(verificationCode,passwordEncoder.encode(newPassword));
+    }
+
+//    @Override
+//    public void changePassword(String email, String newPassword) {
+//        userDao.changePassword(passwordEncoder.encode(newPassword))
+//    }
+
 
     /**
      * Generates random verification code when verifying user or updating password

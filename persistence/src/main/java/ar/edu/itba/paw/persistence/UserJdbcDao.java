@@ -70,4 +70,17 @@ public class UserJdbcDao implements UserDao {
         jdbcTemplate.update("UPDATE users SET verificationCode = ? WHERE verificationCode = ?", new Object[]{ null, verificationCode },
                 new int[]{ Types.NULL, Types.INTEGER });
     }
+
+    @Override
+    public void changePasswordSolicited(String email, int verificationCode) {
+        jdbcTemplate.update("UPDATE users SET verificationCode = ? WHERE mail = ?", new Object[]{ verificationCode, email },
+                new int[]{ Types.INTEGER, Types.VARCHAR });
+
+    }
+
+    @Override
+    public void changePassword(int verificationCode, String newPassword) {
+        jdbcTemplate.update("UPDATE users SET password = ? WHERE verificationCode = ?", new Object[]{ newPassword, verificationCode },
+                new int[]{ Types.VARCHAR, Types.INTEGER });
+    }
 }

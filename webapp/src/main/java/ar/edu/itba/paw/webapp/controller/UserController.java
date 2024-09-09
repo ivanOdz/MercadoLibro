@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.webapp.form.PasswordForm;
 import ar.edu.itba.paw.webapp.form.UserForm;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -59,7 +60,6 @@ public class UserController {
     public ModelAndView create(@Valid @ModelAttribute("userForm") UserForm userForm, BindingResult errors) {
 
         if (errors.hasErrors()){
-            System.out.println(errors.getAllErrors());
             return createForm(userForm);
         }
 
@@ -100,6 +100,37 @@ public class UserController {
         }
         return new ModelAndView("redirect:/logout");
     }
+
+    @RequestMapping("/mail_input")
+    public ModelAndView mailInput(){
+        return new ModelAndView("user/mail_input"); //TODO : redirect the user to a page "Check your inbox to modify your password"
+    }
+
+    @RequestMapping("/change_password_solicited")
+    public ModelAndView changePasswordSolicited(@RequestParam(name = "email") String email){
+        us.changePasswordSolicited(email);
+        return new ModelAndView("redirect:/login"); //TODO : redirect the user to a page "Check your inbox to modify your password"
+    }
+
+
+    @RequestMapping(path = "/change_password", method = RequestMethod.GET)
+    public ModelAndView createPasswordForm(@ModelAttribute("passwordForm") PasswordForm passwordForm, @RequestParam(name = "verification_code") int verificationCode){
+        ModelAndView mav = new ModelAndView("user/new_password");
+        mav.addObject("verification_code", verificationCode);
+        return mav;
+    }
+
+    @RequestMapping(value = "/change_password", method = RequestMethod.POST)
+    public ModelAndView changePassword(@Valid @ModelAttribute("passwordForm") PasswordForm passwordForm, BindingResult errors, @RequestParam(name = "verification_code") int verificationCode){
+        if(errors.hasErrors()){
+            System.out.print(errors.getAllErrors());
+            return createPasswordForm(passwordForm, verificationCode);
+        }
+        us.changePassword(verificationCode, passwordForm.getPassword() );
+        return new ModelAndView("redirect:/login");  //TODO : redirect the user to a page "Your password was changed successfully"
+    }
+
+
 
     // binding=false -> read only attribute
     @ModelAttribute(name="loggedUser", binding = false)

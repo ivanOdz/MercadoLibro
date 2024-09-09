@@ -20,4 +20,7 @@ public interface UserService {
     Optional<User> findByUsername(String username);
 
     void verifyUser(int verificationCode);
+
+    void changePasswordSolicited(String email);
+    void changePassword(int verificationCode, String newPassword);
 }
