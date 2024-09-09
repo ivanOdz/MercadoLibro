@@ -53,9 +53,9 @@
 
 		<div class="uk-navbar-right">
 			<ul class="uk-navbar-nav">
-				<li><a class="pl-1 pr-1" href="#">Intercambios</a></li>
-				<li><a class="pl-1 pr-1" href="#">Mis Libros</a></li>
-				<li><a class="pl-1 pr-1" href="#">Perfil</a></li>
+				<li><a class="pl-1 pr-1" href="#"><spring:message code="home.exchange.view"/></a></li>
+				<li><a class="pl-1 pr-1" href="#"><spring:message code="home.book.view"/></a></li>
+				<li><a class="pl-1 pr-1" href="#"><spring:message code="home.profile.view"/></a></li>
 			</ul>
 		</div>
 		</div>
