@@ -3,18 +3,24 @@ package ar.edu.itba.paw.models;
 public class User {
 
     private final long userId;
-    private String username;
+    private final String username;
     private final String mail;
     private final String password;
+    private final Long imageId;
+    private final Integer verificationCode;
+    private final boolean isVerified;
 
-    public User(long userId, String username, String mail, String password) {
+    public User(long userId, String username, String mail, String password, Long imageId, Integer verificationCode, boolean isVerified) {
         this.userId = userId;
         this.username = username;
         this.mail = mail;
         this.password = password;
+        this.imageId = imageId;
+        this.verificationCode = verificationCode;
+        this.isVerified = isVerified;
     }
 
-    public long getId() {
+    public long getUserId() {
         return userId;
     }
 
@@ -26,12 +32,19 @@ public class User {
         return mail;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public String getPassword() {
+        return password;
     }
 
-    public String getPassword() {
-        //TODO
-        return password;
+    public Long getImageId() {
+        return imageId;
+    }
+
+    public Integer getVerificationCode() {
+        return verificationCode;
+    }
+
+    public boolean isVerified() {
+        return isVerified;
     }
 }

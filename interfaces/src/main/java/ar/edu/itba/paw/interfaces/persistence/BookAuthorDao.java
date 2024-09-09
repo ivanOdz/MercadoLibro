@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface BookAuthorDao {
 
-    BookAuthor createBook_Author(long bookId, long authorId);
+    BookAuthor createBookAuthor(long bookModelId, long authorId);
 
     List<Author> getAuthorsByBookId(long bookId);
 

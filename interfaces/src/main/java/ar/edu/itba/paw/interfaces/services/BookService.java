@@ -2,20 +2,19 @@ package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.Book;
 import ar.edu.itba.paw.models.utils.BookState;
-import ar.edu.itba.paw.models.utils.Genres;
+import ar.edu.itba.paw.models.utils.Genre;
 import ar.edu.itba.paw.models.utils.PublicationState;
 
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.List;
 
 @Service
 public interface BookService {
 
     Optional<Book> getBookById(long bookId);
-    
-    Book createBook(String isbn, String title, String editorial, String description, Genres genre, BookState bookState, PublicationState publicationState, int edition, int rating, long image, long userId);
+
+    Book createBook (int bookModelId, int ownerId, BookState bookState, int exchangesQty, int rating);
 
     void exchangeOwnership(long b1, long b2);
 }

@@ -7,7 +7,7 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.models.utils.BookStateWrapper;
 import ar.edu.itba.paw.models.utils.GenreWrapper;
-import ar.edu.itba.paw.models.utils.Genres;
+import ar.edu.itba.paw.models.utils.Genre;
 import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.webapp.form.PublicationForm;
 
@@ -73,7 +73,7 @@ public class AddPublicationController {
 
         String username = userService.findUsernameByEmail(submited_mail);
         mav.addObject("publicationForm", publicationForm);
-        mav.addObject("genres", List.of(Genres.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
+        mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
         mav.addObject("bookStates", List.of(BookState.values()).stream().map(bookStatus -> new BookStateWrapper(bookStatus, bookStateService.getBookStateDisplayName(bookStatus))).collect(Collectors.toList()));
         mav.addObject("publicationId", publicationId);
         mav.addObject("isForExchange", isForExchange);
@@ -94,7 +94,8 @@ public class AddPublicationController {
 
         System.out.println("RATING:" +publicationForm.getRating());
         System.out.println("USERNAME:" + publicationForm.getUsername());
-        final Publication publication = ps.createPublication(
+        /*final Publication publication = ps.createPublication(
+
                 publicationForm.getUsername(),
                 submited_mail,
                 "root",   //TODO
@@ -110,15 +111,15 @@ public class AddPublicationController {
                 publicationForm.getRating(),
                 imageService.saveImage(publicationForm.getImageFile()).getImageId(),
                 publicationForm.getLocation()
-        );
+        );*/
 
          if(isForExchange) {
         	 
-             Exchange ex = exchangeService.initializeExchange(isForExchange, publication.getPublicationId(), publicationId);
+             /*Exchange ex = exchangeService.initializeExchange(isForExchange, publication.getPublicationId(), publicationId);
              
              Map<String, Object> variables = new HashMap<>();
-             Publication offererPub = publicationsService.getPublicationById(ex.getOfferer()).get();
-             Publication requesterPub = publicationsService.getPublicationById(ex.getRequester()).get();
+             Publication offererPub = publicationsService.getPublicationById(ex.getOffererPubId()).get();
+             Publication requesterPub = publicationsService.getPublicationById(ex.getRequesterPubId()).get();
 
              Book bookOffered = bookService.getBookById(offererPub.getBookId()).get();
              Book bookRequested = bookService.getBookById(requesterPub.getBookId()).get();
@@ -130,14 +131,14 @@ public class AddPublicationController {
 
              variables.put("requesterEmail", requester.getMail());
              variables.put("requesterName", requester.getUsername());
-             variables.put("requestedPublication", bookRequested.getTitle());
-             variables.put("offeredPublication", bookOffered.getTitle());
+             //variables.put("requestedPublication", bookRequested.getTitle());
+             //variables.put("offeredPublication", bookOffered.getTitle());
              variables.put("validationUrl", "http://localhost:8080/exchange?accept_code=" + ex.getAcceptCode() + "&state=true");
              variables.put("rejectionUrl", "http://localhost:8080/exchange?accept_code=" + ex.getAcceptCode() +"&state=false");
 
              emailService.sendEmail(oferrerEmail, variables, "exchangeRequest", "Requesting");
+            */
          }
-
 
         return new ModelAndView("redirect:/");
     }

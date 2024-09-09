@@ -17,7 +17,13 @@ import java.util.Optional;
 public class UserJdbcDao implements UserDao {
 
     private static final RowMapper<User> ROWMAPPER =
-            (rs, rowNum) -> new User(rs.getLong("userid"), rs.getString("username"), rs.getString("mail"), rs.getString("password"));
+            (rs, rowNum) -> new User(rs.getLong("userId"),
+                                     rs.getString("username"),
+                                     rs.getString("mail"),
+                                     rs.getString("password"),
+                                     rs.getLong("imageId"),
+                                     rs.getInt("verificationCode"),
+                                     rs.getBoolean("isVerified"));
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
@@ -25,7 +31,7 @@ public class UserJdbcDao implements UserDao {
     public UserJdbcDao(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .usingGeneratedKeyColumns("userid")
+                .usingGeneratedKeyColumns("userId")
                 .withTableName("users");
     }
 
@@ -42,16 +48,15 @@ public class UserJdbcDao implements UserDao {
     }
 
     private void updateUsername(User user, String newUsername) {
-        jdbcTemplate.update("UPDATE users SET username = ? WHERE userId = ?", new Object[]{ newUsername, user.getId() },
+        jdbcTemplate.update("UPDATE users SET username = ? WHERE userId = ?", new Object[]{ newUsername, user.getUserId() },
                 new int[]{ Types.VARCHAR, Types.BIGINT });
-        user.setUsername(newUsername);
     }
 
     @Override
     public User createUser(String username, String mail, String password) {
 
-        final Map<String, String> userData = Map.of("username", username,"mail", mail, "password", password);
         final Number userId;
+        final Map<String, Object> userData = Map.of("username", username,"mail", mail, "password", password, "imageId", null, "verificationCode", null, "isVerified", true);
 
         Optional<User> user = find(mail);
         if (user.isPresent()) {
@@ -63,7 +68,7 @@ public class UserJdbcDao implements UserDao {
             userId = jdbcInsert.executeAndReturnKey(userData);
         }
 
-        return new User(userId.longValue(), username, mail, password);
+        return new User(userId.longValue(), username, mail, password, null, null, false);
     }
 
     @Override

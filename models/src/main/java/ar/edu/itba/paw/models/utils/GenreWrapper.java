@@ -3,16 +3,16 @@ package ar.edu.itba.paw.models.utils;
 
 public class GenreWrapper {
 	
-	private Genres genre;
+	private Genre genre;
 	private String displayName;
 	
-	public GenreWrapper(Genres genre, String displayName) {
+	public GenreWrapper(Genre genre, String displayName) {
 		
 		this.genre = genre;
 		this.displayName = displayName;
 	}
 	
-	public Genres getGenre() {
+	public Genre getGenre() {
 		
 		return genre;
 	}

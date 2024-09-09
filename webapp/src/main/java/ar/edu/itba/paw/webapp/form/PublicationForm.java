@@ -3,10 +3,9 @@ package ar.edu.itba.paw.webapp.form;
 import javax.validation.constraints.*;
 
 import ar.edu.itba.paw.models.utils.BookState;
-import ar.edu.itba.paw.models.utils.Genres;
+import ar.edu.itba.paw.models.utils.Genre;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PublicationForm {
@@ -38,7 +37,7 @@ public class PublicationForm {
     private String description;
 
     @NotNull
-    private Genres genre;
+    private Genre genre;
     
     @NotNull
     private BookState bookState;
@@ -85,7 +84,7 @@ public class PublicationForm {
     }
     
     @NotNull
-    public Genres getGenre() {
+    public Genre getGenre() {
     	return genre;
     }
 
@@ -142,7 +141,7 @@ public class PublicationForm {
         this.description = description;
     }
     
-    public void setGenre(@NotNull Genres genre) {
+    public void setGenre(@NotNull Genre genre) {
     	this.genre = genre;
     }
     

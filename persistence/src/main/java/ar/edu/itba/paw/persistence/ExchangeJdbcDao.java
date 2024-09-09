@@ -10,7 +10,10 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+
+import java.sql.Timestamp;
 import java.sql.Types;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -25,7 +28,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
 
 
     private static final RowMapper<Exchange> ROWMAPPER =
-            (rs, rowNum) -> new Exchange(rs.getLong("exchangeId"), rs.getLong("offerer"), rs.getLong("requester"), rs.getInt("exchangeState"), rs.getInt("acceptCode"));
+            (rs, rowNum) -> new Exchange(rs.getLong("exchangeId"), rs.getLong("offererPubId"), rs.getLong("requesterPubId"), ExchangeState.fromInt(rs.getInt("exchangeState")), rs.getInt("acceptCode"), rs.getBoolean("offererReceivedBook"), rs.getBoolean("requesterReceivedBook"), rs.getTimestamp("exchangeDate"));
 
 
     public ExchangeJdbcDao(final DataSource ds, PublicationsJdbcDao publicationsJdbcDao, BookJdbcDao bookJdbcDao) {
@@ -33,77 +36,79 @@ public class ExchangeJdbcDao implements ExchangeDao {
         this.publicationsJdbcDao = publicationsJdbcDao;
         this.bookJdbcDao = bookJdbcDao;
         jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                .usingGeneratedKeyColumns("exchangeid")
-                .withTableName("exchanges");
+                .usingGeneratedKeyColumns("exchangeId")
+                .withTableName("exchange");
     }
 
     @Override
     public void updateExchangeStatus(int acceptCode, int newStatus) {
-        String sql = "UPDATE exchanges SET exchangestate = ? WHERE acceptCode = ?";
+        String sql = "UPDATE exchange SET exchangeState = ? WHERE acceptCode = ?";
         jdbcTemplate.update(sql, newStatus, acceptCode);
     }
 
-
     @Override
     public Optional<Exchange> findById(long id) {
-        return jdbcTemplate.query("SELECT * FROM exchanges WHERE exchangeId = ?", new Object[]{ id },
+        return jdbcTemplate.query("SELECT * FROM exchange WHERE exchangeId = ?", new Object[]{ id },
                 new int[]{ Types.BIGINT }, ROWMAPPER).stream().findFirst();
     }
 
     @Override
     public long getIdByAcceptCode(int acceptCode) {
         System.out.println(acceptCode);
-        return jdbcTemplate.query("SELECT * FROM exchanges WHERE acceptCode = ?", new Object[]{ acceptCode },
-                new int[]{ Types.INTEGER }, ROWMAPPER).stream().findFirst().get().getId();
+        return jdbcTemplate.query("SELECT * FROM exchange WHERE acceptCode = ?", new Object[]{ acceptCode },
+                new int[]{ Types.INTEGER }, ROWMAPPER).stream().findFirst().get().getExchangeId();
     }
 
     @Override
     public ResponseState exchange(int acceptCode, boolean state) {
-        Optional<Exchange> ex = jdbcTemplate.query("SELECT * FROM exchanges WHERE acceptCode = ?", new Object[]{ acceptCode },
+        Optional<Exchange> ex = jdbcTemplate.query("SELECT * FROM exchange WHERE acceptCode = ?", new Object[]{ acceptCode },
                 new int[]{ Types.INTEGER }, ROWMAPPER).stream().findFirst();
 
         if(ex.isEmpty()) {
             // TODO: mandar a una pagina que diga accept code invalido
             return ResponseState.INVALID;
         }
-        if(ex.get().getState() == ExchangeState.REJECTED.getValue()){
+        if(ex.get().getExchangeState().getValue() == ExchangeState.REJECTED.getValue()){
             return ResponseState.REJECTED;
         }
-        if(ex.get().getState() == ExchangeState.ACCEPTED.getValue()){
+        if(ex.get().getExchangeState().getValue() == ExchangeState.ACCEPTED.getValue()){
             return ResponseState.ACCEPTED;
         }
         if(!state) {
-            jdbcTemplate.update("UPDATE exchanges SET exchangeState = ? WHERE acceptCode = ?", ExchangeState.REJECTED.getValue(), acceptCode);
+            jdbcTemplate.update("UPDATE exchange SET exchangeState = ? WHERE acceptCode = ?", ExchangeState.REJECTED.getValue(), acceptCode);
             return ResponseState.REJECTED;
         }
 
-        long pubId1 = ex.get().getOfferer();
-        long pubId2 = ex.get().getRequester();
+        long pubId1 = ex.get().getOffererPubId();
+        long pubId2 = ex.get().getRequesterPubId();
         long b1 = publicationsJdbcDao.getPublicationById(pubId1).get().getBookId();
         long b2 = publicationsJdbcDao.getPublicationById(pubId2).get().getBookId();
 
         bookJdbcDao.exchangeOwnership(b1, b2);
 
-        jdbcTemplate.update("UPDATE exchanges SET exchangeState = ? WHERE acceptCode = ?", ExchangeState.ACCEPTED.getValue(), acceptCode);
-        jdbcTemplate.update("UPDATE exchanges SET exchangeState = ? WHERE offerer = ? AND acceptCode <> ?", ExchangeState.REJECTED.getValue(), ex.get().getOfferer(), acceptCode);
-        publicationsJdbcDao.terminatePublication(ex.get().getOfferer());
-        publicationsJdbcDao.terminatePublication(ex.get().getRequester());
+        jdbcTemplate.update("UPDATE exchange SET exchangeState = ? WHERE acceptCode = ?", ExchangeState.ACCEPTED.getValue(), acceptCode);
+        jdbcTemplate.update("UPDATE exchange SET exchangeState = ? WHERE offererPubId = ? AND acceptCode <> ?", ExchangeState.REJECTED.getValue(), ex.get().getOffererPubId(), acceptCode);
+        publicationsJdbcDao.terminatePublication(ex.get().getOffererPubId());
+        publicationsJdbcDao.terminatePublication(ex.get().getRequesterPubId());
 
         return ResponseState.ACCEPTED;
-
     }
 
     @Override
-    public Exchange createExchange(long offererId, long requesterId, int acceptCode) {
+    public Exchange createExchange(long offererPubId, long requesterPubId, int acceptCode) {
+        Timestamp currentTimestamp = new Timestamp(new Date().getTime());
+
         final Map<String, Object> exchangeData = new HashMap<>();
-        exchangeData.put("offerer", offererId);
-        exchangeData.put("requester", requesterId);
-        exchangeData.put("acceptCode", acceptCode);
+        exchangeData.put("offererPubId", offererPubId);
+        exchangeData.put("requesterPubId", requesterPubId);
         exchangeData.put("exchangeState", ExchangeState.PENDING.getValue());
+        exchangeData.put("acceptCode", acceptCode);
+        exchangeData.put("offererReceivedBook", false);
+        exchangeData.put("requesterReceivedBook", false);
+        exchangeData.put("exchangeDate", currentTimestamp);
 
         final Number generatedId = jdbcInsert.executeAndReturnKey(exchangeData);
-        return new Exchange(generatedId.longValue(),  offererId,  requesterId,  ExchangeState.PENDING.getValue(), acceptCode);
+
+        return new Exchange(generatedId.longValue(),  offererPubId,  requesterPubId,  ExchangeState.PENDING, acceptCode, false, false, currentTimestamp);
     }
-
-
 }

@@ -33,9 +33,9 @@ public class CardServiceImpl implements CardService {
         List<Card> cardList = new ArrayList<>();
         for (Publication publication : publicationsList) {
             Book book = bookService.getBookById(publication.getBookId()).get();
-            Image image = imageService.getImageById(book.getImage()).orElse(null);
+            //Image image = imageService.getImageById(book.get()).orElse(null);
             List<Author> authors = bookAuthorService.getAuthorsByBookId(book.getBookId());
-            cardList.add(new Card(publication, book, image, authors));
+            cardList.add(new Card(publication, book, /*image*/null, authors));
         }
         return cardList;
     }

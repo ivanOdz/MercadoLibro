@@ -60,6 +60,6 @@ public class UserJdbcDaoTest {
 
         // 3. Postcondiciones
         assertTrue(maybeUser.isPresent());
-        assertEquals(PREEXISTING_USER_ID, maybeUser.get().getId());
+        assertEquals(PREEXISTING_USER_ID, maybeUser.get().getUserId());
     }
 }

@@ -17,24 +17,22 @@ import java.util.stream.Collectors;
 @Repository
 public class AuthorJdbcDao implements AuthorDao {
 
-    private static final RowMapper<Author> ROWMAPPERAUTHOR = (rs, rowNum) -> new Author(rs.getLong("authorid"), rs.getString("authorname"));
-
+    private static final RowMapper<Author> ROWMAPPERAUTHOR = (rs, rowNum) -> new Author(rs.getLong("authorId"), rs.getString("authorName"));
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
     public AuthorJdbcDao(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
-        jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).usingGeneratedKeyColumns("authorid").withTableName("author");
+        jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).usingGeneratedKeyColumns("authorId").withTableName("author");
     }
 
     @Override
     public Author createAuthor(String authorName) {
-        System.out.println("autorName: " + authorName);
         final Map<String, String> authorData = Map.of("authorName", authorName);
 
         final Number generatedId = jdbcInsert.executeAndReturnKey(authorData);
-        System.out.println("generatedId: " + generatedId);
+
         return new Author(generatedId.longValue(), authorName);
     }
 
@@ -49,5 +47,4 @@ public class AuthorJdbcDao implements AuthorDao {
 
         return jdbcTemplate.query(sql, authorIds.toArray(), ROWMAPPERAUTHOR);
     }
-
 }

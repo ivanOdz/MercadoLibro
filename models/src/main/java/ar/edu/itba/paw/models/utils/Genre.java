@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.models.utils;
 
-public enum Genres {
+public enum Genre {
 
 	FICTION(1),
 	NON_FICTION(2),
@@ -36,14 +36,14 @@ public enum Genres {
 	
 	private final int value;
 
-	Genres(int value) {
+	Genre(int value) {
 		
 		this.value = value;
     }
 	
-	public static Genres fromInt(int i) {
+	public static Genre fromInt(int i) {
 		
-		return Genres.values()[i];
+		return Genre.values()[i];
 	}
 	
 	public int getValue() {

@@ -6,12 +6,14 @@ import ar.edu.itba.paw.models.Book;
 import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.utils.BookState;
-import ar.edu.itba.paw.models.utils.Genres;
+import ar.edu.itba.paw.models.utils.Genre;
 import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.interfaces.services.SinglePublicationService;
 
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -32,17 +34,20 @@ public class SinglePublicationServiceImpl implements SinglePublicationService {
     }
 
     @Override
-    public Publication createPublication(String username, String mail, String password, String isbn, String title, List<String> authors, String editorial, String description, Genres genre, BookState bookState, PublicationState publicationState, int edition, int rating, long image, String location) {
+    public Publication createPublication(int bookModelId, int ownerId, BookState bookState, int exchangesQty, int rating) {
         
-    	User user = userDao.createUser(username, mail, "root");
-        Book book = bookDao.createBook(isbn, title, editorial, description, genre, bookState, publicationState, edition, rating, image, user.getId());
+        Book book = bookDao.createBook(bookModelId, ownerId, bookState, exchangesQty, rating);
 
-        for (String author : authors) {
-            System.out.println("autor: " + author);
+        // TODO: Obtener lista de autores dado un libro
+        // Dado el bookModelId, tomar el authorId de la tabla book_author
+
+        //List<Author> authors =
+        /*for (String author : authors) {
             Author auth = authorDao.createAuthor(author);
-            book_authorDao.createBook_Author(book.getBookId(), auth.getAuthorId());
+            book_authorDao.createBookAuthor(book.getBookId(), auth.getAuthorId());
 
-        }
-        return publicationDao.createPublication(book.getBookId(), user.getId(), location);
+        }*/
+        //return publicationDao.createPublication(book.getBookId(), user.getId(), location);
+        return new Publication(1,1, BookState.NEW.getValue(), PublicationState.CURRENT, new Timestamp(new Date().getTime()), 1);
     }
 }

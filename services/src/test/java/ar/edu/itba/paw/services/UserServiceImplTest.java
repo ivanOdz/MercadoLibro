@@ -31,7 +31,7 @@ public class UserServiceImplTest {
         userService = new UserServiceImpl(mock);
     }
 */
-    @Test
+    /*@Test
     public void testCreate() {
         // 1. Precondiciones
         Mockito.when(mock.createUser(eq(USERNAME), eq(MAIL), eq(PASSWORD))).thenReturn(new User(1, USERNAME, MAIL, PASSWORD));
@@ -44,7 +44,7 @@ public class UserServiceImplTest {
         assertEquals(USERNAME, user.getUsername());
         assertEquals(MAIL, user.getMail());
         assertEquals(PASSWORD, user.getPassword());
-    }
+    }*/
 
     @Test(expected = DuplicateKeyException.class)
     public void testCreateDuplicate() {

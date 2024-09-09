@@ -20,7 +20,7 @@ public class BookAuthorServiceImpl implements BookAuthorService {
 
     @Override
     public BookAuthor createBook_Author(long bookId, long authorId, List<BookAuthor> bookAuthors) {
-        return book_authorDao.createBook_Author(bookId, authorId);
+        return book_authorDao.createBookAuthor(bookId, authorId);
     }
 
     @Override

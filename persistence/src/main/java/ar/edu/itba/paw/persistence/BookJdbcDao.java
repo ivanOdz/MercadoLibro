@@ -3,7 +3,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.persistence.BookDao;
 import ar.edu.itba.paw.models.Book;
 import ar.edu.itba.paw.models.utils.BookState;
-import ar.edu.itba.paw.models.utils.Genres;
+import ar.edu.itba.paw.models.utils.Genre;
 import ar.edu.itba.paw.models.utils.PublicationState;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -21,66 +21,46 @@ public class BookJdbcDao implements BookDao {
     private final SimpleJdbcInsert jdbcInsert;
 
     private static final RowMapper<Book> ROWMAPPERBOOKS = (rs, rowNum) -> new Book(
-    		
             rs.getLong("bookId"),
-            rs.getString("isbn"),
-            rs.getString("title"),
-            rs.getString("editorial"),
-            rs.getString("description"),
-            Genres.fromInt(rs.getInt("genre")),
+            rs.getLong("bookModelId"),
+            rs.getLong("ownerId"),
             BookState.fromInt(rs.getInt("bookState")),
-            PublicationState.fromInt(rs.getInt("publicationState")),		// Mapea el valor entero al enum PublicationState
-            rs.getInt("edition"),
-            rs.getInt("rating"),
-            rs.getLong("image"),
-            rs.getLong("owner")
+            rs.getInt("exchangesQty"),
+            rs.getInt("rating")
     );
     
     public BookJdbcDao(final DataSource ds) {
        
     	jdbcTemplate = new JdbcTemplate(ds);
-        jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).usingGeneratedKeyColumns("bookid").withTableName("books");
+        jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).usingGeneratedKeyColumns("bookId").withTableName("books");
     }
 
     @Override
-    public Book createBook(String isbn, String title, String editorial, String description, Genres genre, BookState bookState, PublicationState publicationState, int edition, int rating, long image, long userId) {
+    public Book createBook(int bookModelId, int ownerId, BookState bookState, int exchangesQty, int rating) {
         
     	final Map<String, Object> bookData = new HashMap<>();
-        bookData.put("isbn", isbn);
-        bookData.put("title", title);
-        bookData.put("editorial", editorial);
-        bookData.put("description", description);
-        bookData.put("genre", genre.getValue());
+        bookData.put("bookModelId", bookModelId);
+        bookData.put("ownerId", ownerId);
         bookData.put("bookState", bookState.getValue());
-        bookData.put("publicationState", publicationState.getValue());
-        bookData.put("edition", edition);
+        bookData.put("exchangesQty", exchangesQty);
         bookData.put("rating", rating);
-        bookData.put("image", image);
-        bookData.put("owner", userId);
 
         final Number generatedId = jdbcInsert.executeAndReturnKey(bookData);
-        return new Book(generatedId.longValue(), isbn, title, editorial, description, genre, bookState, publicationState, edition, rating, image, userId);
+        return new Book(generatedId.longValue(), bookModelId, ownerId, bookState, exchangesQty, rating);
     }
 
     @Override
-    public Optional<Book> getBookById(long thebookId) {
-        return jdbcTemplate.query("SELECT * FROM books WHERE bookId = ?", new Object[]{ thebookId },
+    public Optional<Book> getBookById(long bookId) {
+        return jdbcTemplate.query("SELECT * FROM book WHERE bookId = ?", new Object[]{ bookId },
                 new int[]{ Types.BIGINT }, ROWMAPPERBOOKS).stream().findFirst();
     }
 
     @Override
     public void exchangeOwnership(long b1, long b2) {
-
-
         Book book1 = getBookById(b1).get();
         Book book2 = getBookById(b2).get();
 
-        System.out.print("bookid1:" + b1);
-        System.out.print("bookid2:" + b2);
-
-        System.out.print("owner1:" + book1.getUserId());
-        System.out.print("owner2:" + book2.getUserId());
-        jdbcTemplate.update("UPDATE books SET owner = ? WHERE bookId = ?", book2.getUserId(), book1.getBookId());
-        jdbcTemplate.update("UPDATE books SET owner = ? WHERE bookId = ?", book1.getUserId(), book2.getBookId());
+        jdbcTemplate.update("UPDATE book SET ownerId = ? WHERE bookId = ?", book2.getOwnerId(), book1.getBookId());
+        jdbcTemplate.update("UPDATE book SET ownerId = ? WHERE bookId = ?", book1.getOwnerId(), book2.getBookId());
     }
 }

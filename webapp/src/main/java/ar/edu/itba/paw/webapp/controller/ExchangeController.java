@@ -39,8 +39,8 @@ public class ExchangeController {
         long exchangeId = exchangeService.getId(acceptCode);
 
         Exchange exchange = exchangeService.getExchangeById(exchangeId).get();
-        Publication offererPub = publicationsService.getPublicationById(exchange.getOfferer()).get();
-        Publication requesterPub = publicationsService.getPublicationById(exchange.getRequester()).get();
+        Publication offererPub = publicationsService.getPublicationById(exchange.getOffererPubId()).get();
+        Publication requesterPub = publicationsService.getPublicationById(exchange.getRequesterPubId()).get();
 
         Book bookOffered = bookService.getBookById(offererPub.getBookId()).get();
         Book bookRequested = bookService.getBookById(requesterPub.getBookId()).get();
@@ -52,8 +52,8 @@ public class ExchangeController {
 
         variables.put("requesterEmail", requesterEmail);
         variables.put("requesterName", requester.getUsername());
-        variables.put("requestedBook", bookRequested.getTitle());
-        variables.put("offeredBook", bookOffered.getTitle());
+        //variables.put("requestedBook", bookRequested.getTitle());
+        //variables.put("offeredBook", bookOffered.getTitle());
         variables.put("offererName", offerer.getUsername());
         variables.put("offererEmail", offerer.getMail());
 

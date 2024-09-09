@@ -1,8 +1,9 @@
 package ar.edu.itba.paw.models;
 
 public class Author {
-    private long authorId;
-    private String authorName;
+
+    private final long authorId;
+    private final String authorName;
 
     public Author(long authorId, String authorName) {
         this.authorId = authorId;
@@ -16,13 +17,4 @@ public class Author {
     public String getAuthorName() {
         return authorName;
     }
-
-    public void setAuthorId(long authorId) {
-        this.authorId = authorId;
-    }
-
-    public void setAuthorName(String authorName) {
-        this.authorName = authorName;
-    }
-
 }

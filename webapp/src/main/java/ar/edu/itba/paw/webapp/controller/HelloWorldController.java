@@ -1,19 +1,13 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.models.utils.Genres;
-import ar.edu.itba.paw.models.utils.PublicationState;
-import ar.edu.itba.paw.interfaces.services.SinglePublicationService;
 import ar.edu.itba.paw.webapp.auth.PawUserDetails;
-import ar.edu.itba.paw.webapp.form.PublicationForm;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.webapp.form.UserForm;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;

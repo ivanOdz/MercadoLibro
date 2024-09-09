@@ -2,27 +2,25 @@ package ar.edu.itba.paw.models;
 
 public class BookAuthor {
 
-    private long bookId;
-    private long authorId;
+    private final long bookModelId;
+    private final long authorId;
 
-    public BookAuthor(long bookId, long authorId) {
-        this.bookId = bookId;
+    public BookAuthor(long bookModelId, long authorId) {
+        this.bookModelId = bookModelId;
         this.authorId = authorId;
     }
 
-    public long getBookId() {
-        return bookId;
+    public long getBookModelId() {
+        return bookModelId;
     }
 
     public long getAuthorId() {
         return authorId;
     }
 
-    public void setBookId(long bookId) {
-        this.bookId = bookId;
-    }
-
-    public void setAuthorId(long authorId) {
-        this.authorId = authorId;
-    }
 }
+
+
+
+
+

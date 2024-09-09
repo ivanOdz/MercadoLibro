@@ -41,11 +41,11 @@ public class ExchangeServiceImpl implements ExchangeService {
     }
 
     @Override
-    public Exchange initializeExchange(boolean isForExchange, long requesterId, long offererId) {
+    public Exchange initializeExchange(boolean isForExchange, long requesterPubId, long offererPubId) {
 //        if(isForExchange) {
             Random random = new Random();
             int acceptCode = Math.abs(random.nextInt());
-            return exchangeDao.createExchange(offererId, requesterId, acceptCode);
+            return exchangeDao.createExchange(offererPubId, requesterPubId, acceptCode);
 //        }
 //        return null;
     }

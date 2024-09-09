@@ -1,21 +1,26 @@
 package ar.edu.itba.paw.models;
 
+
 import ar.edu.itba.paw.models.utils.PublicationState;
 
-public class Publication {
+import java.sql.Timestamp;
 
+public class Publication {
     private final long publicationId;
     private final long bookId;
     private final long userId;
-    private int publicationState;
-    private final String location;
+    private final PublicationState publicationState;
+    private final Timestamp publicationDatetime;
+    private final long locationId;
 
-    public Publication(long publicationId, long bookId, long userId, String location) {
+    // Constructor
+    public Publication(long publicationId, long bookId, long userId, PublicationState publicationState, Timestamp publicationDatetime, long locationId) {
         this.publicationId = publicationId;
         this.bookId = bookId;
         this.userId = userId;
-        publicationState = PublicationState.CURRENT.getValue();
-        this.location = location;
+        this.publicationState = publicationState;
+        this.publicationDatetime = publicationDatetime;
+        this.locationId = locationId;
     }
 
     public long getPublicationId() {
@@ -30,15 +35,15 @@ public class Publication {
         return userId;
     }
 
-    public int getPublicationState() {
+    public PublicationState getPublicationState() {
         return publicationState;
     }
 
-    public String getLocation() {
-        return location;
+    public Timestamp getPublicationDatetime() {
+        return publicationDatetime;
     }
 
-    public void terminatePublication() {
-        publicationState = PublicationState.TERMINATED.getValue();
+    public long getLocationId() {
+        return locationId;
     }
 }

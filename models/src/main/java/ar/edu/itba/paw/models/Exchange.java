@@ -2,39 +2,59 @@ package ar.edu.itba.paw.models;
 
 import ar.edu.itba.paw.models.utils.ExchangeState;
 
+import java.sql.Timestamp;
+
 public class Exchange {
-    private long id;
-    private long offerer;
-    private long requester;
-    private int state;
-    private int acceptCode;
+    private final long exchangeId;
+    private final long offererPubId;
+    private final long requesterPubId;
+    private final ExchangeState exchangeState;
+    private final int acceptCode;
+    private final boolean offererReceivedBook;
+    private final boolean requesterReceivedBook;
+    private final Timestamp exchangeDate;
 
-
-    public Exchange(long id, long offerer, long requester, int state, int acceptCode) {
-        this.id = id;
-        this.offerer = offerer;
-        this.requester = requester;
-        this.state = state;
+    public Exchange(long exchangeId, long offererPubId, long requesterPubId, ExchangeState exchangeState, int acceptCode,
+                    boolean offererReceivedBook, boolean requesterReceivedBook, Timestamp exchangeDate) {
+        this.exchangeId = exchangeId;
+        this.offererPubId = offererPubId;
+        this.requesterPubId = requesterPubId;
+        this.exchangeState = exchangeState;
         this.acceptCode = acceptCode;
+        this.offererReceivedBook = offererReceivedBook;
+        this.requesterReceivedBook = requesterReceivedBook;
+        this.exchangeDate = exchangeDate;
     }
 
-    public long getId() {
-        return id;
+    public long getExchangeId() {
+        return exchangeId;
     }
 
-    public int getState() {
-        return state;
+    public long getOffererPubId() {
+        return offererPubId;
+    }
+
+    public long getRequesterPubId() {
+        return requesterPubId;
+    }
+
+    public ExchangeState getExchangeState() {
+        return exchangeState;
     }
 
     public int getAcceptCode() {
         return acceptCode;
     }
 
-    public long getOfferer() {
-        return offerer;
+    public boolean getOffererReceivedBook() {
+        return offererReceivedBook;
     }
 
-    public long getRequester() {
-        return requester;
+    public boolean getRequesterReceivedBook() {
+        return requesterReceivedBook;
+    }
+
+    public Timestamp getExchangeDate() {
+        return exchangeDate;
     }
 }

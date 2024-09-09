@@ -1,19 +1,14 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.ImageDao;
-import ar.edu.itba.paw.models.Book;
 import ar.edu.itba.paw.models.Image;
-import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.models.utils.BookState;
-import ar.edu.itba.paw.models.utils.Genres;
-import ar.edu.itba.paw.models.utils.PublicationState;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -33,7 +28,7 @@ public class ImageJdbcDao implements ImageDao {
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .usingGeneratedKeyColumns("imageid")
-                .withTableName("images");
+                .withTableName("image");
     }
 
     @Override
@@ -45,13 +40,15 @@ public class ImageJdbcDao implements ImageDao {
 
     @Override
     public Optional<Image> getImageById(long imageId) {
-        String sql = "SELECT * FROM images WHERE imageId = ?";
-        try {
-            Image image = jdbcTemplate.queryForObject(sql, new Object[]{imageId}, ROWMAPPERIMAGE);
-            return Optional.ofNullable(image);
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
+        String sql = "SELECT * FROM image WHERE imageId = ?";
+
+        List<Image> images = jdbcTemplate.query(
+                sql,
+                new Object[]{imageId},
+                ROWMAPPERIMAGE
+        );
+
+        return images.stream().findFirst();
     }
 
 
