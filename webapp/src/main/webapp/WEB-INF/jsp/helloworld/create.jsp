@@ -6,6 +6,7 @@
 <html>
 <body>
 <c:url var="postUrl" value="/create"/>
+<c:url var="signInUrl" value="/login"/>
 <form:form action="${postUrl}" method="post" modelAttribute="userForm">
     <div>
         <label>
@@ -46,6 +47,13 @@
             <input type="submit"/>
         </label>
     </div>
+
+    <p><spring:message code="hwc.signin.prompt"/>:</p>
+    <a href="${signInUrl}">
+        <button type="button">
+            <spring:message code="hwc.signin.button"/>
+        </button>
+    </a>
 </form:form>
 </body>
 </html>
