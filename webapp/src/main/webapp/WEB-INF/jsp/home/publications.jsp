@@ -53,25 +53,27 @@
 			<div class="uk-width-1-4@s filter-section uk-border-rounded uk-box-shadow-small mt-1 mb-1">
 				<ul uk-accordion="multiple: true">
 					<li class="uk-open">
-						<a class="uk-accordion-title"><spring:message code="filter.genre"/></a>
+						<a class="uk-accordion-title">
+							<spring:message code="filter.genre"/>
+						</a>
 						<div class="uk-accordion-content">
-							<div class="uk-margin">
-								<c:forEach var="genreWrapper" items="${genres}">
-									<input class="uk-checkbox" type="checkbox" checked="checked" name="genre" value="${genreWrapper.genre}" />
-									<label>${genreWrapper.displayName}</label>
-								</c:forEach>
-							</div>
+							<c:forEach var="genreWrapper" items="${genres}">
+								<div class="uk-margin">
+								<input class="uk-checkbox" type="checkbox" checked="checked" name="genre" value="${genreWrapper.genre}" />
+								<label>${genreWrapper.displayName}</label>
+								</div>
+							</c:forEach>
 						</div>
 					</li>
 					<li>
 						<a class="uk-accordion-title"><spring:message code="filter.condition"/></a>
 						<div class="uk-accordion-content">
+							<c:forEach var="bookStateWrapper" items="${bookStates}">
 							<div class="uk-margin">
-								<c:forEach var="genreWrapper" items="${bookStates}">
-									<input class="uk-checkbox" type="checkbox" checked="checked" name="genre" value="${bookStateWrapper.bookState}" />
-									<label>${bookStateWrapper.displayName}</label>
-								</c:forEach>
+								<input class="uk-checkbox" type="checkbox" checked="checked" name="bookState" value="${bookStateWrapper.bookState}" />
+								<label>${bookStateWrapper.displayName}</label>
 							</div>
+							</c:forEach>
 						</div>
 					</li>
 					<li>
@@ -80,7 +82,7 @@
 							<div class="uk-margin">
 								<label>
 									<input class="uk-checkbox" type="checkbox" checked="checked" />
-									Option 1
+									Ivan´s House
 								</label>
 							</div>
 							<div class="uk-margin">
