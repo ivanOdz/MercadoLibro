@@ -17,27 +17,46 @@
 
 </head>
 <body>
-<nav class="uk-navbar-container uk-background-primary" uk-navbar>
-	<div class="uk-navbar-left ml-9">
-		<a class="uk-navbar-item uk-logo navbar-logo" href="${pageContext.request.contextPath}/">
-			<spring:message code="publications.list.brand.logo"/>
-		</a>
-	</div>
-	<div class="uk-navbar-center uk-flex uk-flex-middle">
-		<div>
-			<form class="uk-search uk-search-default custom-search-form" method="get" action="${pageContext.request.contextPath}">
-				<input class="uk-search-input" type="search"
-					   placeholder="Search"
-					   aria-label="Search"
-					   name="search"
-					   id="search"
-					   value="${param.search != null ? param.search : ''}">
-				<button class="uk-search-icon-flip" uk-search-icon></button>
-			</form>
+<nav class="uk-navbar-container uk-background-primary">
+	<div class="uk-container">
+		<div  uk-navbar>
+		<div class="uk-navbar-left">
+			<ul class="uk-navbar-nav">
+				<li>
+					<a class="uk-navbar-item uk-logo" href="${pageContext.request.contextPath}/">
+						<strong>
+							<spring:message code="publications.list.brand.logo"/>
+						</strong>
+					</a>
+				</li>
+			</ul>
+		</div>
 
+		<div class="uk-navbar-center">
+			<ul class="uk-navbar-nav">
+				<li>
+					<form class="uk-search uk-search-default custom-search-form" method="get" action="${pageContext.request.contextPath}">
+						<input class="uk-search-input" type="search"
+							   placeholder="Search"
+							   aria-label="Search"
+							   name="search"
+							   id="search"
+							   value="${param.search != null ? param.search : ''}">
+						<button class="uk-search-icon-flip" uk-search-icon></button>
+					</form>
+				</li>
+			</ul>
+		</div>
+
+		<div class="uk-navbar-right">
+			<ul class="uk-navbar-nav">
+				<li><a class="pl-1 pr-1" href="#">Intercambios</a></li>
+				<li><a class="pl-1 pr-1" href="#">Mis Libros</a></li>
+				<li><a class="pl-1 pr-1" href="#">Perfil</a></li>
+			</ul>
+		</div>
 		</div>
 	</div>
-<%--    <h4><spring:message code="home.profile.welcome"/><c:out value="${loggedUser.username}"/>!</h4>--%>
 </nav>
 
 <div class="fixed-action-btn">
@@ -49,7 +68,7 @@
 
 <div class="uk-background-muted">
 	<div class="uk-container uk-margin-top">
-		<div class="uk-grid" uk-grid>
+		<div class="uk-grid ml-1" uk-grid>
 			<div class="uk-width-1-4@s filter-section uk-border-rounded uk-box-shadow-small mt-1 mb-1">
 				<ul uk-accordion="multiple: true">
 					<li class="uk-open">
@@ -82,7 +101,7 @@
 							<div class="uk-margin">
 								<label>
 									<input class="uk-checkbox" type="checkbox" checked="checked" />
-									Ivan´s House
+									Ivanï¿½s House
 								</label>
 							</div>
 							<div class="uk-margin">
