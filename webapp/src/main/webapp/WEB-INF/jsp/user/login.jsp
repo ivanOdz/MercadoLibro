@@ -16,6 +16,7 @@
 <c:url value="/login" var="loginUrl"/>
 <c:url value="/create" var="signUpUrl"/>
 <c:url value="/mail_input" var="changePasswordUrl"/>
+<div style="display: flex; place-items: center; height: 100%;">
 <div class="uk-container container">
 
     <h2 style="justify-content: center; margin-left: 60px;"><spring:message code="login.title"/></h2>
@@ -76,6 +77,6 @@
 
 
 </div>
-
+</div>
 </body>
 </html>

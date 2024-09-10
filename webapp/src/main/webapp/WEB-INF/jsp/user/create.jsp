@@ -18,6 +18,7 @@
 <body>
 <c:url var="postUrl" value="/create"/>
 <c:url var="signInUrl" value="/login"/>
+<div style="display: flex; place-items: center; height: 100%;">
 <div class="uk-container container">
     <h3 style="justify-content: center; margin-left: 30px; "><spring:message code="register.title"/></h3>
 
@@ -96,6 +97,7 @@
         </a></p>
 
     </div>
+</div>
 </div>
 
 </body>

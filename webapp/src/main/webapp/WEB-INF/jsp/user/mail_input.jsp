@@ -14,8 +14,9 @@
 </head>
 <body>
 <c:url value="/change_password_solicited" var="changePasswordUrl"/>
+<div style="display: flex; place-items: center; height: 100%;">
 <div class="uk-container container">
-  <h2 style="justify-content: center; margin-left: 80px;"><spring:message code="new.password.title"/></h2>
+  <h2 style="justify-content: center; display: flex; place-items: center;"><spring:message code="new.password.title"/></h2>
   <h4><spring:message code="new.password.description"/></h4>
   <div style="justify-content: center;">
   <form action="${changePasswordUrl}" method="post" class="uk-grid-large uk-grid" style="justify-content: center;">
@@ -42,6 +43,7 @@
 
   </form>
   </div>
+</div>
 </div>
 
 </body>
