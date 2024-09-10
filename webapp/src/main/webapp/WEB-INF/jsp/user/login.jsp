@@ -18,13 +18,9 @@
 <c:url value="/mail_input" var="changePasswordUrl"/>
 <div class="uk-container container">
 
-    <div class="custom-logo">
-        <img src="${pageContext.request.contextPath}/images/mercado_libro.jpg" alt="mercado_libro" class="custom-logo-image"/>
-    </div>
-
     <h2 style="justify-content: center; margin-left: 60px;"><spring:message code="login.title"/></h2>
     <div style="justify-content: center;">
-    <form action="${loginUrl}" method="post" class="uk-grid-large" uk-grid style="justify-content: center;">
+    <form action="${loginUrl}" method="post" class="uk-grid-large uk-grid" style="justify-content: center;">
         <div class="uk-margin" style="justify-content: center">
             <div class="uk-width-1-1" >
                 <div>
