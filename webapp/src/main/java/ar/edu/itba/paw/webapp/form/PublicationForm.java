@@ -10,14 +10,6 @@ import java.util.List;
 
 public class PublicationForm {
 
-    @Size(min = 5, max = 100)
-    private String username;
-
-    @NotBlank
-    @Size(min = 10, max = 100)
-    @Pattern(regexp = "^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$")
-    private String mail;
-
     @NotBlank
     @Pattern(regexp = "^(97[89])\\d{1,5}\\d{1,7}\\d{1,7}\\d$")
     private String isbn;
@@ -54,14 +46,6 @@ public class PublicationForm {
 
     @NotBlank
     private String location;
-
-    public @Size(min = 5, max = 100) String getUsername() {
-        return username;
-    }
-
-    public @NotBlank @Size(min = 10, max = 100) @Pattern(regexp = "^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$") String getMail() {
-        return mail;
-    }
 
     public @NotBlank @Pattern(regexp = "^(97[89])\\d{1,5}\\d{1,7}\\d{1,7}\\d$") String getIsbn() {
         return isbn;
@@ -113,13 +97,6 @@ public class PublicationForm {
         return location;
     }
 
-    public void setUsername(@Size(min = 5, max = 100) String username) {
-        this.username = username;
-    }
-
-    public void setMail(@NotBlank @Size(min = 10, max = 100) @Pattern(regexp = "^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$") String mail) {
-        this.mail = mail;
-    }
 
     public void setIsbn(@NotBlank @Pattern(regexp = "^(97[89])\\d{1,5}\\d{1,7}\\d{1,7}\\d$") String isbn) {
         this.isbn = isbn;

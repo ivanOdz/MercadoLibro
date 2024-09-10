@@ -50,7 +50,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.sessionManagement()
-                    .invalidSessionUrl("/login")
+                .invalidSessionUrl("/login")
                 // recursos por roles ==> accept
                 // importante orden de definicion de reglas
                 .and().authorizeRequests()

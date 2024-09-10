@@ -2,6 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html lang="es">
+<%@include file="/WEB-INF/jsp/head/headers.jsp"%>
 <head>
     <meta charset="UTF-8">
     <title><fmt:message key="exchange.invalid"/></title>

@@ -2,6 +2,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <html>
+<%@include file="/WEB-INF/jsp/head/headers.jsp"%>
 <head>
     <title><spring:message code="form.title"/></title>
     

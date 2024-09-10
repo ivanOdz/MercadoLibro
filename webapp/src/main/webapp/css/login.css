@@ -1,0 +1,40 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    background-color: #D1E8E2;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    max-width: 100px;
+    width: 30%;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.custom-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.custom-logo-image {
+    filter: invert(100%);
+}
+
+label {
+    display: block;
+    text-align: left;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.link-text {
+    text-decoration: underline;
+    font-weight: bold;
+}

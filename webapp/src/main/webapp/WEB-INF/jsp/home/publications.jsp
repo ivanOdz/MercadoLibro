@@ -7,6 +7,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <html lang="es">
+<%@include file="/WEB-INF/jsp/head/headers.jsp"%>
 <head>
 	<link href="${pageContext.request.contextPath}/css/publications.css?v=1.0" rel="stylesheet"/>
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
