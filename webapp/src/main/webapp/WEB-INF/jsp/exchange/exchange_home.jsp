@@ -9,6 +9,7 @@
 <html lang="es">
 <head>
     <link href="${pageContext.request.contextPath}/css/publications.css?v=1.0" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/css/exchange.css ?v=1.0" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
     <link rel="icon" href="${pageContext.request.contextPath}/images/favicon.ico" type="image/x-icon"/>
@@ -73,57 +74,10 @@
 <div class="uk-background-muted">
     <div class="uk-container uk-margin-top">
         <div class="uk-grid ml-1" uk-grid>
-            <div class="uk-width-1-4@s filter-section uk-border-rounded uk-box-shadow-small mt-1 mb-1">
-                <ul uk-accordion="multiple: true">
-                    <li class="uk-open">
-                        <a class="uk-accordion-title">
-                            <spring:message code="filter.genre"/>
-                        </a>
-                        <div class="uk-accordion-content">
-                            <c:forEach var="genreWrapper" items="${genres}">
-                                <div class="uk-margin">
-                                    <input class="uk-checkbox" type="checkbox" checked="checked" name="genre" value="${genreWrapper.genre}" />
-                                    <label>${genreWrapper.displayName}</label>
-                                </div>
-                            </c:forEach>
-                        </div>
-                    </li>
-                    <li>
-                        <a class="uk-accordion-title"><spring:message code="filter.condition"/></a>
-                        <div class="uk-accordion-content">
-                            <c:forEach var="bookStateWrapper" items="${bookStates}">
-                                <div class="uk-margin">
-                                    <input class="uk-checkbox" type="checkbox" checked="checked" name="bookState" value="${bookStateWrapper.bookState}" />
-                                    <label>${bookStateWrapper.displayName}</label>
-                                </div>
-                            </c:forEach>
-                        </div>
-                    </li>
-                    <li>
-                        <a class="uk-accordion-title"><spring:message code="filter.location"/></a>
-                        <div class="uk-accordion-content">
-                            <div class="uk-margin">
-                                <label>
-                                    <input class="uk-checkbox" type="checkbox" checked="checked" />
-                                    Ivan�s House
-                                </label>
-                            </div>
-                            <div class="uk-margin">
-                                <label>
-                                    <input class="uk-checkbox" type="checkbox" />
-                                    Option 2
-                                </label>
-                            </div>
-                            <div class="uk-margin">
-                                <label>
-                                    <input class="uk-checkbox" type="checkbox" />
-                                    Option 3
-                                </label>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
+            <div class="uk-width-1-3@s exchange-information-section uk-border-rounded uk-box-shadow-small mt-1 mb-1 uk-height-viewport" uk-height-viewport="offset-top: true">
+
             </div>
+
 
             <div class="uk-width-3-4@s col-content">
                 <div class="uk-card uk-card-default uk-card-body uk-margin-bottom mt-1 uk-border-rounded uk-border-rounded-medium">
