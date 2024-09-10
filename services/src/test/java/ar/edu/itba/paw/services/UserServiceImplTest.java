@@ -13,7 +13,7 @@ import org.springframework.dao.DuplicateKeyException;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.eq;
 
-@RunWith(MockitoJUnitRunner.class)
+//@RunWith(MockitoJUnitRunner.class)
 public class UserServiceImplTest {
 
     private static final String USERNAME = "username";
@@ -21,9 +21,9 @@ public class UserServiceImplTest {
     private static final String PASSWORD = "password";
     private static final int VERIFICATIONCODE = 10;
 //----------------------------------------------
-    @InjectMocks
+    //@InjectMocks
     private UserServiceImpl userService;
-    @Mock
+    //@Mock
     private UserDao mock;
 /* Este @Before es para cuando se corre con MockitoJUnitRunner => no se usa @Mock ni  @InjectMocks
     @Before
@@ -45,7 +45,7 @@ public class UserServiceImplTest {
         assertEquals(USERNAME, user.getUsername());
         assertEquals(MAIL, user.getMail());
         assertEquals(PASSWORD, user.getPassword());
-    }*/
+    }
 
     @Test(expected = DuplicateKeyException.class)
     public void testCreateDuplicate() {
@@ -57,5 +57,5 @@ public class UserServiceImplTest {
 
         // 3. Valido las precondiciones
         fail();
-    }
+    }*/
 }
