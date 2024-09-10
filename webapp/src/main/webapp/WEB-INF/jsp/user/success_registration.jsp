@@ -2,10 +2,12 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <html>
+<%@include file="/WEB-INF/jsp/head/headers.jsp"%>
     <head>
+        <link href="${pageContext.request.contextPath}/css/background.css" rel="stylesheet"/>
+
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
-        <link rel="icon" href="${pageContext.request.contextPath}/images/favicon.ico" type="image/x-icon"/>
     </head>
 <body>
 <c:url var="okUrl" value="/login"/>
