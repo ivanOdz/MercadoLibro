@@ -4,8 +4,9 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <!DOCTYPE html>
-<html lang="es">
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
+<html lang="es">
 <head>
 	<link href="${pageContext.request.contextPath}/css/publications.css?v=1.0" rel="stylesheet"/>
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
@@ -19,6 +20,10 @@
 
 </head>
 <body>
+<c:url var="exchangeUrl" value="/exchange"/>
+<c:url var="booksUrl" value="/book"/>
+<c:url var="profileUrl" value="/profile"/>
+
 <nav class="uk-navbar-container uk-background-primary">
 	<div class="uk-container">
 		<div  uk-navbar>
@@ -54,14 +59,13 @@
 				</li>
 			</ul>
 		</div>
-
-		<div class="uk-navbar-right">
-			<ul class="uk-navbar-nav">
-				<li><a class="pl-1 pr-1" href="#"><spring:message code="home.exchange.view"/></a></li>
-				<li><a class="pl-1 pr-1" href="#"><spring:message code="home.book.view"/></a></li>
-				<li><a class="pl-1 pr-1" href="#"><spring:message code="home.profile.view"/></a></li>
-			</ul>
-		</div>
+			<div class="uk-navbar-right">
+				<ul class="uk-navbar-nav">
+					<li><a class="pl-1 pr-1" href="<c:url value="${exchangeUrl}"/>"><spring:message code="home.exchange.view"/></a></li>
+					<li><a class="pl-1 pr-1" href="<c:url value="${booksUrl}"/>"><spring:message code="home.book.view"/></a></li>
+					<li><a class="pl-1 pr-1" href="<c:url value="${profileUrl}"/>"><spring:message code="home.profile.view"/></a></li>
+				</ul>
+			</div>
 		</div>
 	</div>
 </nav>

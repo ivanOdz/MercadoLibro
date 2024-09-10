@@ -31,7 +31,13 @@ public class ExchangeController {
         this.publicationsService = publicationsService;
     }
 
+
     @RequestMapping("/exchange")
+    public ModelAndView exchangeHome() {
+        return new ModelAndView("exchange/exchange_home");
+    }
+
+    @RequestMapping("/createexchange")
     public ModelAndView exchange(@RequestParam(name = "accept_code") int acceptCode, @RequestParam(name = "state") boolean state) {
         final ModelAndView mav = new ModelAndView(exchangeService.exchange(acceptCode, state));
 
