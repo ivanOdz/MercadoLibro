@@ -8,7 +8,7 @@
 
     <title><spring:message code="add.publication.header"/></title>
 	<meta charset="UTF-8">
-	<link href="${pageContext.request.contextPath}/css/publicationForm.css" rel="stylesheet"/>
+	<link href="${pageContext.request.contextPath}/css/bookForm.css" rel="stylesheet"/>
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
 	<script type="text/javascript">
 
@@ -50,7 +50,7 @@
 <%--		<spring:message code="add.publication.description.required_fields"/>--%>
 <%--	</small>--%>
 
-	<form:form modelAttribute="publicationForm" action="${postUrl}" method="post" enctype="multipart/form-data">
+	<form:form modelAttribute="bookForm" action="${postUrl}" method="post" enctype="multipart/form-data">
 
 		<h4 class="label"><spring:message code="add.publication.subheader.book"/></h4>
 
@@ -79,7 +79,7 @@
 		<div id="author-container" class="form-field">
 			<label class="form-group">
 				<spring:message code="add.publication.authors"/>
-				<c:forEach var="author" items="${publicationForm.authors}" varStatus="status">
+				<c:forEach var="author" items="${bookForm.authors}" varStatus="status">
 					<input type="text" name="authors[${status.index}]" value="${author}" class="form-input"/>
 						<c:if test="${status.index > 0}">
 							<button type="button" onclick="removeAuthorField(this)"> X </button>

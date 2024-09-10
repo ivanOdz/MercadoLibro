@@ -24,6 +24,7 @@
 <c:url var="exchangeUrl" value="/exchange"/>
 <c:url var="booksUrl" value="/book"/>
 <c:url var="profileUrl" value="/profile"/>
+<c:url var="newBookFromScratch" value="/book/upload_new_book"/>
 
 <nav class="uk-navbar-container uk-background-primary uk-box-shadow-small" uk-sticky>
 	<div class="uk-container">
@@ -67,9 +68,21 @@
 						<a class="pl-1 pr-1"href="<c:url value="${booksUrl}"/>"><spring:message code="home.book.view"/></a>
 						<div class="uk-navbar-dropdown">
 							<ul class="uk-nav uk-navbar-dropdown-nav">
-								<li class="uk-active uk-margin-small-top"><a href="<c:url value="${booksUrl}"><spring:message code="home.book.view.books"/></a></li>
-								<li class="uk-margin-small-top"><a href="#"><spring:message code="home.book.view.uploadnew"/></a></li>
-								<li class="uk-margin-small-top"><a href="#"><spring:message code="home.book.view.uploadnewprecharged"/></a></li>
+								<li class="uk-active uk-margin-small-top">
+									<a href="<c:url value='${booksUrl}'/>">
+										<spring:message code="home.book.view.books"/>
+									</a>
+								</li>
+								<li class="uk-margin-small-top">
+									<a href="<c:url value='${newBookFromScratch}'/>">
+										<spring:message code="home.book.view.uploadnew"/>
+									</a>
+								</li>
+								<li class="uk-margin-small-top">
+									<a href="#">
+										<spring:message code="home.book.view.uploadnewprecharged"/>
+									</a>
+								</li>
 							</ul>
 						</div>
 					</li>

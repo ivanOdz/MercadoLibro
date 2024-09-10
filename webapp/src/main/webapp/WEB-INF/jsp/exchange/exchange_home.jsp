@@ -83,11 +83,24 @@
                         <a class="pl-1 pr-1"href="<c:url value="${booksUrl}"/>"><spring:message code="home.book.view"/></a>
                         <div class="uk-navbar-dropdown">
                             <ul class="uk-nav uk-navbar-dropdown-nav">
-                                <li class="uk-active uk-margin-small-top"><a href="<c:url value="${booksUrl}"><spring:message code="home.book.view.books"/></a></li>
-                                <li class="uk-margin-small-top"><a href="#"><spring:message code="home.book.view.uploadnew"/></a></li>
-                                <li class="uk-margin-small-top"><a href="#"><spring:message code="home.book.view.uploadnewprecharged"/></a></li>
+                                <li class="uk-active uk-margin-small-top">
+                                    <a href="<c:url value='${booksUrl}'/>">
+                                        <spring:message code="home.book.view.books"/>
+                                    </a>
+                                </li>
+                                <li class="uk-margin-small-top">
+                                    <a href="<c:url value='${newBookFromScratch}'/>">
+                                        <spring:message code="home.book.view.uploadnew"/>
+                                    </a>
+                                </li>
+                                <li class="uk-margin-small-top">
+                                    <a href="<c:url value='${uploadNewPrecharged}'/>">
+                                        <spring:message code="home.book.view.uploadnewprecharged"/>
+                                    </a>
+                                </li>
                             </ul>
                         </div>
+
                     </li>
                     <li><a class="pl-1 pr-1" href="<c:url value="${profileUrl}"/>"><spring:message code="home.profile.view"/></a></li>
                 </ul>
