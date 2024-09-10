@@ -61,7 +61,7 @@ public class UserJdbcDao implements UserDao {
         userData.put("password", password);
         userData.put("imageId", null); // Permite null
         userData.put("verificationCode", verificationCode);
-        userData.put("isVerified", true);
+        userData.put("isVerified", false);
 
         final Number userId = jdbcInsert.executeAndReturnKey(userData);
 

@@ -56,23 +56,6 @@ public class UserController {
         return mav;
     }
 
-    @RequestMapping(path = "/create", method = RequestMethod.POST)
-    public ModelAndView create(@Valid @ModelAttribute("userForm") UserForm userForm, BindingResult errors) {
-
-        if (errors.hasErrors()){
-            return createForm(userForm);
-        }
-
-        // verify date, create an user and send a verification email
-        final User user = us.createUser(userForm.getUsername(), userForm.getMail(), userForm.getPassword());
-
-        // create a session and keep the user logged in
-        final Authentication authenticationToken = new UsernamePasswordAuthenticationToken(userForm.getUsername(), userForm.getPassword(), null);
-        SecurityContextHolder.getContext().setAuthentication(auth.authenticate(authenticationToken));
-
-        return new ModelAndView("redirect:/logout");  // TODO: send the user to a page 'Your user was created. Please check your inbox to verify your account'
-    }
-
     @RequestMapping(path = "/create", method = RequestMethod.GET)
     public ModelAndView createForm(@ModelAttribute("userForm") UserForm userForm){
         return new ModelAndView("user/create");
@@ -131,6 +114,27 @@ public class UserController {
     }
 
 
+    @RequestMapping(path = "/create", method = RequestMethod.POST)
+    public ModelAndView create(@Valid @ModelAttribute("userForm") UserForm userForm, BindingResult errors) {
+
+        if (errors.hasErrors()){
+            return createForm(userForm);
+        }
+
+        // verify date, create an user and send a verification email
+        final User user = us.createUser(userForm.getUsername(), userForm.getMail(), userForm.getPassword());
+
+        // create a session and keep the user logged in
+        final Authentication authenticationToken = new UsernamePasswordAuthenticationToken(userForm.getUsername(), userForm.getPassword(), null);
+        SecurityContextHolder.getContext().setAuthentication(auth.authenticate(authenticationToken));
+
+        return new ModelAndView("redirect:/success_registration");  // TODO: send the user to a page 'Your user was created. Please check your inbox to verify your account'
+    }
+
+    @RequestMapping("/success_registration")
+    public ModelAndView successRegistration(){
+        return new ModelAndView("user/success_registration");
+    }
 
     // binding=false -> read only attribute
     @ModelAttribute(name="loggedUser", binding = false)
@@ -141,19 +145,4 @@ public class UserController {
         }
         return null;
     }
-
-//    // home
-//    @RequestMapping("/mail")
-//    public ModelAndView home() {
-//        final ModelAndView mav = new ModelAndView("helloworld/home");
-//        Map<String, Object> variables = new HashMap<>();
-//        variables.put("requesterName", "Julieta Techenski");
-//        variables.put("requesterEmail", "mtaurian@gmail.com");
-//        variables.put("requestedPublication", "Deutsch Kursbuch");
-//        variables.put("offeredPublication", "Harry Potter 1");
-//        variables.put("rejectionUrl", "http://localhost:8080/publication?publication_id=3");
-//        variables.put("validationUrl", "http://localhost:8080/publication?publication_id=3");
-//        emailService.sendEmail("modzomek@itba.edu.ar", variables, "exchangeRequest", "Book Exchange");
-//        return mav;
-//    }
 }
