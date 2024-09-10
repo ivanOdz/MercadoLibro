@@ -59,7 +59,7 @@ public class PublicationController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.getPrincipal() instanceof PawUserDetails pud) {
             mav.addObject("loggedUser", pud.getUser());
-            List<Card> cardList = cs.buildCardList(ps.getAllPublicationsFilteredBy(search).getPublications().stream().filter(c -> (Long.compare(c.getUserId(), pud.getUser().getId()) != 0)).toList());
+            //List<Card> cardList = cs.buildCardList(ps.getAllPublicationsFilteredBy(search).getPublications().stream().filter(c -> (Long.compare(c.getUserId(), pud.getUser().getId()) != 0)).toList());
             mav.addObject("publications", cardList);
         }
         

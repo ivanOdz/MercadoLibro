@@ -111,7 +111,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
     }
 
     public List<Exchange> getExchangesByUserIdInvolved(long anUserId){
-        return jdbcTemplate.query("SELECT * FROM exchange WHERE offererPubId IN (SELECT publicationId FROM publication WHERE userId = ?) UNION SELECT * FROM exchange WHERE requesterPubId IN (SELECT publicationId FROM publication WHERE userId = ?)", new Object[]{ anUserId, anUserId },
+        return jdbcTemplate.query("SELECT * FROM exchange WHERE offererPubId IN (SELECT publicationId FROM publication WHERE userId = ?) UNION SELECT * FROM exchange WHERE requesterPubId IN (SELECT publicationId FROM publication WHERE userId = ? ) ORDER BY exchangeDate DESC", new Object[]{ anUserId, anUserId },
                 new int[]{ Types.BIGINT, Types.BIGINT }, ROWMAPPER);
     }
 

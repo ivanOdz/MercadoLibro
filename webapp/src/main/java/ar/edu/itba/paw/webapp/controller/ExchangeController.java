@@ -71,8 +71,6 @@ public class ExchangeController {
         //variables.put("offeredBook", bookOffered.getTitle());
         variables.put("requesterEmail", offererEmail);
         variables.put("requesterName", offerer.getUsername());
-        variables.put("offeredBook", bookOffered.getTitle());
-        variables.put("requestedBook", bookRequested.getTitle());
         variables.put("offererName", offerer.getUsername());
         variables.put("offererEmail", offerer.getMail());
 
