@@ -46,4 +46,8 @@ public class Card {
         }
         return authorsString;
     }
+
+    public long getUserId(){
+        return publication.getUserId();
+    }
 }

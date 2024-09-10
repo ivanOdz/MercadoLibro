@@ -37,14 +37,14 @@ public class PublicationsController {
     @RequestMapping("/")
     public ModelAndView index(@RequestParam(name = "search", defaultValue = "") String search) {
         final ModelAndView mav = new ModelAndView("home/publications");
-        List<Card> cardList = cs.buildCardList(ps.getAllPublicationsFilteredBy(search).getPublications());
-        mav.addObject("publications", cardList);
-
         // user profile data
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.getPrincipal() instanceof PawUserDetails pud) {
             mav.addObject("loggedUser", pud.getUser());
+            List<Card> cardList = cs.buildCardList(ps.getAllPublicationsFilteredBy(search).getPublications().stream().filter(c -> (Long.compare(c.getUserId(), pud.getUser().getId()) != 0)).toList());
+            mav.addObject("publications", cardList);
         }
+
 
         return mav;
     }
