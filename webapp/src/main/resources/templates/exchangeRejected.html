@@ -11,12 +11,12 @@
 
     <p>
         <strong th:text="#{email.requestedPublication}" style="font-size: 16px; font-weight: bold;"></strong>
-        <span th:text="${requestedBook}" style="font-size: 16px;"></span>
+        <span th:text="${offeredBook}" style="font-size: 16px;"></span>
     </p>
 
     <p>
         <strong th:text="#{email.offeredPublication}" style="font-size: 16px; font-weight: bold;"></strong>
-        <span th:text="${offeredBook}" style="font-size: 16px;"></span>
+        <span th:text="${requestedBook}" style="font-size: 16px;"></span>
     </p>
 
     <p th:text="#{email.rejectionThankYouMessage}" style="font-size: 16px;"></p>

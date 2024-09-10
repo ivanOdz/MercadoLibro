@@ -48,12 +48,13 @@ public class ExchangeController {
         User requester = userService.findById(requesterPub.getUserId()).get();
         User offerer = userService.findById(offererPub.getUserId()).get();
 
+        String offererEmail = offerer.getMail();
         String requesterEmail = requester.getMail();
 
-        variables.put("requesterEmail", requesterEmail);
-        variables.put("requesterName", requester.getUsername());
-        variables.put("requestedBook", bookRequested.getTitle());
+        variables.put("requesterEmail", offererEmail);
+        variables.put("requesterName", offerer.getUsername());
         variables.put("offeredBook", bookOffered.getTitle());
+        variables.put("requestedBook", bookRequested.getTitle());
         variables.put("offererName", offerer.getUsername());
         variables.put("offererEmail", offerer.getMail());
 
