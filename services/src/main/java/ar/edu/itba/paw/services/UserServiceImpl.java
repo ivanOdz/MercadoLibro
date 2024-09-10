@@ -1,19 +1,16 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.services.EmailService;
+import ar.edu.itba.paw.interfaces.services.UserReviewService;
 import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.models.Book;
-import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
+import ar.edu.itba.paw.models.UserReview;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @Primary
 @Service
@@ -22,11 +19,14 @@ public class UserServiceImpl implements UserService {
     private final UserDao userDao;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
+    private final UserReviewService userReviewsService;
 
-    public UserServiceImpl(final UserDao userDao, final PasswordEncoder passwordEncoder, final EmailService emailService) {
+
+    public UserServiceImpl(final UserDao userDao, final PasswordEncoder passwordEncoder, final EmailService emailService, final UserReviewService userReviewsService) {
         this.userDao = userDao;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
+        this.userReviewsService = userReviewsService;
     }
     @Override
     public Optional<User> findById(long id) {
@@ -91,6 +91,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void changePassword(int verificationCode, String newPassword) {
         userDao.changePassword(verificationCode,passwordEncoder.encode(newPassword));
+    }
+
+    @Override
+    public List<UserReview> getReviewsByUserId(long userId) {
+        return userReviewsService.getReviewsByUserId(userId);
     }
 
 //    @Override

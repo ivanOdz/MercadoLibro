@@ -166,4 +166,19 @@ public class UserController {
         }
         return null;
     }
+
+
+    @RequestMapping("/profile")
+    public ModelAndView profileHome() {
+        ModelAndView mav = new ModelAndView("profile/profile_home");
+
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.getPrincipal() instanceof PawUserDetails pud) {
+            mav.addObject("loggedUser", pud.getUser());
+            mav.addObject("reviews", us.getReviewsByUserId(pud.getUser().getUserId()));
+        }
+
+        return mav;
+    }
 }

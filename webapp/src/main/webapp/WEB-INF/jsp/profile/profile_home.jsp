@@ -78,14 +78,23 @@
             <spring:message code="profile.title"/>
         </p>
     </div>
-        <div class="uk-container uk-margin-top">
-            <div class="uk-grid ml-1" uk-grid>
-                <div class="uk-width-1-3@s exchange-information-section uk-border-rounded uk-box-shadow-small mt-1 mb-1 uk-height-viewport" uk-height-viewport="offset-top: true">
+    <div class="uk-container uk-margin-top">
+        <div class="uk-grid ml-1" uk-grid>
+            <div class="uk-width-1-3@s exchange-information-section uk-border-rounded uk-box-shadow-small mt-1 mb-1 uk-height-viewport" uk-height-viewport="offset-top: true">
+            </div>
 
-                </div>
-
+            <div class="uk-width-expand uk-margin-top">
+                <p class="uk-text-lead">
+                    <c:out value="${loggedUser.username}"/>
+                </p>
+                <c:forEach var="review" items="${reviews}">
+                    <div class="uk-card uk-card-default uk-card-body uk-border-rounded uk-box-shadow-small mb-1">
+<%--                        <p>${review.reviewDescription}</p>--%>
+                    </div>
+                </c:forEach>
             </div>
         </div>
+    </div>
 </div>
 </body>
 </html>
