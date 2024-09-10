@@ -4,7 +4,8 @@
 <%@include file="/WEB-INF/jsp/head/headers.jsp"%>
 <head>
   <link href="${pageContext.request.contextPath}/css/login.css" rel="stylesheet"/>
-  <link rel="icon" href="${pageContext.request.contextPath}/images/favicon.ico" type="image/x-icon"/>
+  <link href="${pageContext.request.contextPath}/css/background.css" rel="stylesheet"/>
+
   <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
