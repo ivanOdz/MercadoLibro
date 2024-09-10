@@ -123,15 +123,19 @@ public class UserController {
 
         // verify date, create an user and send a verification email
         final User user = us.createUser(userForm.getUsername(), userForm.getMail(), userForm.getPassword());
+//
+//        try {
+//            // create a session and keep the user logged in
+//            final Authentication authenticationToken = new UsernamePasswordAuthenticationToken(userForm.getUsername(), userForm.getPassword(), null);
+//            SecurityContextHolder.getContext().setAuthentication(auth.authenticate(authenticationToken));
+//        }catch(Exception e) {
+//            System.out.println(e.getMessage());
+//        }
 
-        // create a session and keep the user logged in
-        final Authentication authenticationToken = new UsernamePasswordAuthenticationToken(userForm.getUsername(), userForm.getPassword(), null);
-        SecurityContextHolder.getContext().setAuthentication(auth.authenticate(authenticationToken));
-
-        return new ModelAndView("redirect:/success_registration");  // TODO: send the user to a page 'Your user was created. Please check your inbox to verify your account'
+        return new ModelAndView("redirect:/success_registration");
     }
 
-    @RequestMapping("/success_registration")
+    @RequestMapping( "/success_registration")
     public ModelAndView successRegistration(){
         return new ModelAndView("user/success_registration");
     }

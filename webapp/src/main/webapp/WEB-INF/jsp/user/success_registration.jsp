@@ -1,22 +1,32 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <html>
-<link rel="icon" href="${pageContext.request.contextPath}/images/favicon.ico" type="image/x-icon"/>
+    <head>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
+        <link rel="icon" href="${pageContext.request.contextPath}/images/favicon.ico" type="image/x-icon"/>
+    </head>
 <body>
-<div class="uk-background-primary">
+<c:url var="okUrl" value="/login"/>
 
+<div class="uk-background-center-center">
+    <div class="uk-position-center uk-card uk-card-default uk-card-body uk-width-1-2@m">
+        <h3 class="uk-card-title">
+            <spring:message code="hwc.registration.success_registration"/>
+        </h3>
+        <a href="${okUrl}">
+            <button class="uk-button uk-button-primary uk-align-center">
+                <spring:message code="hwc.registration.ok"/>
+            </button>
+        </a>
+    </div>
+    </div>
 
 
 <%--    Por favor revisa tu casilla de correo para verificar tu cuenta.--%>
 
 
-    <a href="${okUrl}">
-        <button type="button">
-            <spring:message code="hwc.change_password.button"/>
-        </button>
-    </a>
-</div>
+
 </body>
 </html>
