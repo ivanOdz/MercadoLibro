@@ -1,4 +1,3 @@
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
@@ -20,87 +19,92 @@
 <c:url var="postUrl" value="/create"/>
 <c:url var="signInUrl" value="/login"/>
 <div style="display: flex; place-items: center; height: 100%;">
-<div class="uk-container container">
-    <h3 style="justify-content: center; margin-left: 30px; "><spring:message code="register.title"/></h3>
+    <div class="uk-container container">
+        <h3 style="justify-content: center; margin-left: 30px;">
+            <spring:message code="register.title"/>
+        </h3>
 
-    <div style="justify-content: center;">
-    <form:form action="${postUrl}" method="post" modelAttribute="userForm" class="uk-grid-large uk-grid" style="justify-content: center;">
-        <div class="uk-margin" style="justify-content: center">
+        <div style="justify-content: center;">
+            <form:form action="${postUrl}" method="post" modelAttribute="userForm" class="uk-grid-large uk-grid" style="justify-content: center;">
+                <div class="uk-margin" style="justify-content: center">
 
-        <div class="uk-width-1-1">
-            <div>
-                <label>
-                    <spring:message code="hwc.create.username"/>
-                </label>
-            </div>
-            <div class="uk-inline">
-                <span class="uk-form-icon" uk-icon="icon: user"></span>
-                <input  class="uk-input" type="text" name="username" aria-label="Not clickable icon"/>
-            </div>
-            <form:errors path="username" element="p" cssStyle="color: red;"/>
+                    <div class="uk-width-1-1">
+                        <div>
+                            <label>
+                                <spring:message code="hwc.create.username"/>
+                            </label>
+                        </div>
+                        <div class="uk-inline">
+                            <span class="uk-form-icon" uk-icon="icon: user"></span>
+                            <input class="uk-input" type="text" name="username" aria-label="Not clickable icon"/>
+                        </div>
+                        <form:errors path="username" element="p" cssStyle="color: red;"/>
+                    </div>
+
+                    <div class="uk-width-1-1 uk-margin-top">
+                        <div>
+                            <label>
+                                <spring:message code="hwc.create.mail"/>
+                            </label>
+                        </div>
+                        <div class="uk-inline">
+                            <span class="uk-form-icon" uk-icon="icon: mail"></span>
+                            <input class="uk-input" type="text" name="mail" aria-label="Not clickable icon"/>
+                        </div>
+                        <form:errors path="mail" element="p" cssStyle="color: red;"/>
+                    </div>
+
+                    <div class="uk-width-1-1 uk-margin-top">
+                        <div>
+                            <label>
+                                <spring:message code="hwc.login.password"/>
+                            </label>
+                        </div>
+                        <div class="uk-inline">
+                            <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: lock"></span>
+                            <input class="uk-input" type="password" name="password" aria-label="Not clickable icon"/>
+                        </div>
+                        <form:errors path="password" element="p" cssStyle="color: red;"/>
+                    </div>
+
+                    <div class="uk-width-1-1 uk-margin-top">
+                        <div>
+                            <label>
+                                <spring:message code="hwc.create.confirm_password"/>
+                            </label>
+                        </div>
+                        <div class="uk-inline">
+                            <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: lock"></span>
+                            <input class="uk-input" type="password" name="repeatedPassword" aria-label="Not clickable icon"/>
+                        </div>
+                        <form:errors path="repeatedPassword" element="p" cssStyle="color: red;"/>
+                    </div>
+
+                    <c:if test="${!empty userForm.password && !empty userForm.repeatedPassword && userForm.password != userForm.repeatedPassword}">
+                        <span class="error" style="color:red">
+                            <spring:message code="userForm.passwords.mismatch"/>
+                        </span>
+                    </c:if>
+
+                    <div>
+                        <div class="uk-margin-top uk-button-group" style="margin-left: 50px;">
+                            <button class="uk-button uk-button-primary">
+                                <spring:message code="hwc.create.submit"/>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </form:form>
         </div>
 
-        <div class="uk-width-1-1 uk-margin-top">
-            <div>
-                <label>
-                    <spring:message code="hwc.create.mail"/>
-                </label>
-            </div>
-            <div class="uk-inline">
-                <span class="uk-form-icon" uk-icon="icon: mail"></span>
-                <input  class="uk-input" type="text" name="mail" aria-label="Not clickable icon"/>
-            </div>
-            <form:errors path="mail" element="p" cssStyle="color: red;"/>
-        </div>
-
-        <div class="uk-width-1-1 uk-margin-top">
-            <div>
-                <label>
-                    <spring:message code="hwc.login.password"/>
-                </label>
-            </div>
-            <div class="uk-inline">
-                <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: lock"></span>
-                <input class="uk-input" type="password" name="password" aria-label="Not clickable icon"/>
-            </div>
-                <form:errors path="password" element="p" cssStyle="color: red;"/>
-        </div>
-
-        <div class="uk-width-1-1 uk-margin-top">
-            <div>
-                <label>
-                    <spring:message code="hwc.create.confirm_password"/>
-                </label>
-            </div>
-            <div class="uk-inline">
-                <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: lock"></span>
-                <input class="uk-input" type="password" name="repeatedPassword" aria-label="Not clickable icon"/>
-            </div>
-            <form:errors path="repeatedPassword" element="p" cssStyle="color: red;"/>
-        </div>
-
-        <c:if test="${!empty userForm.password && !empty userForm.repeatedPassword && userForm.password != userForm.repeatedPassword}">
-            <span class="error" style="color:red"><spring:message code="userForm.passwords.mismatch"/></span>
-        </c:if>
-
-        <div>
-            <div class="uk-margin-top uk-button-group" style="margin-left: 50px;">
-                <button class="uk-button uk-button-primary"> <spring:message code="hwc.create.submit"/> </button>
-            </div>
-        </div>
-
-        </div>
-    </form:form>
+        <p><spring:message code="hwc.signin.prompt"/>:</p>
+        <a href="${signInUrl}">
+            <button type="button">
+                <spring:message code="hwc.signin.button"/>
+            </button>
+        </a>
     </div>
-
-
-</form:form>
-
-<p><spring:message code="hwc.signin.prompt"/>:</p>
-<a href="${signInUrl}">
-    <button type="button">
-        <spring:message code="hwc.signin.button"/>
-    </button>
-</a>
+</div>
 </body>
 </html>
