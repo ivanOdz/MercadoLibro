@@ -22,7 +22,7 @@ import java.util.Optional;
 public class ExchangeJdbcDao implements ExchangeDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final PublicationsJdbcDao publicationsJdbcDao;
+    private final PublicationJdbcDao publicationJdbcDao;
     private final BookJdbcDao bookJdbcDao;
     private final SimpleJdbcInsert jdbcInsert;
 
@@ -31,9 +31,9 @@ public class ExchangeJdbcDao implements ExchangeDao {
             (rs, rowNum) -> new Exchange(rs.getLong("exchangeId"), rs.getLong("offererPubId"), rs.getLong("requesterPubId"), ExchangeState.fromInt(rs.getInt("exchangeState")), rs.getInt("acceptCode"), rs.getBoolean("offererReceivedBook"), rs.getBoolean("requesterReceivedBook"), rs.getTimestamp("exchangeDate"));
 
 
-    public ExchangeJdbcDao(final DataSource ds, PublicationsJdbcDao publicationsJdbcDao, BookJdbcDao bookJdbcDao) {
+    public ExchangeJdbcDao(final DataSource ds, PublicationJdbcDao publicationJdbcDao, BookJdbcDao bookJdbcDao) {
         jdbcTemplate = new JdbcTemplate(ds);
-        this.publicationsJdbcDao = publicationsJdbcDao;
+        this.publicationJdbcDao = publicationJdbcDao;
         this.bookJdbcDao = bookJdbcDao;
         jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .usingGeneratedKeyColumns("exchangeid")
@@ -81,15 +81,15 @@ public class ExchangeJdbcDao implements ExchangeDao {
 
         long pubId1 = ex.get().getOffererPubId();
         long pubId2 = ex.get().getRequesterPubId();
-        long b1 = publicationsJdbcDao.getPublicationById(pubId1).get().getBookId();
-        long b2 = publicationsJdbcDao.getPublicationById(pubId2).get().getBookId();
+        long b1 = publicationJdbcDao.getPublicationById(pubId1).get().getBookId();
+        long b2 = publicationJdbcDao.getPublicationById(pubId2).get().getBookId();
 
         bookJdbcDao.exchangeOwnership(b1, b2);
 
         jdbcTemplate.update("UPDATE exchange SET exchangeState = ? WHERE acceptCode = ?", ExchangeState.ACCEPTED.getValue(), acceptCode);
         jdbcTemplate.update("UPDATE exchange SET exchangeState = ? WHERE offererPubId = ? AND acceptCode <> ?", ExchangeState.REJECTED.getValue(), ex.get().getOffererPubId(), acceptCode);
-        publicationsJdbcDao.terminatePublication(ex.get().getOffererPubId());
-        publicationsJdbcDao.terminatePublication(ex.get().getRequesterPubId());
+        publicationJdbcDao.terminatePublication(ex.get().getOffererPubId());
+        publicationJdbcDao.terminatePublication(ex.get().getRequesterPubId());
 
         return ResponseState.ACCEPTED;
     }

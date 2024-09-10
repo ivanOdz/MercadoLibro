@@ -10,7 +10,7 @@ import ar.edu.itba.paw.models.utils.GenreWrapper;
 import ar.edu.itba.paw.models.utils.Genre;
 import ar.edu.itba.paw.interfaces.services.BookService;
 import ar.edu.itba.paw.interfaces.services.BookStateService;
-import ar.edu.itba.paw.interfaces.services.PublicationsService;
+import ar.edu.itba.paw.interfaces.services.PublicationService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 
@@ -29,9 +29,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
-public class PublicationsController {
+public class PublicationController {
 
-    private PublicationsService ps;
+    private PublicationService ps;
     private BookService bs;
     private UserService us;
     private CardService cs;
@@ -40,7 +40,7 @@ public class PublicationsController {
     @Autowired
     private BookStateService bookStateService;
     
-    public PublicationsController(PublicationsService ps, BookService bs, UserService us, CardService cs) {
+    public PublicationController(PublicationService ps, BookService bs, UserService us, CardService cs) {
         this.ps = ps;
         this.bs = bs;
         this.us = us;
@@ -49,18 +49,18 @@ public class PublicationsController {
 
     @RequestMapping("/")
     public ModelAndView index(@RequestParam(name = "search", defaultValue = "") String search) {
+    	
         final ModelAndView mav = new ModelAndView("home/publications");
-        List<Card> cardList = cs.buildCardList(ps.getAllPublicationsFilteredBy(search).getPublications());
+        List<Card> cardList = cs.buildCardList(ps.getAllPublicationsFilteredBy(search));
         mav.addObject("publications", cardList);
         mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
         mav.addObject("bookStates", List.of(BookState.values()).stream().map(bookStatus -> new BookStateWrapper(bookStatus, bookStateService.getBookStateDisplayName(bookStatus))).collect(Collectors.toList()));
-       
         // user profile data
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.getPrincipal() instanceof PawUserDetails pud) {
             mav.addObject("loggedUser", pud.getUser());
         }
-
+        
         return mav;
     }
 

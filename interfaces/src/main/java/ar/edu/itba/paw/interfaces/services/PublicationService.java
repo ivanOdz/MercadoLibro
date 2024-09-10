@@ -1,18 +1,18 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.Publication;
-import ar.edu.itba.paw.models.Publications;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
-public interface PublicationsService {
+public interface PublicationService {
 
-    Publications getAllPublications();
+    List<Publication> getAllPublications();
 
     Optional<Publication> getPublicationById(long publicationId);
 
-    Publications getAllPublicationsFilteredBy(String search);
+    List<Publication> getAllPublicationsFilteredBy(String search);
 
 }

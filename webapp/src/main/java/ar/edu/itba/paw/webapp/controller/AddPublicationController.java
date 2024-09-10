@@ -8,7 +8,6 @@ import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.models.utils.BookStateWrapper;
 import ar.edu.itba.paw.models.utils.GenreWrapper;
 import ar.edu.itba.paw.models.utils.Genre;
-import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 import ar.edu.itba.paw.webapp.form.PublicationForm;
 
@@ -25,9 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -43,7 +40,7 @@ public class AddPublicationController {
 
     private ExchangeService exchangeService;
 
-    private PublicationsService publicationsService;
+    private PublicationService publicationService;
 
     private BookService bookService;
 
@@ -55,12 +52,12 @@ public class AddPublicationController {
     private BookStateService bookStateService;
 
 
-    public AddPublicationController(final SinglePublicationService ps, final ImageService imageService, final EmailService emailService, final ExchangeService exchangeService, PublicationsService publicationsService, BookService bookService, UserService userService) {
+    public AddPublicationController(final SinglePublicationService ps, final ImageService imageService, final EmailService emailService, final ExchangeService exchangeService, PublicationService publicationService, BookService bookService, UserService userService) {
         this.ps = ps;
         this.imageService = imageService;
         this.emailService = emailService;
         this.exchangeService = exchangeService;
-        this.publicationsService = publicationsService;
+        this.publicationService = publicationService;
         this.bookService = bookService;
         this.userService = userService;
     }
@@ -125,8 +122,8 @@ public class AddPublicationController {
                 Exchange ex = exchangeService.initializeExchange(isForExchange, publication.getPublicationId(), publicationId);
 
                 Map<String, Object> variables = new HashMap<>();
-                Publication offererPub = publicationsService.getPublicationById(ex.getOffererPubId()).get();
-                Publication requesterPub = publicationsService.getPublicationById(ex.getRequesterPubId()).get();
+                Publication offererPub = publicationService.getPublicationById(ex.getOffererPubId()).get();
+                Publication requesterPub = publicationService.getPublicationById(ex.getRequesterPubId()).get();
 
                 Book bookOffered = bookService.getBookById(offererPub.getBookId()).get();
                 Book bookRequested = bookService.getBookById(requesterPub.getBookId()).get();

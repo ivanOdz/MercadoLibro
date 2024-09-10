@@ -1,19 +1,19 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
 import ar.edu.itba.paw.models.Publication;
-import ar.edu.itba.paw.models.Publications;
 
+import java.util.List;
 import java.util.Optional;
 
-public interface PublicationsDao {
+public interface PublicationDao {
 
-    Publications getAllPublications();
+    List<Publication> getAllPublications();
 
     Optional<Publication> getPublicationById(long publicationId);
 
-    Publications getAllPublicationsFilteredBy(String search);
+    List<Publication> getAllPublicationsFilteredBy(String search);
 
-    Publications getAllPublicationsAvailable();
+    List<Publication> getAllPublicationsAvailable();
 
     void terminatePublication(long pubId);
 

@@ -6,7 +6,6 @@ import ar.edu.itba.paw.models.Exchange;
 import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.models.User;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -20,15 +19,15 @@ public class ExchangeController {
     ExchangeService exchangeService;
     EmailService emailService;
     UserService userService;
-    PublicationsService publicationsService;
+    PublicationService publicationService;
     BookService bookService;
 
-    public ExchangeController(final ExchangeService exchangeService, final EmailService emailService, final UserService userService, final BookService bookService, final PublicationsService publicationsService) {
+    public ExchangeController(final ExchangeService exchangeService, final EmailService emailService, final UserService userService, final BookService bookService, final PublicationService publicationService) {
         this.exchangeService = exchangeService;
         this.emailService = emailService;
         this.userService = userService;
         this.bookService = bookService;
-        this.publicationsService = publicationsService;
+        this.publicationService = publicationService;
     }
 
 
@@ -45,8 +44,8 @@ public class ExchangeController {
         long exchangeId = exchangeService.getId(acceptCode);
 
         Exchange exchange = exchangeService.getExchangeById(exchangeId).get();
-        Publication offererPub = publicationsService.getPublicationById(exchange.getOffererPubId()).get();
-        Publication requesterPub = publicationsService.getPublicationById(exchange.getRequesterPubId()).get();
+        Publication offererPub = publicationService.getPublicationById(exchange.getOffererPubId()).get();
+        Publication requesterPub = publicationService.getPublicationById(exchange.getRequesterPubId()).get();
 
         Book bookOffered = bookService.getBookById(offererPub.getBookId()).get();
         Book bookRequested = bookService.getBookById(requesterPub.getBookId()).get();
