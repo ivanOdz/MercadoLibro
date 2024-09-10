@@ -110,7 +110,7 @@ public class UserController {
             return createPasswordForm(passwordForm, verificationCode);
         }
         us.changePassword(verificationCode, passwordForm.getPassword() );
-        return new ModelAndView("redirect:/success_password");  //TODO : redirect the user to a page "Your password was changed successfully"
+        return new ModelAndView("redirect:/success_password");
     }
 
 
