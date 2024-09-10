@@ -22,4 +22,8 @@ public class PasswordForm {
     public String getPassword() {
         return password;
     }
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
 }
