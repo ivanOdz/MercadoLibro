@@ -10,7 +10,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
 
-  <title><spring:message code="login.head.title"/></title>
+  <title><spring:message code="new.password.title"/></title>
 
 </head>
 <body>
