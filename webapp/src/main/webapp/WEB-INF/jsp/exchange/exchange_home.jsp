@@ -25,7 +25,8 @@
 <c:url var="exchangeUrl" value="/exchange"/>
 <c:url var="booksUrl" value="/book"/>
 <c:url var="profileUrl" value="/profile"/>
-<nav class="uk-navbar-container uk-background-primary">
+
+<nav class="uk-navbar-container uk-background-primary uk-box-shadow-small" uk-sticky>
     <div class="uk-container">
         <div  uk-navbar>
             <div class="uk-navbar-left">
@@ -72,8 +73,8 @@
 </nav>
 
 <div class="uk-background-muted">
-    <div class="uk-container uk-margin-top">
-        <div class="uk-grid ml-1" uk-grid>
+    <div class="uk-container ">
+        <div class="uk-grid ml-1 uk-margin-top" uk-grid>
             <div class="uk-width-1-3@s exchange-information-section uk-border-rounded uk-box-shadow-small mt-1 mb-1 uk-height-viewport" uk-height-viewport="offset-top: true">
 
             </div>

@@ -22,7 +22,8 @@
 <c:url var="exchangeUrl" value="/exchange"/>
 <c:url var="booksUrl" value="/book"/>
 <c:url var="profileUrl" value="/profile"/>
-<nav class="uk-navbar-container uk-background-primary">
+
+<nav class="uk-navbar-container uk-background-primary uk-box-shadow-small" uk-sticky>
     <div class="uk-container">
         <div  uk-navbar>
             <div class="uk-navbar-left">
