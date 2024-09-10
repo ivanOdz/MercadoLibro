@@ -23,9 +23,8 @@ body {
 }
 
 .exchange-information-section {
-    margin: 1rem;
     padding: 1rem;
-    background-color: white;
+    background-color: white !important;
     border-radius: 8px;
 }
 
