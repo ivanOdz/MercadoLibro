@@ -10,8 +10,15 @@ public class BookController {
 
 
     @RequestMapping("/book")
-    public ModelAndView profileHome() {
+    public ModelAndView bookHome() {
         return new ModelAndView("book/book_home");
     }
 
+
+    @RequestMapping("/book/upload_new_book")
+    public ModelAndView uploadNewBook() {
+
+
+        return new ModelAndView("book/newbook");
+    }
 }
