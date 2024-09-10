@@ -56,23 +56,6 @@ public class UserController {
         return mav;
     }
 
-    @RequestMapping(path = "/create", method = RequestMethod.POST)
-    public ModelAndView create(@Valid @ModelAttribute("userForm") UserForm userForm, BindingResult errors) {
-
-        if (errors.hasErrors()){
-            return createForm(userForm);
-        }
-
-        // verify date, create an user and send a verification email
-        final User user = us.createUser(userForm.getUsername(), userForm.getMail(), userForm.getPassword());
-
-        // create a session and keep the user logged in
-        final Authentication authenticationToken = new UsernamePasswordAuthenticationToken(userForm.getUsername(), userForm.getPassword(), null);
-        SecurityContextHolder.getContext().setAuthentication(auth.authenticate(authenticationToken));
-
-        return new ModelAndView("redirect:/logout");  // TODO: send the user to a page 'Your user was created. Please check your inbox to verify your account'
-    }
-
     @RequestMapping(path = "/create", method = RequestMethod.GET)
     public ModelAndView createForm(@ModelAttribute("userForm") UserForm userForm){
         return new ModelAndView("user/create");
@@ -87,7 +70,7 @@ public class UserController {
     @RequestMapping("/verification")
     public ModelAndView verificationController(@RequestParam(name = "verification_code") int verificationCode){
         us.verifyUser(verificationCode);
-        return new ModelAndView("user/login");
+        return new ModelAndView("redirect:/success_verification");
     }
 
     @RequestMapping("/check_verify")
@@ -103,13 +86,13 @@ public class UserController {
 
     @RequestMapping("/mail_input")
     public ModelAndView mailInput(){
-        return new ModelAndView("user/mail_input"); //TODO : redirect the user to a page "Check your inbox to modify your password"
+        return new ModelAndView("user/mail_input");
     }
 
     @RequestMapping("/change_password_solicited")
     public ModelAndView changePasswordSolicited(@RequestParam(name = "email") String email){
         us.changePasswordSolicited(email);
-        return new ModelAndView("redirect:/login"); //TODO : redirect the user to a page "Check your inbox to modify your password"
+        return new ModelAndView("redirect:/mail_input_message");
     }
 
 
@@ -127,11 +110,53 @@ public class UserController {
             return createPasswordForm(passwordForm, verificationCode);
         }
         us.changePassword(verificationCode, passwordForm.getPassword() );
-        return new ModelAndView("redirect:/login");  //TODO : redirect the user to a page "Your password was changed successfully"
+        return new ModelAndView("redirect:/success_password");
     }
 
 
+    @RequestMapping(path = "/create", method = RequestMethod.POST)
+    public ModelAndView create(@Valid @ModelAttribute("userForm") UserForm userForm, BindingResult errors) {
 
+        if (errors.hasErrors()){
+            return createForm(userForm);
+        }
+
+        // verify date, create an user and send a verification email
+        final User user = us.createUser(userForm.getUsername(), userForm.getMail(), userForm.getPassword());
+//
+//        try {
+//            // create a session and keep the user logged in
+//            final Authentication authenticationToken = new UsernamePasswordAuthenticationToken(userForm.getUsername(), userForm.getPassword(), null);
+//            SecurityContextHolder.getContext().setAuthentication(auth.authenticate(authenticationToken));
+//        }catch(Exception e) {
+//            System.out.println(e.getMessage());
+//        }
+
+        return new ModelAndView("redirect:/success_registration");
+    }
+
+
+    // success screens
+
+    @RequestMapping( "/success_registration")
+    public ModelAndView successRegistration(){
+        return new ModelAndView("user/success_registration");
+    }
+
+    @RequestMapping( "/success_verification")
+    public ModelAndView successVerification(){
+        return new ModelAndView("user/success_verification");
+    }
+
+    @RequestMapping("/mail_input_message")
+    public ModelAndView mailInputMessage(){
+        return new ModelAndView("user/mail_input_message");
+    }
+
+    @RequestMapping( "/success_password")
+    public ModelAndView successPassword(){
+        return new ModelAndView("user/success_password");
+    }
     // binding=false -> read only attribute
     @ModelAttribute(name="loggedUser", binding = false)
     public User getLoggedUser(){

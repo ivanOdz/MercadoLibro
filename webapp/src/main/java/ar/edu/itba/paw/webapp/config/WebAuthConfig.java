@@ -50,29 +50,29 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.sessionManagement()
-                    .invalidSessionUrl("/login")
+                .invalidSessionUrl("/login")
                 // recursos por roles ==> accept
                 // importante orden de definicion de reglas
                 .and().authorizeRequests()
-                    .antMatchers("/create","/login","/mail_input", "/change_password_solicited","/change_password").anonymous()
-                    .antMatchers("/post/edit").hasRole("EDITOR")
-                    .antMatchers("/post/{postId}").access("@accessHelper.isOwner(#pricipal, #postId)") // para areas de acceso a un admin
-                    .antMatchers("/**").authenticated()
+                .antMatchers("/create","/login","/mail_input", "/change_password_solicited","/change_password", "/success_registration",  "/success_verification", "/verification", "/mail_input_message", "/success_password").anonymous()
+                .antMatchers("/post/edit").hasRole("EDITOR")
+                .antMatchers("/post/{postId}").access("@accessHelper.isOwner(#pricipal, #postId)") // para areas de acceso a un admin
+                .antMatchers("/**").authenticated()
                 .and().formLogin()
-                    .usernameParameter("username")
-                    .passwordParameter("password")
-                    .loginPage("/login")
-                    .defaultSuccessUrl("/check_verify", false)
+                .usernameParameter("username")
+                .passwordParameter("password")
+                .loginPage("/login")
+                .defaultSuccessUrl("/check_verify", false)
                 .and().rememberMe()
-                    .rememberMeParameter("remember_me")
+                .rememberMeParameter("remember_me")
 //                    .key(new String(rememberMeKey.getInputStream().readAllBytes()))
-                    .userDetailsService(userDetails)
-                    .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30))
+                .userDetailsService(userDetails)
+                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30))
                 .and().logout()
-                    .logoutUrl("/logout")
-                    .logoutSuccessUrl("/login")
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login")
                 .and().exceptionHandling()
-                    .accessDeniedPage("/403")
+                .accessDeniedPage("/403")
                 .and().csrf().disable();
 
     }

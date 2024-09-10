@@ -4,7 +4,7 @@
 <%@include file="/WEB-INF/jsp/head/headers.jsp"%>
 <head>
   <link href="${pageContext.request.contextPath}/css/login.css" rel="stylesheet"/>
-
+  <link rel="icon" href="${pageContext.request.contextPath}/images/favicon.ico" type="image/x-icon"/>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
@@ -30,9 +30,9 @@
         </div>
         <div class="uk-inline">
           <span class="uk-form-icon" uk-icon="icon: mail"></span>
-          <input  class="uk-input" type="text" name="mail" aria-label="Not clickable icon"/>
+          <input  class="uk-input" type="text" name="email" aria-label="Not clickable icon"/>
         </div>
-        <form:errors path="mail" element="p" cssStyle="color: red;"/>
+        <form:errors path="email" element="p" cssStyle="color: red;"/>
       </div>
 
       <div class="uk-margin-top uk-button-group" style="margin-left: 50px;">

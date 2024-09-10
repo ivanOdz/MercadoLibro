@@ -1,6 +1,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
+<head>
+    <link rel="icon" href="${pageContext.request.contextPath}/images/favicon.ico" type="image/x-icon"/>
+
+</head>
 <body>
 <c:url value="/change_password" var="changePasswordUrl"/>
 <form action="${changePasswordUrl}" method="post">
