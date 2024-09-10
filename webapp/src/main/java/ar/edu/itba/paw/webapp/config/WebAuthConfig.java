@@ -54,7 +54,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 // recursos por roles ==> accept
                 // importante orden de definicion de reglas
                 .and().authorizeRequests()
-                    .antMatchers("/create","/login","/mail_input", "/change_password_solicited","/change_password", "/success_registration",  "/success_verification", "/verification").anonymous()
+                    .antMatchers("/create","/login","/mail_input", "/change_password_solicited","/change_password", "/success_registration",  "/success_verification", "/verification", "/mail_input_message", "/success_password").anonymous()
                     .antMatchers("/post/edit").hasRole("EDITOR")
                     .antMatchers("/post/{postId}").access("@accessHelper.isOwner(#pricipal, #postId)") // para areas de acceso a un admin
                     .antMatchers("/**").authenticated()
