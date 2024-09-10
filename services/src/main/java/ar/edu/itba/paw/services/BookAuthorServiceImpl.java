@@ -12,19 +12,19 @@ import java.util.Optional;
 @Service
 public class BookAuthorServiceImpl implements BookAuthorService {
 
-    private final BookAuthorDao book_authorDao;
+    private final BookAuthorDao bookAuthorDao;
 
     public BookAuthorServiceImpl(BookAuthorDao bookAuthorDao) {
-        book_authorDao = bookAuthorDao;
+        this.bookAuthorDao = bookAuthorDao;
     }
 
     @Override
     public BookAuthor createBook_Author(long bookId, long authorId, List<BookAuthor> bookAuthors) {
-        return book_authorDao.createBookAuthor(bookId, authorId);
+        return bookAuthorDao.createBookAuthor(bookId, authorId);
     }
 
     @Override
     public List<Author> getAuthorsByBookId(long bookId) {
-        return book_authorDao.getAuthorsByBookId(bookId);
+        return bookAuthorDao.getAuthorsByBookId(bookId);
     }
 }

@@ -10,6 +10,11 @@ public enum Language {
         this.value = value;
     }
 
+
+    public static Language fromInt(int i) {
+
+        return Language.values()[i];
+    }
     public int getValue() {
         return this.value;
     }

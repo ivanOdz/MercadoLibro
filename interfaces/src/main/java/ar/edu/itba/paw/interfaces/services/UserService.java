@@ -27,4 +27,6 @@ public interface UserService {
     void changePassword(int verificationCode, String newPassword);
 
     List<UserReview> getReviewsByUserId(long userId);
+
+    User getUserByPubId(long pubId);
 }

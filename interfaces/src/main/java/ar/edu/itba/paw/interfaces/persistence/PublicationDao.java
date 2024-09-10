@@ -17,4 +17,5 @@ public interface PublicationDao {
 
     void terminatePublication(long pubId);
 
+
 }

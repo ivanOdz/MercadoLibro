@@ -61,6 +61,9 @@ public class PublicationJdbcDao implements PublicationDao {
     public void terminatePublication(long pubId) {
         jdbcTemplate.update("UPDATE publication SET publicationState = ? WHERE publicationId = ?",PublicationState.TERMINATED.getValue(), pubId);
     }
+
+
+
 }
 
 

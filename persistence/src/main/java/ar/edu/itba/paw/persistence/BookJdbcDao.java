@@ -63,4 +63,22 @@ public class BookJdbcDao implements BookDao {
         jdbcTemplate.update("UPDATE book SET ownerId = ? WHERE bookId = ?", book2.getOwnerId(), book1.getBookId());
         jdbcTemplate.update("UPDATE book SET ownerId = ? WHERE bookId = ?", book1.getOwnerId(), book2.getBookId());
     }
+
+    @Override
+    public Book getBookByPubId(long pubId) {
+        return jdbcTemplate.query("SELECT * FROM book b JOIN publication p ON b.bookId = p.bookId WHERE p.publicationid = ?", new Object[]{ pubId }, new int[]{ Types.BIGINT }, ROWMAPPERBOOKS).stream().findFirst().get();
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

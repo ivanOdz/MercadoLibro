@@ -95,4 +95,10 @@ public class UserJdbcDao implements UserDao {
         jdbcTemplate.update("UPDATE users SET password = ? WHERE verificationCode = ?", new Object[]{ newPassword, verificationCode },
                 new int[]{ Types.VARCHAR, Types.INTEGER });
     }
+
+    @Override
+    public User getUserByPubId(long pubId) {
+        return jdbcTemplate.query("SELECT mail FROM users u JOIN publication p ON u.userId = p.userId WHERE p.publicationId = ?", new Object[]{ pubId },
+                new int[]{Types.BIGINT}, ROWMAPPER).stream().findFirst().get();
+    }
 }

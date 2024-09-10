@@ -16,6 +16,9 @@ public interface UserDao {
     void verifyUser(int verificationCode);
 
     void changePasswordSolicited(String email, int verificationCode);
+
     void changePassword(int verificationCode, String newPassword);
+
+    User getUserByPubId(long pubId);
 
 }

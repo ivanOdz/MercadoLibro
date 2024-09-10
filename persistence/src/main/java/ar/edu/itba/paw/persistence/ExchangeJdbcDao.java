@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.ExchangeDao;
 import ar.edu.itba.paw.models.Exchange;
+import ar.edu.itba.paw.models.ExchangeWrapper;
 import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.models.utils.ResponseState;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,10 +14,7 @@ import javax.sql.DataSource;
 
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class ExchangeJdbcDao implements ExchangeDao {
@@ -111,4 +109,11 @@ public class ExchangeJdbcDao implements ExchangeDao {
 
         return new Exchange(generatedId.longValue(),  offererPubId,  requesterPubId,  ExchangeState.PENDING, acceptCode, false, false, currentTimestamp);
     }
+
+    public List<Exchange> getExchangesByUserIdInvolved(long anUserId){
+        return jdbcTemplate.query("SELECT * FROM exchange WHERE offererPubId IN (SELECT publicationId FROM publication WHERE userId = ?) UNION SELECT * FROM exchange WHERE requesterPubId IN (SELECT publicationId FROM publication WHERE userId = ?)", new Object[]{ anUserId, anUserId },
+                new int[]{ Types.BIGINT, Types.BIGINT }, ROWMAPPER);
+    }
+
+
 }

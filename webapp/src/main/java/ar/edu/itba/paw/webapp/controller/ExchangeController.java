@@ -1,16 +1,17 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.Book;
-import ar.edu.itba.paw.models.Exchange;
-import ar.edu.itba.paw.models.Publication;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.webapp.auth.PawUserDetails;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -33,7 +34,15 @@ public class ExchangeController {
 
     @RequestMapping("/exchange")
     public ModelAndView exchangeHome() {
-        return new ModelAndView("exchange/exchange_home");
+        final ModelAndView mav = new ModelAndView("exchange/exchange_home");
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.getPrincipal() instanceof PawUserDetails pud) {
+            List<ExchangeWrapper> exchangeWrapperList = exchangeService.getExchangeWrapperListByUserId(pud.getUser().getUserId());
+            mav.addObject("exchangeWrapperList", exchangeWrapperList);
+        }
+
+        return mav;
     }
 
     @RequestMapping("/createexchange")

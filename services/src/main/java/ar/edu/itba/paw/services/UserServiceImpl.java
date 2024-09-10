@@ -98,6 +98,11 @@ public class UserServiceImpl implements UserService {
         return userReviewsService.getReviewsByUserId(userId);
     }
 
+    @Override
+    public User getUserByPubId(long pubId) {
+        return userDao.getUserByPubId(pubId);
+    }
+
 //    @Override
 //    public void changePassword(String email, String newPassword) {
 //        userDao.changePassword(passwordEncoder.encode(newPassword))

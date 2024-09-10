@@ -90,22 +90,58 @@
     <div class="uk-container">
         <div class="uk-grid ml-1 uk-margin-top" uk-grid>
             <div class="uk-width-1-3@s exchange-information-section uk-border-rounded uk-box-shadow-small uk-margin-top mb-1 uk-height-viewport" uk-height-viewport="offset-top: true">
+                        <%--  TODO: CARD DONDE SE MUESTRA MAS INFORMACION DEL INTERCAMBIO--%>
 
             </div>
 
-
             <div class="uk-width-expand uk-margin-top">
-<%--                    <c:forEach var="exchange" items="${exchanges}">--%>
+                <c:forEach var="exchange" items="${exchangeWrapperList}">
                     <div class="uk-card uk-card-default uk-card-body uk-border-rounded uk-box-shadow-small mb-1">
-                        EXPAND
+                        <!-- Mostrar información del solicitante -->
+                        <h3>Intercambio con: ${exchange.requesterUsername}</h3>
+                        <p>Email: ${exchange.requesterMail}</p>
+                        <p>Ubicación: ${exchange.requesterLocation}</p>
+
+                        <!-- Información del libro del ofertante -->
+                        <h4>Libro ofertado:</h4>
+                        <p>Título: ${exchange.offererBookModel.title}</p>
+                        <p>Autor(es):
+                            <c:forEach var="author" items="${exchange.offererBookAuthor}">
+                                ${author.name}<c:if test="${!author.last}">, </c:if>
+                            </c:forEach>
+                        </p>
+                        <p>Edición: ${exchange.offererBookModel.edition}</p>
+
+                        <!-- Mostrar imágenes del libro ofertado -->
+                        <div uk-grid>
+                            <c:forEach var="image" items="${exchange.offererBookImages}">
+                                <div class="uk-width-1-4">
+                                    <img src="${imageService.getImageUrl(image.imageId)}" class="uk-border-rounded" alt="Imagen del libro">
+                                </div>
+                            </c:forEach>
+                        </div>
+
+                        <!-- Información del libro solicitado -->
+                        <h4>Libro solicitado:</h4>
+                        <p>Título: ${exchange.requesterBookModel.title}</p>
+                        <p>Autor(es):
+                            <c:forEach var="author" items="${exchange.requesterBookAuthor}">
+                                ${author.name}<c:if test="${!author.last}">, </c:if>
+                            </c:forEach>
+                        </p>
+                        <p>Edición: ${exchange.requesterBookModel.edition}</p>
+
+                        <!-- Mostrar imágenes del libro solicitado -->
+                        <div uk-grid>
+                            <c:forEach var="image" items="${exchange.requesterBookImages}">
+                                <div class="uk-width-1-4">
+                                    <img src="${imageService.getImageUrl(image.imageId)}" class="uk-border-rounded" alt="Imagen del libro">
+                                </div>
+                            </c:forEach>
+                        </div>
                     </div>
-                <div class="uk-card uk-card-default uk-card-body uk-border-rounded uk-box-shadow-small mb-1">
-                    EXPAND
-                </div>
-                <div class="uk-card uk-card-default uk-card-body uk-border-rounded uk-box-shadow-small mb-1">
-                    EXPAND
-                </div>
-<%--                    </c:forEach>--%>
+                </c:forEach>
+
             </div>
             </div>
         </div>

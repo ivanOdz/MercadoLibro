@@ -1,8 +1,10 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
 import ar.edu.itba.paw.models.Exchange;
+import ar.edu.itba.paw.models.ExchangeWrapper;
 import ar.edu.itba.paw.models.utils.ResponseState;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ExchangeDao {
@@ -15,5 +17,7 @@ public interface ExchangeDao {
     ResponseState exchange(int acceptCode, boolean state);
 
     Exchange createExchange(long offererId, long requesterId, int acceptCode);
+
+    List<Exchange> getExchangesByUserIdInvolved(long anUserId);
 
 }

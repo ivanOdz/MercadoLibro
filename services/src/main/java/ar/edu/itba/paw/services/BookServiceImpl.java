@@ -33,4 +33,9 @@ public class BookServiceImpl implements BookService {
     public void exchangeOwnership(long b1, long b2) {
         bookDao.exchangeOwnership(b1, b2);
     }
+
+    @Override
+    public Book getBookByPubId(long pubId) {
+        return bookDao.getBookByPubId(pubId);
+    }
 }

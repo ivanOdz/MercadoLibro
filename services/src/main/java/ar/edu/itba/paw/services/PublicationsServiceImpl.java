@@ -33,4 +33,6 @@ public class PublicationsServiceImpl implements PublicationService {
         return pubDao.getAllPublicationsFilteredBy(search);
     }
 
+
+
 }
