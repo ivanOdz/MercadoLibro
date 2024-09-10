@@ -52,32 +52,6 @@
 
 	<form:form modelAttribute="publicationForm" action="${postUrl}" method="post" enctype="multipart/form-data">
 
-		<h4 class="label"><spring:message code="add.publication.subheader.user"/></h4>
-
-		<div>
-			<label class="form-group">
-				<spring:message code="add.publication.username"/>
-				<form:input path="username" type="text" class="form-input"
-							value="${username}"
-							 />
-			</label>
-			<form:errors path="username" element="p" cssStyle="color: red;"/>
-		</div>
-
-		<div>
-			<label class="form-group">
-				<spring:message code="add.publication.mail"/>
-				<form:input path="mail" type="text" class="form-input"
-							value="${submited_mail}" readonly="${emailFieldIsReadOnly}" />
-                <small class="description">
-                    <spring:message code="add.publication.username_email.description"/>
-                </small>
-            </label>
-			<form:errors path="mail" element="p" cssStyle="color: red;"/>
-		</div>
-
-
-
 		<h4 class="label"><spring:message code="add.publication.subheader.book"/></h4>
 
 		<div style="margin-bottom: 10px">

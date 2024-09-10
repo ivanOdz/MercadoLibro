@@ -92,11 +92,10 @@ public class AddPublicationController {
                                        @RequestParam(name = "publication_id") long publicationId, @RequestParam(name = "is_for_exchange") boolean isForExchange, @RequestParam(name = "submited_mail", defaultValue = "") String submited_mail) {
 
 		if (errors.hasErrors()) {
+            System.out.println(errors.getAllErrors());
 			return createPublicationForm(publicationForm, publicationId, isForExchange, submited_mail);
 		}
 
-        System.out.println("RATING:" +publicationForm.getRating());
-        System.out.println("USERNAME:" + publicationForm.getUsername());
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user;
