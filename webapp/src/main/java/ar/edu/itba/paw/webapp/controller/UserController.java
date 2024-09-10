@@ -70,7 +70,7 @@ public class UserController {
     @RequestMapping("/verification")
     public ModelAndView verificationController(@RequestParam(name = "verification_code") int verificationCode){
         us.verifyUser(verificationCode);
-        return new ModelAndView("user/login");
+        return new ModelAndView("redirect:/success_verification");
     }
 
     @RequestMapping("/check_verify")
@@ -99,7 +99,7 @@ public class UserController {
     @RequestMapping(path = "/change_password", method = RequestMethod.GET)
     public ModelAndView createPasswordForm(@ModelAttribute("passwordForm") PasswordForm passwordForm, @RequestParam(name = "verification_code") int verificationCode){
         ModelAndView mav = new ModelAndView("user/new_password");
-        mav.addObject("verification_code", verificationCode);
+        mav.addObject("redirect:/verification_code", verificationCode);
         return mav;
     }
 
@@ -138,6 +138,11 @@ public class UserController {
     @RequestMapping( "/success_registration")
     public ModelAndView successRegistration(){
         return new ModelAndView("user/success_registration");
+    }
+
+    @RequestMapping( "/success_verification")
+    public ModelAndView successVerification(){
+        return new ModelAndView("user/success_verification");
     }
 
     // binding=false -> read only attribute

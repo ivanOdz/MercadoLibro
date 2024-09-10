@@ -22,11 +22,5 @@
         </a>
     </div>
     </div>
-
-
-<%--    Por favor revisa tu casilla de correo para verificar tu cuenta.--%>
-
-
-
 </body>
 </html>
