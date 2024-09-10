@@ -3,7 +3,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <html lang="es">
-
+<%@include file="/WEB-INF/jsp/head/headers.jsp"%>
 <head>
 	<link href="${pageContext.request.contextPath}/css/publications.css?v=1.0" rel="stylesheet"/>
 

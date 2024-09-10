@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <html>
+<%@include file="/WEB-INF/jsp/head/headers.jsp"%>
 <head>
     <link href="${pageContext.request.contextPath}/css/comparemail.css" rel="stylesheet"/>
     <title><spring:message code="compare.emails.title"/></title>
