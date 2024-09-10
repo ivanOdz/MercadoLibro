@@ -1,21 +1,30 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<!DOCTYPE html>
-<html lang="es">
-<%@include file="/WEB-INF/jsp/head/headers.jsp"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title><fmt:message key="exchange.rejected"/></title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <title><fmt:message key="exchange.accepted"/></title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/WEB-INF/css/exchange.css" rel="stylesheet">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
+    <link rel="icon" href="${pageContext.request.contextPath}/images/favicon.ico" type="image/x-icon"/>
+    <meta charset="UTF-8">
 </head>
 <body>
-<div class="icon-container">
-    <i class="material-icons large icon">cancel</i> <!-- Ícono de rechazo -->
-    <div class="message"><fmt:message key="exchange.rejected"/></div>
-</div>
+<c:url var="okUrl" value="/login"/>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<div class="uk-background-center-center">
+    <div class="uk-position-center uk-card uk-card-default uk-card-body uk-width-1-2@m">
+        <h3 class="uk-card-title">
+                <fmt:message key="exchange.rejected"/>
+        </h3>
+        <a href="${okUrl}">
+            <button class="uk-button uk-button-primary uk-align-center">
+                <spring:message code="hwc.home"/>
+            </button>
+        </a>
+    </div>
+</div>
 </body>
 </html>
