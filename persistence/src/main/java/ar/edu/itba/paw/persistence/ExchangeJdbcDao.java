@@ -63,7 +63,6 @@ public class ExchangeJdbcDao implements ExchangeDao {
                 new int[]{ Types.INTEGER }, ROWMAPPER).stream().findFirst();
 
         if(ex.isEmpty()) {
-            // TODO: mandar a una pagina que diga accept code invalido
             return ResponseState.INVALID;
         }
         if(ex.get().getExchangeState().getValue() == ExchangeState.REJECTED.getValue()){
@@ -93,9 +92,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
     }
 
     @Override
-    public Exchange createExchange(long offererPubId, long requesterPubId, int acceptCode) {
-        Timestamp currentTimestamp = new Timestamp(new Date().getTime());
-
+    public Exchange createExchange(long offererPubId, long requesterPubId, int acceptCode, Timestamp startDate) {
         final Map<String, Object> exchangeData = new HashMap<>();
         exchangeData.put("offererPubId", offererPubId);
         exchangeData.put("requesterPubId", requesterPubId);
@@ -103,17 +100,15 @@ public class ExchangeJdbcDao implements ExchangeDao {
         exchangeData.put("acceptCode", acceptCode);
         exchangeData.put("offererReceivedBook", false);
         exchangeData.put("requesterReceivedBook", false);
-        exchangeData.put("exchangeDate", currentTimestamp);
+        exchangeData.put("exchangeDate", startDate);
 
         final Number generatedId = jdbcInsert.executeAndReturnKey(exchangeData);
 
-        return new Exchange(generatedId.longValue(),  offererPubId,  requesterPubId,  ExchangeState.PENDING, acceptCode, false, false, currentTimestamp);
+        return new Exchange(generatedId.longValue(),  offererPubId,  requesterPubId,  ExchangeState.PENDING, acceptCode, false, false, startDate);
     }
 
     public List<Exchange> getExchangesByUserIdInvolved(long anUserId){
-        return jdbcTemplate.query("SELECT * FROM exchange WHERE offererPubId IN (SELECT publicationId FROM publication WHERE userId = ?) UNION SELECT * FROM exchange WHERE requesterPubId IN (SELECT publicationId FROM publication WHERE userId = ? ) ORDER BY exchangeDate DESC", new Object[]{ anUserId, anUserId },
+        return jdbcTemplate.query("SELECT * FROM exchange WHERE offererPubId IN (SELECT publicationId FROM publication WHERE userId = ?) UNION SELECT * FROM exchange WHERE requesterPubId IN (SELECT publicationId FROM publication WHERE userId = ? ) ORDER BY exchangeStartDate DESC", new Object[]{ anUserId, anUserId },
                 new int[]{ Types.BIGINT, Types.BIGINT }, ROWMAPPER);
     }
-
-
 }

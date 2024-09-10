@@ -60,7 +60,7 @@ public class PublicationController {
         if(authentication.getPrincipal() instanceof PawUserDetails pud) {
             mav.addObject("loggedUser", pud.getUser());
             //List<Card> cardList = cs.buildCardList(ps.getAllPublicationsFilteredBy(search).getPublications().stream().filter(c -> (Long.compare(c.getUserId(), pud.getUser().getId()) != 0)).toList());
-            mav.addObject("publications", cardList);
+            //mav.addObject("publications", cardList);
         }
         
         return mav;
@@ -86,6 +86,7 @@ public class PublicationController {
         return mav;
     }
 
+    // Esto tienen que volar
     @RequestMapping("/submitmail")
     public ModelAndView submitMail(@RequestParam(name = "publication_id") long publicationId) {
         final ModelAndView mav = new ModelAndView("home/submitmail");

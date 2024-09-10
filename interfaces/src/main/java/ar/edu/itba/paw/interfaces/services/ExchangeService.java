@@ -14,9 +14,8 @@ public interface ExchangeService {
     long getId(int acceptCode);
 
     String exchange(int acceptCode, boolean state);
-    Exchange initializeExchange(boolean isForExchange, long requesterId, long offererId);
 
-     List<ExchangeWrapper> getExchangeWrapperListByUserId(long userId);
+    Exchange initializeExchange(long requesterId, long offererId);
 
-
-    }
+    List<ExchangeWrapper> getExchangeWrapperListByUserId(long userId);
+}

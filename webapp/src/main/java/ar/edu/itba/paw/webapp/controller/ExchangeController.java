@@ -17,18 +17,20 @@ import java.util.Map;
 @Controller
 public class ExchangeController {
 
-    ExchangeService exchangeService;
-    EmailService emailService;
-    UserService userService;
-    PublicationService publicationService;
-    BookService bookService;
+    private final ExchangeService exchangeService;
+    private final EmailService emailService;
+    private final UserService userService;
+    private final PublicationService publicationService;
+    private final BookService bookService;
+    private final BookModelService bookModelService;
 
-    public ExchangeController(final ExchangeService exchangeService, final EmailService emailService, final UserService userService, final BookService bookService, final PublicationService publicationService) {
+    public ExchangeController(final ExchangeService exchangeService, final EmailService emailService, final UserService userService, final BookService bookService, final PublicationService publicationService, BookModelService bookModelService) {
         this.exchangeService = exchangeService;
         this.emailService = emailService;
         this.userService = userService;
         this.bookService = bookService;
         this.publicationService = publicationService;
+        this.bookModelService = bookModelService;
     }
 
 
@@ -44,6 +46,19 @@ public class ExchangeController {
 
         return mav;
     }
+    @RequestMapping("/exchange/accepted")
+    public ModelAndView exchangeAccepted(@RequestParam long acceptCode) {
+        final ModelAndView mav = new ModelAndView("exchange/exchange_accepted");
+
+        return mav;
+    }
+
+    @RequestMapping("/exchange/invalid")
+    public ModelAndView exchangeRejected() {
+
+        return new ModelAndView("/exchange/invalid");
+    }
+
 
     @RequestMapping("/createexchange")
     public ModelAndView exchange(@RequestParam(name = "accept_code") int acceptCode, @RequestParam(name = "state") boolean state) {
@@ -65,14 +80,20 @@ public class ExchangeController {
         String offererEmail = offerer.getMail();
         String requesterEmail = requester.getMail();
 
+        BookModel offeredBookModel = bookModelService.getBookModelByBookModelId(bookOffered.getBookModelId());
+        BookModel requestedBookModel = bookModelService.getBookModelByBookModelId(bookRequested.getBookModelId());
+
+        variables.put("requestedBook", requestedBookModel.getTitle());
+        variables.put("offeredBook", offeredBookModel.getTitle());
+
         variables.put("requesterEmail", requesterEmail);
         variables.put("requesterName", requester.getUsername());
-        //variables.put("requestedBook", bookRequested.getTitle());
-        //variables.put("offeredBook", bookOffered.getTitle());
-        variables.put("requesterEmail", offererEmail);
-        variables.put("requesterName", offerer.getUsername());
+
+        //variables.put("requesterEmail", offererEmail);    ¡??????
+        //variables.put("requesterName", offerer.getUsername());
+
         variables.put("offererName", offerer.getUsername());
-        variables.put("offererEmail", offerer.getMail());
+        variables.put("offererEmail", offererEmail);
 
         emailService.sendExchangeEmail(requesterEmail, variables, state);
 

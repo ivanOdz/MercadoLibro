@@ -8,10 +8,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.sql.Timestamp;
+import java.util.*;
 
 @Service
 public class ExchangeServiceImpl implements ExchangeService {
@@ -63,13 +61,13 @@ public class ExchangeServiceImpl implements ExchangeService {
     }
 
     @Override
-    public Exchange initializeExchange(boolean isForExchange, long requesterPubId, long offererPubId) {
-//        if(isForExchange) {
+    public Exchange initializeExchange(long requesterPubId, long offererPubId) {
             Random random = new Random();
             int acceptCode = Math.abs(random.nextInt());
-            return exchangeDao.createExchange(offererPubId, requesterPubId, acceptCode);
-//        }
-//        return null;
+            Date date = new Date();
+            Timestamp timestamp = new Timestamp(date.getTime());
+
+        return exchangeDao.createExchange(offererPubId, requesterPubId, acceptCode, timestamp);
     }
 
 
