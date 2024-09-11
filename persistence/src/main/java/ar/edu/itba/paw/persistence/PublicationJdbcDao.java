@@ -62,8 +62,11 @@ public class PublicationJdbcDao implements PublicationDao {
         jdbcTemplate.update("UPDATE publication SET publicationState = ? WHERE publicationId = ?",PublicationState.TERMINATED.getValue(), pubId);
     }
 
+    @Override
+    public Optional<Publication> getPublicationStateByBookId(long bookId) {
+        return jdbcTemplate.query("SELECT * FROM publication WHERE bookId = ? ORDER BY publicationDatetime DESC LIMIT 1", new Object[]{ bookId }, new int[]{ Types.BIGINT }, ROWMAPPERPUBLICATIONS).stream().findFirst();
 
-
+    }
 }
 
 

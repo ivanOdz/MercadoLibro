@@ -171,6 +171,7 @@
                             </figure>
                             <h5 class="uk-card-title custom-link">${card.bookModel.title}</h5>
                             <p class="small-gray-text custom-link">${card.authorsString}</p>
+                            /
                         </div>
                     </c:forEach>
                 </div>

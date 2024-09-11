@@ -1,9 +1,6 @@
-package ar.edu.itba.paw.models.utils;
+package ar.edu.itba.paw.models;
 
-import ar.edu.itba.paw.models.Author;
-import ar.edu.itba.paw.models.Book;
-import ar.edu.itba.paw.models.BookModel;
-import ar.edu.itba.paw.models.Image;
+import ar.edu.itba.paw.models.utils.PublicationState;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,12 +10,14 @@ public class CardBook {
     private final BookModel bookModel;
     private final Image image;
     private final List<Author> bookAuthors;
+    private final boolean canPublish;
 
-    public CardBook(Book book, BookModel bookModel, Image image, List<Author> bookAuthors) {
+    public CardBook(Book book, BookModel bookModel, Image image, List<Author> bookAuthors, boolean canPublish) {
         this.book = book;
         this.bookModel = bookModel;
         this.image = image;
         this.bookAuthors = bookAuthors;
+        this.canPublish = canPublish;
     }
 
     public Book getBook() {
@@ -33,8 +32,12 @@ public class CardBook {
         return image;
     }
 
-    public List<Author> getAuthors() {
+    public List<Author> getBookAuthors() {
         return bookAuthors;
+    }
+
+    public boolean canPublish() {
+        return canPublish;
     }
 
     public String getAuthorsString() {
