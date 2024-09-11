@@ -8,5 +8,6 @@ import java.util.List;
 @Service
 public interface BookImageService {
     List<BookImage> getImageByBookId(long bookId);
+    List<BookImage> getSortedImagesByBookId(long bookId);
 
 }

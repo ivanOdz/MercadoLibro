@@ -7,14 +7,17 @@ import java.util.stream.Collectors;
 public class Card {
     private Publication publication;
     private Book book;
-    private Image image;
+    private BookModel bookModel;
+    private List<Image> images;
     private List<Author> bookAuthors;
+    private String location;
 
-    public Card(Publication publication, Book book, Image image, List<Author> bookAuthors) {
+    public Card(Publication publication, Book book, BookModel bookModel, List<Image> images, List<Author> bookAuthors, String location) {
         this.publication = publication;
         this.book = book;
-        this.image = image;
+        this.images = images;
         this.bookAuthors = bookAuthors;
+        this.location = location;
     }
 
     public Publication getPublication() {
@@ -25,8 +28,16 @@ public class Card {
         return book;
     }
 
-    public Image getImage() {
-        return image;
+    public BookModel getBookModel() {
+        return bookModel;
+    }
+
+    public List<Image> getImages() {
+        return images;
+    }
+
+    public String getLocation() {
+        return location;
     }
 
     public List<Author> getBookAuthors() {

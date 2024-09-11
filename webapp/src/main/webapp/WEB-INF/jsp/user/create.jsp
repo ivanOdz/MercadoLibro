@@ -98,12 +98,10 @@
             </form:form>
         </div>
 
-        <p><spring:message code="hwc.signin.prompt"/>:</p>
-        <a href="${signInUrl}">
-            <button type="button">
-                <spring:message code="hwc.signin.button"/>
-            </button>
-        </a>
+        <p class="uk-margin" style="text-align: center;">
+            <spring:message code="hwc.signin.prompt"/>
+        <a href="${signInUrl}" class="uk-link-text link-text"><spring:message code="hwc.signin.button"/></a>
+        </p>
     </div>
 </div>
 </body>

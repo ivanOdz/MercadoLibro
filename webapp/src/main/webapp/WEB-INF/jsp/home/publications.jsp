@@ -158,7 +158,7 @@
 				<div class="uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m mb-1" uk-grid>
 					<c:forEach var="card" items="${publications}">
 						<div>
-							<a href="<c:url value='submitmail'>
+							<a href="<c:url value='publications/${card.publication.publicationId}'>
 								<c:param name='publication_id' value='${card.publication.publicationId}'/>
 								</c:url>" class="uk-card uk-card-default uk-card-hover uk-card-body uk-border-rounded custom-link">
 								<figure class="uk-margin-bottom">

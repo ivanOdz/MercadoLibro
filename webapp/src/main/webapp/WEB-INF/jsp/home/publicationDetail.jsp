@@ -1,0 +1,149 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+
+
+<html>
+<%@include file="/WEB-INF/jsp/head/headers.jsp"%>
+<head>
+  <link href="${pageContext.request.contextPath}/css/publicationDetail.css?v=1.0" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
+
+  <title><spring:message code="publication.details.title"/></title>
+</head>
+<body>
+<div class="row-container" style="margin-top: 60px;">
+  <!-- Image -->
+  <div class="my-image">
+    <figure class="uk-margin-bottom">
+      <c:choose>
+        <c:when test="${card.images != null}">
+     <!--     <img class="book-image" src="${pageContext.request.contextPath}/images/${card.images.imageId}" alt="bookImage" style="width: 300px; height: auto; margin-left: 20px"/> -->
+
+          <div class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1" uk-slideshow>
+
+            <div class="uk-slideshow-items">
+              <c:forEach var="image" items="${card.images}">
+              <div>
+                <img src="${pageContext.request.contextPath}/images/${image.imageId}" alt="bookImage" uk-cover>
+              </div>
+              </c:forEach>
+            </div>
+
+            <a class="uk-position-center-left uk-position-small uk-hidden-hover" href uk-slidenav-previous uk-slideshow-item="previous"></a>
+            <a class="uk-position-center-right uk-position-small uk-hidden-hover" href uk-slidenav-next uk-slideshow-item="next"></a>
+
+          </div>
+
+        </c:when>
+        <c:otherwise>
+          <img class="book-image" src="${pageContext.request.contextPath}/images/book.jpg" alt="book" style="width: 300px; height: auto;"/>
+        </c:otherwise>
+      </c:choose>
+    </figure>
+  </div>
+
+  <div class="column-container">
+    <!-- Title -->
+    <div>
+      <h1 class="uk-text-large uk-text-bold" style="font-size: 36px;">${card.bookModel.title}</h1>
+    </div>
+
+    <!-- Author -->
+    <div>
+      <p class="small-gray-text custom-link">${card.authorsString}</p>
+    </div>
+
+    <!-- Line -->
+    <hr style="width: 40lh;"/>
+
+    <!-- Description -->
+    <div style="max-width: 40lh; text-align: justify;">
+      <p>${card.bookModel.description}</p>
+    </div>
+
+    <!-- Line -->
+    <hr style="width: 40lh;"/>
+    <div>
+      <div class="row-container" style="margin-left: 50px;">
+
+        <!-- Book State -->
+        <div class="column-container" style="place-items: center; display: flex; margin-right: 90px;">
+          <div>
+            <p style="text-align: center"><spring:message code="publication.details.bookState"/></p>
+            <i class="material-icons" style="margin-left: 40px;">book</i>
+            <c:choose>
+              <c:when test="${card.book.bookState == 'NEW'}">
+                <spring:message code="bookState.new"/>
+              </c:when>
+              <c:when test="${card.book.bookState == 'LIKE_NEW'}">
+                <spring:message code="bookState.like.new"/>
+              </c:when>
+              <c:when test="${card.book.bookState == 'VERY_GOOD'}">
+                <spring:message code="bookState.very.good"/>
+              </c:when>
+              <c:when test="${card.book.bookState == 'GOOD'}">
+                <spring:message code="bookState.good"/>
+              </c:when>
+              <c:when test="${card.book.bookState == 'ACCEPTABLE'}">
+                <spring:message code="bookState.acceptable"/>
+              </c:when>
+              <c:when test="${card.book.bookState == 'WORN'}">
+                <spring:message code="bookState.worn"/>
+              </c:when>
+            </c:choose>
+          </div>
+        </div>
+
+        <!-- Publication date -->
+        <div class="column-container" style="place-items: center; display: flex;">
+          <div>
+            <p style="text-align: center"><spring:message code="publication.details.date"/></p>
+            <i class="material-icons" style="margin-left: 60px;">history</i>
+            <p style="text-align: center"><strong>${card.publication.publicationDatetime}</strong></p>
+          </div>
+        </div>
+
+        <!-- Editorial -->
+        <div class="column-container" style="place-items: center; display: flex;">
+          <div>
+            <p style="text-align: center"><spring:message code="publication.details.editorial"/></p>
+            <i class="material-icons" style="margin-right: 90px;">file-edit</i>
+            <p style="text-align: center"><strong>${card.bookModel.editorial}</strong></p>
+          </div>
+
+          <!-- Location -->
+          <div class="column-container" style="place-items: center; display: flex;">
+            <div>
+              <p style="text-align: center"><spring:message code="publication.details.location"/></p>
+              <i class="material-icons" style="margin-right: 90px;">location</i>
+              <p style="text-align: center"><strong>${card.location}</strong></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="column-container" style="margin-left: 2lh; place-items: center; display: flex;">
+    <div>
+      <p class="uk-text-medium" style="font-size: 25px; text-align: center; max-width: 9lh; margin-left: 1lh;"><spring:message code="exchange.description"/></p>
+    </div>
+    <div>
+      <p class="uk-text-medium" style="font-size: 25px; max-width: 9lh; text-align: center; margin-left: 1lh;"><spring:message code="exchange.description2"/></p>
+    </div>
+    <div class="uk-margin-top uk-button-group" style="margin-left: 50px;">
+      <button class="uk-button uk-button-primary"> <spring:message code="exchange.button.description"/> </button>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
+publicationDetail.jsp
+5 KB
