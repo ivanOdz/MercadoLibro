@@ -175,14 +175,42 @@
 
                                 <c:choose>
                                     <c:when test="${card.canPublish}">
-                                        <form action="${pageContext.request.contextPath}/createpublication" method="post" class="uk-form-stacked">
-                                            <input type="hidden" name="bookId" value="${card.book.bookId}"/>
-                                            <input type="hidden" name="location" value="Mexico"/>
-                                            <button type="submit" class="uk-button uk-button-primary uk-width-1-1"><spring:message code="book.publish.button"/></button>
-                                        </form>
+
+                                        <a class="uk-button uk-button-default uk-button-primary uk-width-1-1" href="#modal-sections" uk-toggle><spring:message code="book.publish.button"/></a>
+
+                                        <div id="modal-sections" uk-modal>
+                                            <div class="uk-modal-dialog">
+                                                <button class="uk-modal-close-default" type="button" uk-close></button>
+                                                <div class="uk-modal-header">
+                                                    <h5><spring:message code="book.set.location"/></h5>
+
+                                                    <div class="uk-margin">
+                                                        <div class="uk-inline">
+                                                            <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: location"></span>
+                                                            <input class="uk-input" type="text" aria-label="Not clickable icon">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="uk-flex uk-flex-between uk-flex-middle uk-text-right uk-margin-small-top">
+                                                        <!-- Botón de cancelar -->
+                                                        <button class="uk-button uk-button-default uk-modal-close uk-width-auto" type="button"><spring:message code="button.cancel"/></button>
+
+                                                        <!-- Formulario de publicación -->
+                                                        <form action="${pageContext.request.contextPath}/createpublication" method="post" class="uk-form-stacked">
+                                                            <input type="hidden" name="bookId" value="${card.book.bookId}"/>
+                                                            <input type="hidden" name="location" value="ACA VA LA UBICACION"/>
+                                                                <button type="submit" class="uk-button uk-button-primary uk-width-auto"><spring:message code="book.publish.button"/></button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
                                     </c:when>
+
                                     <c:otherwise>
-                                        <button class="uk-button uk-button-primary uk-width-1-1" disabled><spring:message code="book.publish.button"/></button>
+                                        <button class="uk-button uk-button-primary uk-width-1-1" disabled><spring:message code="book.published.button"/></button>
                                     </c:otherwise>
                                 </c:choose>
                             </div>

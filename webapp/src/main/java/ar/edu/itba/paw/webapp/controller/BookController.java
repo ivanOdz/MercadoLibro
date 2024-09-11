@@ -111,7 +111,6 @@ public class BookController {
     @PostMapping("/book/upload_book")
     public ModelAndView uploadBook(@Valid @ModelAttribute("bookForm") BookForm bookForm, BindingResult errors) {
         if(errors.hasErrors()){
-            System.out.println(errors.getAllErrors());
             return bookForm(bookForm);
         }
 
