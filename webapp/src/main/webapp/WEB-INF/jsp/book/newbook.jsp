@@ -159,16 +159,18 @@
                             <label class="form-group">
                                 <spring:message code="add.publication.authors"/>
                                 <c:forEach var="author" items="${bookForm.authors}" varStatus="status">
-                                    <input class="uk-input" type="text" name="authors[${status.index}]" value="${author}"F/
+                                    <input class="uk-input" type="text" name="authors[${status.index}]" value="${author}"/>
                                     <c:if test="${status.index > 0}">
-                                        <button type="button" onclick="removeAuthorField(this)"> X </button>
+                                        <button class="uk-button" type="button" onclick="removeAuthorField(this)">
+                                            <span uk-icon="icon:  close"></span>
+                                        </button>
                                     </c:if>
                                 </c:forEach>
                             </label>
                         </div>
 
                         <div class="form-container" style="margin-bottom: 10px">
-                            <button type="button" onclick="addAuthorField()"><spring:message code="add.publication.add.author"/></button>
+                            <button class="uk-button uk-margin-right" type="button" onclick="addAuthorField()"><spring:message code="add.publication.add.author"/></button>
                             <small class="description">
                                 <spring:message code="add.publication.description.authors"/>
                             </small>
@@ -292,7 +294,7 @@
                         <div>
                             <label class="form-group">
                                 <spring:message code="add.publication.image"/>
-                                <form:input path="imageFile" type="file" class="uk-input"/>
+                                <form:input path="imageFile" type="file"/>
                             </label>
                             <form:errors path="imageFile" element="p" cssStyle="color: red;"/>
                         </div>
@@ -305,12 +307,17 @@
                             <form:errors path="location" element="p" cssStyle="color: red;"/>
                         </div>
 
-                        <br>
 
-                        <div class="form-container">
-                            <button type="submit"><spring:message code="add.publication.submit"/></button>
+                        <div class="uk-container uk-margin-top">
+
+                            <div class="uk-inline">
+
+                                <div class="uk-position-right">
+                                    <button type="submit" class="uk-button uk-button-default uk-background-primary uk-light uk-panel"><spring:message code="add.publication.submit"/></button>
+                                </div>
+
+                            </div>
                         </div>
-
                     </form:form>
                 </div>
             </div>
@@ -344,36 +351,5 @@
         authorIndex--;
     }
 </script>
-
-
-<%--<head>--%>
-
-<%--    <title><spring:message code="add.publication.header"/></title>--%>
-<%--    <meta charset="UTF-8">--%>
-<%--    <link href="${pageContext.request.contextPath}/css/publicationForm.css" rel="stylesheet"/>--%>
-<%--    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>--%>
-
-
-<%--</head>--%>
-
-<%--<body>--%>
-
-<%--<c:url var="postUrl" value="/createpublication"/>--%>
-
-<%--<div class="form-container">--%>
-
-<%--    <h1 class="label"><spring:message code="add.publication.header.title"/></h1>--%>
-<%--&lt;%&ndash;    <c:set var="usernameFieldIsReadOnly" value="${not empty username}" />&ndash;%&gt;--%>
-<%--&lt;%&ndash;    <c:set var="emailFieldIsReadOnly" value="${not empty submited_mail}" />&ndash;%&gt;--%>
-
-<%--    &lt;%&ndash;	<small class="description">&ndash;%&gt;--%>
-<%--    &lt;%&ndash;		<spring:message code="add.publication.description.required_fields"/>&ndash;%&gt;--%>
-<%--    &lt;%&ndash;	</small>&ndash;%&gt;--%>
-
-
-
-<%--</div>--%>
-
-<%--</body>--%>
 
 </html>
