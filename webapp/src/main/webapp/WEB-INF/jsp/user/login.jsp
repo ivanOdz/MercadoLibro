@@ -58,6 +58,13 @@
                     <input class="uk-checkbox" type="checkbox" name="remember_me"/>
                 </label>
             </div>
+
+            <c:if test="${not empty error}">
+                <div class="uk-text-small" style="color:red;">
+                        ${error}
+                </div>
+            </c:if>
+
             <div class="uk-margin-top uk-button-group" style="margin-left: 50px;">
                 <button class="uk-button uk-button-primary"> <spring:message code="hwc.login.submit"/> </button>
             </div>
@@ -66,8 +73,8 @@
     </form>
     </div>
 
-    <div class="uk-margin" style="text-align: center;">
-        <a class="uk-link-text link-text" href="${changePasswordUrl}">
+    <div style="text-align: center;">
+        <a class="uk-link-text link-text uk-align-center" href="${changePasswordUrl}">
                 <spring:message code="hwc.change_password.button"/>
         </a>
     </div>
