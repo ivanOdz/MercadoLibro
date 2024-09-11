@@ -32,7 +32,7 @@ public class BookJdbcDao implements BookDao {
     public BookJdbcDao(final DataSource ds) {
        
     	jdbcTemplate = new JdbcTemplate(ds);
-        jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).usingGeneratedKeyColumns("bookId").withTableName("books");
+        jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).usingGeneratedKeyColumns("bookid").withTableName("book");
     }
 
     @Override

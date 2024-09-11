@@ -2,8 +2,10 @@ package ar.edu.itba.paw.webapp.form;
 
 import javax.validation.constraints.*;
 
+import ar.edu.itba.paw.models.utils.BookDimension;
 import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.models.utils.Genre;
+import ar.edu.itba.paw.models.utils.Language;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -36,7 +38,7 @@ public class BookForm {
     
     @Min(1)
     @Max(99)
-    private int edition;
+    private int edition =1;
 
     @Min(1)
     @Max(5)
@@ -50,13 +52,15 @@ public class BookForm {
 
     private boolean isPocketEdition;
 
-    private int dimension;
+    @NotNull
+    private BookDimension dimension;
 
-    private int language;
+    @NotNull
+    private Language language;
 
-    private int pages;
+    private int pages = 300;
 
-    private int weight;
+    private int weight = 300;
 
 
     public @NotBlank @Pattern(regexp = "^(97[89])\\d{1,5}\\d{1,7}\\d{1,7}\\d$") String getIsbn() {
@@ -120,11 +124,12 @@ public class BookForm {
         return isPocketEdition;
     }
 
-    public int getDimension() {
+
+    public BookDimension getDimension() {
         return dimension;
     }
 
-    public int getLanguage() {
+    public Language getLanguage() {
         return language;
     }
 
@@ -187,11 +192,11 @@ public class BookForm {
         this.isHardcover = isHardcover;
     }
 
-    public void setDimension(int dimension) {
+    public void setDimension(BookDimension dimension) {
         this.dimension = dimension;
     }
 
-    public void setLanguage(int language) {
+    public void setLanguage(Language language) {
         this.language = language;
     }
 

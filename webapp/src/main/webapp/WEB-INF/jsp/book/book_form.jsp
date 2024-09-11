@@ -162,6 +162,31 @@
                             </form:select>
                         </div>
 
+                        <%--Languages--%>
+
+                        <div class="form-group">
+                            <form:label path="language">
+                                <spring:message code="add.publication.book.language"/>
+                            </form:label>
+                            <form:select path="language" class="uk-input">
+                                <c:forEach var="languageWrapper" items="${languages}">
+                                    <form:option value="${languageWrapper.language}" label="${languageWrapper.displayName}" />
+                                </c:forEach>
+                            </form:select>
+                        </div>
+
+                        <%--Publication Year--%>
+                        <div class="input-field">
+                            <label for="publicationYear">
+                                <spring:message code="add.publication.book.year"/>
+                            </label>
+                            <select id="publicationYear" name="publicationYear">
+                                <c:forEach var="year" begin="1900" end="${currentYear}">
+                                    <option value="${year}" ${bookForm.publicationYear == year ? 'selected' : ''}>${year}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
+
                         <%--BookState--%>
 
                         <div class="form-group">
@@ -175,7 +200,6 @@
                             </form:select>
                         </div>
 
-                        <%--Descripción--%>
 
 
 
@@ -221,13 +245,69 @@
                         <div  style="margin-bottom: 10px">
                             <label class="form-group">
                                 <spring:message code="add.publication.edition"/>
-                                <form:input path="edition" type="text" class="uk-input"/>
+                                <form:input id="edition" autocomplete="false" placeholder="1" path="edition" type="text" class="uk-input"/>
                             </label>
                             <form:errors path="edition" element="p" cssStyle="color: red;"/>
                             <small class="description">
                                 <spring:message code="add.publication.description.edition"/>
                             </small>
                         </div>
+
+                        <%--Pages--%>
+
+                        <div>
+                            <label class="form-group">
+                                <spring:message code="add.book.pages"/>
+                                <form:input path="pages" type="text" class="uk-input" placeholder="300"/>
+                            </label>
+                            <form:errors path="pages" element="p" cssStyle="color: red;"/>
+                            <small class="description">
+                                <spring:message code="add.book.description.pages"/>
+                            </small>
+                        </div>
+
+                        <%--Dimension--%>
+
+                        <div class="form-group">
+                            <form:label path="dimension">
+                                <spring:message code="add.publication.book.dimension"/>
+                            </form:label>
+                            <form:select path="dimension" class="uk-input">
+                                <c:forEach var="dimensionWrapper" items="${dimensions}">
+                                    <form:option value="${dimensionWrapper.dimension}" label="${dimensionWrapper.displayName}" />
+                                </c:forEach>
+                            </form:select>
+                        </div>
+                        <%--Weight--%>
+
+                        <div>
+                            <label class="form-group">
+                                <spring:message code="add.book.weight"/>
+                                <form:input path="weight" type="text" class="uk-input" placeholder="300"/>
+                            </label>
+                            <form:errors path="weight" element="p" cssStyle="color: red;"/>
+                            <small class="description">
+                                <spring:message code="add.book.description.weight"/>
+                            </small>
+                        </div>
+
+                        <%--Ckeckboxes--%>
+
+                        <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+                            <!-- Pocket Edition -->
+                            <label class="mr-1">
+                                <spring:message code="add.book.pocket"/>
+                                <form:checkbox path="isPocketEdition" class="uk-checkbox" />
+                            </label>
+
+                            <!-- Hardcover -->
+                            <label class="mr-1">
+                                <spring:message code="add.book.hardcover"/>
+                                <form:checkbox path="isHardcover" class="uk-checkbox" />
+                            </label>
+                        </div>
+
+
 
                         <%--Rating--%>
 
@@ -263,17 +343,6 @@
                                 </label>
                             </div>
 
-                            <!-- Mostrar errores de validación -->
-                            <form:errors path="rating" element="p" cssStyle="color: red;" />
-
-<%--                            <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">--%>
-<%--                                <label>--%>
-<%--                                    <spring:message code="add.book.pocket"/>--%>
-<%--                                    <form:input path="isPocketEdition" class="uk-checkbox" type="checkbox"/>--%>
-
-<%--                                </label>--%>
-<%--                                <label><input class="uk-checkbox" type="checkbox"> B</label>--%>
-<%--                            </div>--%>
                         </div>
 
                         <div class="uk-container uk-margin-top">

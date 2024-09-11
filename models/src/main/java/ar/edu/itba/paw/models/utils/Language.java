@@ -18,4 +18,9 @@ public enum Language {
     public int getValue() {
         return this.value;
     }
+
+    public String getKey() {
+
+        return "language." + name();
+    }
 }
