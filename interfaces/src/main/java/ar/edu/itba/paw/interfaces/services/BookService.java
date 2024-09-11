@@ -15,7 +15,7 @@ public interface BookService {
 
     Optional<Book> getBookById(long bookId);
 
-    Book createBook (int bookModelId, int ownerId, BookState bookState, int exchangesQty, int rating);
+    Book createBook (long bookModelId, long ownerId, BookState bookState, int exchangesQty, int rating);
 
     void exchangeOwnership(long b1, long b2);
 

@@ -22,7 +22,7 @@ public class BookModelServiceImpl implements BookModelService {
     }
 
     @Override
-    public void addBookModel(String isbn, String title, String editorial, String description, Genre genre, int edition, int weight, int pages, int language, int dimension, Short publicationYear, boolean pocketEdition, boolean hardcover) {
-        bookModelDao.addBookModel(isbn, title, editorial, description, genre, edition, weight, pages, language, dimension, publicationYear, pocketEdition, hardcover);
+    public BookModel addBookModel(String isbn, String title, String editorial, String description, Genre genre, int edition, int weight, int pages, int language, int dimension, Short publicationYear, boolean pocketEdition, boolean hardcover) {
+        return bookModelDao.addBookModel(isbn, title, editorial, description, genre, edition, weight, pages, language, dimension, publicationYear, pocketEdition, hardcover);
     }
 }

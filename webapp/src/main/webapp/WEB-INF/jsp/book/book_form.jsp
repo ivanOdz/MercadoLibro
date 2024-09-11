@@ -215,6 +215,8 @@
                             </small>
                         </div>
 
+                        <%--Edicion--%>
+
                         <div  style="margin-bottom: 10px">
                             <label class="form-group">
                                 <spring:message code="add.publication.edition"/>
@@ -225,6 +227,8 @@
                                 <spring:message code="add.publication.description.edition"/>
                             </small>
                         </div>
+
+                        <%--Rating--%>
 
                         <div class="form-group">
                             <label>
@@ -260,11 +264,16 @@
 
                             <!-- Mostrar errores de validación -->
                             <form:errors path="rating" element="p" cssStyle="color: red;" />
+
+                            <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+                                <label>
+                                    <spring:message code="add.book.pocket"/>
+                                    <form:input path="isPocketEdition" class="uk-checkbox" type="checkbox"/>
+
+                                </label>
+                                <label><input class="uk-checkbox" type="checkbox"> B</label>
+                            </div>
                         </div>
-
-
-<%--
-
 
                         <div class="uk-container uk-margin-top">
 

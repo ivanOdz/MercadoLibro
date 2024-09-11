@@ -21,7 +21,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book createBook (int bookModelId, int ownerId, BookState bookState, int exchangesQty, int rating) {
+    public Book createBook (long bookModelId, long ownerId, BookState bookState, int exchangesQty, int rating) {
         return bookDao.createBook(bookModelId, ownerId, bookState, exchangesQty, rating);
     }
 

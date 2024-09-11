@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
+import ar.edu.itba.paw.models.BookModel;
 import ar.edu.itba.paw.models.Card;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.webapp.auth.PawUserDetails;
@@ -101,7 +102,7 @@ public class BookController {
 
         // TODO: pagina que informe qeu se agrego el libro de forma correcta
 
-        bookModelService.addBookModel(
+        BookModel bookModel = bookModelService.addBookModel(
                 bookForm.getIsbn(),
                 bookForm.getTitle(),
                 bookForm.getEditorial(),
@@ -116,6 +117,12 @@ public class BookController {
                 bookForm.getIsPocketEdition(),
                 bookForm.getIsHardcover()
                 );
+
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.getPrincipal() instanceof PawUserDetails pud) {
+            bookService.createBook(bookModel.getBookModelId(), pud.getUser().getUserId(), bookForm.getBookState(), 0,bookForm.getRating());
+        }
 
         return new ModelAndView("redirect:/");
     }

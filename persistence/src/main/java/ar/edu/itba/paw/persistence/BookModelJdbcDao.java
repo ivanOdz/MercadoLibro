@@ -53,13 +53,13 @@ public class BookModelJdbcDao implements BookModelDao {
     }
 
     @Override
-    public void addBookModel(String isbn, String title, String editorial, String description, Genre genre, int edition, int weight, int pages, int language, int dimension, Short publicationYear, boolean pocketEdition, boolean hardcover) {
+    public BookModel addBookModel(String isbn, String title, String editorial, String description, Genre genre, int edition, int weight, int pages, int language, int dimension, Short publicationYear, boolean pocketEdition, boolean hardcover) {
         final Map<String, Object> md = new HashMap<>();
         md.put("isbn", isbn);
         md.put("title", title);
         md.put("editorial", editorial);
         md.put("description", description);
-        md.put("genre", genre.name());
+        md.put("genre", genre.getValue());
         md.put("edition", edition);
         md.put("weight", weight);
         md.put("pages", pages);
@@ -68,7 +68,10 @@ public class BookModelJdbcDao implements BookModelDao {
         md.put("publicationyear", publicationYear);
         md.put("ispocketedition", pocketEdition);
         md.put("ishardcover", hardcover);
-        jdbcInsert.execute(md);
+
+        final Number modelId = jdbcInsert.executeAndReturnKey(md);
+
+        return new BookModel(modelId.longValue(), isbn,title,editorial,description,genre,edition,weight,pages,Language.fromInt(language), dimension, publicationYear, pocketEdition, hardcover);
     }
 }
 
