@@ -3,17 +3,16 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 
-<%@include file="/WEB-INF/jsp/head/headers.jsp"%>
 
 <!DOCTYPE html>
 <html lang="es">
+<%@include file="/WEB-INF/jsp/head/headers.jsp"%>
 <head>
     <meta charset="UTF-8">
     <title><fmt:message key="exchange.invalid"/></title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
-    <link rel="icon" href="${pageContext.request.contextPath}/images/favicon.ico" type="image/x-icon"/>
     <meta charset="UTF-8">
 </head>
 <body>
