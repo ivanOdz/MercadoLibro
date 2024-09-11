@@ -92,7 +92,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
     }
 
     @Override
-    public Exchange createExchange(long offererPubId, long requesterPubId, int acceptCode, Timestamp startDate) {
+    public void createExchange(long offererPubId, long requesterPubId, int acceptCode, Timestamp startDate) {
         final Map<String, Object> exchangeData = new HashMap<>();
         exchangeData.put("offererPubId", offererPubId);
         exchangeData.put("requesterPubId", requesterPubId);
@@ -100,11 +100,10 @@ public class ExchangeJdbcDao implements ExchangeDao {
         exchangeData.put("acceptCode", acceptCode);
         exchangeData.put("offererReceivedBook", false);
         exchangeData.put("requesterReceivedBook", false);
-        exchangeData.put("exchangeDate", startDate);
+        exchangeData.put("exchangeStartDate", startDate);
+        exchangeData.put("exchangeEndDate", null);
 
-        final Number generatedId = jdbcInsert.executeAndReturnKey(exchangeData);
-
-        return new Exchange(generatedId.longValue(),  offererPubId,  requesterPubId,  ExchangeState.PENDING, acceptCode, false, false, startDate);
+        jdbcInsert.executeAndReturnKey(exchangeData);
     }
 
     public List<Exchange> getExchangesByUserIdInvolved(long anUserId){

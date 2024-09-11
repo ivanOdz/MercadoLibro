@@ -76,15 +76,15 @@ public class PublicationJdbcDao implements PublicationDao {
     }
 
     @Override
-    public void createPublication(long bookId, long userId, long locationId) {
+    public long createPublication(long bookId, long userId, long locationId, PublicationState publicationState) {
         final Map<String, Object> md = new HashMap<>();
         md.put("bookId", bookId);
         md.put("userId", userId);
-        md.put("publicationState", PublicationState.CURRENT.getValue());
+        md.put("publicationState", publicationState.getValue());
         md.put("publicationDatetime", new Timestamp(new Date().getTime()));
         md.put("locationId", locationId);
 
-        jdbcInsert.executeAndReturnKey(md);
+        return jdbcInsert.executeAndReturnKey(md).longValue();
     }
 }
 

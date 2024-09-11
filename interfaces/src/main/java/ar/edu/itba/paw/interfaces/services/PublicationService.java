@@ -18,6 +18,6 @@ public interface PublicationService {
 
     Optional<Publication> getPublicationStateByBookId(long bookId);
 
-    void createPublication(long bookId, long userId, long locationId);
+    long createPublication(long bookId, long userId, long locationId, PublicationState publicationState);
 
 }

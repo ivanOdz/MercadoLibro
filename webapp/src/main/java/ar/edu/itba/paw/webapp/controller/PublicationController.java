@@ -2,10 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.models.utils.BookState;
-import ar.edu.itba.paw.models.utils.BookStateWrapper;
-import ar.edu.itba.paw.models.utils.GenreWrapper;
-import ar.edu.itba.paw.models.utils.Genre;
+import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,7 +73,7 @@ public class PublicationController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.getPrincipal() instanceof PawUserDetails pud) {
             long locationId = ls.newLocation(location);
-            ps.createPublication(bookId, pud.getUser().getUserId(), locationId);
+            ps.createPublication(bookId, pud.getUser().getUserId(), locationId, PublicationState.CURRENT);
         }
 
         return mav;

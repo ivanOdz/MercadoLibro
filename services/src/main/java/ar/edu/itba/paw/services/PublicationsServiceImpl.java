@@ -40,8 +40,8 @@ public class PublicationsServiceImpl implements PublicationService {
     }
 
     @Override
-    public void createPublication(long bookId, long userId, long locationId) {
-        pubDao.createPublication(bookId, userId, locationId);
+    public long createPublication(long bookId, long userId, long locationId, PublicationState publicationState){
+        return pubDao.createPublication(bookId, userId, locationId, publicationState);
     }
 
 

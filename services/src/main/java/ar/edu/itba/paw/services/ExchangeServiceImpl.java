@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.persistence.ExchangeDao;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.models.utils.ResponseState;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -61,13 +62,20 @@ public class ExchangeServiceImpl implements ExchangeService {
     }
 
     @Override
-    public Exchange initializeExchange(long requesterPubId, long offererPubId) {
-            Random random = new Random();
-            int acceptCode = Math.abs(random.nextInt());
-            Date date = new Date();
-            Timestamp timestamp = new Timestamp(date.getTime());
+    public void initializeExchange(CompleteBook requesterComplete, long offererPubId) {
+        // Insertar tupla de requester en publicacion con fecha actual y publicationState = 2 (OFFERER)
 
-        return exchangeDao.createExchange(offererPubId, requesterPubId, acceptCode, timestamp);
+
+        long location = locationService.newLocation(requesterComplete.getLocation());
+        long requesterId = bookService.getBookById(requesterComplete.getSelectedBookId()).get().getOwnerId();
+        long requesterPubId = publicationService.createPublication(requesterComplete.getSelectedBookId(), requesterId, location, PublicationState.OFFERED);
+
+        Random random = new Random();
+        int acceptCode = Math.abs(random.nextInt());
+        Date date = new Date();
+        Timestamp timestamp = new Timestamp(date.getTime());
+
+        exchangeDao.createExchange(offererPubId, requesterPubId, acceptCode, timestamp);
     }
 
 

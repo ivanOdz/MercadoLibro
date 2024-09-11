@@ -225,8 +225,15 @@
                 <form:option value="${completeBook.book.bookId}" label="${completeBook.bookModel.title}" />
               </c:forEach>
             </form:select>
+
           </div>
         </div>
+          <div class="uk-inline">
+            <label class="form-group">
+              <spring:message code="book.set.location"/>
+              <form:input path="location" type="text" class="uk-input"/>
+            </label>
+          </div>
 
         <div class="form-container">
           <input type="hidden" name="publication_id" value="${publication_id}">
