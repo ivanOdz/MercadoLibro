@@ -80,7 +80,9 @@
                 <ul class="uk-navbar-nav">
                     <li><a class="pl-1 pr-1" href="<c:url value="${exchangeUrl}"/>"><spring:message code="home.exchange.view"/></a></li>
                     <li>
-                        <a class="pl-1 pr-1"href="<c:url value="${booksUrl}"/>"><spring:message code="home.book.view"/></a>
+                        <a class="pl-1 pr-1" href="<c:url value='${booksUrl}'/>">
+                            <spring:message code="home.book.view"/>
+                        </a>
                         <div class="uk-navbar-dropdown">
                             <ul class="uk-nav uk-navbar-dropdown-nav">
                                 <li class="uk-active uk-margin-small-top">
@@ -100,14 +102,15 @@
                                 </li>
                             </ul>
                         </div>
-
                     </li>
+
                     <li><a class="pl-1 pr-1" href="<c:url value="${profileUrl}"/>"><spring:message code="home.profile.view"/></a></li>
                 </ul>
             </div>
         </div>
     </div>
 </nav>
+
 <div class="uk-background-muted">
     <div class="uk-container">
         <div class="uk-grid ml-1 uk-margin-top" uk-grid>

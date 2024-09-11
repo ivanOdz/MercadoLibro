@@ -46,12 +46,30 @@ public class ExchangeController {
 
         return mav;
     }
+
+    @RequestMapping("exchange/initializeexchange")
+    public ModelAndView createExchange(@RequestParam long offererPubId, @RequestParam long requesterBookId){
+        final ModelAndView mav = new ModelAndView("exchange/exchange_initialized_confirmation");
+
+        // Dado el requesterBookId me tengo que fijar si existe una publicacion, caso contrario creo la publicacion y
+        // luego obtengo el id de la publicacion
+
+
+        //Exchange exchange = exchangeService.initializeExchange(requesterBookId, offererPubId);
+
+        return mav;
+    }
+
+
+
+
     @RequestMapping("/exchange/accepted")
     public ModelAndView exchangeAccepted(@RequestParam long acceptCode) {
         final ModelAndView mav = new ModelAndView("exchange/exchange_accepted");
 
         return mav;
     }
+
 
     @RequestMapping("/exchange/invalid")
     public ModelAndView exchangeRejected() {

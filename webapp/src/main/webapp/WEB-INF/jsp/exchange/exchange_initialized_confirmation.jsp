@@ -1,29 +1,20 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <!DOCTYPE html>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
-<html lang="es">
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><spring:message code="confirmation.page.title"/></title>
     <link href="${pageContext.request.contextPath}/css/publications.css?v=1.0" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
-    <link rel="icon" href="${pageContext.request.contextPath}/images/favicon.ico" type="image/x-icon"/>
     <link href="${pageContext.request.contextPath}/css/exchange.css ?v=1.0" rel="stylesheet"/>
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
-
-    <title><spring:message code="profile.view.title"/></title>
 </head>
 <body>
-<c:url var="exchangeUrl" value="/exchange"/>
-<c:url var="booksUrl" value="/book"/>
-<c:url var="profileUrl" value="/profile"/>
-
 
 <nav class="uk-navbar-container uk-background-primary uk-box-shadow-small" uk-sticky>
     <div class="uk-container">
@@ -79,32 +70,24 @@
         </div>
     </div>
 </nav>
-<div class="uk-section uk-background-muted">
-    <div class="uk-align-center uk-container">
-        <p class="uk-text-lead uk-align-center">
-            <spring:message code="profile.title"/>
+
+<div class="uk-container uk-margin-large-top uk-margin-large-bottom">
+    <div class="uk-text-center">
+        <h1 class="uk-heading-large"><spring:message code="confirmation.title"/></h1>
+        <p class="uk-text-lead"><spring:message code="confirmation.message"/></p>
+
+        <div class="uk-alert-success" uk-alert>
+            <a class="uk-alert-close" uk-close></a>
+            <p><spring:message code="confirmation.success.message"/></p>
+        </div>
+
+        <p>
+            <a class="uk-button uk-button-primary" href="${pageContext.request.contextPath}/">
+                <spring:message code="confirmation.home.button"/>
+            </a>
         </p>
     </div>
-    <div class="uk-container uk-margin-top">
-        <div class="uk-grid ml-1" uk-grid>
-            <div class="uk-width-1-3@s exchange-information-section uk-border-rounded uk-box-shadow-small mt-1 mb-1 uk-height-viewport"
-                 uk-height-viewport="offset-top: true">
-            </div>
-
-            <div class="uk-width-expand uk-margin-top">
-                <p class="uk-text-lead">
-                    <c:out value="${loggedUser.username}"/>
-                </p>
-                <c:forEach var="review" items="${reviews}">
-                    <div class="uk-card uk-card-default uk-card-body uk-border-rounded uk-box-shadow-small mb-1">
-                            <%--                        <p>${review.reviewDescription}</p>--%>
-                    </div>
-                </c:forEach>
-            </div>
-        </div>
-    </div>
 </div>
 
-</div>
 </body>
 </html>

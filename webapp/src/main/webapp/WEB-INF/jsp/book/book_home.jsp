@@ -156,7 +156,7 @@
                     <h6 class="uk-text-muted"><spring:message code="book.list.select"/></h6>
                 </div>
 
-                <div class="uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m" uk-grid>
+                <div class="uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m mb-1" uk-grid>
                     <c:forEach var="card" items="${cardBookList}">
                         <div>
                             <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-border-rounded custom-link">
@@ -192,10 +192,8 @@
                                                     </div>
 
                                                     <div class="uk-flex uk-flex-between uk-flex-middle uk-text-right uk-margin-small-top">
-                                                        <!-- Botón de cancelar -->
                                                         <button class="uk-button uk-button-default uk-modal-close uk-width-auto" type="button"><spring:message code="button.cancel"/></button>
 
-                                                        <!-- Formulario de publicación -->
                                                         <form action="${pageContext.request.contextPath}/createpublication" method="post" class="uk-form-stacked">
                                                             <input type="hidden" name="bookId" value="${card.book.bookId}"/>
                                                             <input type="hidden" name="location" value="ACA VA LA UBICACION"/>
