@@ -55,7 +55,8 @@ public class ExchangeController {
         
         final ModelAndView mav = new ModelAndView("exchange/exchange_initialized_confirmation");
 
-        exchangeService.initializeExchange(completeBook.getSelectedBookId(), publicationId);
+        // completeBook.getSelectedBookId() ->  requesterBookID
+        exchangeService.initializeExchange(completeBook, publicationId);
 
         return mav;
     }

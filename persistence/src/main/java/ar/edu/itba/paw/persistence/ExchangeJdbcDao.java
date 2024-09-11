@@ -26,7 +26,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
 
 
     private static final RowMapper<Exchange> ROWMAPPER =
-            (rs, rowNum) -> new Exchange(rs.getLong("exchangeId"), rs.getLong("offererPubId"), rs.getLong("requesterPubId"), ExchangeState.fromInt(rs.getInt("exchangeState")), rs.getInt("acceptCode"), rs.getBoolean("offererReceivedBook"), rs.getBoolean("requesterReceivedBook"), rs.getTimestamp("exchangeDate"));
+            (rs, rowNum) -> new Exchange(rs.getLong("exchangeId"), rs.getLong("offererPubId"), rs.getLong("requesterPubId"), ExchangeState.fromInt(rs.getInt("exchangeState")), rs.getInt("acceptCode"), rs.getBoolean("offererReceivedBook"), rs.getBoolean("requesterReceivedBook"), rs.getTimestamp("exchangeStartDate"), rs.getTimestamp("exchangeEndDate"));
 
 
     public ExchangeJdbcDao(final DataSource ds, PublicationJdbcDao publicationJdbcDao, BookJdbcDao bookJdbcDao) {
@@ -100,11 +100,12 @@ public class ExchangeJdbcDao implements ExchangeDao {
         exchangeData.put("acceptCode", acceptCode);
         exchangeData.put("offererReceivedBook", false);
         exchangeData.put("requesterReceivedBook", false);
-        exchangeData.put("exchangeDate", startDate);
+        exchangeData.put("exchangeStartDate", startDate);
+        exchangeData.put("exchangeEndDate", null);
 
-        final Number generatedId = jdbcInsert.executeAndReturnKey(exchangeData);
+        Number id = jdbcInsert.executeAndReturnKey(exchangeData);
 
-        return new Exchange(generatedId.longValue(),  offererPubId,  requesterPubId,  ExchangeState.PENDING, acceptCode, false, false, startDate);
+        return new Exchange(id.longValue(), offererPubId, requesterPubId, ExchangeState.PENDING, acceptCode, false, false, startDate, null);
     }
 
     public List<Exchange> getExchangesByUserIdInvolved(long anUserId){

@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.persistence.ExchangeDao;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.models.utils.ResponseState;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,9 +23,10 @@ public class ExchangeServiceImpl implements ExchangeService {
     private final BookImageService bookImageService;
     private final LocationService locationService;
     private final UserService userService;
+    private final EmailService emailService;
 
 
-    public ExchangeServiceImpl(final ExchangeDao exchangeDao, BookService bookService, BookModelService bookModelService, ImageService imageService, PublicationService publicationService, BookAuthorService bookAuthorService, BookImageService bookImageService, LocationService locationService, UserService userService){
+    public ExchangeServiceImpl(final ExchangeDao exchangeDao, BookService bookService, BookModelService bookModelService, ImageService imageService, PublicationService publicationService, BookAuthorService bookAuthorService, BookImageService bookImageService, LocationService locationService, UserService userService, EmailService emailService){
         this.exchangeDao = exchangeDao;
         this.bookService = bookService;
         this.bookModelService = bookModelService;
@@ -34,6 +36,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         this.bookImageService = bookImageService;
         this.locationService = locationService;
         this.userService = userService;
+        this.emailService = emailService;
     }
 
 
@@ -61,13 +64,46 @@ public class ExchangeServiceImpl implements ExchangeService {
     }
 
     @Override
-    public Exchange initializeExchange(long requesterPubId, long offererPubId) {
-            Random random = new Random();
-            int acceptCode = Math.abs(random.nextInt());
-            Date date = new Date();
-            Timestamp timestamp = new Timestamp(date.getTime());
+    public void initializeExchange(CompleteBook requesterComplete, long offererPubId) {
+        // Insertar tupla de requester en publicacion con fecha actual y publicationState = 2 (OFFERER)
 
-        return exchangeDao.createExchange(offererPubId, requesterPubId, acceptCode, timestamp);
+
+        long location = locationService.newLocation(requesterComplete.getLocation());
+        long requesterId = bookService.getBookById(requesterComplete.getSelectedBookId()).get().getOwnerId();
+        long requesterPubId = publicationService.createPublication(requesterComplete.getSelectedBookId(), requesterId, location, PublicationState.OFFERED);
+
+        Random random = new Random();
+        int acceptCode = Math.abs(random.nextInt());
+        Date date = new Date();
+        Timestamp timestamp = new Timestamp(date.getTime());
+
+        Exchange ex = exchangeDao.createExchange(offererPubId, requesterPubId, acceptCode, timestamp);
+
+        Map<String, Object> variables = new HashMap<>();
+        Publication offererPub = publicationService.getPublicationById(ex.getOffererPubId()).get();
+        Publication requesterPub = publicationService.getPublicationById(ex.getRequesterPubId()).get();
+
+        Book bookOffered = bookService.getBookById(offererPub.getBookId()).get();
+        Book bookRequested = bookService.getBookById(requesterPub.getBookId()).get();
+
+        User oferrer = userService.findById(offererPub.getUserId()).get();
+        User requester = userService.findById(requesterPub.getUserId()).get();
+
+        String oferrerEmail = oferrer.getMail();
+
+        String bookModelOfferedTitle = bookModelService.getBookModelByBookModelId(bookOffered.getBookModelId()).getTitle();
+        String bookModelRequestedTitle = bookModelService.getBookModelByBookModelId(bookRequested.getBookModelId()).getTitle();
+
+
+        variables.put("requesterEmail", requester.getMail());
+        variables.put("requesterName", requester.getUsername());
+        variables.put("requestedPublication", bookModelRequestedTitle);
+        variables.put("offeredPublication", bookModelOfferedTitle);
+        variables.put("validationUrl", "http://localhost:8080/createexchange?accept_code=" + ex.getAcceptCode() + "&state=true");
+        variables.put("rejectionUrl", "http://localhost:8080/createexchange?accept_code=" + ex.getAcceptCode() +"&state=false");
+
+        emailService.sendEmail(oferrerEmail, variables, "exchangeRequest", "Requesting");
+
     }
 
 
