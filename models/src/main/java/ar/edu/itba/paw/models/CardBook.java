@@ -36,7 +36,7 @@ public class CardBook {
         return bookAuthors;
     }
 
-    public boolean canPublish() {
+    public boolean getCanPublish() {
         return canPublish;
     }
 

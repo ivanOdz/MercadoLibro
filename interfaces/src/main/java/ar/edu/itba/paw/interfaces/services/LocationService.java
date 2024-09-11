@@ -6,4 +6,6 @@ import org.springframework.stereotype.Service;
 public interface LocationService {
     String getLocationByPublicationId(long pubId);
 
+    long newLocation(String location);
+
 }

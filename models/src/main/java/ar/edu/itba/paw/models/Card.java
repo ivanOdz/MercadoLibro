@@ -63,4 +63,6 @@ public class Card {
     public long getUserId(){
         return publication.getUserId();
     }
+
+
 }

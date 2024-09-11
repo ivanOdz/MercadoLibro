@@ -5,17 +5,23 @@ import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.models.utils.PublicationState;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.Date;
+import java.sql.Timestamp;
 import java.sql.Types;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
 public class PublicationJdbcDao implements PublicationDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
     private static final RowMapper<Publication> ROWMAPPERPUBLICATIONS =
             (rs, rowNum) -> new Publication(
@@ -27,9 +33,14 @@ public class PublicationJdbcDao implements PublicationDao {
                     rs.getLong("locationId")
             );
 
+
     public PublicationJdbcDao(final DataSource ds) {
-        jdbcTemplate = new JdbcTemplate(ds);
+        jdbcTemplate =  new JdbcTemplate(ds);;
+        jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .usingGeneratedKeyColumns("publicationid")
+                .withTableName("publication");
     }
+
 
     @Override
     public List<Publication> getAllPublications() {
@@ -62,6 +73,18 @@ public class PublicationJdbcDao implements PublicationDao {
     public Optional<Publication> getPublicationStateByBookId(long bookId) {
         return jdbcTemplate.query("SELECT * FROM publication WHERE bookId = ? ORDER BY publicationDatetime DESC LIMIT 1", new Object[]{ bookId }, new int[]{ Types.BIGINT }, ROWMAPPERPUBLICATIONS).stream().findFirst();
 
+    }
+
+    @Override
+    public void createPublication(long bookId, long userId, long locationId) {
+        final Map<String, Object> md = new HashMap<>();
+        md.put("bookId", bookId);
+        md.put("userId", userId);
+        md.put("publicationState", PublicationState.CURRENT.getValue());
+        md.put("publicationDatetime", new Timestamp(new Date().getTime()));
+        md.put("locationId", locationId);
+
+        jdbcInsert.executeAndReturnKey(md);
     }
 }
 

@@ -1,17 +1,12 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.services.CardService;
-import ar.edu.itba.paw.interfaces.services.GenreService;
+import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Card;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.models.utils.BookStateWrapper;
 import ar.edu.itba.paw.models.utils.GenreWrapper;
 import ar.edu.itba.paw.models.utils.Genre;
-import ar.edu.itba.paw.interfaces.services.BookService;
-import ar.edu.itba.paw.interfaces.services.BookStateService;
-import ar.edu.itba.paw.interfaces.services.PublicationService;
-import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,18 +27,20 @@ import java.util.stream.Collectors;
 @Controller
 public class PublicationController {
 
-    private PublicationService ps;
-    private UserService us;
-    private CardService cs;
+    private final PublicationService ps;
+    private final UserService us;
+    private final CardService cs;
+    private final LocationService ls;
     @Autowired
     private GenreService genreService;
     @Autowired
     private BookStateService bookStateService;
     
-    public PublicationController(PublicationService ps, UserService us, CardService cs) {
+    public PublicationController(PublicationService ps, UserService us, CardService cs, LocationService ls) {
         this.ps = ps;
         this.us = us;
         this.cs = cs;
+        this.ls = ls;
     }
 
     @RequestMapping("/")
@@ -72,10 +69,14 @@ public class PublicationController {
         return index(search);
     }
 
-    @RequestMapping("/createpublication")
-    public ModelAndView createPublication(){
-        ModelAndView mav = new ModelAndView("home/publications");
-
+    @RequestMapping(path = "/createpublication", method = RequestMethod.POST)
+    public ModelAndView createPublication(@RequestParam(name = "bookId") long bookId, @RequestParam(name = "location") String location){
+        ModelAndView mav = new ModelAndView("book/book_home");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.getPrincipal() instanceof PawUserDetails pud) {
+            long locationId = ls.newLocation(location);
+            ps.createPublication(bookId, pud.getUser().getUserId(), locationId);
+        }
 
         return mav;
     }

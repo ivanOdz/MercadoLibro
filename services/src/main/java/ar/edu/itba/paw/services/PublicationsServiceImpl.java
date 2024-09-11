@@ -39,5 +39,10 @@ public class PublicationsServiceImpl implements PublicationService {
         return pubDao.getPublicationStateByBookId(bookId);
     }
 
+    @Override
+    public void createPublication(long bookId, long userId, long locationId) {
+        pubDao.createPublication(bookId, userId, locationId);
+    }
+
 
 }

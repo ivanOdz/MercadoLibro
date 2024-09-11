@@ -156,10 +156,10 @@
                     <h6 class="uk-text-muted"><spring:message code="book.list.select"/></h6>
                 </div>
 
-                <div class="uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m mb-1" uk-grid>
+                <div class="uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m" uk-grid>
                     <c:forEach var="card" items="${cardBookList}">
                         <div>
-                            <a href="/" class="uk-card uk-card-default uk-card-hover uk-card-body uk-border-rounded custom-link">
+                            <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-border-rounded custom-link">
                                 <figure class="uk-margin-bottom">
                                     <c:choose>
                                         <c:when test="${card.image != null}">
@@ -174,17 +174,20 @@
                                 <p class="small-gray-text custom-link">${card.authorsString}</p>
 
                                 <c:choose>
-                                    <c:when test="${true}">
-                                        <button class="uk-button uk-button-primary">Publicar</button>
+                                    <c:when test="${card.canPublish}">
+                                        <form action="${pageContext.request.contextPath}/createpublication" method="post" class="uk-form-stacked">
+                                            <input type="hidden" name="bookId" value="${card.book.bookId}"/>
+                                            <input type="hidden" name="location" value="Mexico"/>
+                                            <button type="submit" class="uk-button uk-button-primary uk-width-1-1"><spring:message code="book.publish.button"/></button>
+                                        </form>
                                     </c:when>
                                     <c:otherwise>
-                                        <button class="uk-button uk-button-primary" disabled>Publicar</button>
+                                        <button class="uk-button uk-button-primary uk-width-1-1" disabled><spring:message code="book.publish.button"/></button>
                                     </c:otherwise>
                                 </c:choose>
+                            </div>
                         </div>
-
                     </c:forEach>
-
                 </div>
             </div>
         </div>

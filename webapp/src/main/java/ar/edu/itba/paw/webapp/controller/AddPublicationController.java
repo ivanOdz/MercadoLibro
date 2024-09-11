@@ -83,7 +83,7 @@ public class AddPublicationController {
         return mav;
     }
 
-    @PostMapping(path = "/createpublication")
+    @PostMapping(path = "/createpublicationotroooo")
     public ModelAndView addPublication(@Valid @ModelAttribute("publicationForm") BookForm bookForm,
                                        BindingResult errors,
                                        @RequestParam(name = "publication_id") long publicationId, @RequestParam(name = "is_for_exchange") boolean isForExchange, @RequestParam(name = "submited_mail", defaultValue = "") String submited_mail) {

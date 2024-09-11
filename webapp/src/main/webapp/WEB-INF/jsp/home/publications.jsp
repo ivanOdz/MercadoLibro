@@ -65,7 +65,7 @@
 				<ul class="uk-navbar-nav">
 					<li><a class="pl-1 pr-1" href="<c:url value="${exchangeUrl}"/>"><spring:message code="home.exchange.view"/></a></li>
 					<li>
-						<a class="pl-1 pr-1"href="<c:url value="${booksUrl}"/>"><spring:message code="home.book.view"/></a>
+						<a class="pl-1 pr-1" href="<c:url value="${booksUrl}"/>"><spring:message code="home.book.view"/></a>
 						<div class="uk-navbar-dropdown">
 							<ul class="uk-nav uk-navbar-dropdown-nav">
 								<li class="uk-active uk-margin-small-top">
@@ -157,7 +157,7 @@
 
 				<div class="uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m mb-1" uk-grid>
 					<c:forEach var="card" items="${publications}">
-						<div>
+						/*<div>
 							<a href="<c:url value='publications/${card.publication.publicationId}'>
 								<c:param name='publication_id' value='${card.publication.publicationId}'/>
 								</c:url>" class="uk-card uk-card-default uk-card-hover uk-card-body uk-border-rounded custom-link">
@@ -171,10 +171,12 @@
 										</c:otherwise>
 									</c:choose>
 								</figure>
+
 								<h5 class="uk-card-title custom-link">${card.bookModel.title}</h5>
 								<p class="small-gray-text custom-link">${card.authorsString}</p>
 							</a>
 						</div>
+						<p>hola</p>
 					</c:forEach>
 				</div>
 			</div>

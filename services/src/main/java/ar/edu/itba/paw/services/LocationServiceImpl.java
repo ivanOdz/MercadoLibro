@@ -16,4 +16,9 @@ public class LocationServiceImpl implements LocationService {
     public String getLocationByPublicationId(long pubId) {
         return locationDao.getLocationByPublicationId(pubId);
     }
+
+    @Override
+    public long newLocation(String location) {
+        return locationDao.newLocation(location);
+    }
 }
