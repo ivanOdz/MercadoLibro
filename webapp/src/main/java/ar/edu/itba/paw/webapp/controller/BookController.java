@@ -2,7 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.BookModel;
-import ar.edu.itba.paw.models.Card;
+import ar.edu.itba.paw.models.CardBook;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 import ar.edu.itba.paw.webapp.form.BookForm;
@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -98,7 +100,11 @@ public class BookController {
     }
 
     @PostMapping("/book/upload_book")
-    public ModelAndView uploadBook(@ModelAttribute("bookForm") BookForm bookForm) {
+    public ModelAndView uploadBook(@Valid @ModelAttribute("bookForm") BookForm bookForm, BindingResult errors) {
+
+        if (errors.hasErrors()) {
+            return bookForm(bookForm);
+        }
 
         // TODO: pagina que informe qeu se agrego el libro de forma correcta
 

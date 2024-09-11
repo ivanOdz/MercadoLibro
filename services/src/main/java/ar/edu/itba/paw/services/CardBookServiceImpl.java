@@ -2,11 +2,13 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.models.utils.CardBook;
+import ar.edu.itba.paw.models.CardBook;
+import ar.edu.itba.paw.models.utils.PublicationState;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CardBookServiceImpl implements CardBookService {
@@ -15,12 +17,14 @@ public class CardBookServiceImpl implements CardBookService {
     private final ImageService imageService;
     private final BookAuthorService bookAuthorService;
     private final BookModelService bookModelService;
+    private final PublicationService publicationService;
 
-    public CardBookServiceImpl(BookService bookService, ImageService imageService, BookAuthorService bookAuthorService, BookModelService bookModelService) {
+    public CardBookServiceImpl(BookService bookService, ImageService imageService, BookAuthorService bookAuthorService, BookModelService bookModelService, PublicationService publicationService) {
         this.bookService = bookService;
         this.imageService = imageService;
         this.bookAuthorService = bookAuthorService;
         this.bookModelService = bookModelService;
+        this.publicationService = publicationService;
     }
 
 
@@ -32,7 +36,13 @@ public class CardBookServiceImpl implements CardBookService {
             Image image = imageService.getFirstImageByBookId(book.getBookId());
             List<Author> authors = bookAuthorService.getAuthorsByBookId(book.getBookId());
 
-            cardBookList.add(new CardBook(book, bookModel, image, authors));
+            boolean canPublish = false;
+            Optional<Publication> publication = publicationService.getPublicationStateByBookId(book.getBookId());
+            if(publication.isEmpty() || publication.get().getPublicationState() == PublicationState.TERMINATED) {
+                canPublish = true;
+            }
+
+            cardBookList.add(new CardBook(book, bookModel, image, authors, canPublish));
         }
         return cardBookList;
     }

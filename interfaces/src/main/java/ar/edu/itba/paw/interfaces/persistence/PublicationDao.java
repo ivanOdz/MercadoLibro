@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
 import ar.edu.itba.paw.models.Publication;
+import ar.edu.itba.paw.models.utils.PublicationState;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,5 +18,6 @@ public interface PublicationDao {
 
     void terminatePublication(long pubId);
 
+    Optional<Publication> getPublicationStateByBookId(long bookId);
 
 }
