@@ -53,9 +53,13 @@ public class PublicationJdbcDao implements PublicationDao {
             return getAllPublicationsAvailable();
         }
         return jdbcTemplate.query(
-                "SELECT * FROM publication WHERE publicationState = ? AND bookId IN (SELECT bookId from book WHERE bookModelId IN (SELECT bookModelId FROM book_model WHERE LOWER(title) LIKE LOWER(?))",
-                new Object[]{ PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%" }, new int[]{ Types.INTEGER, Types.VARCHAR }, ROWMAPPERPUBLICATIONS);
+                "SELECT * FROM publication WHERE publicationState = ? AND bookId IN (SELECT bookId FROM book WHERE bookModelId IN (SELECT bookModelId FROM book_model WHERE LOWER(title) LIKE LOWER(?)))",
+                new Object[]{ PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%" },
+                new int[]{ Types.INTEGER, Types.VARCHAR },
+                ROWMAPPERPUBLICATIONS
+        );
     }
+
 
     @Override
     public void terminatePublication(long pubId) {

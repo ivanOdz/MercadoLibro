@@ -9,13 +9,13 @@
 <html lang="es">
 <%@include file="/WEB-INF/jsp/head/headers.jsp"%>
 <head>
-	<link href="${pageContext.request.contextPath}/css/publications.css?v=1.0" rel="stylesheet"/>
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
 	<link rel="icon" href="${pageContext.request.contextPath}/images/favicon.ico" type="image/x-icon"/>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
+	<link href="${pageContext.request.contextPath}/css/publications.css" rel="stylesheet"/>
 
 	<title><spring:message code="publications.list.brand.logo"/></title>
 
@@ -26,8 +26,8 @@
 <c:url var="profileUrl" value="/profile"/>
 <c:url var="newBookFromScratch" value="/book/book_form"/>
 
-<nav class="uk-navbar-container uk-background-primary uk-box-shadow-small" uk-sticky>
-	<div class="uk-container">
+<nav class="background-custom uk-box-shadow-small" uk-sticky>
+	<div class="uk-container background-custom">
 		<div  uk-navbar>
 		<div class="uk-navbar-left">
 			<ul class="uk-navbar-nav">

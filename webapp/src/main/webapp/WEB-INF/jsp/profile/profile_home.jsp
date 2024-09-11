@@ -1,7 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <!DOCTYPE html>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -27,12 +27,13 @@
 
 <nav class="uk-navbar-container uk-background-primary uk-box-shadow-small" uk-sticky>
     <div class="uk-container">
-        <div  uk-navbar>
+        <div uk-navbar>
             <div class="uk-navbar-left">
                 <ul class="uk-navbar-nav">
                     <li>
                         <a href="${pageContext.request.contextPath}/">
-                            <img src="${pageContext.request.contextPath}/images/mercado_libro.webp" alt="Logo Icon" class="icon-style">
+                            <img src="${pageContext.request.contextPath}/images/mercado_libro.webp" alt="Logo Icon"
+                                 class="icon-style">
                         </a>
                     </li>
                     <li>
@@ -48,18 +49,26 @@
 
             <div class="uk-navbar-right">
                 <ul class="uk-navbar-nav">
-                    <li><a class="pl-1 pr-1" href="<c:url value="${exchangeUrl}"/>"><spring:message code="home.exchange.view"/></a></li>
+                    <li><a class="pl-1 pr-1" href="<c:url value="${exchangeUrl}"/>"><spring:message
+                            code="home.exchange.view"/></a></li>
                     <li>
-                        <a class="pl-1 pr-1"href="<c:url value="${booksUrl}"/>"><spring:message code="home.book.view"/></a>
+                        <a class="pl-1 pr-1" href="<c:url value="${booksUrl}"/>"><spring:message
+                                code="home.book.view"/></a>
                         <div class="uk-navbar-dropdown">
                             <ul class="uk-nav uk-navbar-dropdown-nav">
-                                <li class="uk-active uk-margin-small-top"><a href="<c:url value="${booksUrl}"><spring:message code="home.book.view.books"/></a></li>
-                                <li class="uk-margin-small-top"><a href="#"><spring:message code="home.book.view.uploadnew"/></a></li>
-                                <li class="uk-margin-small-top"><a href="#"><spring:message code="home.book.view.uploadnewprecharged"/></a></li>
+                                <li class="uk-active uk-margin-small-top">
+                                    <a href="<c:url value="${booksUrl}"/>"/>
+                                    <spring:message code="home.book.view.books"/>
+                                    </a></li>
+                                <li class="uk-margin-small-top"><a href="#"><spring:message
+                                        code="home.book.view.uploadnew"/></a></li>
+                                <li class="uk-margin-small-top"><a href="#"><spring:message
+                                        code="home.book.view.uploadnewprecharged"/></a></li>
                             </ul>
                         </div>
                     </li>
-                    <li><a class="pl-1 pr-1" href="<c:url value="${profileUrl}"/>"><spring:message code="home.profile.view"/></a></li>
+                    <li><a class="pl-1 pr-1" href="<c:url value="${profileUrl}"/>"><spring:message
+                            code="home.profile.view"/></a></li>
                 </ul>
             </div>
         </div>
@@ -74,7 +83,8 @@
     </div>
     <div class="uk-container uk-margin-top">
         <div class="uk-grid ml-1" uk-grid>
-            <div class="uk-width-1-3@s exchange-information-section uk-border-rounded uk-box-shadow-small mt-1 mb-1 uk-height-viewport" uk-height-viewport="offset-top: true">
+            <div class="uk-width-1-3@s exchange-information-section uk-border-rounded uk-box-shadow-small mt-1 mb-1 uk-height-viewport"
+                 uk-height-viewport="offset-top: true">
             </div>
 
             <div class="uk-width-expand uk-margin-top">
@@ -83,12 +93,14 @@
                 </p>
                 <c:forEach var="review" items="${reviews}">
                     <div class="uk-card uk-card-default uk-card-body uk-border-rounded uk-box-shadow-small mb-1">
-<%--                        <p>${review.reviewDescription}</p>--%>
+                            <%--                        <p>${review.reviewDescription}</p>--%>
                     </div>
                 </c:forEach>
             </div>
         </div>
     </div>
+</div>
+
 </div>
 </body>
 </html>
