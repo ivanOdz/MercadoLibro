@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.persistence.BookModelDao;
 import ar.edu.itba.paw.models.BookModel;
 import ar.edu.itba.paw.models.Location;
+import ar.edu.itba.paw.models.utils.BookDimension;
 import ar.edu.itba.paw.models.utils.Genre;
 import ar.edu.itba.paw.models.utils.Language;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -53,7 +54,7 @@ public class BookModelJdbcDao implements BookModelDao {
     }
 
     @Override
-    public BookModel addBookModel(String isbn, String title, String editorial, String description, Genre genre, int edition, int weight, int pages, int language, int dimension, Short publicationYear, boolean pocketEdition, boolean hardcover) {
+    public BookModel addBookModel(String isbn, String title, String editorial, String description, Genre genre, int edition, int weight, int pages, Language language, BookDimension dimension, Short publicationYear, boolean pocketEdition, boolean hardcover) {
         final Map<String, Object> md = new HashMap<>();
         md.put("isbn", isbn);
         md.put("title", title);
@@ -63,15 +64,15 @@ public class BookModelJdbcDao implements BookModelDao {
         md.put("edition", edition);
         md.put("weight", weight);
         md.put("pages", pages);
-        md.put("booklanguage", language);
-        md.put("dimension", dimension);
+        md.put("booklanguage", language.getValue());
+        md.put("dimension", dimension.getValue());
         md.put("publicationyear", publicationYear);
         md.put("ispocketedition", pocketEdition);
         md.put("ishardcover", hardcover);
 
         final Number modelId = jdbcInsert.executeAndReturnKey(md);
 
-        return new BookModel(modelId.longValue(), isbn,title,editorial,description,genre,edition,weight,pages,Language.fromInt(language), dimension, publicationYear, pocketEdition, hardcover);
+        return new BookModel(modelId.longValue(), isbn,title,editorial,description,genre,edition,weight,pages,language, dimension.getValue(), publicationYear, pocketEdition, hardcover);
     }
 }
 

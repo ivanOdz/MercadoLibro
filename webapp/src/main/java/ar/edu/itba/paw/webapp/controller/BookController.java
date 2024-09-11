@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,6 +51,13 @@ public class BookController {
 
     @Autowired
     private BookStateService bookStateService;
+
+    @Autowired
+    private LanguageService languageService;
+
+    @Autowired
+    private BookDimensionService bookDimensionService;
+
 
     public BookController(SinglePublicationService ps, ImageService imageService, EmailService emailService, ExchangeService exchangeService, PublicationService publicationService, BookService bookService, BookModelService bookModelService, CardBookService cardBookService, UserService userService) {
         this.ps = ps;
@@ -94,19 +102,20 @@ public class BookController {
         mav.addObject("bookForm", bookForm);
         mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
         mav.addObject("bookStates", List.of(BookState.values()).stream().map(bookStatus -> new BookStateWrapper(bookStatus, bookStateService.getBookStateDisplayName(bookStatus))).collect(Collectors.toList()));
-
-
+        mav.addObject("languages", List.of(Language.values()).stream().map(language -> new LanguageWrapper(language, languageService.getLanguageDisplayName(language))).collect(Collectors.toList()));
+        mav.addObject("dimensions", List.of(BookDimension.values()).stream().map(dimension -> new BookDimensionWrapper(dimension, bookDimensionService.getDimensionDisplayName(dimension))).collect(Collectors.toList()));
+        mav.addObject("currentYear", Year.now().getValue());
         return mav;
     }
 
     @PostMapping("/book/upload_book")
     public ModelAndView uploadBook(@Valid @ModelAttribute("bookForm") BookForm bookForm, BindingResult errors) {
 
-        if (errors.hasErrors()) {
+
+        if(errors.hasErrors()){
+            System.out.println(errors.getAllErrors());
             return bookForm(bookForm);
         }
-
-        // TODO: pagina que informe qeu se agrego el libro de forma correcta
 
         BookModel bookModel = bookModelService.addBookModel(
                 bookForm.getIsbn(),
@@ -130,6 +139,6 @@ public class BookController {
             bookService.createBook(bookModel.getBookModelId(), pud.getUser().getUserId(), bookForm.getBookState(), 0,bookForm.getRating());
         }
 
-        return new ModelAndView("redirect:/");
+        return new ModelAndView("redirect:/book");
     }
 }
