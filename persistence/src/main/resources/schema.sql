@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS book_model (
       pages               INTEGER,
       bookLanguage        INTEGER,
       dimension           INTEGER, -- SMALL, MEDIUM, LARGE.
-      publicationDate     SMALLINT,
+      publicationYear     SMALLINT,
       isPocketEdition     BOOLEAN,
       isHardcover         BOOLEAN
 );
