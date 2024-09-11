@@ -6,5 +6,8 @@ import java.util.Optional;
 
 public interface ImageDao {
     Image createImage(byte[] image);
+
     Optional<Image> getImageById(long imageId);
+
+    Image getFirstImageByBookId(long bookId);
 }

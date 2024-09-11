@@ -33,4 +33,9 @@ public class ImageServiceImpl implements ImageService {
         return imageDao.getImageById(imageId);
     }
 
+    @Override
+    public Image getFirstImageByBookId(long bookId) {
+        return imageDao.getFirstImageByBookId(bookId);
+    }
+
 }

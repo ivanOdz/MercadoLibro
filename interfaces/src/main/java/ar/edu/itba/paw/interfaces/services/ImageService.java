@@ -10,6 +10,9 @@ import java.util.Optional;
 @Service
 public interface ImageService {
     Image saveImage(MultipartFile image);
+
     Optional<Image> getImageById(long imageId);
+
+    Image getFirstImageByBookId (long bookId);
 
 }

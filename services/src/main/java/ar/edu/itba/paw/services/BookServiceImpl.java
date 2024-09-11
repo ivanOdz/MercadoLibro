@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.interfaces.persistence.BookDao;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -37,5 +38,10 @@ public class BookServiceImpl implements BookService {
     @Override
     public Book getBookByPubId(long pubId) {
         return bookDao.getBookByPubId(pubId);
+    }
+
+    @Override
+    public List<Book> getAllBooksByOwnerIdAndFilteredBy(long ownerId, String search) {
+        return bookDao.getAllBooksByOwnerIdAndFilteredBy(ownerId, search);
     }
 }

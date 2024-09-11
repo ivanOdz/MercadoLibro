@@ -68,6 +68,12 @@ public class BookJdbcDao implements BookDao {
     public Book getBookByPubId(long pubId) {
         return jdbcTemplate.query("SELECT * FROM book b JOIN publication p ON b.bookId = p.bookId WHERE p.publicationid = ?", new Object[]{ pubId }, new int[]{ Types.BIGINT }, ROWMAPPERBOOKS).stream().findFirst().get();
     }
+
+    @Override
+    public List<Book> getAllBooksByOwnerIdAndFilteredBy(long ownerId, String search) {
+        return jdbcTemplate.query("SELECT * FROM book WHERE ownerId = ? AND bookModelId IN (SELECT bookModelId FROM book_model WHERE LOWER(title) LIKE LOWER(?))",
+                new Object[]{ ownerId, "%" + search.toLowerCase() + "%" }, new int[]{ Types.BIGINT, Types.VARCHAR }, ROWMAPPERBOOKS);
+    }
 }
 
 

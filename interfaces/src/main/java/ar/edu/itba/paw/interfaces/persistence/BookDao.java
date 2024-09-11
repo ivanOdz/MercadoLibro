@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.models.utils.Genre;
 import ar.edu.itba.paw.models.utils.PublicationState;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface BookDao {
@@ -16,4 +17,6 @@ public interface BookDao {
     void exchangeOwnership(long b1, long b2);
 
     Book getBookByPubId(long pubId);
+
+    List<Book> getAllBooksByOwnerIdAndFilteredBy(long ownerId, String search);
 }
