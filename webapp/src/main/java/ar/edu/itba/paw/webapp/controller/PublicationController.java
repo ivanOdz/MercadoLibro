@@ -1,8 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.Card;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.models.utils.BookStateWrapper;
 import ar.edu.itba.paw.models.utils.GenreWrapper;
@@ -28,16 +27,21 @@ public class PublicationController {
     private final UserService us;
     private final CardService cs;
     private final LocationService ls;
+    private final BookModelService bms;
+    private final CompleteBookService cbs;
+
     @Autowired
     private GenreService genreService;
     @Autowired
     private BookStateService bookStateService;
     
-    public PublicationController(PublicationService ps, UserService us, CardService cs, LocationService ls) {
+    public PublicationController(PublicationService ps, UserService us, CardService cs, LocationService ls, BookModelService bms, CompleteBookService cbs) {
         this.ps = ps;
         this.us = us;
         this.cs = cs;
         this.ls = ls;
+        this.bms = bms;
+        this.cbs = cbs;
     }
 
     @RequestMapping("/")
@@ -97,8 +101,22 @@ public class PublicationController {
     public ModelAndView publicationDetail(@PathVariable(name = "publication_id") long publicationId) {
         final ModelAndView mav = new ModelAndView("home/publicationDetail");
         mav.addObject("card", cs.createCard(publicationId));
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
+
+            List<CompleteBook> completeBooks = cbs.getCompleteAvailableBooksByUserId(pud.getUser().getUserId());
+
+            // Aquí estamos creando un objeto de modelo vacío
+            CompleteBook completeBookParam = new CompleteBook(null, null);
+            mav.addObject("completeBookParam", completeBookParam);
+
+            mav.addObject("completeBooks", completeBooks);
+            mav.addObject("publication_id", publicationId);
+        }
         return mav;
     }
+
 
     // Esto tienen que volar
     @RequestMapping("/submitmail")

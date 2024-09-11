@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.Types;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -73,6 +74,12 @@ public class BookModelJdbcDao implements BookModelDao {
         final Number modelId = jdbcInsert.executeAndReturnKey(md);
 
         return new BookModel(modelId.longValue(), isbn,title,editorial,description,genre,edition,weight,pages,language, dimension.getValue(), publicationYear, pocketEdition, hardcover);
+    }
+
+    @Override
+    public List<BookModel> getBookModelByUserId(long userId) {
+        return jdbcTemplate.query("SELECT bm.* FROM book b JOIN book_model bm ON b.bookModelId = bm.bookModelId JOIN users u ON b.ownerId = u.userId WHERE b.ownerId = ?"
+        ,new Object[] { userId }, new int[] {Types.BIGINT}, ROWMAPPERBOOKMODEL);
     }
 }
 

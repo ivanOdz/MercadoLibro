@@ -17,8 +17,9 @@ public class CardServiceImpl implements CardService {
     private final BookModelService bookModelService;
     private final BookImageService bookImageService;
     private final LocationService locationService;
+    private final CardBookService cardBookService;
 
-    public CardServiceImpl(BookService bookService, BookAuthorService bookAuthorService, ImageService imageService, PublicationService publicationsService, BookModelService bookModelService, BookImageService bookImageService, LocationService locationService) {
+    public CardServiceImpl(BookService bookService, BookAuthorService bookAuthorService, ImageService imageService, PublicationService publicationsService, BookModelService bookModelService, BookImageService bookImageService, LocationService locationService, CardBookService cardBookService) {
         this.bookService = bookService;
         this.bookAuthorService = bookAuthorService;
         this.imageService = imageService;
@@ -26,6 +27,7 @@ public class CardServiceImpl implements CardService {
         this.bookModelService = bookModelService;
         this.bookImageService = bookImageService;
         this.locationService = locationService;
+        this.cardBookService = cardBookService;
     }
 
     @Override
@@ -44,9 +46,7 @@ public class CardServiceImpl implements CardService {
         List<Card> cardList = new ArrayList<>();
         for (Publication publication : publicationsList) {
             Book book = bookService.getBookById(publication.getBookId()).get();
-
             List<BookImage> bookImage = bookImageService.getImageByBookId(book.getBookId());
-
             List<Author> authors = bookAuthorService.getAuthorsByBookId(book.getBookId());
             BookModel bookModel = bookModelService.getBookModelByBookModelId(book.getBookModelId());
             String location = locationService.getLocationByPublicationId(publication.getPublicationId());

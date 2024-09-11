@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 
 <html>
@@ -16,6 +17,11 @@
   <title><spring:message code="publication.details.title"/></title>
 </head>
 <body>
+<c:url var="exchangeUrl" value="/exchange"/>
+<c:url var="booksUrl" value="/book"/>
+<c:url var="profileUrl" value="/profile"/>
+<c:url var="newBookFromScratch" value="/book/book_form"/>
+
 <nav class="uk-navbar-container uk-background-primary uk-box-shadow-small" uk-sticky>
   <div class="uk-container">
     <div  uk-navbar>
@@ -208,40 +214,29 @@
       <p class="uk-text-medium" style="font-size: 25px; max-width: 9lh; text-align: center; margin-left: 1lh;"><spring:message code="exchange.description2"/></p>
     </div>
 
-    <div class="uk-margin">
-      <label class="uk-form-label" for="form-horizontal-select">Elija un libro de su biblioteca</label>
-      <div class="uk-form-controls">
-        <select class="uk-select" id="form-horizontal-select">
-          <c:forEach var="book" items="${books}">
-            <option>
-                  <a href="<c:url value='publications/${card.publication.publicationId}'>
-                                    <c:param name='publication_id' value='${card.publication.publicationId}'/>
-                                    </c:url>" class="uk-card uk-card-default uk-card-hover uk-card-body uk-border-rounded custom-link">
-                  <figure class="uk-margin-bottom">
-                    <c:choose>
-                      <c:when test="${card.bookImages != null}">
-                        <img class="book-image" src="${pageContext.request.contextPath}/images/${card.bookImages[0].imageId}" alt="bookImage"/>
-                      </c:when>
-                      <c:otherwise>
-                        <img class="book-image" src="${pageContext.request.contextPath}/images/book.jpg" alt="book"/>
-                      </c:otherwise>
-                    </c:choose>
-                  </figure>
+    <div class="uk-container uk-margin-top">
+      <form:form action="${pageContext.request.contextPath}/exchange/initializeexchange" method="post" modelAttribute="completeBookParam" enctype="multipart/form-data">
+        <div class="uk-margin">
+          <div class="uk-form-controls">
+            <form:select path="selectedBookId" cssClass="uk-select">
+              <c:forEach var="completeBook" items="${completeBooks}">
+                <form:option value="${completeBook.book.bookId}" label="${completeBook.bookModel.title}" />
+              </c:forEach>
+            </form:select>
+          </div>
+        </div>
 
-                  <h5 class="uk-card-title custom-link">${card.bookModel.title}</h5>
-                  <p class="small-gray-text custom-link">${card.authorsString}</p>
-                </a>
-            </option>
-          </c:forEach>
-        </select>
-      </div>
-    </div>
-    <div class="uk-margin-top uk-button-group" style="margin-left: 50px;">
-      <button class="uk-button uk-button-primary"> <spring:message code="exchange.button.description"/> </button>
+        <div class="form-container">
+          <input type="hidden" name="publication_id" value="${publication_id}">
+          <button type="submit" class="uk-button uk-button-primary">
+            <spring:message code="add.publication.submit"/>
+          </button>
+        </div>
+      </form:form>
     </div>
   </div>
-
-</div>
+  </div>
 </div>
 </body>
 </html>
+

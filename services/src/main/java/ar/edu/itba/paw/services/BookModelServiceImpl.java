@@ -22,6 +22,7 @@ public class BookModelServiceImpl implements BookModelService {
 
     private final BookAuthorService bookAuthorService;
 
+
     public BookModelServiceImpl(BookModelDao bookModelDao, AuthorService authorService, BookAuthorService bookAuthorService) {
         this.bookModelDao = bookModelDao;
         this.authorService = authorService;
@@ -42,5 +43,10 @@ public class BookModelServiceImpl implements BookModelService {
             bookAuthorService.createBookAuthor(bookModel.getBookModelId(),a.getAuthorId());
         }
         return bookModel;
+    }
+
+    @Override
+    public List<BookModel> getBookModelByUserId(long userId) {
+        return bookModelDao.getBookModelByUserId(userId);
     }
 }

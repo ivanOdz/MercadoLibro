@@ -6,7 +6,9 @@ import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -47,20 +49,15 @@ public class ExchangeController {
         return mav;
     }
 
-    @RequestMapping("exchange/initializeexchange")
-    public ModelAndView createExchange(@RequestParam long offererPubId, @RequestParam long requesterBookId){
-        final ModelAndView mav = new ModelAndView("exchange/exchange_initialized_confirmation");
+    @RequestMapping(path = "/exchange/initializeexchange", method = RequestMethod.POST)
+   // public ModelAndView createExchange(@RequestParam (name = "publication_id") long offererPubId, @RequestParam (name = "bookId") long bookId){
+    public ModelAndView createExchange(@ModelAttribute("completeBookParam") CompleteBook completeBook, @RequestParam("publication_id") long publicationId){
+    final ModelAndView mav = new ModelAndView("exchange/exchange_initialized_confirmation");
 
-        // Dado el requesterBookId me tengo que fijar si existe una publicacion, caso contrario creo la publicacion y
-        // luego obtengo el id de la publicacion
-
-
-        //Exchange exchange = exchangeService.initializeExchange(requesterBookId, offererPubId);
+        exchangeService.initializeExchange(completeBook.getBook().getBookId(), publicationId);
 
         return mav;
     }
-
-
 
 
     @RequestMapping("/exchange/accepted")
@@ -70,13 +67,11 @@ public class ExchangeController {
         return mav;
     }
 
-
     @RequestMapping("/exchange/invalid")
     public ModelAndView exchangeRejected() {
 
         return new ModelAndView("/exchange/invalid");
     }
-
 
     @RequestMapping("/createexchange")
     public ModelAndView exchange(@RequestParam(name = "accept_code") int acceptCode, @RequestParam(name = "state") boolean state) {
