@@ -11,6 +11,10 @@ import java.util.List;
 public class UserReviewServiceImpl implements UserReviewService {
     UserReviewDao urDao;
 
+    public UserReviewServiceImpl(UserReviewDao urDao) {
+        this.urDao = urDao;
+    }
+
     @Override
     public List<UserReview> getReviewsByUserId(long userId) {
         return urDao.getReviewsByUserId(userId);
