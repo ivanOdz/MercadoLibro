@@ -266,14 +266,14 @@
                             <!-- Mostrar errores de validación -->
                             <form:errors path="rating" element="p" cssStyle="color: red;" />
 
-                            <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
-                                <label>
-                                    <spring:message code="add.book.pocket"/>
-                                    <form:input path="isPocketEdition" class="uk-checkbox" type="checkbox"/>
+<%--                            <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">--%>
+<%--                                <label>--%>
+<%--                                    <spring:message code="add.book.pocket"/>--%>
+<%--                                    <form:input path="isPocketEdition" class="uk-checkbox" type="checkbox"/>--%>
 
-                                </label>
-                                <label><input class="uk-checkbox" type="checkbox"> B</label>
-                            </div>
+<%--                                </label>--%>
+<%--                                <label><input class="uk-checkbox" type="checkbox"> B</label>--%>
+<%--                            </div>--%>
                         </div>
 
                         <div class="uk-container uk-margin-top">
