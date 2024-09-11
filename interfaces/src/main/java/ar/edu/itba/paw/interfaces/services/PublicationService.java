@@ -14,7 +14,7 @@ public interface PublicationService {
 
     Optional<Publication> getPublicationById(long publicationId);
 
-    List<Publication> getAllPublicationsFilteredBy(String search);
+    List<Publication> getAllPublicationsFilteredBy(String search, long userId);
 
     Optional<Publication> getPublicationStateByBookId(long bookId);
 

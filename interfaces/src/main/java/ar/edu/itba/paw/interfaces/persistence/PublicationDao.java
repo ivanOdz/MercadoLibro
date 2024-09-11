@@ -12,9 +12,8 @@ public interface PublicationDao {
 
     Optional<Publication> getPublicationById(long publicationId);
 
-    List<Publication> getAllPublicationsFilteredBy(String search);
+    List<Publication> getAllPublicationsFilteredBy(String search, long userId);
 
-    List<Publication> getAllPublicationsAvailable();
 
     void terminatePublication(long pubId);
 

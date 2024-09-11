@@ -37,25 +37,17 @@ public class PublicationJdbcDao implements PublicationDao {
     }
 
     @Override
-    public List<Publication> getAllPublicationsAvailable() {
-        return jdbcTemplate.query("SELECT * FROM publication WHERE publicationState = ?", ROWMAPPERPUBLICATIONS, PublicationState.CURRENT.getValue());
-    }
-
-    @Override
     public Optional<Publication> getPublicationById(long pubId) {
         return jdbcTemplate.query("SELECT * FROM publication WHERE publicationId = ?", new Object[]{ pubId },
                 new int[]{ Types.BIGINT }, ROWMAPPERPUBLICATIONS).stream().findFirst();
     }
 
     @Override
-    public List<Publication> getAllPublicationsFilteredBy(String search) {
-        if (search.compareTo("") == 0) {
-            return getAllPublicationsAvailable();
-        }
+    public List<Publication> getAllPublicationsFilteredBy(String search, long userId) {
         return jdbcTemplate.query(
-                "SELECT * FROM publication WHERE publicationState = ? AND bookId IN (SELECT bookId FROM book WHERE bookModelId IN (SELECT bookModelId FROM book_model WHERE LOWER(title) LIKE LOWER(?)))",
-                new Object[]{ PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%" },
-                new int[]{ Types.INTEGER, Types.VARCHAR },
+                "SELECT * FROM publication WHERE publicationState = ? AND userId <> ? AND bookId IN (SELECT bookId FROM book WHERE bookModelId IN (SELECT bookModelId FROM book_model WHERE LOWER(title) LIKE LOWER(?)))",
+                new Object[]{ PublicationState.CURRENT.getValue(), userId,"%" + search.toLowerCase() + "%" },
+                new int[]{ Types.INTEGER, Types.BIGINT, Types.VARCHAR },
                 ROWMAPPERPUBLICATIONS
         );
     }

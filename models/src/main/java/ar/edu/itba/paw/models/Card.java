@@ -8,14 +8,14 @@ public class Card {
     private Publication publication;
     private Book book;
     private BookModel bookModel;
-    private List<Image> images;
+    private List<BookImage> bookImages;
     private List<Author> bookAuthors;
     private String location;
 
-    public Card(Publication publication, Book book, BookModel bookModel, List<Image> images, List<Author> bookAuthors, String location) {
+    public Card(Publication publication, Book book, BookModel bookModel,List<BookImage> images, List<Author> bookAuthors, String location) {
         this.publication = publication;
         this.book = book;
-        this.images = images;
+        this.bookImages = bookImages;
         this.bookAuthors = bookAuthors;
         this.location = location;
     }
@@ -32,8 +32,8 @@ public class Card {
         return bookModel;
     }
 
-    public List<Image> getImages() {
-        return images;
+    public List<BookImage> getImages() {
+        return bookImages;
     }
 
     public String getLocation() {

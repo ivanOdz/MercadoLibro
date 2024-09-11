@@ -52,16 +52,18 @@ public class PublicationController {
     public ModelAndView index(@RequestParam(name = "search", defaultValue = "") String search) {
     	
         final ModelAndView mav = new ModelAndView("home/publications");
-        List<Card> cardList = cs.buildCardList(ps.getAllPublicationsFilteredBy(search));
-        mav.addObject("publications", cardList);
-        mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
-        mav.addObject("bookStates", List.of(BookState.values()).stream().map(bookStatus -> new BookStateWrapper(bookStatus, bookStateService.getBookStateDisplayName(bookStatus))).collect(Collectors.toList()));
-        // user profile data
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.getPrincipal() instanceof PawUserDetails pud) {
-            mav.addObject("loggedUser", pud.getUser());
-            //List<Card> cardList = cs.buildCardList(ps.getAllPublicationsFilteredBy(search).getPublications().stream().filter(c -> (Long.compare(c.getUserId(), pud.getUser().getId()) != 0)).toList());
-            //mav.addObject("publications", cardList);
+            List<Card> cardList = cs.buildCardList(ps.getAllPublicationsFilteredBy(search, pud.getUser().getUserId()));
+
+            mav.addObject("username", pud.getUser().getUsername());
+            mav.addObject("publications", cardList);
+
+
+            mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
+            mav.addObject("bookStates", List.of(BookState.values()).stream().map(bookStatus -> new BookStateWrapper(bookStatus, bookStateService.getBookStateDisplayName(bookStatus))).collect(Collectors.toList()));
+
         }
         
         return mav;
@@ -75,6 +77,7 @@ public class PublicationController {
     @RequestMapping("/createpublication")
     public ModelAndView createPublication(){
         ModelAndView mav = new ModelAndView("home/publications");
+
 
         return mav;
     }

@@ -29,20 +29,14 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public Card createCard(Publication publication, Book book, BookModel bookModel, List<Image> images, List<Author> authors, String location) {
-        return new Card(publication, book, bookModel, images, authors, location);
-    }
-
-    @Override
     public Card createCard(long publicationId) {
         Publication publication = publicationsService.getPublicationById(publicationId).get();
         Book book = bookService.getBookById(publication.getBookId()).get();
         BookModel bookModel = bookModelService.getBookModelByBookModelId(book.getBookModelId());
         List<BookImage> bookImages = bookImageService.getSortedImagesByBookId(bookModel.getBookModelId());
-        List<Image> images = imageService.getImagesByBookImageList(bookImages);
         List<Author> authors = bookAuthorService.getAuthorsByBookId(book.getBookId());
         String location = locationService.getLocationByPublicationId(publicationId);
-        return new Card(publication, book, bookModel, images, authors, location);
+        return new Card(publication, book, bookModel, bookImages, authors, location);
     }
 
     @Override
@@ -50,15 +44,15 @@ public class CardServiceImpl implements CardService {
         List<Card> cardList = new ArrayList<>();
         for (Publication publication : publicationsList) {
             Book book = bookService.getBookById(publication.getBookId()).get();
-//            Image image = imageService.getImageById(book.get()).orElse(null);
+
+            List<BookImage> bookImage = bookImageService.getImageByBookId(book.getBookId());
+
             List<Author> authors = bookAuthorService.getAuthorsByBookId(book.getBookId());
             BookModel bookModel = bookModelService.getBookModelByBookModelId(book.getBookModelId());
-            cardList.add(new Card(publication, book, bookModel, /*image*/null, authors, "Argentina"));
+            String location = locationService.getLocationByPublicationId(publication.getPublicationId());
+            cardList.add(new Card(publication, book, bookModel, bookImage, authors, location));
         }
         return cardList;
     }
-
-
-
 
 }

@@ -159,21 +159,32 @@
                 <div class="uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m mb-1" uk-grid>
                     <c:forEach var="card" items="${cardBookList}">
                         <div>
-                            <figure class="uk-margin-bottom">
+                            <a href="/" class="uk-card uk-card-default uk-card-hover uk-card-body uk-border-rounded custom-link">
+                                <figure class="uk-margin-bottom">
+                                    <c:choose>
+                                        <c:when test="${card.image != null}">
+                                            <img class="book-image" src="${pageContext.request.contextPath}/images/${card.image.imageId}" alt="bookImage"/>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <img class="book-image" src="${pageContext.request.contextPath}/images/book.jpg" alt="book"/>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </figure>
+                                <h5 class="uk-card-title custom-link">${card.bookModel.title}</h5>
+                                <p class="small-gray-text custom-link">${card.authorsString}</p>
+
                                 <c:choose>
-                                    <c:when test="${card.image != null}">
-                                        <img class="book-image" src="${pageContext.request.contextPath}/images/${card.image.imageId}" alt="bookImage"/>
+                                    <c:when test="${true}">
+                                        <button class="uk-button uk-button-primary">Publicar</button>
                                     </c:when>
                                     <c:otherwise>
-                                        <img class="book-image" src="${pageContext.request.contextPath}/images/book.jpg" alt="book"/>
+                                        <button class="uk-button uk-button-primary" disabled>Publicar</button>
                                     </c:otherwise>
                                 </c:choose>
-                            </figure>
-                            <h5 class="uk-card-title custom-link">${card.bookModel.title}</h5>
-                            <p class="small-gray-text custom-link">${card.authorsString}</p>
-                            /
                         </div>
+
                     </c:forEach>
+
                 </div>
             </div>
         </div>
