@@ -60,7 +60,7 @@
             </div>
             <div class="uk-navbar-right">
                 <ul class="uk-navbar-nav">
-                    <li><a class="pl-1 pr-1" href="<c:url value="${exchangeUrl}"/>"><spring:message code="home.exchange.view"/></a></li>
+<%--                    <li><a class="pl-1 pr-1" href="<c:url value="${exchangeUrl}"/>"><spring:message code="home.exchange.view"/></a></li>--%>
                     <li>
                         <a class="pl-1 pr-1" href="<c:url value='${booksUrl}'/>">
                             <spring:message code="home.book.view"/>
@@ -86,7 +86,7 @@
                         </div>
                     </li>
 
-                    <li><a class="pl-1 pr-1" href="<c:url value="${profileUrl}"/>"><spring:message code="home.profile.view"/></a></li>
+<%--                    <li><a class="pl-1 pr-1" href="<c:url value="${profileUrl}"/>"><spring:message code="home.profile.view"/></a></li>--%>
                 </ul>
             </div>
         </div>
