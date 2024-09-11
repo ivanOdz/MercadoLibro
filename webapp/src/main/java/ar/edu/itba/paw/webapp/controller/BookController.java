@@ -113,8 +113,8 @@ public class BookController {
                 bookForm.getLanguage(),
                 bookForm.getDimension(),
                 bookForm.getPublicationYear(),
-                bookForm.isPocketEdition(),
-                bookForm.isHardcover()
+                bookForm.getIsPocketEdition(),
+                bookForm.getIsHardcover()
                 );
 
         return new ModelAndView("redirect:/");

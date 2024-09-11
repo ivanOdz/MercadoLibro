@@ -3,38 +3,10 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <html>
-
-
-<style>
-    .star-rating {
-        direction: rtl;
-        display: inline-flex;
-        margin: 10px 0 10px 0;
-    }
-
-    .star-rating input {
-        display: none;
-    }
-
-    .star-rating label {
-        font-size: 2em;
-        color: #ccc;
-        cursor: pointer;
-    }
-
-    .star-rating input:checked ~ label {
-        color: #f5c518;
-    }
-
-    .star-rating label:hover,
-    .star-rating label:hover ~ label {
-        color: #f5c518;
-    }
-
-</style>
 <head>
     <%@include file="/WEB-INF/jsp/head/headers.jsp"%>
-    <link href="${pageContext.request.contextPath}/css/publications.css?v=1.0" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/css/book_form.css" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/css/publications.css" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
     <link rel="icon" href="${pageContext.request.contextPath}/images/favicon.ico" type="image/x-icon"/>
@@ -47,7 +19,7 @@
 <body>
 
 <c:url var="exchangeUrl" value="/exchange"/>
-<c:url var="booksUrl" value="/book/upload_new_book"/>
+<c:url var="booksUrl" value="/book/upload_book"/>
 <c:url var="profileUrl" value="/profile"/>
 
 <nav class="uk-navbar-container uk-background-primary uk-box-shadow-small" uk-sticky>
@@ -299,12 +271,14 @@
                             <form:errors path="imageFile" element="p" cssStyle="color: red;"/>
                         </div>
 
-                        <div>
-                            <label class="form-group">
-                                <spring:message code="add.publication.location"/>
-                                <form:input path="location" type="text" class="uk-input"/>
+
+                        <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+                            <label>
+                                <form:input path="isHardcover" class="uk-checkbox" type="checkbox" checked="true"/>
                             </label>
-                            <form:errors path="location" element="p" cssStyle="color: red;"/>
+                            <label>
+                                <form:input path="isPocketEdition" class="uk-checkbox" type="checkbox"/>
+                            </label>
                         </div>
 
 

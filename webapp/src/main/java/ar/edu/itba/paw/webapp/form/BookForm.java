@@ -112,11 +112,11 @@ public class BookForm {
         return publicationYear;
     }
 
-    public boolean isHardcover() {
+    public boolean getIsHardcover() {
         return isHardcover;
     }
 
-    public boolean isPocketEdition() {
+    public boolean getIsPocketEdition() {
         return isPocketEdition;
     }
 
@@ -202,5 +202,6 @@ public class BookForm {
     public void setWeight(int weight) {
         this.weight = weight;
     }
+
 
 }
