@@ -5,6 +5,10 @@ import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.webapp.form.PasswordForm;
 import ar.edu.itba.paw.webapp.form.UserForm;
+import com.sun.mail.imap.IMAPFolder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 
 import javax.validation.Valid;
+import java.util.Locale;
 
 
 @Controller
@@ -26,6 +31,9 @@ public class UserController {
     private final UserService us;
 
     private AuthenticationManager auth;
+
+    @Autowired
+    private MessageSource messageSource;
 
     public UserController(final UserService us, AuthenticationManager auth) {
         this.us = us;
@@ -59,8 +67,22 @@ public class UserController {
 
 
     @RequestMapping("/login")
-    public ModelAndView login(){
-        return new ModelAndView("user/login");
+    public ModelAndView login(@RequestParam(value = "error", required = false) String error,
+                              @RequestParam(value = "logout", required = false) String logout) {
+        ModelAndView modelAndView = new ModelAndView("user/login");
+
+        if (error != null) {
+            Locale locale = LocaleContextHolder.getLocale();
+
+            String errorMessage = messageSource.getMessage("login.invalid", null, locale);
+            modelAndView.addObject("error", errorMessage);
+        }
+
+        if (logout != null) {
+            modelAndView.addObject("message", "Has cerrado sesión correctamente.");
+        }
+
+        return modelAndView;
     }
 
 

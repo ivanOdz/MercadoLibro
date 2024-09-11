@@ -63,6 +63,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .passwordParameter("password")
                     .loginPage("/login")
                     .defaultSuccessUrl("/check_verify", false)
+                    .failureUrl("/login?error=true")
                 .and().rememberMe()
                     .rememberMeParameter("remember_me")
 //                    .key(new String(rememberMeKey.getInputStream().readAllBytes()))

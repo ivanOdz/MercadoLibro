@@ -7,11 +7,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <html lang="es">
+<%@include file="/WEB-INF/jsp/head/headers.jsp"%>
 <head>
     <link href="${pageContext.request.contextPath}/css/publications.css?v=1.0" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
-    <link rel="icon" href="${pageContext.request.contextPath}/images/favicon.ico" type="image/x-icon"/>
     <link href="${pageContext.request.contextPath}/css/exchange.css ?v=1.0" rel="stylesheet"/>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>

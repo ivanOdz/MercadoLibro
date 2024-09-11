@@ -3,6 +3,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <!DOCTYPE html>
+<%@include file="/WEB-INF/jsp/head/headers.jsp"%>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
