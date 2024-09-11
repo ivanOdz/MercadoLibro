@@ -263,23 +263,23 @@
                         </div>
 
 
-                        <div>
-                            <label class="form-group">
-                                <spring:message code="add.publication.image"/>
-                                <form:input path="imageFile" type="file"/>
-                            </label>
-                            <form:errors path="imageFile" element="p" cssStyle="color: red;"/>
-                        </div>
+<%--                        <div>--%>
+<%--                            <label class="form-group">--%>
+<%--                                <spring:message code="add.publication.image"/>--%>
+<%--                                <form:input path="imageFile" type="file"/>--%>
+<%--                            </label>--%>
+<%--                            <form:errors path="imageFile" element="p" cssStyle="color: red;"/>--%>
+<%--                        </div>--%>
 
 
-                        <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
-                            <label>
-                                <form:input path="isHardcover" class="uk-checkbox" type="checkbox" checked="true"/>
-                            </label>
-                            <label>
-                                <form:input path="isPocketEdition" class="uk-checkbox" type="checkbox"/>
-                            </label>
-                        </div>
+<%--                        <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">--%>
+<%--                            <label>--%>
+<%--                                <form:input path="isHardcover" class="uk-checkbox" type="checkbox" checked="true"/>--%>
+<%--                            </label>--%>
+<%--                            <label>--%>
+<%--                                <form:input path="isPocketEdition" class="uk-checkbox" type="checkbox"/>--%>
+<%--                            </label>--%>
+<%--                        </div>--%>
 
 
                         <div class="uk-container uk-margin-top">
