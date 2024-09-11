@@ -69,14 +69,13 @@ public class PublicationController {
     }
 
     @RequestMapping(path = "/createpublication", method = RequestMethod.POST)
-    public ModelAndView createPublication(@ModelAttribute(name = "publicationForm")PublicationForm publicationForm/*, @RequestParam(name = "bookId") long bookId, @RequestParam(name = "location") String location*/){
+    public ModelAndView createPublication(@RequestParam(name = "bookId") long bookId, @RequestParam(name = "location") String location){
         ModelAndView mav = new ModelAndView("book/book_home");
-        mav.addObject("publicationForm", publicationForm);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.getPrincipal() instanceof PawUserDetails pud) {
-            long locationId = ls.newLocation(publicationForm.getLocation());
-            ps.createPublication(publicationForm.getBookId(), pud.getUser().getUserId(), locationId, PublicationState.CURRENT);
+            long locationId = ls.newLocation(location);
+            ps.createPublication(bookId, pud.getUser().getUserId(), locationId, PublicationState.CURRENT);
         }
 
         return mav;
