@@ -163,15 +163,15 @@
 								</c:url>" class="uk-card uk-card-default uk-card-hover uk-card-body uk-border-rounded custom-link">
 								<figure class="uk-margin-bottom">
 									<c:choose>
-										<c:when test="${card.image != null}">
-											<img class="book-image" src="${pageContext.request.contextPath}/images/${card.image.imageId}" alt="bookImage"/>
+										<c:when test="${card.bookImages != null}">
+											<img class="book-image" src="${pageContext.request.contextPath}/images/${card.bookImages[0].imageId}" alt="bookImage"/>
 										</c:when>
 										<c:otherwise>
 											<img class="book-image" src="${pageContext.request.contextPath}/images/book.jpg" alt="book"/>
 										</c:otherwise>
 									</c:choose>
 								</figure>
-								<h5 class="uk-card-title custom-link">${card.book.title}</h5>
+								<h5 class="uk-card-title custom-link">${card.bookModel.title}</h5>
 								<p class="small-gray-text custom-link">${card.authorsString}</p>
 							</a>
 						</div>

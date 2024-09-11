@@ -33,7 +33,6 @@ import java.util.stream.Collectors;
 public class PublicationController {
 
     private PublicationService ps;
-    private BookService bs;
     private UserService us;
     private CardService cs;
     @Autowired
@@ -41,9 +40,8 @@ public class PublicationController {
     @Autowired
     private BookStateService bookStateService;
     
-    public PublicationController(PublicationService ps, BookService bs, UserService us, CardService cs) {
+    public PublicationController(PublicationService ps, UserService us, CardService cs) {
         this.ps = ps;
-        this.bs = bs;
         this.us = us;
         this.cs = cs;
     }

@@ -5,20 +5,22 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Card {
-    private Publication publication;
-    private Book book;
-    private BookModel bookModel;
-    private List<BookImage> bookImages;
-    private List<Author> bookAuthors;
-    private String location;
+    private final Publication publication;
+    private final Book book;
+    private final BookModel bookModel;
+    private final List<BookImage> bookImages;
+    private final List<Author> bookAuthors;
+    private final String location;
 
-    public Card(Publication publication, Book book, BookModel bookModel,List<BookImage> images, List<Author> bookAuthors, String location) {
+    public Card(Publication publication, Book book, BookModel bookModel, List<BookImage> bookImages, List<Author> bookAuthors, String location) {
         this.publication = publication;
         this.book = book;
+        this.bookModel = bookModel;
         this.bookImages = bookImages;
         this.bookAuthors = bookAuthors;
         this.location = location;
     }
+
 
     public Publication getPublication() {
         return publication;
@@ -32,16 +34,16 @@ public class Card {
         return bookModel;
     }
 
-    public List<BookImage> getImages() {
+    public List<BookImage> getBookImages() {
         return bookImages;
-    }
-
-    public String getLocation() {
-        return location;
     }
 
     public List<Author> getBookAuthors() {
         return bookAuthors;
+    }
+
+    public String getLocation() {
+        return location;
     }
 
     public String getAuthorsString() {
