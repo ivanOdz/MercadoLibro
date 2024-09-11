@@ -88,19 +88,19 @@ public class AddPublicationController {
                                        BindingResult errors,
                                        @RequestParam(name = "publication_id") long publicationId, @RequestParam(name = "is_for_exchange") boolean isForExchange, @RequestParam(name = "submited_mail", defaultValue = "") String submited_mail) {
 
-		if (errors.hasErrors()) {
+        if (errors.hasErrors()) {
             System.out.println(errors.getAllErrors());
-			return createPublicationForm(bookForm, publicationId, isForExchange, submited_mail);
-		}
+            return createPublicationForm(bookForm, publicationId, isForExchange, submited_mail);
+        }
 
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user;
 
         Publication publication;
-        if (authentication.getPrincipal() instanceof PawUserDetails pud){
+        /*if (authentication.getPrincipal() instanceof PawUserDetails pud){
             user = pud.getUser();
-           /* publication = ps.createPublication(
+            publication = ps.createPublication(
                     user.getUserId(),
                     publicationForm.getIsbn(),
                     publicationForm.getTitle(),
@@ -140,10 +140,11 @@ public class AddPublicationController {
                 variables.put("rejectionUrl", "http://localhost:8080/exchange?accept_code=" + ex.getAcceptCode() +"&state=false");
 
                 emailService.sendEmail(oferrerEmail, variables, "exchangeRequest", "Requesting");
-            }*/
+            }
             return new ModelAndView("redirect:/");
         } else {
             return new ModelAndView("redirect:/login");
-        }
+        }*/
+    return new ModelAndView("/");
     }
 }

@@ -17,7 +17,7 @@ public interface ExchangeDao {
 
     ResponseState exchange(int acceptCode, boolean state);
 
-    void createExchange(long offererId, long requesterId, int acceptCode, Timestamp startDate);
+    Exchange createExchange(long offererId, long requesterId, int acceptCode, Timestamp startDate);
 
     List<Exchange> getExchangesByUserIdInvolved(long anUserId);
 

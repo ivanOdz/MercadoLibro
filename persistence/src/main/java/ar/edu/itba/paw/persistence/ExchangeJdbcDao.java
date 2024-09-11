@@ -26,7 +26,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
 
 
     private static final RowMapper<Exchange> ROWMAPPER =
-            (rs, rowNum) -> new Exchange(rs.getLong("exchangeId"), rs.getLong("offererPubId"), rs.getLong("requesterPubId"), ExchangeState.fromInt(rs.getInt("exchangeState")), rs.getInt("acceptCode"), rs.getBoolean("offererReceivedBook"), rs.getBoolean("requesterReceivedBook"), rs.getTimestamp("exchangeDate"));
+            (rs, rowNum) -> new Exchange(rs.getLong("exchangeId"), rs.getLong("offererPubId"), rs.getLong("requesterPubId"), ExchangeState.fromInt(rs.getInt("exchangeState")), rs.getInt("acceptCode"), rs.getBoolean("offererReceivedBook"), rs.getBoolean("requesterReceivedBook"), rs.getTimestamp("exchangeStartDate"), rs.getTimestamp("exchangeEndDate"));
 
 
     public ExchangeJdbcDao(final DataSource ds, PublicationJdbcDao publicationJdbcDao, BookJdbcDao bookJdbcDao) {
@@ -92,7 +92,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
     }
 
     @Override
-    public void createExchange(long offererPubId, long requesterPubId, int acceptCode, Timestamp startDate) {
+    public Exchange createExchange(long offererPubId, long requesterPubId, int acceptCode, Timestamp startDate) {
         final Map<String, Object> exchangeData = new HashMap<>();
         exchangeData.put("offererPubId", offererPubId);
         exchangeData.put("requesterPubId", requesterPubId);
@@ -103,7 +103,9 @@ public class ExchangeJdbcDao implements ExchangeDao {
         exchangeData.put("exchangeStartDate", startDate);
         exchangeData.put("exchangeEndDate", null);
 
-        jdbcInsert.executeAndReturnKey(exchangeData);
+        Number id = jdbcInsert.executeAndReturnKey(exchangeData);
+
+        return new Exchange(id.longValue(), offererPubId, requesterPubId, ExchangeState.PENDING, acceptCode, false, false, startDate, null);
     }
 
     public List<Exchange> getExchangesByUserIdInvolved(long anUserId){
