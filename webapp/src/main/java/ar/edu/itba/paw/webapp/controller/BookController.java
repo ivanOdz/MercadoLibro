@@ -110,14 +110,13 @@ public class BookController {
 
     @PostMapping("/book/upload_book")
     public ModelAndView uploadBook(@Valid @ModelAttribute("bookForm") BookForm bookForm, BindingResult errors) {
-
-
         if(errors.hasErrors()){
             System.out.println(errors.getAllErrors());
             return bookForm(bookForm);
         }
 
         BookModel bookModel = bookModelService.addBookModel(
+                bookForm.getAuthors(),
                 bookForm.getIsbn(),
                 bookForm.getTitle(),
                 bookForm.getEditorial(),
@@ -132,7 +131,6 @@ public class BookController {
                 bookForm.getIsPocketEdition(),
                 bookForm.getIsHardcover()
                 );
-
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.getPrincipal() instanceof PawUserDetails pud) {

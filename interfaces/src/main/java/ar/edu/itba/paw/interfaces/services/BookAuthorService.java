@@ -9,7 +9,7 @@ import java.util.List;
 @Service
 public interface BookAuthorService {
 
-    BookAuthor createBook_Author(long bookId, long authorId, List<BookAuthor> bookAuthors);
+    BookAuthor createBookAuthor(long bookId, long authorId);
 
     List<Author> getAuthorsByBookId(long bookId);
 
