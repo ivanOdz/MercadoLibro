@@ -22,8 +22,8 @@
 <c:url var="exchangeUrl" value="/exchange"/>
 <c:url var="booksUrl" value="/book"/>
 <c:url var="profileUrl" value="/profile"/>
-<c:url var="newBookFromScratch" value="/book/upload_new_book"/>
-<c:url var="uploadNewPrecharged" value="/book/upload_new_book"/>
+<c:url var="newBookFromScratch" value="/book/book_form"/>
+<c:url var="uploadNewPrecharged" value="/book/book_form"/>
 
 <nav class="uk-navbar-container uk-background-primary uk-box-shadow-small" uk-sticky>
     <div class="uk-container">

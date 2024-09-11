@@ -19,8 +19,9 @@
 <body>
 
 <c:url var="exchangeUrl" value="/exchange"/>
-<c:url var="booksUrl" value="/book/upload_book"/>
+<c:url var="booksUrl" value="/book"/>
 <c:url var="profileUrl" value="/profile"/>
+<c:url var="postUrl" value="/book/upload_book"/>
 
 <nav class="uk-navbar-container uk-background-primary uk-box-shadow-small" uk-sticky>
     <div class="uk-container">
