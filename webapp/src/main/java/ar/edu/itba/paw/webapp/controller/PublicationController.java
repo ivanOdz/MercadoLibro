@@ -71,6 +71,13 @@ public class PublicationController {
         return index(search);
     }
 
+    @RequestMapping("/createpublication")
+    public ModelAndView createPublication(){
+        ModelAndView mav = new ModelAndView("home/publications");
+
+        return mav;
+    }
+
 
     @RequestMapping("/publication")
     public ModelAndView publication(@RequestParam(name = "publication_id") long publicationId) {

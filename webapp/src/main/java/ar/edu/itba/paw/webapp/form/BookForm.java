@@ -16,8 +16,7 @@ public class BookForm {
     @Pattern(regexp = "^(97[89])\\d{1,5}\\d{1,7}\\d{1,7}\\d$")
     private String isbn;
 
-    @NotBlank
-    @Size(min = 1, max = 255)
+    @Size(min = 1, max = 255, message = "{Size.bookForm.title}")
     private String title;
     
     @NotEmpty

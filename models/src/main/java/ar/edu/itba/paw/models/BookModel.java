@@ -81,7 +81,7 @@ public class BookModel {
         return dimension;
     }
 
-    public short getPublicationDate() {
+    public short getPublicationYear() {
         return publicationYear;
     }
 
