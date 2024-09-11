@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.utils.PublicationState;
 
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,4 +20,6 @@ public interface BookService {
     void exchangeOwnership(long b1, long b2);
 
     Book getBookByPubId(long pubId);
+
+    List<Book> getAllBooksByOwnerIdAndFilteredBy(long ownerId, String search);
 }

@@ -33,7 +33,7 @@ public class BookModelJdbcDao implements BookModelDao {
             rs.getInt("pages"),
             Language.fromInt(rs.getInt("bookLanguage")),
             rs.getInt("dimension"),
-            rs.getShort("publicationDate"),
+            rs.getShort("publicationYear"),
             rs.getBoolean("isPocketEdition"),
             rs.getBoolean("isHardcover")
     );

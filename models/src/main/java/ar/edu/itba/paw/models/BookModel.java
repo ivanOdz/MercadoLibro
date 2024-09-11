@@ -16,11 +16,11 @@ public class BookModel {
     private final int pages;
     private final Language bookLanguage;
     private final int dimension;
-    private final short publicationDate;
+    private final short publicationYear;
     private final boolean isPocketEdition;
     private final boolean isHardcover;
 
-    public BookModel(long bookModelId, String isbn, String title, String editorial, String description, Genre genre, int edition, int weight, int pages, Language bookLanguage, int dimension, short publicationDate, boolean isPocketEdition, boolean isHardcover) {
+    public BookModel(long bookModelId, String isbn, String title, String editorial, String description, Genre genre, int edition, int weight, int pages, Language bookLanguage, int dimension, short publicationYear, boolean isPocketEdition, boolean isHardcover) {
         this.bookModelId = bookModelId;
         this.isbn = isbn;
         this.title = title;
@@ -32,7 +32,7 @@ public class BookModel {
         this.pages = pages;
         this.bookLanguage = bookLanguage;
         this.dimension = dimension;
-        this.publicationDate = publicationDate;
+        this.publicationYear = publicationYear;
         this.isPocketEdition = isPocketEdition;
         this.isHardcover = isHardcover;
     }
@@ -82,7 +82,7 @@ public class BookModel {
     }
 
     public short getPublicationDate() {
-        return publicationDate;
+        return publicationYear;
     }
 
     public boolean isPocketEdition() {

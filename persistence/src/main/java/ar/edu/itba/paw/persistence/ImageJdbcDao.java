@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.sql.Types;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -49,6 +50,12 @@ public class ImageJdbcDao implements ImageDao {
         );
 
         return images.stream().findFirst();
+    }
+
+    @Override
+    public Image getFirstImageByBookId(long bookId) {
+        return jdbcTemplate.query("SELECT i.imageId, i.image FROM image i JOIN book_image b ON i.imageId = b.imageId WHERE b.bookId = ? AND imageOrder = ?",
+                new Object[]{ bookId, 1 }, new int[] { Types.BIGINT, Types.INTEGER }, ROWMAPPERIMAGE).stream().findFirst().orElse(null);
     }
 
 
