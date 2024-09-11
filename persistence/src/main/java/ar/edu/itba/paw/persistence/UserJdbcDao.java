@@ -55,6 +55,12 @@ public class UserJdbcDao implements UserDao {
 
     @Override
     public User createUser(String username, String mail, String password, int verificationCode) {
+        Optional<User> user = find(mail);
+
+        if (user.isPresent()) {
+            return null;
+        }
+
         final Map<String, Object> userData = new HashMap<>();
         userData.put("username", username);
         userData.put("mail", mail);

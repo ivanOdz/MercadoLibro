@@ -29,4 +29,6 @@ public interface UserService {
     List<UserReview> getReviewsByUserId(long userId);
 
     User getUserByPubId(long pubId);
+
+    boolean userExists(String mail);
 }

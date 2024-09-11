@@ -56,10 +56,7 @@ public class UserController {
         return mav;
     }
 
-    @RequestMapping(path = "/create", method = RequestMethod.GET)
-    public ModelAndView createForm(@ModelAttribute("userForm") UserForm userForm){
-        return new ModelAndView("user/create");
-    }
+
 
     @RequestMapping("/login")
     public ModelAndView login(){
@@ -113,6 +110,10 @@ public class UserController {
         return new ModelAndView("redirect:/success_password");
     }
 
+    @RequestMapping(path = "/create", method = RequestMethod.GET)
+    public ModelAndView createForm(@ModelAttribute("userForm") UserForm userForm) {
+        return new ModelAndView("user/create");
+    }
 
     @RequestMapping(path = "/create", method = RequestMethod.POST)
     public ModelAndView create(@Valid @ModelAttribute("userForm") UserForm userForm, BindingResult errors) {
@@ -121,9 +122,11 @@ public class UserController {
             return createForm(userForm);
         }
 
-        // verify date, create an user and send a verification email
-        final User user = us.createUser(userForm.getUsername(), userForm.getMail(), userForm.getPassword());
-//
+        if(us.userExists(userForm.getMail())){
+            errors.rejectValue("mail", "error.user.exists");
+            return createForm(userForm);
+        }
+        //
 //        try {
 //            // create a session and keep the user logged in
 //            final Authentication authenticationToken = new UsernamePasswordAuthenticationToken(userForm.getUsername(), userForm.getPassword(), null);
@@ -131,6 +134,9 @@ public class UserController {
 //        }catch(Exception e) {
 //            System.out.println(e.getMessage());
 //        }
+
+        // verify date, create an user and send a verification email
+        final User user = us.createUser(userForm.getUsername(), userForm.getMail(), userForm.getPassword());
 
         return new ModelAndView("redirect:/success_registration");
     }

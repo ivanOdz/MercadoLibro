@@ -28,19 +28,6 @@
             <form:form action="${postUrl}" method="post" modelAttribute="userForm" class="uk-grid-large uk-grid" style="justify-content: center;">
                 <div class="uk-margin" style="justify-content: center">
 
-                    <div class="uk-width-1-1">
-                        <div>
-                            <label>
-                                <spring:message code="hwc.create.username"/>
-                            </label>
-                        </div>
-                        <div class="uk-inline">
-                            <span class="uk-form-icon" uk-icon="icon: user"></span>
-                            <input class="uk-input" type="text" name="username" aria-label="Not clickable icon"/>
-                        </div>
-                        <form:errors path="username" element="p" cssStyle="color: red;"/>
-                    </div>
-
                     <div class="uk-width-1-1 uk-margin-top">
                         <div>
                             <label>
@@ -52,6 +39,19 @@
                             <input class="uk-input" type="text" name="mail" aria-label="Not clickable icon"/>
                         </div>
                         <form:errors path="mail" element="p" cssStyle="color: red;"/>
+                    </div>
+
+                    <div class="uk-width-1-1">
+                        <div>
+                            <label>
+                                <spring:message code="hwc.create.username"/>
+                            </label>
+                        </div>
+                        <div class="uk-inline">
+                            <span class="uk-form-icon" uk-icon="icon: user"></span>
+                            <input class="uk-input" type="text" name="username" aria-label="Not clickable icon"/>
+                        </div>
+                        <form:errors path="username" element="p" cssStyle="color: red;"/>
                     </div>
 
                     <div class="uk-width-1-1 uk-margin-top">
@@ -85,6 +85,9 @@
                             <spring:message code="userForm.passwords.mismatch"/>
                         </span>
                     </c:if>
+
+
+
 
                     <div>
                         <div class="uk-margin-top uk-button-group" style="margin-left: 50px;">

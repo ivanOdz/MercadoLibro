@@ -53,7 +53,11 @@ public class UserServiceImpl implements UserService {
         //  4. enviar el token de validacion en un correo de bienvenida
         //  5. agregar al usuario a una cola de verificacion manual
 
+
         User user = userDao.createUser(username, mail, passwordEncoder.encode(password), generateVerificationCode());
+        if(user == null) {
+            return null; // user exists -> returns null
+        }
 
         Map<String, Object> variables = new HashMap<>();
 
@@ -101,6 +105,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByPubId(long pubId) {
         return userDao.getUserByPubId(pubId);
+    }
+
+    @Override
+    public boolean userExists(String mail) {
+        return userDao.find(mail).isPresent();
     }
 
 //    @Override
