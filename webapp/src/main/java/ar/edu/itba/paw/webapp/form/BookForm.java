@@ -44,8 +44,20 @@ public class BookForm {
 
     private MultipartFile imageFile;
 
-    @NotBlank
-    private String location;
+    private Short publicationYear;
+
+    private boolean isHardcover;
+
+    private boolean isPocketEdition;
+
+    private int dimension;
+
+    private int language;
+
+    private int pages;
+
+    private int weight;
+
 
     public @NotBlank @Pattern(regexp = "^(97[89])\\d{1,5}\\d{1,7}\\d{1,7}\\d$") String getIsbn() {
         return isbn;
@@ -66,7 +78,10 @@ public class BookForm {
     public @Size(min = 10, max = 2000) String getDescription() {
         return description;
     }
-    
+
+
+    // Getters
+
     @NotNull
     public Genre getGenre() {
     	return genre;
@@ -93,9 +108,35 @@ public class BookForm {
         return imageFile;
     }
 
-    public @NotBlank String getLocation() {
-        return location;
+    public Short getPublicationYear() {
+        return publicationYear;
     }
+
+    public boolean isHardcover() {
+        return isHardcover;
+    }
+
+    public boolean isPocketEdition() {
+        return isPocketEdition;
+    }
+
+    public int getDimension() {
+        return dimension;
+    }
+
+    public int getLanguage() {
+        return language;
+    }
+
+    public int getPages() {
+        return pages;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
+    // Setters
 
 
     public void setIsbn(@NotBlank @Pattern(regexp = "^(97[89])\\d{1,5}\\d{1,7}\\d{1,7}\\d$") String isbn) {
@@ -138,7 +179,28 @@ public class BookForm {
         this.imageFile = imageFile;
     }
 
-    public void setLocation(@NotBlank String location) {
-        this.location = location;
+    public void setPublicationYear(Short publicationYear) {
+        this.publicationYear = publicationYear;
     }
+
+    public void setIsHardcover(boolean isHardcover) {
+        this.isHardcover = isHardcover;
+    }
+
+    public void setDimension(int dimension) {
+        this.dimension = dimension;
+    }
+
+    public void setLanguage(int language) {
+        this.language = language;
+    }
+
+    public void setPages(int pages) {
+        this.pages = pages;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
+    }
+
 }
