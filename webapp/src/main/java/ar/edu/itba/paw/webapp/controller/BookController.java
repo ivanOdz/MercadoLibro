@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -33,19 +34,22 @@ public class BookController {
 
     private final BookService bookService;
 
+    private final BookModelService bookModelService;
+
     @Autowired
     private GenreService genreService;
 
     @Autowired
     private BookStateService bookStateService;
 
-    public BookController(SinglePublicationService ps, ImageService imageService, EmailService emailService, ExchangeService exchangeService, PublicationService publicationService, BookService bookService, UserService userService) {
+    public BookController(SinglePublicationService ps, ImageService imageService, EmailService emailService, ExchangeService exchangeService, PublicationService publicationService, BookService bookService, BookModelService bookModelService, UserService userService) {
         this.ps = ps;
         this.imageService = imageService;
         this.emailService = emailService;
         this.exchangeService = exchangeService;
         this.publicationService = publicationService;
         this.bookService = bookService;
+        this.bookModelService = bookModelService;
         this.userService = userService;
     }
 
@@ -58,10 +62,10 @@ public class BookController {
     }
 
 
-    @GetMapping("/book/upload_new_book")
-    public ModelAndView uploadNewBook(@ModelAttribute("bookForm") BookForm bookForm) {
+    @GetMapping("/book/book_form")
+    public ModelAndView bookForm(@ModelAttribute("bookForm") BookForm bookForm) {
 
-        final ModelAndView mav = new ModelAndView("book/newbook");
+        final ModelAndView mav = new ModelAndView("book/book_form");
 
         if (bookForm.getAuthors() == null) {
             bookForm.setAuthors(new ArrayList<>());
@@ -73,5 +77,29 @@ public class BookController {
 
 
         return mav;
+    }
+
+    @PostMapping("/book/upload_book")
+    public ModelAndView uploadBook(@ModelAttribute("bookForm") BookForm bookForm) {
+
+        // TODO: pagina que informe qeu se agrego el libro de forma correcta
+
+        bookModelService.addBookModel(
+                bookForm.getIsbn(),
+                bookForm.getTitle(),
+                bookForm.getEditorial(),
+                bookForm.getDescription(),
+                bookForm.getGenre(),
+                bookForm.getEdition(),
+                bookForm.getWeight(),
+                bookForm.getPages(),
+                bookForm.getLanguage(),
+                bookForm.getDimension(),
+                bookForm.getPublicationYear(),
+                bookForm.isPocketEdition(),
+                bookForm.isHardcover()
+                );
+
+        return new ModelAndView("redirect:/");
     }
 }
