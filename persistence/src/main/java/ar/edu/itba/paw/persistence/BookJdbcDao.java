@@ -36,7 +36,7 @@ public class BookJdbcDao implements BookDao {
     }
 
     @Override
-    public Book createBook(int bookModelId, long ownerId, BookState bookState, int exchangesQty, int rating) {
+    public Book createBook(long bookModelId, long ownerId, BookState bookState, int exchangesQty, int rating) {
         
     	final Map<String, Object> bookData = new HashMap<>();
         bookData.put("bookModelId", bookModelId);

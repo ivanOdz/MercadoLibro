@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface BookDao {
 
-    Book createBook(int bookModelId, long ownerId, BookState bookState, int exchangesQty, int rating);
+    Book createBook(long bookModelId, long ownerId, BookState bookState, int exchangesQty, int rating);
 
     Optional<Book> getBookById(long bookId);
 
