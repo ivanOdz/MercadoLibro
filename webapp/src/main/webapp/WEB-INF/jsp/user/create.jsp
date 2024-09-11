@@ -28,18 +28,7 @@
             <form:form action="${postUrl}" method="post" modelAttribute="userForm" class="uk-grid-large uk-grid" style="justify-content: center;">
                 <div class="uk-margin" style="justify-content: center">
 
-                    <div class="uk-width-1-1 uk-margin-top">
-                        <div>
-                            <label>
-                                <spring:message code="hwc.create.mail"/>
-                            </label>
-                        </div>
-                        <div class="uk-inline">
-                            <span class="uk-form-icon" uk-icon="icon: mail"></span>
-                            <input class="uk-input" type="text" name="mail" aria-label="Not clickable icon"/>
-                        </div>
-                        <form:errors path="mail" element="p" cssStyle="color: red;"/>
-                    </div>
+
 
                     <div class="uk-width-1-1">
                         <div>
@@ -52,6 +41,21 @@
                             <input class="uk-input" type="text" name="username" aria-label="Not clickable icon"/>
                         </div>
                         <form:errors path="username" element="p" cssStyle="color: red;"/>
+                    </div>
+
+                    <div class="uk-width-1-1 uk-margin-top">
+                        <div>
+                            <label>
+                                <spring:message code="hwc.create.mail"/>
+                            </label>
+                        </div>
+                        <div class="uk-inline">
+                            <span class="uk-form-icon" uk-icon="icon: mail"></span>
+                            <input class="uk-input" type="text" name="mail" aria-label="Not clickable icon"/>
+                        </div>
+                        <div class="uk-container uk-align-center">
+                            <form:errors class="uk-text-small" path="mail" element="p" cssStyle="color: red;"/>
+                        </div>
                     </div>
 
                     <div class="uk-width-1-1 uk-margin-top">
