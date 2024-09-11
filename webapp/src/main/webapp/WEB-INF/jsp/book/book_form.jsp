@@ -98,21 +98,6 @@
         <div class="uk-grid ml-1 uk-margin-top" uk-grid>
 
             <div class="uk-section uk-align-center">
-                <div class="uk-container uk-margin-bottom">
-                    <a class="uk-button uk-button-text" href="${pageContext.request.contextPath}/">
-                        <span uk-icon="icon:  chevron-left"></span>
-                        <spring:message code="add.book.return_home"/>
-                    </a>
-                </div>
-                <div class="uk-container">
-                    <h2 class="uk-heading-line">
-                        <spring:message code="add.book.title"/>
-                    </h2>
-                    <h4 class="uk-article-meta">
-                        <spring:message code="add.book.description"/>
-                    </h4>
-                </div>
-
                 <div class="uk-container uk-margin-top">
                     <form:form modelAttribute="bookForm" action="${postUrl}" method="post" enctype="multipart/form-data">
 
@@ -356,6 +341,21 @@
                             </div>
                         </div>
                     </form:form>
+                </div>
+                <div class="uk-container uk-margin-bottom">
+                    <a class="uk-button uk-button-text" href="${pageContext.request.contextPath}/">
+                        <span uk-icon="icon:  chevron-left"></span>
+                        <spring:message code="add.book.return_home"/>
+                    </a>
+                </div>
+
+                <div class="uk-container">
+                    <h2 class="uk-heading-line">
+                        <spring:message code="add.book.title"/>
+                    </h2>
+                    <h4 class="uk-article-meta">
+                        <spring:message code="add.book.description"/>
+                    </h4>
                 </div>
             </div>
         </div>

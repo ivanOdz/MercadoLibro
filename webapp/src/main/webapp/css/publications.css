@@ -58,7 +58,6 @@
 .icon-style {
     height: 80px;
     margin-right: 10px;
-    color: #2c1809;
 }
 
 .pl-1 {
@@ -108,9 +107,4 @@
 .fixed-action-btn .uk-button-primary {
     border-radius: 50%;
     padding: 0; /
-}
-
-
-.background-custom {
-    background-color: #D6D0C2; !important;
 }
