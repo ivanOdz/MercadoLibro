@@ -346,6 +346,15 @@
 
                         </div>
 
+                        <%--Image--%>
+                        <div>
+                            <label class="form-group">
+                                <spring:message code="add.publication.image"/>
+                                <form:input path="imageFile" type="file" class="form-input"/>
+                            </label>
+                            <form:errors path="imageFile" element="p" cssStyle="color: red;"/>
+                        </div>
+
                         <div class="uk-container uk-margin-top">
 
                             <div class="uk-inline">
