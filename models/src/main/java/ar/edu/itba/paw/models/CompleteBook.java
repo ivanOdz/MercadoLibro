@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.models;
 
 public class CompleteBook {
-    private final Book book;
-    private final BookModel bookModel;
+    private Book book;
+    private BookModel bookModel;
     private Long selectedBookId; // Campo adicional para almacenar el ID seleccionado
 
     public CompleteBook(Book book, BookModel bookModel) {
@@ -24,5 +24,13 @@ public class CompleteBook {
 
     public void setSelectedBookId(Long selectedBookId) {
         this.selectedBookId = selectedBookId;
+    }
+
+    public void setBook(Book book) {
+        this.book = book;
+    }
+
+    public void setBookModel(BookModel bookModel) {
+        this.bookModel = bookModel;
     }
 }

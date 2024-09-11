@@ -52,9 +52,10 @@ public class ExchangeController {
     @RequestMapping(path = "/exchange/initializeexchange", method = RequestMethod.POST)
    // public ModelAndView createExchange(@RequestParam (name = "publication_id") long offererPubId, @RequestParam (name = "bookId") long bookId){
     public ModelAndView createExchange(@ModelAttribute("completeBookParam") CompleteBook completeBook, @RequestParam("publication_id") long publicationId){
-    final ModelAndView mav = new ModelAndView("exchange/exchange_initialized_confirmation");
+        
+        final ModelAndView mav = new ModelAndView("exchange/exchange_initialized_confirmation");
 
-        exchangeService.initializeExchange(completeBook.getBook().getBookId(), publicationId);
+        exchangeService.initializeExchange(completeBook.getSelectedBookId(), publicationId);
 
         return mav;
     }

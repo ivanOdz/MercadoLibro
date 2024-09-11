@@ -152,26 +152,28 @@
           <div>
             <p style="text-align: center"><spring:message code="publication.details.bookState"/></p>
             <i class="material-icons" style="margin-left: 40px;">book</i>
+            <div>
             <c:choose>
               <c:when test="${card.book.bookState == 'NEW'}">
-                <spring:message code="bookState.new"/>
+            <strong><spring:message code="bookState.new"/></strong>
               </c:when>
               <c:when test="${card.book.bookState == 'LIKE_NEW'}">
-                <spring:message code="bookState.like.new"/>
+            <strong><spring:message code="bookState.like.new"/></strong>
               </c:when>
               <c:when test="${card.book.bookState == 'VERY_GOOD'}">
-                <spring:message code="bookState.very.good"/>
+            <strong><spring:message code="bookState.very.good"/></strong>
               </c:when>
               <c:when test="${card.book.bookState == 'GOOD'}">
-                <spring:message code="bookState.good"/>
+              <strong><spring:message code="bookState.good"/></strong>
               </c:when>
               <c:when test="${card.book.bookState == 'ACCEPTABLE'}">
-                <spring:message code="bookState.acceptable"/>
+                <strong><spring:message code="bookState.acceptable"/></strong>
               </c:when>
               <c:when test="${card.book.bookState == 'WORN'}">
-                <spring:message code="bookState.worn"/>
+                  <strong><spring:message code="bookState.worn"/></strong>
               </c:when>
             </c:choose>
+            </div>
           </div>
         </div>
 
@@ -196,7 +198,7 @@
           <div class="column-container" style="place-items: center; display: flex;">
             <div>
               <p style="text-align: center"><spring:message code="publication.details.location"/></p>
-                <span uk-icon="icon: check"></span>
+                <span uk-icon="icon: location"></span>
               <p style="text-align: center"><strong>${card.location}</strong></p>
             </div>
           </div>
