@@ -77,11 +77,6 @@
         <h1 class="uk-heading-large"><spring:message code="confirmation.title"/></h1>
         <p class="uk-text-lead"><spring:message code="confirmation.message"/></p>
 
-        <div class="uk-alert-success" uk-alert>
-            <a class="uk-alert-close" uk-close></a>
-            <p><spring:message code="confirmation.success.message"/></p>
-        </div>
-
         <p>
             <a class="uk-button uk-button-primary" href="${pageContext.request.contextPath}/">
                 <spring:message code="confirmation.home.button"/>

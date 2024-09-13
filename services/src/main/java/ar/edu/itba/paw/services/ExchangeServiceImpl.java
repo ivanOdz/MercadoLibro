@@ -70,6 +70,8 @@ public class ExchangeServiceImpl implements ExchangeService {
 
 
         long location = locationService.newLocation(requesterComplete.getLocation());
+
+        System.out.println("Location = " + location);
         long requesterId = bookService.getBookById(requesterComplete.getSelectedBookId()).get().getOwnerId();
         long requesterPubId = publicationService.createPublication(requesterComplete.getSelectedBookId(), requesterId, location, PublicationState.OFFERED);
 
