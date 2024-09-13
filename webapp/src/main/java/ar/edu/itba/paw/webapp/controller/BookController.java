@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
@@ -137,11 +138,14 @@ public class BookController {
                 bookForm.getIsHardcover()
                 );
 
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.getPrincipal() instanceof PawUserDetails pud) {
             Book book = bookService.createBook(bookModel.getBookModelId(), pud.getUser().getUserId(), bookForm.getBookState(), 0,bookForm.getRating());
-            Image image = imageService.saveImage(bookForm.getImageFile());
-            bookImageService.saveBookImage(book.getBookId(), image, new Timestamp(System.currentTimeMillis()));
+
+            System.out.println("La lista de libros viene como: "+ bookForm.getImageFiles());
+            List<Image> images = imageService.saveImage(bookForm.getImageFiles());
+            bookImageService.saveBookImage(book.getBookId(), images, new Timestamp(System.currentTimeMillis()));
         }
 
         return new ModelAndView("redirect:/book");

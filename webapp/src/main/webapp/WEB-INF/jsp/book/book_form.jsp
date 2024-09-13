@@ -350,8 +350,8 @@
                         <div id="image-container" class="uk-container uk-margin-top uk-margin-bottom">
                             <label class="form-group">
                                 <spring:message code="add.publication.image"/>
-                                <c:forEach var="image" items="${bookForm.imageFile}" varStatus="imageStatus">
-                                    <input class="uk-input" type="file" name="imageFile[${imageStatus.index}]" value="${image}"/>
+                                <c:forEach var="image" items="${bookForm.imageFiles}" varStatus="imageStatus">
+                                    <input class="uk-input" type="file" name="imageFiles[${imageStatus.index}]" accept="image/*"/>
                                     <c:if test="${imageStatus.index > 0}">
                                         <button class="uk-button" type="button" onclick="removeImageField(this)">
                                             <span uk-icon="icon:  close"></span>
@@ -363,11 +363,7 @@
 
                         <div class="form-container" style="margin-bottom: 10px">
                             <button class="uk-button uk-margin-right" type="button" onclick="addImageField()"><spring:message code="add.publication.add.image"/></button>
-                            <small class="description">
-                                    <spring:message code="add.publication.image"/>
-                            </small>
                         </div>
-
 
 
                         <div class="uk-container uk-margin-top">
@@ -396,7 +392,7 @@
 <script type="text/javascript">
 
     let authorIndex = authors.length;
-    let imageIndex = imageFile.length;
+    let imageIndex = imageFiles.length;
 
     function addAuthorField() {
 
@@ -423,7 +419,7 @@
         let container = document.getElementById("image-container");
         let newField = document.createElement("div");
 
-        newField.innerHTML = `	<input type="file" name="imageFile[${imageIndex}]" class="uk-input"/>
+        newField.innerHTML = `	   <input class="uk-input" type="file" name="imageFiles[${imageIndex}]" accept="image/*"/>
 									<button type="button" onclick="removeImageField(this)"> X </button>	`;
 
         container.appendChild(newField);

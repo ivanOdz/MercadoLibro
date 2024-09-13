@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.utils.Genre;
 import ar.edu.itba.paw.models.utils.Language;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BookForm {
@@ -43,7 +44,7 @@ public class BookForm {
     @Max(5)
     private int rating;
 
-    private MultipartFile imageFile;
+    private List<MultipartFile> imageFiles;
 
     private Short publicationYear;
 
@@ -107,8 +108,8 @@ public class BookForm {
         return rating;
     }
 
-    public MultipartFile getImageFile() {
-        return imageFile;
+    public List<MultipartFile> getImageFiles() {
+        return imageFiles;
     }
 
     public Short getPublicationYear() {
@@ -179,23 +180,28 @@ public class BookForm {
         this.rating = rating;
     }
 
-    public void setImageFile(MultipartFile imageFile) {
-        this.imageFile = imageFile;
+
+    public void setImageFiles(List<MultipartFile> imageFiles) {
+        this.imageFiles = imageFiles;
     }
 
     public void setPublicationYear(Short publicationYear) {
         this.publicationYear = publicationYear;
     }
 
-    public void setIsHardcover(boolean isHardcover) {
-        this.isHardcover = isHardcover;
+    public void setHardcover(boolean hardcover) {
+        isHardcover = hardcover;
     }
 
-    public void setDimension(BookDimension dimension) {
+    public void setPocketEdition(boolean pocketEdition) {
+        isPocketEdition = pocketEdition;
+    }
+
+    public void setDimension(@NotNull BookDimension dimension) {
         this.dimension = dimension;
     }
 
-    public void setLanguage(Language language) {
+    public void setLanguage(@NotNull Language language) {
         this.language = language;
     }
 
@@ -206,6 +212,4 @@ public class BookForm {
     public void setWeight(int weight) {
         this.weight = weight;
     }
-
-
 }

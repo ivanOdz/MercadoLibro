@@ -20,17 +20,21 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public Image saveImage(MultipartFile image) {
-        Image i = null;
+    public List<Image> saveImage(List<MultipartFile> image) {
+        List<Image> images = new ArrayList<>();
+
+        for(MultipartFile file : image) {
 
             try {
-               i =  imageDao.createImage(image.getBytes());
+                images.add(imageDao.createImage(file.getBytes()));
+
             } catch (Exception e) {
                 e.printStackTrace();
                 throw new RuntimeException("Error al guardar la imagen", e);
             }
+        }
 
-        return i;
+        return images;
     }
 
     @Override

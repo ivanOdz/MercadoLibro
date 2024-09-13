@@ -37,9 +37,12 @@ public class BookImageServiceImpl implements BookImageService {
     }
 
     @Override
-    public void saveBookImage(long bookId, Image image, Timestamp timestamp){
+    public void saveBookImage(long bookId, List<Image> image, Timestamp timestamp){
         int imageOrder = 0;
-            bookImageDao.saveBookImage(bookId, imageOrder, image.getImageId(), timestamp);
+        for(Image file : image) {
+            bookImageDao.saveBookImage(bookId, imageOrder++, file.getImageId(), timestamp);
         }
+
+    }
 
 }

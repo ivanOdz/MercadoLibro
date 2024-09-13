@@ -13,6 +13,6 @@ public interface BookImageService {
 
     List<BookImage> getSortedImagesByBookId(long bookId);
 
-    void saveBookImage(long bookId, Image image, Timestamp timestamp);
+    void saveBookImage(long bookId, List<Image> image, Timestamp timestamp);
 
 }
