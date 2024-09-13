@@ -387,7 +387,8 @@
         let newField = document.createElement("div");
 
         newField.innerHTML = `	<input type="text" name="authors[${authorIndex}]" class="uk-input"/>
-									<button type="button" onclick="removeAuthorField(this)"> X </button>	`;
+									<button class ="uk-button uk-button-danger uk-button-small" type="button" onclick="removeAuthorField(this)"><span uk-icon="icon: trash"></span></button>
+
 
         container.appendChild(newField);
         authorIndex++;
@@ -405,6 +406,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         var uploadElement = document.querySelector('.js-upload');
         var progressBar = document.getElementById('js-progressbar');
+        var previewContainer = document.getElementById('image-preview-container');
 
         // Inicializa UIkit.upload
         UIkit.upload(uploadElement, {
@@ -453,7 +455,6 @@
             uploadElement.classList.remove('uk-placeholder'); // Remover estilo al soltar el archivo
 
             var files = e.dataTransfer.files;
-            var previewContainer = document.getElementById('image-preview-container');
 
             // Limpia el contenedor antes de agregar nuevas imágenes
             previewContainer.innerHTML = '';
@@ -461,19 +462,33 @@
             for (const file of files) {
                 const reader = new FileReader();
                 reader.onload = function(event) {
+                    const imgWrapper = document.createElement('div');
+                    imgWrapper.classList.add('image-wrapper');
+
                     const img = document.createElement('img');
                     img.src = event.target.result;
                     img.classList.add('uk-margin-small-right');
                     img.style.maxWidth = '200px';
                     img.style.maxHeight = '200px';
-                    previewContainer.appendChild(img);
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.classList.add('uk-button', 'uk-button-danger', 'uk-button-small');
+                    deleteButton.innerHTML = '<span uk-icon="icon: trash"></span>';
+                    deleteButton.classList.add('delete-button');
+
+                    deleteButton.addEventListener('click', function() {
+                        imgWrapper.remove(); // Elimina el contenedor de la imagen
+                    });
+
+                    imgWrapper.appendChild(img);
+                    imgWrapper.appendChild(deleteButton);
+                    previewContainer.appendChild(imgWrapper);
                 };
                 reader.readAsDataURL(file);
             }
         });
 
         var fileInput = document.getElementById('file-input');
-        var previewContainer = document.getElementById('image-preview-container');
 
         fileInput.addEventListener('change', function(event) {
             const files = event.target.files;
@@ -485,17 +500,33 @@
             for (const file of files) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
+                    const imgWrapper = document.createElement('div');
+                    imgWrapper.classList.add('image-wrapper');
+
                     const img = document.createElement('img');
                     img.src = e.target.result;
-                    img.classList.add('uk-margin-small-right'); // Añade clase para margen, si quieres
+                    img.classList.add('uk-margin-small-right');
                     img.style.maxWidth = '200px'; // Limita el tamaño de la imagen
                     img.style.maxHeight = '200px'; // Limita el tamaño de la imagen
-                    previewContainer.appendChild(img);
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.classList.add('uk-button', 'uk-button-danger', 'uk-button-small');
+                    deleteButton.innerHTML = '<span uk-icon="icon: trash"></span>';
+                    deleteButton.classList.add('delete-button');
+
+                    deleteButton.addEventListener('click', function() {
+                        imgWrapper.remove(); // Elimina el contenedor de la imagen
+                    });
+
+                    imgWrapper.appendChild(img);
+                    imgWrapper.appendChild(deleteButton);
+                    previewContainer.appendChild(imgWrapper);
                 };
                 reader.readAsDataURL(file);
             }
         });
     });
+
 
 
 </script>
