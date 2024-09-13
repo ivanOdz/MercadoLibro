@@ -348,7 +348,7 @@
                             <span uk-icon="icon: cloud-upload"></span>
                             <span class="uk-text-middle">Attach binaries by dropping them here or</span>
                             <div uk-form-custom>
-                                <input type="file" id="imageFiles" name="imageFiles" accept="image/*" multiple>
+                                <input type="file" id="file-input" name="imageFiles" accept="image/*" multiple>
                                 <span class="uk-link">selecting one</span>
                             </div>
                         </div>
@@ -359,15 +359,15 @@
 
 
                         <div class="uk-container uk-margin-top">
-
                             <div class="uk-inline">
-
                                 <div class="uk-position-right">
-                                    <button type="submit" class="uk-button uk-button-default uk-background-primary uk-light uk-panel"><spring:message code="add.publication.upload"/></button>
+                                    <button type="submit" id="upload-button" class="uk-button uk-button-default uk-background-primary uk-light uk-panel">
+                                        <spring:message code="add.publication.upload"/>
+                                    </button>
                                 </div>
-
                             </div>
                         </div>
+
                     </form:form>
                 </div>
             </div>
@@ -402,72 +402,108 @@
     }
 */
 
-   var bar = document.getElementById('js-progressbar');
-
-   UIkit.upload('.js-upload', {
-
-       url: '',
-       multiple: true,
-
-       beforeSend: function () {
-           console.log('beforeSend', arguments);
-       },
-       beforeAll: function () {
-           console.log('beforeAll', arguments);
-       },
-       load: function () {
-           console.log('load', arguments);
-       },
-       error: function () {
-           console.log('error', arguments);
-       },
-       complete: function () {
-           console.log('complete', arguments);
-       },
-
-       loadStart: function (e) {
-           console.log('loadStart', arguments);
-
-           bar.removeAttribute('hidden');
-           bar.max = e.total;
-           bar.value = e.loaded;
-       },
-
-       progress: function (e) {
-           console.log('progress', arguments);
-
-           bar.max = e.total;
-           bar.value = e.loaded;
-       },
-
-       loadEnd: function (e) {
-           console.log('loadEnd', arguments);
-
-           bar.max = e.total;
-           bar.value = e.loaded;
-       },
-
-       completeAll: function () {
-           console.log('completeAll', arguments);
-
-           setTimeout(function () {
-               bar.setAttribute('hidden', 'hidden');
-           }, 1000);
-
-           alert('Upload Completed');
-       }
-
-   });
-
     document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('imageFiles').addEventListener('change', function(event) {
-            const files = event.target.files;
-            const previewContainer = document.getElementById('image-preview-container');
-            previewContainer.innerHTML = ''; // Limpia el contenedor antes de agregar nuevas imágenes
+        var uploadElement = document.querySelector('.js-upload');
+        var progressBar = document.getElementById('js-progressbar');
+
+        // Inicializa UIkit.upload
+        UIkit.upload(uploadElement, {
+            url: '/book/upload_book',
+            multiple: true,
+
+            beforeSend: function () {
+                console.log('beforeSend', arguments);
+            },
+            beforeAll: function () {
+                console.log('beforeAll', arguments);
+            },
+            load: function () {
+                console.log('load', arguments);
+            },
+            error: function () {
+                console.log('error', arguments);
+            },
+            complete: function () {
+                console.log('complete', arguments);
+            },
+
+            loadStart: function (e) {
+                console.log('loadStart', arguments);
+                progressBar.removeAttribute('hidden');
+                progressBar.max = e.total;
+                progressBar.value = e.loaded;
+            },
+
+            progress: function (e) {
+                console.log('progress', arguments);
+                progressBar.max = e.total;
+                progressBar.value = e.loaded;
+            },
+
+            loadEnd: function (e) {
+                console.log('loadEnd', arguments);
+                progressBar.max = e.total;
+                progressBar.value = e.loaded;
+            },
+
+            completeAll: function () {
+                console.log('completeAll', arguments);
+                setTimeout(function () {
+                    progressBar.setAttribute('hidden', 'hidden');
+                }, 1000);
+            }
+        });
+
+        // Manejo del arrastrar y soltar
+        uploadElement.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            uploadElement.classList.add('uk-placeholder'); // Estilo para indicar que se está arrastrando un archivo
+        });
+
+        uploadElement.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            uploadElement.classList.remove('uk-placeholder'); // Remover estilo al salir el archivo del área
+        });
+
+        uploadElement.addEventListener('drop', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            uploadElement.classList.remove('uk-placeholder'); // Remover estilo al soltar el archivo
+
+            var files = e.dataTransfer.files;
+            var previewContainer = document.getElementById('image-preview-container');
+
+            // Limpia el contenedor antes de agregar nuevas imágenes
+            previewContainer.innerHTML = '';
 
             for (const file of files) {
                 const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = document.createElement('img');
+                    img.src = event.target.result;
+                    img.classList.add('uk-margin-small-right');
+                    img.style.maxWidth = '200px';
+                    img.style.maxHeight = '200px';
+                    previewContainer.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
 
+        var fileInput = document.getElementById('file-input');
+        var previewContainer = document.getElementById('image-preview-container');
+
+        fileInput.addEventListener('change', function(event) {
+            const files = event.target.files;
+            console.log('Files selected:', files); // Agregado para depuración
+
+            // Limpia el contenedor antes de agregar nuevas imágenes
+            previewContainer.innerHTML = '';
+
+            for (const file of files) {
+                const reader = new FileReader();
                 reader.onload = function(e) {
                     const img = document.createElement('img');
                     img.src = e.target.result;
@@ -476,11 +512,11 @@
                     img.style.maxHeight = '200px'; // Limita el tamaño de la imagen
                     previewContainer.appendChild(img);
                 };
-
                 reader.readAsDataURL(file);
             }
         });
     });
+
 
 </script>
 </body>
