@@ -111,10 +111,10 @@ public class ExchangeServiceImpl implements ExchangeService {
 
 
     @Override
-    public List<ExchangeWrapper> getExchangeWrapperListByUserId(long userId) {
-        List<ExchangeWrapper> toReturn = new ArrayList<>();
+    public List<ExchangeRequesterWrapper> getExchangeRequesterWrapperListByUserId(long userId) {
+        List<ExchangeRequesterWrapper> toReturn = new ArrayList<>();
 
-        List<Exchange> exchanges = exchangeDao.getExchangesByUserIdInvolved(userId);
+        List<Exchange> exchanges = exchangeDao.getExchangesWhereUserIdIsOfferer(userId);
 
         for (Exchange ex : exchanges) {
             String requesterLocation = locationService.getLocationByPublicationId(ex.getRequesterPubId());
@@ -140,7 +140,7 @@ public class ExchangeServiceImpl implements ExchangeService {
                     .map(Author::getAuthorName)
                     .collect(Collectors.toList());
 
-            toReturn.add(new ExchangeWrapper(ex, requesterLocation, requesterMail, requesterUsername, offererBook, requesterBook, offererBookModel, requesterBookModel, requesterBookImages, offererBookImages, requesterAuthorNames, offererAuthorNames));
+            toReturn.add(new ExchangeRequesterWrapper(ex, requesterLocation, requesterMail, requesterUsername, offererBook, requesterBook, offererBookModel, requesterBookModel, requesterBookImages, offererBookImages, requesterAuthorNames, offererAuthorNames));
         }
 
         return toReturn;

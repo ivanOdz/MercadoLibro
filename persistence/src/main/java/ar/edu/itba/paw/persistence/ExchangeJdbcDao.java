@@ -2,7 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.ExchangeDao;
 import ar.edu.itba.paw.models.Exchange;
-import ar.edu.itba.paw.models.ExchangeWrapper;
+import ar.edu.itba.paw.models.ExchangeRequesterWrapper;
 import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.models.utils.ResponseState;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -108,8 +108,13 @@ public class ExchangeJdbcDao implements ExchangeDao {
         return new Exchange(id.longValue(), offererPubId, requesterPubId, ExchangeState.PENDING, acceptCode, false, false, startDate, null);
     }
 
-    public List<Exchange> getExchangesByUserIdInvolved(long anUserId){
-        return jdbcTemplate.query("SELECT * FROM exchange WHERE offererPubId IN (SELECT publicationId FROM publication WHERE userId = ?) UNION SELECT * FROM exchange WHERE requesterPubId IN (SELECT publicationId FROM publication WHERE userId = ? ) ORDER BY exchangeStartDate DESC", new Object[]{ anUserId, anUserId },
-                new int[]{ Types.BIGINT, Types.BIGINT }, ROWMAPPER);
+    public List<Exchange> getExchangesWhereUserIdIsOfferer(long anUserId){
+        return jdbcTemplate.query("SELECT * FROM exchange WHERE offererPubId IN (SELECT publicationId FROM publication WHERE userId = ?) ORDER BY exchangeStartDate DESC", new Object[]{ anUserId },
+                new int[]{ Types.BIGINT }, ROWMAPPER);
+    }
+
+    public List<Exchange> getExchangesWhereUserIdIsRequester(long anUserId){
+        return jdbcTemplate.query("SELECT * FROM exchange WHERE requesterPubId IN (SELECT publicationId FROM publication WHERE userId = ? ) ORDER BY exchangeStartDate DESC", new Object[]{ anUserId },
+                new int[]{ Types.BIGINT }, ROWMAPPER);
     }
 }

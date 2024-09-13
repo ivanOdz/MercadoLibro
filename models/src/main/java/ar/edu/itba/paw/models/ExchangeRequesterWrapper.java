@@ -2,7 +2,7 @@ package ar.edu.itba.paw.models;
 
 import java.util.List;
 
-public class ExchangeWrapper {
+public class ExchangeRequesterWrapper {
 
     private final Exchange exchange;
     private final String requesterLocation, requesterMail, requesterUsername;
@@ -11,7 +11,7 @@ public class ExchangeWrapper {
     private final List<BookImage> requesterBookImages, offererBookImages;
     private final List<String> requesterBookAuthor, offererBookAuthor;
 
-    public ExchangeWrapper(Exchange exchange, String requesterLocation, String requesterMail, String requesterUsername, Book offererBook, Book requesterBook, BookModel offererBookModel, BookModel requesterBookModel, List<BookImage> requesterBookImages, List<BookImage> offererBookImages, List<String> requesterBookAuthor, List<String> offererBookAuthor) {
+    public ExchangeRequesterWrapper(Exchange exchange, String requesterLocation, String requesterMail, String requesterUsername, Book offererBook, Book requesterBook, BookModel offererBookModel, BookModel requesterBookModel, List<BookImage> requesterBookImages, List<BookImage> offererBookImages, List<String> requesterBookAuthor, List<String> offererBookAuthor) {
         this.exchange = exchange;
         this.requesterLocation = requesterLocation;
         this.requesterMail = requesterMail;

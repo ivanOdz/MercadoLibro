@@ -2,7 +2,7 @@ package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.CompleteBook;
 import ar.edu.itba.paw.models.Exchange;
-import ar.edu.itba.paw.models.ExchangeWrapper;
+import ar.edu.itba.paw.models.ExchangeRequesterWrapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,5 +18,5 @@ public interface ExchangeService {
 
     void initializeExchange(CompleteBook requesterCompleteData, long offererPubId);
 
-    List<ExchangeWrapper> getExchangeWrapperListByUserId(long userId);
+    List<ExchangeRequesterWrapper> getExchangeRequesterWrapperListByUserId(long userId);
 }

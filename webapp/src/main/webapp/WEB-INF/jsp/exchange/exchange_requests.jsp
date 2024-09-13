@@ -38,7 +38,8 @@
 </head>
 
 <body>
-<c:url var="exchangeUrl" value="/exchange"/>
+<c:url var="exchangeRequestsUrl" value="/requests"/>
+<c:url var="exchangeOffersUrl" value="/offers"/>
 <c:url var="booksUrl" value="/book"/>
 <c:url var="profileUrl" value="/profile"/>
 <c:url var="newBookFromScratch" value="/book/book_form"/>
@@ -82,7 +83,24 @@
             </div>
             <div class="uk-navbar-right">
                 <ul class="uk-navbar-nav">
-                    <li><a class="pl-1 pr-1" href="<c:url value="${exchangeUrl}"/>"><spring:message code="home.exchange.view"/></a></li>
+                    <li>
+                        <a class="pl-1 pr-1" href="<c:url value="${exchangeRequestsUrl}"/>"><spring:message code="home.exchange.view"/></a>
+                        <div class="uk-navbar-dropdown">
+                            <ul class="uk-nav uk-navbar-dropdown-nav">
+                                <li class="uk-active uk-margin-small-top">
+                                    <a href="<c:url value='${exchangeRequestsUrl}'/>">
+                                        <spring:message code="home.exchange.requests"/>
+                                    </a>
+                                </li>
+                                <li class="uk-margin-small-top">
+                                    <a href="<c:url value='${exchangeOffersUrl}'/>">
+                                        <spring:message code="home.exchange.offers"/>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
                     <li>
                         <a class="pl-1 pr-1" href="<c:url value='${booksUrl}'/>">
                             <spring:message code="home.book.view"/>
@@ -157,35 +175,6 @@
 
             <!-- Segunda columna que ocupa el resto del espacio disponible -->
             <div class="uk-width-expand uk-margin-top uk-overflow-auto" style="max-height: 80vh;">
-                <!-- Contenedor desplazable con altura máxima y ancho completo -->
-<%--                        <h3 class="uk-card-title">Intercambio con: ${exchange.requesterUsername}</h3>--%>
-<%--                        <p>Email: ${exchange.requesterMail}</p>--%>
-<%--                        <p>Ubicación: ${exchange.requesterLocation}</p>--%>
-
-<%--                        <h4>Libro ofertado:</h4>--%>
-<%--                        <p>Título: ${exchange.offererBookModel.title}</p>--%>
-<%--                        <p>Autor(es):--%>
-<%--                            <c:forEach var="author" items="${exchange.offererBookAuthor}">--%>
-<%--                                ${author}--%>
-<%--                            </c:forEach>--%>
-<%--                        </p>--%>
-<%--                        <p>Edición: ${exchange.offererBookModel.edition}</p>--%>
-
-<%--                        <div class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1" uk-slideshow>--%>
-
-<%--                            <div class="uk-slideshow-items">--%>
-<%--                                <c:forEach var="image" items="${exchange.offererBookImages}">--%>
-<%--                                    <div>--%>
-<%--                                        <img src="${pageContext.request.contextPath}/images/${image.imageId}" alt="bookImage" uk-cover>--%>
-<%--                                    </div>--%>
-<%--                                </c:forEach>--%>
-<%--                            </div>--%>
-
-<%--                            <a class="uk-position-center-left uk-position-small uk-hidden-hover"  uk-slidenav-previous uk-slideshow-item="previous"></a>--%>
-<%--                            <a class="uk-position-center-right uk-position-small uk-hidden-hover" uk-slidenav-next uk-slideshow-item="next"></a>--%>
-
-<%--                        </div>--%>
-<%--                    </div>--%>
                 <c:forEach var="exchange" items="${exchangeWrapperList}">
                     <div class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-4@s uk-margin exchange-card" onclick="selectCard(this, '${exchange.requesterUsername}', '${exchange.requesterMail}', '${exchange.requesterLocation}', '${exchange.offererBookModel.title}', '${exchange.offererBookAuthor}', '${exchange.offererBookModel.edition}', '${exchange.offererBookImages}')" uk-grid>
                         <div class="uk-card-media-left uk-cover-container">
@@ -201,15 +190,14 @@
                                     </c:when>
                                     <c:when test="${exchange.exchange.exchangeState == 'REJECTED'}">
                                         <span class="uk-badge state-rejected">Rejected</span>
-
                                     </c:when>
                                     <c:when test="${exchange.exchange.exchangeState == 'PENDING'}">
                                         <div class="uk-button-group">
                                             <a class="uk-button uk-button-default" href="<c:url value='/createexchange'>
-                                                <c:param name='accept_code' value='${exchange.exchange.acceptCode}'/>
-                                                <c:param name='state' value='true'/>
-                                            </c:url>">Accept</a>
-                                            <a class="uk-button uk-button-default" href="<c:url value='/createexchange'>
+                                            <c:param name='accept_code' value='${exchange.exchange.acceptCode}'/>
+                                            <c:param name='state' value='true'/>
+                                        </c:url>">Accept</a>
+                                                                        <a class="uk-button uk-button-default" href="<c:url value='/createexchange'>
                                             <c:param name='accept_code' value='${exchange.exchange.acceptCode}'/>
                                             <c:param name='state' value='false'/>
                                         </c:url>">Reject</a>
@@ -220,6 +208,7 @@
                                         <span class="uk-badge state-inprogress">In Progress</span>
                                     </c:when>
                                 </c:choose>
+
                             </div>
                         </div>
                     </div>

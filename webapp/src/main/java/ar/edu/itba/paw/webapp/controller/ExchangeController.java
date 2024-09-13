@@ -36,13 +36,31 @@ public class ExchangeController {
     }
 
 
-    @RequestMapping("/exchange")
-    public ModelAndView exchangeHome() {
-        final ModelAndView mav = new ModelAndView("exchange/exchange_home");
+    // Requests (osea peticiones que me hacen a mi)
+    // Paso el ID, y quiero aquellas exchanges en las que soy offerer
+    @RequestMapping("/requests")
+    public ModelAndView exchangeRequests() {
+        final ModelAndView mav = new ModelAndView("exchange/exchange_requests");
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
+            List<ExchangeRequesterWrapper> exchangeWrapperList = exchangeService.getExchangeRequesterWrapperListByUserId(pud.getUser().getUserId());
+            mav.addObject("exchangeWrapperList", exchangeWrapperList);
+        }
+
+        return mav;
+    }
+
+
+    // Estado de mis ofertas
+    // Paso el ID, y quiero aquellas exchanges en las que soy requester
+    @RequestMapping("/offers")
+    public ModelAndView exchangeOffers() {
+        final ModelAndView mav = new ModelAndView("exchange/exchange_offers");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.getPrincipal() instanceof PawUserDetails pud) {
-            List<ExchangeWrapper> exchangeWrapperList = exchangeService.getExchangeWrapperListByUserId(pud.getUser().getUserId());
+            List<ExchangeRequesterWrapper> exchangeWrapperList = exchangeService.getExchangeRequesterWrapperListByUserId(pud.getUser().getUserId());
             mav.addObject("exchangeWrapperList", exchangeWrapperList);
         }
 
@@ -50,9 +68,9 @@ public class ExchangeController {
     }
 
     @RequestMapping(path = "/exchange/initializeexchange", method = RequestMethod.POST)
-   // public ModelAndView createExchange(@RequestParam (name = "publication_id") long offererPubId, @RequestParam (name = "bookId") long bookId){
+    // public ModelAndView createExchange(@RequestParam (name = "publication_id") long offererPubId, @RequestParam (name = "bookId") long bookId){
     public ModelAndView createExchange(@ModelAttribute("completeBookParam") CompleteBook completeBook, @RequestParam("publication_id") long publicationId){
-        
+
         final ModelAndView mav = new ModelAndView("exchange/exchange_initialized_confirmation");
 
         exchangeService.initializeExchange(completeBook, publicationId);

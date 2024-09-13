@@ -18,6 +18,8 @@ public interface ExchangeDao {
 
     Exchange createExchange(long offererId, long requesterId, int acceptCode, Timestamp startDate);
 
-    List<Exchange> getExchangesByUserIdInvolved(long anUserId);
+    List<Exchange> getExchangesWhereUserIdIsOfferer(long anUserId);
+
+    List<Exchange> getExchangesWhereUserIdIsRequester(long anUserId);
 
 }
