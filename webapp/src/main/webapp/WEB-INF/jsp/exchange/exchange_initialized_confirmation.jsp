@@ -16,6 +16,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
 </head>
 <body>
+<c:url var="logout" value="/logout"/>
 
 <nav class="uk-navbar-container uk-background-primary uk-box-shadow-small" uk-sticky>
     <div class="uk-container">
@@ -37,6 +38,21 @@
                 </ul>
             </div>
 
+            <div class="uk-navbar-center">
+                <ul class="uk-navbar-nav">
+                    <li>
+                        <form class="uk-search uk-search-default custom-search-form" method="get" action="${pageContext.request.contextPath}">
+                            <input class="uk-search-input" type="search"
+                                   placeholder="<spring:message code='home.search.text'/>"
+                                   aria-label="Search"
+                                   name="search"
+                                   id="search"
+                                   value="${param.search != null ? param.search : ''}">
+                            <button class="uk-search-icon-flip" uk-search-icon></button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
             <div class="uk-navbar-right">
                 <ul class="uk-navbar-nav">
                     <li><a class="pl-1 pr-1" href="<c:url value="${exchangeUrl}"/>"><spring:message code="home.exchange.view"/></a></li>
@@ -64,8 +80,23 @@
                             </ul>
                         </div>
                     </li>
-
-                    <li><a class="pl-1 pr-1" href="<c:url value="${profileUrl}"/>"><spring:message code="home.profile.view"/></a></li>
+                    <li>
+                        <a class="pl-1 pr-1" href="<c:url value="${profileUrl}"/>"><spring:message code="home.profile.view"/></a>
+                        <div class="uk-navbar-dropdown">
+                            <ul class="uk-nav uk-navbar-dropdown-nav">
+                                <li class="uk-active uk-margin-small-top">
+                                    <a href="<c:url value='${profileUrl}'/>">
+                                        <spring:message code="home.profile.view"/>
+                                    </a>
+                                </li>
+                                <li class="uk-margin-small-top">
+                                    <a href="<c:url value='${logout}'/>">
+                                        <spring:message code="home.profile.logout"/>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
                 </ul>
             </div>
         </div>

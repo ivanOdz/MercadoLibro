@@ -21,6 +21,7 @@
 <c:url var="booksUrl" value="/book"/>
 <c:url var="profileUrl" value="/profile"/>
 <c:url var="newBookFromScratch" value="/book/book_form"/>
+<c:url var="logout" value="/logout"/>
 
 <nav class="uk-navbar-container uk-background-primary uk-box-shadow-small" uk-sticky>
   <div class="uk-container">
@@ -84,13 +85,29 @@
               </ul>
             </div>
           </li>
-
-          <li><a class="pl-1 pr-1" href="<c:url value="${profileUrl}"/>"><spring:message code="home.profile.view"/></a></li>
+          <li>
+            <a class="pl-1 pr-1" href="<c:url value="${profileUrl}"/>"><spring:message code="home.profile.view"/></a>
+            <div class="uk-navbar-dropdown">
+              <ul class="uk-nav uk-navbar-dropdown-nav">
+                <li class="uk-active uk-margin-small-top">
+                  <a href="<c:url value='${profileUrl}'/>">
+                    <spring:message code="home.profile.view"/>
+                  </a>
+                </li>
+                <li class="uk-margin-small-top">
+                  <a href="<c:url value='${logout}'/>">
+                    <spring:message code="home.profile.logout"/>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </li>
         </ul>
       </div>
     </div>
   </div>
 </nav>
+
 
 <div class="uk-background-muted">
   <div class="uk-container">
