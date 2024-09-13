@@ -21,7 +21,7 @@ public class BookForm {
     private String title;
     
     @NotEmpty
-    private List<String> authors;
+    private List<String> authors = new ArrayList<>();
     
     @NotBlank
     @Size(min = 1, max = 100)

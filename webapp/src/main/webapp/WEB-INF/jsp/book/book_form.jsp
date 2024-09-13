@@ -129,26 +129,26 @@
                         </div>
 
                         <%--Autores--%>
-<%--                        <div id="author-container" class="uk-container uk-margin-top uk-margin-bottom">--%>
-<%--                            <label class="form-group">--%>
-<%--                                <spring:message code="add.publication.authors"/>--%>
-<%--                                <c:forEach var="author" items="${bookForm.authors}" varStatus="status">--%>
-<%--                                    <input class="uk-input" type="text" name="authors[${status.index}]" value="${author}"/>--%>
-<%--                                    <c:if test="${status.index > 0}">--%>
-<%--                                        <button class="uk-button" type="button" onclick="removeAuthorField(this)">--%>
-<%--                                            <span uk-icon="icon:  close"></span>--%>
-<%--                                        </button>--%>
-<%--                                    </c:if>--%>
-<%--                                </c:forEach>--%>
-<%--                            </label>--%>
-<%--                        </div>--%>
+                        <div id="author-container" class="uk-container uk-margin-top uk-margin-bottom">
+                            <label class="form-group">
+                                <spring:message code="add.publication.authors"/>
+                                <c:forEach var="author" items="${bookForm.authors}" varStatus="status">
+                                    <input class="uk-input" type="text" name="authors[${status.index}]" value="${author}"/>
+                                    <c:if test="${status.index > 0}">
+                                        <button class="uk-button" type="button" onclick="removeAuthorField(this)">
+                                            <span uk-icon="icon:  close"></span>
+                                        </button>
+                                    </c:if>
+                                </c:forEach>
+                            </label>
+                        </div>
 
-<%--                        <div class="form-container" style="margin-bottom: 10px">--%>
-<%--                            <button class="uk-button uk-margin-right" type="button" onclick="addAuthorField()"><spring:message code="add.publication.add.author"/></button>--%>
-<%--                            <small class="description">--%>
-<%--                                <spring:message code="add.publication.description.authors"/>--%>
-<%--                            </small>--%>
-<%--                        </div>--%>
+                        <div class="form-container" style="margin-bottom: 10px">
+                            <button class="uk-button uk-margin-right" type="button" onclick="addAuthorField()"><spring:message code="add.publication.add.author"/></button>
+                            <small class="description">
+                                <spring:message code="add.publication.description.authors"/>
+                            </small>
+                        </div>
 
                         <%--Género--%>
 
@@ -344,7 +344,7 @@
                             </div>
                         </div>
 
-                        <div class="js-upload uk-placeholder uk-text-center">
+                        <div class="uk-placeholder uk-text-center">
                             <span uk-icon="icon: cloud-upload"></span>
                             <span class="uk-text-middle">Attach binaries by dropping them here or</span>
                             <div uk-form-custom>
@@ -377,8 +377,9 @@
 
 <script type="text/javascript">
 
-    /*let authorIndex = authors.length;
-    let imageIndex = imageFiles.length;
+    var authors = ${bookForm.authors};
+
+    let authorIndex = authors.length;
 
     function addAuthorField() {
 
@@ -387,7 +388,8 @@
         let newField = document.createElement("div");
 
         newField.innerHTML = `	<input type="text" name="authors[${authorIndex}]" class="uk-input"/>
-									<button class ="uk-button uk-button-danger uk-button-small" type="button" onclick="removeAuthorField(this)"><span uk-icon="icon: trash"></span></button>
+									<button class ="uk-button uk-button-danger uk-button-small" type="button" onclick="removeAuthorField(this)"><span uk-icon="icon: trash"></span></button>`
+
 
 
         container.appendChild(newField);
@@ -401,90 +403,10 @@
         container.removeChild(button.parentNode);
         authorIndex--;
     }
-*/
+
 
     document.addEventListener('DOMContentLoaded', function() {
-        var uploadElement = document.querySelector('.js-upload');
-        var progressBar = document.getElementById('js-progressbar');
         var previewContainer = document.getElementById('image-preview-container');
-
-        UIkit.upload(uploadElement, {
-            url: '/book/upload_book',
-            multiple: true,
-
-            loadStart: function (e) {
-                progressBar.removeAttribute('hidden');
-                progressBar.max = e.total;
-                progressBar.value = e.loaded;
-            },
-
-            progress: function (e) {
-                progressBar.max = e.total;
-                progressBar.value = e.loaded;
-            },
-
-            loadEnd: function (e) {
-                progressBar.max = e.total;
-                progressBar.value = e.loaded;
-            },
-
-            completeAll: function () {
-                setTimeout(function () {
-                    progressBar.setAttribute('hidden', 'hidden');
-                }, 1000);
-            }
-        });
-
-        uploadElement.addEventListener('dragover', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            uploadElement.classList.add('uk-placeholder');
-        });
-
-        uploadElement.addEventListener('dragleave', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            uploadElement.classList.remove('uk-placeholder');
-        });
-
-        uploadElement.addEventListener('drop', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            uploadElement.classList.remove('uk-placeholder');
-
-            var files = e.dataTransfer.files;
-
-            previewContainer.innerHTML = '';
-
-            for (const file of files) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const imgWrapper = document.createElement('div');
-                    imgWrapper.classList.add('image-wrapper');
-
-                    const img = document.createElement('img');
-                    img.src = event.target.result;
-                    img.classList.add('uk-margin-small-right');
-                    img.style.maxWidth = '200px';
-                    img.style.maxHeight = '200px';
-
-                    const deleteButton = document.createElement('button');
-                    deleteButton.classList.add('uk-button', 'uk-button-danger', 'uk-button-small');
-                    deleteButton.innerHTML = '<span uk-icon="icon: trash"></span>';
-                    deleteButton.classList.add('delete-button');
-
-                    deleteButton.addEventListener('click', function() {
-                        imgWrapper.remove();
-                    });
-
-                    imgWrapper.appendChild(img);
-                    imgWrapper.appendChild(deleteButton);
-                    previewContainer.appendChild(imgWrapper);
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
         var fileInput = document.getElementById('file-input');
 
         fileInput.addEventListener('change', function(event) {
