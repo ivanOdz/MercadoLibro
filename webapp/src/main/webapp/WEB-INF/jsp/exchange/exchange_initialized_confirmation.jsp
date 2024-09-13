@@ -16,6 +16,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
 </head>
 <body>
+<c:url var="exchangeUrl" value="/exchange"/>
+<c:url var="booksUrl" value="/book"/>
+<c:url var="profileUrl" value="/profile"/>
+<c:url var="newBookFromScratch" value="/book/book_form"/>
 <c:url var="logout" value="/logout"/>
 
 <nav class="uk-navbar-container uk-background-primary uk-box-shadow-small" uk-sticky>

@@ -1,22 +1,25 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
-
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <!DOCTYPE html>
-<html lang="es">
 <%@include file="/WEB-INF/jsp/head/headers.jsp"%>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title><fmt:message key="exchange.invalid"/></title>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><spring:message code="confirmation.page.title"/></title>
+    <link href="${pageContext.request.contextPath}/css/publications.css?v=1.0" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/css/exchange.css ?v=1.0" rel="stylesheet"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
-    <meta charset="UTF-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
 </head>
 <body>
-<c:url var="okUrl" value="/exchange"/>
+<c:url var="exchangeUrl" value="/exchange"/>
+<c:url var="booksUrl" value="/book"/>
+<c:url var="profileUrl" value="/profile"/>
+<c:url var="newBookFromScratch" value="/book/book_form"/>
 <c:url var="logout" value="/logout"/>
 
 <nav class="uk-navbar-container uk-background-primary uk-box-shadow-small" uk-sticky>
@@ -104,17 +107,18 @@
     </div>
 </nav>
 
-<div class="uk-background-center-center">
-    <div class="uk-position-center uk-card uk-card-default uk-card-body uk-width-1-2@m">
-        <h3 class="uk-card-title">
-            <fmt:message key="exchange.invalid"/>
-        </h3>
-        <a href="${okUrl}">
-            <button class="uk-button uk-button-primary uk-align-center">
-                <spring:message code="exchange.button.redirect"/>
-            </button>
-        </a>
+<div class="uk-container uk-margin-large-top uk-margin-large-bottom">
+    <div class="uk-text-center">
+        <h1 class="uk-heading-large"><spring:message code="invalid.title"/></h1>
+        <p class="uk-text-lead"><spring:message code="invalid.message"/></p>
+
+        <p>
+            <a class="uk-button uk-button-primary" href="${pageContext.request.contextPath}/">
+                <spring:message code="confirmation.home.button"/>
+            </a>
+        </p>
     </div>
 </div>
+
 </body>
 </html>

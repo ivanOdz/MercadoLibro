@@ -21,4 +21,6 @@ public class UserReviewForm {
     private String reviewDescription;
     private long offererPubId;
     private long requesterPubId;
+
+
 }
