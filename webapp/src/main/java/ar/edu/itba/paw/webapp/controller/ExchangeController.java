@@ -54,18 +54,18 @@ public class ExchangeController {
 
     // Estado de mis ofertas
     // Paso el ID, y quiero aquellas exchanges en las que soy requester
-    @RequestMapping("/offers")
+    /*@RequestMapping("/offers")
     public ModelAndView exchangeOffers() {
         final ModelAndView mav = new ModelAndView("exchange/exchange_offers");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.getPrincipal() instanceof PawUserDetails pud) {
-            List<ExchangeRequesterWrapper> exchangeWrapperList = exchangeService.getExchangeRequesterWrapperListByUserId(pud.getUser().getUserId());
+            List<ExchangeRequesterWrapper> exchangeWrapperList = exchangeService.getExchangeOffererWrapperListByUserId(pud.getUser().getUserId());
             mav.addObject("exchangeWrapperList", exchangeWrapperList);
         }
 
         return mav;
-    }
+    }*/
 
     @RequestMapping(path = "/exchange/initializeexchange", method = RequestMethod.POST)
     // public ModelAndView createExchange(@RequestParam (name = "publication_id") long offererPubId, @RequestParam (name = "bookId") long bookId){
