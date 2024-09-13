@@ -14,6 +14,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
 
+
 </head>
 
 <body>
@@ -128,26 +129,26 @@
                         </div>
 
                         <%--Autores--%>
-                        <div id="author-container" class="uk-container uk-margin-top uk-margin-bottom">
-                            <label class="form-group">
-                                <spring:message code="add.publication.authors"/>
-                                <c:forEach var="author" items="${bookForm.authors}" varStatus="status">
-                                    <input class="uk-input" type="text" name="authors[${status.index}]" value="${author}"/>
-                                    <c:if test="${status.index > 0}">
-                                        <button class="uk-button" type="button" onclick="removeAuthorField(this)">
-                                            <span uk-icon="icon:  close"></span>
-                                        </button>
-                                    </c:if>
-                                </c:forEach>
-                            </label>
-                        </div>
+<%--                        <div id="author-container" class="uk-container uk-margin-top uk-margin-bottom">--%>
+<%--                            <label class="form-group">--%>
+<%--                                <spring:message code="add.publication.authors"/>--%>
+<%--                                <c:forEach var="author" items="${bookForm.authors}" varStatus="status">--%>
+<%--                                    <input class="uk-input" type="text" name="authors[${status.index}]" value="${author}"/>--%>
+<%--                                    <c:if test="${status.index > 0}">--%>
+<%--                                        <button class="uk-button" type="button" onclick="removeAuthorField(this)">--%>
+<%--                                            <span uk-icon="icon:  close"></span>--%>
+<%--                                        </button>--%>
+<%--                                    </c:if>--%>
+<%--                                </c:forEach>--%>
+<%--                            </label>--%>
+<%--                        </div>--%>
 
-                        <div class="form-container" style="margin-bottom: 10px">
-                            <button class="uk-button uk-margin-right" type="button" onclick="addAuthorField()"><spring:message code="add.publication.add.author"/></button>
-                            <small class="description">
-                                <spring:message code="add.publication.description.authors"/>
-                            </small>
-                        </div>
+<%--                        <div class="form-container" style="margin-bottom: 10px">--%>
+<%--                            <button class="uk-button uk-margin-right" type="button" onclick="addAuthorField()"><spring:message code="add.publication.add.author"/></button>--%>
+<%--                            <small class="description">--%>
+<%--                                <spring:message code="add.publication.description.authors"/>--%>
+<%--                            </small>--%>
+<%--                        </div>--%>
 
                         <%--Género--%>
 
@@ -308,7 +309,6 @@
                         </div>
 
 
-
                         <%--Rating--%>
 
                         <div class="form-group">
@@ -342,28 +342,20 @@
                                     <span uk-icon="icon: star; ratio: 1.5"></span>
                                 </label>
                             </div>
-
                         </div>
 
-                        <%--Image--%>
-
-                        <div id="image-container" class="uk-container uk-margin-top uk-margin-bottom">
-                            <label class="form-group">
-                                <spring:message code="add.publication.image"/>
-                                <c:forEach var="image" items="${bookForm.imageFiles}" varStatus="imageStatus">
-                                    <input class="uk-input" type="file" name="imageFiles[${imageStatus.index}]" accept="image/*"/>
-                                    <c:if test="${imageStatus.index > 0}">
-                                        <button class="uk-button" type="button" onclick="removeImageField(this)">
-                                            <span uk-icon="icon:  close"></span>
-                                        </button>
-                                    </c:if>
-                                </c:forEach>
-                            </label>
+                        <div class="js-upload uk-placeholder uk-text-center">
+                            <span uk-icon="icon: cloud-upload"></span>
+                            <span class="uk-text-middle">Attach binaries by dropping them here or</span>
+                            <div uk-form-custom>
+                                <input type="file" id="imageFiles" name="imageFiles" accept="image/*" multiple>
+                                <span class="uk-link">selecting one</span>
+                            </div>
                         </div>
 
-                        <div class="form-container" style="margin-bottom: 10px">
-                            <button class="uk-button uk-margin-right" type="button" onclick="addImageField()"><spring:message code="add.publication.add.image"/></button>
-                        </div>
+                        <progress id="js-progressbar" class="uk-progress" value="0" max="100" hidden></progress>
+
+                        <div id="image-preview-container" class="uk-margin-top"></div>
 
 
                         <div class="uk-container uk-margin-top">
@@ -371,30 +363,25 @@
                             <div class="uk-inline">
 
                                 <div class="uk-position-right">
-                                    <button type="submit" class="uk-button uk-button-default uk-background-primary uk-light uk-panel"><spring:message code="add.publication.submit"/></button>
+                                    <button type="submit" class="uk-button uk-button-default uk-background-primary uk-light uk-panel"><spring:message code="add.publication.upload"/></button>
                                 </div>
 
                             </div>
                         </div>
                     </form:form>
                 </div>
-
-
-
             </div>
         </div>
     </div>
 </div>
-</body>
-
-<%--Script--%>
 
 <script type="text/javascript">
 
-    let authorIndex = authors.length;
+    /*let authorIndex = authors.length;
     let imageIndex = imageFiles.length;
 
     function addAuthorField() {
+
 
         let container = document.getElementById("author-container");
         let newField = document.createElement("div");
@@ -413,26 +400,89 @@
         container.removeChild(button.parentNode);
         authorIndex--;
     }
+*/
 
-    function addImageField() {
+   var bar = document.getElementById('js-progressbar');
 
-        let container = document.getElementById("image-container");
-        let newField = document.createElement("div");
+   UIkit.upload('.js-upload', {
 
-        newField.innerHTML = `	   <input class="uk-input" type="file" name="imageFiles[${imageIndex}]" accept="image/*"/>
-									<button type="button" onclick="removeImageField(this)"> X </button>	`;
+       url: '',
+       multiple: true,
 
-        container.appendChild(newField);
-        imageIndex++;
-    }
+       beforeSend: function () {
+           console.log('beforeSend', arguments);
+       },
+       beforeAll: function () {
+           console.log('beforeAll', arguments);
+       },
+       load: function () {
+           console.log('load', arguments);
+       },
+       error: function () {
+           console.log('error', arguments);
+       },
+       complete: function () {
+           console.log('complete', arguments);
+       },
 
-    function removeImageField(button) {
+       loadStart: function (e) {
+           console.log('loadStart', arguments);
 
-        var container = document.getElementById("image-container");
-        container.removeChild(button.parentNode);
-        imageIndex--;
-    }
+           bar.removeAttribute('hidden');
+           bar.max = e.total;
+           bar.value = e.loaded;
+       },
+
+       progress: function (e) {
+           console.log('progress', arguments);
+
+           bar.max = e.total;
+           bar.value = e.loaded;
+       },
+
+       loadEnd: function (e) {
+           console.log('loadEnd', arguments);
+
+           bar.max = e.total;
+           bar.value = e.loaded;
+       },
+
+       completeAll: function () {
+           console.log('completeAll', arguments);
+
+           setTimeout(function () {
+               bar.setAttribute('hidden', 'hidden');
+           }, 1000);
+
+           alert('Upload Completed');
+       }
+
+   });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('imageFiles').addEventListener('change', function(event) {
+            const files = event.target.files;
+            const previewContainer = document.getElementById('image-preview-container');
+            previewContainer.innerHTML = ''; // Limpia el contenedor antes de agregar nuevas imágenes
+
+            for (const file of files) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.classList.add('uk-margin-small-right'); // Añade clase para margen, si quieres
+                    img.style.maxWidth = '200px'; // Limita el tamaño de la imagen
+                    img.style.maxHeight = '200px'; // Limita el tamaño de la imagen
+                    previewContainer.appendChild(img);
+                };
+
+                reader.readAsDataURL(file);
+            }
+        });
+    });
 
 </script>
+</body>
 
 </html>
