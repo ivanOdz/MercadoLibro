@@ -253,7 +253,7 @@
                                                                     <input class="uk-input" type="hidden" value="${card.book.bookId}" name="bookId" aria-label="Not clickable icon"/>
                                                                 </div>
                                                                 <div class="uk-margin-top uk-button-group" style="margin-left: 50px;">
-                                                                    <button class="uk-button uk-button-primary"> <spring:message code="hwc.login.submit"/> </button>
+                                                                    <button class="uk-button uk-button-primary"> <spring:message code="book.publish.button"/> </button>
                                                                 </div>
                                                             </div>
                                                         </div>

@@ -143,7 +143,6 @@ public class BookController {
         if(authentication.getPrincipal() instanceof PawUserDetails pud) {
             Book book = bookService.createBook(bookModel.getBookModelId(), pud.getUser().getUserId(), bookForm.getBookState(), 0,bookForm.getRating());
 
-            System.out.println("La lista de libros viene como: "+ bookForm.getImageFiles());
             List<Image> images = imageService.saveImage(bookForm.getImageFiles());
             bookImageService.saveBookImage(book.getBookId(), images, new Timestamp(System.currentTimeMillis()));
         }

@@ -48,7 +48,6 @@ public class CardBookServiceImpl implements CardBookService {
             if(publication.isEmpty() || publication.get().getPublicationState() == PublicationState.TERMINATED) {
                 canPublish = true;
             }
-            System.out.println("El id de la imagen es: " + imageId);
             cardBookList.add(new CardBook(book, bookModel, imageId, authors, canPublish));
         }
         return cardBookList;

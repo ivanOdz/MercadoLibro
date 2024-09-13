@@ -69,7 +69,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         // Insertar tupla de requester en publicacion con fecha actual y publicationState = 2 (OFFERER)
 
 
-        long location = locationService.newLocation(requesterComplete.getLocationId());
+        long location = locationService.newLocation(requesterComplete.getLocation());
         long requesterId = bookService.getBookById(requesterComplete.getSelectedBookId()).get().getOwnerId();
         long requesterPubId = publicationService.createPublication(requesterComplete.getSelectedBookId(), requesterId, location, PublicationState.OFFERED);
 

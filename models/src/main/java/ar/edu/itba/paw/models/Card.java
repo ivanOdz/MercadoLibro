@@ -10,15 +10,15 @@ public class Card {
     private final BookModel bookModel;
     private final List<BookImage> bookImages;
     private final List<Author> bookAuthors;
-    private final String locationId;
+    private final String location;
 
-    public Card(Publication publication, Book book, BookModel bookModel, List<BookImage> bookImages, List<Author> bookAuthors, String locationId) {
+    public Card(Publication publication, Book book, BookModel bookModel, List<BookImage> bookImages, List<Author> bookAuthors, String location) {
         this.publication = publication;
         this.book = book;
         this.bookModel = bookModel;
         this.bookImages = bookImages;
         this.bookAuthors = bookAuthors;
-        this.locationId = locationId;
+        this.location = location;
     }
 
 
@@ -42,8 +42,8 @@ public class Card {
         return bookAuthors;
     }
 
-    public String getLocationId() {
-        return locationId;
+    public String getLocation() {
+        return location;
     }
 
     public String getAuthorsString() {

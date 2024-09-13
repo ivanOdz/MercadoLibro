@@ -195,9 +195,9 @@
 		<div>
 			<label class="form-group">
 				<spring:message code="add.publication.location"/>
-				<form:input path="location" type="text" class="form-input"/>
+				<form:input path="locationId" type="text" class="form-input"/>
 			</label>
-			<form:errors path="location" element="p" cssStyle="color: red;"/>
+			<form:errors path="locationId" element="p" cssStyle="color: red;"/>
 		</div>
 
 		<br>
