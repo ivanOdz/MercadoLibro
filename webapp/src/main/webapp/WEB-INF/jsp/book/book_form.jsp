@@ -411,43 +411,23 @@
             url: '/book/upload_book',
             multiple: true,
 
-            beforeSend: function () {
-                console.log('beforeSend', arguments);
-            },
-            beforeAll: function () {
-                console.log('beforeAll', arguments);
-            },
-            load: function () {
-                console.log('load', arguments);
-            },
-            error: function () {
-                console.log('error', arguments);
-            },
-            complete: function () {
-                console.log('complete', arguments);
-            },
-
             loadStart: function (e) {
-                console.log('loadStart', arguments);
                 progressBar.removeAttribute('hidden');
                 progressBar.max = e.total;
                 progressBar.value = e.loaded;
             },
 
             progress: function (e) {
-                console.log('progress', arguments);
                 progressBar.max = e.total;
                 progressBar.value = e.loaded;
             },
 
             loadEnd: function (e) {
-                console.log('loadEnd', arguments);
                 progressBar.max = e.total;
                 progressBar.value = e.loaded;
             },
 
             completeAll: function () {
-                console.log('completeAll', arguments);
                 setTimeout(function () {
                     progressBar.setAttribute('hidden', 'hidden');
                 }, 1000);
