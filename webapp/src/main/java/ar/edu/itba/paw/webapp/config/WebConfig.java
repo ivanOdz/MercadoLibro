@@ -3,10 +3,9 @@ package ar.edu.itba.paw.webapp.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.*;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
@@ -23,7 +22,9 @@ import org.springframework.web.servlet.view.JstlView;
 
 import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
+@PropertySource("classpath:application${spring.profiles.active}.properties")
 @EnableWebMvc
 @ComponentScan({
         "ar.edu.itba.paw.webapp.controller",
@@ -34,6 +35,15 @@ import java.nio.charset.StandardCharsets;
 public class WebConfig extends WebMvcConfigurerAdapter {
     @Value("classpath:schema.sql")
     private Resource schemaSql;
+
+    @Value("#{environment.dataBaseURL}")
+    private String dataBaseURL;
+
+    @Value("#{environment.dataBaseUser}")
+    private String dataBaseUser;
+
+    @Value("#{environment.dataBasePassword}")
+    private String dataBasePassword;
 
     @Bean
     public ViewResolver viewResolver() {
@@ -57,13 +67,12 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean
-    public DataSource dataSource() {
+    public DataSource dataSource(Environment environment) {
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
-
         ds.setDriverClass(org.postgresql.Driver.class);
-        ds.setUrl("jdbc:postgresql://localhost/paw");
-        ds.setUsername("postgres");
-        ds.setPassword("root");
+        ds.setUrl(dataBaseURL);
+        ds.setUsername(dataBaseUser);
+        ds.setPassword(dataBasePassword);
 
         return ds;
     }
