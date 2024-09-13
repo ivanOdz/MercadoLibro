@@ -26,23 +26,23 @@
 
 #image-preview-container {
     display: flex;
-    flex-wrap: wrap; /* Permite que las imágenes se muevan a la siguiente línea si no hay suficiente espacio en la fila */
-    gap: 10px; /* Espacio entre las imágenes */
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .image-wrapper {
     display: flex;
-    flex-direction: column; /* Coloca los elementos en una columna (imagen arriba y botón abajo) */
-    align-items: center; /* Centra la imagen y el botón */
+    flex-direction: column;
+    align-items: center;
     margin: 5px;
 }
 
 .image-wrapper img {
-    max-width: 200px; /* Limita el tamaño de la imagen */
-    max-height: 200px; /* Limita el tamaño de la imagen */
+    max-width: 200px;
+    max-height: 200px;
 }
 
 .delete-button {
-    margin-top: 5px; /* Espacio entre la imagen y el botón */
+    margin-top: 5px;
 }
 

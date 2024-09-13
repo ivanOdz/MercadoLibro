@@ -408,7 +408,6 @@
         var progressBar = document.getElementById('js-progressbar');
         var previewContainer = document.getElementById('image-preview-container');
 
-        // Inicializa UIkit.upload
         UIkit.upload(uploadElement, {
             url: '/book/upload_book',
             multiple: true,
@@ -436,27 +435,25 @@
             }
         });
 
-        // Manejo del arrastrar y soltar
         uploadElement.addEventListener('dragover', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            uploadElement.classList.add('uk-placeholder'); // Estilo para indicar que se está arrastrando un archivo
+            uploadElement.classList.add('uk-placeholder');
         });
 
         uploadElement.addEventListener('dragleave', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            uploadElement.classList.remove('uk-placeholder'); // Remover estilo al salir el archivo del área
+            uploadElement.classList.remove('uk-placeholder');
         });
 
         uploadElement.addEventListener('drop', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            uploadElement.classList.remove('uk-placeholder'); // Remover estilo al soltar el archivo
+            uploadElement.classList.remove('uk-placeholder');
 
             var files = e.dataTransfer.files;
 
-            // Limpia el contenedor antes de agregar nuevas imágenes
             previewContainer.innerHTML = '';
 
             for (const file of files) {
@@ -477,7 +474,7 @@
                     deleteButton.classList.add('delete-button');
 
                     deleteButton.addEventListener('click', function() {
-                        imgWrapper.remove(); // Elimina el contenedor de la imagen
+                        imgWrapper.remove();
                     });
 
                     imgWrapper.appendChild(img);
@@ -492,9 +489,7 @@
 
         fileInput.addEventListener('change', function(event) {
             const files = event.target.files;
-            console.log('Files selected:', files); // Agregado para depuración
 
-            // Limpia el contenedor antes de agregar nuevas imágenes
             previewContainer.innerHTML = '';
 
             for (const file of files) {
@@ -506,8 +501,8 @@
                     const img = document.createElement('img');
                     img.src = e.target.result;
                     img.classList.add('uk-margin-small-right');
-                    img.style.maxWidth = '200px'; // Limita el tamaño de la imagen
-                    img.style.maxHeight = '200px'; // Limita el tamaño de la imagen
+                    img.style.maxWidth = '200px';
+                    img.style.maxHeight = '200px';
 
                     const deleteButton = document.createElement('button');
                     deleteButton.classList.add('uk-button', 'uk-button-danger', 'uk-button-small');
@@ -515,7 +510,7 @@
                     deleteButton.classList.add('delete-button');
 
                     deleteButton.addEventListener('click', function() {
-                        imgWrapper.remove(); // Elimina el contenedor de la imagen
+                        imgWrapper.remove();
                     });
 
                     imgWrapper.appendChild(img);
