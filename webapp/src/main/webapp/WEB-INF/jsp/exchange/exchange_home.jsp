@@ -61,6 +61,7 @@
                 </ul>
             </div>
 
+
             <div class="uk-navbar-center">
                 <ul class="uk-navbar-nav">
                     <li>
@@ -155,12 +156,19 @@
                         </p>
                         <p>Edición: ${exchange.offererBookModel.edition}</p>
 
-                        <div uk-grid>
-                            <c:forEach var="image" items="${exchange.offererBookImages}">
-                                <div class="uk-width-1-4">
-                                    <img src="${image}" class="uk-border-rounded" alt="Imagen del libro">
-                                </div>
-                            </c:forEach>
+                        <div class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1" uk-slideshow>
+
+                            <div class="uk-slideshow-items">
+                                <c:forEach var="image" items="${exchange.offererBookImages}">
+                                    <div>
+                                        <img src="${pageContext.request.contextPath}/images/${image.imageId}" alt="bookImage" uk-cover>
+                                    </div>
+                                </c:forEach>
+                            </div>
+
+                            <a class="uk-position-center-left uk-position-small uk-hidden-hover"  uk-slidenav-previous uk-slideshow-item="previous"></a>
+                            <a class="uk-position-center-right uk-position-small uk-hidden-hover" uk-slidenav-next uk-slideshow-item="next"></a>
+
                         </div>
                     </div>
                 </c:forEach>

@@ -128,13 +128,6 @@ public class ExchangeServiceImpl implements ExchangeService {
             List<BookImage> requesterBookImages = bookImageService.getImageByBookId(requesterBook.getBookId());
             List<BookImage> offererBookImages = bookImageService.getImageByBookId(offererBook.getBookId());
 
-            List<Long> requesterImageIds = requesterBookImages.stream()
-                    .map(BookImage::getImageId)
-                    .collect(Collectors.toList());
-
-            List<Long> offererImageIds = offererBookImages.stream()
-                    .map(BookImage::getImageId)
-                    .collect(Collectors.toList());
 
             List<Author> requesterBookAuthor = bookAuthorService.getAuthorsByBookId(requesterBookModel.getBookModelId());
             List<Author> offererBookAuthor = bookAuthorService.getAuthorsByBookId(offererBookModel.getBookModelId());
@@ -147,7 +140,7 @@ public class ExchangeServiceImpl implements ExchangeService {
                     .map(Author::getAuthorName)
                     .collect(Collectors.toList());
 
-            toReturn.add(new ExchangeWrapper(ex, requesterLocation, requesterMail, requesterUsername, offererBook, requesterBook, offererBookModel, requesterBookModel, requesterImageIds, offererImageIds, requesterAuthorNames, offererAuthorNames));
+            toReturn.add(new ExchangeWrapper(ex, requesterLocation, requesterMail, requesterUsername, offererBook, requesterBook, offererBookModel, requesterBookModel, requesterBookImages, offererBookImages, requesterAuthorNames, offererAuthorNames));
         }
 
         return toReturn;
