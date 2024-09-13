@@ -34,6 +34,13 @@ public class CardBookServiceImpl implements CardBookService {
         for (Book book : bookList) {
             BookModel bookModel = bookModelService.getBookModelByBookModelId(book.getBookModelId());
             Image image = imageService.getFirstImageByBookId(book.getBookId());
+
+            Long imageId = null;
+
+            if(image != null){
+                imageId = image.getImageId();
+            }
+
             List<Author> authors = bookAuthorService.getAuthorsByBookId(book.getBookId());
 
             boolean canPublish = false;
@@ -41,8 +48,8 @@ public class CardBookServiceImpl implements CardBookService {
             if(publication.isEmpty() || publication.get().getPublicationState() == PublicationState.TERMINATED) {
                 canPublish = true;
             }
-
-            cardBookList.add(new CardBook(book, bookModel, image, authors, canPublish));
+            System.out.println("El id de la imagen es: " + imageId);
+            cardBookList.add(new CardBook(book, bookModel, imageId, authors, canPublish));
         }
         return cardBookList;
     }

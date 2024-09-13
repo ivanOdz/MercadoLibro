@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ExchangeServiceImpl implements ExchangeService {
@@ -68,7 +69,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         // Insertar tupla de requester en publicacion con fecha actual y publicationState = 2 (OFFERER)
 
 
-        long location = locationService.newLocation(requesterComplete.getLocation());
+        long location = locationService.newLocation(requesterComplete.getLocationId());
         long requesterId = bookService.getBookById(requesterComplete.getSelectedBookId()).get().getOwnerId();
         long requesterPubId = publicationService.createPublication(requesterComplete.getSelectedBookId(), requesterId, location, PublicationState.OFFERED);
 
@@ -124,10 +125,27 @@ public class ExchangeServiceImpl implements ExchangeService {
             BookModel requesterBookModel = bookModelService.getBookModelByBookModelId(requesterBook.getBookModelId());
             List<BookImage> requesterBookImages = bookImageService.getImageByBookId(requesterBook.getBookId());
             List<BookImage> offererBookImages = bookImageService.getImageByBookId(offererBook.getBookId());
+
+            List<Long> requesterImageIds = requesterBookImages.stream()
+                    .map(BookImage::getImageId)
+                    .collect(Collectors.toList());
+
+            List<Long> offererImageIds = offererBookImages.stream()
+                    .map(BookImage::getImageId)
+                    .collect(Collectors.toList());
+
             List<Author> requesterBookAuthor = bookAuthorService.getAuthorsByBookId(requesterBookModel.getBookModelId());
             List<Author> offererBookAuthor = bookAuthorService.getAuthorsByBookId(offererBookModel.getBookModelId());
 
-            toReturn.add(new ExchangeWrapper(ex, requesterLocation, requesterMail, requesterUsername, offererBook, requesterBook, offererBookModel, requesterBookModel, requesterBookImages, offererBookImages, requesterBookAuthor, offererBookAuthor));
+            List<String> requesterAuthorNames = requesterBookAuthor.stream()
+                    .map(Author::getAuthorName)
+                    .collect(Collectors.toList());
+
+            List<String> offererAuthorNames = offererBookAuthor.stream()
+                    .map(Author::getAuthorName)
+                    .collect(Collectors.toList());
+
+            toReturn.add(new ExchangeWrapper(ex, requesterLocation, requesterMail, requesterUsername, offererBook, requesterBook, offererBookModel, requesterBookModel, requesterImageIds, offererImageIds, requesterAuthorNames, offererAuthorNames));
         }
 
         return toReturn;

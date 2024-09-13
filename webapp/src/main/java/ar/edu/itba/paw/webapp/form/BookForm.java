@@ -71,7 +71,7 @@ public class BookForm {
     }
 
     public @NotEmpty List<String> getAuthors() {
-        return authors;
+            return authors;
     }
 
     public @NotBlank @Size(min = 1, max = 100) String getEditorial() {

@@ -63,7 +63,6 @@
             <div class="uk-navbar-right">
                 <ul class="uk-navbar-nav">
                     <li><a class="pl-1 pr-1" href="<c:url value="${exchangeUrl}"/>"><spring:message code="home.exchange.view"/></a></li>
-                    <%--					<li><a class="pl-1 pr-1" href="<c:url value="${exchangeUrl}"/>"><spring:message code="home.exchange.view"/></a></li>--%>
                     <li>
                         <a class="pl-1 pr-1" href="<c:url value='${booksUrl}'/>">
                             <spring:message code="home.book.view"/>
@@ -90,7 +89,6 @@
                     </li>
 
                     <li><a class="pl-1 pr-1" href="<c:url value="${profileUrl}"/>"><spring:message code="home.profile.view"/></a></li>
-                    <%--					<li><a class="pl-1 pr-1" href="<c:url value="${profileUrl}"/>"><spring:message code="home.profile.view"/></a></li>--%>
                 </ul>
             </div>
         </div>
@@ -217,7 +215,7 @@
                                 <figure class="uk-margin-bottom">
                                     <c:choose>
                                         <c:when test="${card.image != null}">
-                                            <img class="book-image" src="${pageContext.request.contextPath}/images/${card.image.imageId}" alt="bookImage"/>
+                                            <img class="book-image" src="${pageContext.request.contextPath}/images/${card.image}" alt="bookImage"/>
                                         </c:when>
                                         <c:otherwise>
                                             <img class="book-image" src="${pageContext.request.contextPath}/images/book.jpg" alt="book"/>

@@ -128,7 +128,6 @@
                         </div>
 
                         <%--Autores--%>
-
                         <div id="author-container" class="uk-container uk-margin-top uk-margin-bottom">
                             <label class="form-group">
                                 <spring:message code="add.publication.authors"/>
@@ -347,13 +346,31 @@
                         </div>
 
                         <%--Image--%>
-                        <div>
+
+                        <div id="image-container" class="uk-container uk-margin-top uk-margin-bottom">
                             <label class="form-group">
                                 <spring:message code="add.publication.image"/>
                                 <form:input path="imageFile" type="file" class="form-input"/>
+
+                                <c:forEach var="image" items="${bookForm.imageFile}" varStatus="imageStatus">
+                                    <input class="uk-input" type="file" name="imageFile[${imageStatus.index}]" value="${image}"/>
+                                    <c:if test="${imageStatus.index > 0}">
+                                        <button class="uk-button" type="button" onclick="removeImageField(this)">
+                                            <span uk-icon="icon:  close"></span>
+                                        </button>
+                                    </c:if>
+                                </c:forEach>
                             </label>
-                            <form:errors path="imageFile" element="p" cssStyle="color: red;"/>
                         </div>
+
+                        <div class="form-container" style="margin-bottom: 10px">
+                            <button class="uk-button uk-margin-right" type="button" onclick="addImageField()"><spring:message code="add.publication.add.author"/></button>
+                            <small class="description">
+                                    <spring:message code="add.publication.image"/>
+                            </small>
+                        </div>
+
+
 
                         <div class="uk-container uk-margin-top">
 
@@ -380,7 +397,8 @@
 
 <script type="text/javascript">
 
-    let authorIndex = authors.lenght;
+    let authorIndex = authors.length;
+    let imageIndex = imageFile.length;
 
     function addAuthorField() {
 
@@ -394,12 +412,33 @@
         authorIndex++;
     }
 
+
     function removeAuthorField(button) {
 
         var container = document.getElementById("author-container");
         container.removeChild(button.parentNode);
         authorIndex--;
     }
+
+    function addImageField() {
+
+        let container = document.getElementById("image-container");
+        let newField = document.createElement("div");
+
+        newField.innerHTML = `	<input type="file" name="imageFile[${imageIndex}]" class="uk-input"/>
+									<button type="button" onclick="removeImageField(this)"> X </button>	`;
+
+        container.appendChild(newField);
+        imageIndex++;
+    }
+
+    function removeImageField(button) {
+
+        var container = document.getElementById("image-container");
+        container.removeChild(button.parentNode);
+        imageIndex--;
+    }
+
 </script>
 
 </html>

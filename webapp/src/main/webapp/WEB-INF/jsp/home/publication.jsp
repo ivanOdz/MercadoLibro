@@ -12,7 +12,7 @@
   <p><strong><spring:message code="publication.details.bookId"/>:</strong> ${publication.bookId}</p>
   <p><strong><spring:message code="publication.details.userId"/>:</strong> ${publication.userId}</p>
   <p><strong><spring:message code="publication.details.publicationState"/>:</strong> ${publication.publicationState}</p>
-  <p><strong><spring:message code="publication.details.location"/>:</strong> ${publication.location}</p>
+  <p><strong><spring:message code="publication.details.location"/>:</strong> ${publication.locationId}</p>
 </div>
 </body>
 </html>

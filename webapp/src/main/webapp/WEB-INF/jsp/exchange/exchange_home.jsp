@@ -25,7 +25,7 @@
 <html lang="es">
 <head>
     <link href="${pageContext.request.contextPath}/css/publications.css?v=1.0" rel="stylesheet"/>
-    <link href="${pageContext.request.contextPath}/css/exchange.css ?v=1.0" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/css/exchange.css?v=1.0" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
 
@@ -78,7 +78,7 @@
             </div>
             <div class="uk-navbar-right">
                 <ul class="uk-navbar-nav">
-                    <%--					<li><a class="pl-1 pr-1" href="<c:url value="${exchangeUrl}"/>"><spring:message code="home.exchange.view"/></a></li>--%>
+                    <li><a class="pl-1 pr-1" href="<c:url value="${exchangeUrl}"/>"><spring:message code="home.exchange.view"/></a></li>
                     <li>
                         <a class="pl-1 pr-1" href="<c:url value='${booksUrl}'/>">
                             <spring:message code="home.book.view"/>
@@ -104,7 +104,7 @@
                         </div>
                     </li>
 
-                    <%--					<li><a class="pl-1 pr-1" href="<c:url value="${profileUrl}"/>"><spring:message code="home.profile.view"/></a></li>--%>
+                    <li><a class="pl-1 pr-1" href="<c:url value="${profileUrl}"/>"><spring:message code="home.profile.view"/></a></li>
                 </ul>
             </div>
         </div>
@@ -114,62 +114,133 @@
 <div class="uk-background-muted">
     <div class="uk-container">
         <div class="uk-grid ml-1 uk-margin-top" uk-grid>
-            <div class="uk-width-1-3@s exchange-information-section uk-border-rounded uk-box-shadow-small uk-margin-top mb-1 uk-height-viewport" uk-height-viewport="offset-top: true">
-                        <%--  TODO: CARD DONDE SE MUESTRA MAS INFORMACION DEL INTERCAMBIO--%>
+            <!-- Primera columna que ocupa 1/3 del ancho -->
+            <div id="exchange-info uk-padding-small" class="uk-width-1-3@s exchange-information-section uk-card uk-card-default uk-border-rounded uk-box-shadow-small uk-margin-top mb-1 uk-height-viewport uk-margin-bottom" uk-height-viewport="offset-top: true">
+                <!-- Contenedor para el mensaje cuando no se ha seleccionado ninguna tarjeta -->
+                <div id="no-selection-message" class="uk-text-center uk-margin-large-top">
+                    <p>Por favor, haga clic en alguna tarjeta para mostrar más información.</p>
+                </div>
 
+                <!-- Contenedor para la información del intercambio -->
+                <div id="exchange-details" style="display: none;">
+                    <h3 id="info-requester-username">Intercambio con: </h3>
+                    <p id="info-requester-mail">Email: </p>
+                    <p id="info-requester-location">Ubicación: </p>
+
+                    <h4>Libro ofertado:</h4>
+                    <p id="info-offered-book-title">Título: </p>
+                    <p id="info-offered-book-authors">Autor(es): </p>
+                    <p id="info-offered-book-edition">Edición: </p>
+
+                    <div id="info-offered-book-images" uk-grid></div>
+                </div>
             </div>
 
-            <div class="uk-width-expand uk-margin-top">
+            <!-- Segunda columna que ocupa el resto del espacio disponible -->
+            <div class="uk-width-expand uk-margin-top uk-overflow-auto" style="max-height: 80vh;">
+                <!-- Contenedor desplazable con altura máxima y ancho completo -->
                 <c:forEach var="exchange" items="${exchangeWrapperList}">
-                    <div class="uk-card uk-card-default uk-card-body uk-border-rounded uk-box-shadow-small mb-1">
-                        <!-- Mostrar información del solicitante -->
-                        <h3>Intercambio con: ${exchange.requesterUsername}</h3>
+                    <div class="uk-width-1-1 uk-card uk-card-default uk-card-hover uk-card-body uk-border-rounded uk-box-shadow-small uk-margin-small-bottom exchange-card"
+                         onclick="selectCard(this, '${exchange.requesterUsername}', '${exchange.requesterMail}', '${exchange.requesterLocation}', '${exchange.offererBookModel.title}', '${exchange.offererBookAuthor}', '${exchange.offererBookModel.edition}', '${exchange.offererBookImages}')">
+                        <h3 class="uk-card-title">Intercambio con: ${exchange.requesterUsername}</h3>
                         <p>Email: ${exchange.requesterMail}</p>
                         <p>Ubicación: ${exchange.requesterLocation}</p>
 
-                        <!-- Información del libro del ofertante -->
                         <h4>Libro ofertado:</h4>
                         <p>Título: ${exchange.offererBookModel.title}</p>
                         <p>Autor(es):
                             <c:forEach var="author" items="${exchange.offererBookAuthor}">
-                                ${author.name}<c:if test="${!author.last}">, </c:if>
+                                ${author}
                             </c:forEach>
                         </p>
                         <p>Edición: ${exchange.offererBookModel.edition}</p>
 
-                        <!-- Mostrar imágenes del libro ofertado -->
                         <div uk-grid>
                             <c:forEach var="image" items="${exchange.offererBookImages}">
                                 <div class="uk-width-1-4">
-                                    <img src="${imageService.getImageUrl(image.imageId)}" class="uk-border-rounded" alt="Imagen del libro">
-                                </div>
-                            </c:forEach>
-                        </div>
-
-                        <!-- Información del libro solicitado -->
-                        <h4>Libro solicitado:</h4>
-                        <p>Título: ${exchange.requesterBookModel.title}</p>
-                        <p>Autor(es):
-                            <c:forEach var="author" items="${exchange.requesterBookAuthor}">
-                                ${author.name}<c:if test="${!author.last}">, </c:if>
-                            </c:forEach>
-                        </p>
-                        <p>Edición: ${exchange.requesterBookModel.edition}</p>
-
-                        <!-- Mostrar imágenes del libro solicitado -->
-                        <div uk-grid>
-                            <c:forEach var="image" items="${exchange.requesterBookImages}">
-                                <div class="uk-width-1-4">
-                                    <img src="${imageService.getImageUrl(image.imageId)}" class="uk-border-rounded" alt="Imagen del libro">
+                                    <img src="${image}" class="uk-border-rounded" alt="Imagen del libro">
                                 </div>
                             </c:forEach>
                         </div>
                     </div>
                 </c:forEach>
-
-            </div>
             </div>
         </div>
     </div>
+</div>
+
 </body>
+
+<script>
+    function selectCard(card, requesterUsername, requesterMail, requesterLocation, offeredBookTitle, offeredBookAuthors, offeredBookEdition, offeredBookImages) {
+        // Remover la clase 'selected-card' de todas las tarjetas
+        document.querySelectorAll('.exchange-card').forEach(function(el) {
+            el.classList.remove('selected-card');
+        });
+
+        // Agregar la clase 'selected-card' a la tarjeta clickeada
+        card.classList.add('selected-card');
+
+        // Mostrar la sección de detalles y ocultar el mensaje de selección
+        document.getElementById('no-selection-message').style.display = 'none';
+        document.getElementById('exchange-details').style.display = 'block';
+
+        // Actualizar la información en la columna izquierda
+        document.getElementById('info-requester-username').textContent = 'Intercambio con: ' + requesterUsername;
+        document.getElementById('info-requester-mail').textContent = 'Email: ' + requesterMail;
+        document.getElementById('info-requester-location').textContent = 'Ubicación: ' + requesterLocation;
+        document.getElementById('info-offered-book-title').textContent = 'Título: ' + offeredBookTitle;
+        document.getElementById('info-offered-book-authors').textContent = 'Autor(es): ' + offeredBookAuthors;
+        document.getElementById('info-offered-book-edition').textContent = 'Edición: ' + offeredBookEdition;
+
+        // Limpiar imágenes anteriores
+        const imageContainer = document.getElementById('info-offered-book-images');
+        imageContainer.innerHTML = '';
+
+        // Añadir imágenes del libro ofertado
+        offeredBookImages.forEach(function(imageUrl) {
+            const imgElement = document.createElement('img');
+            imgElement.src = imageUrl;
+            imgElement.className = 'uk-border-rounded';
+            imgElement.alt = 'Imagen del libro';
+            imgElement.style.width = '100%'; // Asegúrate de que las imágenes se ajusten bien
+            const divElement = document.createElement('div');
+            divElement.className = 'uk-width-1-4';
+            divElement.appendChild(imgElement);
+            imageContainer.appendChild(divElement);
+        });
+    }
+
+    // Inicialmente, mostrar el mensaje de selección
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('no-selection-message').style.display = 'block';
+        document.getElementById('exchange-details').style.display = 'none';
+    });
+</script>
+
 </html>
+
+
+
+
+
+
+<!-- Información del libro solicitado -->
+<%--                        <h4>Libro solicitado:</h4>--%>
+<%--                        <p>Título: ${exchange.requesterBookModel.title}</p>--%>
+<%--                        <p>Autor(es):--%>
+<%--                            <c:forEach var="author" items="${exchange.requesterBookAuthor}">--%>
+<%--                                ${author.authorName}--%>
+<%--                            </c:forEach>--%>
+<%--                        </p>--%>
+<%--                        <p>Edición: ${exchange.requesterBookModel.edition}</p>--%>
+<%--    --%>
+<!-- Mostrar imágenes del libro solicitado -->
+<%--                        <div uk-grid>--%>
+<%--                            <c:forEach var="image" items="${exchange.requesterBookImages}">--%>
+<%--                                <div class="uk-width-1-4">--%>
+<%--                                    <img src="${image.imageId}" class="uk-border-rounded" alt="Imagen del libro">--%>
+<%--                                </div>--%>
+<%--                            </c:forEach>--%>
+<%--                        </div>--%>
+

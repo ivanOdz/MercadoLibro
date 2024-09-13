@@ -8,10 +8,10 @@ public class ExchangeWrapper {
     private final String requesterLocation, requesterMail, requesterUsername;
     private final Book offererBook, requesterBook;
     private final BookModel offererBookModel, requesterBookModel;
-    private final List<BookImage> requesterBookImages, offererBookImages;
-    private final List<Author> requesterBookAuthor, offererBookAuthor;
+    private final List<Long> requesterBookImages, offererBookImages;
+    private final List<String> requesterBookAuthor, offererBookAuthor;
 
-    public ExchangeWrapper(Exchange exchange, String requesterLocation, String requesterMail, String requesterUsername, Book offererBook, Book requesterBook, BookModel offererBookModel, BookModel requesterBookModel, List<BookImage> requesterBookImages, List<BookImage> offererBookImages, List<Author> requesterBookAuthor, List<Author> offererBookAuthor) {
+    public ExchangeWrapper(Exchange exchange, String requesterLocation, String requesterMail, String requesterUsername, Book offererBook, Book requesterBook, BookModel offererBookModel, BookModel requesterBookModel, List<Long> requesterBookImages, List<Long> offererBookImages, List<String> requesterBookAuthor, List<String> offererBookAuthor) {
         this.exchange = exchange;
         this.requesterLocation = requesterLocation;
         this.requesterMail = requesterMail;
@@ -42,6 +42,16 @@ public class ExchangeWrapper {
         return requesterUsername;
     }
 
+
+    public BookModel getOffererBookModel() {
+        return offererBookModel;
+    }
+
+
+    public List<Long> getOffererBookImages() {
+        return offererBookImages;
+    }
+
     public Book getOffererBook() {
         return offererBook;
     }
@@ -50,27 +60,19 @@ public class ExchangeWrapper {
         return requesterBook;
     }
 
-    public BookModel getOffererBookModel() {
-        return offererBookModel;
-    }
-
     public BookModel getRequesterBookModel() {
         return requesterBookModel;
     }
 
-    public List<BookImage> getRequesterBookImages() {
+    public List<Long> getRequesterBookImages() {
         return requesterBookImages;
     }
 
-    public List<BookImage> getOffererBookImages() {
-        return offererBookImages;
-    }
-
-    public List<Author> getRequesterBookAuthor() {
+    public List<String> getRequesterBookAuthor() {
         return requesterBookAuthor;
     }
 
-    public List<Author> getOffererBookAuthor() {
+    public List<String> getOffererBookAuthor() {
         return offererBookAuthor;
     }
 }
