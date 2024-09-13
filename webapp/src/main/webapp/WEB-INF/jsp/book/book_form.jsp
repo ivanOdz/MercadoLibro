@@ -350,8 +350,6 @@
                         <div id="image-container" class="uk-container uk-margin-top uk-margin-bottom">
                             <label class="form-group">
                                 <spring:message code="add.publication.image"/>
-                                <form:input path="imageFile" type="file" class="form-input"/>
-
                                 <c:forEach var="image" items="${bookForm.imageFile}" varStatus="imageStatus">
                                     <input class="uk-input" type="file" name="imageFile[${imageStatus.index}]" value="${image}"/>
                                     <c:if test="${imageStatus.index > 0}">
@@ -364,7 +362,7 @@
                         </div>
 
                         <div class="form-container" style="margin-bottom: 10px">
-                            <button class="uk-button uk-margin-right" type="button" onclick="addImageField()"><spring:message code="add.publication.add.author"/></button>
+                            <button class="uk-button uk-margin-right" type="button" onclick="addImageField()"><spring:message code="add.publication.add.image"/></button>
                             <small class="description">
                                     <spring:message code="add.publication.image"/>
                             </small>
