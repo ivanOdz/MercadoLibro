@@ -1,0 +1,42 @@
+
+.main-margin {
+    margin-top: 5%;
+}
+
+.card-profile {
+    height: auto;
+    align-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.title-profile {
+    text-align: center;
+}
+
+.subtitles-profile {
+    text-align: center;
+}
+
+.circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+
+.profile-picture-container {
+    align-items: center;
+    align-content: center;
+}
+
+.profile-content {
+    align-items: center;
+    height: fit-content;
+}
+
+.uk-divider-icon {
+    color: #333333;
+}
