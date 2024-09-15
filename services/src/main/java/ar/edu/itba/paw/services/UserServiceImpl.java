@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.models.UserReview;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,9 @@ public class UserServiceImpl implements UserService {
     private final EmailService emailService;
     private final UserReviewService userReviewsService;
 
+
+    @Value("#{environment.webappUrl}")
+    private String webappUrl;
 
     public UserServiceImpl(final UserDao userDao, final PasswordEncoder passwordEncoder, final EmailService emailService, final UserReviewService userReviewsService) {
         this.userDao = userDao;
@@ -62,7 +66,7 @@ public class UserServiceImpl implements UserService {
         Map<String, Object> variables = new HashMap<>();
 
         variables.put("username", user.getUsername());
-        variables.put("validationUrl", "http://pawserver.it.itba.edu.ar/paw-2024b-09/verification?verification_code=" + user.getVerificationCode());
+        variables.put("validationUrl", webappUrl + "/verification?verification_code=" + user.getVerificationCode());
 
         emailService.sendEmail(user.getMail(), variables, "verification", "User verification");
 
@@ -87,7 +91,7 @@ public class UserServiceImpl implements UserService {
 
         Map<String, Object> variables = new HashMap<>();
 
-        variables.put("validationUrl", "http://localhost:8080/change_password?verification_code=" + verificationCode);
+        variables.put("validationUrl", webappUrl +"/change_password?verification_code=" + verificationCode);
 
         emailService.sendEmail(email, variables, "changePassword", "Password change");
     }
