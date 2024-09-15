@@ -112,16 +112,26 @@ public class ExchangeServiceImpl implements ExchangeService {
     }
 
 
+    /**
+     *
+     * @param userId
+     * @return function called from the offered section of exchanges
+     */
     @Override
-    public List<ExchangeWrapper> getExchangeRequesterWrapperListByUserId(long userId) {
+    public List<ExchangeWrapper> getExchangeOffererWrapperListByUserId(long userId) {
 
         List<Exchange> exchanges = exchangeDao.getExchangesWhereUserIdIsOfferer(userId);
 
         return getExchangeWrapper(exchanges);
     }
 
+    /**
+     *
+     * @param userId
+     * @return function called from the solicited section of exchanges
+     */
     @Override
-    public List<ExchangeWrapper> getExchangeOffererWrapperListByUserId(long userId) {
+    public List<ExchangeWrapper> getExchangeRequesterWrapperListByUserId(long userId) {
 
         List<Exchange> exchanges = exchangeDao.getExchangesWhereUserIdIsRequester(userId);
 
@@ -129,6 +139,12 @@ public class ExchangeServiceImpl implements ExchangeService {
     }
 
 
+    /**
+     *
+     * @param exchanges
+     * @return the exchange data as it is shown on the table 'exchanges'. This function is called from the exchanges sections with the
+     * exchanges already filtered depending on whether the user is an offerer or a solicitor
+     */
     private List<ExchangeWrapper> getExchangeWrapper(List<Exchange> exchanges){
         List<ExchangeWrapper> toReturn = new ArrayList<>();
 
