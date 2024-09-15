@@ -93,9 +93,7 @@
                                     </a>
                                 </li>
                                 <li class="uk-margin-small-top">
-                                    <a href="<c:url value='${logout}'/>">
-                                        <spring:message code="home.profile.logout"/>
-                                    </a>
+                                    <a href="#modal-logout" uk-toggle><spring:message code="home.profile.logout"/></a>
                                 </li>
                             </ul>
                         </div>
@@ -105,3 +103,18 @@
         </div>
     </div>
 </nav>
+
+
+<div id="modal-logout" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body">
+        <h3 class="uk-h3"><spring:message code="logout.confirmation.title"/> </h3>
+        <p class="uk-text-right">
+            <button class="uk-button uk-button-default uk-modal-close" type="button"><spring:message code="button.cancel"/></button>
+            <button class="uk-button uk-button-danger" type="button">
+                <a href="<c:url value='${logout}'/>">
+                    <spring:message code="home.profile.logout"/>
+                </a>
+            </button>
+        </p>
+    </div>
+</div>
