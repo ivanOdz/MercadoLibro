@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
         Map<String, Object> variables = new HashMap<>();
 
         variables.put("username", user.getUsername());
-        variables.put("validationUrl", "http://localhost:8080/verification?verification_code=" + user.getVerificationCode());
+        variables.put("validationUrl", "http://pawserver.it.itba.edu.ar/paw-2024b-09/verification?verification_code=" + user.getVerificationCode());
 
         emailService.sendEmail(user.getMail(), variables, "verification", "User verification");
 

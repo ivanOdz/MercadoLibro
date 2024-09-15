@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.models.utils.ResponseState;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,9 @@ public class ExchangeServiceImpl implements ExchangeService {
     private final UserService userService;
     private final EmailService emailService;
 
+
+    @Value("#{environment.webappUrl}")
+    private String webappUrl;
 
     public ExchangeServiceImpl(final ExchangeDao exchangeDao, BookService bookService, BookModelService bookModelService, ImageService imageService, PublicationService publicationService, BookAuthorService bookAuthorService, BookImageService bookImageService, LocationService locationService, UserService userService, EmailService emailService){
         this.exchangeDao = exchangeDao;
@@ -102,8 +106,8 @@ public class ExchangeServiceImpl implements ExchangeService {
         variables.put("requesterName", requester.getUsername());
         variables.put("requestedPublication", bookModelRequestedTitle);
         variables.put("offeredPublication", bookModelOfferedTitle);
-        variables.put("validationUrl", "http://localhost:8080/createexchange?accept_code=" + ex.getAcceptCode() + "&state=true");
-        variables.put("rejectionUrl", "http://localhost:8080/createexchange?accept_code=" + ex.getAcceptCode() +"&state=false");
+        variables.put("validationUrl", webappUrl + "/createexchange?accept_code=" + ex.getAcceptCode() + "&state=true");
+        variables.put("rejectionUrl", webappUrl + "/createexchange?accept_code=" + ex.getAcceptCode() +"&state=false");
 
         emailService.sendEmail(oferrerEmail, variables, "exchangeRequest", "Requesting");
 
