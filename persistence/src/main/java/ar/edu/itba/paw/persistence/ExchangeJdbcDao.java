@@ -2,7 +2,6 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.ExchangeDao;
 import ar.edu.itba.paw.models.Exchange;
-import ar.edu.itba.paw.models.ExchangeRequesterWrapper;
 import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.models.utils.ResponseState;
 import org.springframework.jdbc.core.JdbcTemplate;

@@ -35,3 +35,14 @@
     background-color: blue !important;
     color: white !important;
 }
+
+
+.title {
+    text-align: center;
+}
+
+.title-section {
+    align-content: center;
+    text-align: center;
+    margin-top: 3%
+}

@@ -6,8 +6,6 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.models.utils.ResponseState;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -115,38 +113,61 @@ public class ExchangeServiceImpl implements ExchangeService {
 
 
     @Override
-    public List<ExchangeRequesterWrapper> getExchangeRequesterWrapperListByUserId(long userId) {
-        List<ExchangeRequesterWrapper> toReturn = new ArrayList<>();
+    public List<ExchangeWrapper> getExchangeRequesterWrapperListByUserId(long userId) {
 
         List<Exchange> exchanges = exchangeDao.getExchangesWhereUserIdIsOfferer(userId);
 
+        return getExchangeWrapper(exchanges);
+    }
+
+    @Override
+    public List<ExchangeWrapper> getExchangeOffererWrapperListByUserId(long userId) {
+
+        List<Exchange> exchanges = exchangeDao.getExchangesWhereUserIdIsRequester(userId);
+
+        return getExchangeWrapper(exchanges);
+    }
+
+
+    private List<ExchangeWrapper> getExchangeWrapper(List<Exchange> exchanges){
+        List<ExchangeWrapper> toReturn = new ArrayList<>();
+
         for (Exchange ex : exchanges) {
+
+            // requester data
             String requesterLocation = locationService.getLocationByPublicationId(ex.getRequesterPubId());
             User requester = userService.getUserByPubId(ex.getRequesterPubId());
             String requesterMail = requester.getMail();
             String requesterUsername = requester.getUsername();
-            Book offererBook = bookService.getBookByPubId(ex.getOffererPubId());
+            // book - requested data
             Book requesterBook = bookService.getBookByPubId(ex.getOffererPubId());
-            BookModel offererBookModel = bookModelService.getBookModelByBookModelId(offererBook.getBookModelId());
             BookModel requesterBookModel = bookModelService.getBookModelByBookModelId(requesterBook.getBookModelId());
             List<BookImage> requesterBookImages = bookImageService.getImageByBookId(requesterBook.getBookId());
-            List<BookImage> offererBookImages = bookImageService.getImageByBookId(offererBook.getBookId());
-
-
             List<Author> requesterBookAuthor = bookAuthorService.getAuthorsByBookId(requesterBookModel.getBookModelId());
-            List<Author> offererBookAuthor = bookAuthorService.getAuthorsByBookId(offererBookModel.getBookModelId());
-
             List<String> requesterAuthorNames = requesterBookAuthor.stream()
                     .map(Author::getAuthorName)
                     .collect(Collectors.toList());
+
+
+            // offerer data
+            String offererLocation = locationService.getLocationByPublicationId(ex.getOffererPubId());
+            User offerer = userService.getUserByPubId(ex.getOffererPubId());
+            String offererMail = offerer.getMail();
+            String offererUsername = offerer.getUsername();
+            // book - offered data
+            Book offererBook = bookService.getBookByPubId(ex.getOffererPubId());
+            BookModel offererBookModel = bookModelService.getBookModelByBookModelId(offererBook.getBookModelId());
+            List<BookImage> offererBookImages = bookImageService.getImageByBookId(offererBook.getBookId());
+
+
+            List<Author> offererBookAuthor = bookAuthorService.getAuthorsByBookId(offererBookModel.getBookModelId());
 
             List<String> offererAuthorNames = offererBookAuthor.stream()
                     .map(Author::getAuthorName)
                     .collect(Collectors.toList());
 
-            toReturn.add(new ExchangeRequesterWrapper(ex, requesterLocation, requesterMail, requesterUsername, offererBook, requesterBook, offererBookModel, requesterBookModel, requesterBookImages, offererBookImages, requesterAuthorNames, offererAuthorNames));
+            toReturn.add(new ExchangeWrapper(ex, requesterLocation, requesterMail, requesterUsername, offererLocation, offererMail, offererUsername, offererBook, requesterBook, offererBookModel, requesterBookModel, requesterBookImages, offererBookImages, requesterAuthorNames, offererAuthorNames));
         }
-
         return toReturn;
     }
 

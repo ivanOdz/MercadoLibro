@@ -21,6 +21,30 @@
 <body class="main">
 <navbar/>
 
+<div class="uk-grid">
+    <div class="uk-width-1-2 uk-align-center title-section">
+        <h2 class="uk-h2 title"><spring:message code="exchange.offers.title"/></h2>
+        <h3 class="uk-h5"><spring:message code="exchange.offers.subtitle"/></h3>
+        <div>
+            <div class="uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m mb-1" uk-grid>
+                <c:forEach var="exchange" items="${exchanges}">
+                    <div>
+                        <a href="<c:url value='exchange/${exchange.exchange.exchangeId}'>
+								<c:param name='exchangeId' value='${exchange.exchange.exchangeId}'/>
+								</c:url>"
+                           class="uk-card uk-card-default uk-card-hover uk-card-body uk-border-rounded custom-link">
+
+<%--                                <h5 class="uk-card-title custom-link">${exchange.exchange.title_offered}</h5>--%>
+<%--                                <h5 class="uk-card-title custom-link">${exchange.exchange.title_requested}</h5>--%>
+<%--                            <p class="small-gray-text custom-link">${exchange.authorsString}</p>--%>
+                        </a>
+                    </div>
+                </c:forEach>
+            </div>
+        </div>
+    </div>
+
+</div>
 
 
 </body>

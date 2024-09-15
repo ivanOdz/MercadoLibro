@@ -2,20 +2,29 @@ package ar.edu.itba.paw.models;
 
 import java.util.List;
 
-public class ExchangeRequesterWrapper {
+public class ExchangeWrapper {
 
     private final Exchange exchange;
     private final String requesterLocation, requesterMail, requesterUsername;
+    private final String offererLocation, offererMail, offererUsername;
     private final Book offererBook, requesterBook;
     private final BookModel offererBookModel, requesterBookModel;
     private final List<BookImage> requesterBookImages, offererBookImages;
     private final List<String> requesterBookAuthor, offererBookAuthor;
 
-    public ExchangeRequesterWrapper(Exchange exchange, String requesterLocation, String requesterMail, String requesterUsername, Book offererBook, Book requesterBook, BookModel offererBookModel, BookModel requesterBookModel, List<BookImage> requesterBookImages, List<BookImage> offererBookImages, List<String> requesterBookAuthor, List<String> offererBookAuthor) {
+    public ExchangeWrapper(Exchange exchange, String requesterLocation, String requesterMail,
+                           String requesterUsername, String offererLocation, String offererMail,
+                           String offererUsername, Book offererBook, Book requesterBook,
+                           BookModel offererBookModel, BookModel requesterBookModel,
+                           List<BookImage> requesterBookImages, List<BookImage> offererBookImages,
+                           List<String> requesterBookAuthor, List<String> offererBookAuthor) {
         this.exchange = exchange;
         this.requesterLocation = requesterLocation;
         this.requesterMail = requesterMail;
         this.requesterUsername = requesterUsername;
+        this.offererLocation = offererLocation;
+        this.offererMail = offererMail;
+        this.offererUsername = offererUsername;
         this.offererBook = offererBook;
         this.requesterBook = requesterBook;
         this.offererBookModel = offererBookModel;
@@ -41,6 +50,19 @@ public class ExchangeRequesterWrapper {
     public String getRequesterUsername() {
         return requesterUsername;
     }
+
+    public String getOffererLocation() {
+        return offererLocation;
+    }
+
+    public String getOffererMail() {
+        return offererMail;
+    }
+
+    public String getOffererUsername() {
+        return offererUsername;
+    }
+
 
     public Book getOffererBook() {
         return offererBook;

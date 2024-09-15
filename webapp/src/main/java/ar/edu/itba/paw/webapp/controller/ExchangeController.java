@@ -44,8 +44,8 @@ public class ExchangeController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getPrincipal() instanceof PawUserDetails pud) {
-            List<ExchangeRequesterWrapper> exchangeWrapperList = exchangeService.getExchangeRequesterWrapperListByUserId(pud.getUser().getUserId());
-            mav.addObject("exchangeWrapperList", exchangeWrapperList);
+            List<ExchangeWrapper> exchangeWrapperList = exchangeService.getExchangeRequesterWrapperListByUserId(pud.getUser().getUserId());
+            mav.addObject("exchanges", exchangeWrapperList);
         }
 
         return mav;
@@ -60,8 +60,8 @@ public class ExchangeController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.getPrincipal() instanceof PawUserDetails pud) {
-//            List<ExchangeRequesterWrapper> exchangeWrapperList = exchangeService.getExchangeOffererWrapperListByUserId(pud.getUser().getUserId());
-//            mav.addObject("exchangeWrapperList", exchangeWrapperList);
+            List<ExchangeWrapper> exchangeWrapperList = exchangeService.getExchangeOffererWrapperListByUserId(pud.getUser().getUserId());
+            mav.addObject("exchanges", exchangeWrapperList);
         }
 
         return mav;
