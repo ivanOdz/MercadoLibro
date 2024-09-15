@@ -22,6 +22,7 @@
 
 <navbar/>
 
+<c:url var="postUrl" value="/book/upload_book"/>
 
 <div class="uk-background-muted">
     <div class="uk-container">

@@ -156,7 +156,7 @@ public class ExchangeServiceImpl implements ExchangeService {
             String requesterMail = requester.getMail();
             String requesterUsername = requester.getUsername();
             // book - requested data
-            Book requesterBook = bookService.getBookByPubId(ex.getOffererPubId());
+            Book requesterBook = bookService.getBookByPubId(ex.getRequesterPubId());
             BookModel requesterBookModel = bookModelService.getBookModelByBookModelId(requesterBook.getBookModelId());
             List<BookImage> requesterBookImages = bookImageService.getImageByBookId(requesterBook.getBookId());
             List<Author> requesterBookAuthor = bookAuthorService.getAuthorsByBookId(requesterBookModel.getBookModelId());

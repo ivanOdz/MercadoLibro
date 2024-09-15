@@ -38,9 +38,9 @@ public class ExchangeController {
 
     // Requests (osea peticiones que me hacen a mi)
     // Paso el ID, y quiero aquellas exchanges en las que soy offerer
-    @RequestMapping("/requests")
+    @RequestMapping("/offers")
     public ModelAndView exchangeRequests() {
-        final ModelAndView mav = new ModelAndView("exchange/exchange_offers");
+        final ModelAndView mav = new ModelAndView("exchange/exchange_requests");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getPrincipal() instanceof PawUserDetails pud) {
@@ -54,9 +54,9 @@ public class ExchangeController {
 
     // Estado de mis ofertas
     // Paso el ID, y quiero aquellas exchanges en las que soy requester
-    @RequestMapping(path="/offers", method= RequestMethod.GET)
+    @RequestMapping(path="/requests", method= RequestMethod.GET)
     public ModelAndView exchangeOffers() {
-        final ModelAndView mav = new ModelAndView("exchange/exchange_requests");
+        final ModelAndView mav = new ModelAndView("exchange/exchange_offers");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.getPrincipal() instanceof PawUserDetails pud) {
