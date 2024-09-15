@@ -3,10 +3,7 @@
     border: 2px solid #1e87f0; /* Cambia el color según tu necesidad */
     background-color: #cecece !important; /* Color de fondo para la tarjeta seleccionada */
 }
-.exchange-card {
-    position: relative; /* Ensure the date-container can be positioned relative to the card */
-    padding: 20px; /* Adjust padding as needed */
-}
+
 
 .date-container {
     position: absolute;
@@ -41,12 +38,64 @@
     text-align: center;
 }
 
-.title-section {
+.main-section {
     align-content: center;
     text-align: center;
-    margin-top: 3%
+    margin-top: 3%;
+    margin-left: 8%;
+    position: fixed;
 }
 
 .custom-style {
     background-color: #f8f8f8;
+}
+
+.column {
+    margin: 15%;
+}
+
+
+/* Contenedor scrolleable en la columna izquierda */
+.scrollable-content {
+    max-height: calc(100vh - 300px);
+    overflow-y: auto;
+    padding-right: 20px;
+    margin-bottom: 10%;
+}
+
+.card-container {
+    margin-bottom: 2%;
+}
+
+.exchange-info-container {
+    height: 500px;
+    overflow: auto;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    max-height: 100%; /* Asegura que la columna sticky ocupe toda la pantalla */
+    flex-direction: column;
+}
+
+
+.main-content {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 40%;
+}
+
+
+.exchange-card {
+    position: relative;
+    padding: 20px;
+    margin: 5%;
+    height: 15%;
+    width: 80%;
+}
+
+
+.column-exchanges {
+    justify-content: center;
+    margin-left: 5%;
+    margin-top: 2%;
 }

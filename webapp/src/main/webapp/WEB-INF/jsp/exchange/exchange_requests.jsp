@@ -1,12 +1,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
 
 <!DOCTYPE html>
-<%@include file="/WEB-INF/jsp/head/headers.jsp"%>
+<%@include file="/WEB-INF/jsp/head/headers.jsp" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 
@@ -43,29 +43,87 @@
 <navbar/>
 
 <div class="uk-grid">
-    <div class="uk-width-1-2 uk-align-center title-section">
-        <h2 class="uk-h2 title"><spring:message code="exchange.requests.title"/></h2>
-        <h3 class="uk-h5"><spring:message code="exchange.requests.subtitle"/></h3>
+    <div class="uk-width-5-6 uk-align-center main-section">
         <div>
-            <div class="uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m mb-1" uk-grid>
-                <c:forEach var="exchange" items="${exchanges}">
-                    <div>
-                        <a href="<c:url value='exchange/${exchange.exchange.exchangeId}'>
-								<c:param name='exchangeId' value='${exchange.exchange.exchangeId}'/>
-								</c:url>"
-                           class="uk-card uk-card-default uk-card-hover uk-card-body uk-border-rounded custom-link">
+            <h2 class="uk-h2 title"><spring:message code="exchange.requests.title"/></h2>
+            <h3 class="uk-h5"><spring:message code="exchange.requests.subtitle"/></h3>
+        </div>
 
-                                <%--                                <h5 class="uk-card-title custom-link">${exchange.exchange.title_offered}</h5>--%>
-                                <%--                                <h5 class="uk-card-title custom-link">${exchange.exchange.title_requested}</h5>--%>
-                                <%--                            <p class="small-gray-text custom-link">${exchange.authorsString}</p>--%>
-                        </a>
+        <div class="main-content">
+            <!-- columna de exchanges -->
+            <div class="uk-width-3-5 column-exchanges scrollable-content">
+                <div class="uk-container card-container">
+                    <div class="uk-card uk-card-default exchange-card">
+                        <p>hola</p>
                     </div>
-                </c:forEach>
+                </div>
+                <div class="uk-container card-container">
+                    <div class="uk-card uk-card-default exchange-card">
+                        <p>hola</p>
+                    </div>
+                </div>
+                <div class="uk-container card-container">
+                    <div class="uk-card uk-card-default exchange-card">
+                        <p>hola</p>
+                    </div>
+                </div>
+                <div class="uk-container card-container">
+                    <div class="uk-card uk-card-default exchange-card">
+                        <p>hola</p>
+                    </div>
+                </div>
+                <div class="uk-container card-container">
+                    <div class="uk-card uk-card-default exchange-card">
+                        <p>hola</p>
+                    </div>
+                </div>
+                <div class="uk-container card-container">
+                    <div class="uk-card uk-card-default exchange-card">
+                        <p>chau</p>
+                    </div>
+                </div>
+                <div class="uk-container card-container">
+                    <div class="uk-card uk-card-default exchange-card">
+                        <p>hola</p>
+                    </div>
+                </div>
+                <div class="uk-container card-container">
+                    <div class="uk-card uk-card-default exchange-card">
+                        <p>hola</p>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- contenedor derecho donde se ve la info del exchange -->
+            <div class="uk-width-2-5" uk-sticky>
+                <div class="uk-container">
+                    <div class="uk-card uk-card-default uk-card-body exchange-info-container">
+                        <h4 class="uk-h6">
+                            <spring:message code="exchange.choose.message"/>
+                        </h4>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+</div>
 
+<%--            <div class="uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m mb-1" uk-grid>--%>
+<%--                <c:forEach var="exchange" items="${exchanges}">--%>
+<%--                    <div>--%>
+<%--                        <a href="<c:url value='exchange/${exchange.exchange.exchangeId}'>--%>
+<%--								<c:param name='exchangeId' value='${exchange.exchange.exchangeId}'/>--%>
+<%--								</c:url>"--%>
+<%--                           class="uk-card uk-card-default uk-card-hover uk-card-body uk-border-rounded custom-link">--%>
+
+<%--                                                                <h5 class="uk-card-title custom-link">hola</h5>--%>
+<%--                                &lt;%&ndash;                                <h5 class="uk-card-title custom-link">${exchange.exchange.title_requested}</h5>&ndash;%&gt;--%>
+<%--                                &lt;%&ndash;                            <p class="small-gray-text custom-link">${exchange.authorsString}</p>&ndash;%&gt;--%>
+<%--                        </a>--%>
+<%--                    </div>--%>
+<%--                </c:forEach>--%>
 <%--<div class="uk-background-muted">--%>
 <%--    <div class="uk-container">--%>
 <%--        <div class="uk-grid ml-1 uk-margin-top" uk-grid>--%>
@@ -142,7 +200,7 @@
 <script>
     function selectCard(card, requesterUsername, requesterMail, requesterLocation, offeredBookTitle, offeredBookAuthors, offeredBookEdition, offeredBookImages) {
         // Remover la clase 'selected-card' de todas las tarjetas
-        document.querySelectorAll('.exchange-card').forEach(function(el) {
+        document.querySelectorAll('.exchange-card').forEach(function (el) {
             el.classList.remove('selected-card');
         });
 
@@ -166,7 +224,7 @@
         imageContainer.innerHTML = '';
 
         // Añadir imágenes del libro ofertado
-        offeredBookImages.forEach(function(imageUrl) {
+        offeredBookImages.forEach(function (imageUrl) {
             const imgElement = document.createElement('img');
             imgElement.src = imageUrl;
             imgElement.className = 'uk-border-rounded';
@@ -180,17 +238,13 @@
     }
 
     // Inicialmente, mostrar el mensaje de selección
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('no-selection-message').style.display = 'block';
         document.getElementById('exchange-details').style.display = 'none';
     });
 </script>
 
 </html>
-
-
-
-
 
 
 <!-- Información del libro solicitado -->
