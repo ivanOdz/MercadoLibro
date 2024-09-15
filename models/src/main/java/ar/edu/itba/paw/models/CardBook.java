@@ -8,11 +8,11 @@ import java.util.stream.Collectors;
 public class CardBook {
     private final Book book;
     private final BookModel bookModel;
-    private final Image image;
+    private final Long image;
     private final List<Author> bookAuthors;
     private final boolean canPublish;
 
-    public CardBook(Book book, BookModel bookModel, Image image, List<Author> bookAuthors, boolean canPublish) {
+    public CardBook(Book book, BookModel bookModel, Long image, List<Author> bookAuthors, boolean canPublish) {
         this.book = book;
         this.bookModel = bookModel;
         this.image = image;
@@ -28,7 +28,7 @@ public class CardBook {
         return bookModel;
     }
 
-    public Image getImage() {
+    public Long getImage() {
         return image;
     }
 

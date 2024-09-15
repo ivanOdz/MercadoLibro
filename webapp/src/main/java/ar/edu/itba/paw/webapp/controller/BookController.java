@@ -1,8 +1,10 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
+import ar.edu.itba.paw.models.Book;
 import ar.edu.itba.paw.models.BookModel;
 import ar.edu.itba.paw.models.CardBook;
+import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 import ar.edu.itba.paw.webapp.form.BookForm;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.sql.Timestamp;
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +49,8 @@ public class BookController {
 
     private final BookModelService bookModelService;
 
+    private final BookImageService bookImageService;
+
     @Autowired
     private GenreService genreService;
 
@@ -59,7 +64,7 @@ public class BookController {
     private BookDimensionService bookDimensionService;
 
 
-    public BookController(SinglePublicationService ps, ImageService imageService, EmailService emailService, ExchangeService exchangeService, PublicationService publicationService, BookService bookService, BookModelService bookModelService, CardBookService cardBookService, UserService userService) {
+    public BookController(SinglePublicationService ps, ImageService imageService, EmailService emailService, ExchangeService exchangeService, PublicationService publicationService, BookService bookService, BookModelService bookModelService, CardBookService cardBookService, UserService userService, BookImageService bookImageService) {
         this.ps = ps;
         this.imageService = imageService;
         this.emailService = emailService;
@@ -69,6 +74,7 @@ public class BookController {
         this.bookModelService = bookModelService;
         this.cardBookService = cardBookService;
         this.userService = userService;
+        this.bookImageService = bookImageService;
     }
 
     @RequestMapping("/book")
@@ -133,7 +139,9 @@ public class BookController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.getPrincipal() instanceof PawUserDetails pud) {
-            bookService.createBook(bookModel.getBookModelId(), pud.getUser().getUserId(), bookForm.getBookState(), 0,bookForm.getRating());
+            Book book = bookService.createBook(bookModel.getBookModelId(), pud.getUser().getUserId(), bookForm.getBookState(), 0,bookForm.getRating());
+            Image image = imageService.saveImage(bookForm.getImageFile());
+            bookImageService.saveBookImage(book.getBookId(), image, new Timestamp(System.currentTimeMillis()));
         }
 
         return new ModelAndView("redirect:/book");

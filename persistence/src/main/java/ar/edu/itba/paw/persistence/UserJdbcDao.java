@@ -104,7 +104,7 @@ public class UserJdbcDao implements UserDao {
 
     @Override
     public User getUserByPubId(long pubId) {
-        return jdbcTemplate.query("SELECT mail FROM users u JOIN publication p ON u.userId = p.userId WHERE p.publicationId = ?", new Object[]{ pubId },
+        return jdbcTemplate.query("SELECT * FROM users u JOIN publication p ON u.userId = p.userId WHERE p.publicationId = ?", new Object[]{ pubId },
                 new int[]{Types.BIGINT}, ROWMAPPER).stream().findFirst().get();
     }
 }

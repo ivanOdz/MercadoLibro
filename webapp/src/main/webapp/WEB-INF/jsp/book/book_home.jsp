@@ -62,7 +62,7 @@
             </div>
             <div class="uk-navbar-right">
                 <ul class="uk-navbar-nav">
-                    <%--					<li><a class="pl-1 pr-1" href="<c:url value="${exchangeUrl}"/>"><spring:message code="home.exchange.view"/></a></li>--%>
+                    <li><a class="pl-1 pr-1" href="<c:url value="${exchangeUrl}"/>"><spring:message code="home.exchange.view"/></a></li>
                     <li>
                         <a class="pl-1 pr-1" href="<c:url value='${booksUrl}'/>">
                             <spring:message code="home.book.view"/>
@@ -88,7 +88,7 @@
                         </div>
                     </li>
 
-                    <%--					<li><a class="pl-1 pr-1" href="<c:url value="${profileUrl}"/>"><spring:message code="home.profile.view"/></a></li>--%>
+                    <li><a class="pl-1 pr-1" href="<c:url value="${profileUrl}"/>"><spring:message code="home.profile.view"/></a></li>
                 </ul>
             </div>
         </div>
@@ -96,11 +96,60 @@
 </nav>
 
 
-
 <div class="uk-background-muted">
     <div class="uk-container">
         <div class="uk-grid ml-1 uk-margin-top" uk-grid>
-
+            <div class="uk-width-1-4@s filter-section uk-border-rounded uk-box-shadow-small mt-1 mb-1">
+                <ul uk-accordion="multiple: true">
+                    <li class="uk-open">
+                        <a class="uk-accordion-title">
+                            <spring:message code="filter.genre"/>
+                        </a>
+                        <div class="uk-accordion-content">
+                            <c:forEach var="genreWrapper" items="${genres}">
+                                <div class="uk-margin">
+                                    <input class="uk-checkbox" type="checkbox" checked="checked" name="genre" value="${genreWrapper.genre}" />
+                                    <label>${genreWrapper.displayName}</label>
+                                </div>
+                            </c:forEach>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="uk-accordion-title"><spring:message code="filter.condition"/></a>
+                        <div class="uk-accordion-content">
+                            <c:forEach var="bookStateWrapper" items="${bookStates}">
+                                <div class="uk-margin">
+                                    <input class="uk-checkbox" type="checkbox" checked="checked" name="bookState" value="${bookStateWrapper.bookState}" />
+                                    <label>${bookStateWrapper.displayName}</label>
+                                </div>
+                            </c:forEach>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="uk-accordion-title"><spring:message code="filter.location"/></a>
+                        <div class="uk-accordion-content">
+                            <div class="uk-margin">
+                                <label>
+                                    <input class="uk-checkbox" type="checkbox" checked="checked" />
+                                    Ivan�s House
+                                </label>
+                            </div>
+                            <div class="uk-margin">
+                                <label>
+                                    <input class="uk-checkbox" type="checkbox" />
+                                    Option 2
+                                </label>
+                            </div>
+                            <div class="uk-margin">
+                                <label>
+                                    <input class="uk-checkbox" type="checkbox" />
+                                    Option 3
+                                </label>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
             <%--            <div class="uk-width-1-4@s filter-section uk-border-rounded uk-box-shadow-small mt-1 mb-1">--%>
             <%--                <ul uk-accordion="multiple: true">--%>
             <%--                    <li class="uk-open">--%>
@@ -166,7 +215,7 @@
                                 <figure class="uk-margin-bottom">
                                     <c:choose>
                                         <c:when test="${card.image != null}">
-                                            <img class="book-image" src="${pageContext.request.contextPath}/images/${card.image.imageId}" alt="bookImage"/>
+                                            <img class="book-image" src="${pageContext.request.contextPath}/images/${card.image}" alt="bookImage"/>
                                         </c:when>
                                         <c:otherwise>
                                             <img class="book-image" src="${pageContext.request.contextPath}/images/book.jpg" alt="book"/>

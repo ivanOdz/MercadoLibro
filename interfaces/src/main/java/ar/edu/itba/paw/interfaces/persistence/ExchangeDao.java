@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
 import ar.edu.itba.paw.models.Exchange;
-import ar.edu.itba.paw.models.ExchangeWrapper;
 import ar.edu.itba.paw.models.utils.ResponseState;
 
 import java.sql.Timestamp;

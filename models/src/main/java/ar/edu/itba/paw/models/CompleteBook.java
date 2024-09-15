@@ -4,10 +4,10 @@ public class CompleteBook {
     private Book book;
     private BookModel bookModel;
     private Long selectedBookId; // Campo adicional para almacenar el ID seleccionado
-    private String location;
+    private String locationId;
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setLocationId(String locationId) {
+        this.locationId = locationId;
     }
 
     public CompleteBook(Book book, BookModel bookModel) {
@@ -15,8 +15,8 @@ public class CompleteBook {
         this.bookModel = bookModel;
     }
 
-    public String getLocation() {
-        return location;
+    public String getLocationId() {
+        return locationId;
     }
 
     public Book getBook() {

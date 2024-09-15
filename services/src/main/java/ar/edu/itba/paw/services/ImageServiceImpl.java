@@ -22,12 +22,14 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public Image saveImage(MultipartFile image) {
         Image i = null;
-        try {
-            i = imageDao.createImage(image.getBytes());
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Error al guardar la imagen", e);
-        }
+
+            try {
+               i =  imageDao.createImage(image.getBytes());
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new RuntimeException("Error al guardar la imagen", e);
+            }
+
         return i;
     }
 
