@@ -186,40 +186,4 @@ public class ExchangeServiceImpl implements ExchangeService {
         }
         return toReturn;
     }
-
-    /*@Override
-    public List<ExchangeOffererWrapper> getExchangeOffererWrapperListByUserId(long userId) {
-        List<ExchangeOffererWrapper> toReturn = new ArrayList<>();
-
-        List<Exchange> exchanges = exchangeDao.getExchangesWhereUserIdIsOfferer(userId);
-
-        for (Exchange ex : exchanges) {
-            String requesterLocation = locationService.getLocationByPublicationId(ex.getRequesterPubId());
-            User requester = userService.getUserByPubId(ex.getRequesterPubId());
-            String requesterMail = requester.getMail();
-            String requesterUsername = requester.getUsername();
-            Book offererBook = bookService.getBookByPubId(ex.getOffererPubId());
-            Book requesterBook = bookService.getBookByPubId(ex.getOffererPubId());
-            BookModel offererBookModel = bookModelService.getBookModelByBookModelId(offererBook.getBookModelId());
-            BookModel requesterBookModel = bookModelService.getBookModelByBookModelId(requesterBook.getBookModelId());
-            List<BookImage> requesterBookImages = bookImageService.getImageByBookId(requesterBook.getBookId());
-            List<BookImage> offererBookImages = bookImageService.getImageByBookId(offererBook.getBookId());
-
-
-            List<Author> requesterBookAuthor = bookAuthorService.getAuthorsByBookId(requesterBookModel.getBookModelId());
-            List<Author> offererBookAuthor = bookAuthorService.getAuthorsByBookId(offererBookModel.getBookModelId());
-
-            List<String> requesterAuthorNames = requesterBookAuthor.stream()
-                    .map(Author::getAuthorName)
-                    .collect(Collectors.toList());
-
-            List<String> offererAuthorNames = offererBookAuthor.stream()
-                    .map(Author::getAuthorName)
-                    .collect(Collectors.toList());
-
-            toReturn.add(new ExchangeOffererWrapper(ex, requesterLocation, requesterMail, requesterUsername, offererBook, requesterBook, offererBookModel, requesterBookModel, requesterBookImages, offererBookImages, requesterAuthorNames, offererAuthorNames));
-        }
-
-        return toReturn;
-    }*/
 }

@@ -24,7 +24,7 @@
     }*/
 </script>
 
-<html lang="es">
+<html lang="es" class="custom-style">
 <head>
     <link href="${pageContext.request.contextPath}/css/publications.css?v=1.0" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/css/exchange.css?v=1.0" rel="stylesheet"/>
@@ -33,6 +33,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
+    <link href="${pageContext.request.contextPath}/css/exchange.css" rel="stylesheet"/>
 
     <title><spring:message code="exchanges.view.title"/></title>
 
@@ -41,75 +42,99 @@
 <body>
 <navbar/>
 
-<div class="uk-background-muted">
-    <div class="uk-container">
-        <div class="uk-grid ml-1 uk-margin-top" uk-grid>
-            <!-- Primera columna que ocupa 1/3 del ancho -->
-            <div id="exchange-info uk-padding-small" class="uk-width-1-3@s exchange-information-section uk-card uk-card-default uk-border-rounded uk-box-shadow-small uk-margin-top mb-1 uk-height-viewport uk-margin-bottom" uk-height-viewport="offset-top: true">
-                <!-- Contenedor para el mensaje cuando no se ha seleccionado ninguna tarjeta -->
-                <div id="no-selection-message" class="uk-text-center uk-margin-large-top">
-                    <p>Por favor, haga clic en alguna tarjeta para mostrar más información.</p>
-                </div>
+<div class="uk-grid">
+    <div class="uk-width-1-2 uk-align-center title-section">
+        <h2 class="uk-h2 title"><spring:message code="exchange.requests.title"/></h2>
+        <h3 class="uk-h5"><spring:message code="exchange.requests.subtitle"/></h3>
+        <div>
+            <div class="uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m mb-1" uk-grid>
+                <c:forEach var="exchange" items="${exchanges}">
+                    <div>
+                        <a href="<c:url value='exchange/${exchange.exchange.exchangeId}'>
+								<c:param name='exchangeId' value='${exchange.exchange.exchangeId}'/>
+								</c:url>"
+                           class="uk-card uk-card-default uk-card-hover uk-card-body uk-border-rounded custom-link">
 
-                <!-- Contenedor para la información del intercambio -->
-                <div id="exchange-details" style="display: none;">
-                    <h3 id="info-requester-username">Intercambio con: </h3>
-                    <p id="info-requester-mail">Email: </p>
-                    <p id="info-requester-location">Ubicación: </p>
-
-                    <h4>Libro ofertado:</h4>
-                    <p id="info-offered-book-title">Título: </p>
-                    <p id="info-offered-book-authors">Autor(es): </p>
-                    <p id="info-offered-book-edition">Edición: </p>
-
-                    <div id="info-offered-book-images" uk-grid></div>
-                </div>
-            </div>
-
-            <!-- Segunda columna que ocupa el resto del espacio disponible -->
-            <div class="uk-width-expand uk-margin-top uk-overflow-auto" style="max-height: 80vh;">
-                <c:forEach var="exchange" items="${exchangeWrapperList}">
-                    <div class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-4@s uk-margin exchange-card" onclick="selectCard(this, '${exchange.requesterUsername}', '${exchange.requesterMail}', '${exchange.requesterLocation}', '${exchange.offererBookModel.title}', '${exchange.offererBookAuthor}', '${exchange.offererBookModel.edition}', '${exchange.offererBookImages}')" uk-grid>
-                        <div class="uk-card-media-left uk-cover-container">
-                            <img class="book-image" src="${pageContext.request.contextPath}/images/${exchange.requesterBookImages[0].imageId}" alt="bookImage"/>
-                        </div>
-                        <div>
-                            <div class="uk-card-body">
-                                <h3 class="uk-card-title">${exchange.requesterBookModel.title}</h3>
-                                <p class="uk-text-meta"><fmt:formatDate value="${exchange.exchange.exchangeStartDate}" pattern="dd/MM/yyyy" /></p>
-                                <c:choose>
-                                    <c:when test="${exchange.exchange.exchangeState == 'ACCEPTED'}">
-                                        <span class="uk-badge state-approved">Approved</span>
-                                    </c:when>
-                                    <c:when test="${exchange.exchange.exchangeState == 'REJECTED'}">
-                                        <span class="uk-badge state-rejected">Rejected</span>
-                                    </c:when>
-                                    <c:when test="${exchange.exchange.exchangeState == 'PENDING'}">
-                                        <div class="uk-button-group">
-                                            <a class="uk-button uk-button-default" href="<c:url value='/createexchange'>
-                                            <c:param name='accept_code' value='${exchange.exchange.acceptCode}'/>
-                                            <c:param name='state' value='true'/>
-                                        </c:url>">Accept</a>
-                                                                        <a class="uk-button uk-button-default" href="<c:url value='/createexchange'>
-                                            <c:param name='accept_code' value='${exchange.exchange.acceptCode}'/>
-                                            <c:param name='state' value='false'/>
-                                        </c:url>">Reject</a>
-                                        </div>
-                                        <span class="uk-badge state-pending">Pending</span>
-                                    </c:when>
-                                    <c:when test="${exchange.exchange.exchangeState == 'TERMINATED'}">
-                                        <span class="uk-badge state-inprogress">In Progress</span>
-                                    </c:when>
-                                </c:choose>
-
-                            </div>
-                        </div>
+                                <%--                                <h5 class="uk-card-title custom-link">${exchange.exchange.title_offered}</h5>--%>
+                                <%--                                <h5 class="uk-card-title custom-link">${exchange.exchange.title_requested}</h5>--%>
+                                <%--                            <p class="small-gray-text custom-link">${exchange.authorsString}</p>--%>
+                        </a>
                     </div>
                 </c:forEach>
-
             </div>
         </div>
     </div>
+</div>
+
+<%--<div class="uk-background-muted">--%>
+<%--    <div class="uk-container">--%>
+<%--        <div class="uk-grid ml-1 uk-margin-top" uk-grid>--%>
+<%--            <!-- Primera columna que ocupa 1/3 del ancho -->--%>
+<%--            <div id="exchange-info uk-padding-small" class="uk-width-1-3@s exchange-information-section uk-card uk-card-default uk-border-rounded uk-box-shadow-small uk-margin-top mb-1 uk-height-viewport uk-margin-bottom" uk-height-viewport="offset-top: true">--%>
+<%--                <!-- Contenedor para el mensaje cuando no se ha seleccionado ninguna tarjeta -->--%>
+<%--                <div id="no-selection-message" class="uk-text-center uk-margin-large-top">--%>
+<%--                    <p>Por favor, haga clic en alguna tarjeta para mostrar más información.</p>--%>
+<%--                </div>--%>
+
+<%--                <!-- Contenedor para la información del intercambio -->--%>
+<%--                <div id="exchange-details" style="display: none;">--%>
+<%--                    <h3 id="info-requester-username">Intercambio con: </h3>--%>
+<%--                    <p id="info-requester-mail">Email: </p>--%>
+<%--                    <p id="info-requester-location">Ubicación: </p>--%>
+
+<%--                    <h4>Libro ofertado:</h4>--%>
+<%--                    <p id="info-offered-book-title">Título: </p>--%>
+<%--                    <p id="info-offered-book-authors">Autor(es): </p>--%>
+<%--                    <p id="info-offered-book-edition">Edición: </p>--%>
+
+<%--                    <div id="info-offered-book-images" uk-grid></div>--%>
+<%--                </div>--%>
+<%--            </div>--%>
+
+<%--            <!-- Segunda columna que ocupa el resto del espacio disponible -->--%>
+<%--            <div class="uk-width-expand uk-margin-top uk-overflow-auto" style="max-height: 80vh;">--%>
+<%--                <c:forEach var="exchange" items="${exchangeWrapperList}">--%>
+<%--                    <div class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-4@s uk-margin exchange-card" onclick="selectCard(this, '${exchange.requesterUsername}', '${exchange.requesterMail}', '${exchange.requesterLocation}', '${exchange.offererBookModel.title}', '${exchange.offererBookAuthor}', '${exchange.offererBookModel.edition}', '${exchange.offererBookImages}')" uk-grid>--%>
+<%--                        <div class="uk-card-media-left uk-cover-container">--%>
+<%--                            <img class="book-image" src="${pageContext.request.contextPath}/images/${exchange.requesterBookImages[0].imageId}" alt="bookImage"/>--%>
+<%--                        </div>--%>
+<%--                        <div>--%>
+<%--                            <div class="uk-card-body">--%>
+<%--                                <h3 class="uk-card-title">${exchange.requesterBookModel.title}</h3>--%>
+<%--                                <p class="uk-text-meta"><fmt:formatDate value="${exchange.exchange.exchangeStartDate}" pattern="dd/MM/yyyy" /></p>--%>
+<%--                                <c:choose>--%>
+<%--                                    <c:when test="${exchange.exchange.exchangeState == 'ACCEPTED'}">--%>
+<%--                                        <span class="uk-badge state-approved">Approved</span>--%>
+<%--                                    </c:when>--%>
+<%--                                    <c:when test="${exchange.exchange.exchangeState == 'REJECTED'}">--%>
+<%--                                        <span class="uk-badge state-rejected">Rejected</span>--%>
+<%--                                    </c:when>--%>
+<%--                                    <c:when test="${exchange.exchange.exchangeState == 'PENDING'}">--%>
+<%--                                        <div class="uk-button-group">--%>
+<%--                                            <a class="uk-button uk-button-default" href="<c:url value='/createexchange'>--%>
+<%--                                            <c:param name='accept_code' value='${exchange.exchange.acceptCode}'/>--%>
+<%--                                            <c:param name='state' value='true'/>--%>
+<%--                                        </c:url>">Accept</a>--%>
+<%--                                                                        <a class="uk-button uk-button-default" href="<c:url value='/createexchange'>--%>
+<%--                                            <c:param name='accept_code' value='${exchange.exchange.acceptCode}'/>--%>
+<%--                                            <c:param name='state' value='false'/>--%>
+<%--                                        </c:url>">Reject</a>--%>
+<%--                                        </div>--%>
+<%--                                        <span class="uk-badge state-pending">Pending</span>--%>
+<%--                                    </c:when>--%>
+<%--                                    <c:when test="${exchange.exchange.exchangeState == 'TERMINATED'}">--%>
+<%--                                        <span class="uk-badge state-inprogress">In Progress</span>--%>
+<%--                                    </c:when>--%>
+<%--                                </c:choose>--%>
+
+<%--                            </div>--%>
+<%--                        </div>--%>
+<%--                    </div>--%>
+<%--                </c:forEach>--%>
+
+<%--            </div>--%>
+<%--        </div>--%>
+<%--    </div>--%>
 </div>
 
 </body>
