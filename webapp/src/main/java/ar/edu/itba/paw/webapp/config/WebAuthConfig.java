@@ -66,7 +66,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .failureUrl("/login?error=true")
                 .and().rememberMe()
                     .rememberMeParameter("remember_me")
-//                    .key(new String(rememberMeKey.getInputStream().readAllBytes()))
+                    .key(new String(rememberMeKey.getInputStream().readAllBytes()))
                     .userDetailsService(userDetails)
                     .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30))
                 .and().logout()
