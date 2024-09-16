@@ -81,6 +81,11 @@ public class BookModelJdbcDao implements BookModelDao {
         return jdbcTemplate.query("SELECT bm.* FROM book b JOIN book_model bm ON b.bookModelId = bm.bookModelId JOIN users u ON b.ownerId = u.userId WHERE b.ownerId = ?"
         ,new Object[] { userId }, new int[] {Types.BIGINT}, ROWMAPPERBOOKMODEL);
     }
+
+    @Override
+    public List<BookModel> getAllBookModel() {
+        return jdbcTemplate.query("SELECT * FROM book_model", ROWMAPPERBOOKMODEL);
+    }
 }
 
 
