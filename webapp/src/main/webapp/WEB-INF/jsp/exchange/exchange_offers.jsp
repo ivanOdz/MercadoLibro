@@ -74,7 +74,7 @@
                                                         <p class="uk-text-right">
                                                             <button class="uk-button uk-button-default uk-modal-close" type="button"><spring:message code="button.cancel"/></button>
                                                             <button class="uk-button uk-button-primary" type="button">
-                                                                <a class="button-text-accept" href="<c:url value='/confirm_offerer'>
+                                                                <a class="button-text-accept" href="<c:url value='/confirm_requester'>
                                                                             <c:param name='accept_code' value='${exchange.exchange.acceptCode}'/>
                                                                             </c:url>">
                                                                     <spring:message code="button.confirm"/>
