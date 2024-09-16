@@ -5,9 +5,10 @@
 <c:url var="newBookFromScratch" value="/book/book_form"/>
 <c:url var="uploadNewPrecharged" value="/book/book_models"/>
 <c:url var="logout" value="/logout"/>
-<nav class="uk-navbar-container uk-box-shadow-small " uk-sticky>
-    <div class="uk-container uk-width-1-1  nav-background">
-        <div class="uk-width-1-1 nav-container"  uk-navbar>
+
+<nav class="uk-navbar-container uk-box-shadow-small" uk-sticky>
+    <div class="uk-container uk-width-1-1 nav-background">
+        <div class="uk-width-1-1 nav-container" uk-navbar>
             <div class="uk-navbar-left">
                 <ul class="uk-navbar-nav">
                     <li>
@@ -43,20 +44,21 @@
             <div class="uk-navbar-right">
                 <ul class="uk-navbar-nav">
                     <li>
-                        <a class="button-text" class="pl-1 pr-1" href="<c:url value="${exchangeRequestsUrl}"/>"><spring:message code="home.exchange.view"/></a>
+                        <a class="button-text pl-1 pr-1" href="<c:url value='${exchangeRequestsUrl}'/>"><spring:message code="home.exchange.view"/></a>
                         <div class="uk-navbar-dropdown">
                             <ul class="uk-nav uk-navbar-dropdown-nav">
                                 <li class="uk-active uk-margin-small-top">
                                     <a href="<c:url value='${exchangeRequestsUrl}'/>">
                                         <div class="button-text">
-                                            <spring:message  code="home.exchange.requests"/>
+                                            <spring:message code="home.exchange.requests"/>
                                         </div>
                                     </a>
                                 </li>
                                 <li class="uk-margin-small-top">
                                     <a href="<c:url value='${exchangeOffersUrl}'/>">
                                         <div class="button-text">
-                                            <spring:message code="home.exchange.offers"/></div>
+                                            <spring:message code="home.exchange.offers"/>
+                                        </div>
                                     </a>
                                 </li>
                             </ul>
@@ -88,7 +90,7 @@
                         </div>
                     </li>
                     <li>
-                        <a class="pl-1 pr-1" href="<c:url value="${profileUrl}"/>"><spring:message code="home.profile.view"/></a>
+                        <a class="pl-1 pr-1" href="<c:url value='${profileUrl}'/>"><spring:message code="home.profile.view"/></a>
                         <div class="uk-navbar-dropdown">
                             <ul class="uk-nav uk-navbar-dropdown-nav">
                                 <li class="uk-active uk-margin-small-top">
@@ -108,10 +110,9 @@
     </div>
 </nav>
 
-
 <div id="modal-logout" uk-modal>
     <div class="uk-modal-dialog uk-modal-body">
-        <h3 class="uk-h3"><spring:message code="logout.confirmation.title"/> </h3>
+        <h3 class="uk-h3"><spring:message code="logout.confirmation.title"/></h3>
         <p class="uk-text-right">
             <button class="uk-button uk-button-default uk-modal-close" type="button"><spring:message code="button.cancel"/></button>
             <button class="uk-button uk-button-danger" type="button">
