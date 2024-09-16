@@ -11,12 +11,12 @@
             <div class="uk-navbar-left">
                 <ul class="uk-navbar-nav">
                     <li>
-                        <a href="${pageContext.request.contextPath}/">
-                            <img src="${pageContext.request.contextPath}/images/mercado_libro.webp" alt="Logo Icon" class="icon-style">
+                        <a href="/">
+                            <img src="/images/mercado_libro.webp" alt="Logo Icon" class="icon-style">
                         </a>
                     </li>
                     <li>
-                        <a class="uk-navbar-item uk-logo" href="${pageContext.request.contextPath}/">
+                        <a class="uk-navbar-item uk-logo" href="/">
                             <strong class="button-text">
                                 <spring:message code="publications.list.brand.logo"/>
                             </strong>
@@ -28,7 +28,7 @@
             <div class="uk-navbar-center">
                 <ul class="uk-navbar-nav">
                     <li>
-                        <form class="uk-search uk-search-default custom-search-form" method="get" action="${pageContext.request.contextPath}">
+                        <form class="uk-search uk-search-default custom-search-form" method="get" action="/">
                             <input class="uk-search-input button-text" type="search"
                                    placeholder="<spring:message code='home.search.text'/>"
                                    aria-label="Search"
