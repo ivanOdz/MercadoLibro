@@ -117,3 +117,38 @@
 .uk-button-danger a:hover {
     color: inherit;
 }
+
+.nav-background {
+    background-color: #6dafbf; !important;
+    padding: 0;
+    margin:0;
+}
+
+.nav-container {
+    padding: 22px;
+    margin: 0 2% 0 1%;
+}
+
+.button-text {
+    color: black;
+}
+
+.button-text,
+.custom-search-form input::placeholder,
+.uk-navbar-nav a,
+.uk-navbar-dropdown-nav a {
+    color: black !important;
+}
+
+.uk-navbar-dropdown-nav a div {
+    color: black !important;
+}
+
+.uk-navbar-nav a:hover,
+.uk-navbar-dropdown-nav a:hover {
+    color: #ffffff !important;
+}
+
+.custom-search-form input::placeholder {
+    color: black !important;
+}

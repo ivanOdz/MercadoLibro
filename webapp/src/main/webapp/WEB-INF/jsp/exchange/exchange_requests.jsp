@@ -12,7 +12,6 @@
 
 <html lang="es" class="custom-style">
 <head>
-    <link href="${pageContext.request.contextPath}/css/publications.css?v=1.0" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/css/exchange.css?v=1.0" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
@@ -20,6 +19,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
     <link href="${pageContext.request.contextPath}/css/exchange.css" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/css/navbar.css" rel="stylesheet"/>
 
     <title><spring:message code="exchanges.view.title"/></title>
 

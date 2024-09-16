@@ -31,10 +31,6 @@
     flex: 1;
 }
 
-.navbar-logo {
-    text-align: left;
-}
-
 .ml-9 {
     margin-left: 9rem;
 }
@@ -49,10 +45,6 @@
 
 .mr-1 {
     margin-right: 1rem !important;
-}
-
-.uk-navbar-nav {
-    gap: 0 !important;
 }
 
 .icon-style {
@@ -81,14 +73,6 @@
 
 .custom-link:hover {
     text-decoration: none;
-}
-
-.custom-search-form .uk-search-input {
-    border-radius: 20px;
-}
-
-.custom-search-form button.uk-search-icon-flip {
-    border-radius: 20px;
 }
 
 .fixed-action-btn a {
