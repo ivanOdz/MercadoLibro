@@ -17,4 +17,7 @@ public interface BookModelService {
     BookModel addBookModel(List<String> authors, String isbn, String title, String editorial, String description, Genre genre, int edition, int weight, int pages, Language language, BookDimension dimension, Short publicationYear, boolean pocketEdition, boolean hardcover);
 
     List<BookModel> getBookModelByUserId(long userId);
+
+    List<BookModel> getAllBookModel();
+
 }

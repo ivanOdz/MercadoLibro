@@ -3,6 +3,7 @@
 <c:url var="booksUrl" value="/book"/>
 <c:url var="profileUrl" value="/profile"/>
 <c:url var="newBookFromScratch" value="/book/book_form"/>
+<c:url var="uploadNewPrecharged" value="/book/book_models"/>
 <c:url var="logout" value="/logout"/>
 <nav class="uk-navbar-container uk-box-shadow-small " uk-sticky>
     <div class="uk-container uk-width-1-1  nav-background">

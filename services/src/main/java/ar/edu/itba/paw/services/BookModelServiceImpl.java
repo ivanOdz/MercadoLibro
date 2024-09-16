@@ -49,4 +49,9 @@ public class BookModelServiceImpl implements BookModelService {
     public List<BookModel> getBookModelByUserId(long userId) {
         return bookModelDao.getBookModelByUserId(userId);
     }
+
+    @Override
+    public List<BookModel> getAllBookModel() {
+        return bookModelDao.getAllBookModel();
+    }
 }
