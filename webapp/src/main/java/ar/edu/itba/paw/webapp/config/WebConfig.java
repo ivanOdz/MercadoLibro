@@ -24,7 +24,7 @@ import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
-@PropertySource("classpath:application{spring.profiles.active}.properties")
+@PropertySource("classpath:application.properties")
 @EnableWebMvc
 @ComponentScan({
         "ar.edu.itba.paw.webapp.controller",

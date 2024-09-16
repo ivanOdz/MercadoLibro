@@ -12,12 +12,12 @@
             <div class="uk-navbar-left">
                 <ul class="uk-navbar-nav">
                     <li>
-                        <a href="${pageContext.request.contextPath}/">
-                            <img src="${pageContext.request.contextPath}/images/mercado_libro.webp" alt="Logo Icon" class="icon-style">
+                        <a href="<c:url value='/'/>">
+                            <img src="<c:url value='/images/mercado_libro.webp'/>" alt="Logo Icon" class="icon-style">
                         </a>
                     </li>
                     <li>
-                        <a class="uk-navbar-item uk-logo" href="${pageContext.request.contextPath}/">
+                        <a class="uk-navbar-item uk-logo" href="<c:url value='/'/>">
                             <strong class="button-text">
                                 <spring:message code="publications.list.brand.logo"/>
                             </strong>
@@ -29,7 +29,7 @@
             <div class="uk-navbar-center">
                 <ul class="uk-navbar-nav">
                     <li>
-                        <form class="uk-search uk-search-default custom-search-form" method="get" action="${pageContext.request.contextPath}">
+                        <form class="uk-search uk-search-default custom-search-form" method="get" action="<c:url value='/'/>">
                             <input class="uk-search-input button-text" type="search"
                                    placeholder="<spring:message code='home.search.text'/>"
                                    aria-label="Search"
@@ -41,10 +41,13 @@
                     </li>
                 </ul>
             </div>
+
             <div class="uk-navbar-right">
                 <ul class="uk-navbar-nav">
                     <li>
-                        <a class="button-text pl-1 pr-1" href="<c:url value='${exchangeRequestsUrl}'/>"><spring:message code="home.exchange.view"/></a>
+                        <a class="button-text pl-1 pr-1" href="<c:url value='${exchangeRequestsUrl}'/>">
+                            <spring:message code="home.exchange.view"/>
+                        </a>
                         <div class="uk-navbar-dropdown">
                             <ul class="uk-nav uk-navbar-dropdown-nav">
                                 <li class="uk-active uk-margin-small-top">
@@ -89,8 +92,11 @@
                             </ul>
                         </div>
                     </li>
+
                     <li>
-                        <a class="pl-1 pr-1" href="<c:url value='${profileUrl}'/>"><spring:message code="home.profile.view"/></a>
+                        <a class="pl-1 pr-1" href="<c:url value='${profileUrl}'/>">
+                            <spring:message code="home.profile.view"/>
+                        </a>
                         <div class="uk-navbar-dropdown">
                             <ul class="uk-nav uk-navbar-dropdown-nav">
                                 <li class="uk-active uk-margin-small-top">
@@ -99,7 +105,9 @@
                                     </a>
                                 </li>
                                 <li class="uk-margin-small-top">
-                                    <a href="#modal-logout" uk-toggle><spring:message code="home.profile.logout"/></a>
+                                    <a href="#modal-logout" uk-toggle>
+                                        <spring:message code="home.profile.logout"/>
+                                    </a>
                                 </li>
                             </ul>
                         </div>
@@ -114,7 +122,9 @@
     <div class="uk-modal-dialog uk-modal-body">
         <h3 class="uk-h3"><spring:message code="logout.confirmation.title"/></h3>
         <p class="uk-text-right">
-            <button class="uk-button uk-button-default uk-modal-close" type="button"><spring:message code="button.cancel"/></button>
+            <button class="uk-button uk-button-default uk-modal-close" type="button">
+                <spring:message code="button.cancel"/>
+            </button>
             <button class="uk-button uk-button-danger" type="button">
                 <a href="<c:url value='${logout}'/>">
                     <spring:message code="home.profile.logout"/>
