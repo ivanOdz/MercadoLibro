@@ -38,6 +38,15 @@
 .state-awaiting {
     background-color: blue !important;
     color: white !important;
+    height: 38px;
+    white-space: normal;
+    word-break: break-word;
+    width: 100px;
+    line-height: 1.2em;
+    display: inline-block;
+    padding: 4px 8px;
+    margin-top: 25px;
+    margin-left: 20px;
 }
 
 .state-padding {

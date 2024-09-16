@@ -59,6 +59,12 @@
                                     <div class="uk-align-right card-text-right">
                                         <c:choose>
 
+                                            <c:when test="${exchange.exchange.exchangeState == 'ACCEPTED'
+                                                    && exchange.exchange.offererReceivedBook == true}">
+                                                <span class="uk-badge state-awaiting"><spring:message
+                                                        code="exchange.status.awaiting"/></span>
+                                            </c:when>
+
                                             <c:when test="${exchange.exchange.exchangeState == 'ACCEPTED'}">
                                                 <a class="uk-button uk-button-default uk-button-small uk-margin-right"
                                                    href="<c:url value='/confirm_offerer'>
@@ -69,11 +75,7 @@
                                                 <span class="uk-badge state-approved"><spring:message
                                                         code="exchange.status.accepted"/></span>
                                             </c:when>
-                                            <c:when test="${exchange.exchange.exchangeState == 'ACCEPTED'
-                                                    && exchange.exchange.offererReceivedBook == true}">
-                                                <span class="uk-badge state-awaiting"><spring:message
-                                                        code="exchange.status.awaiting"/></span>
-                                            </c:when>
+
 
                                             <c:when test="${exchange.exchange.exchangeState == 'REJECTED'}">
                                                 <span class="uk-badge state-rejected"><spring:message
