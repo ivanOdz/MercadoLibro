@@ -35,6 +35,11 @@
 }
 
 
+.state-padding {
+    margin-left: 150px;
+}
+
+
 .title {
     text-align: center;
 }
@@ -115,6 +120,13 @@
     margin-bottom: 0;
 }
 
+.card-text2 {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 0;
+}
+
 .date-text {
     color: #666666;
     font-size: small;
@@ -123,7 +135,7 @@
 }
 
 .card-text-right {
-    margin: 25%;
+    margin: 25% 0 25% 0;
     padding-left: 80%;
 }
 
@@ -131,6 +143,7 @@
     padding-top: 20px;
     padding-bottom: 20px;
     width: 40%;
+    padding-right: 100px;
 }
 
 

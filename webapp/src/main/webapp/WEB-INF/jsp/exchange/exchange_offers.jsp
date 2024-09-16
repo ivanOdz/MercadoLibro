@@ -44,13 +44,13 @@
                                      alt="bookImage"/>
                             </div>
                             <div>
-                                <div class="card-text">
+                                <div class="card-text2">
                                     <div class="card-text-left">
                                         <h3 class="uk-h6">${exchange.offererBookModel.title}</h3>
                                         <h4 class="date-text"><fmt:formatDate
                                                 value="${exchange.exchange.exchangeStartDate}" pattern="dd/MM/yyyy"/></h4>
                                     </div>
-                                    <div class="uk-align-right card-text-right">
+                                    <div class="uk-align-right card-text-right state-padding">
                                         <c:choose>
                                             <c:when test="${exchange.exchange.exchangeState == 'ACCEPTED'}">
                                                 <span class="uk-badge state-approved">Approved</span>
@@ -59,18 +59,6 @@
                                                 <span class="uk-badge state-rejected">Rejected</span>
                                             </c:when>
                                             <c:when test="${exchange.exchange.exchangeState == 'PENDING'}">
-                                                <div class="uk-button-group">
-                                                    <a class="uk-button uk-button-default uk-button-small"
-                                                       href="<c:url value='/createexchange'>
-                                            <c:param name='accept_code' value='${exchange.exchange.acceptCode}'/>
-                                            <c:param name='state' value='true'/>
-                                        </c:url>">Accept</a>
-                                                    <a class="uk-button uk-button-default uk-button-small uk-margin-right"
-                                                       href="<c:url value='/createexchange'>
-                                            <c:param name='accept_code' value='${exchange.exchange.acceptCode}'/>
-                                            <c:param name='state' value='false'/>
-                                        </c:url>">Reject</a>
-                                                </div>
                                                 <span class="uk-badge state-pending">Pending</span>
                                             </c:when>
                                             <c:when test="${exchange.exchange.exchangeState == 'TERMINATED'}">

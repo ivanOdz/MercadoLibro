@@ -63,8 +63,8 @@
                                      alt="bookImage"/>
                             </div>
                             <div>
-                                <div class="uk-card-body card-text">
-                                    <div>
+                                <div class="card-text">
+                                    <div class="card-text-left">
                                         <h3 class="uk-h6">${exchange.requesterBookModel.title}</h3>
                                         <h4 class="date-text"><fmt:formatDate
                                                 value="${exchange.exchange.exchangeStartDate}" pattern="dd/MM/yyyy"/></h4>
