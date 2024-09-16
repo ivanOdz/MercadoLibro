@@ -22,4 +22,7 @@ public interface ExchangeDao {
 
     List<Exchange> getExchangesWhereUserIdIsRequester(long anUserId);
 
+    void confirmRequester(int acceptCode);
+    void confirmOfferer(int acceptCode);
+
 }

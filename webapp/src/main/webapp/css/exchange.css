@@ -35,6 +35,11 @@
 }
 
 
+.state-awaiting {
+    background-color: blue !important;
+    color: white !important;
+}
+
 .state-padding {
     margin-left: 150px;
 }

@@ -65,4 +65,8 @@ public class Exchange {
         return acceptCode;
     }
 
+    public boolean isConfirmed(){
+        return offererReceivedBook && requesterReceivedBook;
+    }
+
 }

@@ -131,4 +131,20 @@ public class ExchangeController {
 
         return mav;
     }
+
+
+    @RequestMapping("/confirm_offerer")
+    public ModelAndView confirmExchangeOffer(@RequestParam(name = "accept_code") int accept_code) {
+        exchangeService.cofirmOfferer(accept_code);
+        return exchangeRequests();
+    }
+
+
+    @RequestMapping("/confirm_requester")
+    public ModelAndView confirmExchangeRequest(@RequestParam(name = "accept_code") int accept_code) {
+        exchangeService.cofirmRequester(accept_code);
+        return exchangeOffers();
+    }
+
+
 }

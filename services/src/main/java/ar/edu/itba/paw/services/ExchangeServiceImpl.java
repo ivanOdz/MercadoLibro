@@ -125,6 +125,17 @@ public class ExchangeServiceImpl implements ExchangeService {
         return getExchangeWrapper(exchanges);
     }
 
+    @Override
+    public void cofirmOfferer(int acceptCode) {
+        exchangeDao.confirmOfferer(acceptCode);
+    }
+
+    @Override
+    public void cofirmRequester(int acceptCode) {
+        exchangeDao.confirmRequester(acceptCode);
+    }
+
+
     /**
      *
      * @param userId

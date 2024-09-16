@@ -116,4 +116,28 @@ public class ExchangeJdbcDao implements ExchangeDao {
         return jdbcTemplate.query("SELECT * FROM exchange WHERE requesterPubId IN (SELECT publicationId FROM publication WHERE userId = ? ) ORDER BY exchangeStartDate DESC", new Object[]{ anUserId },
                 new int[]{ Types.BIGINT }, ROWMAPPER);
     }
+
+    @Override
+    public void confirmRequester(int acceptCode) {
+        jdbcTemplate.update("UPDATE exchange SET requesterReceivedBook = ? WHERE acceptcode = ?", true, acceptCode);
+
+        Optional<Exchange> exchange= jdbcTemplate.query("SELECT * FROM exchange WHERE acceptcode = ?", new Object[]{ acceptCode },
+                new int[]{ Types.INTEGER }, ROWMAPPER).stream().findFirst();
+
+        if(exchange.get().isConfirmed())
+            updateExchangeStatus(acceptCode, ExchangeState.TERMINATED.getValue());
+
+    }
+
+    @Override
+    public void confirmOfferer(int acceptCode) {
+        jdbcTemplate.update("UPDATE exchange SET offererReceivedBook = ? WHERE acceptcode = ?", true, acceptCode);
+
+        Optional<Exchange> exchange= jdbcTemplate.query("SELECT * FROM exchange WHERE acceptcode = ?", new Object[]{ acceptCode },
+                new int[]{ Types.INTEGER }, ROWMAPPER).stream().findFirst();
+
+        if(exchange.get().isConfirmed())
+            updateExchangeStatus(acceptCode, ExchangeState.TERMINATED.getValue());
+
+    }
 }

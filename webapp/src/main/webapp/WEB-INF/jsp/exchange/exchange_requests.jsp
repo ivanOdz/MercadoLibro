@@ -10,20 +10,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 
-<script>
-    /*function showExchangeInfo(exchangeId) {
-        // Simulación de datos; reemplazar con datos reales del servidor si es necesario
-        const exchangeData = {
-            '1': 'Detalles del intercambio 1: Este libro fue intercambiado el 15 de agosto.',
-            '2': 'Detalles del intercambio 2: Este libro está en proceso de ser intercambiado.',
-            '3': 'Detalles del intercambio 3: Este libro fue intercambiado exitosamente.'
-        };
-
-        // Actualizar el contenido de la sección izquierda con los detalles del intercambio
-        document.getElementById('exchange-info-content').innerText = exchangeData[exchangeId] || 'No hay detalles disponibles para este intercambio.';
-    }*/
-</script>
-
 <html lang="es" class="custom-style">
 <head>
     <link href="${pageContext.request.contextPath}/css/publications.css?v=1.0" rel="stylesheet"/>
@@ -67,33 +53,57 @@
                                     <div class="card-text-left">
                                         <h3 class="uk-h6">${exchange.requesterBookModel.title}</h3>
                                         <h4 class="date-text"><fmt:formatDate
-                                                value="${exchange.exchange.exchangeStartDate}" pattern="dd/MM/yyyy"/></h4>
+                                                value="${exchange.exchange.exchangeStartDate}"
+                                                pattern="dd/MM/yyyy"/></h4>
                                     </div>
                                     <div class="uk-align-right card-text-right">
                                         <c:choose>
+
                                             <c:when test="${exchange.exchange.exchangeState == 'ACCEPTED'}">
-                                                <span class="uk-badge state-approved">Approved</span>
+                                                <a class="uk-button uk-button-default uk-button-small uk-margin-right"
+                                                   href="<c:url value='/confirm_offerer'>
+                                                        <c:param name='accept_code' value='${exchange.exchange.acceptCode}'/>
+                                                            </c:url>">
+                                                    Confirmar intercambio
+                                                </a>
+                                                <span class="uk-badge state-approved"><spring:message
+                                                        code="exchange.status.accepted"/></span>
                                             </c:when>
+                                            <c:when test="${exchange.exchange.exchangeState == 'ACCEPTED'
+                                                    && exchange.exchange.offererReceivedBook == true}">
+                                                <span class="uk-badge state-awaiting"><spring:message
+                                                        code="exchange.status.awaiting"/></span>
+                                            </c:when>
+
                                             <c:when test="${exchange.exchange.exchangeState == 'REJECTED'}">
-                                                <span class="uk-badge state-rejected">Rejected</span>
+                                                <span class="uk-badge state-rejected"><spring:message
+                                                        code="exchange.status.rejected"/></span>
                                             </c:when>
+
                                             <c:when test="${exchange.exchange.exchangeState == 'PENDING'}">
                                                 <div class="uk-button-group">
                                                     <a class="uk-button uk-button-default uk-button-small"
                                                        href="<c:url value='/createexchange'>
-                                            <c:param name='accept_code' value='${exchange.exchange.acceptCode}'/>
-                                            <c:param name='state' value='true'/>
-                                        </c:url>">Accept</a>
+                                                        <c:param name='accept_code' value='${exchange.exchange.acceptCode}'/>
+                                                        <c:param name='state' value='true'/>
+                                                            </c:url>">
+                                                        Accept
+                                                    </a>
                                                     <a class="uk-button uk-button-default uk-button-small uk-margin-right"
                                                        href="<c:url value='/createexchange'>
-                                            <c:param name='accept_code' value='${exchange.exchange.acceptCode}'/>
-                                            <c:param name='state' value='false'/>
-                                        </c:url>">Reject</a>
+                                                        <c:param name='accept_code' value='${exchange.exchange.acceptCode}'/>
+                                                        <c:param name='state' value='false'/>
+                                                            </c:url>">
+                                                        Reject
+                                                    </a>
                                                 </div>
-                                                <span class="uk-badge state-pending">Pending</span>
+                                                <span class="uk-badge state-pending"><spring:message
+                                                        code="exchange.status.pending"/></span>
                                             </c:when>
+
                                             <c:when test="${exchange.exchange.exchangeState == 'TERMINATED'}">
-                                                <span class="uk-badge state-inprogress">In Progress</span>
+                                                <span class="uk-badge state-inprogress"><spring:message
+                                                        code="exchange.status.in_progress"/></span>
                                             </c:when>
                                         </c:choose>
                                     </div>
@@ -118,14 +128,14 @@
 
                             <!-- Contenedor para la información del intercambio -->
                             <div id="exchange-details" style="display: none;">
-                                <h3 id="info-requester-username">Intercambio con: </h3>
-                                <p id="info-requester-mail">Email: </p>
-                                <p id="info-requester-location">Ubicación: </p>
+                                <h3 id="info-requester-username"><spring:message code="exchange.with"/></h3>
+                                <p id="info-requester-mail"><spring:message code="exchange.with_email"/></p>
+                                <p id="info-requester-location"><spring:message code="exchange.location"/></p>
 
-                                <h4>Tu publicación original:</h4>
-                                <p id="info-offered-book-title">Título: </p>
-                                <p id="info-offered-book-authors">Autor(es): </p>
-                                <p id="info-offered-book-edition">Edición: </p>
+                                <h4><spring:message code="exchange.original_publication"/></h4>
+                                <p id="info-offered-book-title"><spring:message code="exchange.book.title"/></p>
+                                <p id="info-offered-book-authors"><spring:message code="exchange.book.authors"/></p>
+                                <p id="info-offered-book-edition"><spring:message code="exchange.book.edition"/></p>
 
                                 <div id="info-offered-book-images" uk-grid></div>
                             </div>
@@ -155,12 +165,12 @@
         document.getElementById('exchange-details').style.display = 'block';
 
         // Actualizar la información en la columna izquierda
-        document.getElementById('info-requester-username').textContent = 'Intercambio con: ' + requesterUsername;
-        document.getElementById('info-requester-mail').textContent = 'Email: ' + requesterMail;
-        document.getElementById('info-requester-location').textContent = 'Ubicación: ' + requesterLocation;
-        document.getElementById('info-offered-book-title').textContent = 'Título: ' + offeredBookTitle;
-        document.getElementById('info-offered-book-authors').textContent = 'Autor(es): ' + offeredBookAuthors;
-        document.getElementById('info-offered-book-edition').textContent = 'Edición: ' + offeredBookEdition;
+        document.getElementById('info-requester-username').textContent = "<spring:message code="exchange.with"/>" + " " + requesterUsername;
+        document.getElementById('info-requester-mail').textContent = "<spring:message code="exchange.with_email"/>" + " " + requesterMail;
+        document.getElementById('info-requester-location').textContent = "<spring:message code="exchange.location"/>" + requesterLocation;
+        document.getElementById('info-offered-book-title').textContent = "<spring:message code="exchange.book.title"/>" + " " + offeredBookTitle;
+        document.getElementById('info-offered-book-authors').textContent = "<spring:message code="exchange.book.authors"/>" + " " + offeredBookAuthors;
+        document.getElementById('info-offered-book-edition').textContent = "<spring:message code="exchange.book.edition"/>" + " " + offeredBookEdition;
 
         // Limpiar imágenes anteriores
         const imageContainer = document.getElementById('info-offered-book-images');

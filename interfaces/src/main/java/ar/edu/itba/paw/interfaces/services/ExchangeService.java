@@ -23,4 +23,16 @@ public interface ExchangeService {
 
     List<ExchangeWrapper> getExchangeOffererWrapperListByUserId(long userId);
 
+    /**
+     * confirms that the offerer received the book
+     * @param acceptCode
+     */
+    void cofirmOfferer(int acceptCode);
+
+    /**
+     * confirms that the requester received the book
+     * @param acceptCode
+     */
+    void cofirmRequester(int acceptCode);
+
 }

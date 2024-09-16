@@ -17,8 +17,13 @@ mvn package || { echo "Error durante mvn package"; exit 1; }
 echo "Subiendo archivo WAR a pampero.itba.edu.ar..."
 scp webapp/target/webapp.war $pampero_user@pampero.itba.edu.ar:/home/$pampero_user || { echo "Error durante SCP a pampero"; exit 1; }
 
+echo "Estableciendo conexión con servidor..."
+ssh $pampero_user@pampero.itba.edu.ar
+
 # Sube el archivo WAR al servidor a través de SFTP
 echo "Subiendo archivo WAR a 10.16.1.110 vía SFTP..."
-echo "put webapp/target/webapp.war web/app.war" | sftp paw-2024b-09@10.16.1.110 || { echo "Error durante SFTP"; exit 1; }
+sftp paw-2024b-09@10.16.1.110
+
+put webapp/target/webapp.war web/app.war
 
 echo "Despliegue completado con éxito."
