@@ -150,7 +150,7 @@
 
 .card-text-right {
     margin: 25% 0 25% 0;
-    padding-left: 80%;
+    padding-left: 50%;
 }
 
 .card-text-left {
@@ -161,4 +161,9 @@
 }
 
 
+
+.button-text-accept {
+    text-decoration: none;
+    color: #ffffff;
+}
 

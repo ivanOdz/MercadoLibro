@@ -67,13 +67,31 @@
 
                                             <c:when test="${exchange.exchange.exchangeState == 'ACCEPTED'}">
                                                 <a class="uk-button uk-button-default uk-button-small uk-margin-right"
-                                                   href="<c:url value='/confirm_offerer'>
-                                                        <c:param name='accept_code' value='${exchange.exchange.acceptCode}'/>
-                                                            </c:url>">
-                                                    Confirmar intercambio
+                                                   href="#modal-confirm-exchange-${exchange.exchange.acceptCode}"
+                                                   onclick="event.stopPropagation()" uk-toggle>
+                                                    <spring:message code="exchange.button.confirm.exchange"/>
                                                 </a>
                                                 <span class="uk-badge state-approved"><spring:message
                                                         code="exchange.status.accepted"/></span>
+
+                                                <!-- Confirm exchange modal -->
+
+                                                <div id="modal-confirm-exchange-${exchange.exchange.acceptCode}" uk-modal>
+                                                    <div class="uk-modal-dialog uk-modal-body">
+                                                        <h3 class="uk-h4"><spring:message code="exchange.confirm.title"/> </h3>
+                                                        <p class="uk-text-right">
+                                                            <button class="uk-button uk-button-default uk-modal-close" type="button"><spring:message code="button.cancel"/></button>
+                                                            <button class="uk-button uk-button-primary" type="button">
+                                                                <a class="button-text-accept" href="<c:url value='/confirm_offerer'>
+                                                                            <c:param name='accept_code' value='${exchange.exchange.acceptCode}'/>
+                                                                            </c:url>">
+                                                                    <spring:message code="button.confirm"/>
+                                                                </a>
+                                                            </button>
+                                                        </p>
+                                                    </div>
+                                                </div>
+
                                             </c:when>
 
 
@@ -85,22 +103,59 @@
                                             <c:when test="${exchange.exchange.exchangeState == 'PENDING'}">
                                                 <div class="uk-button-group">
                                                     <a class="uk-button uk-button-default uk-button-small"
-                                                       href="<c:url value='/createexchange'>
-                                                        <c:param name='accept_code' value='${exchange.exchange.acceptCode}'/>
-                                                        <c:param name='state' value='true'/>
-                                                            </c:url>">
-                                                        Accept
+                                                       href="#modal-exchange-accepted-${exchange.exchange.acceptCode}"
+                                                       onclick="event.stopPropagation()" uk-toggle>
+                                                        <spring:message code="exchange.button.accept"/>
                                                     </a>
                                                     <a class="uk-button uk-button-default uk-button-small uk-margin-right"
-                                                       href="<c:url value='/createexchange'>
+                                                       href="#modal-exchange-rejected-${exchange.exchange.acceptCode}"
+                                                       onclick="event.stopPropagation()" uk-toggle>
+                                                        <spring:message code="email.rejectButton"/>
+                                                    </a>
+
+                                                    <!-- Exchange Rejected modal -->
+
+                                                    <div id="modal-exchange-rejected-${exchange.exchange.acceptCode}" uk-modal>
+                                                        <div class="uk-modal-dialog uk-modal-body">
+                                                            <h3 class="uk-h4"><spring:message code="exchange.rejection.title"/> </h3>
+                                                            <p class="uk-text-right">
+                                                                <button class="uk-button uk-button-default uk-modal-close" type="button"><spring:message code="button.cancel"/></button>
+                                                                <button class="uk-button uk-button-danger" type="button">
+                                                                    <a href="<c:url value='/createexchange'>
                                                         <c:param name='accept_code' value='${exchange.exchange.acceptCode}'/>
                                                         <c:param name='state' value='false'/>
                                                             </c:url>">
-                                                        Reject
-                                                    </a>
+                                                                        <spring:message code="button.confirm"/>
+                                                                    </a>
+                                                                </button>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <!-- Exchange Accepted modal -->
+
+                                                    <div id="modal-exchange-accepted-${exchange.exchange.acceptCode}" uk-modal>
+                                                        <div class="uk-modal-dialog uk-modal-body">
+                                                            <h3 class="uk-h4"><spring:message code="exchange.confirmation.title"/> </h3>
+                                                            <p class="uk-text-right">
+                                                                <button class="uk-button uk-button-default uk-modal-close" type="button"><spring:message code="button.cancel"/></button>
+                                                                <button class="uk-button uk-button-primary" type="button">
+                                                                    <a class="button-text-accept" href="<c:url value='/createexchange'>
+                                                                   <c:param name='accept_code' value='${exchange.exchange.acceptCode}'/>
+                                                                    <c:param name='state' value='true'/>
+                                                                         </c:url>">
+                                                                        <spring:message code="button.confirm"/>
+                                                                    </a>
+                                                                </button>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+
                                                 </div>
                                                 <span class="uk-badge state-pending"><spring:message
                                                         code="exchange.status.pending"/></span>
+
                                             </c:when>
 
                                             <c:when test="${exchange.exchange.exchangeState == 'TERMINATED'}">
@@ -114,6 +169,10 @@
                                 </div>
                             </div>
                         </div>
+
+
+
+
                     </c:forEach>
                 </div>
 
@@ -149,6 +208,8 @@
         </c:if>
     </div>
 </div>
+
+
 
 </body>
 
