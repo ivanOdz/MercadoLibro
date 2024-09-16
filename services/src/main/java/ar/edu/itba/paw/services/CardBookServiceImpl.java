@@ -52,4 +52,22 @@ public class CardBookServiceImpl implements CardBookService {
         }
         return cardBookList;
     }
+
+    @Override
+    public List<CardBook> buildCardBookModelList(List<BookModel> bookList) {
+        List<CardBook> cardBookList = new ArrayList<>();
+        for(BookModel bookModel : bookList){
+            Image image = imageService.getFirstImageByBookId(bookModel.getBookModelId());
+
+            Long imageId = null;
+            if(image != null){
+                imageId = image.getImageId();
+            }
+
+            List<Author> authors = bookAuthorService.getAuthorsByBookId(bookModel.getBookModelId());
+
+            cardBookList.add(new CardBook(bookModel, imageId, authors));
+        }
+        return cardBookList;
+    }
 }

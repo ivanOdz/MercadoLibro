@@ -20,6 +20,14 @@ public class CardBook {
         this.canPublish = canPublish;
     }
 
+    public CardBook(BookModel bookModel, Long image, List<Author> bookAuthors) {
+        this.book = null;
+        this.bookModel = bookModel;
+        this.image = image;
+        this.bookAuthors = bookAuthors;
+        this.canPublish = false;
+    }
+
     public Book getBook() {
         return book;
     }
