@@ -16,6 +16,7 @@
 .state-pending {
     background-color: orange !important;
     color: white !important;
+    margin-top: 5px;
 }
 
 .state-approved {
@@ -51,7 +52,8 @@
 }
 
 .column {
-    margin: 15%;
+    margin-left: 15%;
+    margin-right: 15%;
 }
 
 
@@ -87,10 +89,10 @@
 
 .exchange-card {
     position: relative;
-    padding: 20px;
-    margin: 5%;
-    height: 25%;
-    width: 80%;
+    padding: 20px 0 25px 0;
+    margin-bottom: 5%;
+    height: 40%;
+    width: 90%;
 }
 
 
@@ -99,3 +101,37 @@
     margin-left: 5%;
     margin-top: 2%;
 }
+
+.book-image {
+    width: 80px;
+    height: 100px;
+    object-fit: contain;
+}
+
+.card-text {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 0;
+}
+
+.date-text {
+    color: #666666;
+    font-size: small;
+    padding: 0;
+    margin: 0;
+}
+
+.card-text-right {
+    margin: 25%;
+    padding-left: 80%;
+}
+
+.card-text-left {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    width: 40%;
+}
+
+
+

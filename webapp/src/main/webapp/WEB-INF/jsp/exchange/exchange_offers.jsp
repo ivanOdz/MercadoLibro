@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 
 <html lang="es" class="custom-style">
@@ -34,45 +35,50 @@
                 <!-- columna de exchanges -->
                 <div class="uk-width-3-5 column-exchanges scrollable-content">
                     <c:forEach var="exchange" items="${exchanges}">
-                        <div class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-4@s uk-margin exchange-card"
-                             onclick="selectCard(this, '${exchange.requesterUsername}', '${exchange.requesterMail}', '${exchange.requesterLocation}', '${exchange.offererBookModel.title}', '${exchange.offererBookAuthor}', '${exchange.offererBookModel.edition}', '${exchange.offererBookImages}')"
+                        <div class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-4@s exchange-card"
+                             onclick="selectCard(this, '${exchange.offererUsername}', '${exchange.offererMail}', '${exchange.offererLocation}', '${exchange.requesterBookModel.title}', '${exchange.requesterBookAuthor}', '${exchange.requesterBookModel.edition}', '${exchange.requesterBookImages}')"
                              uk-grid>
-                            <div class="uk-card-media-left uk-cover-container">
+                            <div class="uk-card-media-left">
                                 <img class="book-image"
-                                     src="${pageContext.request.contextPath}/images/${exchange.requesterBookImages[0].imageId}"
+                                     src="${pageContext.request.contextPath}/images/${exchange.offererBookImages[0].imageId}"
                                      alt="bookImage"/>
                             </div>
                             <div>
-                                <div class="uk-card-body">
-                                    <h3 class="uk-card-title">${exchange.requesterBookModel.title}</h3>
-                                    <p class="uk-text-meta"><fmt:formatDate
-                                            value="${exchange.exchange.exchangeStartDate}" pattern="dd/MM/yyyy"/></p>
-                                    <c:choose>
-                                        <c:when test="${exchange.exchange.exchangeState == 'ACCEPTED'}">
-                                            <span class="uk-badge state-approved">Approved</span>
-                                        </c:when>
-                                        <c:when test="${exchange.exchange.exchangeState == 'REJECTED'}">
-                                            <span class="uk-badge state-rejected">Rejected</span>
-                                        </c:when>
-                                        <c:when test="${exchange.exchange.exchangeState == 'PENDING'}">
-                                            <div class="uk-button-group">
-                                                <a class="uk-button uk-button-default"
-                                                   href="<c:url value='/createexchange'>
+                                <div class="card-text">
+                                    <div class="card-text-left">
+                                        <h3 class="uk-h6">${exchange.offererBookModel.title}</h3>
+                                        <h4 class="date-text"><fmt:formatDate
+                                                value="${exchange.exchange.exchangeStartDate}" pattern="dd/MM/yyyy"/></h4>
+                                    </div>
+                                    <div class="uk-align-right card-text-right">
+                                        <c:choose>
+                                            <c:when test="${exchange.exchange.exchangeState == 'ACCEPTED'}">
+                                                <span class="uk-badge state-approved">Approved</span>
+                                            </c:when>
+                                            <c:when test="${exchange.exchange.exchangeState == 'REJECTED'}">
+                                                <span class="uk-badge state-rejected">Rejected</span>
+                                            </c:when>
+                                            <c:when test="${exchange.exchange.exchangeState == 'PENDING'}">
+                                                <div class="uk-button-group">
+                                                    <a class="uk-button uk-button-default uk-button-small"
+                                                       href="<c:url value='/createexchange'>
                                             <c:param name='accept_code' value='${exchange.exchange.acceptCode}'/>
                                             <c:param name='state' value='true'/>
                                         </c:url>">Accept</a>
-                                                <a class="uk-button uk-button-default"
-                                                   href="<c:url value='/createexchange'>
+                                                    <a class="uk-button uk-button-default uk-button-small uk-margin-right"
+                                                       href="<c:url value='/createexchange'>
                                             <c:param name='accept_code' value='${exchange.exchange.acceptCode}'/>
                                             <c:param name='state' value='false'/>
                                         </c:url>">Reject</a>
-                                            </div>
-                                            <span class="uk-badge state-pending">Pending</span>
-                                        </c:when>
-                                        <c:when test="${exchange.exchange.exchangeState == 'TERMINATED'}">
-                                            <span class="uk-badge state-inprogress">In Progress</span>
-                                        </c:when>
-                                    </c:choose>
+                                                </div>
+                                                <span class="uk-badge state-pending">Pending</span>
+                                            </c:when>
+                                            <c:when test="${exchange.exchange.exchangeState == 'TERMINATED'}">
+                                                <span class="uk-badge state-inprogress">In Progress</span>
+                                            </c:when>
+                                        </c:choose>
+                                    </div>
+
 
                                 </div>
                             </div>
@@ -97,7 +103,7 @@
                                 <p id="info-requester-mail">Email: </p>
                                 <p id="info-requester-location">Ubicación: </p>
 
-                                <h4>Libro ofertado:</h4>
+                                <h4>Tu libro:</h4>
                                 <p id="info-offered-book-title">Título: </p>
                                 <p id="info-offered-book-authors">Autor(es): </p>
                                 <p id="info-offered-book-edition">Edición: </p>
@@ -117,7 +123,7 @@
 </body>
 
 <script>
-    function selectCard(card, requesterUsername, requesterMail, requesterLocation, offeredBookTitle, offeredBookAuthors, offeredBookEdition, offeredBookImages) {
+    function selectCard(card, offererUsername, offererMail, offererLocation, requestedBookTitle, requestedBookAuthors, requestedBookEdition, requestedBookImages) {
         // Remover la clase 'selected-card' de todas las tarjetas
         document.querySelectorAll('.exchange-card').forEach(function (el) {
             el.classList.remove('selected-card');
@@ -131,19 +137,19 @@
         document.getElementById('exchange-details').style.display = 'block';
 
         // Actualizar la información en la columna izquierda
-        document.getElementById('info-requester-username').textContent = 'Intercambio con: ' + requesterUsername;
-        document.getElementById('info-requester-mail').textContent = 'Email: ' + requesterMail;
-        document.getElementById('info-requester-location').textContent = 'Ubicación: ' + requesterLocation;
-        document.getElementById('info-offered-book-title').textContent = 'Título: ' + offeredBookTitle;
-        document.getElementById('info-offered-book-authors').textContent = 'Autor(es): ' + offeredBookAuthors;
-        document.getElementById('info-offered-book-edition').textContent = 'Edición: ' + offeredBookEdition;
+        document.getElementById('info-requester-username').textContent = 'Intercambio con: ' + offererUsername;
+        document.getElementById('info-requester-mail').textContent = 'Email: ' + offererMail;
+        document.getElementById('info-requester-location').textContent = 'Ubicación: ' + offererLocation;
+        document.getElementById('info-offered-book-title').textContent = 'Título: ' + requestedBookTitle;
+        document.getElementById('info-offered-book-authors').textContent = 'Autor(es): ' + requestedBookAuthors;
+        document.getElementById('info-offered-book-edition').textContent = 'Edición: ' + requestedBookEdition;
 
         // Limpiar imágenes anteriores
         const imageContainer = document.getElementById('info-offered-book-images');
         imageContainer.innerHTML = '';
 
         // Añadir imágenes del libro ofertado
-        offeredBookImages.forEach(function (imageUrl) {
+        requestedBookImages.forEach(function (imageUrl) {
             const imgElement = document.createElement('img');
             imgElement.src = imageUrl;
             imgElement.className = 'uk-border-rounded';
