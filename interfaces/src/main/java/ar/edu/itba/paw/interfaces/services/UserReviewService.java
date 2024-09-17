@@ -13,4 +13,6 @@ public interface UserReviewService {
     UserReview getUserReview(long exchangeId, long reviewerId);
     
     int getUserRating(long userId);
+    
+    Boolean createUserReview(UserReview userReview);
 }

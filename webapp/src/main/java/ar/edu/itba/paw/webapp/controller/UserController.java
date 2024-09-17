@@ -209,8 +209,6 @@ public class UserController {
             mav.addObject("loggedUser", pud.getUser());
             mav.addObject("reviews", us.getReviewsByUserId(pud.getUser().getUserId()));
             mav.addObject("userRating", userReviewService.getUserRating(pud.getUser().getUserId()));
-            
-            System.out.println(userReviewService.getUserRating(pud.getUser().getUserId()));
         }
         
 

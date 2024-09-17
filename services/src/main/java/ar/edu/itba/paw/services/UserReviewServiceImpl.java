@@ -49,4 +49,10 @@ public class UserReviewServiceImpl implements UserReviewService {
     	
     	return porcentage;
     }
+    
+    @Override
+    public Boolean createUserReview(UserReview userReview) {
+    	
+    	return urDao.createUserReview(userReview);
+    }
 }

@@ -3,6 +3,8 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.auth.PawUserDetails;
+
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.security.Timestamp;
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,16 +29,17 @@ public class ExchangeController {
     private final PublicationService publicationService;
     private final BookService bookService;
     private final BookModelService bookModelService;
-
-    public ExchangeController(final ExchangeService exchangeService, final EmailService emailService, final UserService userService, final BookService bookService, final PublicationService publicationService, BookModelService bookModelService) {
+    private final UserReviewService userReviewService;
+    
+    public ExchangeController(final ExchangeService exchangeService, final EmailService emailService, final UserService userService, final BookService bookService, final PublicationService publicationService, BookModelService bookModelService, UserReviewService userReviewService) {
         this.exchangeService = exchangeService;
         this.emailService = emailService;
         this.userService = userService;
         this.bookService = bookService;
         this.publicationService = publicationService;
         this.bookModelService = bookModelService;
+        this.userReviewService = userReviewService;
     }
-
 
     // Requests (osea peticiones que me hacen a mi)
     // Paso el ID, y quiero aquellas exchanges en las que soy offerer
@@ -62,8 +67,6 @@ public class ExchangeController {
         if (authentication.getPrincipal() instanceof PawUserDetails pud) {
             List<ExchangeWrapper> exchangeWrapperList = exchangeService.getExchangeRequesterWrapperListByUserId(pud.getUser().getUserId());
             mav.addObject("exchanges", exchangeWrapperList);
-             
-            System.out.println(exchangeWrapperList.get(0).getExchange().isOffererReceivedBook());
         }
         
         return mav;
@@ -148,5 +151,26 @@ public class ExchangeController {
         return exchangeOffers();
     }
 
+    @RequestMapping(path = "/submitReview", method = RequestMethod.POST)
+    public ModelAndView submitReview(
+		@RequestParam("exchangeId") long exchangeId,
+		@RequestParam("reviewerId") long reviewerId,
+		@RequestParam("subjectId") long subjectId,
+		@RequestParam("reviewDescription") String reviewDescription,
+		@RequestParam("reviewDate") java.sql.Timestamp reviewDate,
+		@RequestParam("userReviewRating") int userReviewRating) {
+		
+		UserReview userReview = new UserReview((long)0, exchangeId, reviewerId, subjectId, reviewDescription, reviewDate, userReviewRating);
 
+		boolean success = userReviewService.createUserReview(userReview);
+
+        /*
+        if (success) {
+            return new ModelAndView("redirect:/successPage");
+        } else {
+            return new ModelAndView("redirect:/errorPage");
+        }*/
+        
+        return new ModelAndView("redirect:/requests");
+    }
 }
