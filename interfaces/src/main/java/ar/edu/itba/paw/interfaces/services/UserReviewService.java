@@ -11,4 +11,6 @@ public interface UserReviewService {
     List<UserReview> getReviewsByUserId(long userId);
     
     UserReview getUserReview(long exchangeId, long reviewerId);
+    
+    int getUserRating(long userId);
 }

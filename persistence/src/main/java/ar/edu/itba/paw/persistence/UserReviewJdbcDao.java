@@ -25,7 +25,7 @@ public class UserReviewJdbcDao implements UserReviewDao {
                     rs.getLong("subjectId"),
                     rs.getString("reviewDescription"),
                     rs.getTimestamp("reviewDate"),
-                    rs.getInt("userReviewRating")
+                    rs.getInt("userReviewRating") * 20 // Asi queda del 0 al 100%
             );
 
     public UserReviewJdbcDao(final DataSource ds) {
@@ -34,16 +34,17 @@ public class UserReviewJdbcDao implements UserReviewDao {
 
     @Override
     public List<UserReview> getReviewsByUserId(long userId) {
-        return jdbcTemplate.query("SELECT * FROM user_review WHERE subjectId = ?", ROWMAPPER, userId);
-
+    	List<UserReview> reviewList = jdbcTemplate.query("SELECT * FROM user_review WHERE subjectId = ?", ROWMAPPER, userId);
+    	
+    	return reviewList;
     }
     
     @Override
     public UserReview getUserReview(long exchangeId, long userId) {
-    	List<UserReview> exchangeList = jdbcTemplate.query("SELECT * FROM user_review WHERE exchangeId = ? AND reviewerId = ?", ROWMAPPER, exchangeId, userId);
+    	List<UserReview> reviewList = jdbcTemplate.query("SELECT * FROM user_review WHERE exchangeId = ? AND reviewerId = ?", ROWMAPPER, exchangeId, userId);
     	
-    	if (!exchangeList.isEmpty()) {
-    		return exchangeList.getFirst();
+    	if (!reviewList.isEmpty()) {
+    		return reviewList.getFirst();
     	}
     	
     	return null;

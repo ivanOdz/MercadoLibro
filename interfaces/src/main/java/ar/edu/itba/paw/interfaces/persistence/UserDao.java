@@ -20,5 +20,4 @@ public interface UserDao {
     void changePassword(int verificationCode, String newPassword);
 
     User getUserByPubId(long pubId);
-
 }

@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.PawUserDetails;
+import ar.edu.itba.paw.interfaces.services.UserReviewService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.webapp.form.PasswordForm;
 import ar.edu.itba.paw.webapp.form.UserForm;
@@ -34,7 +35,9 @@ public class UserController {
 
     @Autowired
     private MessageSource messageSource;
-
+    @Autowired
+    private UserReviewService userReviewService;
+    
     public UserController(final UserService us, AuthenticationManager auth) {
         this.us = us;
         this.auth = auth;
@@ -202,10 +205,14 @@ public class UserController {
 
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.getPrincipal() instanceof PawUserDetails pud) {
+        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
             mav.addObject("loggedUser", pud.getUser());
             mav.addObject("reviews", us.getReviewsByUserId(pud.getUser().getUserId()));
+            mav.addObject("userRating", userReviewService.getUserRating(pud.getUser().getUserId()));
+            
+            System.out.println(userReviewService.getUserRating(pud.getUser().getUserId()));
         }
+        
 
         return mav;
     }

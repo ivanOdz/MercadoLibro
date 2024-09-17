@@ -59,11 +59,13 @@ public class ExchangeController {
         final ModelAndView mav = new ModelAndView("exchange/exchange_offers");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.getPrincipal() instanceof PawUserDetails pud) {
+        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
             List<ExchangeWrapper> exchangeWrapperList = exchangeService.getExchangeRequesterWrapperListByUserId(pud.getUser().getUserId());
             mav.addObject("exchanges", exchangeWrapperList);
+             
+            System.out.println(exchangeWrapperList.get(0).getExchange().isOffererReceivedBook());
         }
-
+        
         return mav;
     }
 
