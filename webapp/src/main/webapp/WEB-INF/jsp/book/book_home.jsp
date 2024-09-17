@@ -138,7 +138,7 @@
                     <h6 class="uk-text-muted"><spring:message code="book.list.select"/></h6>
                 </div>
 
-                <div class="uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m mb-1" uk-grid>
+                <div class="uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m mb-1" uk-grid uk-height-match="target: > div > .uk-card">
                     <c:forEach var="card" items="${cardBookList}">
                         <c:set var="cardClass" value="${card.canPublish ? 'uk-card uk-card-default uk-card-hover' : 'uk-card uk-card-default'}"/>
                         <c:choose>
@@ -150,7 +150,7 @@
                             </c:otherwise>
                         </c:choose>
                         <div>
-                            <div class="${cardClass} uk-card-body uk-border-rounded uk-height-auto custom-link">
+                            <div class="${cardClass} uk-card-body uk-border-rounded custom-link">
                                 <figure class="uk-margin-bottom">
                                     <c:choose>
                                         <c:when test="${card.image != null}">
