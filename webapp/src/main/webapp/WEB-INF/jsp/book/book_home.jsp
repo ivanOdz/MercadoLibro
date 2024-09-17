@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<html lang="es">
+<html lang="es" class="custom-style">
 <head>
     <link href="${pageContext.request.contextPath}/css/book_home.css?v=1.0" rel="stylesheet"/>
 

@@ -50,7 +50,7 @@
 
                         <%--Titulo--%>
 
-                        <div  class="uk-container uk-margin-top uk-margin-bottom">
+                        <div  class="uk-container uk-margin-top uk-margin-bottom  container-space-between">
                             <label class="form-group">
                                 <spring:message code="add.publication.title"/>
                                 <form:input path="title" type="text" class="uk-input"/>
@@ -59,7 +59,7 @@
                         </div>
 
                         <%--Autores--%>
-                        <div id="author-container" class="uk-container uk-margin-top uk-margin-bottom">
+                        <div id="author-container" class="uk-container uk-margin-top uk-margin-bottom  container-space-between">
                             <label class="form-group">
                                 <spring:message code="add.publication.authors"/>
                                 <c:forEach var="author" items="${bookForm.authors}" varStatus="status">
@@ -82,7 +82,7 @@
 
                         <%--Género--%>
 
-                        <div class="form-group">
+                        <div class="form-group  container-space-between">
                             <form:label path="genre">
                                 <spring:message code="add.publication.genre"/>
                             </form:label>
@@ -95,7 +95,7 @@
 
                         <%--Languages--%>
 
-                        <div class="form-group">
+                        <div class="form-group container-space-between">
                             <form:label path="language">
                                 <spring:message code="add.publication.book.language"/>
                             </form:label>
@@ -107,7 +107,7 @@
                         </div>
 
                         <%--Publication Year--%>
-                        <div class="input-field">
+                        <div class="input-field  container-space-between">
                             <label for="publicationYear">
                                 <spring:message code="add.publication.book.year"/>
                             </label>
@@ -120,7 +120,7 @@
 
                         <%--BookState--%>
 
-                        <div class="form-group">
+                        <div class="form-group  container-space-between">
                             <form:label path="genre">
                                 <spring:message code="add.publication.book.state"/>
                             </form:label>
@@ -136,7 +136,7 @@
 
                         <%--ISBN--%>
 
-                        <div style="margin-bottom: 10px">
+                        <div class=" container-space-between">
                             <label class="form-group">
                                 <spring:message code="add.publication.isbn"/>
                                 <form:input path="isbn" type="text" class="uk-input"/>
@@ -151,7 +151,7 @@
                         <%--Editorial--%>
 
                         <div>
-                            <label class="form-group">
+                            <label class="form-group  container-space-between">
                                 <spring:message code="add.publication.editorial"/>
                                 <form:input path="editorial" type="text" class="uk-input"/>
                             </label>
@@ -160,7 +160,7 @@
 
                         <%--Descripción--%>
 
-                        <div style="margin-bottom: 10px">
+                        <div class=" container-space-between">
                             <label class="form-group">
                                 <spring:message code="add.publication.description"/>
                                 <form:textarea path="description" class="uk-textarea uk-height-small"/>
@@ -173,7 +173,7 @@
 
                         <%--Edicion--%>
 
-                        <div  style="margin-bottom: 10px">
+                        <div class=" container-space-between">
                             <label class="form-group">
                                 <spring:message code="add.publication.edition"/>
                                 <form:input id="edition" autocomplete="false" placeholder="1" path="edition" type="text" class="uk-input"/>
@@ -187,7 +187,7 @@
                         <%--Pages--%>
 
                         <div>
-                            <label class="form-group">
+                            <label class="form-group container-space-between">
                                 <spring:message code="add.book.pages"/>
                                 <form:input path="pages" type="text" class="uk-input" placeholder="300"/>
                             </label>
@@ -199,7 +199,7 @@
 
                         <%--Dimension--%>
 
-                        <div class="form-group">
+                        <div class="form-group container-space-between">
                             <form:label path="dimension">
                                 <spring:message code="add.publication.book.dimension"/>
                             </form:label>
@@ -211,7 +211,7 @@
                         </div>
                         <%--Weight--%>
 
-                        <div>
+                        <div class=" container-space-between">
                             <label class="form-group">
                                 <spring:message code="add.book.weight"/>
                                 <form:input path="weight" type="text" class="uk-input" placeholder="300"/>
