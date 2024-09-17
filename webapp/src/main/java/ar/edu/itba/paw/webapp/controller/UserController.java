@@ -37,6 +37,8 @@ public class UserController {
     private MessageSource messageSource;
     @Autowired
     private UserReviewService userReviewService;
+    @Autowired
+    private UserService userService;
     
     public UserController(final UserService us, AuthenticationManager auth) {
         this.us = us;
@@ -56,8 +58,6 @@ public class UserController {
         return mav;
     }
 
-
-
     @RequestMapping("/{userId:\\d+}")
     public ModelAndView profile(@PathVariable(name = "userId") long userId) {
         final ModelAndView mav = new ModelAndView("user/profile");
@@ -66,8 +66,6 @@ public class UserController {
         mav.addObject("userId", userId);
         return mav;
     }
-
-
 
     @RequestMapping("/login")
     public ModelAndView login(@RequestParam(value = "error", required = false) String error,
@@ -87,7 +85,6 @@ public class UserController {
 
         return modelAndView;
     }
-
 
     @RequestMapping("/verification")
     public ModelAndView verificationController(@RequestParam(name = "verification_code") int verificationCode){
@@ -117,7 +114,6 @@ public class UserController {
         return new ModelAndView("redirect:/mail_input_message");
     }
 
-
     @RequestMapping(path = "/change_password", method = RequestMethod.GET)
     public ModelAndView createPasswordForm(@ModelAttribute("passwordForm") PasswordForm passwordForm, @RequestParam(name = "verification_code") int verificationCode){
         ModelAndView mav = new ModelAndView("user/new_password");
@@ -134,7 +130,23 @@ public class UserController {
         us.changePassword(verificationCode, passwordForm.getPassword() );
         return new ModelAndView("redirect:/success_password");
     }
-
+    
+    @PostMapping(value = "/changeUsername")
+    public ModelAndView changeUsername(@RequestParam("loggedUserId") long userId, @RequestParam("newUsername") String newUsername) {
+    	
+    	final ModelAndView mav = new ModelAndView("redirect:/profile");
+    	boolean updated = userService.changeUserName(userId, newUsername);
+    	
+    	if (updated) {
+    		mav.addObject("message", "DONE");
+    	}
+    	else {
+    		mav.addObject("errorMessage", "FAILED");
+    	}
+    	
+    	return mav;
+    }
+    
     @RequestMapping(path = "/create", method = RequestMethod.GET)
     public ModelAndView createForm(@ModelAttribute("userForm") UserForm userForm) {
         return new ModelAndView("user/create");
@@ -165,7 +177,6 @@ public class UserController {
 
         return new ModelAndView("redirect:/success_registration");
     }
-
 
     // success screens
 
@@ -198,19 +209,18 @@ public class UserController {
         return null;
     }
 
-
     @RequestMapping("/profile")
     public ModelAndView profileHome() {
+    	
         ModelAndView mav = new ModelAndView("profile/profile_home");
 
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        
         if (authentication.getPrincipal() instanceof PawUserDetails pud) {
             mav.addObject("loggedUser", pud.getUser());
             mav.addObject("reviews", us.getReviewsByUserId(pud.getUser().getUserId()));
             mav.addObject("userRating", userReviewService.getUserRating(pud.getUser().getUserId()));
         }
-        
 
         return mav;
     }

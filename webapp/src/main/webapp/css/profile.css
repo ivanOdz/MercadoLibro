@@ -19,14 +19,13 @@
     text-align: center;
 }
 
-.circle {
+.profile-pic {
     width: 150px;
     height: 150px;
     border-radius: 50%;
     object-fit: cover;
 }
-
-
+    
 .profile-picture-container {
     align-items: center;
     align-content: center;
@@ -39,4 +38,52 @@
 
 .uk-divider-icon {
     color: #333333;
+}
+
+.btn-red {
+    background-color: #e53935;
+    color: white;
+}
+
+.reviewStars {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.date-text {
+	
+    position: absolute;
+    top: 5px;
+    left: 10px;
+}
+
+.stars {
+    margin-top: 15px;
+}
+
+.edit-icon {
+    vertical-align: middle;
+    color: #757575;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.btn-red {
+    background-color: #e53935;
+    color: white;
+}
+
+.alert {
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
 }

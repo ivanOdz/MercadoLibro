@@ -24,6 +24,7 @@ public interface UserService {
     void verifyUser(int verificationCode);
 
     void changePasswordSolicited(String email);
+    
     void changePassword(int verificationCode, String newPassword);
 
     List<UserReview> getReviewsByUserId(long userId);
@@ -31,4 +32,6 @@ public interface UserService {
     User getUserByPubId(long pubId);
 
     boolean userExists(String mail);
+    
+    boolean changeUserName(long userId, String newName);
 }

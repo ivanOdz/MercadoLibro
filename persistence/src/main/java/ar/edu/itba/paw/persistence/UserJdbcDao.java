@@ -47,10 +47,12 @@ public class UserJdbcDao implements UserDao {
         return jdbcTemplate.query("SELECT * FROM users WHERE mail = ?", new Object[]{ mail },
         		new int[]{ Types.VARCHAR }, ROWMAPPER).stream().findFirst();
     }
-
-    private void updateUsername(User user, String newUsername) {
-        jdbcTemplate.update("UPDATE users SET username = ? WHERE userId = ?", new Object[]{ newUsername, user.getUserId() },
-                new int[]{ Types.VARCHAR, Types.BIGINT });
+    
+    @Override
+    public boolean updateUsername(long userId, String newUsername) {
+    	int rowsAffected = jdbcTemplate.update("UPDATE users SET username = ? WHERE userId = ?", new Object[]{ newUsername, userId }, new int[]{ Types.VARCHAR, Types.BIGINT });
+    	
+    	return rowsAffected >= 1;
     }
 
     @Override

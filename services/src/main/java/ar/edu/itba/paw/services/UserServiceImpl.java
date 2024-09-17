@@ -121,7 +121,6 @@ public class UserServiceImpl implements UserService {
 //        userDao.changePassword(passwordEncoder.encode(newPassword))
 //    }
 
-
     /**
      * Generates random verification code when verifying user or updating password
      * @return verification code
@@ -129,5 +128,11 @@ public class UserServiceImpl implements UserService {
     private int generateVerificationCode(){
         Random random = new Random();
         return Math.abs(random.nextInt());
+    }
+    
+    @Override
+    public boolean changeUserName(long userId, String newName) {
+    	
+    	return userDao.updateUsername(userId, newName);
     }
 }
