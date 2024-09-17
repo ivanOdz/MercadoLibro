@@ -12,7 +12,7 @@ public interface PublicationDao {
 
     Optional<Publication> getPublicationById(long publicationId);
 
-    List<Publication> getAllPublicationsFilteredBy(String search, long userId);
+    List<Publication> getAllPublicationsFilteredBy(String search, int bookStateFilter, int genreFilter, long userId);
 
 
     void terminatePublication(long pubId);

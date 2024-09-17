@@ -44,14 +44,14 @@ public class PublicationController {
 
     @RequestMapping("/")
     public ModelAndView index(@RequestParam(name = "search", defaultValue = "") String search,
-                              @RequestParam(name = "bookStateFilter", defaultValue = "") String bookStateFilter,
-                              @RequestParam(name = "genreFilter", defaultValue = "") String genreFilter) {
+                              @RequestParam(name = "book-state-filter", defaultValue = "6") int bookStateFilter,
+                              @RequestParam(name = "genre-filter", defaultValue = "32") int genreFilter) {
     	
         final ModelAndView mav = new ModelAndView("home/publications");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.getPrincipal() instanceof PawUserDetails pud) {
-            List<Card> cardList = cs.buildCardList(ps.getAllPublicationsFilteredBy(search, pud.getUser().getUserId()));
+            List<Card> cardList = cs.buildCardList(ps.getAllPublicationsFilteredBy(search, bookStateFilter, genreFilter, pud.getUser().getUserId()));
 
             mav.addObject("username", pud.getUser().getUsername());
             mav.addObject("publications", cardList);
@@ -68,8 +68,8 @@ public class PublicationController {
 
     @RequestMapping(path = "/", method = RequestMethod.GET)
     public ModelAndView search(@RequestParam(name = "search", defaultValue = "") String search,
-                               @RequestParam(name = "bookStateFilter", defaultValue = "") String bookStateFilter,
-                               @RequestParam(name = "genreFilter", defaultValue = "") String genreFilter) {
+                               @RequestParam(name = "book-state-filter", defaultValue = "6") int bookStateFilter,
+                               @RequestParam(name = "genre-filter", defaultValue = "32") int genreFilter) {
 
         return index(search, bookStateFilter, genreFilter);
     }
