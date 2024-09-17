@@ -145,6 +145,7 @@
       <p class="uk-text-medium" style="font-size: 25px; max-width: 9lh; text-align: center; margin-left: 1lh;"><spring:message code="exchange.description2"/></p>
     </div>
 
+    <c:if test="${!(completeBooks.size() eq 0)}">
     <div class="uk-container uk-margin-top">
       <form:form action="${pageContext.request.contextPath}/exchange/initializeexchange" method="post" modelAttribute="completeBookParam" enctype="multipart/form-data">
         <div class="uk-margin">
@@ -172,6 +173,14 @@
         </div>
       </form:form>
     </div>
+    </c:if>
+    <c:if test="${completeBooks.size() eq 0}">
+        <button class="uk-button uk-button-primary">
+          <a class="button-text" href="${pageContext.request.contextPath}/book/book_models">
+            <spring:message code="add.book.missing"/>
+          </a>
+        </button>
+    </c:if>
   </div>
   </div>
 </div>
