@@ -56,6 +56,12 @@ public class UserJdbcDao implements UserDao {
     }
 
     @Override
+    public Optional<User> getUserToVerify(int verificationCode) {
+        return jdbcTemplate.query("SELECT * FROM users WHERE verificationcode = ?", new Object[]{ verificationCode },
+                new int[]{ Types.INTEGER }, ROWMAPPER).stream().findFirst();
+    }
+
+    @Override
     public User createUser(String username, String mail, String password, int verificationCode) {
         Optional<User> user = find(mail);
 

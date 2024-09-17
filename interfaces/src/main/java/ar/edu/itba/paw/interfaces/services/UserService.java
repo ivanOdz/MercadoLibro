@@ -34,4 +34,6 @@ public interface UserService {
     boolean userExists(String mail);
     
     boolean changeUserName(long userId, String newName);
+
+    Optional<User> getUserToVerify(int verificationCode);
 }

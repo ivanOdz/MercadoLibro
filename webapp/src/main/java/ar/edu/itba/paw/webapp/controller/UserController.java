@@ -4,6 +4,7 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 import ar.edu.itba.paw.interfaces.services.UserReviewService;
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.webapp.auth.PawUserDetailsService;
 import ar.edu.itba.paw.webapp.form.PasswordForm;
 import ar.edu.itba.paw.webapp.form.UserForm;
 import com.sun.mail.imap.IMAPFolder;
@@ -14,6 +15,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +33,10 @@ import java.util.Locale;
 @Controller
 public class UserController {
     private final UserService us;
+
+    @Autowired
+    private PawUserDetailsService userDetailsService;
+
 
     private AuthenticationManager auth;
 
@@ -89,7 +95,20 @@ public class UserController {
 
     @RequestMapping("/verification")
     public ModelAndView verificationController(@RequestParam(name = "verification_code") int verificationCode){
+//         obtengo la sesion activa
+        User user = us.getUserToVerify(verificationCode).get();
+
         us.verifyUser(verificationCode);
+//        try {
+//            // create a session and keep the user logged in
+//            UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
+//            final Authentication authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+//            SecurityContextHolder.getContext().setAuthentication(auth.authenticate(authenticationToken));
+//        } catch (Exception e) {
+//            System.out.println(e.getMessage());
+//        }
+
+
         return new ModelAndView("redirect:/success_verification");
     }
 
@@ -163,14 +182,6 @@ public class UserController {
             errors.rejectValue("mail", "error.user.exists");
             return createForm(userForm);
         }
-        //
-//        try {
-//            // create a session and keep the user logged in
-//            final Authentication authenticationToken = new UsernamePasswordAuthenticationToken(userForm.getUsername(), userForm.getPassword(), null);
-//            SecurityContextHolder.getContext().setAuthentication(auth.authenticate(authenticationToken));
-//        }catch(Exception e) {
-//            System.out.println(e.getMessage());
-//        }
 
         // verify date, create an user and send a verification email
         final User user = us.createUser(userForm.getUsername(), userForm.getMail(), userForm.getPassword());
