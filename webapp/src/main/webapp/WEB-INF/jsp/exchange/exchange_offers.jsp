@@ -65,8 +65,8 @@
                                                    onclick="event.stopPropagation()" uk-toggle>
                                                     <spring:message code="exchange.button.confirm.exchange"/>
                                                 </a>
-                                                <span class="uk-badge state-approved"><spring:message
-                                                        code="exchange.status.accepted"/></span>
+                                                <span class="uk-badge state-inprogress"><spring:message
+                                                        code="exchange.status.in_progress"/></span>
 
                                                 <div id="modal-confirm-exchange-${exchange.exchange.acceptCode}" uk-modal>
                                                     <div class="uk-modal-dialog uk-modal-body">
@@ -91,7 +91,7 @@
                                                 <span class="uk-badge state-pending"><spring:message code="exchange.status.pending"/></span>
                                             </c:when>
                                             <c:when test="${exchange.exchange.exchangeState == 'TERMINATED'}">
-                                                <span class="uk-badge state-inprogress"><spring:message code="exchange.status.terminated"/></span>
+                                                <span class="uk-badge state-approved"><spring:message code="exchange.status.terminated"/></span>
                                             </c:when>
                                         </c:choose>
                                     </div>
