@@ -24,6 +24,42 @@
 <div class="uk-background-muted">
   <div class="uk-container">
     <div class="uk-grid ml-1 uk-margin-top" uk-grid>
+      <div class="uk-width-1-4@s filter-section uk-border-rounded uk-box-shadow-small mt-1 mb-1">
+        <h2>${param.search}</h2>
+
+        <!-- Esto tiene que aparecer solo si hay un filtro de Genero -->
+        <c:if test="${genreFilter != '32'}">
+          <form action="<c:url value='' />" method="get">
+            <input type="hidden" name="genre-filter" value="">
+            <input type="hidden" name="search" value="${param.search}">
+
+            <button type="submit" class="ui-search-button" title="GenreFilterRemove">
+							<span class="ui-search-filter-name">
+								<spring:message code="delete.genre.filter"/>
+							</span>
+            </button>
+          </form>
+        </c:if>
+
+        <c:if test="${genreFilter == '32'}">
+          <h3><spring:message code="filter.genre"/></h3>
+          <ul class="uk-list">
+            <c:forEach var="genreWrapper" items="${genres}">
+              <li class="ui-search-filter-container">
+                <form action="<c:url value='' />" method="get">
+                  <input type="hidden" name="genre-filter" value="${genreWrapper.genre.value}">
+                  <input type="hidden" name="search" value="${param.search}">
+
+                  <button type="submit" class="ui-search-button" title="${genreWrapper.displayName}">
+                    <span class="ui-search-filter-name">${genreWrapper.displayName}</span>
+                  </button>
+                </form>
+              </li>
+            </c:forEach>
+          </ul>
+        </c:if>
+      </div>
+
       <div class="uk-width-3-4@s col-content">
         <div class="uk-card uk-card-default uk-card-body uk-margin-bottom mt-1 uk-border-rounded uk-border-rounded-medium">
           <h5 class="uk-text-large"><spring:message code="book.model.view.title"/></h5>

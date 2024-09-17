@@ -83,8 +83,9 @@ public class BookModelJdbcDao implements BookModelDao {
     }
 
     @Override
-    public List<BookModel> getAllBookModel() {
-        return jdbcTemplate.query("SELECT * FROM book_model", ROWMAPPERBOOKMODEL);
+    public List<BookModel> getAllBookModel(String search, int genreFilter) {
+        return jdbcTemplate.query("SELECT * FROM book_model WHERE LOWER(title) LIKE LOWER(?) AND (32 = ? OR genre = ?) ",
+                new Object[]{ "%" + search.toLowerCase() + "%", genreFilter, genreFilter }, new int[]{Types.VARCHAR, Types.INTEGER, Types.INTEGER}, ROWMAPPERBOOKMODEL);
     }
 }
 

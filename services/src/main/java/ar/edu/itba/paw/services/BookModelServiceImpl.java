@@ -51,7 +51,7 @@ public class BookModelServiceImpl implements BookModelService {
     }
 
     @Override
-    public List<BookModel> getAllBookModel() {
-        return bookModelDao.getAllBookModel();
+    public List<BookModel> getAllBookModelFilteredBy(String search, int genreFilter) {
+        return bookModelDao.getAllBookModel(search, genreFilter);
     }
 }

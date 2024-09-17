@@ -104,12 +104,17 @@ public class BookController {
     }
 
     @RequestMapping("/book/book_models")
-    public ModelAndView bookModels(@RequestParam(name = "search", defaultValue = "") String search) {
+    public ModelAndView bookModels(@RequestParam(name = "search", defaultValue = "") String search,
+                                   @RequestParam(name = "genre-filter", defaultValue = "32") int genreFilter) {
 
         ModelAndView mav = new ModelAndView("book/book_models");
 
-        List<CardBook> cardBookList = cardBookService.buildCardBookModelList(bookModelService.getAllBookModel());
+        List<CardBook> cardBookList = cardBookService.buildCardBookModelList(bookModelService.getAllBookModelFilteredBy(search, genreFilter));
+        mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
+
         mav.addObject("cardBookList", cardBookList);
+
+        mav.addObject("genreFilter", genreFilter);
 
         return mav;
     }

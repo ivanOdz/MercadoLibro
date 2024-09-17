@@ -18,6 +18,6 @@ public interface BookModelService {
 
     List<BookModel> getBookModelByUserId(long userId);
 
-    List<BookModel> getAllBookModel();
+    List<BookModel> getAllBookModelFilteredBy(String search, int genreFilter);
 
 }

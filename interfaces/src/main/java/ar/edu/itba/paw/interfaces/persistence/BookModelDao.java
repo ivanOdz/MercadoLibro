@@ -14,5 +14,5 @@ public interface BookModelDao {
 
     List<BookModel> getBookModelByUserId(long userId);
 
-    List<BookModel> getAllBookModel();
+    List<BookModel> getAllBookModel(String search, int genreFilter);
 }
