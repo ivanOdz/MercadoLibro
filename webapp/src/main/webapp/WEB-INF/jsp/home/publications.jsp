@@ -35,7 +35,9 @@
 						<input type="hidden" name="search" value="${param.search}">
 
 						<button type="submit" class="ui-search-button" title="BookStateRemove">
-							<span class="ui-search-filter-name">Borrar filtro estado del libro</span>
+							<span class="ui-search-filter-name">
+								<spring:message code="delete.bookstate.filter"/>
+							</span>
 						</button>
 					</form>
 				</c:if>
@@ -48,7 +50,9 @@
 						<input type="hidden" name="search" value="${param.search}">
 
 						<button type="submit" class="ui-search-button" title="GenreFilterRemove">
-							<span class="ui-search-filter-name">Borrar filtro genero</span>
+							<span class="ui-search-filter-name">
+								<spring:message code="delete.genre.filter"/>
+							</span>
 						</button>
 					</form>
 				</c:if>
