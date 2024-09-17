@@ -105,6 +105,7 @@
 						    
 					    </div>
 					    
+                        <p class="date-text"> <fmt:formatDate value="${review.reviewDate}" pattern="dd/MM/yyyy"/> </p>
 					    <p>${review.reviewDescription}</p>
 					    
 	                </div>

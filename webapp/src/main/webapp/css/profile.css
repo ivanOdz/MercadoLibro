@@ -65,6 +65,13 @@
     right: 10px;
 }
 
+.date-text {
+	
+    position: absolute;
+    top: 5px;
+    left: 10px;
+}
+
 .stars {
     margin-top: 15px;
 }
