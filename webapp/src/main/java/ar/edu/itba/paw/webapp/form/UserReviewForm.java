@@ -11,6 +11,7 @@ public class UserReviewForm {
     // La otra persona ya intercambio el libro, le va a pertenecer a otra persona. Por lo tanto necesito el id de la
     // publicacion de cada uno, y el id de la otra persona va a ser el id que es distinto al mio.
 
+	@NotNull
     private long exchangeId;
 
     @NotNull
@@ -19,8 +20,10 @@ public class UserReviewForm {
     @NotNull
     @Size(min = 1, max = 255)
     private String reviewDescription;
+    
+    @NotNull
     private long offererPubId;
+    
+    @NotNull
     private long requesterPubId;
-
-
 }

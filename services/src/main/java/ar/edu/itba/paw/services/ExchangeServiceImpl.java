@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.persistence.ExchangeDao;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.models.utils.ResponseState;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,12 +25,12 @@ public class ExchangeServiceImpl implements ExchangeService {
     private final LocationService locationService;
     private final UserService userService;
     private final EmailService emailService;
-
+    private final UserReviewService userReviewService;
 
     @Value("#{environment.webappUrl}")
     private String webappUrl;
 
-    public ExchangeServiceImpl(final ExchangeDao exchangeDao, BookService bookService, BookModelService bookModelService, ImageService imageService, PublicationService publicationService, BookAuthorService bookAuthorService, BookImageService bookImageService, LocationService locationService, UserService userService, EmailService emailService){
+    public ExchangeServiceImpl(final ExchangeDao exchangeDao, BookService bookService, BookModelService bookModelService, ImageService imageService, PublicationService publicationService, BookAuthorService bookAuthorService, BookImageService bookImageService, LocationService locationService, UserService userService, EmailService emailService, UserReviewService userReviewService){
         this.exchangeDao = exchangeDao;
         this.bookService = bookService;
         this.bookModelService = bookModelService;
@@ -40,6 +41,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         this.locationService = locationService;
         this.userService = userService;
         this.emailService = emailService;
+        this.userReviewService = userReviewService;
     }
 
 
@@ -69,7 +71,6 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Override
     public void initializeExchange(CompleteBook requesterComplete, long offererPubId) {
         // Insertar tupla de requester en publicacion con fecha actual y publicationState = 2 (OFFERER)
-
 
         long location = locationService.newLocation(requesterComplete.getLocation());
 
@@ -192,8 +193,10 @@ public class ExchangeServiceImpl implements ExchangeService {
             List<String> offererAuthorNames = offererBookAuthor.stream()
                     .map(Author::getAuthorName)
                     .collect(Collectors.toList());
-
-            toReturn.add(new ExchangeWrapper(ex, requesterLocation, requesterMail, requesterUsername, offererLocation, offererMail, offererUsername, offererBook, requesterBook, offererBookModel, requesterBookModel, requesterBookImages, offererBookImages, requesterAuthorNames, offererAuthorNames));
+            
+            Boolean isReviewable = (ex.getExchangeState().equals(ExchangeState.ACCEPTED) || ex.getExchangeState().equals(ExchangeState.TERMINATED)) && (userReviewService.getUserReview(ex.getExchangeId(), ex.getRequesterPubId()) == null);
+            
+            toReturn.add(new ExchangeWrapper(ex, requesterLocation, requesterMail, requesterUsername, offererLocation, offererMail, offererUsername, offererBook, requesterBook, offererBookModel, requesterBookModel, requesterBookImages, offererBookImages, requesterAuthorNames, offererAuthorNames, isReviewable));
         }
         return toReturn;
     }

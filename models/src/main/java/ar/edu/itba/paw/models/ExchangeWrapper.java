@@ -2,6 +2,8 @@ package ar.edu.itba.paw.models;
 
 import java.util.List;
 
+import ar.edu.itba.paw.models.utils.ExchangeState;
+
 public class ExchangeWrapper {
 
     private final Exchange exchange;
@@ -11,13 +13,14 @@ public class ExchangeWrapper {
     private final BookModel offererBookModel, requesterBookModel;
     private final List<BookImage> requesterBookImages, offererBookImages;
     private final List<String> requesterBookAuthor, offererBookAuthor;
-
+    private final Boolean isReviewable;
+    
     public ExchangeWrapper(Exchange exchange, String requesterLocation, String requesterMail,
                            String requesterUsername, String offererLocation, String offererMail,
                            String offererUsername, Book offererBook, Book requesterBook,
                            BookModel offererBookModel, BookModel requesterBookModel,
                            List<BookImage> requesterBookImages, List<BookImage> offererBookImages,
-                           List<String> requesterBookAuthor, List<String> offererBookAuthor) {
+                           List<String> requesterBookAuthor, List<String> offererBookAuthor, Boolean isReviewable) {
         this.exchange = exchange;
         this.requesterLocation = requesterLocation;
         this.requesterMail = requesterMail;
@@ -33,6 +36,7 @@ public class ExchangeWrapper {
         this.offererBookImages = offererBookImages;
         this.requesterBookAuthor = requesterBookAuthor;
         this.offererBookAuthor = offererBookAuthor;
+        this.isReviewable = isReviewable;
     }
 
     public Exchange getExchange() {
@@ -96,6 +100,8 @@ public class ExchangeWrapper {
         return offererBookAuthor;
     }
 
-
+    public Boolean getIsReviewable() {
+    	return isReviewable;
+    }
 
 }
