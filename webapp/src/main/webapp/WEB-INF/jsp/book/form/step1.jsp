@@ -113,7 +113,7 @@
                                 <spring:message code="add.publication.book.year"/>
                             </label>
                             <select id="publicationYear" name="publicationYear">
-                                <c:forEach var="year" begin="1900" end="${currentYear}">
+                                <c:forEach var="year" begin="1800" end="${currentYear}">
                                     <option value="${year}" ${bookForm.publicationYear == year ? 'selected' : ''}>${year}</option>
                                 </c:forEach>
                             </select>
