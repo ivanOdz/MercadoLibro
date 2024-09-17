@@ -18,5 +18,5 @@ public interface BookDao {
 
     Book getBookByPubId(long pubId);
 
-    List<Book> getAllBooksByOwnerIdAndFilteredBy(long ownerId, String search);
+    List<Book> getAllBooksByOwnerIdAndFilteredBy(long ownerId, String search, int bookStateFilter, int genreFilter);
 }

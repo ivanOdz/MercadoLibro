@@ -30,107 +30,77 @@
     <div class="uk-container">
         <div class="uk-grid ml-1 uk-margin-top" uk-grid>
             <div class="uk-width-1-4@s filter-section uk-border-rounded uk-box-shadow-small mt-1 mb-1">
-                <ul uk-accordion="multiple: true">
-                    <li class="uk-open">
-                        <a class="uk-accordion-title">
-                            <spring:message code="filter.genre"/>
-                        </a>
-                        <div class="uk-accordion-content">
-                            <c:forEach var="genreWrapper" items="${genres}">
-                                <div class="uk-margin">
-                                    <input class="uk-checkbox" type="checkbox" checked="checked" name="genre" value="${genreWrapper.genre}" />
-                                    <label>${genreWrapper.displayName}</label>
-                                </div>
-                            </c:forEach>
-                        </div>
-                    </li>
-                    <li>
-                        <a class="uk-accordion-title"><spring:message code="filter.condition"/></a>
-                        <div class="uk-accordion-content">
-                            <c:forEach var="bookStateWrapper" items="${bookStates}">
-                                <div class="uk-margin">
-                                    <input class="uk-checkbox" type="checkbox" checked="checked" name="bookState" value="${bookStateWrapper.bookState}" />
-                                    <label>${bookStateWrapper.displayName}</label>
-                                </div>
-                            </c:forEach>
-                        </div>
-                    </li>
-                    <li>
-                        <a class="uk-accordion-title"><spring:message code="filter.location"/></a>
-                        <div class="uk-accordion-content">
-                            <div class="uk-margin">
-                                <label>
-                                    <input class="uk-checkbox" type="checkbox" checked="checked" />
-                                    Ivan�s House
-                                </label>
-                            </div>
-                            <div class="uk-margin">
-                                <label>
-                                    <input class="uk-checkbox" type="checkbox" />
-                                    Option 2
-                                </label>
-                            </div>
-                            <div class="uk-margin">
-                                <label>
-                                    <input class="uk-checkbox" type="checkbox" />
-                                    Option 3
-                                </label>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
+                <h2>${param.search}</h2>
+
+                <!-- Esto tiene que aparecer solo si hay un filtro de BookState -->
+                <c:if test="${bookStateFilter != '6'}">
+                    <form action="<c:url value='' />" method="get">
+                        <input type="hidden" name="book-state-filter" value="">
+                        <input type="hidden" name="genre-filter" value=${genreFilter}>
+                        <input type="hidden" name="search" value="${param.search}">
+
+                        <button type="submit" class="ui-search-button" title="BookStateRemove">
+							<span class="ui-search-filter-name">
+								<spring:message code="delete.bookstate.filter"/>
+							</span>
+                        </button>
+                    </form>
+                </c:if>
+
+                <!-- Esto tiene que aparecer solo si hay un filtro de Genero -->
+                <c:if test="${genreFilter != '32'}">
+                    <form action="<c:url value='' />" method="get">
+                        <input type="hidden" name="book-state-filter" value=${bookStateFilter}>
+                        <input type="hidden" name="genre-filter" value="">
+                        <input type="hidden" name="search" value="${param.search}">
+
+                        <button type="submit" class="ui-search-button" title="GenreFilterRemove">
+							<span class="ui-search-filter-name">
+								<spring:message code="delete.genre.filter"/>
+							</span>
+                        </button>
+                    </form>
+                </c:if>
+
+                <c:if test="${bookStateFilter == '6'}">
+                    <h3><spring:message code="filter.condition"/></h3>
+                    <ul class="uk-list">
+                        <c:forEach var="bookStateWrapper" items="${bookStates}">
+                            <li class="ui-search-filter-container">
+                                <form action="<c:url value='' />" method="get">
+                                    <input type="hidden" name="book-state-filter" value="${bookStateWrapper.bookState.value}">
+                                    <input type="hidden" name="genre-filter" value="${genreFilter}">
+                                    <input type="hidden" name="search" value="${param.search}">
+
+                                    <button type="submit" class="ui-search-button" title="${bookStateWrapper.displayName}">
+                                        <span class="ui-search-filter-name">${bookStateWrapper.displayName}</span>
+                                    </button>
+                                </form>
+                            </li>
+                        </c:forEach>
+                    </ul>
+                </c:if>
+
+                <c:if test="${genreFilter == '32'}">
+                    <h3><spring:message code="filter.genre"/></h3>
+                    <ul class="uk-list">
+                        <c:forEach var="genreWrapper" items="${genres}">
+                            <li class="ui-search-filter-container">
+                                <form action="<c:url value='' />" method="get">
+                                    <input type="hidden" name="genre-filter" value="${genreWrapper.genre.value}">
+                                    <input type="hidden" name="book-state-filter" value="${bookStateFilter}">
+                                    <input type="hidden" name="search" value="${param.search}">
+
+                                    <button type="submit" class="ui-search-button" title="${genreWrapper.displayName}">
+                                        <span class="ui-search-filter-name">${genreWrapper.displayName}</span>
+                                    </button>
+                                </form>
+                            </li>
+                        </c:forEach>
+                    </ul>
+                </c:if>
             </div>
-            <%--            <div class="uk-width-1-4@s filter-section uk-border-rounded uk-box-shadow-small mt-1 mb-1">--%>
-            <%--                <ul uk-accordion="multiple: true">--%>
-            <%--                    <li class="uk-open">--%>
-            <%--                        <a class="uk-accordion-title">--%>
-            <%--                            <spring:message code="filter.genre"/>--%>
-            <%--                        </a>--%>
-            <%--                        <div class="uk-accordion-content">--%>
-            <%--                            <c:forEach var="genreWrapper" items="${genres}">--%>
-            <%--                                <div class="uk-margin">--%>
-            <%--                                    <input class="uk-checkbox" type="checkbox" checked="checked" name="genre" value="${genreWrapper.genre}" />--%>
-            <%--                                    <label>${genreWrapper.displayName}</label>--%>
-            <%--                                </div>--%>
-            <%--                            </c:forEach>--%>
-            <%--                        </div>--%>
-            <%--                    </li>--%>
-            <%--                    <li>--%>
-            <%--                        <a class="uk-accordion-title"><spring:message code="filter.condition"/></a>--%>
-            <%--                        <div class="uk-accordion-content">--%>
-            <%--                            <c:forEach var="bookStateWrapper" items="${bookStates}">--%>
-            <%--                                <div class="uk-margin">--%>
-            <%--                                    <input class="uk-checkbox" type="checkbox" checked="checked" name="bookState" value="${bookStateWrapper.bookState}" />--%>
-            <%--                                    <label>${bookStateWrapper.displayName}</label>--%>
-            <%--                                </div>--%>
-            <%--                            </c:forEach>--%>
-            <%--                        </div>--%>
-            <%--                    </li>--%>
-            <%--                    <li>--%>
-            <%--                        <a class="uk-accordion-title"><spring:message code="filter.location"/></a>--%>
-            <%--                        <div class="uk-accordion-content">--%>
-            <%--                            <div class="uk-margin">--%>
-            <%--                                <label>--%>
-            <%--                                    <input class="uk-checkbox" type="checkbox" checked="checked" />--%>
-            <%--                                    Ivan�s House--%>
-            <%--                                </label>--%>
-            <%--                            </div>--%>
-            <%--                            <div class="uk-margin">--%>
-            <%--                                <label>--%>
-            <%--                                    <input class="uk-checkbox" type="checkbox" />--%>
-            <%--                                    Option 2--%>
-            <%--                                </label>--%>
-            <%--                            </div>--%>
-            <%--                            <div class="uk-margin">--%>
-            <%--                                <label>--%>
-            <%--                                    <input class="uk-checkbox" type="checkbox" />--%>
-            <%--                                    Option 3--%>
-            <%--                                </label>--%>
-            <%--                            </div>--%>
-            <%--                        </div>--%>
-            <%--                    </li>--%>
-            <%--                </ul>--%>
-            <%--            </div>--%>
+
 
             <div class="uk-width-3-4@s col-content">
                 <div class="uk-card uk-card-default uk-card-body uk-margin-bottom mt-1 uk-border-rounded uk-border-rounded-medium">

@@ -41,7 +41,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> getAllBooksByOwnerIdAndFilteredBy(long ownerId, String search) {
-        return bookDao.getAllBooksByOwnerIdAndFilteredBy(ownerId, search);
+    public List<Book> getAllBooksByOwnerIdAndFilteredBy(long ownerId, String search, int bookStateFilter, int genreFilter) {
+        return bookDao.getAllBooksByOwnerIdAndFilteredBy(ownerId, search, bookStateFilter, genreFilter);
     }
 }

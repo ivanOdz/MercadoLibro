@@ -81,18 +81,23 @@ public class BookController {
     }
 
     @RequestMapping("/book")
-    public ModelAndView bookHome(@RequestParam(name = "search", defaultValue = "") String search) {
+    public ModelAndView bookHome(@RequestParam(name = "search", defaultValue = "") String search,
+                                 @RequestParam(name = "book-state-filter", defaultValue = "6") int bookStateFilter,
+                                 @RequestParam(name = "genre-filter", defaultValue = "32") int genreFilter) {
+
         // Obtener todos los libros que tiene el usuario, armar List<Cards>
         ModelAndView mav = new ModelAndView("book/book_home");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.getPrincipal() instanceof PawUserDetails pud) {
 
-            List<CardBook> cardBookList = cardBookService.buildCardBookList(bookService.getAllBooksByOwnerIdAndFilteredBy(pud.getUser().getUserId(), search));
+            List<CardBook> cardBookList = cardBookService.buildCardBookList(bookService.getAllBooksByOwnerIdAndFilteredBy(pud.getUser().getUserId(), search, bookStateFilter, genreFilter));
             mav.addObject("cardBookList", cardBookList);
             mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
             mav.addObject("bookStates", List.of(BookState.values()).stream().map(bookStatus -> new BookStateWrapper(bookStatus, bookStateService.getBookStateDisplayName(bookStatus))).collect(Collectors.toList()));
 
+            mav.addObject("bookStateFilter", bookStateFilter );
+            mav.addObject("genreFilter", genreFilter);
         }
 
         return mav;

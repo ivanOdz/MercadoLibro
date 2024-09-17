@@ -31,7 +31,7 @@ public class CompleteBookServiceImpl implements CompleteBookService {
     public List<CompleteBook> getCompleteAvailableBooksByUserId(long userId) {
         List<CompleteBook> toReturn = new ArrayList<>();
 
-        List<Book> bookList = bookService.getAllBooksByOwnerIdAndFilteredBy(userId, "");
+        List<Book> bookList = bookService.getAllBooksByOwnerIdAndFilteredBy(userId, "", 6, 32);
 
         for (Book book : bookList) {
             BookModel bookModel = bookModelService.getBookModelByBookModelId(book.getBookModelId());

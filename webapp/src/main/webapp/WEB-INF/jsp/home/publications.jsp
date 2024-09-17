@@ -29,7 +29,7 @@
 
 				<!-- Esto tiene que aparecer solo si hay un filtro de BookState -->
 				<c:if test="${bookStateFilter != '6'}">
-					<form action="<c:url value='/' />" method="get">
+					<form action="<c:url value='' />" method="get">
 						<input type="hidden" name="book-state-filter" value="">
 						<input type="hidden" name="genre-filter" value=${genreFilter}>
 						<input type="hidden" name="search" value="${param.search}">
@@ -44,7 +44,7 @@
 
 				<!-- Esto tiene que aparecer solo si hay un filtro de Genero -->
 				<c:if test="${genreFilter != '32'}">
-					<form action="<c:url value='/' />" method="get">
+					<form action="<c:url value='' />" method="get">
 						<input type="hidden" name="book-state-filter" value=${bookStateFilter}>
 						<input type="hidden" name="genre-filter" value="">
 						<input type="hidden" name="search" value="${param.search}">
@@ -62,7 +62,7 @@
 					<ul class="uk-list">
 						<c:forEach var="bookStateWrapper" items="${bookStates}">
 							<li class="ui-search-filter-container">
-								<form action="<c:url value='/' />" method="get">
+								<form action="<c:url value='' />" method="get">
 									<input type="hidden" name="book-state-filter" value="${bookStateWrapper.bookState.value}">
 									<input type="hidden" name="genre-filter" value="${genreFilter}">
 									<input type="hidden" name="search" value="${param.search}">
@@ -81,7 +81,7 @@
 					<ul class="uk-list">
 						<c:forEach var="genreWrapper" items="${genres}">
 							<li class="ui-search-filter-container">
-								<form action="<c:url value='/' />" method="get">
+								<form action="<c:url value='' />" method="get">
 									<input type="hidden" name="genre-filter" value="${genreWrapper.genre.value}">
 									<input type="hidden" name="book-state-filter" value="${bookStateFilter}">
 									<input type="hidden" name="search" value="${param.search}">

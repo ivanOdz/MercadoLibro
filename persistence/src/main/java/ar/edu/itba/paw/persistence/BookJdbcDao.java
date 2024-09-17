@@ -70,9 +70,9 @@ public class BookJdbcDao implements BookDao {
     }
 
     @Override
-    public List<Book> getAllBooksByOwnerIdAndFilteredBy(long ownerId, String search) {
-        return jdbcTemplate.query("SELECT * FROM book WHERE ownerId = ? AND bookModelId IN (SELECT bookModelId FROM book_model WHERE LOWER(title) LIKE LOWER(?))",
-                new Object[]{ ownerId, "%" + search.toLowerCase() + "%" }, new int[]{ Types.BIGINT, Types.VARCHAR }, ROWMAPPERBOOKS);
+    public List<Book> getAllBooksByOwnerIdAndFilteredBy(long ownerId, String search, int bookStateFilter, int genreFilter) {
+        return jdbcTemplate.query("SELECT * FROM book WHERE ownerId = ? AND (? = 6 OR bookstate = ?) AND bookModelId IN (SELECT bookModelId FROM book_model WHERE LOWER(title) LIKE LOWER(?) AND (? = 32 OR genre = ?))",
+                new Object[]{ ownerId, bookStateFilter, bookStateFilter, "%" + search.toLowerCase() + "%", genreFilter, genreFilter}, new int[]{ Types.BIGINT, Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER }, ROWMAPPERBOOKS);
     }
 }
 
