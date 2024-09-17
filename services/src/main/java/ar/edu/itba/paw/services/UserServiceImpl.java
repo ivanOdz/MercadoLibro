@@ -135,4 +135,9 @@ public class UserServiceImpl implements UserService {
     	
     	return userDao.updateUsername(userId, newName);
     }
+
+    @Override
+    public Optional<User> getUserToVerify(int verificationCode) {
+        return userDao.getUserToVerify(verificationCode);
+    }
 }

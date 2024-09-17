@@ -1,3 +1,4 @@
+<%@include file="/WEB-INF/jsp/head/headers.jsp"%>
 <c:url var="exchangeRequestsUrl" value="/requests"/>
 <c:url var="exchangeOffersUrl" value="/offers"/>
 <c:url var="booksUrl" value="/book"/>

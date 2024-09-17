@@ -99,7 +99,15 @@ public class ExchangeController {
 
     @RequestMapping("/createexchange")
     public ModelAndView exchange(@RequestParam(name = "accept_code") int acceptCode, @RequestParam(name = "state") boolean state) {
-        final ModelAndView mav = new ModelAndView(exchangeService.exchange(acceptCode, state));
+        ModelAndView mav = new ModelAndView("error/forbidden");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        System.out.println(authentication.getPrincipal());
+
+        // if the user that is accepting/rejecting the exchange is the one that should
+        if (authentication.getPrincipal() instanceof PawUserDetails pud
+            && publicationService.getPublicationById(exchangeService.getExchangeById(exchangeService.getId(acceptCode)).get().getOffererPubId()).get().getUserId() == pud.getUser().getUserId()){
+        mav = new ModelAndView(exchangeService.exchange(acceptCode, state));
 
         Map<String, Object> variables = new HashMap<>();
         long exchangeId = exchangeService.getId(acceptCode);
@@ -133,6 +141,7 @@ public class ExchangeController {
         variables.put("offererEmail", offererEmail);
 
         emailService.sendExchangeEmail(requesterEmail, variables, state);
+        }
 
         return mav;
     }

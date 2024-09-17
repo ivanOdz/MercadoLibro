@@ -22,4 +22,6 @@ public interface UserDao {
     User getUserByPubId(long pubId);
     
     boolean updateUsername(long userId, String newUsername);
+
+    Optional<User> getUserToVerify(int verificationCode);
 }
