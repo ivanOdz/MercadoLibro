@@ -7,5 +7,8 @@ import java.util.List;
 
 @Service
 public interface UserReviewService {
+	
     List<UserReview> getReviewsByUserId(long userId);
+    
+    UserReview getUserReview(long exchangeId, long reviewerId);
 }

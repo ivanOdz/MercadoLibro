@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ExchangeDao {
+	
     void updateExchangeStatus(int acceptCode, int newStatus);
 
     Optional<Exchange> findById(long id);
@@ -23,6 +24,7 @@ public interface ExchangeDao {
     List<Exchange> getExchangesWhereUserIdIsRequester(long anUserId);
 
     void confirmRequester(int acceptCode);
+    
     void confirmOfferer(int acceptCode);
 
 }

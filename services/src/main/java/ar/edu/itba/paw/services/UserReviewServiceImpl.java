@@ -19,4 +19,9 @@ public class UserReviewServiceImpl implements UserReviewService {
     public List<UserReview> getReviewsByUserId(long userId) {
         return urDao.getReviewsByUserId(userId);
     }
+    
+    @Override
+    public UserReview getUserReview(long exchangeId, long reviewerId) {
+    	return urDao.getUserReview(exchangeId, reviewerId);
+    }
 }

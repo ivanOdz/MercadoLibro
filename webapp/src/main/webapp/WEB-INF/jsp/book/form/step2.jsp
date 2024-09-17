@@ -3,7 +3,8 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
 
-<html>
+
+<html class="custom-style">
 <%@include file="/WEB-INF/jsp/head/headers.jsp"%>
 <head>
     <%@include file="/WEB-INF/jsp/head/headers.jsp"%>
@@ -15,9 +16,54 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
 
-    <title>STEP2</title>
+    <title><spring:message code="add.book"/></title>
 
 </head>
+
+<script type="text/javascript">
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var previewContainer = document.getElementById('image-preview-container');
+        var fileInput = document.getElementById('file-input');
+
+        fileInput.addEventListener('change', function(event) {
+            const files = event.target.files;
+
+            previewContainer.innerHTML = '';
+
+            for (const file of files) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imgWrapper = document.createElement('div');
+                    imgWrapper.classList.add('image-wrapper');
+
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.classList.add('uk-margin-small-right');
+                    img.style.maxWidth = '200px';
+                    img.style.maxHeight = '200px';
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.classList.add('uk-button', 'uk-button-danger', 'uk-button-small');
+                    deleteButton.innerHTML = '<span uk-icon="icon: trash"></span>';
+                    deleteButton.classList.add('delete-button');
+
+                    deleteButton.addEventListener('click', function() {
+                        imgWrapper.remove();
+                    });
+
+                    imgWrapper.appendChild(img);
+                    imgWrapper.appendChild(deleteButton);
+                    previewContainer.appendChild(imgWrapper);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+
+
+
+</script>
 
 <body>
 
@@ -34,25 +80,19 @@
                     <form:form modelAttribute="bookDetailsForm" action="${postUrl}" enctype="multipart/form-data">
 
                         <div class="uk-container uk-margin-bottom">
-                            <a class="uk-button uk-button-text" href="${pageContext.request.contextPath}/">
+                            <a class="uk-button uk-button-text" href="${pageContext.request.contextPath}/book/book_models">
                                 <span uk-icon="icon:  chevron-left"></span>
-                                <spring:message code="add.book.return_home"/>
+                                <spring:message code="add.book.return_book_models"/>
                             </a>
                         </div>
-
-                        <div class="uk-container">
-                            <h2 class="uk-heading-line">
-                                <spring:message code="add.book.title"/>
-                            </h2>
-                            <h4 class="uk-article-meta">
-                                <spring:message code="add.book.description"/>
-                            </h4>
+                        <div>
+                            <span class="uk-text-large uk-text-bold">
+                            <c:out value="${book_model.title}"/> </span>
                         </div>
-
 
                         <%--BookState--%>
 
-                        <div class="form-group">
+                        <div class="form-group uk-margin-top uk-margin-bottom">
                             <form:label path="bookState">
                                 <spring:message code="add.publication.book.state"/>
                             </form:label>
@@ -65,7 +105,7 @@
 
                         <%--Rating--%>
 
-                        <div class="form-group">
+                        <div class="form-group uk-margin-top uk-margin-bottom">
                             <label>
                                 <spring:message code="add.publication.rating"/>
                             </label>
@@ -99,12 +139,12 @@
                         </div>
 
                         <%--Images--%>
-                        <div class="uk-placeholder uk-text-center">
+                        <div class="uk-placeholder uk-text-center uk-margin-top uk-margin-bottom">
                             <span uk-icon="icon: cloud-upload"></span>
-                            <span class="uk-text-middle">Attach binaries by dropping them here or</span>
+                            <span class="uk-text-middle"><spring:message code="add.publication.add.images"/></span>
                             <div uk-form-custom>
                                 <input type="file" id="file-input" name="imageFiles" accept="image/*" multiple>
-                                <span class="uk-link">selecting one</span>
+                                <span class="uk-link"><spring:message code="add.publication.add.image.here"/></span>
                             </div>
                         </div>
 
@@ -112,7 +152,7 @@
 
                         <div id="image-preview-container" class="uk-margin-top"></div>
 
-
+                        <%--button--%>
                         <div class="uk-container uk-margin-top">
                             <div class="uk-inline">
                                 <div class="uk-position-right">
