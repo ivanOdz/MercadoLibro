@@ -24,6 +24,22 @@
     
     <title><spring:message code="profile.view.title"/></title>
     
+    <script type="text/javascript">
+    
+	    function showEditForm() {
+	        document.getElementById('username-display').style.display = 'none';
+	        document.getElementById('change-username-btn').style.display = 'none';
+	        document.getElementById('change-username-form').style.display = 'block';
+	    }
+	
+	    function cancelEdit() {
+	        document.getElementById('username-display').style.display = 'block';
+	        document.getElementById('change-username-btn').style.display = 'inline-block';
+	        document.getElementById('change-username-form').style.display = 'none';
+	    }
+
+    </script>
+    
 </head>
 
 <body>
@@ -31,14 +47,36 @@
 	<navbar/>
 	
 	<div class="uk-grid">
+	
+		<c:if test="${not empty message}">
+		    <div class="alert alert-success">
+		        <c:out value="${message}" />
+		    </div>
+		</c:if>
+		
+		<c:if test="${not empty errorMessage}">
+		    <div class="alert alert-danger">
+		        <c:out value="${errorMessage}" />
+		    </div>
+		</c:if>
+	
 	    <div class="uk-width-1-2 main-margin uk-align-center">
 	        <div class="uk-card uk-card-default card-profile">
 	            <h1 class="uk-h1 title-profile"><spring:message code="profile.title"/></h1>
 	            <div class="profile-content">
 	            
-<%-- 	            <h3 class="uk-h5"><c:out value="${loggedUser.imageId}"/></h3> --%>
-	                <img src="images/profile-default.jpg" alt="default-profile-pic" class="profile-pic"/>
-	
+<%-- 	            <h3 class="profile-pic"><c:out value="${loggedUser.imageId}"/></h3> --%>
+<!-- 	                <img src="images/profile-default.jpg" alt="default-profile-pic" class="profile-pic"/> -->
+
+<%-- 					<c:choose> --%>
+<%-- 						<c:when test="${loggedUser.imageId != null}"> --%>
+<%-- 							<img class="profile-pic" src="${loggedUser.imageId}" alt="profileImage"/> --%>
+<%-- 						</c:when> --%>
+<%-- 						<c:otherwise> --%>
+<!-- 							<img class="profile-pic" src="images/profile-default.jpg" alt="noProfileImage"/> -->
+<%-- 						</c:otherwise> --%>
+<%-- 					</c:choose> --%>
+					
 	   				<div class="stars">
 					    <c:forEach var="i" begin="1" end="5">
 					        <c:choose>
@@ -54,19 +92,37 @@
 					        </c:choose>
 					    </c:forEach>
 					</div>
+			    	
+			    	<div class="uk-h5">
+					    <h3 class="uk-h5" id="username-display" style="display: inline;"><c:out value="${loggedUser.username}"/></h3>
+					    <button type="button" id="change-username-btn" onclick="showEditForm()" style="display: inline;">
+					        <i class="material-icons edit-icon">edit</i>
+					    </button>
+					    
+					    <form id="change-username-form" action="/changeUsername" method="post" style="display:none;">
+						    <input type="text" name="newUsername" id="new-username" value="${loggedUser.username}" required>
+						    <input type="hidden" name="loggedUserId" value="${loggedUser.userId}">
+						    <button type="submit" class="btn-confirm">Confirm</button>
+						    <button type="button" onclick="cancelEdit()" class="btn-cancel">X</button>
+						</form>
 					
-	                <div class="">
-	                	<h3 class="uk-h5"><c:out value="${loggedUser.username}"/></h3>
-				        <a href="change_username_solicited" title="Change Name">
-				            <i class="material-icons edit-icon">edit</i>
-				        </a>
-	                </div>
-	
+					</div>
+	                
+				    <div id="username-input-section" style="display: none;">
+				        <div class="input-field">
+				            <input id="new-username" type="text" placeholder="Nuevo nombre de usuario" />
+				            <label for="new-username">New</label>
+				        </div>
+				
+				        <button id="confirm-username-btn" class="btn green">Confirm</button>
+				        <button id="cancel-username-btn" class="btn red">X</button>
+			    	</div>
+			    	
 	                <div>
 	                	<h3 class="uk-h5"><c:out value="${loggedUser.mail}"/></h3>
-	                	<a href="change_mail_solicited" title="Change Mail">
-				            <i class="material-icons edit-icon">edit</i>
-				        </a>
+<!-- 	                	<a href="change_mail_solicited" title="Change Mail"> -->
+<!-- 				            <i class="material-icons edit-icon">edit</i> -->
+<!-- 				        </a> -->
 					</div>
 					
 					<div class="changePasswordButton">

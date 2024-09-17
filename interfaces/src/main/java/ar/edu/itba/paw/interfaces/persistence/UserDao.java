@@ -20,4 +20,6 @@ public interface UserDao {
     void changePassword(int verificationCode, String newPassword);
 
     User getUserByPubId(long pubId);
+    
+    boolean updateUsername(long userId, String newUsername);
 }

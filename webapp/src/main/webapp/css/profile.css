@@ -18,6 +18,7 @@
 .subtitles-profile {
     text-align: center;
 }
+
 .profile-pic {
     width: 150px;
     height: 150px;
@@ -37,21 +38,6 @@
 
 .uk-divider-icon {
     color: #333333;
-}
-
-.edit-icon {
-    vertical-align: middle;
-    color: #757575;
-    cursor: pointer;
-}
-
-.btn-red {
-    background-color: #e53935;
-    color: white;
-}        .edit-icon {
-    vertical-align: middle;
-    color: #757575;
-    cursor: pointer;
 }
 
 .btn-red {
@@ -79,10 +65,25 @@
 .edit-icon {
     vertical-align: middle;
     color: #757575;
+    vertical-align: middle;
     cursor: pointer;
 }
 
 .btn-red {
     background-color: #e53935;
     color: white;
+}
+
+.alert {
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
 }
