@@ -18,15 +18,13 @@
 .subtitles-profile {
     text-align: center;
 }
-
-.circle {
+.profile-pic {
     width: 150px;
     height: 150px;
     border-radius: 50%;
     object-fit: cover;
 }
-
-
+    
 .profile-picture-container {
     align-items: center;
     align-content: center;
@@ -39,4 +37,45 @@
 
 .uk-divider-icon {
     color: #333333;
+}
+
+.edit-icon {
+    vertical-align: middle;
+    color: #757575;
+    cursor: pointer;
+}
+
+.btn-red {
+    background-color: #e53935;
+    color: white;
+}        .edit-icon {
+    vertical-align: middle;
+    color: #757575;
+    cursor: pointer;
+}
+
+.btn-red {
+    background-color: #e53935;
+    color: white;
+}
+
+.reviewStars {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.stars {
+    margin-top: 15px;
+}
+
+.edit-icon {
+    vertical-align: middle;
+    color: #757575;
+    cursor: pointer;
+}
+
+.btn-red {
+    background-color: #e53935;
+    color: white;
 }
