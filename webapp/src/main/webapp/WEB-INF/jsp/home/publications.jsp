@@ -19,7 +19,7 @@
 
 </head>
 <body class="main">
-<navbar/>
+<navbar></navbar>
 
 <div class="uk-background-muted">
 	<div class="uk-container">
