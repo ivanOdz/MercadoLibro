@@ -8,12 +8,12 @@
 <%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
 <head>
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
-	<link href="${pageContext.request.contextPath}/css/publications.css?v=1.0" rel="stylesheet"/>
 
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
 	<link href="${pageContext.request.contextPath}/css/navbar.css?v=1.0" rel="stylesheet"/>
+	<link href="${pageContext.request.contextPath}/css/publications.css?v=1.0" rel="stylesheet"/>
 
 	<title><spring:message code="publications.list.brand.logo"/></title>
 
@@ -34,10 +34,11 @@
 						<input type="hidden" name="genre-filter" value=${genreFilter}>
 						<input type="hidden" name="search" value="${param.search}">
 
-						<button type="submit" class="ui-search-button" title="BookStateRemove">
+						<button type="submit" class="ui-search-button uk-button uk-button-default uk-button-small" title="BookStateRemove" uk-close-icon>
 							<span class="ui-search-filter-name">
 								<spring:message code="delete.bookstate.filter"/>
 							</span>
+							<span uk-icon="close"></span>
 						</button>
 					</form>
 				</c:if>
@@ -49,10 +50,11 @@
 						<input type="hidden" name="genre-filter" value="">
 						<input type="hidden" name="search" value="${param.search}">
 
-						<button type="submit" class="ui-search-button" title="GenreFilterRemove">
+						<button type="submit" class="uk-inline uk-search-button uk-button uk-button-default uk-button-small" title="GenreFilterRemove">
 							<span class="ui-search-filter-name">
 								<spring:message code="delete.genre.filter"/>
 							</span>
+							<span uk-icon="close"></span>
 						</button>
 					</form>
 				</c:if>
@@ -67,7 +69,7 @@
 									<input type="hidden" name="genre-filter" value="${genreFilter}">
 									<input type="hidden" name="search" value="${param.search}">
 
-									<button type="submit" class="ui-search-button" title="${bookStateWrapper.displayName}">
+									<button type="submit" class="ui-search-button uk-button uk-button-default uk-button-small" title="${bookStateWrapper.displayName}">
 										<span class="ui-search-filter-name">${bookStateWrapper.displayName}</span>
 									</button>
 								</form>
@@ -86,7 +88,7 @@
 									<input type="hidden" name="book-state-filter" value="${bookStateFilter}">
 									<input type="hidden" name="search" value="${param.search}">
 
-									<button type="submit" class="ui-search-button" title="${genreWrapper.displayName}">
+									<button type="submit" class="ui-search-button uk-button uk-button-default uk-button-small" title="${genreWrapper.displayName}">
 										<span class="ui-search-filter-name">${genreWrapper.displayName}</span>
 									</button>
 								</form>
