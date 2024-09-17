@@ -30,8 +30,8 @@
 				<!-- Esto tiene que aparecer solo si hay un filtro de BookState -->
 				<c:if test="${bookStateFilter != ''}">
 					<form action="<c:url value='/' />" method="get">
-						<input type="hidden" name="bookStateFilter" value="">
-						<input type="hidden" name="genreFilter" value=${genreFilter}>
+						<input type="hidden" name="book-state-filter" value="">
+						<input type="hidden" name="genre-filter" value=${genreFilter}>
 						<input type="hidden" name="search" value="${param.search}">
 
 						<button type="submit" class="ui-search-button" title="BookStateRemove">
@@ -43,8 +43,8 @@
 				<!-- Esto tiene que aparecer solo si hay un filtro de Genero -->
 				<c:if test="${genreFilter != ''}">
 					<form action="<c:url value='/' />" method="get">
-						<input type="hidden" name="bookStateFilter" value=${bookStateFilter}>
-						<input type="hidden" name="genreFilter" value="">
+						<input type="hidden" name="book-state-filter" value=${bookStateFilter}>
+						<input type="hidden" name="genre-filter" value="">
 						<input type="hidden" name="search" value="${param.search}">
 
 						<button type="submit" class="ui-search-button" title="GenreFilterRemove">
@@ -59,8 +59,8 @@
 						<c:forEach var="bookStateWrapper" items="${bookStates}">
 							<li class="ui-search-filter-container">
 								<form action="<c:url value='/' />" method="get">
-									<input type="hidden" name="bookStateFilter" value="${bookStateWrapper.bookState}">
-									<input type="hidden" name="genreFilter" value="${genreFilter}">
+									<input type="hidden" name="book-state-filter" value="${bookStateWrapper.bookState}">
+									<input type="hidden" name="genre-filter" value="${genreFilter}">
 									<input type="hidden" name="search" value="${param.search}">
 
 									<button type="submit" class="ui-search-button" title="${bookStateWrapper.displayName}">
@@ -81,8 +81,8 @@
 
 							<li class="ui-search-filter-container">
 								<form action="<c:url value='/' />" method="get">
-									<input type="hidden" name="genreFilter" value="${genreWrapper.genre}">
-									<input type="hidden" name="bookStateFilter" value="${bookStateFilter}">
+									<input type="hidden" name="genre-filter" value="${genreWrapper.genre}">
+									<input type="hidden" name="book-state-filter" value="${bookStateFilter}">
 									<input type="hidden" name="search" value="${param.search}">
 
 									<button type="submit" class="ui-search-button" title="${genreWrapper.displayName}">

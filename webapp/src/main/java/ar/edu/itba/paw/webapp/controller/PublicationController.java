@@ -44,8 +44,8 @@ public class PublicationController {
 
     @RequestMapping("/")
     public ModelAndView index(@RequestParam(name = "search", defaultValue = "") String search,
-                              @RequestParam(name = "bookStateFilter", defaultValue = "") String bookStateFilter,
-                              @RequestParam(name = "genreFilter", defaultValue = "") String genreFilter) {
+                              @RequestParam(name = "book-state-filter", defaultValue = "") String bookStateFilter,
+                              @RequestParam(name = "genre-filter", defaultValue = "") String genreFilter) {
     	
         final ModelAndView mav = new ModelAndView("home/publications");
 
@@ -68,8 +68,8 @@ public class PublicationController {
 
     @RequestMapping(path = "/", method = RequestMethod.GET)
     public ModelAndView search(@RequestParam(name = "search", defaultValue = "") String search,
-                               @RequestParam(name = "bookStateFilter", defaultValue = "") String bookStateFilter,
-                               @RequestParam(name = "genreFilter", defaultValue = "") String genreFilter) {
+                               @RequestParam(name = "book-state-filter", defaultValue = "") String bookStateFilter,
+                               @RequestParam(name = "genre-filter", defaultValue = "") String genreFilter) {
 
         return index(search, bookStateFilter, genreFilter);
     }
