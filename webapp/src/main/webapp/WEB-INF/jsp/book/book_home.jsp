@@ -10,6 +10,8 @@
 
 <html lang="es">
 <head>
+    <link href="${pageContext.request.contextPath}/css/book_home.css?v=1.0" rel="stylesheet"/>
+
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
     <link rel="icon" href="${pageContext.request.contextPath}/images/favicon.ico" type="image/x-icon"/>
@@ -21,7 +23,7 @@
     <title><spring:message code="book.view.title"/></title>
 </head>
 <body>
-<navbar/>
+<navbar></navbar>
 
 
 <div class="uk-background-muted">
@@ -136,10 +138,19 @@
                     <h6 class="uk-text-muted"><spring:message code="book.list.select"/></h6>
                 </div>
 
-                <div class="uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m mb-1" uk-grid>
+                <div class="uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m mb-1" uk-grid uk-height-match="target: > div > .uk-card">
                     <c:forEach var="card" items="${cardBookList}">
+                        <c:set var="cardClass" value="${card.canPublish ? 'uk-card uk-card-default uk-card-hover' : 'uk-card uk-card-default'}"/>
+                        <c:choose>
+                            <c:when test="${card.canPublish}">
+                                <a href="#modal-sections-${card.book.bookId}" uk-toggle class="uk-display-block custom-link">
+                            </c:when>
+                            <c:otherwise>
+
+                            </c:otherwise>
+                        </c:choose>
                         <div>
-                            <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-border-rounded custom-link">
+                            <div class="${cardClass} uk-card-body uk-border-rounded custom-link">
                                 <figure class="uk-margin-bottom">
                                     <c:choose>
                                         <c:when test="${card.image != null}">
@@ -150,53 +161,39 @@
                                         </c:otherwise>
                                     </c:choose>
                                 </figure>
-                                <h5 class="uk-card-title custom-link">${card.bookModel.title}</h5>
-                                <p class="small-gray-text custom-link">${card.authorsString}</p>
+                                <h5 class="uk-card-title m-0 custom-link">${card.bookModel.title}</h5>
+                                <p class="small-gray-text m-0 custom-link">${card.authorsString}</p>
 
-                                <c:choose>
-                                    <c:when test="${card.canPublish}">
+                                <div id="modal-sections-${card.book.bookId}" uk-modal>
+                                    <div class="uk-modal-dialog">
+                                        <button class="uk-modal-close-default" type="button" uk-close></button>
+                                        <div class="uk-modal-header">
 
-                                        <a class="uk-button uk-button-default uk-button-primary uk-width-1-1" href="#modal-sections-${card.book.bookId}" uk-toggle>
-                                            <spring:message code="book.publish.button"/>
-                                        </a>
-
-                                        <div id="modal-sections-${card.book.bookId}" uk-modal>
-                                            <div class="uk-modal-dialog">
-                                                <button class="uk-modal-close-default" type="button" uk-close></button>
-                                                <div class="uk-modal-header">
-
-                                                    <form action="${pageContext.request.contextPath}/createpublication" method="post" class="uk-grid-large uk-grid" style="justify-content: center;">
-                                                        <div class="uk-margin" style="justify-content: center">
-                                                            <div class="uk-width-1-1" >
-                                                                <div class="uk-width-1-1 uk-margin-top">
-                                                                    <div class="uk-margin-bottom">
-                                                                        <label class="uk-margin">
-                                                                            <spring:message code="book.set.location"/>
-                                                                        </label>
-                                                                    </div>
-                                                                    <div class="uk-inline">
-                                                                        <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: location"></span>
-                                                                        <input class="uk-input" type="text" name="location" aria-label="Not clickable icon"/>
-                                                                    </div>
-                                                                    <input class="uk-input" type="hidden" value="${card.book.bookId}" name="bookId" aria-label="Not clickable icon"/>
-                                                                </div>
-                                                                <div class="uk-margin-top uk-button-group" style="margin-left: 50px;">
-                                                                    <button class="uk-button uk-button-primary"> <spring:message code="book.publish.button"/> </button>
-                                                                </div>
+                                            <form action="${pageContext.request.contextPath}/createpublication" method="post" class="uk-grid-large uk-grid" style="justify-content: center;">
+                                                <div class="uk-margin" style="justify-content: center">
+                                                    <div class="uk-width-1-1" >
+                                                        <div class="uk-width-1-1 uk-margin-top">
+                                                            <div class="uk-margin-bottom">
+                                                                <label class="uk-margin">
+                                                                    <spring:message code="book.set.location"/>
+                                                                </label>
                                                             </div>
+                                                            <div class="uk-inline">
+                                                                <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: location"></span>
+                                                                <input class="uk-input" type="text" name="location" aria-label="Not clickable icon"/>
+                                                            </div>
+                                                            <input class="uk-input" type="hidden" value="${card.book.bookId}" name="bookId" aria-label="Not clickable icon"/>
                                                         </div>
-                                                    </form>
+                                                        <div class="uk-margin-top uk-button-group" style="margin-left: 50px;">
+                                                            <button class="uk-button uk-button-primary"> <spring:message code="book.publish.button"/> </button>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            </form>
                                         </div>
 
-
-                                    </c:when>
-
-                                    <c:otherwise>
-                                        <button class="uk-button uk-button-primary uk-width-1-1" disabled><spring:message code="book.published.button"/></button>
-                                    </c:otherwise>
-                                </c:choose>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </c:forEach>

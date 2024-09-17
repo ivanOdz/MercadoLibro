@@ -45,37 +45,23 @@
 <body>
 	
 	<navbar/>
-	
-	<div class="uk-grid">
-	
-		<c:if test="${not empty message}">
-		    <div class="alert alert-success">
-		        <c:out value="${message}" />
-		    </div>
-		</c:if>
-		
-		<c:if test="${not empty errorMessage}">
-		    <div class="alert alert-danger">
-		        <c:out value="${errorMessage}" />
-		    </div>
-		</c:if>
-	
+
 	    <div class="uk-width-1-2 main-margin uk-align-center">
+	    
 	        <div class="uk-card uk-card-default card-profile">
 	            <h1 class="uk-h1 title-profile"><spring:message code="profile.title"/></h1>
 	            <div class="profile-content">
 	            
-<%-- 	            <h3 class="profile-pic"><c:out value="${loggedUser.imageId}"/></h3> --%>
-<!-- 	                <img src="images/profile-default.jpg" alt="default-profile-pic" class="profile-pic"/> -->
-
-<%-- 					<c:choose> --%>
-<%-- 						<c:when test="${loggedUser.imageId != null}"> --%>
-<%-- 							<img class="profile-pic" src="${loggedUser.imageId}" alt="profileImage"/> --%>
-<%-- 						</c:when> --%>
-<%-- 						<c:otherwise> --%>
-<!-- 							<img class="profile-pic" src="images/profile-default.jpg" alt="noProfileImage"/> -->
-<%-- 						</c:otherwise> --%>
-<%-- 					</c:choose> --%>
+		            <h3 class="profile-pic">
+						<c:choose>
+							<c:when test="${loggedUser.imageId != null}">
+								<img class="profile-pic" src="${pageContext.request.contextPath}/images/${loggedUser.imageId}" alt="profileImage"/>
+							</c:when>
+							<c:otherwise>
+								<img class="profile-pic" src="images/profile-default.jpg" alt="noProfileImage"/>
+							</c:otherwise>
+						</c:choose>
+					</h3>
 					
 	   				<div class="stars">
 					    <c:forEach var="i" begin="1" end="5">
@@ -118,21 +104,36 @@
 				        <button id="cancel-username-btn" class="btn red">X</button>
 			    	</div>
 			    	
+			        <c:choose>
+			            <c:when test="${not empty message}">
+			                <div class="alert alert-success">
+			                    <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+			                    <c:out value="${message}" />
+			                </div>
+			            </c:when>
+			            <c:when test="${not empty errorMessage}">
+			                <div class="alert alert-danger">
+			                    <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+			                    <c:out value="${errorMessage}" />
+			                </div>
+			            </c:when>
+			        </c:choose>
+			    	
 	                <div>
 	                	<h3 class="uk-h5"><c:out value="${loggedUser.mail}"/></h3>
-<!-- 	                	<a href="change_mail_solicited" title="Change Mail"> -->
-<!-- 				            <i class="material-icons edit-icon">edit</i> -->
-<!-- 				        </a> -->
+	<!-- 	                	<a href="change_mail_solicited" title="Change Mail"> -->
+	<!-- 				            <i class="material-icons edit-icon">edit</i> -->
+	<!-- 				        </a> -->
 					</div>
 					
-					<div class="changePasswordButton">
-					    <a href="change_password_solicited" class="btn-red" title="Cambiar Contraseña">
-					        Password change
-					    </a>
-					</div>
+	<!-- 					<div class="changePasswordButton"> -->
+	<!-- 					    <a href="change_password_solicited" class="btn-red" title="Cambiar Contraseña"> -->
+	<!-- 					        Password change -->
+	<!-- 					    </a> -->
+	<!-- 					</div> -->
 				    
 	                <hr class="uk-divider-icon">
-			        
+				        
 			    </div>
 			    
 		    	<div>
