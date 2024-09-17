@@ -193,7 +193,6 @@ public class BookController {
         if(errors.hasErrors()){
             return bookModelForm(modelBookForm, errors);
         }
-        System.out.println(modelBookForm.getAuthors());
         BookModel bookModel = bookModelService.addBookModel(
                 modelBookForm.getAuthors(),
                 modelBookForm.getIsbn(),
