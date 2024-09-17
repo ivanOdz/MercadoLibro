@@ -140,15 +140,23 @@
     color: black !important;
 }
 
+
 .uk-navbar-dropdown-nav a div {
     color: black !important;
 }
 
-.uk-navbar-nav a:hover,
-.uk-navbar-dropdown-nav a:hover {
-    color: #ffffff !important;
-}
-
 .custom-search-form input::placeholder {
     color: black !important;
+}
+
+.button-text-dropdown {
+    color: black;
+}
+
+.uk-navbar-nav > li > a:hover {
+    color: white !important;
+}
+
+.uk-navbar-dropdown-nav > li > a:hover {
+    color: #536367 !important;
 }

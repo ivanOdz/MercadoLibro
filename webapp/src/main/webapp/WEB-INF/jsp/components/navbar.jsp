@@ -5,6 +5,7 @@
 <c:url var="newBookFromScratch" value="/book/book_form"/>
 <c:url var="uploadNewPrecharged" value="/book/book_models"/>
 <c:url var="logout" value="/logout"/>
+
 <nav class="uk-navbar-container uk-box-shadow-small " uk-sticky>
     <div class="uk-container uk-width-1-1  nav-background">
         <div class="uk-width-1-1 nav-container"  uk-navbar>
@@ -47,14 +48,12 @@
                         <div class="uk-navbar-dropdown">
                             <ul class="uk-nav uk-navbar-dropdown-nav">
                                 <li class="uk-active uk-margin-small-top">
-                                    <a href="${exchangeRequestsUrl}">
-                                        <div class="button-text">
+                                    <a class="button-text-dropdown" href="${exchangeRequestsUrl}">
                                             <spring:message  code="home.exchange.requests"/>
-                                        </div>
                                     </a>
                                 </li>
                                 <li class="uk-margin-small-top">
-                                    <a href="${exchangeOffersUrl}">
+                                    <a class="button-text-dropdown" href="${exchangeOffersUrl}">
                                         <div class="button-text">
                                             <spring:message code="home.exchange.offers"/></div>
                                     </a>
@@ -70,17 +69,17 @@
                         <div class="uk-navbar-dropdown">
                             <ul class="uk-nav uk-navbar-dropdown-nav">
                                 <li class="uk-active uk-margin-small-top">
-                                    <a href="${booksUrl}">
+                                    <a class="button-text-dropdown" href="${booksUrl}">
                                         <spring:message code="home.book.view.books"/>
                                     </a>
                                 </li>
                                 <li class="uk-margin-small-top">
-                                    <a href="${newBookFromScratch}">
+                                    <a class="button-text-dropdown" href="${newBookFromScratch}">
                                         <spring:message code="home.book.view.uploadnew"/>
                                     </a>
                                 </li>
                                 <li class="uk-margin-small-top">
-                                    <a href="${uploadNewPrecharged}">
+                                    <a  class="button-text-dropdown" href="${uploadNewPrecharged}">
                                         <spring:message code="home.book.view.uploadnewprecharged"/>
                                     </a>
                                 </li>
@@ -92,12 +91,12 @@
                         <div class="uk-navbar-dropdown">
                             <ul class="uk-nav uk-navbar-dropdown-nav">
                                 <li class="uk-active uk-margin-small-top">
-                                    <a href="${profileUrl}">
+                                    <a class="button-text-dropdown" href="${profileUrl}">
                                         <spring:message code="home.profile.view"/>
                                     </a>
                                 </li>
                                 <li class="uk-margin-small-top">
-                                    <a href="#modal-logout" uk-toggle><spring:message code="home.profile.logout"/></a>
+                                    <a class="button-text-dropdown" href="#modal-logout" uk-toggle><spring:message code="home.profile.logout"/></a>
                                 </li>
                             </ul>
                         </div>
