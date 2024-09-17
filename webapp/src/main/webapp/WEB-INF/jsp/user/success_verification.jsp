@@ -11,14 +11,14 @@
   <meta charset="UTF-8">
 </head>
 <body>
-<c:url var="okUrl" value="/login"/>
+<c:url var="okUrl" value="/"/>
 
 <div class="uk-background-center-center">
   <div class="uk-position-center uk-card uk-card-default uk-card-body uk-width-1-2@m">
     <h3 class="uk-card-title">
       <spring:message code="hwc.registration.success_verification"/>
     </h3>
-    <a href="${okUrl}">
+    <a href="${pageContext.request.contextPath}/">
       <button class="uk-button uk-button-primary uk-align-center">
         <spring:message code="hwc.registration.ok"/>
       </button>
