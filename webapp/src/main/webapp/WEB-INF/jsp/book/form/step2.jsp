@@ -16,9 +16,54 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
 
-    <title>STEP2</title>
+    <title><spring:message code="add.book"/></title>
 
 </head>
+
+<script type="text/javascript">
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var previewContainer = document.getElementById('image-preview-container');
+        var fileInput = document.getElementById('file-input');
+
+        fileInput.addEventListener('change', function(event) {
+            const files = event.target.files;
+
+            previewContainer.innerHTML = '';
+
+            for (const file of files) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imgWrapper = document.createElement('div');
+                    imgWrapper.classList.add('image-wrapper');
+
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.classList.add('uk-margin-small-right');
+                    img.style.maxWidth = '200px';
+                    img.style.maxHeight = '200px';
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.classList.add('uk-button', 'uk-button-danger', 'uk-button-small');
+                    deleteButton.innerHTML = '<span uk-icon="icon: trash"></span>';
+                    deleteButton.classList.add('delete-button');
+
+                    deleteButton.addEventListener('click', function() {
+                        imgWrapper.remove();
+                    });
+
+                    imgWrapper.appendChild(img);
+                    imgWrapper.appendChild(deleteButton);
+                    previewContainer.appendChild(imgWrapper);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+
+
+
+</script>
 
 <body>
 
@@ -41,9 +86,8 @@
                             </a>
                         </div>
                         <div>
-                            aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-                            <c:out value="${book_model.title}"/>
-                            <c:out value="${book_model.editorial}"/>
+                            <span class="uk-text-large uk-text-bold">
+                            <c:out value="${book_model.title}"/> </span>
                         </div>
 
                         <%--BookState--%>
@@ -97,10 +141,10 @@
                         <%--Images--%>
                         <div class="uk-placeholder uk-text-center uk-margin-top uk-margin-bottom">
                             <span uk-icon="icon: cloud-upload"></span>
-                            <span class="uk-text-middle">Attach binaries by dropping them here or</span>
+                            <span class="uk-text-middle"><spring:message code="add.publication.add.images"/></span>
                             <div uk-form-custom>
                                 <input type="file" id="file-input" name="imageFiles" accept="image/*" multiple>
-                                <span class="uk-link">selecting one</span>
+                                <span class="uk-link"><spring:message code="add.publication.add.image.here"/></span>
                             </div>
                         </div>
 
