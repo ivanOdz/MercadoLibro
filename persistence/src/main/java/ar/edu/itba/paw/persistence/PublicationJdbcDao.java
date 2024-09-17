@@ -54,11 +54,12 @@ public class PublicationJdbcDao implements PublicationDao {
     }
 
     @Override
-    public List<Publication> getAllPublicationsFilteredBy(String search, long userId) {
+    public List<Publication> getAllPublicationsFilteredBy(String search, int bookStateFilter, int genreFilter,long userId) {
+
         return jdbcTemplate.query(
-                "SELECT * FROM publication WHERE publicationState = ? AND userId <> ? AND bookId IN (SELECT bookId FROM book WHERE bookModelId IN (SELECT bookModelId FROM book_model WHERE LOWER(title) LIKE LOWER(?)))",
-                new Object[]{ PublicationState.CURRENT.getValue(), userId,"%" + search.toLowerCase() + "%" },
-                new int[]{ Types.INTEGER, Types.BIGINT, Types.VARCHAR },
+                "SELECT * FROM publication WHERE publicationState = ? AND userId <> ? AND bookId IN (SELECT bookId FROM book WHERE (? = 6 OR bookstate = ?) AND bookModelId IN (SELECT bookModelId FROM book_model WHERE LOWER(title) LIKE LOWER(?) AND (? = 32 OR genre = ?)))",
+                new Object[]{ PublicationState.CURRENT.getValue(), userId, bookStateFilter, bookStateFilter, "%" + search.toLowerCase() + "%", genreFilter, genreFilter },
+                new int[]{ Types.INTEGER, Types.BIGINT, Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER },
                 ROWMAPPERPUBLICATIONS
         );
     }

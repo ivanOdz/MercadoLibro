@@ -30,8 +30,8 @@ public class PublicationsServiceImpl implements PublicationService {
     }
 
     @Override
-    public List<Publication> getAllPublicationsFilteredBy(String search, long userId) {
-        return pubDao.getAllPublicationsFilteredBy(search, userId);
+    public List<Publication> getAllPublicationsFilteredBy(String search, int bookStateFilter, int genreFilter, long userId) {
+        return pubDao.getAllPublicationsFilteredBy(search, bookStateFilter, genreFilter, userId);
     }
 
     @Override
