@@ -42,7 +42,11 @@ public class UserReviewJdbcDao implements UserReviewDao {
     public UserReview getUserReview(long exchangeId, long userId) {
     	List<UserReview> exchangeList = jdbcTemplate.query("SELECT * FROM user_review WHERE exchangeId = ? AND reviewerId = ?", ROWMAPPER, exchangeId, userId);
     	
-    	return exchangeList.getFirst();
+    	if (!exchangeList.isEmpty()) {
+    		return exchangeList.getFirst();
+    	}
+    	
+    	return null;
     }
     
     @Override
