@@ -18,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -132,19 +133,18 @@ public class UserController {
     }
     
     @PostMapping(value = "/changeUsername")
-    public ModelAndView changeUsername(@RequestParam("loggedUserId") long userId, @RequestParam("newUsername") String newUsername) {
+    public String changeUsername(@RequestParam("loggedUserId") long userId, @RequestParam("newUsername") String newUsername, RedirectAttributes redirectAttributes) {
     	
-    	final ModelAndView mav = new ModelAndView("redirect:/profile");
     	boolean updated = userService.changeUserName(userId, newUsername);
     	
     	if (updated) {
-    		mav.addObject("message", "DONE");
+    		redirectAttributes.addFlashAttribute("message", "done");
     	}
     	else {
-    		mav.addObject("errorMessage", "FAILED");
+    		redirectAttributes.addFlashAttribute("errorMessage",  "failed");
     	}
     	
-    	return mav;
+    	return "redirect:/profile";
     }
     
     @RequestMapping(path = "/create", method = RequestMethod.GET)
@@ -210,16 +210,18 @@ public class UserController {
     }
 
     @RequestMapping("/profile")
-    public ModelAndView profileHome() {
+    public ModelAndView profileHome(RedirectAttributes redirectAttributes) {
     	
         ModelAndView mav = new ModelAndView("profile/profile_home");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         
         if (authentication.getPrincipal() instanceof PawUserDetails pud) {
-            mav.addObject("loggedUser", pud.getUser());
-            mav.addObject("reviews", us.getReviewsByUserId(pud.getUser().getUserId()));
-            mav.addObject("userRating", userReviewService.getUserRating(pud.getUser().getUserId()));
+        	
+        	User loggedUser = userService.findById(pud.getUser().getUserId()).get();
+            mav.addObject("loggedUser", loggedUser);
+            mav.addObject("reviews", us.getReviewsByUserId(loggedUser.getUserId()));
+            mav.addObject("userRating", userReviewService.getUserRating(loggedUser.getUserId()));
         }
 
         return mav;

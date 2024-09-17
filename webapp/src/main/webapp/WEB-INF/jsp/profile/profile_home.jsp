@@ -45,24 +45,9 @@
 <body>
 	
 	<navbar/>
-	
-	<div class="uk-grid">
-	
-		<c:choose>
-			<c:when test="${not empty message}">
-			    <div class="alert alert-success">
-			        <c:out value="${message}" />
-			    </div>
-			</c:when>
-			
-			<c:when test="${not empty errorMessage}">
-			    <div class="alert alert-danger">
-			        <c:out value="${errorMessage}" />
-			    </div>
-			</c:when>
-		</c:choose>
-	
+
 	    <div class="uk-width-1-2 main-margin uk-align-center">
+	    
 	        <div class="uk-card uk-card-default card-profile">
 	            <h1 class="uk-h1 title-profile"><spring:message code="profile.title"/></h1>
 	            <div class="profile-content">
@@ -118,6 +103,21 @@
 				        <button id="confirm-username-btn" class="btn green">Confirm</button>
 				        <button id="cancel-username-btn" class="btn red">X</button>
 			    	</div>
+			    	
+			        <c:choose>
+			            <c:when test="${not empty message}">
+			                <div class="alert alert-success">
+			                    <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+			                    <c:out value="${message}" />
+			                </div>
+			            </c:when>
+			            <c:when test="${not empty errorMessage}">
+			                <div class="alert alert-danger">
+			                    <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+			                    <c:out value="${errorMessage}" />
+			                </div>
+			            </c:when>
+			        </c:choose>
 			    	
 	                <div>
 	                	<h3 class="uk-h5"><c:out value="${loggedUser.mail}"/></h3>
