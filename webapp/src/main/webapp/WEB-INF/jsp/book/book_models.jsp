@@ -63,7 +63,7 @@
                             <div class="uk-margin" style="justify-content: center">
                               <div class="uk-width-1-1" >
                                 <div class="uk-margin-top uk-button-group" style="margin-left: 50px;">
-                                  <a href="${pageContext.request.contextPath}/book/form_step2?book_model_id=${card.bookModel.bookModelId}" type="submit" class="uk-button uk-button-primary"> Agregar a "mis libros" </a>
+                                  <a href="${pageContext.request.contextPath}/book/form_step2?book_model_id=${card.bookModel.bookModelId}" type="submit" class="uk-button uk-button-primary"> <spring:message code="book.model.view.button"/></a>
                                 </div>
                               </div>
                             </div>

@@ -129,7 +129,7 @@ public class BookController {
         ModelAndView mav = new ModelAndView("book/form/step2");
 
         mav.addObject("bookDetailsForm", bookDetailsForm);
-        mav.addObject("book_model_id", bookModelService.getBookModelByBookModelId(bookModelId));
+        mav.addObject("book_model", bookModelService.getBookModelByBookModelId(bookModelId));
         mav.addObject("bookStates", List.of(BookState.values()).stream().map(bookStatus -> new BookStateWrapper(bookStatus, bookStateService.getBookStateDisplayName(bookStatus))).collect(Collectors.toList()));
 
         return mav;
@@ -193,7 +193,7 @@ public class BookController {
         if(errors.hasErrors()){
             return bookModelForm(modelBookForm, errors);
         }
-
+        System.out.println(modelBookForm.getAuthors());
         BookModel bookModel = bookModelService.addBookModel(
                 modelBookForm.getAuthors(),
                 modelBookForm.getIsbn(),
@@ -211,8 +211,8 @@ public class BookController {
                 modelBookForm.getIsHardcover()
         );
 
-        final ModelAndView mav = new ModelAndView("redirect:/book/form_step2");
-        mav.addObject("book_model", bookModel);
+        final ModelAndView mav = new ModelAndView("redirect:/book/form_step2?book_model_id=" + bookModel.getBookModelId());
+        mav.addObject("book_model_id", bookModel.getBookModelId());
 
         return mav;
     }

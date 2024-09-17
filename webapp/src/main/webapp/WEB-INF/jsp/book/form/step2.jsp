@@ -3,7 +3,8 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
 
-<html>
+
+<html class="custom-style">
 <%@include file="/WEB-INF/jsp/head/headers.jsp"%>
 <head>
     <%@include file="/WEB-INF/jsp/head/headers.jsp"%>
@@ -34,25 +35,20 @@
                     <form:form modelAttribute="bookDetailsForm" action="${postUrl}" enctype="multipart/form-data">
 
                         <div class="uk-container uk-margin-bottom">
-                            <a class="uk-button uk-button-text" href="${pageContext.request.contextPath}/">
+                            <a class="uk-button uk-button-text" href="${pageContext.request.contextPath}/book/book_models">
                                 <span uk-icon="icon:  chevron-left"></span>
-                                <spring:message code="add.book.return_home"/>
+                                <spring:message code="add.book.return_book_models"/>
                             </a>
                         </div>
-
-                        <div class="uk-container">
-                            <h2 class="uk-heading-line">
-                                <spring:message code="add.book.title"/>
-                            </h2>
-                            <h4 class="uk-article-meta">
-                                <spring:message code="add.book.description"/>
-                            </h4>
+                        <div>
+                            aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                            <c:out value="${book_model.title}"/>
+                            <c:out value="${book_model.editorial}"/>
                         </div>
-
 
                         <%--BookState--%>
 
-                        <div class="form-group">
+                        <div class="form-group uk-margin-top uk-margin-bottom">
                             <form:label path="bookState">
                                 <spring:message code="add.publication.book.state"/>
                             </form:label>
@@ -65,7 +61,7 @@
 
                         <%--Rating--%>
 
-                        <div class="form-group">
+                        <div class="form-group uk-margin-top uk-margin-bottom">
                             <label>
                                 <spring:message code="add.publication.rating"/>
                             </label>
@@ -99,7 +95,7 @@
                         </div>
 
                         <%--Images--%>
-                        <div class="uk-placeholder uk-text-center">
+                        <div class="uk-placeholder uk-text-center uk-margin-top uk-margin-bottom">
                             <span uk-icon="icon: cloud-upload"></span>
                             <span class="uk-text-middle">Attach binaries by dropping them here or</span>
                             <div uk-form-custom>
@@ -112,7 +108,7 @@
 
                         <div id="image-preview-container" class="uk-margin-top"></div>
 
-
+                        <%--button--%>
                         <div class="uk-container uk-margin-top">
                             <div class="uk-inline">
                                 <div class="uk-position-right">

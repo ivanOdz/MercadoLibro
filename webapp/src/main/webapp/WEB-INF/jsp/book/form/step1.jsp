@@ -74,7 +74,7 @@
                             </label>
                         </div>
 
-                        <div class="form-container" style="margin-bottom: 10px">
+                        <div class="form-container uk-margin-top uk-margin-bottom" style="margin-bottom: 10px">
                             <button class="uk-button uk-margin-right" type="button" onclick="addAuthorField()"><spring:message code="add.publication.add.author"/></button>
                             <small class="description">
                                 <spring:message code="add.publication.description.authors"/>
@@ -83,7 +83,7 @@
 
                         <%--Género--%>
 
-                        <div class="form-group">
+                        <div class="form-group uk-margin-top uk-margin-bottom">
                             <form:label path="genre">
                                 <spring:message code="add.publication.genre"/>
                             </form:label>
@@ -96,7 +96,7 @@
 
                         <%--Languages--%>
 
-                        <div class="form-group">
+                        <div class="form-group uk-margin-top uk-margin-bottom">
                             <form:label path="language">
                                 <spring:message code="add.publication.book.language"/>
                             </form:label>
@@ -108,7 +108,7 @@
                         </div>
 
                         <%--Publication Year--%>
-                        <div class="input-field">
+                        <div class="form-group uk-margin-top uk-margin-bottom">
                             <label for="publicationYear">
                                 <spring:message code="add.publication.book.year"/>
                             </label>
@@ -121,7 +121,7 @@
 
                         <%--ISBN--%>
 
-                        <div style="margin-bottom: 10px">
+                        <div class="uk-margin-top uk-margin-bottom" style="margin-bottom: 10px">
                             <label class="form-group">
                                 <spring:message code="add.publication.isbn"/>
                                 <form:input path="isbn" type="text" class="uk-input"/>
@@ -135,7 +135,7 @@
 
                         <%--Editorial--%>
 
-                        <div>
+                        <div class="uk-margin-top uk-margin-bottom">
                             <label class="form-group">
                                 <spring:message code="add.publication.editorial"/>
                                 <form:input path="editorial" type="text" class="uk-input"/>
@@ -145,7 +145,7 @@
 
                         <%--Descripción--%>
 
-                        <div style="margin-bottom: 10px">
+                        <div class="uk-margin-top uk-margin-bottom" style="margin-bottom: 10px">
                             <label class="form-group">
                                 <spring:message code="add.publication.description"/>
                                 <form:textarea path="description" class="uk-textarea uk-height-small"/>
@@ -158,7 +158,7 @@
 
                         <%--Edicion--%>
 
-                        <div  style="margin-bottom: 10px">
+                        <div class="uk-margin-top uk-margin-bottom" style="margin-bottom: 10px">
                             <label class="form-group">
                                 <spring:message code="add.publication.edition"/>
                                 <form:input id="edition" autocomplete="false" placeholder="1" path="edition" type="text" class="uk-input"/>
@@ -171,7 +171,7 @@
 
                         <%--Pages--%>
 
-                        <div>
+                        <div class="uk-margin-top uk-margin-bottom">
                             <label class="form-group">
                                 <spring:message code="add.book.pages"/>
                                 <form:input path="pages" type="text" class="uk-input" placeholder="300"/>
@@ -184,7 +184,7 @@
 
                         <%--Dimension--%>
 
-                        <div class="form-group">
+                        <div class="form-group uk-margin-top uk-margin-bottom">
                             <form:label path="dimension">
                                 <spring:message code="add.publication.book.dimension"/>
                             </form:label>
@@ -196,7 +196,7 @@
                         </div>
                         <%--Weight--%>
 
-                        <div>
+                        <div class="uk-margin-top uk-margin-bottom">
                             <label class="form-group">
                                 <spring:message code="add.book.weight"/>
                                 <form:input path="weight" type="text" class="uk-input" placeholder="300"/>
@@ -242,7 +242,7 @@
 
 <script type="text/javascript">
 
-    var authors = ${bookForm.authors};
+    var authors = ${modelBookForm.authors};
 
     let authorIndex = authors.length;
 
