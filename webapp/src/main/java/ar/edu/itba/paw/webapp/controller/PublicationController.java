@@ -43,7 +43,9 @@ public class PublicationController {
     }
 
     @RequestMapping("/")
-    public ModelAndView index(@RequestParam(name = "search", defaultValue = "") String search) {
+    public ModelAndView index(@RequestParam(name = "search", defaultValue = "") String search,
+                              @RequestParam(name = "bookStateFilter", defaultValue = "") String bookStateFilter,
+                              @RequestParam(name = "genreFilter", defaultValue = "") String genreFilter) {
     	
         final ModelAndView mav = new ModelAndView("home/publications");
 
@@ -53,10 +55,11 @@ public class PublicationController {
 
             mav.addObject("username", pud.getUser().getUsername());
             mav.addObject("publications", cardList);
-
-
             mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
             mav.addObject("bookStates", List.of(BookState.values()).stream().map(bookStatus -> new BookStateWrapper(bookStatus, bookStateService.getBookStateDisplayName(bookStatus))).collect(Collectors.toList()));
+
+            mav.addObject("bookStateFilter", bookStateFilter );
+            mav.addObject("genreFilter", genreFilter);
 
         }
         
@@ -64,8 +67,11 @@ public class PublicationController {
     }
 
     @RequestMapping(path = "/", method = RequestMethod.GET)
-    public ModelAndView search(@RequestParam(name = "search", defaultValue = "") String search) {
-        return index(search);
+    public ModelAndView search(@RequestParam(name = "search", defaultValue = "") String search,
+                               @RequestParam(name = "bookStateFilter", defaultValue = "") String bookStateFilter,
+                               @RequestParam(name = "genreFilter", defaultValue = "") String genreFilter) {
+
+        return index(search, bookStateFilter, genreFilter);
     }
 
     @RequestMapping(path = "/createpublication", method = RequestMethod.POST)

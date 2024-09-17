@@ -105,3 +105,11 @@
 .uk-button-danger a:hover {
     color: inherit;
 }
+
+.ui-search-link {
+    text-decoration: none !important; /* Elimina el subrayado */
+    color: inherit !important;;        /* Usa el color del texto del elemento padre */
+    background: none !important;;
+    border: none !important;;
+}
+
