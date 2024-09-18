@@ -30,7 +30,7 @@
     <div class="uk-container">
         <div class="uk-grid ml-1 uk-margin-top" uk-grid>
             <div class="uk-width-1-4@s filter-section uk-border-rounded uk-box-shadow-small mt-1 mb-1">
-                <h2>${param.search}</h2>
+                <h2><c:out value="${param.search}"/></h2>
 
                 <!-- Esto tiene que aparecer solo si hay un filtro de BookState -->
                 <c:if test="${bookStateFilter != '6'}">
