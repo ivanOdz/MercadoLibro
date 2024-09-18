@@ -13,8 +13,8 @@
       <div class="uk-navbar-left">
         <ul class="uk-navbar-nav">
           <li>
-            <a href="${pageContext.request.contextPath}/">
-              <img src="${pageContext.request.contextPath}/images/mercado_libro.webp" alt="Logo Icon" class="icon-style">
+            <a class="image-hover" href="${pageContext.request.contextPath}/">
+              <img  src="${pageContext.request.contextPath}/images/mercado_libro.webp" alt="Logo Icon" class="icon-style">
             </a>
           </li>
           <li>

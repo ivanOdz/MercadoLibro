@@ -192,3 +192,8 @@ a img:hover,
     flex-direction: column;
 
 }
+
+
+.image-hover:hover {
+    background-color: transparent;
+}
