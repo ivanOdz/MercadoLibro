@@ -191,11 +191,11 @@ public class ExchangeController {
 		@RequestParam("reviewerId") long reviewerId,
 		@RequestParam("subjectId") long subjectId,
 		@RequestParam("reviewDescription") String reviewDescription,
-		@RequestParam("reviewDate") java.sql.Timestamp reviewDate,
-		@RequestParam("userReviewRating") int userReviewRating,
-		BindingResult result, RedirectAttributes redirectAttributes) {
+		/*@RequestParam("reviewDate") java.sql.Timestamp reviewDate,*/
+		@RequestParam("userReviewRating") int userReviewRating/*,
+		BindingResult result, RedirectAttributes redirectAttributes*/) {
 		
-		UserReview userReview = new UserReview((long)0, exchangeId, reviewerId, subjectId, reviewDescription, reviewDate, userReviewRating);
+		UserReview userReview = new UserReview((long)0, exchangeId, reviewerId, subjectId, reviewDescription, new java.sql.Timestamp(0), userReviewRating);
 
 		boolean success = userReviewService.createUserReview(userReview);
 
