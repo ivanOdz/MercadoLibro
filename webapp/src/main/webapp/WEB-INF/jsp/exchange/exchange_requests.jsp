@@ -41,8 +41,20 @@
                 <div class="uk-width-3-5 column-exchanges scrollable-content">
                     <c:forEach var="exchange" items="${exchanges}">
                         <div class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-4@s exchange-card"
-                             onclick="selectCard(this, '<c:out value="${exchange.requesterUsername}"/>', '<c:out value="${exchange.requesterMail}"/>', '<c:out value="${exchange.requesterLocation}"/>', '<c:out value="${exchange.offererBookModel.title}"/>', '<c:out value="${exchange.offererBookAuthor}"/>', '<c:out value="${exchange.offererBookModel.edition}"/>', '<c:out value="${exchange.offererBookImages}"/>')"
-                             uk-grid>
+                             onclick="selectCard(this,  '<c:out value="${exchange.requesterUsername}"/>',
+                             							'<c:out value="${exchange.requesterMail}"/>',
+                             							'<c:out value="${exchange.requesterLocation}"/>',
+                             							'<c:out value="${exchange.offererBookModel.title}"/>',
+                             							'<c:out value="${exchange.offererBookAuthor}"/>',
+                             							'<c:out value="${exchange.offererBookModel.edition}"/>',
+                             							'<c:out value="${exchange.offererBookImages}"/>',
+                             							'<c:out value="${exchange.exchange.exchangeId}"/>',
+                     							        '<c:out value="${exchange.offererBook.ownerId}"/>',
+                             							'<c:out value="${exchange.requesterBook.ownerId}"/>',
+                             							'${exchange.isReviewable}'
+                             							)" uk-grid>
+                             
+                             
                             <div class="uk-card-media-left">
                                 <img class="book-image"
                                      src="${pageContext.request.contextPath}/images/${exchange.requesterBookImages[0].imageId}"
@@ -180,32 +192,96 @@
 
 
                 <!-- contenedor derecho donde se ve la info del exchange -->
-                <div class="uk-width-2-5" uk-sticky>
-                    <div class="uk-container">
-                        <div class="uk-card uk-card-default uk-card-body exchange-info-container">
-                            <div id="no-selection-message" class="uk-h6">
-                                <h4 class="uk-h6">
-                                    <spring:message code="exchange.choose.message"/>
-                                </h4>
-                            </div>
-
-                            <!-- Contenedor para la información del intercambio -->
-                            <div id="exchange-details" style="display: none;">
-                                <h3 id="info-requester-username"><spring:message code="exchange.with"/></h3>
-                                <p id="info-requester-mail"><spring:message code="exchange.with_email"/></p>
-                                <p id="info-requester-location"><spring:message code="exchange.location"/></p>
-
-                                <h4><spring:message code="exchange.original_publication"/></h4>
-                                <p id="info-offered-book-title"><spring:message code="exchange.book.title"/></p>
-                                <p id="info-offered-book-authors"><spring:message code="exchange.book.authors"/></p>
-                                <p id="info-offered-book-edition"><spring:message code="exchange.book.edition"/></p>
-
-                                <div id="info-offered-book-images" uk-grid></div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
+				<div class="uk-width-2-5" uk-sticky>
+				    <div class="uk-container">
+				        <div class="uk-card uk-card-default uk-card-body exchange-info-container">
+				            <div id="no-selection-message" class="uk-h6">
+				                <h4 class="uk-h6">
+				                    <spring:message code="exchange.choose.message"/>
+				                </h4>
+				            </div>
+				
+				            <div id="exchange-details" style="display: none;">
+				                <h3 id="info-requester-username"><spring:message code="exchange.with"/></h3>
+				                <p id="info-requester-mail"><spring:message code="exchange.with_email"/></p>
+				                <p id="info-requester-location"><spring:message code="exchange.location"/></p>
+				
+				                <h4><spring:message code="exchange.your_book"/></h4>
+				                <p id="info-offered-book-title"><spring:message code="exchange.book.title"/></p>
+				                <p id="info-offered-book-authors"><spring:message code="exchange.book.authors"/></p>
+				                <p id="info-offered-book-edition"><spring:message code="exchange.book.edition"/></p>
+				
+				                <div id="info-offered-book-images" uk-grid></div>
+				
+							    <button id="add-review-button" class="uk-button uk-button-primary" uk-toggle="target: #modal-add-review">
+							        <spring:message code="exchange.button.add_review"/>
+							    </button>
+				
+								<div id="modal-add-review" uk-modal>
+								    <div class="uk-modal-dialog uk-modal-body">
+								        <h2 class="uk-modal-title"><spring:message code="exchange.add_review.title"/></h2>
+								        
+								        <form:form action="/submitReview" method="post" modelAttribute="userReview">
+									         
+								            <div class="form-group uk-margin-top uk-margin-bottom">
+								                <label><spring:message code="review.rating.label"/></label>
+								
+								                <div class="star-rating">
+								                
+								                    <form:radiobutton path="userReviewRating" value="5" id="star5"/>
+								                    <label for="star5" title="5 stars">
+								                        <span uk-icon="icon: star; ratio: 1.5"></span>
+								                    </label>
+								                    
+								                    <form:radiobutton path="userReviewRating" value="4" id="star4"/>
+	  							                    <label for="star4" title="4 stars">
+								                        <span uk-icon="icon: star; ratio: 1.5"></span>
+								                    </label>
+								
+								                    <form:radiobutton path="userReviewRating" value="3" id="star3"/>
+								                    <label for="star3" title="3 stars">
+								                        <span uk-icon="icon: star; ratio: 1.5"></span>
+								                    </label>
+								
+								                    <form:radiobutton path="userReviewRating" value="2" id="star2"/>
+								                    <label for="star2" title="2 stars">
+								                        <span uk-icon="icon: star; ratio: 1.5"></span>
+								                    </label>
+								
+								                    <form:radiobutton path="userReviewRating" value="1" id="star1"/>
+								                    <label for="star1" title="1 star">
+								                        <span uk-icon="icon: star; ratio: 1.5"></span>
+								                    </label>
+								                    
+								                </div>
+								            </div>
+								
+								            <div class="uk-margin">
+								                <label for="reviewDescription"><spring:message code="review.comments.label"/></label>
+								                <form:textarea path="reviewDescription" rows="4" class="uk-textarea"/>
+								            </div>
+											
+								            <form:hidden path="exchangeId"/>
+								            <form:hidden path="reviewerId"/>
+								            <form:hidden path="subjectId"/>
+								            
+								            <p class="uk-text-right">
+								                <button class="uk-button uk-button-default uk-modal-close" type="button">
+								                    <spring:message code="exchange.button.cancel"/>
+								                </button>
+								                <button class="uk-button uk-button-primary" type="submit">
+								                    <spring:message code="exchange.button.accept"/>
+								                </button>
+								            </p>
+								            
+								        </form:form>
+								    </div>
+								</div>
+				
+				            </div>
+				        </div>
+				    </div>
+				</div>
             </div>
         </c:if>
     </div>
@@ -216,8 +292,8 @@
 </body>
 
 <script>
-    function selectCard(card, requesterUsername, requesterMail, requesterLocation, offeredBookTitle, offeredBookAuthors, offeredBookEdition, offeredBookImages) {
-        // Remover la clase 'selected-card' de todas las tarjetas
+	function selectCard(card, requesterUsername, requesterMail, requesterLocation, offeredBookTitle, offeredBookAuthors, offeredBookEdition, offeredBookImages, exchangeId, reviewerId, subjectId, isReviewable) {
+	    // Remover la clase 'selected-card' de todas las tarjetas
         document.querySelectorAll('.exchange-card').forEach(function (el) {
             el.classList.remove('selected-card');
         });
@@ -237,6 +313,17 @@
         document.getElementById('info-offered-book-authors').textContent = "<spring:message code="exchange.book.authors"/>" + " " + offeredBookAuthors;
         document.getElementById('info-offered-book-edition').textContent = "<spring:message code="exchange.book.edition"/>" + " " + offeredBookEdition;
 
+        if (isReviewable === 'true') {
+            document.getElementById('add-review-button').style.display = 'block';
+        } else {
+            document.getElementById('add-review-button').style.display = 'none';
+        }
+        
+        // Actualizar los campos ocultos del formulario de reseña
+        document.querySelector('input[name="exchangeId"]').value = exchangeId;
+        document.querySelector('input[name="reviewerId"]').value = reviewerId;
+        document.querySelector('input[name="subjectId"]').value = subjectId;
+        
         // Limpiar imágenes anteriores
         const imageContainer = document.getElementById('info-offered-book-images');
         imageContainer.innerHTML = '';

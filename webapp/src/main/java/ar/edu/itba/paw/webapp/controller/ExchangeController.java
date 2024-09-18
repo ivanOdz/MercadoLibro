@@ -56,7 +56,11 @@ public class ExchangeController {
             mav.addObject("userReview", new UserReview());
             
             for (ExchangeWrapper exchange : exchangeWrapperList) {
-                System.out.println("Exchange ID: " + exchange.getExchange().getExchangeId() + " isReviewable: " + exchange.getIsReviewable());
+                System.out.println("Exchange ID: " + exchange.getExchange().getExchangeId());
+                System.out.println("Reviewable: " + "isReviewable: " + exchange.getIsReviewable());
+                System.out.println("Offerer ID: " + exchange.getOffererBook().getOwnerId());
+                System.out.println("Requester ID: " + exchange.getRequesterBook().getOwnerId());
+                System.out.println("");
             }
         }
 

@@ -56,8 +56,8 @@
                              							'<c:out value="${exchange.requesterBookModel.edition}"/>',
                              							'<c:out value="${exchange.requesterBookImages}"/>',
                              							'<c:out value="${exchange.exchange.exchangeId}"/>',
-                             							'<c:out value="${exchange.requesterBook.ownerId}"/>',
                              							'<c:out value="${exchange.offererBook.ownerId}"/>',
+                             							'<c:out value="${exchange.requesterBook.ownerId}"/>',
                              							'${exchange.isReviewable}'
                              							)" uk-grid>
 
@@ -137,7 +137,7 @@
                         </div>
                     </c:forEach>
                 </div>
-
+                
 				<div class="uk-width-2-5" uk-sticky>
 				    <div class="uk-container">
 				        <div class="uk-card uk-card-default uk-card-body exchange-info-container">
@@ -159,7 +159,6 @@
 				
 				                <div id="info-offered-book-images" uk-grid></div>
 				
-
 							    <button id="add-review-button" class="uk-button uk-button-primary" uk-toggle="target: #modal-add-review">
 							        <spring:message code="exchange.button.add_review"/>
 							    </button>
