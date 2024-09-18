@@ -22,17 +22,17 @@
 
 
 <div class="uk-background-muted">
-    <div class="uk-containter"style="margin-bottom: 2%;">
+    <div class="uk-container main uk-align-center" style="margin-bottom: 2%;">
     <div class="row-container">
 
         <!-- Images -->
-        <div class="column-container" style="margin-left: 2%; margin-top: 2%; max-width: 20%;">
+        <div class="column-container">
             <c:choose>
                 <c:when test="${not empty pd.images}">
-                    <div class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1" uk-slider>
+                    <div class="uk-visible-toggle uk-light images" tabindex="-1" uk-slider>
                         <div class="uk-slider-items uk-grid">
                             <c:forEach var="bookImage" items="${pd.images}">
-                                <div class="uk-width-2-3">
+                                <div>
                                     <div class="uk-panel">
                                         <img src="${pageContext.request.contextPath}/images/${bookImage.imageId}"
                                              width="200" height="450" alt="bookImage">
@@ -69,7 +69,7 @@
                 </div>
 
 
-                <div class="column-container" style="margin-top: 2%; margin-left: 55%;">
+                <div class="column-container" style="margin-top: 2%; margin-left: 5%">
                     <!-- Genre -->
                     <div>
                         <p class="small-gray-text custom-link">
@@ -120,7 +120,7 @@
             <hr style="width: 55lh;"/>
 
 
-            <div>
+            <div class="uk-width-2-3">
                 <div class="row-container"
                      style="margin-left: 50px; align-items: center; justify-content: space-between;">
 

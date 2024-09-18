@@ -7,7 +7,7 @@
 <c:url var="uploadNewPrecharged" value="/book/book_models"/>
 <c:url var="logout" value="/logout"/>
 
-<nav class="uk-navbar-container uk-box-shadow-small " uk-sticky>
+<nav class="uk-navbar-container uk-box-shadow-small uk-width-1-1" uk-sticky>
     <div class="uk-container uk-width-1-1  nav-background">
         <div class="uk-width-1-1 nav-container"  uk-navbar>
             <div class="uk-navbar-left">
