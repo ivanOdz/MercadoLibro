@@ -63,7 +63,7 @@
                             <label class="form-group">
                                 <spring:message code="add.publication.authors"/>
                                 <c:forEach var="author" items="${bookForm.authors}" varStatus="status">
-                                    <input class="uk-input" type="text" name="authors[${status.index}]" value="${author}"/>
+                                    <input class="uk-input" type="text" name="authors[${status.index}]" value="<c:out value='${author}'/>"/>
                                     <c:if test="${status.index > 0}">
                                         <button class="uk-button" type="button" onclick="removeAuthorField(this)">
                                             <span uk-icon="icon:  close"></span>
