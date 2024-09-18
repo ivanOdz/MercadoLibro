@@ -27,19 +27,21 @@ public class PublicationController {
     private final LocationService ls;
     private final BookModelService bms;
     private final CompleteBookService cbs;
+    private final PublicationDetailService pds;
 
     @Autowired
     private GenreService genreService;
     @Autowired
     private BookStateService bookStateService;
     
-    public PublicationController(PublicationService ps, UserService us, CardService cs, LocationService ls, BookModelService bms, CompleteBookService cbs) {
+    public PublicationController(PublicationService ps, UserService us, CardService cs, LocationService ls, BookModelService bms, CompleteBookService cbs, PublicationDetailService pds) {
         this.ps = ps;
         this.us = us;
         this.cs = cs;
         this.ls = ls;
         this.bms = bms;
         this.cbs = cbs;
+        this.pds = pds;
     }
 
     @RequestMapping("/")
@@ -102,7 +104,7 @@ public class PublicationController {
         return mav;
     }
 
-    @RequestMapping("/publications/{publication_id:\\d+}")
+    @GetMapping("/publications/{publication_id:\\d+}")
     public ModelAndView publicationDetail(@PathVariable(name = "publication_id") long publicationId) {
         final ModelAndView mav = new ModelAndView("home/publicationDetail");
         mav.addObject("card", cs.createCard(publicationId));
@@ -115,10 +117,10 @@ public class PublicationController {
             // Aquí estamos creando un objeto de modelo vacío
             CompleteBook completeBookParam = new CompleteBook(null, null);
             mav.addObject("completeBookParam", completeBookParam);
-
             mav.addObject("completeBooks", completeBooks);
             mav.addObject("publication_id", publicationId);
         }
+            mav.addObject("pd", pds.getPublicationDetail(publicationId));
         return mav;
     }
 
