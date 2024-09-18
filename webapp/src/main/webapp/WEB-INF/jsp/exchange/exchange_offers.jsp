@@ -91,7 +91,7 @@
                                                                     type="button"><spring:message
                                                                     code="button.cancel"/></button>
                                                             <button class="uk-button uk-button-primary" type="button">
-                                                                <a class="button-text-accept"
+                                                                <a class="button-text-accept custom-link"
                                                                    href="<c:url value='/confirm_requester'>
                                                                             <c:param name='accept_code' value='${exchange.exchange.acceptCode}'/>
                                                                             </c:url>">

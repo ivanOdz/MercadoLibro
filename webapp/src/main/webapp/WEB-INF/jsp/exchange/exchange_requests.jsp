@@ -84,7 +84,7 @@
                                                         <p class="uk-text-right">
                                                             <button class="uk-button uk-button-default uk-modal-close" type="button"><spring:message code="button.cancel"/></button>
                                                             <button class="uk-button uk-button-primary" type="button">
-                                                                <a class="button-text-accept" href="<c:url value='/confirm_offerer'>
+                                                                <a class="button-text-accept custom-link" href="<c:url value='/confirm_offerer'>
                                                                             <c:param name='accept_code' value='${exchange.exchange.acceptCode}'/>
                                                                             </c:url>">
                                                                     <spring:message code="button.confirm"/>
@@ -109,7 +109,7 @@
                                                        onclick="event.stopPropagation()" uk-toggle>
                                                         <spring:message code="exchange.button.accept"/>
                                                     </a>
-                                                    <a class="uk-button uk-button-default uk-button-small uk-margin-right"
+                                                    <a class="uk-button uk-button-default uk-button-small uk-margin-right custom-link"
                                                        href="#modal-exchange-rejected-${exchange.exchange.acceptCode}"
                                                        onclick="event.stopPropagation()" uk-toggle>
                                                         <spring:message code="email.rejectButton"/>
@@ -143,7 +143,7 @@
                                                             <p class="uk-text-right">
                                                                 <button class="uk-button uk-button-default uk-modal-close" type="button"><spring:message code="button.cancel"/></button>
                                                                 <button class="uk-button uk-button-primary" type="button">
-                                                                    <a class="button-text-accept" href="<c:url value='/createexchange'>
+                                                                    <a class="button-text-accept custom-link" href="<c:url value='/createexchange'>
                                                                    <c:param name='accept_code' value='${exchange.exchange.acceptCode}'/>
                                                                     <c:param name='state' value='true'/>
                                                                          </c:url>">
