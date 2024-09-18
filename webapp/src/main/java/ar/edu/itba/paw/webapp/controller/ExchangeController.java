@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,6 +32,7 @@ public class ExchangeController {
     private final PublicationService publicationService;
     private final BookService bookService;
     private final BookModelService bookModelService;
+    @Autowired
     private final UserReviewService userReviewService;
     
     public ExchangeController(final ExchangeService exchangeService, final EmailService emailService, final UserService userService, final BookService bookService, final PublicationService publicationService, BookModelService bookModelService, UserReviewService userReviewService) {
@@ -57,9 +59,10 @@ public class ExchangeController {
             
             for (ExchangeWrapper exchange : exchangeWrapperList) {
                 System.out.println("Exchange ID: " + exchange.getExchange().getExchangeId());
-                System.out.println("Reviewable: " + "isReviewable: " + exchange.getIsReviewable());
+                System.out.println("Reviewable: " + exchange.getIsReviewable());
                 System.out.println("Offerer ID: " + exchange.getOffererBook().getOwnerId());
                 System.out.println("Requester ID: " + exchange.getRequesterBook().getOwnerId());
+                System.out.println("Publication?: " + userReviewService.getUserReview(exchange.getExchange().getExchangeId(), exchange.getExchange().getRequesterPubId()));
                 System.out.println("");
             }
         }
@@ -78,12 +81,13 @@ public class ExchangeController {
             List<ExchangeWrapper> exchangeWrapperList = exchangeService.getExchangeRequesterWrapperListByUserId(pud.getUser().getUserId());
             mav.addObject("exchanges", exchangeWrapperList);
             mav.addObject("userReview", new UserReview());
-            
+
             for (ExchangeWrapper exchange : exchangeWrapperList) {
                 System.out.println("Exchange ID: " + exchange.getExchange().getExchangeId());
-                System.out.println("Reviewable: " + "isReviewable: " + exchange.getIsReviewable());
+                System.out.println("Reviewable: " + exchange.getIsReviewable());
                 System.out.println("Offerer ID: " + exchange.getOffererBook().getOwnerId());
                 System.out.println("Requester ID: " + exchange.getRequesterBook().getOwnerId());
+                System.out.println("Publication?: " + userReviewService.getUserReview(exchange.getExchange().getExchangeId(), exchange.getExchange().getRequesterPubId()));
                 System.out.println("");
             }
         }
@@ -218,7 +222,6 @@ public class ExchangeController {
 		System.out.println("reviewDescription: " + reviewDescription);
 		System.out.println("userReviewRating: " + userReviewRating);
         System.out.println("");
-
         
 		boolean success = userReviewService.createUserReview(userReview);
 

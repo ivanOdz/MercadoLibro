@@ -194,7 +194,11 @@ public class ExchangeServiceImpl implements ExchangeService {
                     .map(Author::getAuthorName)
                     .collect(Collectors.toList());
             
-            Boolean isReviewable = (ex.getExchangeState().equals(ExchangeState.ACCEPTED) || ex.getExchangeState().equals(ExchangeState.TERMINATED)) && (userReviewService.getUserReview(ex.getExchangeId(), ex.getRequesterPubId()) == null);
+            
+            Boolean isReviewable = false;
+            if ((ex.getExchangeState().equals(ExchangeState.ACCEPTED) || ex.getExchangeState().equals(ExchangeState.TERMINATED)) && userReviewService.getUserReview(ex.getExchangeId(), ex.getRequesterPubId()) == null) {
+            	isReviewable = true;
+            }
             
             toReturn.add(new ExchangeWrapper(ex, requesterLocation, requesterMail, requesterUsername, offererLocation, offererMail, offererUsername, offererBook, requesterBook, offererBookModel, requesterBookModel, requesterBookImages, offererBookImages, requesterAuthorNames, offererAuthorNames, isReviewable));
         }
