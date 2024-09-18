@@ -22,6 +22,7 @@
 
 
 <div class="uk-background-muted">
+    <div class="uk-containter"style="margin-bottom: 2%;">
     <div class="row-container">
 
         <!-- Images -->
@@ -54,7 +55,7 @@
                 <div class="column-container">
                     <!-- Title -->
                     <div>
-                        <h1 class="uk-text-large uk-text-bold" style="font-size: 36px;">}
+                        <h1 class="uk-text-large uk-text-bold" style="font-size: 36px;">
                             <c:out value="${pd.bookModel.title}"/>
                         </h1>
                     </div>
@@ -68,7 +69,7 @@
                 </div>
 
 
-                <div class="column-container" style="margin-top: 5%; margin-left: 55%;">
+                <div class="column-container" style="margin-top: 2%; margin-left: 55%;">
                     <!-- Genre -->
                     <div>
                         <p class="small-gray-text custom-link">
@@ -207,7 +208,9 @@
 
 
     <!-- Line -->
-    <hr style="width: 90lh;"/>
+    <div style="margin-top: 5%; margin-left: 10%;">
+        <hr style="width: 50lh;"/>
+    </div>
 
     <div class="row-container" style="margin-left: 2lh; place-items: center; display: flex;">
         <div>
@@ -264,6 +267,7 @@
             </c:if>
         </div>
     </div>
+</div>
 </div>
 </div>
 </body>
