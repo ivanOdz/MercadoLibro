@@ -44,7 +44,6 @@ public class ExchangeServiceImpl implements ExchangeService {
         this.userReviewService = userReviewService;
     }
 
-
     @Override
     public Optional<Exchange> getExchangeById(long exchangeId) {
         return exchangeDao.findById(exchangeId);

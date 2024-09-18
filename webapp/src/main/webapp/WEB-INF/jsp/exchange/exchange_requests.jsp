@@ -49,8 +49,8 @@
                              							'<c:out value="${exchange.offererBookModel.edition}"/>',
                              							'<c:out value="${exchange.offererBookImages}"/>',
                              							'<c:out value="${exchange.exchange.exchangeId}"/>',
-                     							        '<c:out value="${exchange.offererBook.ownerId}"/>',
                              							'<c:out value="${exchange.requesterBook.ownerId}"/>',
+                     							        '<c:out value="${exchange.offererBook.ownerId}"/>',
                              							'${exchange.isReviewable}'
                              							)" uk-grid>
                              
