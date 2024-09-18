@@ -14,7 +14,7 @@
 
 <head>
 
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
 
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
@@ -23,22 +23,6 @@
 	<link href="${pageContext.request.contextPath}/css/navbar.css?v=1.0" rel="stylesheet"/>
 
     <title><spring:message code="profile.view.title"/></title>
-
-    <script type="text/javascript">
-
-        function showEditForm() {
-            document.getElementById('username-display').style.display = 'none';
-            document.getElementById('change-username-btn').style.display = 'none';
-            document.getElementById('change-username-form').style.display = 'block';
-        }
-
-        function cancelEdit() {
-            document.getElementById('username-display').style.display = 'block';
-            document.getElementById('change-username-btn').style.display = 'inline-block';
-            document.getElementById('change-username-form').style.display = 'none';
-        }
-
-    </script>
 
 </head>
 
@@ -220,5 +204,22 @@
 <!-- 	</div> -->
 
 </body>
+
+<script type="text/javascript">
+
+    function showEditForm() {
+        document.getElementById('username-display').style.display = 'none';
+        document.getElementById('change-username-btn').style.display = 'none';
+        document.getElementById('change-username-form').style.display = 'block';
+    }
+
+    function cancelEdit() {
+        document.getElementById('username-display').style.display = 'block';
+        document.getElementById('change-username-btn').style.display = 'inline-block';
+        document.getElementById('change-username-form').style.display = 'none';
+    }
+
+</script>
+
 
 </html>
