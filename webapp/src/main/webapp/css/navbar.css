@@ -71,6 +71,11 @@
 .pr-2 {
     padding-right: 2rem !important;
 }
+
+.pr-3 {
+    padding-right: 10rem !important;
+}
+
 .mb-1 {
     margin-bottom: 1rem !important;
 }
@@ -87,27 +92,6 @@
     border-radius: 20px;
 }
 
-.fixed-action-btn a {
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 0;
-    box-shadow: none;
-    z-index: 1000;
-}
-
-.fixed-action-btn .uk-button-primary {
-    border-radius: 50%;
-    padding: 0; /
-}
-
-.uk-button-text {
-    padding: 10px;
-}
 
 .uk-button-danger a {
     color: inherit;
@@ -116,6 +100,7 @@
 
 .uk-button-danger a:hover {
     color: inherit;
+    background-color: transparent;
 }
 
 .nav-background {
@@ -129,8 +114,16 @@
     margin: 0 2% 0 1%;
 }
 
-.button-text {
+.button-text-wo {
     color: black;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.button-text-wo:hover,
+a img:hover,
+.uk-navbar-item:hover{
+    background-color: transparent; !important;
 }
 
 .button-text,
@@ -153,10 +146,49 @@
     color: black;
 }
 
+.button-text-dropdown:hover{
+    background-color: transparent;
+}
+
 .uk-navbar-nav > li > a:hover {
     color: white !important;
 }
 
 .uk-navbar-dropdown-nav > li > a:hover {
     color: #536367 !important;
+}
+
+.right-icons-nav {
+    font-weight: normal; !important;
+    font-size: 20px; !important;
+}
+
+.right-icons-nav:hover {
+    background-color: transparent;
+    color: white;
+}
+
+.uk-navbar-nav > li > a{
+    font-size: 16px;
+}
+
+
+.dropdown-wo-buttons {
+    color: black;
+    font-size: 14px; !important;
+    margin: 0;
+    padding: 0;
+    line-height: 1.5;
+
+}
+
+.dropdown-wo-buttons:hover {
+    background-color: transparent;
+    color: #666666;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+
 }
