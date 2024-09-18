@@ -9,19 +9,19 @@
 <html lang="es" class="custom-style">
 
 <%@ include file="/WEB-INF/jsp/head/headers.jsp" %>
-<%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
+
 
 <head>
+    <link href="${pageContext.request.contextPath}/css/profile.css?v=1.0" rel="stylesheet"/>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
-    
+
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/css/navbar.css?v=1.0" rel="stylesheet"/>
-    <link href="${pageContext.request.contextPath}/css/profile.css" rel="stylesheet"/>
-    
+
     <title><spring:message code="profile.view.title"/></title>
     
     <script type="text/javascript">
@@ -45,7 +45,7 @@
 <body>
 
 <nav class="uk-navbar-container uk-box-shadow-small " uk-sticky>
-	<div class="uk-container uk-width-1-1  nav-background">
+	<div class="uk-container uk-width-1-1 nav-background">
 		<div class="uk-width-1-1 nav-container"  uk-navbar>
 			<div class="uk-navbar-left">
 				<ul class="uk-navbar-nav">
@@ -130,8 +130,10 @@
 	</div>
 </nav>
 
-	    <div class="uk-width-1-2 main-margin uk-align-center">
-	    
+<div class="uk-background-muted">
+	<div class="uk-container">
+		<div class="uk-grid ml-1 uk-margin-top" uk-grid>
+	    <div class="uk-width-1-2 main-margin uk-align-center mt-1">
 	        <div class="uk-card uk-card-default card-profile">
 	            <h1 class="uk-h1 title-profile"><spring:message code="profile.title"/></h1>
 	            <div class="profile-content">
@@ -256,7 +258,9 @@
 	            </div>
 	        </div>
 	    </div>
-	
+	</div>
+</div>
+
 <!-- 	<div> -->
 	<%--<div class="uk-section uk-background-muted">--%>
 	<%--    <div class="uk-align-center uk-container">--%>
