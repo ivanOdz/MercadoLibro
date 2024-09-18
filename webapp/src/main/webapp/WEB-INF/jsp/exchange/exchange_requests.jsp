@@ -41,7 +41,7 @@
                 <div class="uk-width-3-5 column-exchanges scrollable-content">
                     <c:forEach var="exchange" items="${exchanges}">
                         <div class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-4@s exchange-card"
-                             onclick="selectCard(this, '${exchange.requesterUsername}', '${exchange.requesterMail}', '${exchange.requesterLocation}', '${exchange.offererBookModel.title}', '${exchange.offererBookAuthor}', '${exchange.offererBookModel.edition}', '${exchange.offererBookImages}')"
+                             onclick="selectCard(this, '<c:out value="${exchange.requesterUsername}"/>', '<c:out value="${exchange.requesterMail}"/>', '<c:out value="${exchange.requesterLocation}"/>', '<c:out value="${exchange.offererBookModel.title}"/>', '<c:out value="${exchange.offererBookAuthor}"/>', '<c:out value="${exchange.offererBookModel.edition}"/>', '<c:out value="${exchange.offererBookImages}"/>')"
                              uk-grid>
                             <div class="uk-card-media-left">
                                 <img class="book-image"
@@ -51,7 +51,9 @@
                             <div>
                                 <div class="card-text">
                                     <div class="card-text-left">
-                                        <h3 class="uk-h6">${exchange.requesterBookModel.title}</h3>
+                                        <h3 class="uk-h6">
+                                                <c:out value="${exchange.requesterBookModel.title}"/>
+                                        </h3>
                                         <h4 class="date-text"><fmt:formatDate
                                                 value="${exchange.exchange.exchangeStartDate}"
                                                 pattern="dd/MM/yyyy"/></h4>

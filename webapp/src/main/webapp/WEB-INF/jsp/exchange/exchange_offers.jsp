@@ -37,7 +37,13 @@
                 <div class="uk-width-3-5 column-exchanges scrollable-content">
                     <c:forEach var="exchange" items="${exchanges}">
                         <div class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-4@s exchange-card"
-                             onclick="selectCard(this, '${exchange.offererUsername}', '${exchange.offererMail}', '${exchange.offererLocation}', '${exchange.requesterBookModel.title}', '${exchange.requesterBookAuthor}', '${exchange.requesterBookModel.edition}', '${exchange.requesterBookImages}')"
+                             onclick="selectCard(this, '<c:out value="${exchange.offererUsername}"/>', '<c:out
+                                     value="${exchange.offererMail}"/>', '<c:out
+                                     value="${exchange.offererLocation}"/>', '<c:out
+                                     value="${exchange.requesterBookModel.title}"/>', '<c:out
+                                     value="${exchange.requesterBookAuthor}"/>', '<c:out
+                                     value="${exchange.requesterBookModel.edition}"/>', '<c:out
+                                     value="${exchange.requesterBookImages}"/>')"
                              uk-grid>
                             <div class="uk-card-media-left">
                                 <img class="book-image"
@@ -47,16 +53,23 @@
                             <div>
                                 <div class="card-text2">
                                     <div class="card-text-left">
-                                        <h3 class="uk-h6">${exchange.offererBookModel.title}</h3>
-                                        <h4 class="date-text"><fmt:formatDate
-                                                value="${exchange.exchange.exchangeStartDate}" pattern="dd/MM/yyyy"/></h4>
+                                        <h3 class="uk-h6">
+                                            <c:out value="${exchange.offererBookModel.title}"/>
+                                        </h3>
+                                        <h4 class="date-text">
+                                            <fmt:formatDate
+                                                    value="${exchange.exchange.exchangeStartDate}"
+                                                    pattern="dd/MM/yyyy"/>
+                                        </h4>
                                     </div>
                                     <div class="uk-align-right card-text-right state-padding">
                                         <c:choose>
                                             <c:when test="${exchange.exchange.exchangeState == 'ACCEPTED'
                                                     && exchange.exchange.requesterReceivedBook == true}">
-                                                <span class="uk-badge state-awaiting"><spring:message
-                                                        code="exchange.status.awaiting"/></span>
+                                                <span class="uk-badge state-awaiting">
+                                                    <spring:message
+                                                            code="exchange.status.awaiting"/>
+                                                </span>
                                             </c:when>
 
                                             <c:when test="${exchange.exchange.exchangeState == 'ACCEPTED'}">
@@ -68,13 +81,18 @@
                                                 <span class="uk-badge state-inprogress"><spring:message
                                                         code="exchange.status.in_progress"/></span>
 
-                                                <div id="modal-confirm-exchange-${exchange.exchange.acceptCode}" uk-modal>
+                                                <div id="modal-confirm-exchange-${exchange.exchange.acceptCode}"
+                                                     uk-modal>
                                                     <div class="uk-modal-dialog uk-modal-body">
-                                                        <h3 class="uk-h4"><spring:message code="exchange.confirm.title"/> </h3>
+                                                        <h3 class="uk-h4"><spring:message
+                                                                code="exchange.confirm.title"/></h3>
                                                         <p class="uk-text-right">
-                                                            <button class="uk-button uk-button-default uk-modal-close" type="button"><spring:message code="button.cancel"/></button>
+                                                            <button class="uk-button uk-button-default uk-modal-close"
+                                                                    type="button"><spring:message
+                                                                    code="button.cancel"/></button>
                                                             <button class="uk-button uk-button-primary" type="button">
-                                                                <a class="button-text-accept" href="<c:url value='/confirm_requester'>
+                                                                <a class="button-text-accept"
+                                                                   href="<c:url value='/confirm_requester'>
                                                                             <c:param name='accept_code' value='${exchange.exchange.acceptCode}'/>
                                                                             </c:url>">
                                                                     <spring:message code="button.confirm"/>
@@ -85,13 +103,16 @@
                                                 </div>
                                             </c:when>
                                             <c:when test="${exchange.exchange.exchangeState == 'REJECTED'}">
-                                                <span class="uk-badge state-rejected"><spring:message code="exchange.status.rejected"/></span>
+                                                <span class="uk-badge state-rejected"><spring:message
+                                                        code="exchange.status.rejected"/></span>
                                             </c:when>
                                             <c:when test="${exchange.exchange.exchangeState == 'PENDING'}">
-                                                <span class="uk-badge state-pending"><spring:message code="exchange.status.pending"/></span>
+                                                <span class="uk-badge state-pending"><spring:message
+                                                        code="exchange.status.pending"/></span>
                                             </c:when>
                                             <c:when test="${exchange.exchange.exchangeState == 'TERMINATED'}">
-                                                <span class="uk-badge state-approved"><spring:message code="exchange.status.terminated"/></span>
+                                                <span class="uk-badge state-approved"><spring:message
+                                                        code="exchange.status.terminated"/></span>
                                             </c:when>
                                         </c:choose>
                                     </div>
@@ -118,7 +139,7 @@
                             <div id="exchange-details" style="display: none;">
                                 <h3 id="info-requester-username"><spring:message code="exchange.with"/></h3>
                                 <p id="info-requester-mail"><spring:message code="exchange.with_email"/></p>
-                                <p id="info-requester-location"><spring:message code="exchange.location"/> </p>
+                                <p id="info-requester-location"><spring:message code="exchange.location"/></p>
 
                                 <h4><spring:message code="exchange.your_book"/></h4>
                                 <p id="info-offered-book-title"><spring:message code="exchange.book.title"/></p>
@@ -153,12 +174,12 @@
         document.getElementById('exchange-details').style.display = 'block';
 
         // Actualizar la información en la columna izquierda
-        document.getElementById('info-requester-username').textContent = "<spring:message code="exchange.with"/>" + " "  + offererUsername;
-        document.getElementById('info-requester-mail').textContent = "<spring:message code="exchange.with_email"/>" + " "  + offererMail;
-        document.getElementById('info-requester-location').textContent = "<spring:message code="exchange.location"/>" + " "  + offererLocation;
-        document.getElementById('info-offered-book-title').textContent = "<spring:message code="exchange.book.title"/>" + " "  + requestedBookTitle;
-        document.getElementById('info-offered-book-authors').textContent = "<spring:message code="exchange.book.authors"/>" + " "  + requestedBookAuthors;
-        document.getElementById('info-offered-book-edition').textContent = "<spring:message code="exchange.book.edition"/>" + " "   + requestedBookEdition;
+        document.getElementById('info-requester-username').textContent = "<spring:message code="exchange.with"/>" + " " + offererUsername;
+        document.getElementById('info-requester-mail').textContent = "<spring:message code="exchange.with_email"/>" + " " + offererMail;
+        document.getElementById('info-requester-location').textContent = "<spring:message code="exchange.location"/>" + " " + offererLocation;
+        document.getElementById('info-offered-book-title').textContent = "<spring:message code="exchange.book.title"/>" + " " + requestedBookTitle;
+        document.getElementById('info-offered-book-authors').textContent = "<spring:message code="exchange.book.authors"/>" + " " + requestedBookAuthors;
+        document.getElementById('info-offered-book-edition').textContent = "<spring:message code="exchange.book.edition"/>" + " " + requestedBookEdition;
 
         // Limpiar imágenes anteriores
         const imageContainer = document.getElementById('info-offered-book-images');

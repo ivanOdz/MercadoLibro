@@ -1,18 +1,36 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <html lang="es">
-<%@include file="/WEB-INF/jsp/head/headers.jsp"%>
+<%@include file="/WEB-INF/jsp/head/headers.jsp" %>
 <head>
-  <title><spring:message code="publication.details.title"/></title>
+    <title><spring:message code="publication.details.title"/></title>
 </head>
 <body>
 <div style="border: 1px solid #000; padding: 10px; margin: 10px; display: inline-block; width: 200px; vertical-align: top;">
-  <h2><spring:message code="publication.details.publicationId"/>: ${publication.publicationId}</h2>
-  <p><strong><spring:message code="publication.details.bookId"/>:</strong> ${publication.bookId}</p>
-  <p><strong><spring:message code="publication.details.userId"/>:</strong> ${publication.userId}</p>
-  <p><strong><spring:message code="publication.details.publicationState"/>:</strong> ${publication.publicationState}</p>
-  <p><strong><spring:message code="publication.details.location"/>:</strong> ${publication.locationId}</p>
+    <h2>
+        <spring:message code="publication.details.publicationId"/>
+        <c:out value=": ${publication.publicationId}"/>
+    </h2>
+    <p>
+        <strong>
+            <spring:message code="publication.details.bookId"/>
+            :
+        </strong>
+        <c:out value="${publication.bookId}"/>
+    </p>
+    <p>
+        <strong><spring:message code="publication.details.userId"/>:</strong>
+        <c:out value="${publication.userId}"/>
+    </p>
+    <p>
+        <strong><spring:message code="publication.details.publicationState"/>:</strong>
+        <c:out value="${publication.publicationState}"/>
+    </p>
+    <p>
+        <strong><spring:message code="publication.details.location"/>:</strong>
+        <c:out value="${publication.locationId}"/>
+    </p>
 </div>
 </body>
 </html>
