@@ -3,14 +3,17 @@ package ar.edu.itba.paw.models;
 import java.sql.Timestamp;
 
 public class UserReview {
-    private final long userReviewId;
-    private final long exchangeId;
-    private final long reviewerId;
-    private final long subjectId;
-    private final String reviewDescription;
-    private final Timestamp reviewDate;
-    private final int userReviewRating;
+	
+    private long userReviewId;
+    private long exchangeId;
+    private long reviewerId;
+    private long subjectId;
+    private String reviewDescription;
+    private Timestamp reviewDate;
+    private int userReviewRating;
 
+    public UserReview() { }
+    
     public UserReview(long userReviewId, long exchangeId, long reviewerId, long subjectId,
                       String reviewDescription, Timestamp reviewDate, int userReviewRating) {
         this.userReviewId = userReviewId;
@@ -48,5 +51,17 @@ public class UserReview {
 
     public int getUserReviewRating() {
         return userReviewRating;
+    }
+    
+    public void setReviewDescription(String reviewDescription) {
+        this.reviewDescription = reviewDescription;
+    }
+
+    public void setReviewDate(Timestamp reviewDate) {
+        this.reviewDate = reviewDate;
+    }
+
+    public void setRating(int userReviewRating) {
+        this.userReviewRating = userReviewRating;
     }
 }

@@ -30,6 +30,17 @@
             <h2 class="uk-h2 title"><spring:message code="exchange.offers.title"/></h2>
             <h3 class="uk-h5"><spring:message code="exchange.offers.subtitle"/></h3>
         </div>
+		
+		<c:if test="${!empty successMessage}">
+		    <div class="uk-alert-success" uk-alert>
+		        <p>${successMessage}</p>
+		    </div>
+		</c:if>
+		<c:if test="${!empty errorMessage}">
+		    <div class="uk-alert-danger" uk-alert>
+		        <p>${errorMessage}</p>
+		    </div>
+		</c:if>
 
         <c:if test="${!(exchanges.size() eq 0)}">
             <div class="main-content">
@@ -91,7 +102,7 @@
                                                                     type="button"><spring:message
                                                                     code="button.cancel"/></button>
                                                             <button class="uk-button uk-button-primary" type="button">
-                                                                <a class="button-text-accept custom-link"
+                                                                <a class="button-text-accept"
                                                                    href="<c:url value='/confirm_requester'>
                                                                             <c:param name='accept_code' value='${exchange.exchange.acceptCode}'/>
                                                                             </c:url>">
@@ -124,34 +135,93 @@
                     </c:forEach>
                 </div>
 
-
-                <!-- contenedor derecho donde se ve la info del exchange -->
-                <div class="uk-width-2-5" uk-sticky>
-                    <div class="uk-container">
-                        <div class="uk-card uk-card-default uk-card-body exchange-info-container">
-                            <div id="no-selection-message" class="uk-h6">
-                                <h4 class="uk-h6">
-                                    <spring:message code="exchange.choose.message"/>
-                                </h4>
-                            </div>
-
-                            <!-- Contenedor para la información del intercambio -->
-                            <div id="exchange-details" style="display: none;">
-                                <h3 id="info-requester-username"><spring:message code="exchange.with"/></h3>
-                                <p id="info-requester-mail"><spring:message code="exchange.with_email"/></p>
-                                <p id="info-requester-location"><spring:message code="exchange.location"/></p>
-
-                                <h4><spring:message code="exchange.your_book"/></h4>
-                                <p id="info-offered-book-title"><spring:message code="exchange.book.title"/></p>
-                                <p id="info-offered-book-authors"><spring:message code="exchange.book.authors"/></p>
-                                <p id="info-offered-book-edition"><spring:message code="exchange.book.edition"/></p>
-
-                                <div id="info-offered-book-images" uk-grid></div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
+				<div class="uk-width-2-5" uk-sticky>
+				    <div class="uk-container">
+				        <div class="uk-card uk-card-default uk-card-body exchange-info-container">
+				            <div id="no-selection-message" class="uk-h6">
+				                <h4 class="uk-h6">
+				                    <spring:message code="exchange.choose.message"/>
+				                </h4>
+				            </div>
+				
+				            <div id="exchange-details" style="display: none;">
+				                <h3 id="info-requester-username"><spring:message code="exchange.with"/></h3>
+				                <p id="info-requester-mail"><spring:message code="exchange.with_email"/></p>
+				                <p id="info-requester-location"><spring:message code="exchange.location"/></p>
+				
+				                <h4><spring:message code="exchange.your_book"/></h4>
+				                <p id="info-offered-book-title"><spring:message code="exchange.book.title"/></p>
+				                <p id="info-offered-book-authors"><spring:message code="exchange.book.authors"/></p>
+				                <p id="info-offered-book-edition"><spring:message code="exchange.book.edition"/></p>
+				
+				                <div id="info-offered-book-images" uk-grid></div>
+				
+								    <button class="uk-button uk-button-primary" uk-toggle="target: #modal-add-review">
+								        <spring:message code="exchange.button.add_review"/>
+								    </button>
+				
+								<div id="modal-add-review" uk-modal>
+								    <div class="uk-modal-dialog uk-modal-body">
+								        <h2 class="uk-modal-title"><spring:message code="exchange.add_review.title"/></h2>
+								        
+								        <form:form action="/submitReview" method="post" modelAttribute="review">
+								            
+							            <div class="form-group">
+							                <label><spring:message code="review.rating.label"/></label>
+							
+							                <div class="star-rating">
+							                    <form:radiobutton path="userReviewRating" value="5" id="star5"/>
+							                    <label for="star5" title="5 stars">
+							                        <span uk-icon="icon: star; ratio: 1.5"></span>
+							                    </label>
+							
+							                    <form:radiobutton path="userReviewRating" value="4" id="star4"/>
+							                    <label for="star4" title="4 stars">
+							                        <span uk-icon="icon: star; ratio: 1.5"></span>
+							                    </label>
+							
+							                    <form:radiobutton path="userReviewRating" value="3" id="star3"/>
+							                    <label for="star3" title="3 stars">
+							                        <span uk-icon="icon: star; ratio: 1.5"></span>
+							                    </label>
+							
+							                    <form:radiobutton path="userReviewRating" value="2" id="star2"/>
+							                    <label for="star2" title="2 stars">
+							                        <span uk-icon="icon: star; ratio: 1.5"></span>
+							                    </label>
+							
+							                    <form:radiobutton path="userReviewRating" value="1" id="star1"/>
+							                    <label for="star1" title="1 star">
+							                        <span uk-icon="icon: star; ratio: 1.5"></span>
+							                    </label>
+							                </div>
+							            </div>
+								
+								            <div class="uk-margin">
+								                <label for="reviewDescription"><spring:message code="review.comments.label"/></label>
+								                <form:textarea path="reviewDescription" rows="4" class="uk-textarea"/>
+								            </div>
+											
+								            <form:hidden path="exchangeId"/>
+								            <form:hidden path="reviewerId"/>
+								            <form:hidden path="subjectId"/>
+								
+								            <p class="uk-text-right">
+								                <button class="uk-button uk-button-default uk-modal-close" type="button">
+								                    <spring:message code="exchange.button.cancel"/>
+								                </button>
+								                <button class="uk-button uk-button-primary" type="submit">
+								                    <spring:message code="exchange.button.accept"/>
+								                </button>
+								            </p>
+								        </form:form>
+								    </div>
+								</div>
+				
+				            </div>
+				        </div>
+				    </div>
+				</div>
             </div>
         </c:if>
     </div>

@@ -8,11 +8,13 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Timestamp;
 import java.sql.Date;
@@ -51,6 +53,7 @@ public class ExchangeController {
         if (authentication.getPrincipal() instanceof PawUserDetails pud) {
             List<ExchangeWrapper> exchangeWrapperList = exchangeService.getExchangeOffererWrapperListByUserId(pud.getUser().getUserId());
             mav.addObject("exchanges", exchangeWrapperList);
+            mav.addObject("review", new UserReview());
         }
 
         return mav;
@@ -67,6 +70,7 @@ public class ExchangeController {
         if (authentication.getPrincipal() instanceof PawUserDetails pud) {
             List<ExchangeWrapper> exchangeWrapperList = exchangeService.getExchangeRequesterWrapperListByUserId(pud.getUser().getUserId());
             mav.addObject("exchanges", exchangeWrapperList);
+            mav.addObject("review", new UserReview());
         }
         
         return mav;
@@ -188,7 +192,8 @@ public class ExchangeController {
 		@RequestParam("subjectId") long subjectId,
 		@RequestParam("reviewDescription") String reviewDescription,
 		@RequestParam("reviewDate") java.sql.Timestamp reviewDate,
-		@RequestParam("userReviewRating") int userReviewRating) {
+		@RequestParam("userReviewRating") int userReviewRating,
+		BindingResult result, RedirectAttributes redirectAttributes) {
 		
 		UserReview userReview = new UserReview((long)0, exchangeId, reviewerId, subjectId, reviewDescription, reviewDate, userReviewRating);
 
