@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.Location;
 import ar.edu.itba.paw.models.utils.BookDimension;
 import ar.edu.itba.paw.models.utils.Genre;
 import ar.edu.itba.paw.models.utils.Language;
+import ar.edu.itba.paw.models.utils.Rating;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -86,6 +87,13 @@ public class BookModelJdbcDao implements BookModelDao {
     public List<BookModel> getAllBookModel(String search, int genreFilter) {
         return jdbcTemplate.query("SELECT * FROM book_model WHERE LOWER(title) LIKE LOWER(?) AND (32 = ? OR genre = ?) ",
                 new Object[]{ "%" + search.toLowerCase() + "%", genreFilter, genreFilter }, new int[]{Types.VARCHAR, Types.INTEGER, Types.INTEGER}, ROWMAPPERBOOKMODEL);
+    }
+
+    @Override
+    public Rating getRatingByBookModelId(long bookModelId) {
+        return jdbcTemplate.queryForObject("SELECT AVG(rating) AS average_rating, COUNT(rating) AS total_ratings FROM book WHERE bookModelId = ? AND rating IS NOT NULL", new Object[]{bookModelId}, (rs, rowNum) ->
+            new Rating(rs.getDouble("average_rating"), rs.getInt("total_ratings"))
+        );
     }
 }
 
