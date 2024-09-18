@@ -69,7 +69,7 @@
                 </div>
 
 
-                <div class="column-container" style="margin-top: 2%; margin-left: 55%;">
+                <div class="column-container" style="margin-top: 2%; margin-left: 35%;">
                     <!-- Genre -->
                     <div>
                         <p class="small-gray-text custom-link">
