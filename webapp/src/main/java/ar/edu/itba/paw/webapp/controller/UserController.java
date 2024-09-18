@@ -144,7 +144,7 @@ public class UserController {
     @RequestMapping(value = "/change_password", method = RequestMethod.POST)
     public ModelAndView changePassword(@Valid @ModelAttribute("passwordForm") PasswordForm passwordForm, BindingResult errors, @RequestParam(name = "verification_code") int verificationCode){
         if(errors.hasErrors()){
-            System.out.print(errors.getAllErrors());
+           //System.out.print(errors.getAllErrors());
             return createPasswordForm(passwordForm, verificationCode);
         }
         us.changePassword(verificationCode, passwordForm.getPassword() );
