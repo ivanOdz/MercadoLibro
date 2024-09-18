@@ -22,114 +22,164 @@
 
 
 <div class="uk-background-muted">
-  <div class="uk-container margin-bottom">
-  <div class="my-image">
-    <figure class="uk-margin-bottom">
+  <div class="row-container">
+
+    <!-- Images -->
+    <div class="column-container" style="margin-left: 2%; margin-top: 2%; max-width: 20%;">
       <c:choose>
-        <c:when test="${not empty card.bookImages}">
-          <img class="book-image" src="${pageContext.request.contextPath}/images/${card.bookImages[0].imageId}" alt="bookImage" style="width: 300px; height: auto; margin-left: 20px"/>
-
-          <div class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1" uk-slideshow>
-
-            <div class="uk-slideshow-items">
-              <c:forEach var="image" items="${card.bookImages}">
-              <div>
-                <img src="${pageContext.request.contextPath}/images/${image.imageId}" alt="bookImage" uk-cover>
-              </div>
+        <c:when test="${not empty pd.images}">
+          <div class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1" uk-slider>
+            <div class="uk-slider-items uk-grid">
+              <c:forEach var="bookImage" items="${pd.images}">
+                <div class="uk-width-2-3">
+                  <div class="uk-panel">
+                    <img src="${pageContext.request.contextPath}/images/${bookImage.imageId}" width="200" height="450" alt="bookImage">
+                  </div>
+                </div>
               </c:forEach>
             </div>
-
-            <a class="uk-position-center-left uk-position-small uk-hidden-hover"  uk-slidenav-previous uk-slideshow-item="previous"></a>
-            <a class="uk-position-center-right uk-position-small uk-hidden-hover" uk-slidenav-next uk-slideshow-item="next"></a>
-
           </div>
-
         </c:when>
         <c:otherwise>
-          <img class="book-image" src="${pageContext.request.contextPath}/images/book.jpg" alt="book" style="width: 300px; height: auto;"/>
+          <img class="book-image" src="${pageContext.request.contextPath}/images/book.jpg" width="300" height="400" alt="book"/>
         </c:otherwise>
       </c:choose>
-    </figure>
-  </div>
-
-  <div class="column-container">
-    <!-- Title -->
-    <div>
-      <h1 class="uk-text-large uk-text-bold" style="font-size: 36px;">${card.bookModel.title}</h1>
     </div>
 
-    <!-- Author -->
-    <div>
-      <p class="small-gray-text custom-link">${card.authorsString}</p>
-    </div>
 
-    <!-- Line -->
-    <hr style="width: 40lh;"/>
 
-    <!-- Description -->
-    <div style="max-width: 40lh; text-align: justify;">
-      <p>${card.bookModel.description}</p>
-    </div>
-
-    <!-- Line -->
-    <hr style="width: 40lh;"/>
-    <div>
-      <div class="row-container" style="margin-left: 50px;">
-
-        <!-- Book State -->
-        <div class="column-container" style="place-items: center; display: flex; margin-right: 90px;">
+    <div class="column-container" style="margin-top: 2%; margin-left: 7%;">
+      <div class="row-container">
+        <div class="column-container">
+          <!-- Title -->
           <div>
-            <p style="text-align: center"><spring:message code="publication.details.bookState"/></p>
-            <i class="material-icons" style="margin-left: 40px;">book</i>
-            <div>
-            <c:choose>
-              <c:when test="${card.book.bookState == 'NEW'}">
-            <strong><spring:message code="bookState.new"/></strong>
-              </c:when>
-              <c:when test="${card.book.bookState == 'LIKE_NEW'}">
-            <strong><spring:message code="bookState.like.new"/></strong>
-              </c:when>
-              <c:when test="${card.book.bookState == 'VERY_GOOD'}">
-            <strong><spring:message code="bookState.very.good"/></strong>
-              </c:when>
-              <c:when test="${card.book.bookState == 'GOOD'}">
-              <strong><spring:message code="bookState.good"/></strong>
-              </c:when>
-              <c:when test="${card.book.bookState == 'ACCEPTABLE'}">
-                <strong><spring:message code="bookState.acceptable"/></strong>
-              </c:when>
-              <c:when test="${card.book.bookState == 'WORN'}">
-                  <strong><spring:message code="bookState.worn"/></strong>
-              </c:when>
-            </c:choose>
+            <h1 class="uk-text-large uk-text-bold" style="font-size: 36px;">${pd.bookModel.title}</h1>
+          </div>
+
+          <!-- Author -->
+          <div>
+            <p class="small-gray-text custom-link">${card.authorsString}</p>
+          </div>
+        </div>
+
+
+        <div class="column-container" style="margin-top: 5%; margin-left: 55%;">
+          <!-- Genre -->
+          <div>
+            <p class="small-gray-text custom-link">${card.bookModel.genre}</p>
+          </div>
+
+          <!-- Ranking -->
+          <div class="row-container">
+            <div style="margin-right: 5px;">
+              <p class="small-gray-text custom-link">${pd.rating.rating}</p>
+            </div>
+            <div class="star-rating">
+              <c:forEach var="i" begin="1" end="5">
+                <c:choose>
+                  <c:when test="${i <= pd.rating.rating}">
+                    <!-- Estrella llena -->
+                    <span uk-icon="icon: star; ratio: 1.5" style="color: gold;"></span>
+                  </c:when>
+                  <c:otherwise>
+                    <!-- Estrella vacía -->
+                    <span uk-icon="icon: star; ratio: 1.5" style="color: lightgray;"></span>
+                  </c:otherwise>
+                </c:choose>
+              </c:forEach>
+            </div>
+            <div style="margin-left: 5px;">
+              <p class="small-gray-text custom-link">(${pd.rating.ratingCount})</p>
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- Publication date -->
-        <div class="column-container" style="place-items: center; display: flex;">
-          <div>
-            <p style="text-align: center"><spring:message code="publication.details.date"/></p>
-            <i class="material-icons" style="margin-left: 60px;">history</i>
-            <p style="text-align: center"><strong>${card.publication.publicationDatetime}</strong></p>
-          </div>
-        </div>
 
-        <!-- Editorial -->
-        <div class="column-container" style="place-items: center; display: flex;">
-          <div>
-            <p style="text-align: center"><spring:message code="publication.details.editorial"/></p>
-            <i class="material-icons" style="margin-right: 90px;">file-edit</i>
-            <p style="text-align: center"><strong>${card.bookModel.editorial}</strong></p>
+    <!-- Line -->
+      <hr style="width: 55lh;"/>
+
+      <!-- Description -->
+      <div style="max-width: 55lh; text-align: justify;">
+        <p>${card.bookModel.description}</p>
+      </div>
+
+      <!-- Line -->
+      <hr style="width: 55lh;"/>
+
+
+      <div>
+        <div class="row-container" style="margin-left: 50px; align-items: center; justify-content: space-between;">
+
+          <!-- Book State -->
+          <div class="column-container" style="place-items: center; display: flex;">
+            <div>
+              <p style="text-align: center"><spring:message code="publication.details.bookState"/></p>
+              <i class="material-icons" style="margin-left: 40px;">book</i>
+              <div>
+                <c:choose>
+                  <c:when test="${card.book.bookState == 'NEW'}">
+                    <div style="margin-left: 20px;">
+                      <strong><spring:message code="bookState.new"/></strong>
+                    </div>
+                  </c:when>
+                  <c:when test="${card.book.bookState == 'LIKE_NEW'}">
+                    <div style="margin-left: 20px;">
+                      <strong><spring:message code="bookState.like.new"/></strong>
+                    </div>
+                  </c:when>
+                  <c:when test="${card.book.bookState == 'VERY_GOOD'}">
+                    <div style="margin-left: 20px;">
+                      <strong><spring:message code="bookState.very.good"/></strong>
+                    </div>
+                  </c:when>
+                  <c:when test="${card.book.bookState == 'GOOD'}">
+                    <div style="margin-left: 20px;">
+                      <strong><spring:message code="bookState.good"/></strong>
+                    </div>
+                  </c:when>
+                  <c:when test="${card.book.bookState == 'ACCEPTABLE'}">
+                    <div style="margin-left: 20px;">
+                      <strong><spring:message code="bookState.acceptable"/></strong>
+                    </div>
+                  </c:when>
+                  <c:when test="${card.book.bookState == 'WORN'}">
+                    <div style="margin-left: 20px;">
+                      <strong><spring:message code="bookState.worn"/></strong>
+                    </div>
+                  </c:when>
+                </c:choose>
+              </div>
+            </div>
           </div>
 
           <!-- Location -->
           <div class="column-container" style="place-items: center; display: flex;">
             <div>
               <p style="text-align: center"><spring:message code="publication.details.location"/></p>
-                <span uk-icon="icon: location"></span>
+              <span uk-icon="icon: location" style="margin-left: 25px;"></span>
               <p style="text-align: center"><strong>${card.location}</strong></p>
             </div>
+          </div>
+
+          <!-- Publication date -->
+          <div class="column-container" style="place-items: center; display: flex;">
+            <div>
+              <p style="text-align: center"><spring:message code="publication.details.date"/></p>
+              <i class="material-icons" style="margin-left: 65px;">history</i>
+              <p style="text-align: center"><strong>${card.publication.publicationDatetime}</strong></p>
+            </div>
+          </div>
+
+          <!-- Editorial -->
+          <div class="column-container" style="place-items: center; display: flex;">
+            <div>
+              <p style="text-align: center"><spring:message code="publication.details.editorial"/></p>
+              <i class="material-icons" style="margin-right: 90px;">file-edit</i>
+              <p style="text-align: center"><strong>${card.bookModel.editorial}</strong></p>
+            </div>
+
+
           </div>
         </div>
       </div>
@@ -137,7 +187,11 @@
 
   </div>
 
-  <div class="column-container" style="margin-left: 2lh; place-items: center; display: flex;">
+
+  <!-- Line -->
+  <hr style="width: 90lh;"/>
+
+  <div class="row-container" style="margin-left: 2lh; place-items: center; display: flex;">
     <div>
       <p class="uk-text-medium" style="font-size: 25px; text-align: center; max-width: 9lh; margin-left: 1lh;"><spring:message code="exchange.description"/></p>
     </div>
@@ -145,45 +199,49 @@
       <p class="uk-text-medium" style="font-size: 25px; max-width: 9lh; text-align: center; margin-left: 1lh;"><spring:message code="exchange.description2"/></p>
     </div>
 
-    <c:if test="${!(completeBooks.size() eq 0)}">
-    <div class="uk-container uk-margin-top">
-      <form:form action="${pageContext.request.contextPath}/exchange/initializeexchange" method="post" modelAttribute="completeBookParam" enctype="multipart/form-data">
-        <div class="uk-margin">
-          <div class="uk-form-controls">
-            <form:select path="selectedBookId" cssClass="uk-select">
-              <c:forEach var="completeBook" items="${completeBooks}">
-                <form:option value="${completeBook.book.bookId}" label="${completeBook.bookModel.title}" />
-              </c:forEach>
-            </form:select>
+    <div class="column-container" style="margin-left: 10%;">
+      <label class="form-group" style="margin-left: 10px;">
+        <spring:message code="book.set.book"/>
+      </label>
+      <c:if test="${!(completeBooks.size() eq 0)}">
+        <div class="uk-container uk-margin-top">
+          <form:form action="${pageContext.request.contextPath}/exchange/initializeexchange" method="post" modelAttribute="completeBookParam" enctype="multipart/form-data">
+            <div class="uk-margin">
+              <div class="uk-form-controls">
+                <form:select path="selectedBookId" cssClass="uk-select">
+                  <c:forEach var="completeBook" items="${completeBooks}">
+                    <form:option value="${completeBook.book.bookId}" label="${completeBook.bookModel.title}" />
+                  </c:forEach>
+                </form:select>
 
-          </div>
-        </div>
-          <div class="uk-inline">
-            <label class="form-group">
-              <spring:message code="book.set.location"/>
-              <form:input path="location" type="text" class="uk-input"/>
-            </label>
-          </div>
+              </div>
+            </div>
+            <div class="uk-inline">
+              <label class="form-group">
+                <spring:message code="book.set.location"/>
+                <form:input path="location" type="text" class="uk-input"/>
+              </label>
+            </div>
 
-        <div class="form-container">
-          <input type="hidden" name="publication_id" value="${publication_id}">
-          <button type="submit" class="uk-button uk-button-primary">
-            <spring:message code="add.publication.submit"/>
-          </button>
+            <div class="form-container" style="margin-top: 5%; margin-left: 35%;">
+              <input type="hidden" name="publication_id" value="${publication_id}">
+              <button type="submit" class="uk-button uk-button-primary">
+                <spring:message code="add.exchange.submit"/>
+              </button>
+            </div>
+          </form:form>
         </div>
-      </form:form>
-    </div>
-    </c:if>
-    <c:if test="${completeBooks.size() eq 0}">
+      </c:if>
+      <c:if test="${completeBooks.size() eq 0}">
         <button class="uk-button uk-button-primary">
           <a class="button-text" href="${pageContext.request.contextPath}/book/book_models">
             <spring:message code="add.book.missing"/>
           </a>
         </button>
-    </c:if>
+      </c:if>
+    </div>
   </div>
-  </div>
+</div>
 </div>
 </body>
 </html>
-
