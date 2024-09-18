@@ -1,7 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
 
 
@@ -68,11 +68,13 @@
                         <c:forEach var="bookStateWrapper" items="${bookStates}">
                             <li class="ui-search-filter-container">
                                 <form action="<c:url value='' />" method="get">
-                                    <input type="hidden" name="book-state-filter" value="${bookStateWrapper.bookState.value}">
+                                    <input type="hidden" name="book-state-filter"
+                                           value="${bookStateWrapper.bookState.value}">
                                     <input type="hidden" name="genre-filter" value="${genreFilter}">
                                     <input type="hidden" name="search" value="${param.search}">
 
-                                    <button type="submit" class="ui-search-button" title="${bookStateWrapper.displayName}">
+                                    <button type="submit" class="ui-search-button"
+                                            title="${bookStateWrapper.displayName}">
                                         <span class="ui-search-filter-name">${bookStateWrapper.displayName}</span>
                                     </button>
                                 </form>
@@ -108,40 +110,51 @@
                     <h6 class="uk-text-muted"><spring:message code="book.list.select"/></h6>
                 </div>
 
-                <div class="uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m mb-1" uk-grid uk-height-match="target: > div > .uk-card">
+                <div class="uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m mb-1" uk-grid
+                     uk-height-match="target: > div > .uk-card">
                     <c:forEach var="card" items="${cardBookList}">
-                        <c:set var="cardClass" value="${card.canPublish ? 'uk-card uk-card-default uk-card-hover' : 'uk-card uk-card-default'}"/>
-                        <c:choose>
-                            <c:when test="${card.canPublish}">
-                                <a href="#modal-sections-${card.book.bookId}" uk-toggle class="uk-display-block custom-link">
-                            </c:when>
-                            <c:otherwise>
+                    <c:set var="cardClass"
+                           value="${card.canPublish ? 'uk-card uk-card-default uk-card-hover' : 'uk-card uk-card-default'}"/>
+                    <c:choose>
+                    <c:when test="${card.canPublish}">
+                    <a href="#modal-sections-${card.book.bookId}" uk-toggle class="uk-display-block custom-link">
+                        </c:when>
+                        <c:otherwise>
 
-                            </c:otherwise>
+                        </c:otherwise>
                         </c:choose>
                         <div>
                             <div class="${cardClass} uk-card-body uk-border-rounded custom-link">
                                 <figure class="uk-margin-bottom">
                                     <c:choose>
                                         <c:when test="${card.image != null}">
-                                            <img class="book-image" src="${pageContext.request.contextPath}/images/${card.image}" alt="bookImage"/>
+                                            <img class="book-image"
+                                                 src="${pageContext.request.contextPath}/images/${card.image}"
+                                                 alt="bookImage"/>
                                         </c:when>
                                         <c:otherwise>
-                                            <img class="book-image" src="${pageContext.request.contextPath}/images/book.jpg" alt="book"/>
+                                            <img class="book-image"
+                                                 src="${pageContext.request.contextPath}/images/book.jpg" alt="book"/>
                                         </c:otherwise>
                                     </c:choose>
                                 </figure>
-                                <h5 class="uk-card-title m-0 custom-link">${card.bookModel.title}</h5>
-                                <p class="small-gray-text m-0 custom-link">${card.authorsString}</p>
+                                <h5 class="uk-card-title m-0 custom-link">
+                                    <c:out value="${card.bookModel.title}"/>
+                                </h5>
+                                <p class="small-gray-text m-0 custom-link">
+                                    <c:out value="${card.authorsString}"/>
+                                </p>
 
                                 <div id="modal-sections-${card.book.bookId}" uk-modal>
                                     <div class="uk-modal-dialog">
                                         <button class="uk-modal-close-default" type="button" uk-close></button>
                                         <div class="uk-modal-header">
 
-                                            <form action="${pageContext.request.contextPath}/createpublication" method="post" class="uk-grid-large uk-grid" style="justify-content: center;">
+                                            <form action="${pageContext.request.contextPath}/createpublication"
+                                                  method="post" class="uk-grid-large uk-grid"
+                                                  style="justify-content: center;">
                                                 <div class="uk-margin" style="justify-content: center">
-                                                    <div class="uk-width-1-1" >
+                                                    <div class="uk-width-1-1">
                                                         <div class="uk-width-1-1 uk-margin-top">
                                                             <div class="uk-margin-bottom">
                                                                 <label class="uk-margin">
@@ -149,13 +162,19 @@
                                                                 </label>
                                                             </div>
                                                             <div class="uk-inline">
-                                                                <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: location"></span>
-                                                                <input class="uk-input" type="text" name="location" aria-label="Not clickable icon"/>
+                                                                <span class="uk-form-icon uk-form-icon-flip"
+                                                                      uk-icon="icon: location"></span>
+                                                                <input class="uk-input" type="text" name="location"
+                                                                       aria-label="Not clickable icon"/>
                                                             </div>
-                                                            <input class="uk-input" type="hidden" value="${card.book.bookId}" name="bookId" aria-label="Not clickable icon"/>
+                                                            <input class="uk-input" type="hidden"
+                                                                   value="${card.book.bookId}" name="bookId"
+                                                                   aria-label="Not clickable icon"/>
                                                         </div>
-                                                        <div class="uk-margin-top uk-button-group" style="margin-left: 50px;">
-                                                            <button class="uk-button uk-button-primary"> <spring:message code="book.publish.button"/> </button>
+                                                        <div class="uk-margin-top uk-button-group"
+                                                             style="margin-left: 50px;">
+                                                            <button class="uk-button uk-button-primary"><spring:message
+                                                                    code="book.publish.button"/></button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -166,7 +185,7 @@
                                 </div>
                             </div>
                         </div>
-                    </c:forEach>
+                        </c:forEach>
                 </div>
             </div>
         </div>
