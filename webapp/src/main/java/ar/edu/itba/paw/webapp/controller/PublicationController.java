@@ -28,7 +28,6 @@ public class PublicationController {
     private final BookModelService bms;
     private final CompleteBookService cbs;
     private final PublicationDetailService pds;
-
     @Autowired
     private GenreService genreService;
     @Autowired
@@ -59,7 +58,6 @@ public class PublicationController {
             mav.addObject("publications", cardList);
             mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
             mav.addObject("bookStates", List.of(BookState.values()).stream().map(bookStatus -> new BookStateWrapper(bookStatus, bookStateService.getBookStateDisplayName(bookStatus))).collect(Collectors.toList()));
-
             mav.addObject("bookStateFilter", bookStateFilter );
             mav.addObject("genreFilter", genreFilter);
 
@@ -119,6 +117,7 @@ public class PublicationController {
             mav.addObject("completeBookParam", completeBookParam);
             mav.addObject("completeBooks", completeBooks);
             mav.addObject("publication_id", publicationId);
+            mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
         }
             mav.addObject("pd", pds.getPublicationDetail(publicationId));
         return mav;

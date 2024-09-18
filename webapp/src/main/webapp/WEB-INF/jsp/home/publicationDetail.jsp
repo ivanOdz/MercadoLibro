@@ -72,9 +72,13 @@
                 <div class="column-container" style="margin-top: 2%; margin-left: 35%;">
                     <!-- Genre -->
                     <div>
-                        <p class="small-gray-text custom-link">
-                            <c:out value="${card.bookModel.genre}"/>
-                        </p>
+					    <p class="small-gray-text custom-link">
+					        <c:forEach var="genreWrapper" items="${genres}">
+					            <c:if test="${genreWrapper.genre == card.bookModel.genre}">
+					                <c:out value="${genreWrapper.displayName}"/>
+					            </c:if>
+					        </c:forEach>
+					    </p>
                     </div>
 
                     <!-- Ranking -->
