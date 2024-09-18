@@ -84,7 +84,7 @@ public class PublicationController {
             ps.createPublication(bookId, pud.getUser().getUserId(), locationId, PublicationState.CURRENT);
         }
 
-        return mav;
+        return new ModelAndView("redirect:/book");
     }
 
 
