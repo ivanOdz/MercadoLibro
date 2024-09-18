@@ -1,14 +1,14 @@
 
 .main-margin {
-    margin-top: 5%;
+    margin-top: 8rem;
 }
 
 .card-profile {
-    height: auto;
     align-content: center;
     align-items: center;
     display: flex;
     flex-direction: column;
+    margin-top: 5rem !important;
 }
 
 .title-profile {

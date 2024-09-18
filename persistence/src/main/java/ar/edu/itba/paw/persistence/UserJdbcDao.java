@@ -50,7 +50,8 @@ public class UserJdbcDao implements UserDao {
     
     @Override
     public boolean updateUsername(long userId, String newUsername) {
-    	int rowsAffected = jdbcTemplate.update("UPDATE users SET username = ? WHERE userId = ?", new Object[]{ newUsername, userId }, new int[]{ Types.VARCHAR, Types.BIGINT });
+    	    	
+    	int rowsAffected = jdbcTemplate.update("UPDATE users SET userName = ? WHERE userId = ? AND NOT EXISTS (SELECT * FROM users WHERE userName = ?)", new Object[]{ newUsername, userId, newUsername }, new int[]{ Types.VARCHAR, Types.BIGINT, Types.VARCHAR });
     	
     	return rowsAffected >= 1;
     }
