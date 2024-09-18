@@ -138,11 +138,11 @@
 	            
 		            <h3 class="profile-pic">
 						<c:choose>
-							<c:when test="${loggedUser.imageId != null}">
+							<c:when test="${loggedUser.imageId != 0}">
 								<img class="profile-pic" src="${pageContext.request.contextPath}/images/${loggedUser.imageId}" alt="profileImage"/>
 							</c:when>
 							<c:otherwise>
-								<img class="profile-pic" src="images/profile-default.jpg" alt="noProfileImage"/>
+								<img class="profile-pic" src="${pageContext.request.contextPath}/images/profile-default.jpg" alt="defaultImage"/>
 							</c:otherwise>
 						</c:choose>
 					</h3>
