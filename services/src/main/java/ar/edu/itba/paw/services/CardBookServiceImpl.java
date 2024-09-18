@@ -41,7 +41,7 @@ public class CardBookServiceImpl implements CardBookService {
                 imageId = image.getImageId();
             }
 
-            List<Author> authors = bookAuthorService.getAuthorsByBookId(book.getBookId());
+            List<Author> authors = bookAuthorService.getAuthorsByBookId(book.getBookModelId());
 
             boolean canPublish = false;
             Optional<Publication> publication = publicationService.getPublicationStateByBookId(book.getBookId());
