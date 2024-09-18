@@ -5,7 +5,7 @@
 <%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
 <%@include file="/WEB-INF/jsp/head/headers.jsp" %>
 
-<html>
+<html class="custom-style">
 <head>
     <link href="${pageContext.request.contextPath}/css/navbar.css?v=1.0" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
@@ -35,10 +35,12 @@
                         <input type="hidden" name="genre-filter" value="">
                         <input type="hidden" name="search" value="${param.search}">
 
-                        <button type="submit" class="ui-search-button" title="GenreFilterRemove">
+                        <button type="submit" class="ui-search-button  uk-button uk-button-default uk-button-small" title="GenreFilterRemove">
 							<span class="ui-search-filter-name">
 								<spring:message code="delete.genre.filter"/>
 							</span>
+                            <span uk-icon="close"></span>
+
                         </button>
                     </form>
                 </c:if>
@@ -52,7 +54,7 @@
                                     <input type="hidden" name="genre-filter" value="${genreWrapper.genre.value}">
                                     <input type="hidden" name="search" value="${param.search}">
 
-                                    <button type="submit" class="ui-search-button" title="${genreWrapper.displayName}">
+                                    <button type="submit" class="ui-search-button  uk-button uk-button-default uk-button-small" title="${genreWrapper.displayName}">
                                         <span class="ui-search-filter-name">${genreWrapper.displayName}</span>
                                     </button>
                                 </form>
