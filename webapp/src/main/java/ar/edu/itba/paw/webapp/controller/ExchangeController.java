@@ -53,12 +53,15 @@ public class ExchangeController {
         if (authentication.getPrincipal() instanceof PawUserDetails pud) {
             List<ExchangeWrapper> exchangeWrapperList = exchangeService.getExchangeOffererWrapperListByUserId(pud.getUser().getUserId());
             mav.addObject("exchanges", exchangeWrapperList);
-            mav.addObject("review", new UserReview());
+            mav.addObject("userReview", new UserReview());
+            
+            for (ExchangeWrapper exchange : exchangeWrapperList) {
+                System.out.println("Exchange ID: " + exchange.getExchange().getExchangeId() + " isReviewable: " + exchange.getIsReviewable());
+            }
         }
 
         return mav;
     }
-
 
     // Estado de mis ofertas
     // Paso el ID, y quiero aquellas exchanges en las que soy requester
@@ -70,7 +73,15 @@ public class ExchangeController {
         if (authentication.getPrincipal() instanceof PawUserDetails pud) {
             List<ExchangeWrapper> exchangeWrapperList = exchangeService.getExchangeRequesterWrapperListByUserId(pud.getUser().getUserId());
             mav.addObject("exchanges", exchangeWrapperList);
-            mav.addObject("review", new UserReview());
+            mav.addObject("userReview", new UserReview());
+            
+            for (ExchangeWrapper exchange : exchangeWrapperList) {
+                System.out.println("Exchange ID: " + exchange.getExchange().getExchangeId());
+                System.out.println("Reviewable: " + "isReviewable: " + exchange.getIsReviewable());
+                System.out.println("Offerer ID: " + exchange.getOffererBook().getOwnerId());
+                System.out.println("Requester ID: " + exchange.getRequesterBook().getOwnerId());
+                System.out.println("");
+            }
         }
         
         return mav;
@@ -191,12 +202,20 @@ public class ExchangeController {
 		@RequestParam("reviewerId") long reviewerId,
 		@RequestParam("subjectId") long subjectId,
 		@RequestParam("reviewDescription") String reviewDescription,
-		/*@RequestParam("reviewDate") java.sql.Timestamp reviewDate,*/
 		@RequestParam("userReviewRating") int userReviewRating/*,
 		BindingResult result, RedirectAttributes redirectAttributes*/) {
 		
-		UserReview userReview = new UserReview((long)0, exchangeId, reviewerId, subjectId, reviewDescription, new java.sql.Timestamp(0), userReviewRating);
+		UserReview userReview = new UserReview((long)0, exchangeId, reviewerId, subjectId, reviewDescription, new java.sql.Timestamp(System.currentTimeMillis()), userReviewRating);
+		
+        System.out.println("USER-REVIEW: ");
+		System.out.println("exchangeId: " + exchangeId);
+		System.out.println("reviewerId: " + reviewerId);
+		System.out.println("subjectId: " + subjectId);
+		System.out.println("reviewDescription: " + reviewDescription);
+		System.out.println("userReviewRating: " + userReviewRating);
+        System.out.println("");
 
+        
 		boolean success = userReviewService.createUserReview(userReview);
 
         /*
