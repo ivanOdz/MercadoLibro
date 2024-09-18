@@ -13,13 +13,13 @@
       <div class="uk-navbar-left">
         <ul class="uk-navbar-nav">
           <li>
-            <a href="${pageContext.request.contextPath}/">
-              <img src="${pageContext.request.contextPath}/images/mercado_libro.webp" alt="Logo Icon" class="icon-style">
+            <a class="image-hover" href="${pageContext.request.contextPath}/">
+              <img  src="${pageContext.request.contextPath}/images/mercado_libro.webp" alt="Logo Icon" class="icon-style">
             </a>
           </li>
           <li>
             <a class="uk-navbar-item uk-logo" href="${pageContext.request.contextPath}/">
-              <strong class="button-text">
+              <strong class="button-text-wo">
                 <spring:message code="publications.list.brand.logo"/>
               </strong>
             </a>
@@ -31,18 +31,17 @@
       <div class="uk-navbar-right">
         <ul class="uk-navbar-nav">
           <li>
-            <a class="button-text" class="pl-1 pr-1" href="${exchangeRequestsUrl}"><spring:message code="home.exchange.view"/></a>
+            <a class="right-icons-nav pl-1 pr-1" href="${exchangeRequestsUrl}"><spring:message code="home.exchange.view"/></a>
             <div class="uk-navbar-dropdown">
               <ul class="uk-nav uk-navbar-dropdown-nav">
-                <li class="uk-active uk-margin-small-top">
-                  <a class="button-text-dropdown" href="${exchangeRequestsUrl}">
+                <li>
+                  <a class="dropdown-wo-buttons" href="${exchangeRequestsUrl}">
                     <spring:message  code="home.exchange.requests"/>
                   </a>
                 </li>
-                <li class="uk-margin-small-top">
-                  <a class="button-text-dropdown" href="${exchangeOffersUrl}">
-                    <div class="button-text">
-                      <spring:message code="home.exchange.offers"/></div>
+                <li>
+                  <a class="dropdown-wo-buttons" href="${exchangeOffersUrl}">
+                      <spring:message code="home.exchange.offers"/>
                   </a>
                 </li>
               </ul>
@@ -50,23 +49,23 @@
           </li>
 
           <li>
-            <a class="pl-1 pr-1" href="${booksUrl}">
+            <a class="pl-1 pr-1 right-icons-nav" href="${booksUrl}">
               <spring:message code="home.book.view"/>
             </a>
             <div class="uk-navbar-dropdown">
               <ul class="uk-nav uk-navbar-dropdown-nav">
-                <li class="uk-active uk-margin-small-top">
-                  <a class="button-text-dropdown" href="${booksUrl}">
+                <li>
+                  <a class="dropdown-wo-buttons" href="${booksUrl}">
                     <spring:message code="home.book.view.books"/>
                   </a>
                 </li>
-                <li class="uk-margin-small-top">
-                  <a class="button-text-dropdown" href="${newBookFromScratch}">
+                <li>
+                  <a class="dropdown-wo-buttons" href="${newBookFromScratch}">
                     <spring:message code="home.book.view.uploadnew"/>
                   </a>
                 </li>
-                <li class="uk-margin-small-top">
-                  <a  class="button-text-dropdown" href="${uploadNewPrecharged}">
+                <li>
+                  <a  class="dropdown-wo-buttons" href="${uploadNewPrecharged}">
                     <spring:message code="home.book.view.uploadnewprecharged"/>
                   </a>
                 </li>
@@ -74,16 +73,16 @@
             </div>
           </li>
           <li>
-            <a class="pl-1 pr-1" href="${profileUrl}"><spring:message code="home.profile.view"/></a>
+            <a class="pl-1 pr-1 right-icons-nav" href="${profileUrl}"><spring:message code="home.profile.view"/></a>
             <div class="uk-navbar-dropdown">
-              <ul class="uk-nav uk-navbar-dropdown-nav">
+              <ul class="uk-nav uk-navbar-dropdown-nav column">
                 <li class="uk-active uk-margin-small-top">
-                  <a class="button-text-dropdown" href="${profileUrl}">
+                  <a class="dropdown-wo-buttons" href="${profileUrl}">
                     <spring:message code="home.profile.view"/>
                   </a>
                 </li>
                 <li class="uk-margin-small-top">
-                  <a class="button-text-dropdown" href="#modal-logout" uk-toggle><spring:message code="home.profile.logout"/></a>
+                  <a class="dropdown-wo-buttons" href="#modal-logout" uk-toggle><spring:message code="home.profile.logout"/></a>
                 </li>
               </ul>
             </div>

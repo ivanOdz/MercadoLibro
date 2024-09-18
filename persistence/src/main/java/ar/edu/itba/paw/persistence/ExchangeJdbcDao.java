@@ -51,7 +51,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
 
     @Override
     public long getIdByAcceptCode(int acceptCode) {
-        System.out.println(acceptCode);
+        //System.out.println(acceptCode);
         return jdbcTemplate.query("SELECT * FROM exchange WHERE acceptCode = ?", new Object[]{ acceptCode },
                 new int[]{ Types.INTEGER }, ROWMAPPER).stream().findFirst().get().getExchangeId();
     }

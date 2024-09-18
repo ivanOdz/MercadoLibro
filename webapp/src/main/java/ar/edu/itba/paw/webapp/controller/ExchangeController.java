@@ -150,7 +150,7 @@ public class ExchangeController {
     public ModelAndView confirmExchangeOffer(@RequestParam(name = "accept_code") int accept_code) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        System.out.println(authentication.getPrincipal());
+        //System.out.println(authentication.getPrincipal());
 
         // if the user that is accepting/rejecting the exchange is the one that should
         if (authentication.getPrincipal() instanceof PawUserDetails pud
@@ -173,7 +173,7 @@ public class ExchangeController {
         ModelAndView mav = new ModelAndView("error/failed_authentication");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        System.out.println(authentication.getPrincipal());
+        //System.out.println(authentication.getPrincipal());
 
         // if the user that is accepting/rejecting the exchange is the one that should
         if (authentication.getPrincipal() instanceof PawUserDetails pud
