@@ -111,8 +111,9 @@
 }
 
 .nav-container {
-    padding: 22px;
+    padding: 12px;
     margin: 0;
+    height: 12%;
 }
 
 .button-text-wo {
