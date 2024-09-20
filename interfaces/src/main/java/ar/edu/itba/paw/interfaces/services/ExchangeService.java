@@ -14,7 +14,7 @@ public interface ExchangeService {
 
     long getId(int acceptCode);
 
-    String exchange(int acceptCode, boolean state);
+    //String exchange(int acceptCode, boolean state);
 
     void initializeExchange(CompleteBook requesterCompleteData, long offererPubId);
 

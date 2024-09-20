@@ -23,7 +23,7 @@ public class PublicationDetailServiceImpl implements PublicationDetailService {
         this.bookImageService = bookImageService;
     }
 
-    @Override
+    /*@Override
     public PublicationDetail getPublicationDetail(long publicationId) {
         Publication publication = publicationService.getPublicationById(publicationId).orElse(null);
         Book book = bookService.getBookById(publication.getBookId()).orElse(null);
@@ -32,5 +32,5 @@ public class PublicationDetailServiceImpl implements PublicationDetailService {
         Rating rating = bookModelService.getRatingByBookModelId(bookModel.getBookModelId());
 
         return new PublicationDetail(bookModel, book, bookImageList, rating);
-    }
+    }*/
 }

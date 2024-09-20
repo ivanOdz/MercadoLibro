@@ -2,12 +2,14 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.services.PublicationService;
 import ar.edu.itba.paw.interfaces.persistence.PublicationDao;
+import ar.edu.itba.paw.models.PublicationCard;
+import ar.edu.itba.paw.models.utils.BookState;
+import ar.edu.itba.paw.models.utils.Genre;
 import ar.edu.itba.paw.models.utils.PublicationState;
+import ar.edu.itba.paw.models.utils.SortType;
 import org.springframework.stereotype.Service;
-import ar.edu.itba.paw.models.Publication;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
@@ -19,7 +21,7 @@ public class PublicationsServiceImpl implements PublicationService {
         this.pubDao = pubDao;
     }
 
-    @Override
+    /*@Override
     public List<Publication> getAllPublications() {
         return pubDao.getAllPublications();
     }
@@ -37,11 +39,15 @@ public class PublicationsServiceImpl implements PublicationService {
     @Override
     public Optional<Publication> getPublicationStateByBookId(long bookId) {
         return pubDao.getPublicationStateByBookId(bookId);
-    }
+    }*/
 
     @Override
     public long createPublication(long bookId, long userId, long locationId, PublicationState publicationState){
         return pubDao.createPublication(bookId, userId, locationId, publicationState);
+    }
+
+    public List<PublicationCard> getFilteredSortedOrderedPublicationsByPageExcludingUser(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, int pageIndex, long userId, SortType sortType){
+        return pubDao.getFilteredSortedOrderedPublicationsByPageExcludingUser(search, isBookStateFilterActive, bookStateFilter, isGenreFilterActive, genreFilter, pageIndex, userId, sortType);
     }
 
 

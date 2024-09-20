@@ -44,10 +44,10 @@ public class CardBookServiceImpl implements CardBookService {
             List<Author> authors = bookAuthorService.getAuthorsByBookId(book.getBookModelId());
 
             boolean canPublish = false;
-            Optional<Publication> publication = publicationService.getPublicationStateByBookId(book.getBookId());
-            if(publication.isEmpty() || publication.get().getPublicationState() == PublicationState.TERMINATED) {
-                canPublish = true;
-            }
+            //Optional<Publication> publication = publicationService.getPublicationStateByBookId(book.getBookId());
+            //if(publication.isEmpty() || publication.get().getPublicationState() == PublicationState.TERMINATED) {
+            //    canPublish = true;
+            //}
             cardBookList.add(new CardBook(book, bookModel, imageId, authors, canPublish));
         }
         return cardBookList;

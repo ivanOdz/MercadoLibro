@@ -55,7 +55,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         return exchangeDao.getIdByAcceptCode(acceptCode);
     }
 
-    @Override
+    /*@Override
     public String exchange(int acceptCode, boolean state) {
         switch (exchangeDao.exchange(acceptCode, state)){
             case ResponseState.ACCEPTED: {
@@ -66,7 +66,7 @@ public class ExchangeServiceImpl implements ExchangeService {
             }
             default: return "exchange/invalid";
         }
-    }
+    }*/
 
     @Override
     public void initializeExchange(CompleteBook requesterComplete, long offererPubId) {
@@ -86,10 +86,10 @@ public class ExchangeServiceImpl implements ExchangeService {
         Exchange ex = exchangeDao.createExchange(offererPubId, requesterPubId, acceptCode, timestamp);
 
         Map<String, Object> variables = new HashMap<>();
-        Publication offererPub = publicationService.getPublicationById(ex.getOffererPubId()).get();
-        Publication requesterPub = publicationService.getPublicationById(ex.getRequesterPubId()).get();
+        //Publication offererPub = publicationService.getPublicationById(ex.getOffererPubId()).get();
+        //Publication requesterPub = publicationService.getPublicationById(ex.getRequesterPubId()).get();
 
-        Book bookOffered = bookService.getBookById(offererPub.getBookId()).get();
+        /*Book bookOffered = bookService.getBookById(offererPub.getBookId()).get();
         Book bookRequested = bookService.getBookById(requesterPub.getBookId()).get();
 
         User oferrer = userService.findById(offererPub.getUserId()).get();
@@ -106,9 +106,9 @@ public class ExchangeServiceImpl implements ExchangeService {
         variables.put("requestedPublication", bookModelRequestedTitle);
         variables.put("offeredPublication", bookModelOfferedTitle);
         variables.put("validationUrl", webappUrl + "/createexchange?accept_code=" + ex.getAcceptCode() + "&state=true");
-        variables.put("rejectionUrl", webappUrl + "/createexchange?accept_code=" + ex.getAcceptCode() +"&state=false");
+        variables.put("rejectionUrl", webappUrl + "/createexchange?accept_code=" + ex.getAcceptCode() +"&state=false");*/
 
-        emailService.sendEmail(oferrerEmail, variables, "exchangeRequest", "Requesting");
+        //emailService.sendEmail(oferrerEmail, variables, "exchangeRequest", "Requesting");
 
     }
 

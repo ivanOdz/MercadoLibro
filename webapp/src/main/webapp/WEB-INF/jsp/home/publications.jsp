@@ -30,9 +30,10 @@
                 </h2>
 
                 <!-- Esto tiene que aparecer solo si hay un filtro de BookState -->
-                <c:if test="${bookStateFilter != '6'}">
+                <c:if test="${isBookStateFilterActive}">
                     <form action="<c:url value='' />" method="get">
-                        <input type="hidden" name="book-state-filter" value="">
+                        <input type="hidden" name="is-book-state-filter-active" value="false">
+                        <input type="hidden" name="is-genre-filter-active" value=${isGenreFilterActive}>
                         <input type="hidden" name="genre-filter" value=${genreFilter}>
                         <input type="hidden" name="search" value="<c:out value='${param.search}'/>"/>
 
@@ -47,10 +48,11 @@
                 </c:if>
 
                 <!-- Esto tiene que aparecer solo si hay un filtro de Genero -->
-                <c:if test="${genreFilter != '32'}">
+                <c:if test="${isGenreFilterActive}">
                     <form action="<c:url value='' />" method="get">
+                        <input type="hidden" name="is-genre-filter-active" value="false">
+                        <input type="hidden" name="is-book-state-filter-active" value=${isBookStateFilterActive}>
                         <input type="hidden" name="book-state-filter" value=${bookStateFilter}>
-                        <input type="hidden" name="genre-filter" value="">
                         <input type="hidden" name="search" value="<c:out value='${param.search}'/>">
 
                         <button type="submit"
@@ -64,7 +66,7 @@
                     </form>
                 </c:if>
 
-                <c:if test="${bookStateFilter == '6'}">
+                <c:if test="${!isBookStateFilterActive}">
                     <h3><spring:message code="filter.condition"/></h3>
                     <ul class="uk-list">
                         <c:forEach var="bookStateWrapper" items="${bookStates}">
@@ -86,7 +88,7 @@
                     </ul>
                 </c:if>
 
-                <c:if test="${genreFilter == '32'}">
+                <c:if test="${!isGenreFilterActive}">
                     <h3><spring:message code="filter.genre"/></h3>
                     <ul class="uk-list">
                         <c:forEach var="genreWrapper" items="${genres}">
@@ -117,15 +119,15 @@
                 <div class="uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m mb-1" uk-grid>
                     <c:forEach var="card" items="${publications}">
                         <div>
-                            <a href="<c:url value='publications/${card.publication.publicationId}'>
-								<c:param name='publication_id' value='${card.publication.publicationId}'/>
+                            <a href="<c:url value='publications/${card.publicationId}'>
+								<c:param name='publication_id' value='${card.publicationId}'/>
 								</c:url>"
                                class="uk-card uk-card-default uk-card-hover uk-card-body uk-border-rounded custom-link">
                                 <figure class="uk-margin-bottom">
                                     <c:choose>
-                                        <c:when test="${card.bookImages != null}">
+                                        <c:when test="${card.imageId != null}">
                                             <img class="book-image"
-                                                 src="${pageContext.request.contextPath}/images/${card.bookImages[0].imageId}"
+                                                 src="${pageContext.request.contextPath}/images/${card.imageId}"
                                                  alt="bookImage"/>
                                         </c:when>
                                         <c:otherwise>
@@ -136,10 +138,10 @@
                                 </figure>
 
                                 <h5 class="uk-card-title custom-link">
-                                    <c:out value='${card.bookModel.title}'/>
+                                    <c:out value='${card.title}'/>
                                 </h5>
                                 <p class="small-gray-text custom-link">
-                                    <c:out value='${card.authorsString}'/>
+                                    <c:out value='${card.authors}'/>
                                 </p>
                             </a>
                         </div>

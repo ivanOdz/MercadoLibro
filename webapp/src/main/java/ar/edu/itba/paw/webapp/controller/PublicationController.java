@@ -45,34 +45,43 @@ public class PublicationController {
 
     @RequestMapping("/")
     public ModelAndView index(@RequestParam(name = "search", defaultValue = "") String search,
-                              @RequestParam(name = "book-state-filter", defaultValue = "6") int bookStateFilter,
-                              @RequestParam(name = "genre-filter", defaultValue = "32") int genreFilter) {
-    	
+                              @RequestParam(name = "is-book-state-filter-active", defaultValue = "false") boolean isBookStateFilterActive,
+                              @RequestParam(name = "book-state-filter", required = false) BookState bookStateFilter,
+                              @RequestParam(name = "is-genre-filter-active", defaultValue = "false") boolean isGenreFilterActive,
+                              @RequestParam(name = "genre-filter", required = false) Genre genreFilter,
+                              @RequestParam(name = "page-index", defaultValue = "0") int pageIndex,
+                              @RequestParam(name = "sort-type", defaultValue = "PUBLICATION_DATE_ASCENDING") SortType sortType) {
+
         final ModelAndView mav = new ModelAndView("home/publications");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.getPrincipal() instanceof PawUserDetails pud) {
-            List<Card> cardList = cs.buildCardList(ps.getAllPublicationsFilteredBy(search, bookStateFilter, genreFilter, pud.getUser().getUserId()));
+            List<PublicationCard> publications = ps.getFilteredSortedOrderedPublicationsByPageExcludingUser(search, isBookStateFilterActive,
+                    bookStateFilter, isGenreFilterActive, genreFilter, pageIndex, pud.getUser().getUserId(), sortType);
 
+
+            System.out.println("Cantidad de publicaciones recuperadas: " + publications.toArray().length);
             mav.addObject("username", pud.getUser().getUsername());
-            mav.addObject("publications", cardList);
+            mav.addObject("publications", publications);
             mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
             mav.addObject("bookStates", List.of(BookState.values()).stream().map(bookStatus -> new BookStateWrapper(bookStatus, bookStateService.getBookStateDisplayName(bookStatus))).collect(Collectors.toList()));
-            mav.addObject("bookStateFilter", bookStateFilter );
+            mav.addObject("bookStateFilter", bookStateFilter);
+            mav.addObject("isGenreFilterActive", isGenreFilterActive);
             mav.addObject("genreFilter", genreFilter);
+            mav.addObject("isBookStateFilterActive", isBookStateFilterActive);
 
         }
         
         return mav;
     }
 
-    @RequestMapping(path = "/", method = RequestMethod.GET)
+    /*@RequestMapping(path = "/", method = RequestMethod.GET)
     public ModelAndView search(@RequestParam(name = "search", defaultValue = "") String search,
                                @RequestParam(name = "book-state-filter", defaultValue = "6") int bookStateFilter,
                                @RequestParam(name = "genre-filter", defaultValue = "32") int genreFilter) {
 
         return index(search, bookStateFilter, genreFilter);
-    }
+    }*/
 
     @RequestMapping(path = "/createpublication", method = RequestMethod.POST)
     public ModelAndView createPublication(@RequestParam(name = "bookId") long bookId, @RequestParam(name = "location") String location){
@@ -88,7 +97,7 @@ public class PublicationController {
     }
 
 
-    @RequestMapping("/publication")
+    /*@RequestMapping("/publication")
     public ModelAndView publication(@RequestParam(name = "publication_id") long publicationId) {
         final ModelAndView mav = new ModelAndView("home/publication");
         
@@ -100,9 +109,9 @@ public class PublicationController {
         }
 
         return mav;
-    }
+    }*/
 
-    @GetMapping("/publications/{publication_id:\\d+}")
+    /*@GetMapping("/publications/{publication_id:\\d+}")
     public ModelAndView publicationDetail(@PathVariable(name = "publication_id") long publicationId) {
         final ModelAndView mav = new ModelAndView("home/publicationDetail");
         mav.addObject("card", cs.createCard(publicationId));
@@ -121,11 +130,11 @@ public class PublicationController {
         }
             mav.addObject("pd", pds.getPublicationDetail(publicationId));
         return mav;
-    }
+    }*/
 
 
     // Esto tienen que volar
-    @RequestMapping("/submitmail")
+    /*@RequestMapping("/submitmail")
     public ModelAndView submitMail(@RequestParam(name = "publication_id") long publicationId) {
         final ModelAndView mav = new ModelAndView("home/submitmail");
         if(ps.getPublicationById(publicationId).isEmpty()) {
@@ -133,9 +142,9 @@ public class PublicationController {
         }
         else mav.addObject("publication_id", publicationId);
         return mav;
-    }
+    }*/
 
-    @RequestMapping(value = "/submitmail", method = RequestMethod.POST)
+    /*@RequestMapping(value = "/submitmail", method = RequestMethod.POST)
     public ModelAndView handleMailSubmission(@RequestParam(name = "submited_mail") String submited_mail, @RequestParam(name = "publication_id") long publicationId) {
         final ModelAndView mav = new ModelAndView("home/comparemail");
 
@@ -152,6 +161,6 @@ public class PublicationController {
         mav.addObject("is_for_exchange", true);
 
         return mav;
-    }
+    }*/
 
 }

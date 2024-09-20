@@ -56,7 +56,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
                 new int[]{ Types.INTEGER }, ROWMAPPER).stream().findFirst().get().getExchangeId();
     }
 
-    @Override
+    /*@Override
     public ResponseState exchange(int acceptCode, boolean state) {
         Optional<Exchange> ex = jdbcTemplate.query("SELECT * FROM exchange WHERE acceptCode = ?", new Object[]{ acceptCode },
                 new int[]{ Types.INTEGER }, ROWMAPPER).stream().findFirst();
@@ -88,7 +88,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
         publicationJdbcDao.terminatePublication(ex.get().getRequesterPubId());
 
         return ResponseState.ACCEPTED;
-    }
+    }*/
 
     @Override
     public Exchange createExchange(long offererPubId, long requesterPubId, int acceptCode, Timestamp startDate) {

@@ -30,7 +30,7 @@ public class CardServiceImpl implements CardService {
         this.cardBookService = cardBookService;
     }
 
-    @Override
+    /*@Override
     public Card createCard(long publicationId) {
         Publication publication = publicationsService.getPublicationById(publicationId).get();
         Book book = bookService.getBookById(publication.getBookId()).get();
@@ -39,9 +39,9 @@ public class CardServiceImpl implements CardService {
         List<Author> authors = bookAuthorService.getAuthorsByBookId(book.getBookId());
         String location = locationService.getLocationByPublicationId(publicationId);
         return new Card(publication, book, bookModel, bookImages, authors, location);
-    }
+    }*/
 
-    @Override
+    /*@Override
     public List<Card> buildCardList(List<Publication> publicationsList) {
         List<Card> cardList = new ArrayList<>();
         for (Publication publication : publicationsList) {
@@ -53,6 +53,6 @@ public class CardServiceImpl implements CardService {
             cardList.add(new Card(publication, book, bookModel, bookImage, authors, location));
         }
         return cardList;
-    }
+    }*/
 
 }

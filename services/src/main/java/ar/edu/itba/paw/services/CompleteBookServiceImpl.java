@@ -35,11 +35,11 @@ public class CompleteBookServiceImpl implements CompleteBookService {
 
         for (Book book : bookList) {
             BookModel bookModel = bookModelService.getBookModelByBookModelId(book.getBookModelId());
-            Optional<Publication> publication = publicationService.getPublicationStateByBookId(book.getBookId());
+            //Optional<Publication> publication = publicationService.getPublicationStateByBookId(book.getBookId());
 
-            if(publication.isEmpty() || publication.get().getPublicationState() == PublicationState.TERMINATED) {
+            /*if(publication.isEmpty() || publication.get().getPublicationState() == PublicationState.TERMINATED) {
                 toReturn.add(new CompleteBook(book, bookModel));
-            }
+            }*/
         }
 
         return toReturn;

@@ -15,7 +15,7 @@ public interface ExchangeDao {
 
     long getIdByAcceptCode(int acceptCode);
 
-    ResponseState exchange(int acceptCode, boolean state);
+    //ResponseState exchange(int acceptCode, boolean state);
 
     Exchange createExchange(long offererId, long requesterId, int acceptCode, Timestamp startDate);
 

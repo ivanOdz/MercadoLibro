@@ -5,5 +5,5 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface PublicationDetailService {
-    PublicationDetail getPublicationDetail(long publicationId);
+    //PublicationDetail getPublicationDetail(long publicationId);
 }

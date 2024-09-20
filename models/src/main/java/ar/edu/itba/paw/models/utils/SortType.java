@@ -1,0 +1,10 @@
+package ar.edu.itba.paw.models.utils;
+
+public enum SortType {
+    RATING_ASCENDING,
+    RATING_DESCENDING,
+    PUBLICATION_DATE_ASCENDING,
+    PUBLICATION_DATE_DESCENDING,
+    BOOK_NAME_ASCENDING,
+    BOOK_NAME_DESCENDING
+}

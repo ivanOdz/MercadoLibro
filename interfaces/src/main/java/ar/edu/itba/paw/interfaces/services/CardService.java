@@ -8,7 +8,7 @@ import java.util.List;
 @Service
 public interface CardService {
 
-    Card createCard(long publicationId);
+    //Card createCard(long publicationId);
 
-    List<Card> buildCardList(List<Publication> publicationsList);
+    //List<Card> buildCardList(List<Publication> publicationsList);
 }

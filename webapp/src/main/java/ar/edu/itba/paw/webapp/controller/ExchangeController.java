@@ -100,7 +100,7 @@ public class ExchangeController {
         return new ModelAndView("/exchange/invalid");
     }
 
-    @RequestMapping("/createexchange")
+    /*@RequestMapping("/createexchange")
     public ModelAndView exchange(@RequestParam(name = "accept_code") int acceptCode, @RequestParam(name = "state") boolean state) {
         ModelAndView mav = new ModelAndView("error/failed_authentication");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -143,10 +143,10 @@ public class ExchangeController {
         }
 
         return mav;
-    }
+    }*/
 
 
-    @RequestMapping("/confirm_offerer")
+    /*@RequestMapping("/confirm_offerer")
     public ModelAndView confirmExchangeOffer(@RequestParam(name = "accept_code") int accept_code) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -160,7 +160,7 @@ public class ExchangeController {
         }
 
         return new ModelAndView("redirect:/failed_authentication");
-    }
+    }*/
 
     @RequestMapping("/failed_authentication")
     public ModelAndView failedAuthentication() {
@@ -168,7 +168,7 @@ public class ExchangeController {
     }
 
 
-    @RequestMapping("/confirm_requester")
+    /*@RequestMapping("/confirm_requester")
     public ModelAndView confirmExchangeRequest(@RequestParam(name = "accept_code") int accept_code) {
         ModelAndView mav = new ModelAndView("error/failed_authentication");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -183,7 +183,7 @@ public class ExchangeController {
         }
 
         return mav;
-    }
+    }*/
 
     @RequestMapping(path = "/submitReview", method = RequestMethod.POST)
     public ModelAndView submitReview(
