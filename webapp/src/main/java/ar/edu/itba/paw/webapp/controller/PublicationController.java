@@ -59,8 +59,6 @@ public class PublicationController {
             List<PublicationCard> publications = ps.getFilteredSortedOrderedPublicationsByPageExcludingUser(search, isBookStateFilterActive,
                     bookStateFilter, isGenreFilterActive, genreFilter, pageIndex, pud.getUser().getUserId(), sortType);
 
-
-            System.out.println("Cantidad de publicaciones recuperadas: " + publications.toArray().length);
             mav.addObject("username", pud.getUser().getUsername());
             mav.addObject("publications", publications);
             mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
@@ -75,13 +73,17 @@ public class PublicationController {
         return mav;
     }
 
-    /*@RequestMapping(path = "/", method = RequestMethod.GET)
+    @RequestMapping(path = "/", method = RequestMethod.GET)
     public ModelAndView search(@RequestParam(name = "search", defaultValue = "") String search,
-                               @RequestParam(name = "book-state-filter", defaultValue = "6") int bookStateFilter,
-                               @RequestParam(name = "genre-filter", defaultValue = "32") int genreFilter) {
+                               @RequestParam(name = "is-book-state-filter-active", defaultValue = "false") boolean isBookStateFilterActive,
+                               @RequestParam(name = "book-state-filter", required = false) BookState bookStateFilter,
+                               @RequestParam(name = "is-genre-filter-active", defaultValue = "false") boolean isGenreFilterActive,
+                               @RequestParam(name = "genre-filter", required = false) Genre genreFilter,
+                               @RequestParam(name = "page-index", defaultValue = "0") int pageIndex,
+                               @RequestParam(name = "sort-type", defaultValue = "PUBLICATION_DATE_ASCENDING") SortType sortType) {
 
-        return index(search, bookStateFilter, genreFilter);
-    }*/
+        return index(search, isBookStateFilterActive, bookStateFilter, isGenreFilterActive, genreFilter, pageIndex, sortType);
+    }
 
     @RequestMapping(path = "/createpublication", method = RequestMethod.POST)
     public ModelAndView createPublication(@RequestParam(name = "bookId") long bookId, @RequestParam(name = "location") String location){

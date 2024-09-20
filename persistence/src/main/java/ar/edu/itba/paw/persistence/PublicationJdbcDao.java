@@ -146,13 +146,13 @@ public class PublicationJdbcDao implements PublicationDao {
         sqlQuery.append(" LIMIT ? OFFSET ?");
 
         if(isGenreFilterActive && isBookStateFilterActive) {
-            return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ userId, PublicationState.CURRENT.getValue(), genreFilter, bookStateFilter, PAGE_SIZE, offset }, new int[]{ Types.BIGINT, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER  }, ROWMAPPER_PUBLICATIONCARD);
+            return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ userId, PublicationState.CURRENT.getValue(), genreFilter.getValue(), bookStateFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.BIGINT, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER  }, ROWMAPPER_PUBLICATIONCARD);
         }
         if(isGenreFilterActive) {
-            return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ userId, PublicationState.CURRENT.getValue(), genreFilter, PAGE_SIZE, offset }, new int[]{ Types.BIGINT, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROWMAPPER_PUBLICATIONCARD);
+            return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ userId, PublicationState.CURRENT.getValue(), genreFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.BIGINT, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROWMAPPER_PUBLICATIONCARD);
         }
         if(isBookStateFilterActive){
-            return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ userId, PublicationState.CURRENT.getValue(), bookStateFilter, PAGE_SIZE, offset }, new int[]{ Types.BIGINT, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROWMAPPER_PUBLICATIONCARD);
+            return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ userId, PublicationState.CURRENT.getValue(), bookStateFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.BIGINT, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROWMAPPER_PUBLICATIONCARD);
         }
         return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ userId, PublicationState.CURRENT.getValue(), PAGE_SIZE, offset }, new int[]{ Types.BIGINT, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROWMAPPER_PUBLICATIONCARD);
     }

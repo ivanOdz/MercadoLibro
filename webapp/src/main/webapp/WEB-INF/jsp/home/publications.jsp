@@ -71,11 +71,14 @@
                     <ul class="uk-list">
                         <c:forEach var="bookStateWrapper" items="${bookStates}">
                             <li class="ui-search-filter-container">
-                                <form action="<c:url value='' />" method="get">
-                                    <input type="hidden" name="book-state-filter"
-                                           value="${bookStateWrapper.bookState.value}">
-                                    <input type="hidden" name="genre-filter" value="${genreFilter}">
+                                <form action="<c:url value='/' />" method="get">
                                     <input type="hidden" name="search" value="<c:out value='${param.search}'/>">
+                                    <input type="hidden" name="is-book-state-filter-active" value='true'>
+                                    <input type="hidden" name="book-state-filter"
+                                           value="${bookStateWrapper.bookState}">
+                                    <input type="hidden" name="is-genre-filter-active" value="${isGenreFilterActive}">
+                                    <input type="hidden" name="genre-filter" value="${genreFilter}">
+
 
                                     <button type="submit"
                                             class="ui-search-button uk-button uk-button-default uk-button-small"
@@ -94,8 +97,10 @@
                         <c:forEach var="genreWrapper" items="${genres}">
                             <li class="ui-search-filter-container">
                                 <form action="<c:url value='' />" method="get">
-                                    <input type="hidden" name="genre-filter" value="${genreWrapper.genre.value}">
+                                    <input type="hidden" name="genre-filter" value="${genreWrapper.genre}">
+                                    <input type="hidden" name="is-genre-filter-active" value="true">
                                     <input type="hidden" name="book-state-filter" value="${bookStateFilter}">
+                                    <input type="hidden" name="is-book-state-filter-active" value="${isBookStateFilterActive}">
                                     <input type="hidden" name="search" value="<c:out value='${param.search}'/>"/>
 
                                     <button type="submit"
