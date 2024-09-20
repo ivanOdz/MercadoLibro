@@ -87,11 +87,9 @@ public class PublicationController {
 
     @RequestMapping(path = "/createpublication", method = RequestMethod.POST)
     public ModelAndView createPublication(@RequestParam(name = "bookId") long bookId, @RequestParam(name = "location") String location){
-        ModelAndView mav = new ModelAndView("book/book_home");
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.getPrincipal() instanceof PawUserDetails pud) {
-            long locationId = ls.newLocation(location);
+            long locationId = ls.newLocation(location); // Esto se tiene que llamar dentro del publication service.
             ps.createPublication(bookId, pud.getUser().getUserId(), locationId, PublicationState.CURRENT);
         }
 

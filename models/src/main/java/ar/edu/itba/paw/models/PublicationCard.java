@@ -18,6 +18,7 @@ public class PublicationCard {
     private final BookState bookState;  // Book
 
 
+
     // Publication, BookModel, Book, Users,
     // BookAuthor, Author, BookImage, Image,
 
