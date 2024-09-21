@@ -53,7 +53,9 @@ public class PublicationController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.getPrincipal() instanceof PawUserDetails pud) {
             List<Card> cardList = cs.buildCardList(ps.getAllPublicationsFilteredBy(search, bookStateFilter, genreFilter, pud.getUser().getUserId()));
+            User loggedUser = us.findById(pud.getUser().getUserId()).get();
 
+            mav.addObject("loggedUser", loggedUser);
             mav.addObject("username", pud.getUser().getUsername());
             mav.addObject("publications", cardList);
             mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
