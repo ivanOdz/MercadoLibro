@@ -31,10 +31,10 @@
                 <c:when test="${not empty pd.images}">
                     <div class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1" uk-slider>
                         <div class="uk-slider-items uk-grid">
-                            <c:forEach var="bookImage" items="${pd.images}">
+                            <c:forEach var="bookImage" items="${publicationCard.images}">
                                 <div class="uk-width-2-3">
                                     <div class="uk-panel">
-                                        <img src="${pageContext.request.contextPath}/images/${bookImage.imageId}"
+                                        <img src="${pageContext.request.contextPath}/images/${publicationCard.images[0]}"
                                              width="200" height="450" alt="bookImage">
                                     </div>
                                 </div>
@@ -56,14 +56,14 @@
                     <!-- Title -->
                     <div>
                         <h1 class="uk-text-large uk-text-bold" style="font-size: 36px;">
-                            <c:out value="${pd.bookModel.title}"/>
+                            <c:out value="${publicationCard.title}"/>
                         </h1>
                     </div>
 
                     <!-- Author -->
                     <div>
                         <p class="small-gray-text custom-link">
-                            <c:out value="${card.authorsString}"/>
+                            <c:out value="${publicationCard.authors}"/>
                         </p>
                     </div>
                 </div>
@@ -74,7 +74,7 @@
                     <div>
 					    <p class="small-gray-text custom-link">
 					        <c:forEach var="genreWrapper" items="${genres}">
-					            <c:if test="${genreWrapper.genre == card.bookModel.genre}">
+					            <c:if test="${genreWrapper.genre == publicationCard.genre}">
 					                <c:out value="${genreWrapper.displayName}"/>
 					            </c:if>
 					        </c:forEach>
@@ -85,13 +85,13 @@
                     <div class="row-container">
                         <div style="margin-right: 5px;">
                             <p class="small-gray-text custom-link">
-                                <c:out value="${pd.rating.rating}"/>
+                                <c:out value="${publicationCard.rating.rating}"/>
                             </p>
                         </div>
                         <div class="star-rating">
                             <c:forEach var="i" begin="1" end="5">
                                 <c:choose>
-                                    <c:when test="${i <= pd.rating.rating}">
+                                    <c:when test="${i <= publicationCard.rating.rating}">
                                         <!-- Estrella llena -->
                                         <span uk-icon="icon: star; ratio: 1.5" style="color: gold;"></span>
                                     </c:when>
@@ -103,7 +103,7 @@
                             </c:forEach>
                         </div>
                         <div style="margin-left: 5px;">
-                            <p class="small-gray-text custom-link">(<c:out value="${pd.rating.ratingCount}"/>)</p>
+                            <p class="small-gray-text custom-link">(<c:out value="${publicationCard.rating.ratingCount}"/>)</p>
                         </div>
                     </div>
                 </div>
@@ -116,7 +116,7 @@
             <!-- Description -->
             <div style="max-width: 55lh; text-align: justify;">
                 <p>
-                    <c:out value="${card.bookModel.description}"/>
+                    <c:out value="${publicationCard.description}"/>
                 </p>
             </div>
 
@@ -135,32 +135,32 @@
                             <i class="material-icons" style="margin-left: 40px;">book</i>
                             <div>
                                 <c:choose>
-                                    <c:when test="${card.book.bookState == 'NEW'}">
+                                    <c:when test="${publicationCard.bookState == 'NEW'}">
                                         <div style="margin-left: 20px;">
                                             <strong><spring:message code="bookState.new"/></strong>
                                         </div>
                                     </c:when>
-                                    <c:when test="${card.book.bookState == 'LIKE_NEW'}">
+                                    <c:when test="${publicationCard.bookState == 'LIKE_NEW'}">
                                         <div style="margin-left: 20px;">
                                             <strong><spring:message code="bookState.like.new"/></strong>
                                         </div>
                                     </c:when>
-                                    <c:when test="${card.book.bookState == 'VERY_GOOD'}">
+                                    <c:when test="${publicationCard.bookState == 'VERY_GOOD'}">
                                         <div style="margin-left: 20px;">
                                             <strong><spring:message code="bookState.very.good"/></strong>
                                         </div>
                                     </c:when>
-                                    <c:when test="${card.book.bookState == 'GOOD'}">
+                                    <c:when test="${publicationCard.bookState == 'GOOD'}">
                                         <div style="margin-left: 20px;">
                                             <strong><spring:message code="bookState.good"/></strong>
                                         </div>
                                     </c:when>
-                                    <c:when test="${card.book.bookState == 'ACCEPTABLE'}">
+                                    <c:when test="${publicationCard.bookState == 'ACCEPTABLE'}">
                                         <div style="margin-left: 20px;">
                                             <strong><spring:message code="bookState.acceptable"/></strong>
                                         </div>
                                     </c:when>
-                                    <c:when test="${card.book.bookState == 'WORN'}">
+                                    <c:when test="${publicationCard.bookState == 'WORN'}">
                                         <div style="margin-left: 20px;">
                                             <strong><spring:message code="bookState.worn"/></strong>
                                         </div>
@@ -177,7 +177,7 @@
                             <span uk-icon="icon: location" style="margin-left: 25px;"></span>
                             <p style="text-align: center">
                                 <strong>
-                                    <c:out value="${card.location}"/>
+                                    <c:out value="${publicationCard.location}"/>
                                 </strong>
                             </p>
                         </div>
@@ -189,7 +189,7 @@
                             <p style="text-align: center"><spring:message code="publication.details.date"/></p>
                             <i class="material-icons" style="margin-left: 65px;">history</i>
                             <p style="text-align: center">
-                                <strong>${card.publication.publicationDatetime}</strong></p>
+                                <strong>${publicationCard.publicationDatetime}</strong></p>
                         </div>
                     </div>
 
@@ -199,7 +199,7 @@
                             <p style="text-align: center"><spring:message code="publication.details.editorial"/></p>
                             <i class="material-icons" style="margin-right: 90px;">file-edit</i>
                             <p style="text-align: center"><strong>
-                                <c:out value="${card.bookModel.editorial}"/></strong></p>
+                                <c:out value="${publicationCard.publisher}"/></strong></p>
                         </div>
 
 
@@ -226,52 +226,52 @@
                 <spring:message code="exchange.description2"/></p>
         </div>
 
-        <div class="column-container" style="margin-left: 10%;">
-            <label class="form-group" style="margin-left: 10px;">
-                <spring:message code="book.set.book"/>
-            </label>
-            <c:if test="${!(completeBooks.size() eq 0)}">
-                <div class="uk-container uk-margin-top">
-                    <form:form action="${pageContext.request.contextPath}/exchange/initializeexchange" method="post"
-                               modelAttribute="completeBookParam" enctype="multipart/form-data">
-                        <div class="uk-margin">
-                            <div class="uk-form-controls">
-                                <form:select path="selectedBookId" cssClass="uk-select">
-                                    <c:forEach var="completeBook" items="${completeBooks}">
-                                        <form:option value="${completeBook.book.bookId}">
-                                            <c:out value='${completeBook.bookModel.title}'/>
-                                        </form:option>
-                                    </c:forEach>
-                                </form:select>
+<%--        <div class="column-container" style="margin-left: 10%;">--%>
+<%--            <label class="form-group" style="margin-left: 10px;">--%>
+<%--                <spring:message code="book.set.book"/>--%>
+<%--            </label>--%>
+<%--            <c:if test="${!(completeBooks.size() eq 0)}">--%>
+<%--                <div class="uk-container uk-margin-top">--%>
+<%--                    <form:form action="${pageContext.request.contextPath}/exchange/initializeexchange" method="post"--%>
+<%--                               modelAttribute="completeBookParam" enctype="multipart/form-data">--%>
+<%--                        <div class="uk-margin">--%>
+<%--                            <div class="uk-form-controls">--%>
+<%--                                <form:select path="selectedBookId" cssClass="uk-select">--%>
+<%--                                    <c:forEach var="completeBook" items="${completeBooks}">--%>
+<%--                                        <form:option value="${completeBook.book.bookId}">--%>
+<%--                                            <c:out value='${completeBook.bookModel.title}'/>--%>
+<%--                                        </form:option>--%>
+<%--                                    </c:forEach>--%>
+<%--                                </form:select>--%>
 
-                            </div>
-                        </div>
-                        <div class="uk-inline">
-                            <label class="form-group">
-                                <spring:message code="book.set.location"/>
-                                <form:input path="location" type="text" class="uk-input"/>
-                            </label>
-                        </div>
+<%--                            </div>--%>
+<%--                        </div>--%>
+<%--                        <div class="uk-inline">--%>
+<%--                            <label class="form-group">--%>
+<%--                                <spring:message code="book.set.location"/>--%>
+<%--                                <form:input path="location" type="text" class="uk-input"/>--%>
+<%--                            </label>--%>
+<%--                        </div>--%>
 
-                        <div class="form-container" style="margin-top: 5%; margin-left: 35%;">
-                            <input type="hidden" name="publication_id" value="${publication_id}">
-                            <button type="submit" class="uk-button uk-button-primary">
-                                <spring:message code="add.exchange.submit"/>
-                            </button>
-                        </div>
-                    </form:form>
-                </div>
-            </c:if>
-            <c:if test="${completeBooks.size() eq 0}">
-                <button class="uk-button uk-button-primary">
-                    <a class="button-text" href="${pageContext.request.contextPath}/book/book_models">
-                        <spring:message code="add.book.missing"/>
-                    </a>
-                </button>
-            </c:if>
-        </div>
+<%--                        <div class="form-container" style="margin-top: 5%; margin-left: 35%;">--%>
+<%--                            <input type="hidden" name="publication_id" value="${publication_id}">--%>
+<%--                            <button type="submit" class="uk-button uk-button-primary">--%>
+<%--                                <spring:message code="add.exchange.submit"/>--%>
+<%--                            </button>--%>
+<%--                        </div>--%>
+<%--                    </form:form>--%>
+<%--                </div>--%>
+<%--            </c:if>--%>
+<%--            <c:if test="${completeBooks.size() eq 0}">--%>
+<%--                <button class="uk-button uk-button-primary">--%>
+<%--                    <a class="button-text" href="${pageContext.request.contextPath}/book/book_models">--%>
+<%--                        <spring:message code="add.book.missing"/>--%>
+<%--                    </a>--%>
+<%--                </button>--%>
+<%--            </c:if>--%>
+<%--        </div>--%>
+<%--        </div>--%>
     </div>
-</div>
 </div>
 </div>
 </body>

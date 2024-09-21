@@ -144,7 +144,6 @@
                     <c:forEach var="card" items="${publications}">
                         <div>
                             <a href="<c:url value='publications/${card.publicationId}'>
-								<c:param name='publication_id' value='${card.publicationId}'/>
 								</c:url>"
                                class="uk-card uk-card-default uk-card-hover uk-card-body uk-border-rounded custom-link">
                                 <figure class="uk-margin-bottom">
@@ -171,6 +170,12 @@
                         </div>
                     </c:forEach>
                 </div>
+<%--                <nav>--%>
+<%--                    <ul class="uk-pagination">--%>
+<%--                        <li><a href="#"><span class="uk-margin-small-right" uk-pagination-previous></span> Previous</a></li>--%>
+<%--                        <li class="uk-margin-auto-left"><a href="#">Next <span class="uk-margin-small-left" uk-pagination-next></span></a></li>--%>
+<%--                    </ul>--%>
+<%--                </nav>--%>
             </div>
         </div>
     </div>

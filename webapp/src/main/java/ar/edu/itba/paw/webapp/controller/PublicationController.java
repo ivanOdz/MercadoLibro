@@ -5,14 +5,11 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 
-import ar.edu.itba.paw.webapp.form.PublicationForm;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -22,25 +19,17 @@ import java.util.stream.Collectors;
 public class PublicationController {
 
     private final PublicationService ps;
-    private final UserService us;
-    private final CardService cs;
     private final LocationService ls;
-    private final BookModelService bms;
     private final CompleteBookService cbs;
-    private final PublicationDetailService pds;
     @Autowired
     private GenreService genreService;
     @Autowired
     private BookStateService bookStateService;
     
-    public PublicationController(PublicationService ps, UserService us, CardService cs, LocationService ls, BookModelService bms, CompleteBookService cbs, PublicationDetailService pds) {
+    public PublicationController(PublicationService ps, LocationService ls,CompleteBookService cbs) {
         this.ps = ps;
-        this.us = us;
-        this.cs = cs;
         this.ls = ls;
-        this.bms = bms;
         this.cbs = cbs;
-        this.pds = pds;
     }
 
     @RequestMapping("/")
@@ -99,7 +88,7 @@ public class PublicationController {
     /*@RequestMapping("/publication")
     public ModelAndView publication(@RequestParam(name = "publication_id") long publicationId) {
         final ModelAndView mav = new ModelAndView("home/publication");
-        
+
         if (ps.getPublicationById(publicationId).isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Publication not found");
         }
@@ -110,26 +99,16 @@ public class PublicationController {
         return mav;
     }*/
 
-    /*@GetMapping("/publications/{publication_id:\\d+}")
-    public ModelAndView publicationDetail(@PathVariable(name = "publication_id") long publicationId) {
+    @GetMapping("/publications/{publication_id:\\d+}")
+    public ModelAndView publicationDetail(@ModelAttribute("completeBookParam") CompleteBook completeBookParam, @PathVariable(name = "publication_id") long publicationId) {
         final ModelAndView mav = new ModelAndView("home/publicationDetail");
-        mav.addObject("card", cs.createCard(publicationId));
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
+        mav.addObject("publicationCard", ps.getPublicationDetailByPublicationId(publicationId));
+        mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
+        mav.addObject("completeBookParam", completeBookParam);
 
-            List<CompleteBook> completeBooks = cbs.getCompleteAvailableBooksByUserId(pud.getUser().getUserId());
-
-            // Aquí estamos creando un objeto de modelo vacío
-            CompleteBook completeBookParam = new CompleteBook(null, null);
-            mav.addObject("completeBookParam", completeBookParam);
-            mav.addObject("completeBooks", completeBooks);
-            mav.addObject("publication_id", publicationId);
-            mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
-        }
-            mav.addObject("pd", pds.getPublicationDetail(publicationId));
         return mav;
-    }*/
+    }
 
 
     // Esto tienen que volar

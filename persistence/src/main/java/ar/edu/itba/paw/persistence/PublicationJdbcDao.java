@@ -1,25 +1,18 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.PublicationDao;
-import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.models.PublicationCard;
-import ar.edu.itba.paw.models.utils.BookState;
-import ar.edu.itba.paw.models.utils.Genre;
-import ar.edu.itba.paw.models.utils.PublicationState;
-import ar.edu.itba.paw.models.utils.SortType;
+import ar.edu.itba.paw.models.PublicationDetail;
+import ar.edu.itba.paw.models.utils.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.Date;
+import java.util.*;
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @Repository
 public class PublicationJdbcDao implements PublicationDao {
@@ -27,7 +20,7 @@ public class PublicationJdbcDao implements PublicationDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    private static final int PAGE_SIZE = 20;
+    private static final int PAGE_SIZE = 21;
 
 
     private static final RowMapper<PublicationCard> ROWMAPPER_PUBLICATION_CARD =
@@ -42,6 +35,20 @@ public class PublicationJdbcDao implements PublicationDao {
                     BookState.fromInt(rs.getInt("bookState"))
             );
 
+    private static final RowMapper<PublicationDetail> ROWMAPPER_PUBLICATION_DETAIL_CARD =
+            (rs, rowNum) -> new PublicationDetail(
+                    rs.getLong("publicationId"),
+                    Arrays.asList((Integer[]) rs.getArray("images").getArray()),
+                    rs.getString("title"),
+                    rs.getString("authors"),
+                    Genre.fromInt(rs.getInt("genre")),
+                    new Rating(rs.getDouble("averageRating"), rs.getInt("ratingCount")),
+                    rs.getString("description"),
+                    BookState.fromInt(rs.getInt("bookState")),
+                    rs.getString("locationString"),
+                    rs.getTimestamp("publicationDatetime"),
+                    rs.getString("editorial")
+            );
 
     public PublicationJdbcDao(final DataSource ds) {
         jdbcTemplate =  new JdbcTemplate(ds);;
@@ -104,7 +111,7 @@ public class PublicationJdbcDao implements PublicationDao {
                 "SELECT p.publicationId, bm.title, i.imageId, STRING_AGG(a.authorName, ', ') AS authors, AVG(b.rating) AS averageRating, p.publicationDatetime, bm.genre, b.bookState " +
                     "FROM publication p " +
                         "JOIN book b ON p.bookId = b.bookId " +
-                        "JOIN users u ON p.userid = u.userid " +
+                        "JOIN users u ON p.userId = u.userId " +
                         "JOIN book_model bm ON bm.bookModelId = b.bookModelId " +
                         "JOIN book_author ba ON ba.bookModelId = bm.bookModelId " +
                         "JOIN author a ON a.authorId = ba.authorId " +
@@ -155,6 +162,27 @@ public class PublicationJdbcDao implements PublicationDao {
             return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ userId, PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", bookStateFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.BIGINT, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROWMAPPER_PUBLICATION_CARD);
         }
         return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ userId, PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", PAGE_SIZE, offset }, new int[]{ Types.BIGINT, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER }, ROWMAPPER_PUBLICATION_CARD);
+    }
+
+    @Override
+    public PublicationDetail getPublicationDetailByPublicationId(long publicationId) {
+        String sqlQuery = "SELECT p.publicationId, ARRAY_AGG(i.imageId) AS images, bm.title, STRING_AGG(a.authorName, ', ') AS authors, bm.genre, AVG(b.rating) AS averageRating, COUNT(b.rating) AS ratingCount, " +
+                 "bm.description, b.bookState, l.locationString, p.publicationDatetime, bm.editorial " +
+                 "FROM publication p " +
+                 "JOIN book b ON p.bookId = b.bookId " +
+                 "JOIN book_model bm ON bm.bookModelId = b.bookModelId " +
+                 "JOIN book_author ba ON ba.bookModelId = bm.bookModelId " +
+                 "JOIN author a ON a.authorId = ba.authorId " +
+                 "JOIN book_image bi ON bi.bookId = b.bookId " +
+                 "JOIN image i ON bi.imageId = i.imageId " +
+                 "JOIN location l ON p.locationId = l.locationId " +
+                 "WHERE p.publicationId = ? " +
+                 "GROUP BY p.publicationId, bm.title, bm.genre, bm.description, b.bookState, l.locationString, p.publicationDatetime, bm.editorial";
+
+
+        return jdbcTemplate.query(sqlQuery, new Object[]{ publicationId }, new int[]{ Types.BIGINT }, ROWMAPPER_PUBLICATION_DETAIL_CARD).stream().findFirst().orElse(null);
+
+
     }
 }
 
