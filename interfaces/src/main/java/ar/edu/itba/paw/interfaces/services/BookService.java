@@ -1,10 +1,12 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.Book;
+import ar.edu.itba.paw.models.BookCard;
 import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.models.utils.Genre;
 import ar.edu.itba.paw.models.utils.PublicationState;
 
+import ar.edu.itba.paw.models.utils.SortType;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,4 +24,6 @@ public interface BookService {
     Book getBookByPubId(long pubId);
 
     List<Book> getAllBooksByOwnerIdAndFilteredBy(long ownerId, String search, int bookStateFilter, int genreFilter);
+
+    List<BookCard> getFilteredSortedOrderedBooksByPageFromUser(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, int pageIndex, long userId, SortType sortType);
 }

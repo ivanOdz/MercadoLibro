@@ -3,7 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Book;
 import ar.edu.itba.paw.models.BookModel;
-import ar.edu.itba.paw.models.CardBook;
+import ar.edu.itba.paw.models.BookCard;
 import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.webapp.auth.PawUserDetails;
@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
@@ -82,22 +81,32 @@ public class BookController {
 
     @RequestMapping("/book")
     public ModelAndView bookHome(@RequestParam(name = "search", defaultValue = "") String search,
-                                 @RequestParam(name = "book-state-filter", defaultValue = "6") int bookStateFilter,
-                                 @RequestParam(name = "genre-filter", defaultValue = "32") int genreFilter) {
+                                 @RequestParam(name = "is-book-state-filter-active", defaultValue = "false") boolean isBookStateFilterActive,
+                                 @RequestParam(name = "book-state-filter", required = false) BookState bookStateFilter,
+                                 @RequestParam(name = "is-genre-filter-active", defaultValue = "false") boolean isGenreFilterActive,
+                                 @RequestParam(name = "genre-filter", required = false) Genre genreFilter,
+                                 @RequestParam(name = "page-index", defaultValue = "0") int pageIndex,
+                                 @RequestParam(name = "sort-type", defaultValue = "PUBLICATION_DATE_ASCENDING") SortType sortType) {
 
-        // Obtener todos los libros que tiene el usuario, armar List<Cards>
+
         ModelAndView mav = new ModelAndView("book/book_home");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.getPrincipal() instanceof PawUserDetails pud) {
 
-            List<CardBook> cardBookList = cardBookService.buildCardBookList(bookService.getAllBooksByOwnerIdAndFilteredBy(pud.getUser().getUserId(), search, bookStateFilter, genreFilter));
-            mav.addObject("cardBookList", cardBookList);
+            //List<CardBook> cardBookList = cardBookService.buildCardBookList(bookService.getAllBooksByOwnerIdAndFilteredBy(pud.getUser().getUserId(), search, bookStateFilter, genreFilter));
+
+            List<BookCard> books =  bookService.getFilteredSortedOrderedBooksByPageFromUser(search, isBookStateFilterActive,
+                    bookStateFilter, isGenreFilterActive, genreFilter, pageIndex, pud.getUser().getUserId(), sortType);
+
+            //mav.addObject("cardBookList", cardBookList);
+            mav.addObject("books", books);
             mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
             mav.addObject("bookStates", List.of(BookState.values()).stream().map(bookStatus -> new BookStateWrapper(bookStatus, bookStateService.getBookStateDisplayName(bookStatus))).collect(Collectors.toList()));
-
-            mav.addObject("bookStateFilter", bookStateFilter );
+            mav.addObject("bookStateFilter", bookStateFilter);
+            mav.addObject("isGenreFilterActive", isGenreFilterActive);
             mav.addObject("genreFilter", genreFilter);
+            mav.addObject("isBookStateFilterActive", isBookStateFilterActive);
         }
 
         return mav;
@@ -109,7 +118,7 @@ public class BookController {
 
         ModelAndView mav = new ModelAndView("book/book_models");
 
-        List<CardBook> cardBookList = cardBookService.buildCardBookModelList(bookModelService.getAllBookModelFilteredBy(search, genreFilter));
+        List<BookCard> cardBookList = cardBookService.buildCardBookModelList(bookModelService.getAllBookModelFilteredBy(search, genreFilter));
         mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
 
         mav.addObject("cardBookList", cardBookList);

@@ -2,34 +2,33 @@ package ar.edu.itba.paw.models;
 
 import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.models.utils.Genre;
+import ar.edu.itba.paw.models.utils.PublicationState;
 
-import java.sql.Timestamp;
-import java.util.List;
 
-public class PublicationCard {
-
-    private final long publicationId;
-    private final Timestamp publicationDatetime;
+public class BookCard {
+    private final long bookId;
     private final String title;
     private final Long imageId;
     private final String authors;
     private final float rating;
     private final Genre genre;
     private final BookState bookState;
+    private final PublicationState publicationState;
 
-    public PublicationCard(long publicationId, String title, Long imageId, String authors, float rating, Timestamp publicationDatetime, Genre genre, BookState bookState) {
-        this.publicationId = publicationId;
+
+    public BookCard(long bookId, String title, Long imageId, String authors, float rating, Genre genre, BookState bookState, PublicationState publicationState) {
+        this.bookId = bookId;
         this.title = title;
         this.imageId = imageId;
         this.authors = authors;
         this.rating = rating;
-        this.publicationDatetime = publicationDatetime;
         this.genre = genre;
         this.bookState = bookState;
+        this.publicationState = publicationState;
     }
 
-    public long getPublicationId() {
-        return publicationId;
+    public long getBookId() {
+        return bookId;
     }
 
     public String getTitle() {
@@ -48,10 +47,6 @@ public class PublicationCard {
         return rating;
     }
 
-    public Timestamp getPublicationDatetime() {
-        return publicationDatetime;
-    }
-
     public Genre getGenre() {
         return genre;
     }
@@ -60,4 +55,5 @@ public class PublicationCard {
         return bookState;
     }
 
+    public PublicationState getPublicationState() {return publicationState;}
 }

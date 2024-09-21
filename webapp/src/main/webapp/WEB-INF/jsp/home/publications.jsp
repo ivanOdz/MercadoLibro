@@ -29,6 +29,25 @@
                     <c:out value='${param.search}'/>
                 </h2>
 
+                <!-- Esto tiene que aparecer solo si hay algo buscado -->
+                <c:if test="${not empty param.search}">
+                    <form action="<c:url value='' />" method="get">
+                        <input type="hidden" name="is-book-state-filter-active" value="${isBookStateFilterActive}">
+                        <input type="hidden" name="is-genre-filter-active" value=${isGenreFilterActive}>
+                        <input type="hidden" name="genre-filter" value=${genreFilter}>
+                        <input type="hidden" name="book-state-filter" value=${bookStateFilter}>
+                        <input type="hidden" name="search" value=""/>
+
+                        <button type="submit" class="ui-search-button uk-button uk-button-default uk-button-small"
+                                title="BookStateRemove" uk-close-icon>
+							<span class="ui-search-filter-name">
+								<spring:message code="delete.search"/>
+							</span>
+                            <span uk-icon="close"></span>
+                        </button>
+                    </form>
+                </c:if>
+
                 <!-- Esto tiene que aparecer solo si hay un filtro de BookState -->
                 <c:if test="${isBookStateFilterActive}">
                     <form action="<c:url value='' />" method="get">
@@ -71,7 +90,7 @@
                     <ul class="uk-list">
                         <c:forEach var="bookStateWrapper" items="${bookStates}">
                             <li class="ui-search-filter-container">
-                                <form action="<c:url value='/' />" method="get">
+                                <form action="<c:url value='' />" method="get">
                                     <input type="hidden" name="search" value="<c:out value='${param.search}'/>">
                                     <input type="hidden" name="is-book-state-filter-active" value='true'>
                                     <input type="hidden" name="book-state-filter"

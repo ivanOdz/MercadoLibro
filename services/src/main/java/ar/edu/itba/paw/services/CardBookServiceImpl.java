@@ -2,13 +2,11 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.models.CardBook;
-import ar.edu.itba.paw.models.utils.PublicationState;
+import ar.edu.itba.paw.models.BookCard;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CardBookServiceImpl implements CardBookService {
@@ -29,8 +27,8 @@ public class CardBookServiceImpl implements CardBookService {
 
 
     @Override
-    public List<CardBook> buildCardBookList(List<Book> bookList) {
-        List<CardBook> cardBookList = new ArrayList<>();
+    public List<BookCard> buildCardBookList(List<Book> bookList) {
+        List<BookCard> cardBookList = new ArrayList<>();
         for (Book book : bookList) {
             BookModel bookModel = bookModelService.getBookModelByBookModelId(book.getBookModelId());
             Image image = imageService.getFirstImageByBookId(book.getBookId());
@@ -48,14 +46,14 @@ public class CardBookServiceImpl implements CardBookService {
             //if(publication.isEmpty() || publication.get().getPublicationState() == PublicationState.TERMINATED) {
             //    canPublish = true;
             //}
-            cardBookList.add(new CardBook(book, bookModel, imageId, authors, canPublish));
+            //cardBookList.add(new BookCard(book, bookModel, imageId, authors, canPublish));
         }
         return cardBookList;
     }
 
     @Override
-    public List<CardBook> buildCardBookModelList(List<BookModel> bookList) {
-        List<CardBook> cardBookList = new ArrayList<>();
+    public List<BookCard> buildCardBookModelList(List<BookModel> bookList) {
+        List<BookCard> cardBookList = new ArrayList<>();
         for(BookModel bookModel : bookList){
             Image image = imageService.getFirstImageByBookId(bookModel.getBookModelId());
 
@@ -66,7 +64,7 @@ public class CardBookServiceImpl implements CardBookService {
 
             List<Author> authors = bookAuthorService.getAuthorsByBookId(bookModel.getBookModelId());
 
-            cardBookList.add(new CardBook(bookModel, imageId, authors));
+            //cardBookList.add(new BookCard(bookModel, imageId, authors));
         }
         return cardBookList;
     }

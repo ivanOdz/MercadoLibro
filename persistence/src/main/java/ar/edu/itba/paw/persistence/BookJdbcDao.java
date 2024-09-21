@@ -2,9 +2,12 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.BookDao;
 import ar.edu.itba.paw.models.Book;
+import ar.edu.itba.paw.models.BookCard;
+import ar.edu.itba.paw.models.PublicationCard;
 import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.models.utils.Genre;
 import ar.edu.itba.paw.models.utils.PublicationState;
+import ar.edu.itba.paw.models.utils.SortType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.core.RowMapper;
@@ -20,6 +23,8 @@ public class BookJdbcDao implements BookDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
+    private static final int PAGE_SIZE = 20;
+
     private static final RowMapper<Book> ROWMAPPERBOOKS = (rs, rowNum) -> new Book(
             rs.getLong("bookId"),
             rs.getLong("bookModelId"),
@@ -28,7 +33,20 @@ public class BookJdbcDao implements BookDao {
             rs.getInt("exchangesQty"),
             rs.getInt("rating")
     );
-    
+
+    private static final RowMapper<BookCard> ROWMAPPER_BOOK_CARD =
+            (rs, rowNum) -> new BookCard(
+                    rs.getLong("bookId"),
+                    rs.getString("title"),
+                    rs.getLong("imageId"),
+                    rs.getString("authors"),
+                    rs.getFloat("averageRating"),
+                    Genre.fromInt(rs.getInt("genre")),
+                    BookState.fromInt(rs.getInt("bookState")),
+                    PublicationState.fromInt(rs.getInt("publicationState"))
+            );
+
+
     public BookJdbcDao(final DataSource ds) {
        
     	jdbcTemplate = new JdbcTemplate(ds);
@@ -73,6 +91,59 @@ public class BookJdbcDao implements BookDao {
     public List<Book> getAllBooksByOwnerIdAndFilteredBy(long ownerId, String search, int bookStateFilter, int genreFilter) {
         return jdbcTemplate.query("SELECT * FROM book WHERE ownerId = ? AND (? = 6 OR bookstate = ?) AND bookModelId IN (SELECT bookModelId FROM book_model WHERE LOWER(title) LIKE LOWER(?) AND (? = 32 OR genre = ?))",
                 new Object[]{ ownerId, bookStateFilter, bookStateFilter, "%" + search.toLowerCase() + "%", genreFilter, genreFilter}, new int[]{ Types.BIGINT, Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER }, ROWMAPPERBOOKS);
+    }
+
+    @Override
+    public List<BookCard> getFilteredSortedOrderedBooksByPageFromUser(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, int pageIndex, long userId, SortType sortType) {
+        StringBuilder sqlQuery = new StringBuilder(
+                "SELECT  b.bookId, bm.title, i.imageId, STRING_AGG(a.authorName, ', ') AS authors, AVG(b.rating) AS averageRating, bm.genre, b.bookState, p.publicationState " +
+                        "FROM publication p " +
+                        "JOIN book b ON p.bookId = b.bookId " +
+                        "JOIN users u ON p.userid = u.userid " +
+                        "JOIN book_model bm ON bm.bookModelId = b.bookModelId " +
+                        "JOIN book_author ba ON ba.bookModelId = bm.bookModelId " +
+                        "JOIN author a ON a.authorId = ba.authorId " +
+                        "JOIN book_image bi ON bi.bookId = b.bookId " +
+                        "JOIN image i ON bi.imageId = i.imageId " +
+                        "WHERE bi.imageOrder = 0 AND u.userid = ? AND LOWER(bm.title) LIKE LOWER(?) ");
+
+        if (isGenreFilterActive) {
+            sqlQuery.append("AND bm.genre = ? ");
+        }
+
+        if (isBookStateFilterActive) {
+            sqlQuery.append("AND b.bookState = ? ");
+        }
+
+        sqlQuery.append("GROUP BY b.bookId, bm.title, i.imageId, bm.genre, b.bookState, p.publicationState");
+
+        switch (sortType) {
+            case RATING_ASCENDING:
+                sqlQuery.append(" ORDER BY rating ASC");
+                break;
+            case RATING_DESCENDING:
+                sqlQuery.append(" ORDER BY rating DESC");
+                break;
+            case BOOK_NAME_ASCENDING:
+                sqlQuery.append(" ORDER BY title ASC");
+                break;
+            default:
+                sqlQuery.append(" ORDER BY title DESC");
+        }
+
+        int offset = pageIndex * PAGE_SIZE;
+        sqlQuery.append(" LIMIT ? OFFSET ?");
+
+        if(isGenreFilterActive && isBookStateFilterActive) {
+            return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ userId, "%" + search.toLowerCase() + "%", genreFilter.getValue(), bookStateFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.BIGINT, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER  }, ROWMAPPER_BOOK_CARD);
+        }
+        if(isGenreFilterActive) {
+            return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ userId, "%" + search.toLowerCase() + "%", genreFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.BIGINT,  Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROWMAPPER_BOOK_CARD);
+        }
+        if(isBookStateFilterActive){
+            return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ userId, "%" + search.toLowerCase() + "%", bookStateFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.BIGINT,  Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROWMAPPER_BOOK_CARD);
+        }
+        return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ userId, "%" + search.toLowerCase() + "%", PAGE_SIZE, offset }, new int[]{ Types.BIGINT, Types.VARCHAR, Types.INTEGER, Types.INTEGER }, ROWMAPPER_BOOK_CARD);
     }
 }
 
