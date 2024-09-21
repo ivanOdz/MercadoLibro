@@ -166,23 +166,27 @@ public class PublicationJdbcDao implements PublicationDao {
 
     @Override
     public PublicationDetail getPublicationDetailByPublicationId(long publicationId) {
-        String sqlQuery = "SELECT p.publicationId, ARRAY_AGG(i.imageId) AS images, bm.title, STRING_AGG(a.authorName, ', ') AS authors, bm.genre, AVG(b.rating) AS averageRating, COUNT(b.rating) AS ratingCount, " +
-                 "bm.description, b.bookState, l.locationString, p.publicationDatetime, bm.editorial " +
-                 "FROM publication p " +
-                 "JOIN book b ON p.bookId = b.bookId " +
-                 "JOIN book_model bm ON bm.bookModelId = b.bookModelId " +
-                 "JOIN book_author ba ON ba.bookModelId = bm.bookModelId " +
-                 "JOIN author a ON a.authorId = ba.authorId " +
-                 "JOIN book_image bi ON bi.bookId = b.bookId " +
-                 "JOIN image i ON bi.imageId = i.imageId " +
-                 "JOIN location l ON p.locationId = l.locationId " +
-                 "WHERE p.publicationId = ? " +
-                 "GROUP BY p.publicationId, bm.title, bm.genre, bm.description, b.bookState, l.locationString, p.publicationDatetime, bm.editorial";
-
+        String sqlQuery = "SELECT p.publicationId, " +
+                "ARRAY_AGG(i.imageId ORDER BY bi.imageOrder) AS images, " +
+                "bm.title, STRING_AGG(a.authorName, ', ') AS authors, " +
+                "bm.genre, COALESCE(avgRatings.averageRating, 0) AS averageRating, " +
+                "COALESCE(avgRatings.ratingCount, 0) AS ratingCount, " +
+                "bm.description, b.bookState, l.locationString, p.publicationDatetime, bm.editorial " +
+                "FROM publication p " +
+                "JOIN book b ON p.bookId = b.bookId " +
+                "JOIN book_model bm ON bm.bookModelId = b.bookModelId " +
+                "JOIN book_author ba ON ba.bookModelId = bm.bookModelId " +
+                "JOIN author a ON a.authorId = ba.authorId " +
+                "JOIN book_image bi ON bi.bookId = b.bookId " +
+                "JOIN image i ON bi.imageId = i.imageId " +
+                "JOIN location l ON p.locationId = l.locationId " +
+                "LEFT JOIN (SELECT bb.bookModelId, AVG(bb.rating) AS averageRating, COUNT(bb.rating) AS ratingCount " +
+                "            FROM book bb " +
+                "            GROUP BY bb.bookModelId) avgRatings ON avgRatings.bookModelId = bm.bookModelId " +
+                "WHERE p.publicationId = ? " +
+                "GROUP BY p.publicationId, bm.title, bm.genre, bm.description, b.bookState, l.locationString, p.publicationDatetime, bm.editorial, avgRatings.averageRating, avgRatings.ratingCount";
 
         return jdbcTemplate.query(sqlQuery, new Object[]{ publicationId }, new int[]{ Types.BIGINT }, ROWMAPPER_PUBLICATION_DETAIL_CARD).stream().findFirst().orElse(null);
-
-
     }
 }
 
