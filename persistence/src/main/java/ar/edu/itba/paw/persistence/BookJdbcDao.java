@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.persistence.BookDao;
 import ar.edu.itba.paw.models.Book;
 import ar.edu.itba.paw.models.BookCard;
+import ar.edu.itba.paw.models.BookModelCard;
 import ar.edu.itba.paw.models.PublicationCard;
 import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.models.utils.Genre;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.util.*;
 import java.sql.Types;
+
 
 @Repository
 public class BookJdbcDao implements BookDao {
@@ -46,6 +48,17 @@ public class BookJdbcDao implements BookDao {
                     PublicationState.fromInt(rs.getInt("publicationState"))
             );
 
+    private static final RowMapper<BookModelCard> ROWMAPPER_BOOK_MODEL_CARD =
+            (rs, rowNum) -> new BookModelCard(
+                    rs.getLong("bookModelId"),
+                    rs.getLong("imageId"),
+                    rs.getString("title"),
+                    rs.getString("authors"),
+                    Genre.fromInt(rs.getInt("genre")),
+                    rs.getString("editorial"),
+                    rs.getString("description"),
+                    rs.getFloat("averageRating")
+            );
 
     public BookJdbcDao(final DataSource ds) {
        
@@ -145,10 +158,49 @@ public class BookJdbcDao implements BookDao {
         }
         return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ userId, "%" + search.toLowerCase() + "%", PAGE_SIZE, offset }, new int[]{ Types.BIGINT, Types.VARCHAR, Types.INTEGER, Types.INTEGER }, ROWMAPPER_BOOK_CARD);
     }
+
+    @Override
+    public List<BookModelCard> getFilteredSortedOrderedModelBooksByPage(String search, boolean isGenreFilterActive, Genre genreFilter, int pageIndex, SortType sortType) {
+        StringBuilder sqlQuery = new StringBuilder(
+                "SELECT bm.bookModelId, i.imageId, bm.title, STRING_AGG(a.authorName, ', ') AS authors, bm.genre, bm.editorial, bm.description, AVG(b.rating) AS averageRating " +
+                        "FROM book_model bm " +
+                        "JOIN book b ON b.bookModelId = bm.bookModelId " +
+                        "JOIN book_author ba ON ba.bookModelId = bm.bookModelId " +
+                        "JOIN author a ON a.authorId = ba.authorId " +
+                        "JOIN book_image bi ON bi.bookId = b.bookId " + // esto no se deberia de hacer, aca seria desde la tabla nueva book_model_image
+                        "JOIN image i ON bi.imageId = i.imageId " +
+                        "WHERE bi.imageOrder = 0 AND LOWER(bm.title) LIKE LOWER(?) ");
+
+        if (isGenreFilterActive) {
+            sqlQuery.append("AND bm.genre = ? ");
+        }
+
+        sqlQuery.append("GROUP BY bm.bookModelId, i.imageId, bm.title, bm.genre, bm.editorial, bm.description");
+
+        switch (sortType) {
+            case RATING_ASCENDING:
+                sqlQuery.append(" ORDER BY rating ASC");
+                break;
+            case RATING_DESCENDING:
+                sqlQuery.append(" ORDER BY rating DESC");
+                break;
+            case BOOK_NAME_ASCENDING:
+                sqlQuery.append(" ORDER BY title ASC");
+                break;
+            default:
+                sqlQuery.append(" ORDER BY title DESC");
+        }
+
+        int offset = pageIndex * PAGE_SIZE;
+        sqlQuery.append(" LIMIT ? OFFSET ?");
+
+        if(isGenreFilterActive) {
+            return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ "%" + search.toLowerCase() + "%", genreFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROWMAPPER_BOOK_MODEL_CARD);
+        }
+        return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ "%" + search.toLowerCase() + "%", PAGE_SIZE, offset }, new int[]{ Types.VARCHAR, Types.INTEGER, Types.INTEGER }, ROWMAPPER_BOOK_MODEL_CARD);
+
+    }
 }
-
-
-
 
 
 

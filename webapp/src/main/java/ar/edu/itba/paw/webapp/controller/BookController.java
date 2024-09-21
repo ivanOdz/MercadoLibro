@@ -1,10 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.Book;
-import ar.edu.itba.paw.models.BookModel;
-import ar.edu.itba.paw.models.BookCard;
-import ar.edu.itba.paw.models.Image;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 import ar.edu.itba.paw.webapp.form.BookDetailsForm;
@@ -86,7 +83,7 @@ public class BookController {
                                  @RequestParam(name = "is-genre-filter-active", defaultValue = "false") boolean isGenreFilterActive,
                                  @RequestParam(name = "genre-filter", required = false) Genre genreFilter,
                                  @RequestParam(name = "page-index", defaultValue = "0") int pageIndex,
-                                 @RequestParam(name = "sort-type", defaultValue = "PUBLICATION_DATE_ASCENDING") SortType sortType) {
+                                 @RequestParam(name = "sort-type", defaultValue = "BOOK_NAME_ASCENDING") SortType sortType) {
 
 
         ModelAndView mav = new ModelAndView("book/book_home");
@@ -94,12 +91,9 @@ public class BookController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.getPrincipal() instanceof PawUserDetails pud) {
 
-            //List<CardBook> cardBookList = cardBookService.buildCardBookList(bookService.getAllBooksByOwnerIdAndFilteredBy(pud.getUser().getUserId(), search, bookStateFilter, genreFilter));
-
             List<BookCard> books =  bookService.getFilteredSortedOrderedBooksByPageFromUser(search, isBookStateFilterActive,
                     bookStateFilter, isGenreFilterActive, genreFilter, pageIndex, pud.getUser().getUserId(), sortType);
 
-            //mav.addObject("cardBookList", cardBookList);
             mav.addObject("books", books);
             mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
             mav.addObject("bookStates", List.of(BookState.values()).stream().map(bookStatus -> new BookStateWrapper(bookStatus, bookStateService.getBookStateDisplayName(bookStatus))).collect(Collectors.toList()));
@@ -114,15 +108,18 @@ public class BookController {
 
     @RequestMapping("/book/book_models")
     public ModelAndView bookModels(@RequestParam(name = "search", defaultValue = "") String search,
-                                   @RequestParam(name = "genre-filter", defaultValue = "32") int genreFilter) {
+                                   @RequestParam(name = "is-genre-filter-active", defaultValue = "false") boolean isGenreFilterActive,
+                                   @RequestParam(name = "genre-filter", required = false) Genre genreFilter,
+                                   @RequestParam(name = "page-index", defaultValue = "0") int pageIndex,
+                                   @RequestParam(name = "sort-type", defaultValue = "BOOK_NAME_ASCENDING") SortType sortType) {
 
         ModelAndView mav = new ModelAndView("book/book_models");
 
-        List<BookCard> cardBookList = cardBookService.buildCardBookModelList(bookModelService.getAllBookModelFilteredBy(search, genreFilter));
+        List<BookModelCard> modelBooks = bookService.getFilteredSortedOrderedModelBooksByPage(search, isGenreFilterActive, genreFilter, pageIndex, sortType);
+
+        mav.addObject("modelBooks", modelBooks);
+        mav.addObject("isGenreFilterActive", isGenreFilterActive);
         mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
-
-        mav.addObject("cardBookList", cardBookList);
-
         mav.addObject("genreFilter", genreFilter);
 
         return mav;

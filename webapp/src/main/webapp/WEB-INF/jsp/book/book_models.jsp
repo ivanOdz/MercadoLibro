@@ -29,32 +29,52 @@
                     <c:out value="${param.search}"/>
                 </h2>
 
-                <!-- Esto tiene que aparecer solo si hay un filtro de Genero -->
-                <c:if test="${genreFilter != '32'}">
+                <!-- Esto tiene que aparecer solo si hay algo buscado -->
+                <c:if test="${not empty param.search}">
                     <form action="<c:url value='' />" method="get">
-                        <input type="hidden" name="genre-filter" value="">
-                        <input type="hidden" name="search" value="${param.search}">
+                        <input type="hidden" name="is-genre-filter-active" value=${isGenreFilterActive}>
+                        <input type="hidden" name="genre-filter" value=${genreFilter}>
+                        <input type="hidden" name="search" value=""/>
 
-                        <button type="submit" class="ui-search-button  uk-button uk-button-default uk-button-small" title="GenreFilterRemove">
+                        <button type="submit" class="ui-search-button uk-button uk-button-default uk-button-small"
+                                title="BookStateRemove" uk-close-icon>
 							<span class="ui-search-filter-name">
-								<spring:message code="delete.genre.filter"/>
+								<spring:message code="delete.search"/>
 							</span>
                             <span uk-icon="close"></span>
-
                         </button>
                     </form>
                 </c:if>
 
-                <c:if test="${genreFilter == '32'}">
+                <c:if test="${isGenreFilterActive}">
+                    <form action="<c:url value='' />" method="get">
+                        <input type="hidden" name="is-genre-filter-active" value="false">
+                        <input type="hidden" name="search" value="<c:out value='${param.search}'/>">
+
+                        <button type="submit"
+                                class="uk-inline uk-search-button uk-button uk-button-default uk-button-small"
+                                title="GenreFilterRemove">
+							<span class="ui-search-filter-name">
+								<spring:message code="delete.genre.filter"/>
+							</span>
+                            <span uk-icon="close"></span>
+                        </button>
+                    </form>
+                </c:if>
+
+                <c:if test="${!isGenreFilterActive}">
                     <h3><spring:message code="filter.genre"/></h3>
                     <ul class="uk-list">
                         <c:forEach var="genreWrapper" items="${genres}">
                             <li class="ui-search-filter-container">
                                 <form action="<c:url value='' />" method="get">
-                                    <input type="hidden" name="genre-filter" value="${genreWrapper.genre.value}">
-                                    <input type="hidden" name="search" value="${param.search}">
+                                    <input type="hidden" name="genre-filter" value="${genreWrapper.genre}">
+                                    <input type="hidden" name="is-genre-filter-active" value="true">
+                                    <input type="hidden" name="search" value="<c:out value='${param.search}'/>"/>
 
-                                    <button type="submit" class="ui-search-button  uk-button uk-button-default uk-button-small" title="${genreWrapper.displayName}">
+                                    <button type="submit"
+                                            class="ui-search-button uk-button uk-button-default uk-button-small"
+                                            title="${genreWrapper.displayName}">
                                         <span class="ui-search-filter-name">${genreWrapper.displayName}</span>
                                     </button>
                                 </form>
@@ -71,14 +91,14 @@
                 </div>
 
                 <div class="uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m mb-1" uk-grid>
-                    <c:forEach var="card" items="${cardBookList}">
+                    <c:forEach var="card" items="${modelBooks}">
                         <div>
                             <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-border-rounded custom-link">
                                 <figure class="uk-margin-bottom">
                                     <c:choose>
-                                        <c:when test="${card.image != null}">
+                                        <c:when test="${card.imageId != null}">
                                             <img class="book-image"
-                                                 src="${pageContext.request.contextPath}/images/${card.image}"
+                                                 src="${pageContext.request.contextPath}/images/${card.imageId}"
                                                  alt="bookImage"/>
                                         </c:when>
                                         <c:otherwise>
@@ -88,41 +108,41 @@
                                     </c:choose>
                                 </figure>
                                 <h5 class="uk-card-title custom-link">
-                                    <c:out value="${card.bookModel.title}"/>
+                                    <c:out value="${card.title}"/>
                                 </h5>
                                 <p class="small-gray-text custom-link">
-                                    <c:out value="${card.authorsString}"/>
+                                    <c:out value="${card.authors}"/>
                                 </p>
 
                                 <a class="uk-button uk-button-default uk-button-primary uk-width-1-1"
-                                   href="#modal-sections-${card.bookModel.bookModelId}" uk-toggle>
+                                   href="#modal-sections-${card.bookModelId}" uk-toggle>
                                     <spring:message code="book.add.button"/>
                                 </a>
 
-                                <div id="modal-sections-${card.bookModel.bookModelId}" uk-modal>
+                                <div id="modal-sections-${card.bookModelId}" uk-modal>
                                     <div class="uk-modal-dialog">
                                         <div class="uk-modal-header">
                                             <h5 class="uk-card-title custom-link">
-                                                <c:out value="${card.bookModel.title}"/>
+                                                <c:out value="${card.title}"/>
                                             </h5>
                                             <p class="small-gray-text custom-link">
-                                                <c:out value="${card.authorsString}"/>
+                                                <c:out value="${card.authors}"/>
                                             </p>
                                             <p>
-                                                <c:out value="${card.bookModel.genre}"/>
+                                                <c:out value="${card.genre}"/>
                                             </p>
                                             <p>
-                                                <c:out value="${card.bookModel.editorial}"/>
+                                                <c:out value="${card.publisher}"/>
                                             </p>
                                             <p>
-                                                <c:out value="${card.bookModel.description}"/>
+                                                <c:out value="${card.description}"/>
                                             </p>
 
                                             <div class="uk-margin" style="justify-content: center">
                                                 <div class="uk-width-1-1">
                                                     <div class="uk-margin-top uk-button-group"
                                                          style="margin-left: 50px;">
-                                                        <a href="${pageContext.request.contextPath}/book/form_step2?book_model_id=${card.bookModel.bookModelId}"
+                                                        <a href="${pageContext.request.contextPath}/book/form_step2?book_model_id=${card.bookModelId}"
                                                            type="submit" class="uk-button uk-button-primary">
                                                             <spring:message code="book.model.view.button"/></a>
                                                     </div>
