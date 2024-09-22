@@ -8,6 +8,8 @@ import ar.edu.itba.paw.webapp.auth.PawUserDetailsService;
 import ar.edu.itba.paw.webapp.form.PasswordForm;
 import ar.edu.itba.paw.webapp.form.UserForm;
 import com.sun.mail.imap.IMAPFolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -44,8 +46,8 @@ public class UserController {
     private MessageSource messageSource;
     @Autowired
     private UserReviewService userReviewService;
-    @Autowired
-    private UserService userService;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
     
     public UserController(final UserService us, AuthenticationManager auth) {
         this.us = us;
@@ -154,7 +156,7 @@ public class UserController {
     @PostMapping(value = "/changeUsername")
     public String changeUsername(@RequestParam("loggedUserId") long userId, @RequestParam("newUsername") String newUsername, RedirectAttributes redirectAttributes) {
     	
-    	boolean updated = userService.changeUserName(userId, newUsername);
+    	boolean updated = us.changeUserName(userId, newUsername);
     	
     	if (updated) {
     		redirectAttributes.addFlashAttribute("message", "done");
@@ -210,11 +212,13 @@ public class UserController {
     public ModelAndView successPassword(){
         return new ModelAndView("user/success_password");
     }
+
     // binding=false -> read only attribute
     @ModelAttribute(name="loggedUser", binding = false)
     public User getLoggedUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getPrincipal() instanceof PawUserDetails pud){
+            LOGGER.debug("Logged user is {}", pud.getUser());
             return pud.getUser();
         }
         return null;
@@ -229,7 +233,7 @@ public class UserController {
         
         if (authentication.getPrincipal() instanceof PawUserDetails pud) {
         	
-        	User loggedUser = userService.findById(pud.getUser().getUserId()).get();
+        	User loggedUser = us.findById(pud.getUser().getUserId()).get();
             mav.addObject("loggedUser", loggedUser);
             mav.addObject("reviews", us.getReviewsByUserId(loggedUser.getUserId()));
             mav.addObject("userRating", userReviewService.getUserRating(loggedUser.getUserId()));
