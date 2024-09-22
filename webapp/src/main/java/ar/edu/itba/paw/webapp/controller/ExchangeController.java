@@ -56,7 +56,10 @@ public class ExchangeController {
             List<ExchangeWrapper> exchangeWrapperList = exchangeService.getExchangeOffererWrapperListByUserId(pud.getUser().getUserId());
             mav.addObject("exchanges", exchangeWrapperList);
             mav.addObject("userReview", new UserReview());
-            
+
+            User loggedUser = userService.findById(pud.getUser().getUserId()).get();
+            mav.addObject("loggedUser", loggedUser);
+
             for (ExchangeWrapper exchange : exchangeWrapperList) {
                 System.out.println("Exchange ID: " + exchange.getExchange().getExchangeId());
                 System.out.println("Reviewable: " + exchange.getIsReviewable());
@@ -78,9 +81,13 @@ public class ExchangeController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getPrincipal() instanceof PawUserDetails pud) {
+            User loggedUser = userService.findById(pud.getUser().getUserId()).get();
+            mav.addObject("loggedUser", loggedUser);
+
             List<ExchangeWrapper> exchangeWrapperList = exchangeService.getExchangeRequesterWrapperListByUserId(pud.getUser().getUserId());
             mav.addObject("exchanges", exchangeWrapperList);
             mav.addObject("userReview", new UserReview());
+
 
             for (ExchangeWrapper exchange : exchangeWrapperList) {
                 System.out.println("Exchange ID: " + exchange.getExchange().getExchangeId());

@@ -1,10 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.Book;
-import ar.edu.itba.paw.models.BookModel;
-import ar.edu.itba.paw.models.CardBook;
-import ar.edu.itba.paw.models.Image;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 import ar.edu.itba.paw.webapp.form.BookDetailsForm;
@@ -89,14 +86,17 @@ public class BookController {
         ModelAndView mav = new ModelAndView("book/book_home");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.getPrincipal() instanceof PawUserDetails pud) {
+        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
+
+            User loggedUser = userService.findById(pud.getUser().getUserId()).get();
+            mav.addObject("loggedUser", loggedUser);
 
             List<CardBook> cardBookList = cardBookService.buildCardBookList(bookService.getAllBooksByOwnerIdAndFilteredBy(pud.getUser().getUserId(), search, bookStateFilter, genreFilter));
             mav.addObject("cardBookList", cardBookList);
             mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
             mav.addObject("bookStates", List.of(BookState.values()).stream().map(bookStatus -> new BookStateWrapper(bookStatus, bookStateService.getBookStateDisplayName(bookStatus))).collect(Collectors.toList()));
 
-            mav.addObject("bookStateFilter", bookStateFilter );
+            mav.addObject("bookStateFilter", bookStateFilter);
             mav.addObject("genreFilter", genreFilter);
         }
 
@@ -108,6 +108,12 @@ public class BookController {
                                    @RequestParam(name = "genre-filter", defaultValue = "32") int genreFilter) {
 
         ModelAndView mav = new ModelAndView("book/book_models");
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
+            User loggedUser = userService.findById(pud.getUser().getUserId()).get();
+            mav.addObject("loggedUser", loggedUser);
+        }
 
         List<CardBook> cardBookList = cardBookService.buildCardBookModelList(bookModelService.getAllBookModelFilteredBy(search, genreFilter));
         mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
@@ -124,6 +130,12 @@ public class BookController {
 
         ModelAndView mav = new ModelAndView("book/form/step1");
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
+            User loggedUser = userService.findById(pud.getUser().getUserId()).get();
+            mav.addObject("loggedUser", loggedUser);
+        }
+
         mav.addObject("modelBookForm", modelBookForm);
         mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
         mav.addObject("languages", List.of(Language.values()).stream().map(language -> new LanguageWrapper(language, languageService.getLanguageDisplayName(language))).collect(Collectors.toList()));
@@ -134,9 +146,16 @@ public class BookController {
     }
 
     @GetMapping("/book/form_step2")
-    public ModelAndView bookDetailsForm(@ModelAttribute("bookDetailsForm") BookDetailsForm bookDetailsForm, @RequestParam(name = "book_model_id") long bookModelId, BindingResult errors) {
+    public ModelAndView bookDetailsForm(@ModelAttribute("bookDetailsForm") BookDetailsForm bookDetailsForm,
+                                        @RequestParam(name = "book_model_id") long bookModelId, BindingResult errors) {
 
         ModelAndView mav = new ModelAndView("book/form/step2");
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
+            User loggedUser = userService.findById(pud.getUser().getUserId()).get();
+            mav.addObject("loggedUser", loggedUser);
+        }
 
         mav.addObject("bookDetailsForm", bookDetailsForm);
         mav.addObject("book_model", bookModelService.getBookModelByBookModelId(bookModelId));
@@ -149,6 +168,12 @@ public class BookController {
     public ModelAndView bookForm(@ModelAttribute("bookForm") BookForm bookForm) {
 
         final ModelAndView mav = new ModelAndView("book/book_form");
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
+            User loggedUser = userService.findById(pud.getUser().getUserId()).get();
+            mav.addObject("loggedUser", loggedUser);
+        }
 
         if (bookForm.getAuthors() == null) {
             bookForm.setAuthors(new ArrayList<>());
@@ -199,8 +224,9 @@ public class BookController {
     }*/
 
     @PostMapping("/book/upload_book_model")
-    public ModelAndView uploadBookModel(@Valid @ModelAttribute("modelBookForm") ModelBookForm modelBookForm, BindingResult errors) {
-        if(errors.hasErrors()){
+    public ModelAndView uploadBookModel(@Valid @ModelAttribute("modelBookForm") ModelBookForm
+                                                modelBookForm, BindingResult errors) {
+        if (errors.hasErrors()) {
             return bookModelForm(modelBookForm, errors);
         }
         BookModel bookModel = bookModelService.addBookModel(
@@ -222,6 +248,12 @@ public class BookController {
 
         final ModelAndView mav = new ModelAndView("redirect:/book/form_step2?book_model_id=" + bookModel.getBookModelId());
         mav.addObject("book_model_id", bookModel.getBookModelId());
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
+            User loggedUser = userService.findById(pud.getUser().getUserId()).get();
+            mav.addObject("loggedUser", loggedUser);
+        }
 
         return mav;
     }

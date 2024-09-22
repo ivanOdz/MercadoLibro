@@ -32,7 +32,7 @@ public class PublicationController {
     private GenreService genreService;
     @Autowired
     private BookStateService bookStateService;
-    
+
     public PublicationController(PublicationService ps, UserService us, CardService cs, LocationService ls, BookModelService bms, CompleteBookService cbs, PublicationDetailService pds) {
         this.ps = ps;
         this.us = us;
@@ -47,11 +47,11 @@ public class PublicationController {
     public ModelAndView index(@RequestParam(name = "search", defaultValue = "") String search,
                               @RequestParam(name = "book-state-filter", defaultValue = "6") int bookStateFilter,
                               @RequestParam(name = "genre-filter", defaultValue = "32") int genreFilter) {
-    	
+
         final ModelAndView mav = new ModelAndView("home/publications");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.getPrincipal() instanceof PawUserDetails pud) {
+        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
             List<Card> cardList = cs.buildCardList(ps.getAllPublicationsFilteredBy(search, bookStateFilter, genreFilter, pud.getUser().getUserId()));
             User loggedUser = us.findById(pud.getUser().getUserId()).get();
 
@@ -60,11 +60,11 @@ public class PublicationController {
             mav.addObject("publications", cardList);
             mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
             mav.addObject("bookStates", List.of(BookState.values()).stream().map(bookStatus -> new BookStateWrapper(bookStatus, bookStateService.getBookStateDisplayName(bookStatus))).collect(Collectors.toList()));
-            mav.addObject("bookStateFilter", bookStateFilter );
+            mav.addObject("bookStateFilter", bookStateFilter);
             mav.addObject("genreFilter", genreFilter);
 
         }
-        
+
         return mav;
     }
 
@@ -77,11 +77,14 @@ public class PublicationController {
     }
 
     @RequestMapping(path = "/createpublication", method = RequestMethod.POST)
-    public ModelAndView createPublication(@RequestParam(name = "bookId") long bookId, @RequestParam(name = "location") String location){
+    public ModelAndView createPublication(@RequestParam(name = "bookId") long bookId, @RequestParam(name = "location") String location) {
         ModelAndView mav = new ModelAndView("book/book_home");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.getPrincipal() instanceof PawUserDetails pud) {
+        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
+            User loggedUser = us.findById(pud.getUser().getUserId()).get();
+            mav.addObject("loggedUser", loggedUser);
+
             long locationId = ls.newLocation(location);
             ps.createPublication(bookId, pud.getUser().getUserId(), locationId, PublicationState.CURRENT);
         }
@@ -93,11 +96,14 @@ public class PublicationController {
     @RequestMapping("/publication")
     public ModelAndView publication(@RequestParam(name = "publication_id") long publicationId) {
         final ModelAndView mav = new ModelAndView("home/publication");
-        
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
+            User loggedUser = us.findById(pud.getUser().getUserId()).get();
+            mav.addObject("loggedUser", loggedUser);
+        }
         if (ps.getPublicationById(publicationId).isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Publication not found");
-        }
-        else {
+        } else {
             mav.addObject("publication", ps.getPublicationById(publicationId).get());
         }
 
@@ -111,6 +117,8 @@ public class PublicationController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getPrincipal() instanceof PawUserDetails pud) {
+            User loggedUser = us.findById(pud.getUser().getUserId()).get();
+            mav.addObject("loggedUser", loggedUser);
 
             List<CompleteBook> completeBooks = cbs.getCompleteAvailableBooksByUserId(pud.getUser().getUserId());
 
@@ -121,7 +129,7 @@ public class PublicationController {
             mav.addObject("publication_id", publicationId);
             mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
         }
-            mav.addObject("pd", pds.getPublicationDetail(publicationId));
+        mav.addObject("pd", pds.getPublicationDetail(publicationId));
         return mav;
     }
 
@@ -130,10 +138,16 @@ public class PublicationController {
     @RequestMapping("/submitmail")
     public ModelAndView submitMail(@RequestParam(name = "publication_id") long publicationId) {
         final ModelAndView mav = new ModelAndView("home/submitmail");
-        if(ps.getPublicationById(publicationId).isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Publication not found");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
+            User loggedUser = us.findById(pud.getUser().getUserId()).get();
+            mav.addObject("loggedUser", loggedUser);
         }
-        else mav.addObject("publication_id", publicationId);
+
+
+        if (ps.getPublicationById(publicationId).isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Publication not found");
+        } else mav.addObject("publication_id", publicationId);
         return mav;
     }
 
@@ -141,10 +155,16 @@ public class PublicationController {
     public ModelAndView handleMailSubmission(@RequestParam(name = "submited_mail") String submited_mail, @RequestParam(name = "publication_id") long publicationId) {
         final ModelAndView mav = new ModelAndView("home/comparemail");
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
+            User loggedUser = us.findById(pud.getUser().getUserId()).get();
+            mav.addObject("loggedUser", loggedUser);
+        }
+
         if (ps.getPublicationById(publicationId).isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Publication not found");
         }
-        
+
         long userId = ps.getPublicationById(publicationId).get().getUserId();
         User owner = us.findById(userId).get();
 
