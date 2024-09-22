@@ -32,12 +32,12 @@ public class UserReviewJdbcDao implements UserReviewDao {
         jdbcTemplate = new JdbcTemplate(ds);
     }
 
-    @Override
+    /*@Override
     public List<UserReview> getReviewsByUserId(long userId) {
     	List<UserReview> reviewList = jdbcTemplate.query("SELECT * FROM user_review WHERE subjectId = ?", ROWMAPPER, userId);
     	
     	return reviewList;
-    }
+    }*/
     
     @Override
     public UserReview getUserReview(long exchangeId, long userId) {
@@ -49,7 +49,12 @@ public class UserReviewJdbcDao implements UserReviewDao {
     	
     	return null;
     }
-    
+
+    @Override
+    public List<UserReview> getReviewsByUserId(long userId) {
+        return List.of();
+    }
+
     @Override
     public Boolean createUserReview(UserReview userReview) {
         String sql = "INSERT INTO user_review (exchangeId, reviewerId, subjectId, reviewDescription, reviewDate, userReviewRating) VALUES (?, ?, ?, ?, ?, ?)";

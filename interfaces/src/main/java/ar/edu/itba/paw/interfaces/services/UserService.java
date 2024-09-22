@@ -27,7 +27,7 @@ public interface UserService {
     
     void changePassword(int verificationCode, String newPassword);
 
-    List<UserReview> getReviewsByUserId(long userId);
+    List<UserReview> getReviewsByUserId(long userId, int pageIndex);
 
     User getUserByPubId(long pubId);
 
@@ -36,4 +36,7 @@ public interface UserService {
     boolean changeUserName(long userId, String newName);
 
     Optional<User> getUserToVerify(int verificationCode);
+
+    Double getUserRating(long userId);
+
 }

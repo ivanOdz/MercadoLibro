@@ -20,17 +20,16 @@ public class UserServiceImpl implements UserService {
     private final UserDao userDao;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
-    private final UserReviewService userReviewsService;
+    //private final UserReviewService userReviewsService;
 
 
     @Value("#{environment.webappUrl}")
     private String webappUrl;
 
-    public UserServiceImpl(final UserDao userDao, final PasswordEncoder passwordEncoder, final EmailService emailService, final UserReviewService userReviewsService) {
+    public UserServiceImpl(final UserDao userDao, final PasswordEncoder passwordEncoder, final EmailService emailService) {
         this.userDao = userDao;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
-        this.userReviewsService = userReviewsService;
     }
     @Override
     public Optional<User> findById(long id) {
@@ -102,8 +101,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserReview> getReviewsByUserId(long userId) {
-        return userReviewsService.getReviewsByUserId(userId);
+    public List<UserReview> getReviewsByUserId(long userId, int pageIndex) {
+        //return userReviewsService.getReviewsByUserId(userId, pageIndex);
+       return userDao.getReviewsByUserId(userId, pageIndex);
     }
 
     @Override
@@ -139,5 +139,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> getUserToVerify(int verificationCode) {
         return userDao.getUserToVerify(verificationCode);
+    }
+
+    @Override
+    public Double getUserRating(long userId) {
+        return userDao.getUserRating(userId);
     }
 }

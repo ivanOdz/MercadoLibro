@@ -55,10 +55,10 @@
                         <div class="stars">
                             <c:forEach var="i" begin="1" end="5">
                                 <c:choose>
-                                    <c:when test="${i * 20 <= userRating}">
+                                    <c:when test="${i <= userRating}">
                                         <i class="material-icons yellow-text">star</i>
                                     </c:when>
-                                    <c:when test="${(i * 20 - 10) <= userRating && userRating < i * 20}">
+                                    <c:when test="${i - 0.5 <= userRating && userRating < i}">
                                         <i class="material-icons yellow-text">star_half</i>
                                     </c:when>
                                     <c:otherwise>
@@ -66,6 +66,7 @@
                                     </c:otherwise>
                                 </c:choose>
                             </c:forEach>
+
                         </div>
 
                         <div class="uk-h5">
@@ -140,23 +141,17 @@
                     <c:forEach var="review" items="${reviews}">
 
                         <div class="uk-card uk-card-body uk-border-rounded uk-box-shadow-small uk-width-expand">
-
                             <div class="reviewStars">
-
                                 <c:forEach var="i" begin="1" end="5">
                                     <c:choose>
-                                        <c:when test="${i * 20 <= review.userReviewRating}">
+                                        <c:when test="${i <= review.userReviewRating}">
                                             <i class="material-icons yellow-text">star</i>
-                                        </c:when>
-                                        <c:when test="${(i * 20 - 10) <= review.userReviewRating && review.userReviewRating < i * 20}">
-                                            <i class="material-icons yellow-text">star_half</i>
                                         </c:when>
                                         <c:otherwise>
                                             <i class="material-icons grey-text">star_border</i>
                                         </c:otherwise>
                                     </c:choose>
                                 </c:forEach>
-
                             </div>
 
                             <p class="date-text"><fmt:formatDate value="${review.reviewDate}" pattern="dd/MM/yyyy"/></p>

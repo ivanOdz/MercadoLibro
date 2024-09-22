@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.UserReview;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.Types;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -26,8 +28,23 @@ public class UserJdbcDao implements UserDao {
                                      rs.getInt("verificationCode"),
                                      rs.getBoolean("isVerified"));
 
+    private static final RowMapper<UserReview> ROWMAPPER_USER_REVIEW =
+            (rs, rowNum) -> new UserReview(rs.getLong("userReviewId"),
+                                           rs.getLong("exchangeId"),
+                                           rs.getLong("reviewerId"),
+                                           rs.getLong("subjectId"),
+                                           rs.getString("reviewDescription"),
+                                           rs.getTimestamp("reviewDate"),
+                                           rs.getInt("userReviewRating"));
+
+    private static final RowMapper<Double> ROWMAPPER_USER_REVIEW_RATING =
+            (rs, rowNum) -> rs.getDouble("userReviewRating");
+
+
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
+
+    private final static int PAGE_SIZE = 21;
 
     public UserJdbcDao(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
@@ -61,6 +78,20 @@ public class UserJdbcDao implements UserDao {
         return jdbcTemplate.query("SELECT * FROM users WHERE verificationcode = ?", new Object[]{ verificationCode },
                 new int[]{ Types.INTEGER }, ROWMAPPER).stream().findFirst();
     }
+
+    @Override
+    public List<UserReview> getReviewsByUserId(long userId, int pageIndex) {
+        int offset = PAGE_SIZE * pageIndex;
+        return jdbcTemplate.query("SELECT * FROM user_review WHERE subjectId = ? ORDER BY reviewdate DESC LIMIT ? OFFSET ?",
+                new Object[]{ userId, PAGE_SIZE, offset }, new int[]{ Types.BIGINT, Types.INTEGER, Types.INTEGER }, ROWMAPPER_USER_REVIEW);
+    }
+
+    public Double getUserRating(long userId) {
+        String sql = "SELECT AVG(userReviewRating) AS userReviewRating FROM user_review WHERE subjectId = ?";
+        return jdbcTemplate.query(sql, new Object[]{userId}, new int[]{ Types.BIGINT }, ROWMAPPER_USER_REVIEW_RATING).stream().findFirst().get();
+    }
+
+
 
     @Override
     public User createUser(String username, String mail, String password, int verificationCode) {

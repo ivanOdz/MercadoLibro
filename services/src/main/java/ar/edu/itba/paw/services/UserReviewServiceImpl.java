@@ -28,12 +28,12 @@ public class UserReviewServiceImpl implements UserReviewService {
     
     @Override
     public int getUserRating(long userId) {
-    	
+
     	int totalRating = 0;
     	int reviewCount = 0;
     	int porcentage = 0;
     	
-    	List<UserReview> reviews = getReviewsByUserId(userId); 
+    	List<UserReview> reviews = getReviewsByUserId(userId);
     	
         if (reviews.isEmpty()) {
             return porcentage;
@@ -46,8 +46,8 @@ public class UserReviewServiceImpl implements UserReviewService {
     	}
     	
     	porcentage = totalRating / reviewCount;
-    	
-    	return porcentage;
+
+           return porcentage;
     }
     
     @Override

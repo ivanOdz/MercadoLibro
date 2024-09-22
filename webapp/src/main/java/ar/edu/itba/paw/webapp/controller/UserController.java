@@ -42,8 +42,8 @@ public class UserController {
 
     @Autowired
     private MessageSource messageSource;
-    @Autowired
-    private UserReviewService userReviewService;
+    /*@Autowired
+    private UserReviewService userReviewService;*/
     @Autowired
     private UserService userService;
     
@@ -221,7 +221,8 @@ public class UserController {
     }
 
     @RequestMapping("/profile")
-    public ModelAndView profileHome(RedirectAttributes redirectAttributes) {
+    public ModelAndView profileHome(RedirectAttributes redirectAttributes,
+                                    @RequestParam(name = "pageIndex", defaultValue = "0") int pageIndex) {
     	
         ModelAndView mav = new ModelAndView("profile/profile_home");
 
@@ -231,8 +232,8 @@ public class UserController {
         	
         	User loggedUser = userService.findById(pud.getUser().getUserId()).get();
             mav.addObject("loggedUser", loggedUser);
-            mav.addObject("reviews", us.getReviewsByUserId(loggedUser.getUserId()));
-            mav.addObject("userRating", userReviewService.getUserRating(loggedUser.getUserId()));
+            mav.addObject("reviews", us.getReviewsByUserId(loggedUser.getUserId(), pageIndex));
+            mav.addObject("userRating", us.getUserRating(loggedUser.getUserId()));
         }
 
         return mav;
