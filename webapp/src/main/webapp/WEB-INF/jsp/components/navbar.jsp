@@ -8,8 +8,12 @@
 <c:url var="logout" value="/logout"/>
 
 <nav class="uk-navbar-container uk-box-shadow-small " uk-sticky>
-    <div class="uk-container uk-width-1-1  nav-background">
-        <div class="uk-width-1-1 nav-container"  uk-navbar>
+    <div class="uk-container uk-width-1-1 nav-background">
+        <div class="uk-width-1-1" style="
+             padding: 0px;
+             margin: 0px;
+             padding-left: 2rem;
+        " uk-navbar>
             <div class="uk-navbar-left">
                 <ul class="uk-navbar-nav">
                     <li>
@@ -32,12 +36,12 @@
                     <li>
                         <form class="uk-search uk-search-default custom-search-form" method="get" action="">
                             <input class="uk-search-input button-text" type="search"
-                                   placeholder="<spring:message code='home.search.text'/>"
+                                   placeholder="  <spring:message code='home.search.text'/>"
                                    aria-label="Search"
                                    name="search"
                                    id="search"
                                    value="<c:out value='${param.search}'/>">
-                            <button class="uk-search-icon-flip" uk-search-icon></button>
+                            <button class="uk-search-icon-flip" style="color:white;" uk-search-icon></button>
                         </form>
                     </li>
                 </ul>
@@ -45,7 +49,7 @@
             <div class="uk-navbar-right">
                 <ul class="uk-navbar-nav">
                     <li>
-                        <a class="button-text" class="pl-1 pr-1" href="${exchangeRequestsUrl}"><spring:message code="home.exchange.view"/></a>
+                        <a class="pl-1 pr-1" class="pl-1 pr-1" href="${exchangeRequestsUrl}"><spring:message code="home.exchange.view"/></a>
                         <div class="uk-navbar-dropdown">
                             <ul class="uk-nav uk-navbar-dropdown-nav">
                                 <li class="uk-active uk-margin-small-top">
