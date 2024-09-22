@@ -183,10 +183,10 @@ public class PublicationJdbcDao implements PublicationDao {
                 "LEFT JOIN (SELECT bb.bookModelId, AVG(bb.rating) AS averageRating, COUNT(bb.rating) AS ratingCount " +
                 "            FROM book bb " +
                 "            GROUP BY bb.bookModelId) avgRatings ON avgRatings.bookModelId = bm.bookModelId " +
-                "WHERE p.publicationId = ? " +
+                "WHERE p.publicationId = ? AND p.publicationState = ? " +
                 "GROUP BY p.publicationId, bm.title, bm.genre, bm.description, b.bookState, l.locationString, p.publicationDatetime, bm.editorial, avgRatings.averageRating, avgRatings.ratingCount";
 
-        return jdbcTemplate.query(sqlQuery, new Object[]{ publicationId }, new int[]{ Types.BIGINT }, ROWMAPPER_PUBLICATION_DETAIL_CARD).stream().findFirst().orElse(null);
+        return jdbcTemplate.query(sqlQuery, new Object[]{ publicationId, PublicationState.CURRENT.getValue() }, new int[]{ Types.BIGINT, Types.INTEGER }, ROWMAPPER_PUBLICATION_DETAIL_CARD).stream().findFirst().orElse(null);
     }
 }
 

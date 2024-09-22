@@ -55,6 +55,7 @@ public class PublicationController {
             mav.addObject("isGenreFilterActive", isGenreFilterActive);
             mav.addObject("genreFilter", genreFilter);
             mav.addObject("isBookStateFilterActive", isBookStateFilterActive);
+//            mav.addObject("pageIndex", pageIndex);
 
         }
         
@@ -103,7 +104,14 @@ public class PublicationController {
     public ModelAndView publicationDetail(@ModelAttribute("completeBookParam") CompleteBook completeBookParam, @PathVariable(name = "publication_id") long publicationId) {
         final ModelAndView mav = new ModelAndView("home/publicationDetail");
 
-        mav.addObject("publicationCard", ps.getPublicationDetailByPublicationId(publicationId));
+        PublicationDetail publicationDetail = ps.getPublicationDetailByPublicationId(publicationId);
+
+        if(publicationDetail == null){
+            // TODO: Hace vista que la publicacion ya no esta disponible
+            return new ModelAndView("error/forbidden");
+        }
+
+        mav.addObject("publicationCard", publicationDetail);
         mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
         mav.addObject("completeBookParam", completeBookParam);
 
