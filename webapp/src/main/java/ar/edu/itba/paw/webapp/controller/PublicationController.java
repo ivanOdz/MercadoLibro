@@ -60,7 +60,6 @@ public class PublicationController {
             List<Card> cardList = cs.buildCardList(ps.getAllPublicationsFilteredBy(search, bookStateFilter, genreFilter, pud.getUser().getUserId()));
             User loggedUser = us.findById(pud.getUser().getUserId()).get();
 
-            LOGGER.debug("Logged in user: {}", loggedUser.getUsername());
 
             mav.addObject("loggedUser", loggedUser);
             mav.addObject("username", pud.getUser().getUsername());

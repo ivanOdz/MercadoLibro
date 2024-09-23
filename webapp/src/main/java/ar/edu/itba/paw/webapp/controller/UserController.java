@@ -48,7 +48,7 @@ public class UserController {
     private UserReviewService userReviewService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
-    
+
     public UserController(final UserService us, AuthenticationManager auth) {
         this.us = us;
         this.auth = auth;
@@ -230,10 +230,13 @@ public class UserController {
         ModelAndView mav = new ModelAndView("profile/profile_home");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        
+
+        LOGGER.info("Este es un mensaje de info");
+        LOGGER.error("Este es un mensaje de error");
+        LOGGER.debug("Este es un mensaje de debug");
         if (authentication.getPrincipal() instanceof PawUserDetails pud) {
-        	
-        	User loggedUser = us.findById(pud.getUser().getUserId()).get();
+
+            User loggedUser = us.findById(pud.getUser().getUserId()).get();
             mav.addObject("loggedUser", loggedUser);
             mav.addObject("reviews", us.getReviewsByUserId(loggedUser.getUserId()));
             mav.addObject("userRating", userReviewService.getUserRating(loggedUser.getUserId()));
