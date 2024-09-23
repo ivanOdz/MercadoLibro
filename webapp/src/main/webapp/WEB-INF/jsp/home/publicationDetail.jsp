@@ -14,9 +14,35 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
     <link href="${pageContext.request.contextPath}/css/navbar.css?v=1.0" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/css/publicationDetail.css?v=1.0" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
     <title><spring:message code="publication.details.title"/></title>
 </head>
+<style>
+    .slider-button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        outline: none;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: box-shadow 0.3s ease;
+    }
+
+    .slider-button:hover {
+        box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2);
+    }
+    .slider-button span {
+        font-size: 24px;
+        color: #000000;
+    }
+</style>
+
 <body>
 <navbar/>
 
@@ -28,17 +54,16 @@
         <!-- Images -->
         <div class="column-container" style="margin-left: 2%; margin-top: 2%; max-width: 20%;">
             <c:choose>
-                <c:when test="${not empty pd.images}">
-                    <div class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1" uk-slider>
-                        <div class="uk-slider-items uk-grid">
-                            <c:forEach var="bookImage" items="${publicationCard.images}">
-                                <div class="uk-width-2-3">
-                                    <div class="uk-panel">
-                                        <img src="${pageContext.request.contextPath}/images/${publicationCard.images[0]}"
-                                             width="200" height="450" alt="bookImage">
-                                    </div>
-                                </div>
-                            </c:forEach>
+                <c:when test="${not empty publicationCard.images}">
+                    <div class="column-container">
+                        <img id="currentImage" src="<c:url value='${pageContext.request.contextPath}/images/${publicationCard.images[0]}'/>" alt="Book Image" />
+                        <div class="row-container">
+                            <button id="prevBtn" class="slider-button" style="margin-left: 30%; margin-right: 5%;">
+                                <span uk-icon="icon: chevron-left"></span>
+                            </button>
+                            <button id="nextBtn" class="slider-button">
+                                <span uk-icon="icon: chevron-right"></span>
+                            </button>
                         </div>
                     </div>
                 </c:when>
@@ -274,5 +299,34 @@
     </div>
 </div>
 </div>
+
+<script>
+    const images = [
+        <c:forEach var="image" items="${publicationCard.images}" varStatus="loop">
+        '<c:url value="${pageContext.request.contextPath}/images/${image}"/>'<c:if test="${!loop.last}">,</c:if>
+        </c:forEach>
+    ];
+
+
+    let currentIndex = 0;
+    const imgElement = document.getElementById('currentImage');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    function showImage(index) {
+        if (index < 0) {
+            currentIndex = images.length - 1;
+        } else if (index >= images.length) {
+            currentIndex = 0;
+        } else {
+            currentIndex = index;
+        }
+        imgElement.src = images[currentIndex];
+    }
+
+    prevBtn.addEventListener('click', () => showImage(currentIndex - 1));
+    nextBtn.addEventListener('click', () => showImage(currentIndex + 1));
+</script>
+
 </body>
 </html>
