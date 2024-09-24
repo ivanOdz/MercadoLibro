@@ -6,6 +6,8 @@ import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 
 import ar.edu.itba.paw.webapp.form.PublicationForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -33,6 +35,9 @@ public class PublicationController {
     @Autowired
     private BookStateService bookStateService;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+
+
     public PublicationController(PublicationService ps, UserService us, CardService cs, LocationService ls, BookModelService bms, CompleteBookService cbs, PublicationDetailService pds) {
         this.ps = ps;
         this.us = us;
@@ -54,6 +59,7 @@ public class PublicationController {
         if (authentication.getPrincipal() instanceof PawUserDetails pud) {
             List<Card> cardList = cs.buildCardList(ps.getAllPublicationsFilteredBy(search, bookStateFilter, genreFilter, pud.getUser().getUserId()));
             User loggedUser = us.findById(pud.getUser().getUserId()).get();
+
 
             mav.addObject("loggedUser", loggedUser);
             mav.addObject("username", pud.getUser().getUsername());
