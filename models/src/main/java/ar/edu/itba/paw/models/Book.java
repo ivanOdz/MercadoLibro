@@ -1,31 +1,31 @@
 package ar.edu.itba.paw.models;
 
 import ar.edu.itba.paw.models.utils.BookState;
+import ar.edu.itba.paw.models.utils.Rating;
 
 public class Book {
 
 	private final long bookId;
-	private final long bookModelId;
 	private final long ownerId;
+	private final BookModel bookModel;
 	private final BookState bookState;
 	private final int exchangesQty;
-	private final int rating;
 
-	public Book(long bookId, long bookModelId, long ownerId, BookState bookState, int exchangesQty, int rating) {
-		this.bookId = bookId;
-		this.bookModelId = bookModelId;
-		this.ownerId = ownerId;
-		this.bookState = bookState;
-		this.exchangesQty = exchangesQty;
-		this.rating = rating;
-	}
+
+    public Book(long bookId, BookModel bookModel, long ownerId, BookState bookState, int exchangesQty) {
+        this.bookId = bookId;
+        this.bookModel = bookModel;
+        this.ownerId = ownerId;
+        this.bookState = bookState;
+        this.exchangesQty = exchangesQty;
+    }
 
 	public long getBookId() {
 		return bookId;
 	}
 
-	public long getBookModelId() {
-		return bookModelId;
+	public BookModel getBookModel() {
+		return bookModel;
 	}
 
 	public long getOwnerId() {
@@ -38,9 +38,5 @@ public class Book {
 
 	public int getExchangesQty() {
 		return exchangesQty;
-	}
-
-	public int getRating() {
-		return rating;
 	}
 }

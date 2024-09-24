@@ -11,17 +11,19 @@ import java.util.Optional;
 
 public interface BookDao {
 
-    Book createBook(long bookModelId, long ownerId, BookState bookState, int exchangesQty, int rating);
+    //Book createBook(long bookModelId, long ownerId, BookState bookState, int exchangesQty, int rating); // Posiblemente hay que rehacer.
 
-    Optional<Book> getBookById(long bookId);
+    //void exchangeOwnership(long b1, long b2);     //Esta hay que rehacerla
 
-    void exchangeOwnership(long b1, long b2);
+    //-------------------------- De aca para abajo posiblemente se borren--------------------
 
-    Book getBookByPubId(long pubId);
+    //Optional<Book> getBookById(long bookId);
 
-    List<Book> getAllBooksByOwnerIdAndFilteredBy(long ownerId, String search, int bookStateFilter, int genreFilter);
+    //Book getBookByPubId(long pubId);
 
-    List<BookCard> getFilteredSortedOrderedBooksByPageFromUser(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, int pageIndex, long userId, SortType sortType);
+    //List<Book> getAllBooksByOwnerIdAndFilteredBy(long ownerId, String search, int bookStateFilter, int genreFilter);
+
+    //List<Book> getFilteredSortedOrderedBooksByPageFromUser(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, int pageIndex, long userId, SortType sortType);
 
 
 }

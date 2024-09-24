@@ -91,7 +91,7 @@ public class BookController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.getPrincipal() instanceof PawUserDetails pud) {
 
-            List<BookCard> books =  bookService.getFilteredSortedOrderedBooksByPageFromUser(search, isBookStateFilterActive,
+            List<Book> books =  bookService.getFilteredSortedOrderedBooksByPageFromUser(search, isBookStateFilterActive,
                     bookStateFilter, isGenreFilterActive, genreFilter, pageIndex, pud.getUser().getUserId(), sortType);
 
             mav.addObject("books", books);

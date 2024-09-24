@@ -1,14 +1,8 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.BookDao;
-import ar.edu.itba.paw.models.Book;
-import ar.edu.itba.paw.models.BookCard;
-import ar.edu.itba.paw.models.BookModelCard;
-import ar.edu.itba.paw.models.PublicationCard;
-import ar.edu.itba.paw.models.utils.BookState;
-import ar.edu.itba.paw.models.utils.Genre;
-import ar.edu.itba.paw.models.utils.PublicationState;
-import ar.edu.itba.paw.models.utils.SortType;
+import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.models.utils.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.core.RowMapper;
@@ -17,6 +11,8 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.util.*;
 import java.sql.Types;
+
+import static ar.edu.itba.paw.persistence.BookModelJdbcDao.ROW_MAPPER_BOOK_MODEL;
 
 
 @Repository
@@ -27,26 +23,14 @@ public class BookJdbcDao implements BookDao {
 
     private static final int PAGE_SIZE = 21;
 
-    private static final RowMapper<Book> ROWMAPPERBOOKS = (rs, rowNum) -> new Book(
-            rs.getLong("bookId"),
-            rs.getLong("bookModelId"),
-            rs.getLong("ownerId"),
-            BookState.fromInt(rs.getInt("bookState")),
-            rs.getInt("exchangesQty"),
-            rs.getInt("rating")
-    );
+    private static final RowMapper<Book> ROW_MAPPER_BOOK =
+            (rs, rowNum) -> {
+                BookModel bookModel = ROW_MAPPER_BOOK_MODEL.mapRow(rs, rowNum);
+                BookState bookState = BookState.fromInt(rs.getInt("bookState"));
+                int exchangesQty = rs.getInt("exchangesQty");
 
-    private static final RowMapper<BookCard> ROWMAPPER_BOOK_CARD =
-            (rs, rowNum) -> new BookCard(
-                    rs.getLong("bookId"),
-                    rs.getString("title"),
-                    rs.getLong("imageId"),
-                    rs.getString("authors"),
-                    rs.getFloat("averageRating"),
-                    Genre.fromInt(rs.getInt("genre")),
-                    BookState.fromInt(rs.getInt("bookState")),
-                    PublicationState.fromInt(rs.getInt("publicationState"))
-            );
+                return new Book(rs.getLong("bookId"), bookModel, rs.getLong("ownerId"), bookState, exchangesQty);
+            };
 
     public BookJdbcDao(final DataSource ds) {
        
@@ -54,7 +38,7 @@ public class BookJdbcDao implements BookDao {
         jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).usingGeneratedKeyColumns("bookid").withTableName("book");
     }
 
-    @Override
+    /*@Override
     public Book createBook(long bookModelId, long ownerId, BookState bookState, int exchangesQty, int rating) {
         
     	final Map<String, Object> bookData = new HashMap<>();
@@ -66,36 +50,37 @@ public class BookJdbcDao implements BookDao {
 
         final Number generatedId = jdbcInsert.executeAndReturnKey(bookData);
         return new Book(generatedId.longValue(), bookModelId, ownerId, bookState, exchangesQty, rating);
-    }
+    }*/
 
-    @Override
+    /*@Override
     public Optional<Book> getBookById(long bookId) {
         return jdbcTemplate.query("SELECT * FROM book WHERE bookId = ?", new Object[]{ bookId },
-                new int[]{ Types.BIGINT }, ROWMAPPERBOOKS).stream().findFirst();
-    }
+                new int[]{ Types.BIGINT }, ROW_MAPPER_BOOK).stream().findFirst();
+    }*/
 
-    @Override
+    /*@Override
     public void exchangeOwnership(long b1, long b2) {
         Book book1 = getBookById(b1).get();
         Book book2 = getBookById(b2).get();
 
         jdbcTemplate.update("UPDATE book SET ownerId = ? WHERE bookId = ?", book2.getOwnerId(), book1.getBookId());
         jdbcTemplate.update("UPDATE book SET ownerId = ? WHERE bookId = ?", book1.getOwnerId(), book2.getBookId());
-    }
+    }*/
 
-    @Override
+    /*@Override
     public Book getBookByPubId(long pubId) {
         return jdbcTemplate.query("SELECT * FROM book b JOIN publication p ON b.bookId = p.bookId WHERE p.publicationid = ?", new Object[]{ pubId }, new int[]{ Types.BIGINT }, ROWMAPPERBOOKS).stream().findFirst().get();
-    }
+    }*/
 
-    @Override
+    /*@Override
     public List<Book> getAllBooksByOwnerIdAndFilteredBy(long ownerId, String search, int bookStateFilter, int genreFilter) {
         return jdbcTemplate.query("SELECT * FROM book WHERE ownerId = ? AND (? = 6 OR bookstate = ?) AND bookModelId IN (SELECT bookModelId FROM book_model WHERE LOWER(title) LIKE LOWER(?) AND (? = 32 OR genre = ?))",
                 new Object[]{ ownerId, bookStateFilter, bookStateFilter, "%" + search.toLowerCase() + "%", genreFilter, genreFilter}, new int[]{ Types.BIGINT, Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER }, ROWMAPPERBOOKS);
-    }
+    }*/
 
-    @Override
-    public List<BookCard> getFilteredSortedOrderedBooksByPageFromUser(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, int pageIndex, long userId, SortType sortType) {
+    /*@Override
+    public List<Book> getFilteredSortedOrderedBooksByPageFromUser(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, int pageIndex, long userId, SortType sortType) {
+
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT  b.bookId, bm.title, i.imageId, STRING_AGG(a.authorName, ', ') AS authors, AVG(b.rating) AS averageRating, bm.genre, b.bookState, p.publicationState " +
                         "FROM publication p " +
@@ -136,16 +121,16 @@ public class BookJdbcDao implements BookDao {
         sqlQuery.append(" LIMIT ? OFFSET ?");
 
         if(isGenreFilterActive && isBookStateFilterActive) {
-            return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ userId, "%" + search.toLowerCase() + "%", genreFilter.getValue(), bookStateFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.BIGINT, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER  }, ROWMAPPER_BOOK_CARD);
+            return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ userId, "%" + search.toLowerCase() + "%", genreFilter.getValue(), bookStateFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.BIGINT, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER  }, ROWMAPPER_BOOK);
         }
         if(isGenreFilterActive) {
-            return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ userId, "%" + search.toLowerCase() + "%", genreFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.BIGINT,  Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROWMAPPER_BOOK_CARD);
+            return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ userId, "%" + search.toLowerCase() + "%", genreFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.BIGINT,  Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROWMAPPER_BOOK);
         }
         if(isBookStateFilterActive){
-            return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ userId, "%" + search.toLowerCase() + "%", bookStateFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.BIGINT,  Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROWMAPPER_BOOK_CARD);
+            return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ userId, "%" + search.toLowerCase() + "%", bookStateFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.BIGINT,  Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROWMAPPER_BOOK);
         }
-        return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ userId, "%" + search.toLowerCase() + "%", PAGE_SIZE, offset }, new int[]{ Types.BIGINT, Types.VARCHAR, Types.INTEGER, Types.INTEGER }, ROWMAPPER_BOOK_CARD);
-    }
+        return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ userId, "%" + search.toLowerCase() + "%", PAGE_SIZE, offset }, new int[]{ Types.BIGINT, Types.VARCHAR, Types.INTEGER, Types.INTEGER }, ROWMAPPER_BOOK);
+    }*/
 
 }
 
