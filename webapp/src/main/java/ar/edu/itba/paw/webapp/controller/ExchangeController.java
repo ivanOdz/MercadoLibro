@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -46,12 +47,14 @@ public class ExchangeController {
     // Requests (osea peticiones que me hacen a mi)
     // Paso el ID, y quiero aquellas exchanges en las que soy offerer
     @RequestMapping("/offers")
-    public ModelAndView exchangeRequests() {
+    public ModelAndView exchangeRequests(@RequestParam(name = "exchange-state", defaultValue = "PENDING") ExchangeState exchangeState) {
         final ModelAndView mav = new ModelAndView("exchange/exchange_requests");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getPrincipal() instanceof PawUserDetails pud) {
-            List<ExchangeWrapper> exchangeWrapperList = exchangeService.getExchangeOffererWrapperListByUserId(pud.getUser().getUserId());
+
+            List<ExchangeWrapper> exchangeWrapperList = exchangeService.getExchangeOffererWrapperListByUserId(pud.getUser().getUserId(), exchangeState);
+            mav.addObject("exchangeState", exchangeState);
             mav.addObject("exchanges", exchangeWrapperList);
             mav.addObject("review", new UserReview());
         }
@@ -68,8 +71,8 @@ public class ExchangeController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getPrincipal() instanceof PawUserDetails pud) {
-            List<ExchangeWrapper> exchangeWrapperList = exchangeService.getExchangeRequesterWrapperListByUserId(pud.getUser().getUserId());
-            mav.addObject("exchanges", exchangeWrapperList);
+            //List<ExchangeWrapper> exchangeWrapperList = exchangeService.getExchangeRequesterWrapperListByUserId(pud.getUser().getUserId());
+            //mav.addObject("exchanges", exchangeWrapperList);
             mav.addObject("review", new UserReview());
         }
         

@@ -4,43 +4,66 @@ import java.util.List;
 
 import ar.edu.itba.paw.models.utils.ExchangeState;
 
-public class ExchangeWrapper {
+import java.time.LocalDateTime;
 
-    private final Exchange exchange;
-    private final String requesterLocation, requesterMail, requesterUsername;
-    private final String offererLocation, offererMail, offererUsername;
-    private final Book offererBook, requesterBook;
-    private final BookModel offererBookModel, requesterBookModel;
-    private final List<BookImage> requesterBookImages, offererBookImages;
-    private final List<String> requesterBookAuthor, offererBookAuthor;
-    private final Boolean isReviewable;
-    
-    public ExchangeWrapper(Exchange exchange, String requesterLocation, String requesterMail,
-                           String requesterUsername, String offererLocation, String offererMail,
-                           String offererUsername, Book offererBook, Book requesterBook,
-                           BookModel offererBookModel, BookModel requesterBookModel,
-                           List<BookImage> requesterBookImages, List<BookImage> offererBookImages,
-                           List<String> requesterBookAuthor, List<String> offererBookAuthor, Boolean isReviewable) {
-        this.exchange = exchange;
+public class ExchangeWrapper {
+    private LocalDateTime exchangeStartDate;
+    private String acceptCode;
+    private String requesterLocation;
+    private String requesterMail;
+    private String requesterUsername;
+    private Long requesterProfileImageId;
+    private Long offererProfileImageId;
+    private String offererLocation;
+    private String offererMail;
+    private String offererUsername;
+    private String offererBookState;
+    private String requesterBookState;
+    private String offererBookTitle;
+    private String requesterBookTitle;
+    private Long reqBookImageId;
+    private Long offBookImageId;
+    private String requesterBookAuthors;
+    private String offererBookAuthors;
+    private Boolean offererReceivedBook;
+    private Boolean requesterReceivedBook;
+
+    // Constructor con todos los campos
+    public ExchangeWrapper(LocalDateTime exchangeStartDate, String acceptCode, String requesterLocation, String requesterMail,
+                       String requesterUsername, Long requesterProfileImageId, Long offererProfileImageId,
+                       String offererLocation, String offererMail, String offererUsername, String offererBookState,
+                       String requesterBookState, String offererBookTitle, String requesterBookTitle,
+                       Long reqBookImageId, Long offBookImageId, String requesterBookAuthors, String offererBookAuthors,
+                       Boolean offererReceivedBook, Boolean requesterReceivedBook) {
+        this.exchangeStartDate = exchangeStartDate;
+        this.acceptCode = acceptCode;
         this.requesterLocation = requesterLocation;
         this.requesterMail = requesterMail;
         this.requesterUsername = requesterUsername;
+        this.requesterProfileImageId = requesterProfileImageId;
+        this.offererProfileImageId = offererProfileImageId;
         this.offererLocation = offererLocation;
         this.offererMail = offererMail;
         this.offererUsername = offererUsername;
-        this.offererBook = offererBook;
-        this.requesterBook = requesterBook;
-        this.offererBookModel = offererBookModel;
-        this.requesterBookModel = requesterBookModel;
-        this.requesterBookImages = requesterBookImages;
-        this.offererBookImages = offererBookImages;
-        this.requesterBookAuthor = requesterBookAuthor;
-        this.offererBookAuthor = offererBookAuthor;
-        this.isReviewable = isReviewable;
+        this.offererBookState = offererBookState;
+        this.requesterBookState = requesterBookState;
+        this.offererBookTitle = offererBookTitle;
+        this.requesterBookTitle = requesterBookTitle;
+        this.reqBookImageId = reqBookImageId;
+        this.offBookImageId = offBookImageId;
+        this.requesterBookAuthors = requesterBookAuthors;
+        this.offererBookAuthors = offererBookAuthors;
+        this.offererReceivedBook = offererReceivedBook;
+        this.requesterReceivedBook = requesterReceivedBook;
     }
 
-    public Exchange getExchange() {
-        return exchange;
+    // Getters (Opcional si los necesitas)
+    public LocalDateTime getExchangeStartDate() {
+        return exchangeStartDate;
+    }
+
+    public String getAcceptCode() {
+        return acceptCode;
     }
 
     public String getRequesterLocation() {
@@ -55,6 +78,14 @@ public class ExchangeWrapper {
         return requesterUsername;
     }
 
+    public Long getRequesterProfileImageId() {
+        return requesterProfileImageId;
+    }
+
+    public Long getOffererProfileImageId() {
+        return offererProfileImageId;
+    }
+
     public String getOffererLocation() {
         return offererLocation;
     }
@@ -67,41 +98,43 @@ public class ExchangeWrapper {
         return offererUsername;
     }
 
-
-    public Book getOffererBook() {
-        return offererBook;
+    public String getOffererBookState() {
+        return offererBookState;
     }
 
-    public Book getRequesterBook() {
-        return requesterBook;
+    public String getRequesterBookState() {
+        return requesterBookState;
     }
 
-    public BookModel getOffererBookModel() {
-        return offererBookModel;
+    public String getOffererBookTitle() {
+        return offererBookTitle;
     }
 
-    public BookModel getRequesterBookModel() {
-        return requesterBookModel;
+    public String getRequesterBookTitle() {
+        return requesterBookTitle;
     }
 
-    public List<BookImage> getRequesterBookImages() {
-        return requesterBookImages;
+    public Long getReqBookImageId() {
+        return reqBookImageId;
     }
 
-    public List<BookImage> getOffererBookImages() {
-        return offererBookImages;
+    public Long getOffBookImageId() {
+        return offBookImageId;
     }
 
-    public List<String> getRequesterBookAuthor() {
-        return requesterBookAuthor;
+    public String getRequesterBookAuthors() {
+        return requesterBookAuthors;
     }
 
-    public List<String> getOffererBookAuthor() {
-        return offererBookAuthor;
+    public String getOffererBookAuthors() {
+        return offererBookAuthors;
     }
 
-    public Boolean getIsReviewable() {
-    	return isReviewable;
+    public Boolean getOffererReceivedBook() {
+        return offererReceivedBook;
     }
 
+    public Boolean getRequesterReceivedBook() {
+        return requesterReceivedBook;
+    }
 }

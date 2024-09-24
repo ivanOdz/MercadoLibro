@@ -26,11 +26,13 @@
 
 <div class="uk-grid">
     <div class="uk-width-5-6 uk-align-center main-section">
-        <div>
-            <h2 class="uk-h2 title"><spring:message code="exchange.offers.title"/></h2>
-            <h3 class="uk-h5"><spring:message code="exchange.offers.subtitle"/></h3>
-        </div>
-		
+<%--        <div>--%>
+<%--            <h2 class="uk-h2 title"><spring:message code="exchange.offers.title"/></h2>--%>
+<%--            <h3 class="uk-h5"><spring:message code="exchange.offers.subtitle"/></h3>--%>
+<%--        </div>--%>
+<%--		--%>
+
+
 		<c:if test="${!empty successMessage}">
 		    <div class="uk-alert-success" uk-alert>
 		        <p>${successMessage}</p>
@@ -46,6 +48,14 @@
             <div class="main-content">
                 <!-- columna de exchanges -->
                 <div class="uk-width-3-5 column-exchanges scrollable-content">
+					<div>
+						<ul class="uk-child-width-expand" uk-tab>
+							<li ><a href="#">Pendientes</a></li>
+							<li><a href="#">Aceptados</a></li>
+							<li><a href="#">Finalizados</a></li>
+							<li class="uk-active"> <a href="#">Rechazados</a></li>
+						</ul>
+					</div>
                     <c:forEach var="exchange" items="${exchanges}">
                         <div class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-4@s exchange-card"
                              onclick="selectCard(this, '<c:out value="${exchange.offererUsername}"/>', '<c:out

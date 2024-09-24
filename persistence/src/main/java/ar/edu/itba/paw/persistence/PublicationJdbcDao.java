@@ -166,7 +166,8 @@ public class PublicationJdbcDao implements PublicationDao {
 
     @Override
     public PublicationDetail getPublicationDetailByPublicationId(long publicationId) {
-        String sqlQuery = "SELECT p.publicationId, " +
+        StringBuilder sqlQuery = new StringBuilder(
+                "SELECT p.publicationId, " +
                 "ARRAY_AGG(i.imageId ORDER BY bi.imageOrder) AS images, " +
                 "bm.title, STRING_AGG(a.authorName, ', ') AS authors, " +
                 "bm.genre, COALESCE(avgRatings.averageRating, 0) AS averageRating, " +
@@ -184,9 +185,9 @@ public class PublicationJdbcDao implements PublicationDao {
                 "            FROM book bb " +
                 "            GROUP BY bb.bookModelId) avgRatings ON avgRatings.bookModelId = bm.bookModelId " +
                 "WHERE p.publicationId = ? AND p.publicationState = ? " +
-                "GROUP BY p.publicationId, bm.title, bm.genre, bm.description, b.bookState, l.locationString, p.publicationDatetime, bm.editorial, avgRatings.averageRating, avgRatings.ratingCount";
+                "GROUP BY p.publicationId, bm.title, bm.genre, bm.description, b.bookState, l.locationString, p.publicationDatetime, bm.editorial, avgRatings.averageRating, avgRatings.ratingCount");
 
-        return jdbcTemplate.query(sqlQuery, new Object[]{ publicationId, PublicationState.CURRENT.getValue() }, new int[]{ Types.BIGINT, Types.INTEGER }, ROWMAPPER_PUBLICATION_DETAIL_CARD).stream().findFirst().orElse(null);
+        return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ publicationId, PublicationState.CURRENT.getValue() }, new int[]{ Types.BIGINT, Types.INTEGER }, ROWMAPPER_PUBLICATION_DETAIL_CARD).stream().findFirst().orElse(null);
     }
 }
 

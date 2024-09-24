@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
 import ar.edu.itba.paw.models.Exchange;
+import ar.edu.itba.paw.models.ExchangeWrapper;
+import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.models.utils.ResponseState;
 
 import java.sql.Timestamp;
@@ -19,7 +21,7 @@ public interface ExchangeDao {
 
     Exchange createExchange(long offererId, long requesterId, int acceptCode, Timestamp startDate);
 
-    List<Exchange> getExchangesWhereUserIdIsOfferer(long anUserId);
+    List<ExchangeWrapper> getExchangesWhereUserIdIsOfferer(long anUserId, ExchangeState exchangeState);
 
     List<Exchange> getExchangesWhereUserIdIsRequester(long anUserId);
 

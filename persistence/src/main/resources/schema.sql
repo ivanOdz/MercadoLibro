@@ -54,6 +54,15 @@ CREATE TABLE IF NOT EXISTS book_image (
       PRIMARY KEY(bookId, imageOrder)
 );
 
+CREATE TABLE IF NOT EXISTS book_model_image (
+      bookModelId              INTEGER NOT NULL REFERENCES book_model(bookModelId) ON DELETE CASCADE,
+      imageOrder          INTEGER NOT NULL, -- Para el orden de las fotos
+      imageId             INTEGER NOT NULL REFERENCES image(imageId) ON DELETE CASCADE,
+      imageDatetime       TIMESTAMP,
+      PRIMARY KEY(bookModelId, imageOrder)
+);
+
+
 -- Tabla de autores LISTO
 CREATE TABLE IF NOT EXISTS author (
       authorId            SERIAL PRIMARY KEY,

@@ -119,14 +119,16 @@ public class ExchangeServiceImpl implements ExchangeService {
      * @return function called from the offered section of exchanges
      */
     @Override
-    public List<ExchangeWrapper> getExchangeOffererWrapperListByUserId(long userId) {
+    public List<ExchangeWrapper> getExchangeOffererWrapperListByUserId(long userId, ExchangeState exchangeState) {
 
-        List<Exchange> exchanges = exchangeDao.getExchangesWhereUserIdIsOfferer(userId);
+        //List<Exchange> exchanges = exchangeDao.getExchangesWhereUserIdIsOfferer(userId);
 
-        return getExchangeWrapper(exchanges);
+        return exchangeDao.getExchangesWhereUserIdIsOfferer(userId, exchangeState);
+
+        //return getExchangeWrapper(exchanges);
     }
 
-    @Override
+    /*@Override
     public void cofirmOfferer(int acceptCode) {
         exchangeDao.confirmOfferer(acceptCode);
     }
@@ -135,20 +137,20 @@ public class ExchangeServiceImpl implements ExchangeService {
     public void cofirmRequester(int acceptCode) {
         exchangeDao.confirmRequester(acceptCode);
     }
-
+*/
 
     /**
      *
      * @param userId
      * @return function called from the solicited section of exchanges
      */
-    @Override
+    /*@Override
     public List<ExchangeWrapper> getExchangeRequesterWrapperListByUserId(long userId) {
 
         List<Exchange> exchanges = exchangeDao.getExchangesWhereUserIdIsRequester(userId);
 
         return getExchangeWrapper(exchanges);
-    }
+    }*/
 
 
     /**
@@ -157,7 +159,7 @@ public class ExchangeServiceImpl implements ExchangeService {
      * @return the exchange data as it is shown on the table 'exchanges'. This function is called from the exchanges sections with the
      * exchanges already filtered depending on whether the user is an offerer or a solicitor
      */
-    private List<ExchangeWrapper> getExchangeWrapper(List<Exchange> exchanges){
+    /*private List<ExchangeWrapper> getExchangeWrapper(List<Exchange> exchanges){
         List<ExchangeWrapper> toReturn = new ArrayList<>();
 
         for (Exchange ex : exchanges) {
@@ -199,5 +201,5 @@ public class ExchangeServiceImpl implements ExchangeService {
             toReturn.add(new ExchangeWrapper(ex, requesterLocation, requesterMail, requesterUsername, offererLocation, offererMail, offererUsername, offererBook, requesterBook, offererBookModel, requesterBookModel, requesterBookImages, offererBookImages, requesterAuthorNames, offererAuthorNames, isReviewable));
         }
         return toReturn;
-    }
+    }*/
 }
