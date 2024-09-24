@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS users (
      isVerified          BOOLEAN
 );
 
--- Tabla de modelo de libros LISTO
+-- Tabla de modelo de libros
 CREATE TABLE IF NOT EXISTS book_model (
       bookModelId         SERIAL PRIMARY KEY,
       isbn                VARCHAR(13) NOT NULL,
@@ -34,18 +34,19 @@ CREATE TABLE IF NOT EXISTS book_model (
 );
 
 
--- Tabla de libros LISTO
+
+-- Tabla de libros
 CREATE TABLE IF NOT EXISTS book (
     bookId              SERIAL PRIMARY KEY,
     bookModelId         INTEGER NOT NULL REFERENCES book_model(bookModelId) ON DELETE SET NULL,
     ownerId             INTEGER NOT NULL REFERENCES users(userId) ON DELETE CASCADE,
     bookState           INTEGER NOT NULL,
-    exchangesQty        INTEGER NOT NULL,
-    rating              INTEGER
+    exchangesQty        INTEGER NOT NULL
+--    rating              INTEGER  eliminado, paso a nueva tabla rating
 );
 
 
--- Tabla de imágenes de libros LISTO
+-- Tabla de imágenes de libros
 CREATE TABLE IF NOT EXISTS book_image (
       bookId              INTEGER NOT NULL REFERENCES book(bookId) ON DELETE CASCADE,
       imageOrder          INTEGER NOT NULL, -- Para el orden de las fotos
@@ -54,6 +55,8 @@ CREATE TABLE IF NOT EXISTS book_image (
       PRIMARY KEY(bookId, imageOrder)
 );
 
+
+-- Nueva
 CREATE TABLE IF NOT EXISTS book_model_image (
       bookModelId              INTEGER NOT NULL REFERENCES book_model(bookModelId) ON DELETE CASCADE,
       imageOrder          INTEGER NOT NULL, -- Para el orden de las fotos
@@ -62,27 +65,35 @@ CREATE TABLE IF NOT EXISTS book_model_image (
       PRIMARY KEY(bookModelId, imageOrder)
 );
 
+-- Nueva
+CREATE TABLE book_rating (
+      ratingId SERIAL PRIMARY KEY,
+      userId INTEGER NOT NULL REFERENCES users(userId) ON DELETE CASCADE,
+      bookModelId INTEGER NOT NULL REFERENCES book_model(bookModelId) ON DELETE CASCADE,
+      rating INTEGER
+);
 
--- Tabla de autores LISTO
+
+-- Tabla de autores
 CREATE TABLE IF NOT EXISTS author (
       authorId            SERIAL PRIMARY KEY,
       authorName          VARCHAR(255) NOT NULL
 );
 
--- Relación libro y autor LISTO
+-- Relación libro y autor
 CREATE TABLE IF NOT EXISTS book_author (
        bookModelId         INTEGER NOT NULL REFERENCES book_model(bookModelId) ON DELETE CASCADE,
        authorId            INTEGER NOT NULL REFERENCES author(authorId) ON DELETE CASCADE,
        PRIMARY KEY (bookModelId, authorId)
 );
 
--- Tabla de ubicaciones LISTO 
+-- Tabla de ubicaciones
 CREATE TABLE IF NOT EXISTS location (
         locationId          SERIAL PRIMARY KEY,
         locationString      VARCHAR(255) NOT NULL
 );
 
--- Tabla de publicaciones LISTO
+-- Tabla de publicaciones
 CREATE TABLE IF NOT EXISTS publication (
        publicationId       SERIAL PRIMARY KEY,
        bookId              INTEGER NOT NULL REFERENCES book(bookId),
@@ -92,7 +103,7 @@ CREATE TABLE IF NOT EXISTS publication (
        locationId          INTEGER REFERENCES location(locationId)
 );
 
--- Tabla de intercambios LISTO
+-- Tabla de intercambios
 CREATE TABLE IF NOT EXISTS exchange (
         exchangeId          SERIAL PRIMARY KEY,
         offererPubId        INTEGER NOT NULL REFERENCES publication(publicationId),
@@ -105,7 +116,7 @@ CREATE TABLE IF NOT EXISTS exchange (
         exchangeStartDate   TIMESTAMP
 );
 
--- Tabla de reseñas de usuarios LISTO
+-- Tabla de reseñas de usuarios
 CREATE TABLE IF NOT EXISTS user_review (
        userReviewId        SERIAL PRIMARY KEY,
        exchangeId          INTEGER NOT NULL REFERENCES exchange(exchangeId),

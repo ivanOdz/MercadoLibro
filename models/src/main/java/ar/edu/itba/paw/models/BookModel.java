@@ -2,6 +2,7 @@ package ar.edu.itba.paw.models;
 
 import ar.edu.itba.paw.models.utils.Genre;
 import ar.edu.itba.paw.models.utils.Language;
+import ar.edu.itba.paw.models.utils.Rating;
 
 public class BookModel {
 
@@ -21,8 +22,10 @@ public class BookModel {
     private final boolean isHardcover;
     private final String authors;
     private final long imageId;
+    private final Rating rating;
 
-    public BookModel(long bookModelId, String isbn, String title, String editorial, String description, Genre genre, int edition, int weight, int pages, Language bookLanguage, int dimension, short publicationYear, boolean isPocketEdition, boolean isHardcover, String authors, long imageId) {
+
+    public BookModel(long bookModelId, String isbn, String title, String editorial, String description, Genre genre, int edition, int weight, int pages, Language bookLanguage, int dimension, short publicationYear, boolean isPocketEdition, boolean isHardcover, String authors, long imageId,  Rating rating) {
         this.bookModelId = bookModelId;
         this.isbn = isbn;
         this.title = title;
@@ -39,6 +42,11 @@ public class BookModel {
         this.isHardcover = isHardcover;
         this.authors = authors;
         this.imageId = imageId;
+        this.rating = rating;
+    }
+
+    public Rating getRating() {
+        return rating;
     }
 
     public String getAuthors() {
@@ -104,4 +112,5 @@ public class BookModel {
     public boolean isHardcover() {
         return isHardcover;
     }
+
 }
