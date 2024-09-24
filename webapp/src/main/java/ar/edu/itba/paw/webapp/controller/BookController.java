@@ -115,7 +115,7 @@ public class BookController {
 
         ModelAndView mav = new ModelAndView("book/book_models");
 
-        List<BookModelCard> modelBooks = bookService.getFilteredSortedOrderedModelBooksByPage(search, isGenreFilterActive, genreFilter, pageIndex, sortType);
+        List<BookModel> modelBooks = bookModelService.getFilteredSortedOrderedModelBooksByPage(search, isGenreFilterActive, genreFilter, pageIndex, sortType);
 
         mav.addObject("modelBooks", modelBooks);
         mav.addObject("isGenreFilterActive", isGenreFilterActive);
@@ -204,7 +204,7 @@ public class BookController {
         return new ModelAndView("redirect:/book");
     }*/
 
-    @PostMapping("/book/upload_book_model")
+    /*@PostMapping("/book/upload_book_model")
     public ModelAndView uploadBookModel(@Valid @ModelAttribute("modelBookForm") ModelBookForm modelBookForm, BindingResult errors) {
         if(errors.hasErrors()){
             return bookModelForm(modelBookForm, errors);
@@ -230,7 +230,7 @@ public class BookController {
         mav.addObject("book_model_id", bookModel.getBookModelId());
 
         return mav;
-    }
+    }*/
 
     @PostMapping("/book/upload_book")
     public ModelAndView uploadBook(@Valid @ModelAttribute("bookDetailsForm") BookDetailsForm bookDetailsForm, @RequestParam(name = "book_model_id") long bookModelId, BindingResult errors) {
