@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS book_model (
 -- Tabla de libros LISTO
 CREATE TABLE IF NOT EXISTS book (
     bookId              SERIAL PRIMARY KEY,
-    bookModelId         INTEGER NOT NULL REFERENCES book_model(bookModelId) ON DELETE SET NULL,
+    bookModelId         INTEGER REFERENCES book_model(bookModelId) ON DELETE SET NULL,
     ownerId             INTEGER NOT NULL REFERENCES users(userId) ON DELETE CASCADE,
     bookState           INTEGER NOT NULL,
     exchangesQty        INTEGER NOT NULL,

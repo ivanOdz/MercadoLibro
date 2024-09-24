@@ -15,47 +15,54 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
-@EnableTransactionManagement
 @ComponentScan("ar.edu.itba.paw.persistence")
 @Configuration
+@EnableTransactionManagement
 public class TestConfig {
+	
+	@Value("classpath:pgsql.sql")
+	private Resource pgSql;
+	
+	@Value("classpath:schema.sql")
+	private Resource schemaSql;
 
-    @Value("classpath:pgsql.sql")
-    private Resource pgSql;
+	@Bean
+	public DataSource dataSource() {
 
-    @Value("classpath:schema.sql")
-    private Resource schemaSql;
+		final SimpleDriverDataSource ds = new SimpleDriverDataSource();
+		
+		ds.setDriverClass(org.hsqldb.jdbc.JDBCDriver.class);
+		ds.setUrl("jdbc:hsqldb:mem:paw");
+		ds.setUsername("ha");
+		ds.setPassword("");
+		
+		return ds;
+	}
+	
+	@Bean
+	public DataSourceInitializer dsInitializer(final DataSource ds) {
 
-    @Bean
-    public DataSource dataSource() {
-        final SimpleDriverDataSource ds = new SimpleDriverDataSource();
-
-        ds.setDriverClass(org.hsqldb.jdbc.JDBCDriver.class);
-        ds.setUrl("jdbc:postgresql:mem:paw");
-        ds.setUsername("ha");
-        ds.setPassword("");
-
-        return ds;
-    }
-
-    @Bean
-    public DataSourceInitializer dsInitializer(final DataSource ds) {
-        final DataSourceInitializer dsi = new DataSourceInitializer();
-        dsi.setDataSource(ds);
-        dsi.setDatabasePopulator(dsPopulator());
-        return dsi;
-    }
-
-    private DatabasePopulator dsPopulator() {
-        ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
-        dbp.addScript(pgSql);
-        dbp.addScript(schemaSql);
-        return dbp;
-    }
-
-    @Bean
-    public TransactionManager transactionManager(DataSource ds) {
-        return new JdbcTransactionManager(ds);
-    }
-
+		final DataSourceInitializer dsi = new DataSourceInitializer();
+		
+		dsi.setDataSource(ds);
+		dsi.setDatabasePopulator(dsPopulator());
+		
+		return dsi;
+	}
+	
+	private DatabasePopulator dsPopulator() {
+		
+		final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
+		
+		dbp.addScript(pgSql);
+		dbp.addScript(schemaSql);
+		
+		return dbp;
+	}
+	
+	@Bean
+	public TransactionManager transactionManager(DataSource ds) {
+		
+		return new JdbcTransactionManager(ds);
+	}
 }
