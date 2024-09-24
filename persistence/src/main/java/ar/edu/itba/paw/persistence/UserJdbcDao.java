@@ -19,7 +19,7 @@ import java.util.Optional;
 @Repository
 public class UserJdbcDao implements UserDao {
 
-    private static final RowMapper<User> ROWMAPPER =
+    private static final RowMapper<User> ROW_MAPPER_USER =
             (rs, rowNum) -> new User(rs.getLong("userId"),
                                      rs.getString("username"),
                                      rs.getString("mail"),
@@ -56,13 +56,13 @@ public class UserJdbcDao implements UserDao {
     @Override
     public Optional<User> findById(long id) {
         return jdbcTemplate.query("SELECT * FROM users WHERE userId = ?", new Object[]{ id },
-                new int[]{ Types.BIGINT }, ROWMAPPER).stream().findFirst();
+                new int[]{ Types.BIGINT }, ROW_MAPPER_USER).stream().findFirst();
     }
 
     @Override
     public Optional<User> find(String mail) {
         return jdbcTemplate.query("SELECT * FROM users WHERE mail = ?", new Object[]{ mail },
-        		new int[]{ Types.VARCHAR }, ROWMAPPER).stream().findFirst();
+        		new int[]{ Types.VARCHAR }, ROW_MAPPER_USER).stream().findFirst();
     }
     
     @Override
@@ -76,7 +76,7 @@ public class UserJdbcDao implements UserDao {
     @Override
     public Optional<User> getUserToVerify(int verificationCode) {
         return jdbcTemplate.query("SELECT * FROM users WHERE verificationcode = ?", new Object[]{ verificationCode },
-                new int[]{ Types.INTEGER }, ROWMAPPER).stream().findFirst();
+                new int[]{ Types.INTEGER }, ROW_MAPPER_USER).stream().findFirst();
     }
 
     @Override
@@ -117,7 +117,7 @@ public class UserJdbcDao implements UserDao {
 
     @Override
     public Optional<User> findByUsername(String username) {
-        return jdbcTemplate.query("SELECT * FROM users WHERE username = ? ", new Object[]{ username }, new int[] {Types.VARCHAR}, ROWMAPPER).stream().findFirst();
+        return jdbcTemplate.query("SELECT * FROM users WHERE username = ? ", new Object[]{ username }, new int[] {Types.VARCHAR}, ROW_MAPPER_USER).stream().findFirst();
     }
 
     @Override
@@ -145,6 +145,6 @@ public class UserJdbcDao implements UserDao {
     @Override
     public User getUserByPubId(long pubId) {
         return jdbcTemplate.query("SELECT * FROM users u JOIN publication p ON u.userId = p.userId WHERE p.publicationId = ?", new Object[]{ pubId },
-                new int[]{Types.BIGINT}, ROWMAPPER).stream().findFirst().get();
+                new int[]{Types.BIGINT}, ROW_MAPPER_USER).stream().findFirst().get();
     }
 }
