@@ -23,7 +23,8 @@ public class BookModelJdbcDao implements BookModelDao {
 
     private static final int PAGE_SIZE = 21;
 
-    private static final RowMapper<BookModel> ROW_MAPPER_BOOK_MODEL = (rs, rowNum) -> new BookModel(
+    // package-private visibility
+    static final RowMapper<BookModel> ROW_MAPPER_BOOK_MODEL = (rs, rowNum) -> new BookModel(
             rs.getLong("bookModelId"),
             rs.getString("isbn"),
             rs.getString("title"),
@@ -102,7 +103,7 @@ public class BookModelJdbcDao implements BookModelDao {
     public List<BookModel> getFilteredSortedOrderedModelBooksByPage(String search, boolean isGenreFilterActive, Genre genreFilter, int pageIndex, SortType sortType) {
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
-                        "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, i.imageId, AVG(br.rating) as bookRating, COUNT(br.rating) as ratingQty" +
+                        "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, i.imageId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount" +
                         "FROM book_model bm " +
                         "JOIN book b ON b.bookModelId = bm.bookModelId " +
                         "JOIN book_author ba ON ba.bookModelId = bm.bookModelId " +
