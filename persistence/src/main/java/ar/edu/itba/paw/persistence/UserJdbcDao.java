@@ -19,7 +19,7 @@ import java.util.Optional;
 @Repository
 public class UserJdbcDao implements UserDao {
 
-    private static final RowMapper<User> ROW_MAPPER_USER =
+    static final RowMapper<User> ROW_MAPPER_USER =
             (rs, rowNum) -> new User(rs.getLong("userId"),
                                      rs.getString("username"),
                                      rs.getString("mail"),
