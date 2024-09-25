@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 @Controller
 public class BookController {
 
-    private final SinglePublicationService ps;
+//    private final SinglePublicationService ps;
 
     private final ImageService imageService;
 
@@ -63,8 +63,8 @@ public class BookController {
     private BookDimensionService bookDimensionService;
 
 
-    public BookController(SinglePublicationService ps, ImageService imageService, EmailService emailService, ExchangeService exchangeService, PublicationService publicationService, BookService bookService, BookModelService bookModelService, CardBookService cardBookService, UserService userService, BookImageService bookImageService) {
-        this.ps = ps;
+    public BookController(/*SinglePublicationService ps,*/ ImageService imageService, EmailService emailService, ExchangeService exchangeService, PublicationService publicationService, BookService bookService, BookModelService bookModelService, CardBookService cardBookService, UserService userService, BookImageService bookImageService) {
+//        this.ps = ps;
         this.imageService = imageService;
         this.emailService = emailService;
         this.exchangeService = exchangeService;

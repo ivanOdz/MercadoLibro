@@ -99,16 +99,16 @@ public class PublicationJdbcDao implements PublicationDao {
                     "b.bookState, b.exchangesQty," +
                     //book_model
                     "bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
-                    "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, i.imageId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount" +
+                    "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, i.imageId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount " +
 
                     "FROM publication p " +
                     "JOIN book b ON p.bookId = b.bookId " +
                     "JOIN book_model bm ON bm.bookModelId = b.bookModelId " +
-                    "JOIN book_rating br ON bm.bookModelId = br.bookModelId " +
+                    "LEFT JOIN book_rating br ON bm.bookModelId = br.bookModelId " +
                     "JOIN book_author ba ON ba.bookModelId = bm.bookModelId " +
                     "JOIN author a ON a.authorId = ba.authorId " +
                     "JOIN book_image bi ON bi.bookId = b.bookId " +
-                    "JOIN image i ON bi.imageId = i.imageId " +
+                    "LEFT JOIN image i ON bi.imageId = i.imageId " +
                     "JOIN location l ON p.locationId = l.locationId " +
                     "LEFT JOIN (SELECT bb.bookModelId, AVG(bb.rating) AS rating, COUNT(bb.rating) AS ratingCount " +
                     "FROM book bb " +
@@ -172,16 +172,16 @@ public class PublicationJdbcDao implements PublicationDao {
                 "b.bookState, b.exchangesQty," +
                 //book_model
                 "bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
-                "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, i.imageId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount" +
+                "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, i.imageId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount " +
 
                 "FROM publication p " +
                 "JOIN book b ON p.bookId = b.bookId " +
                 "JOIN book_model bm ON bm.bookModelId = b.bookModelId " +
-                "JOIN book_rating br ON bm.bookModelId = br.bookModelId " +
+                "LEFT JOIN book_rating br ON bm.bookModelId = br.bookModelId " +
                 "JOIN book_author ba ON ba.bookModelId = bm.bookModelId " +
                 "JOIN author a ON a.authorId = ba.authorId " +
                 "JOIN book_image bi ON bi.bookId = b.bookId " +
-                "JOIN image i ON bi.imageId = i.imageId " +
+                "LEFT JOIN image i ON bi.imageId = i.imageId " +
                 "JOIN location l ON p.locationId = l.locationId " +
                 "LEFT JOIN (SELECT bb.bookModelId, AVG(bb.rating) AS rating, COUNT(bb.rating) AS ratingCount " +
                 "FROM book bb " +
