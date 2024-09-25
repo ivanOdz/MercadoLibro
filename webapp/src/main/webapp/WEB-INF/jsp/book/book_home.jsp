@@ -156,7 +156,7 @@
                                 <figure class="uk-margin-bottom">
                                     <c:choose>
                                         <c:when test="${card.images[0] != null}">
-<%--                                            <img class="book-image" src="${pageContext.request.contextPath}/images/${card.images[0]}" alt="bookImage"/>--%>
+                                            <img class="book-image" src="${pageContext.request.contextPath}/images/${card.images[0]}" alt="bookImage"/>
                                         </c:when>
                                         <c:otherwise>
                                             <img class="book-image" src="${pageContext.request.contextPath}/images/book.jpg" alt="book"/>
