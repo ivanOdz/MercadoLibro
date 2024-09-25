@@ -12,10 +12,10 @@ public class Book {
 	private final BookState bookState;
 	private final int exchangesQty;
 	private final boolean available;
-	private final List<Long> images;
+	private final List<Integer> images;
 
 
-    public Book(long bookId, User owner, BookModel bookModel, BookState bookState, int exchangesQty, boolean available, List<Long> images) {
+    public Book(long bookId, User owner, BookModel bookModel, BookState bookState, int exchangesQty, boolean available, List<Integer> images) {
         this.bookId = bookId;
         this.owner = owner;
         this.bookModel = bookModel;
@@ -49,7 +49,7 @@ public class Book {
 		return available;
 	}
 
-	public List<Long> getImages() {
+	public List<Integer> getImages() {
 		return images;
 	}
 }

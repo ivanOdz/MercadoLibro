@@ -31,7 +31,7 @@ public class BookJdbcDao implements BookDao {
                 BookState bookState = BookState.fromInt(rs.getInt("bookState"));
                 int exchangesQty = rs.getInt("exchangesQty");
                 boolean available = PublicationState.fromInt(rs.getInt("publicationState")) == PublicationState.CURRENT;
-                List<Long> images = Arrays.asList((Long[]) rs.getArray("images").getArray());
+                List<Integer> images = Arrays.asList((Integer[]) rs.getArray("images").getArray());
 
                 return new Book(rs.getLong("bookId"), owner, bookModel, bookState, exchangesQty, available, images);
             };
