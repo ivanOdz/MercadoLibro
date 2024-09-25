@@ -54,6 +54,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 // recursos por roles ==> accept
                 // importante orden de definicion de reglas
                 .and().authorizeRequests()
+                    .antMatchers("/images/**, /css/**").permitAll()
                     .antMatchers("/favicon.ico", "/createexchange", "/confirm_offerer", "/confirm_requester").permitAll()
                     .antMatchers("/create","/login","/mail_input", "/change_password_solicited","/change_password", "/success_registration",  "/success_verification", "/verification", "/mail_input_message", "/success_password","/failed_authentication").anonymous()
                     .antMatchers("/post/edit").hasRole("EDITOR")
@@ -77,10 +78,5 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .accessDeniedPage("/403")
                 .and().csrf().disable();
 
-    }
-
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/css/**", "/js/**", "/img/**", "favicon.ico","/403");
     }
 }
