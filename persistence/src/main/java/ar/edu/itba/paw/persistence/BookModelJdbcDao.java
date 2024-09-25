@@ -40,7 +40,7 @@ public class BookModelJdbcDao implements BookModelDao {
             rs.getBoolean("isPocketEdition"),
             rs.getBoolean("isHardcover"),
             rs.getString("authors"),
-            rs.getLong("imageId"), // revisar esto, deberia obtener todas las imagenes no solo la primera.
+            rs.getLong("imageId"),
             new Rating(rs.getDouble("rating"), rs.getInt("ratingCount"))
     );
 
@@ -108,10 +108,9 @@ public class BookModelJdbcDao implements BookModelDao {
                         "JOIN book b ON b.bookModelId = bm.bookModelId " +
                         "JOIN book_author ba ON ba.bookModelId = bm.bookModelId " +
                         "JOIN author a ON a.authorId = ba.authorId " +
-                        "JOIN book_image bi ON bi.bookId = b.bookId " + // esto no se deberia de hacer, aca seria desde la tabla nueva book_model_image
-                        "JOIN image i ON bi.imageId = i.imageId " +
-                        "JOIN book_rating br ON bm.bookModelId = br.bookModelId" +
-                        "WHERE bi.imageOrder = 0 AND LOWER(bm.title) LIKE LOWER(?) ");
+                        "JOIN image i ON bm.imageId = i.imageId " +
+                        "JOIN book_rating br ON bm.bookModelId = br.bookModelId " +
+                        "WHERE LOWER(bm.title) LIKE LOWER(?) ");
 
         if (isGenreFilterActive) {
             sqlQuery.append("AND bm.genre = ? ");
