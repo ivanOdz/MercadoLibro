@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
+<%@ include file="/WEB-INF/jsp/components/navbar_wo_search.jsp" %>
 
 
 <!DOCTYPE html>
@@ -10,7 +10,6 @@
 
 <html lang="es" class="custom-style">
 <head>
-    <link href="${pageContext.request.contextPath}/css/book_home.css?v=1.0" rel="stylesheet"/>
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
@@ -19,16 +18,31 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
     <link href="${pageContext.request.contextPath}/css/navbar.css?v=1.0" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/css/book_home.css?v=1.0" rel="stylesheet"/>
 
     <title><spring:message code="book.view.title"/></title>
 </head>
 <body>
-<navbar></navbar>
+<navbar_wo_search></navbar_wo_search>
 
 
 <div class="uk-background-muted">
-    <div class="uk-container">
-        <div class="uk-grid ml-1 uk-margin-top" uk-grid>
+    <div class="uk-container main-content">
+        <div class="uk-container book-search-section">
+            <form class="uk-search uk-search-default custom-search-form book-search" method="get" action="">
+                <input class="uk-search-input button-text " type="search"
+                       placeholder="<spring:message code='home.search.text'/>"
+                       aria-label="Search"
+                       name="search"
+                       id="search"
+                       value="${param.search != null ? param.search : ''}">
+                <button class="uk-search-icon-flip" uk-search-icon></button>
+            </form>
+        </div>
+
+        <div class="uk-grid ml-1" uk-grid>
+
+
             <div class="uk-width-1-4@s filter-section uk-border-rounded uk-box-shadow-small mt-1 mb-1">
                 <h2><c:out value="${param.search}"/></h2>
 
