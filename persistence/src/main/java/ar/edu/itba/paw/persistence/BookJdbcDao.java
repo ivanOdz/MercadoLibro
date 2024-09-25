@@ -30,10 +30,10 @@ public class BookJdbcDao implements BookDao {
                 BookModel bookModel = ROW_MAPPER_BOOK_MODEL.mapRow(rs, rowNum);
                 BookState bookState = BookState.fromInt(rs.getInt("bookState"));
                 int exchangesQty = rs.getInt("exchangesQty");
-                boolean available = PublicationState.fromInt(rs.getInt("publicationState")) == PublicationState.CURRENT;
+
                 List<Integer> images = Arrays.asList((Integer[]) rs.getArray("images").getArray());
 
-                return new Book(rs.getLong("bookId"), owner, bookModel, bookState, exchangesQty, available, images);
+                return new Book(rs.getLong("bookId"), owner, bookModel, bookState, exchangesQty, rs.getBoolean("available"), images);
             };
 
     public BookJdbcDao(final DataSource ds) {
@@ -89,13 +89,15 @@ public class BookJdbcDao implements BookDao {
                 "SELECT  b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
                         "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, i.imageId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount, " +
                         "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, ARRAY_AGG(i.imageId ORDER BY bi.imageOrder) AS images, " +
-                        "p.publicationState "+
+                        "p.publicationState, e.exchangeState, CASE WHEN EXISTS (SELECT 1 FROM exchange e2 JOIN publication p2 ON e2.offererPubId = p2.publicationId OR e2.requesterPubId = p2.publicationId " +
+                        "WHERE (p2.bookId = b.bookId) AND e2.exchangeState = ?) THEN TRUE ELSE FALSE END AS available "+
                         "FROM book b " +
                         "JOIN users u ON b.ownerId = u.userId " +
                         "JOIN book_model bm ON bm.bookModelId = b.bookModelId " +
                         "JOIN book_author ba ON ba.bookModelId = bm.bookModelId " +
                         "JOIN author a ON a.authorId = ba.authorId " +
                         "LEFT JOIN publication p ON p.bookId = b.bookId " +
+                        "LEFT JOIN exchange e ON e.offererPubId = p.publicationId OR e.requesterPubId = p.publicationId " +
                         "JOIN book_image bi ON bi.bookId = b.bookId " +
                         "LEFT JOIN book_rating br ON bm.bookModelId = br.bookModelId " +
                         "JOIN image i ON bi.imageId = i.imageId " +
@@ -109,8 +111,8 @@ public class BookJdbcDao implements BookDao {
             sqlQuery.append("AND b.bookState = ? ");
         }
 
-        sqlQuery.append("GROUP BY b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, bm.dimension, bm.publicationYear, " +
-                "bm.isPocketEdition, bm.isHardcover, p.publicationState, i.imageId, u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified");
+        sqlQuery.append("GROUP BY available, b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, bm.dimension, bm.publicationYear, " +
+                "bm.isPocketEdition, bm.isHardcover, p.publicationState, i.imageId, u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, e.exchangeState");
 
         switch (sortType) {
             case RATING_ASCENDING:
@@ -130,15 +132,15 @@ public class BookJdbcDao implements BookDao {
         sqlQuery.append(" LIMIT ? OFFSET ?");
 
         if(isGenreFilterActive && isBookStateFilterActive) {
-            return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ userId, "%" + search.toLowerCase() + "%", genreFilter.getValue(), bookStateFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.BIGINT, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER  }, ROW_MAPPER_BOOK);
+            return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ ExchangeState.ACCEPTED.getValue(), userId, "%" + search.toLowerCase() + "%", genreFilter.getValue(), bookStateFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.INTEGER, Types.BIGINT, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER  }, ROW_MAPPER_BOOK);
         }
         if(isGenreFilterActive) {
-            return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ userId, "%" + search.toLowerCase() + "%", genreFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.BIGINT,  Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_BOOK);
+            return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ ExchangeState.ACCEPTED.getValue(), userId, "%" + search.toLowerCase() + "%", genreFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.INTEGER, Types.BIGINT,  Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_BOOK);
         }
         if(isBookStateFilterActive){
-            return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ userId, "%" + search.toLowerCase() + "%", bookStateFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.BIGINT,  Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_BOOK);
+            return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ ExchangeState.ACCEPTED.getValue(), userId, "%" + search.toLowerCase() + "%", bookStateFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.INTEGER, Types.BIGINT,  Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_BOOK);
         }
-        return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ userId, "%" + search.toLowerCase() + "%", PAGE_SIZE, offset }, new int[]{ Types.BIGINT, Types.VARCHAR, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_BOOK);
+        return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ ExchangeState.ACCEPTED.getValue(), userId, "%" + search.toLowerCase() + "%", PAGE_SIZE, offset }, new int[]{ Types.INTEGER, Types.BIGINT, Types.VARCHAR, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_BOOK);
     }
 
 }
