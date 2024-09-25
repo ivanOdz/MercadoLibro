@@ -88,7 +88,7 @@ public class BookJdbcDao implements BookDao {
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT  b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
                         "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, i.imageId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount, " +
-                        "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified " +
+                        "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, ARRAY_AGG(i.imageId ORDER BY bi.imageOrder) AS images " +
                         "FROM book " +
                         "JOIN users u ON b.ownerId = u.userId " +
                         "JOIN book_model bm ON bm.bookModelId = b.bookModelId " +
@@ -96,7 +96,6 @@ public class BookJdbcDao implements BookDao {
                         "JOIN author a ON a.authorId = ba.authorId " +
                         "JOIN book_image bi ON bi.bookId = b.bookId " +
                         "JOIN image i ON bi.imageId = i.imageId " +
-                        "ARRAY_AGG(i.imageId ORDER BY bi.imageOrder) AS images " +
                         "WHERE u.userid = ? AND LOWER(bm.title) LIKE LOWER(?) ");
 
         if (isGenreFilterActive) {
