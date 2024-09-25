@@ -45,7 +45,7 @@ public class PublicationController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.getPrincipal() instanceof PawUserDetails pud) {
-            List<PublicationCard> publications = ps.getFilteredSortedOrderedPublicationsByPageExcludingUser(search, isBookStateFilterActive,
+            List<Publication> publications = ps.getFilteredSortedOrderedPublicationsByPageExcludingUser(search, isBookStateFilterActive,
                     bookStateFilter, isGenreFilterActive, genreFilter, pageIndex, pud.getUser().getUserId(), sortType);
 
             mav.addObject("publications", publications);
@@ -104,14 +104,14 @@ public class PublicationController {
     public ModelAndView publicationDetail(@ModelAttribute("completeBookParam") CompleteBook completeBookParam, @PathVariable(name = "publication_id") long publicationId) {
         final ModelAndView mav = new ModelAndView("home/publicationDetail");
 
-        PublicationDetail publicationDetail = ps.getPublicationDetailByPublicationId(publicationId);
+        Publication publication = ps.getPublicationByPublicationId(publicationId);
 
-        if(publicationDetail == null){
+        if(publication == null){
             // TODO: Hace vista que la publicacion ya no esta disponible
             return new ModelAndView("error/forbidden");
         }
 
-        mav.addObject("publicationCard", publicationDetail);
+        mav.addObject("publicationCard", publication);
         mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
         mav.addObject("completeBookParam", completeBookParam);
 
