@@ -132,7 +132,7 @@
                                                 <c:out value="${card.genre}"/>
                                             </p>
                                             <p>
-                                                <c:out value="${card.publisher}"/>
+                                                <c:out value="${card.editorial}"/>
                                             </p>
                                             <p>
                                                 <c:out value="${card.description}"/>
