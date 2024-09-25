@@ -56,11 +56,12 @@ CREATE TABLE IF NOT EXISTS book_image (
 );
 
 -- Nueva
-CREATE TABLE book_rating (
-      ratingId SERIAL PRIMARY KEY,
+
+CREATE TABLE IF NOT EXISTS book_rating (
       userId INTEGER NOT NULL REFERENCES users(userId) ON DELETE CASCADE,
       bookModelId INTEGER NOT NULL REFERENCES book_model(bookModelId) ON DELETE CASCADE,
-      rating INTEGER
+      rating INTEGER,
+      PRIMARY KEY(userId, bookModelId)
 );
 
 
