@@ -37,14 +37,14 @@ public class BookJdbcDao implements BookDao {
             };
 
     public BookJdbcDao(final DataSource ds) {
-       
+
     	jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).usingGeneratedKeyColumns("bookid").withTableName("book");
     }
 
     /*@Override
     public Book createBook(long bookModelId, long ownerId, BookState bookState, int exchangesQty, int rating) {
-        
+
     	final Map<String, Object> bookData = new HashMap<>();
         bookData.put("bookModelId", bookModelId);
         bookData.put("ownerId", ownerId);
@@ -88,9 +88,9 @@ public class BookJdbcDao implements BookDao {
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT  b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
                         "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, i.imageId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount, " +
-                        "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, " +
+                        "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified " +
                         "FROM book " +
-                        "JOIN users u ON p.userid = u.userid " +
+                        "JOIN users u ON b.ownerId = u.userId " +
                         "JOIN book_model bm ON bm.bookModelId = b.bookModelId " +
                         "JOIN book_author ba ON ba.bookModelId = bm.bookModelId " +
                         "JOIN author a ON a.authorId = ba.authorId " +
