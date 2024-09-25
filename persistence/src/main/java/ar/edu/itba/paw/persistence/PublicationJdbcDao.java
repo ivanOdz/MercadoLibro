@@ -99,7 +99,11 @@ public class PublicationJdbcDao implements PublicationDao {
                     "b.bookState, b.exchangesQty," +
                     //book_model
                     "bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
-                    "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, bm.imageId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount, " + "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, " +
+                    "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, bm.imageId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount, " + "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, " +
+                    "(SELECT STRING_AGG(a.authorName, ', ') " +
+                    " FROM book_author ba " +
+                    " JOIN author a ON a.authorId = ba.authorId " +
+                    " WHERE ba.bookModelId = bm.bookModelId) AS authors, "+
                     "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified " +
                     "FROM publication p " +
                     "JOIN book b ON p.bookId = b.bookId " +
@@ -173,7 +177,11 @@ public class PublicationJdbcDao implements PublicationDao {
                 "b.bookState, b.exchangesQty," +
                 //book_model
                 "bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
-                "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, bm.imageId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount, " +
+                "(SELECT STRING_AGG(a.authorName, ', ') " +
+                " FROM book_author ba " +
+                " JOIN author a ON a.authorId = ba.authorId " +
+                " WHERE ba.bookModelId = bm.bookModelId) AS authors, "+
+                "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, bm.imageId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount, " +
                 "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified " +
 
                 "FROM publication p " +
