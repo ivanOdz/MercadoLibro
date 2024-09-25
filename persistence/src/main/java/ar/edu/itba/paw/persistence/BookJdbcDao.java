@@ -23,8 +23,9 @@ public class BookJdbcDao implements BookDao {
 
     private static final int PAGE_SIZE = 21;
 
-    private static final RowMapper<Book> ROW_MAPPER_BOOK =
+    static final RowMapper<Book> ROW_MAPPER_BOOK =
             (rs, rowNum) -> {
+                // IMAGES
                 BookModel bookModel = ROW_MAPPER_BOOK_MODEL.mapRow(rs, rowNum);
                 BookState bookState = BookState.fromInt(rs.getInt("bookState"));
                 int exchangesQty = rs.getInt("exchangesQty");

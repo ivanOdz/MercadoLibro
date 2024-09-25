@@ -53,7 +53,7 @@ public class PublicationsServiceImpl implements PublicationService {
 
     @Override
     public PublicationDetail getPublicationDetailByPublicationId(long publicationId) {
-        return pubDao.getPublicationDetailByPublicationId(publicationId);
+        return pubDao.getPublicationByPublicationId(publicationId);
     }
 
 
