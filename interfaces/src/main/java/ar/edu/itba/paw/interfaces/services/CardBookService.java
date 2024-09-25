@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface CardBookService {
 
-    List<BookCard> buildCardBookList(List<Book> bookList);
+    //List<BookCard> buildCardBookList(List<Book> bookList);
 
-    List<BookCard> buildCardBookModelList(List<BookModel> bookList);
+    //List<BookCard> buildCardBookModelList(List<BookModel> bookList);
 }

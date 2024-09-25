@@ -16,15 +16,15 @@ import java.util.Optional;
 @Service
 public interface BookService {
 
-    Optional<Book> getBookById(long bookId);
+    //Optional<Book> getBookById(long bookId);
 
-    Book createBook (long bookModelId, long ownerId, BookState bookState, int exchangesQty, int rating);
+   // Book createBook (long bookModelId, long ownerId, BookState bookState, int exchangesQty, int rating);
 
-    void exchangeOwnership(long b1, long b2);
+    //void exchangeOwnership(long b1, long b2);
 
-    Book getBookByPubId(long pubId);
+    //Book getBookByPubId(long pubId);
 
-    List<Book> getAllBooksByOwnerIdAndFilteredBy(long ownerId, String search, int bookStateFilter, int genreFilter);
+    //List<Book> getAllBooksByOwnerIdAndFilteredBy(long ownerId, String search, int bookStateFilter, int genreFilter);
 
     List<Book> getFilteredSortedOrderedBooksByPageFromUser(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, int pageIndex, long userId, SortType sortType);
 

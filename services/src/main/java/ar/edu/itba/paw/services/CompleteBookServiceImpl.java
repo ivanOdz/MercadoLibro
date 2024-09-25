@@ -27,7 +27,7 @@ public class CompleteBookServiceImpl implements CompleteBookService {
 
 
 
-    @Override
+    /*@Override
     public List<CompleteBook> getCompleteAvailableBooksByUserId(long userId) {
         List<CompleteBook> toReturn = new ArrayList<>();
 
@@ -37,11 +37,11 @@ public class CompleteBookServiceImpl implements CompleteBookService {
             BookModel bookModel = bookModelService.getBookModelByBookModelId(book.getBookModelId());
             //Optional<Publication> publication = publicationService.getPublicationStateByBookId(book.getBookId());
 
-            /*if(publication.isEmpty() || publication.get().getPublicationState() == PublicationState.TERMINATED) {
+            if(publication.isEmpty() || publication.get().getPublicationState() == PublicationState.TERMINATED) {
                 toReturn.add(new CompleteBook(book, bookModel));
-            }*/
+            }
         }
 
         return toReturn;
-    }
+    }*/
 }

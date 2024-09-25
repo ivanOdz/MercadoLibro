@@ -12,6 +12,6 @@ import java.util.List;
 @Service
 public interface SinglePublicationService {
 
-    Publication createPublication(int bookModelId, long ownerId, BookState bookState, int exchangesQty, int rating);
+    //Publication createPublication(int bookModelId, long ownerId, BookState bookState, int exchangesQty, int rating);
 
 }

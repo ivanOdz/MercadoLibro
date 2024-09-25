@@ -26,7 +26,7 @@ public class CardBookServiceImpl implements CardBookService {
     }
 
 
-    @Override
+    /*@Override
     public List<BookCard> buildCardBookList(List<Book> bookList) {
         List<BookCard> cardBookList = new ArrayList<>();
         for (Book book : bookList) {
@@ -67,5 +67,5 @@ public class CardBookServiceImpl implements CardBookService {
             //cardBookList.add(new BookCard(bookModel, imageId, authors));
         }
         return cardBookList;
-    }
+    }*/
 }

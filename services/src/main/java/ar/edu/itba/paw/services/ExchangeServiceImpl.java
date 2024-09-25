@@ -45,7 +45,7 @@ public class ExchangeServiceImpl implements ExchangeService {
     }
 
 
-    @Override
+    /*@Override
     public Optional<Exchange> getExchangeById(long exchangeId) {
         return exchangeDao.findById(exchangeId);
     }
@@ -53,7 +53,7 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Override
     public long getId(int acceptCode) {
         return exchangeDao.getIdByAcceptCode(acceptCode);
-    }
+    }*/
 
     /*@Override
     public String exchange(int acceptCode, boolean state) {
@@ -68,7 +68,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         }
     }*/
 
-    @Override
+    /*@Override
     public void initializeExchange(CompleteBook requesterComplete, long offererPubId) {
         // Insertar tupla de requester en publicacion con fecha actual y publicationState = 2 (OFFERER)
 
@@ -106,19 +106,14 @@ public class ExchangeServiceImpl implements ExchangeService {
         variables.put("requestedPublication", bookModelRequestedTitle);
         variables.put("offeredPublication", bookModelOfferedTitle);
         variables.put("validationUrl", webappUrl + "/createexchange?accept_code=" + ex.getAcceptCode() + "&state=true");
-        variables.put("rejectionUrl", webappUrl + "/createexchange?accept_code=" + ex.getAcceptCode() +"&state=false");*/
+        variables.put("rejectionUrl", webappUrl + "/createexchange?accept_code=" + ex.getAcceptCode() +"&state=false");
 
         //emailService.sendEmail(oferrerEmail, variables, "exchangeRequest", "Requesting");
 
-    }
+    }*/
 
 
-    /**
-     *
-     * @param userId
-     * @return function called from the offered section of exchanges
-     */
-    @Override
+    /*@Override
     public List<ExchangeWrapper> getExchangeOffererWrapperListByUserId(long userId, ExchangeState exchangeState) {
 
         //List<Exchange> exchanges = exchangeDao.getExchangesWhereUserIdIsOfferer(userId);
@@ -126,7 +121,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         return exchangeDao.getExchangesWhereUserIdIsOfferer(userId, exchangeState);
 
         //return getExchangeWrapper(exchanges);
-    }
+    }*/
 
     /*@Override
     public void cofirmOfferer(int acceptCode) {
@@ -136,8 +131,8 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Override
     public void cofirmRequester(int acceptCode) {
         exchangeDao.confirmRequester(acceptCode);
-    }
-*/
+    }*/
+
 
     /**
      *

@@ -23,7 +23,7 @@ public class BookServiceImpl implements BookService {
         this.bookDao = bookDao;
     }
 
-    @Override
+    /*@Override
     public Book createBook (long bookModelId, long ownerId, BookState bookState, int exchangesQty, int rating) {
         return bookDao.createBook(bookModelId, ownerId, bookState, exchangesQty, rating);
     }
@@ -46,7 +46,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<Book> getAllBooksByOwnerIdAndFilteredBy(long ownerId, String search, int bookStateFilter, int genreFilter) {
         return bookDao.getAllBooksByOwnerIdAndFilteredBy(ownerId, search, bookStateFilter, genreFilter);
-    }
+    }*/
 
     @Override
     public List<Book> getFilteredSortedOrderedBooksByPageFromUser(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, int pageIndex, long userId, SortType sortType) {

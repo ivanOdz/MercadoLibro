@@ -232,7 +232,7 @@ public class BookController {
         return mav;
     }*/
 
-    @PostMapping("/book/upload_book")
+    /*@PostMapping("/book/upload_book")
     public ModelAndView uploadBook(@Valid @ModelAttribute("bookDetailsForm") BookDetailsForm bookDetailsForm, @RequestParam(name = "book_model_id") long bookModelId, BindingResult errors) {
         if(errors.hasErrors()){
             return bookDetailsForm(bookDetailsForm, bookModelId, errors);
@@ -248,5 +248,5 @@ public class BookController {
         }
 
         return new ModelAndView("redirect:/book");
-    }
+    }*/
 }

@@ -46,7 +46,7 @@ public class ExchangeController {
 
     // Requests (osea peticiones que me hacen a mi)
     // Paso el ID, y quiero aquellas exchanges en las que soy offerer
-    @RequestMapping("/offers")
+    /*@RequestMapping("/offers")
     public ModelAndView exchangeRequests(@RequestParam(name = "exchange-state", defaultValue = "PENDING") ExchangeState exchangeState) {
         final ModelAndView mav = new ModelAndView("exchange/exchange_requests");
 
@@ -60,7 +60,7 @@ public class ExchangeController {
         }
 
         return mav;
-    }
+    }*/
 
 
     // Estado de mis ofertas
@@ -79,7 +79,7 @@ public class ExchangeController {
         return mav;
     }
 
-    @RequestMapping(path = "/exchange/initializeexchange", method = RequestMethod.POST)
+    /*@RequestMapping(path = "/exchange/initializeexchange", method = RequestMethod.POST)
     // public ModelAndView createExchange(@RequestParam (name = "publication_id") long offererPubId, @RequestParam (name = "bookId") long bookId){
     public ModelAndView createExchange(@ModelAttribute("completeBookParam") CompleteBook completeBook, @RequestParam("publication_id") long publicationId){
 
@@ -88,7 +88,7 @@ public class ExchangeController {
         exchangeService.initializeExchange(completeBook, publicationId);
 
         return mav;
-    }
+    }*/
 
 
     @RequestMapping("/exchange/accepted")

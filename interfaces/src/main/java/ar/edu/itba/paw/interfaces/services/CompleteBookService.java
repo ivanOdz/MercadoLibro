@@ -5,6 +5,6 @@ import ar.edu.itba.paw.models.CompleteBook;
 import java.util.List;
 
 public interface CompleteBookService {
-    List<CompleteBook> getCompleteAvailableBooksByUserId(long userId);
+    //List<CompleteBook> getCompleteAvailableBooksByUserId(long userId);
 
 }

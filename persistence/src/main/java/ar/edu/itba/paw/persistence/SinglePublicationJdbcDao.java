@@ -26,7 +26,7 @@ public class SinglePublicationJdbcDao implements SinglePublicationDao {
                 .withTableName("publication");
     }
 
-    @Override
+    /*@Override
     public Publication createPublication(long bookId, long userId, long locationId) {
         Timestamp currentTimestamp = new Timestamp(new Date().getTime());
 
@@ -39,6 +39,6 @@ public class SinglePublicationJdbcDao implements SinglePublicationDao {
 
         final Number generatedId = jdbcInsert.executeAndReturnKey(publicationData);
         return new Publication(generatedId.longValue(), bookId, userId, PublicationState.CURRENT, currentTimestamp, locationId);
-    }
+    }*/
 
 }
