@@ -1,35 +1,40 @@
 package ar.edu.itba.paw.models;
 
 import ar.edu.itba.paw.models.utils.BookState;
-import ar.edu.itba.paw.models.utils.Rating;
+
+import java.util.List;
+
 
 public class Book {
-
 	private final long bookId;
-	private final long ownerId;
+	private final User owner;
 	private final BookModel bookModel;
 	private final BookState bookState;
 	private final int exchangesQty;
+	private final boolean available;
+	private final List<Long> images;
 
 
-    public Book(long bookId, BookModel bookModel, long ownerId, BookState bookState, int exchangesQty) {
+    public Book(long bookId, User owner, BookModel bookModel, BookState bookState, int exchangesQty, boolean available, List<Long> images) {
         this.bookId = bookId;
+        this.owner = owner;
         this.bookModel = bookModel;
-        this.ownerId = ownerId;
         this.bookState = bookState;
         this.exchangesQty = exchangesQty;
+        this.available = available;
+        this.images = images;
     }
 
 	public long getBookId() {
 		return bookId;
 	}
 
-	public BookModel getBookModel() {
-		return bookModel;
+	public User getOwner() {
+		return owner;
 	}
 
-	public long getOwnerId() {
-		return ownerId;
+	public BookModel getBookModel() {
+		return bookModel;
 	}
 
 	public BookState getBookState() {
@@ -38,5 +43,13 @@ public class Book {
 
 	public int getExchangesQty() {
 		return exchangesQty;
+	}
+
+	public boolean isAvailable() {
+		return available;
+	}
+
+	public List<Long> getImages() {
+		return images;
 	}
 }
