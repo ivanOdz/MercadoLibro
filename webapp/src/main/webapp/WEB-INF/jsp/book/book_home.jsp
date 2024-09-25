@@ -155,8 +155,8 @@
                             <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-border-rounded custom-link">
                                 <figure class="uk-margin-bottom">
                                     <c:choose>
-                                        <c:when test="${card.imageId != null}">
-                                            <img class="book-image" src="${pageContext.request.contextPath}/images/${card.imageId}" alt="bookImage"/>
+                                        <c:when test="${card.images[0] != null}">
+                                            <img class="book-image" src="${pageContext.request.contextPath}/images/${card.images[0]}" alt="bookImage"/>
                                         </c:when>
                                         <c:otherwise>
                                             <img class="book-image" src="${pageContext.request.contextPath}/images/book.jpg" alt="book"/>
@@ -166,11 +166,11 @@
 
                                 <div class="uk-flex uk-flex-column uk-flex-column uk-margin-bottom">
                                     <div class="" >
-                                        <h5 class="uk-card-title custom-link">${card.title}</h5>
-                                        <p class="small-gray-text custom-link">${card.authors}</p>
+                                        <h5 class="uk-card-title custom-link">${card.bookModel.title}</h5>
+                                        <p class="small-gray-text custom-link">${card.bookModel.authors}</p>
                                     </div>
                                     <c:choose>
-                                        <c:when test="${card.publicationState != PublicationState.CURRENT}">
+                                        <c:when test="${card.bookState == bookStates.AVAIABLE}">
                                             <a class="uk-button uk-button-default uk-button-primary uk-width-1-1" href="#modal-sections-${card.bookId}" uk-toggle>
                                                 <spring:message code="book.publish.button"/>
                                             </a>

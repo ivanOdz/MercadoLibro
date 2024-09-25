@@ -99,7 +99,7 @@ public class PublicationJdbcDao implements PublicationDao {
                     "b.bookState, b.exchangesQty," +
                     //book_model
                     "bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
-                    "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, i.imageId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount, " + "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, " +
+                    "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, bm.imageId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount, " + "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, " +
                     "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified " +
                     "FROM publication p " +
                     "JOIN book b ON p.bookId = b.bookId " +
@@ -108,8 +108,8 @@ public class PublicationJdbcDao implements PublicationDao {
                     "LEFT JOIN book_rating br ON bm.bookModelId = br.bookModelId " +
                     "JOIN book_author ba ON ba.bookModelId = bm.bookModelId " +
                     "JOIN author a ON a.authorId = ba.authorId " +
-                    "JOIN book_image bi ON bi.bookId = b.bookId " +
-                    "LEFT JOIN image i ON bi.imageId = i.imageId " +
+                    "LEFT JOIN book_image bi ON bi.bookId = b.bookId " +
+                    "LEFT JOIN image i ON bm.imageId = i.imageId " +
                     "JOIN location l ON p.locationId = l.locationId " +
                     "LEFT JOIN (SELECT bb.bookModelId, AVG(bb.rating) AS rating, COUNT(bb.rating) AS ratingCount " +
                     "FROM book bb " +
@@ -125,7 +125,7 @@ public class PublicationJdbcDao implements PublicationDao {
             sqlQuery.append("AND b.bookState = ? ");
         }
 
-        sqlQuery.append("GROUP BY u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, p.publicationId, p.publicationState, l.locationId, l.locationString, p.publicationDatetime,b.bookId, b.bookState, b.exchangesQty, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, i.imageId");
+        sqlQuery.append("GROUP BY u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, p.publicationId, p.publicationState, l.locationId, l.locationString, p.publicationDatetime,b.bookId, b.bookState, b.exchangesQty, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, bm.imageId");
 
         switch (sortType) {
             case RATING_ASCENDING:
@@ -169,11 +169,11 @@ public class PublicationJdbcDao implements PublicationDao {
                 "p.publicationState, l.locationId, l.locationString, p.publicationDatetime," +
 
                 //book
-                "b.bookId, ARRAY_AGG(i.imageId ORDER BY bi.imageOrder) AS images, " +
+                "b.bookId, ARRAY_AGG(bi.imageId ORDER BY bi.imageOrder) AS images, " +
                 "b.bookState, b.exchangesQty," +
                 //book_model
                 "bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
-                "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, i.imageId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount, " +
+                "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, bm.imageId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount, " +
                 "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified " +
 
                 "FROM publication p " +
@@ -183,14 +183,14 @@ public class PublicationJdbcDao implements PublicationDao {
                 "LEFT JOIN book_rating br ON bm.bookModelId = br.bookModelId " +
                 "JOIN book_author ba ON ba.bookModelId = bm.bookModelId " +
                 "JOIN author a ON a.authorId = ba.authorId " +
-                "JOIN book_image bi ON bi.bookId = b.bookId " +
-                "LEFT JOIN image i ON bi.imageId = i.imageId " +
+                "LEFT JOIN book_image bi ON bi.bookId = b.bookId " +
+                "LEFT JOIN image i ON bm.imageId = i.imageId " +
                 "JOIN location l ON p.locationId = l.locationId " +
                 "LEFT JOIN (SELECT bb.bookModelId, AVG(bb.rating) AS rating, COUNT(bb.rating) AS ratingCount " +
                 "FROM book bb " +
                 "GROUP BY bb.bookModelId) avgRatings ON avgRatings.bookModelId = bm.bookModelId " +
                 "WHERE p.publicationId = ? AND p.publicationState = ? " +
-                "GROUP BY u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, p.publicationId, p.publicationState, l.locationId, l.locationString, p.publicationDatetime, b.bookId, b.bookState, b.exchangesQty, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover");
+                "GROUP BY u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, p.publicationId, p.publicationState, l.locationId, l.locationString, p.publicationDatetime, b.bookId, b.bookState, b.exchangesQty, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, bm.imageId");
 
         return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ publicationId, PublicationState.CURRENT.getValue() }, new int[]{ Types.BIGINT, Types.INTEGER }, ROW_MAPPER_PUBLICATION).stream().findFirst().orElse(null);
     }

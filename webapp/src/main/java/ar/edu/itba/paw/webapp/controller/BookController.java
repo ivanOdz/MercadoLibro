@@ -32,23 +32,23 @@ public class BookController {
 
 //    private final SinglePublicationService ps;
 
-    private final ImageService imageService;
+//    private final ImageService imageService;
 
-    private final EmailService emailService;
+//    private final EmailService emailService;
 
-    private final ExchangeService exchangeService;
+//    private final ExchangeService exchangeService;
 
-    private final PublicationService publicationService;
+//    private final PublicationService publicationService;
 
     private final BookService bookService;
 
-    private final CardBookService cardBookService;
+//    private final CardBookService cardBookService;
 
-    private final UserService userService;
+//    private final UserService userService;
 
     private final BookModelService bookModelService;
 
-    private final BookImageService bookImageService;
+//    private final BookImageService bookImageService;
 
     @Autowired
     private GenreService genreService;
@@ -62,19 +62,11 @@ public class BookController {
     @Autowired
     private BookDimensionService bookDimensionService;
 
-
-    public BookController(/*SinglePublicationService ps,*/ ImageService imageService, EmailService emailService, ExchangeService exchangeService, PublicationService publicationService, BookService bookService, BookModelService bookModelService, CardBookService cardBookService, UserService userService, BookImageService bookImageService) {
-//        this.ps = ps;
-        this.imageService = imageService;
-        this.emailService = emailService;
-        this.exchangeService = exchangeService;
-        this.publicationService = publicationService;
+    public BookController(BookService bookService, BookModelService bookModelService) {
         this.bookService = bookService;
         this.bookModelService = bookModelService;
-        this.cardBookService = cardBookService;
-        this.userService = userService;
-        this.bookImageService = bookImageService;
     }
+
 
     @RequestMapping("/book")
     public ModelAndView bookHome(@RequestParam(name = "search", defaultValue = "") String search,

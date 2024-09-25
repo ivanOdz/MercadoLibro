@@ -54,9 +54,9 @@
         <!-- Images -->
         <div class="column-container" style="margin-left: 2%; margin-top: 2%; max-width: 20%;">
             <c:choose>
-                <c:when test="${not empty publicationCard.images}">
+                <c:when test="${not empty publication.book.images}">
                     <div class="column-container">
-                        <img id="currentImage" src="<c:url value='${pageContext.request.contextPath}/images/${publicationCard.images[0]}'/>" alt="Book Image" />
+                        <img id="currentImage" src="<c:url value='${pageContext.request.contextPath}/images/${publication.book.images[0]}'/>" alt="Book Image" />
                         <div class="row-container">
                             <button id="prevBtn" class="slider-button" style="margin-left: 30%; margin-right: 5%;">
                                 <span uk-icon="icon: chevron-left"></span>
@@ -81,14 +81,14 @@
                     <!-- Title -->
                     <div>
                         <h1 class="uk-text-large uk-text-bold" style="font-size: 36px;">
-                            <c:out value="${publicationCard.title}"/>
+                            <c:out value="${publication.book.bookModel.title}"/>
                         </h1>
                     </div>
 
                     <!-- Author -->
                     <div>
                         <p class="small-gray-text custom-link">
-                            <c:out value="${publicationCard.authors}"/>
+                            <c:out value="${publication.book.bookModel.authors}"/>
                         </p>
                     </div>
                 </div>
@@ -99,7 +99,7 @@
                     <div>
 					    <p class="small-gray-text custom-link">
 					        <c:forEach var="genreWrapper" items="${genres}">
-					            <c:if test="${genreWrapper.genre == publicationCard.genre}">
+					            <c:if test="${genreWrapper.genre == publication.book.bookModel.genre}">
 					                <c:out value="${genreWrapper.displayName}"/>
 					            </c:if>
 					        </c:forEach>
@@ -110,13 +110,13 @@
                     <div class="row-container">
                         <div style="margin-right: 5px;">
                             <p class="small-gray-text custom-link">
-                                <c:out value="${publicationCard.rating.rating}"/>
+                                <c:out value="${publication.book.bookModel.rating.rating}"/>
                             </p>
                         </div>
                         <div class="star-rating">
                             <c:forEach var="i" begin="1" end="5">
                                 <c:choose>
-                                    <c:when test="${i <= publicationCard.rating.rating}">
+                                    <c:when test="${i <= publication.book.bookModel.rating.rating}">
                                         <!-- Estrella llena -->
                                         <span uk-icon="icon: star; ratio: 1.5" style="color: gold;"></span>
                                     </c:when>
@@ -128,7 +128,7 @@
                             </c:forEach>
                         </div>
                         <div style="margin-left: 5px;">
-                            <p class="small-gray-text custom-link">(<c:out value="${publicationCard.rating.ratingCount}"/>)</p>
+                            <p class="small-gray-text custom-link">(<c:out value="${publication.book.bookModel.rating.ratingCount}"/>)</p>
                         </div>
                     </div>
                 </div>
@@ -141,7 +141,7 @@
             <!-- Description -->
             <div style="max-width: 55lh; text-align: justify;">
                 <p>
-                    <c:out value="${publicationCard.description}"/>
+                    <c:out value="${publication.book.bookModel.description}"/>
                 </p>
             </div>
 
@@ -160,32 +160,32 @@
                             <i class="material-icons" style="margin-left: 40px;">book</i>
                             <div>
                                 <c:choose>
-                                    <c:when test="${publicationCard.bookState == 'NEW'}">
+                                    <c:when test="${publication.book.bookState == 'NEW'}">
                                         <div style="margin-left: 20px;">
                                             <strong><spring:message code="bookState.new"/></strong>
                                         </div>
                                     </c:when>
-                                    <c:when test="${publicationCard.bookState == 'LIKE_NEW'}">
+                                    <c:when test="${publication.book.bookState == 'LIKE_NEW'}">
                                         <div style="margin-left: 20px;">
                                             <strong><spring:message code="bookState.like.new"/></strong>
                                         </div>
                                     </c:when>
-                                    <c:when test="${publicationCard.bookState == 'VERY_GOOD'}">
+                                    <c:when test="${publication.book.bookState == 'VERY_GOOD'}">
                                         <div style="margin-left: 20px;">
                                             <strong><spring:message code="bookState.very.good"/></strong>
                                         </div>
                                     </c:when>
-                                    <c:when test="${publicationCard.bookState == 'GOOD'}">
+                                    <c:when test="${publication.book.bookState == 'GOOD'}">
                                         <div style="margin-left: 20px;">
                                             <strong><spring:message code="bookState.good"/></strong>
                                         </div>
                                     </c:when>
-                                    <c:when test="${publicationCard.bookState == 'ACCEPTABLE'}">
+                                    <c:when test="${publication.book.bookState == 'ACCEPTABLE'}">
                                         <div style="margin-left: 20px;">
                                             <strong><spring:message code="bookState.acceptable"/></strong>
                                         </div>
                                     </c:when>
-                                    <c:when test="${publicationCard.bookState == 'WORN'}">
+                                    <c:when test="${publication.book.bookState == 'WORN'}">
                                         <div style="margin-left: 20px;">
                                             <strong><spring:message code="bookState.worn"/></strong>
                                         </div>
@@ -202,7 +202,7 @@
                             <span uk-icon="icon: location" style="margin-left: 25px;"></span>
                             <p style="text-align: center">
                                 <strong>
-                                    <c:out value="${publicationCard.location}"/>
+                                    <c:out value="${publication.location}"/>
                                 </strong>
                             </p>
                         </div>
@@ -214,7 +214,7 @@
                             <p style="text-align: center"><spring:message code="publication.details.date"/></p>
                             <i class="material-icons" style="margin-left: 65px;">history</i>
                             <p style="text-align: center">
-                                <strong>${publicationCard.publicationDatetime}</strong></p>
+                                <strong>${publication.publicationDatetime}</strong></p>
                         </div>
                     </div>
 
@@ -224,7 +224,7 @@
                             <p style="text-align: center"><spring:message code="publication.details.editorial"/></p>
                             <i class="material-icons" style="margin-right: 90px;">file-edit</i>
                             <p style="text-align: center"><strong>
-                                <c:out value="${publicationCard.publisher}"/></strong></p>
+                                <c:out value="${publication.book.bookModel.editorial}"/></strong></p>
                         </div>
 
 
@@ -302,7 +302,7 @@
 
 <script>
     const images = [
-        <c:forEach var="image" items="${publicationCard.images}" varStatus="loop">
+        <c:forEach var="image" items="${publication.book.images}" varStatus="loop">
         '<c:url value="${pageContext.request.contextPath}/images/${image}"/>'<c:if test="${!loop.last}">,</c:if>
         </c:forEach>
     ];

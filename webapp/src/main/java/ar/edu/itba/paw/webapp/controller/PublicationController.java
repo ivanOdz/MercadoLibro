@@ -111,9 +111,9 @@ public class PublicationController {
             return new ModelAndView("error/forbidden");
         }
 
-        mav.addObject("publicationCard", publication);
+        mav.addObject("publication", publication);
         mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
-        mav.addObject("completeBookParam", completeBookParam);
+//        mav.addObject("completeBookParam", completeBookParam);
 
         return mav;
     }
