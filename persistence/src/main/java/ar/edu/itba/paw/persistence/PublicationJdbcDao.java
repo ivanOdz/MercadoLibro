@@ -116,7 +116,7 @@ public class PublicationJdbcDao implements PublicationDao {
                     "LEFT JOIN image i ON bm.imageId = i.imageId " +
                     "JOIN location l ON p.locationId = l.locationId " +
                     "LEFT JOIN (SELECT bb.bookModelId, AVG(bb.rating) AS rating, COUNT(bb.rating) AS ratingCount " +
-                    "FROM book bb " +
+                    "FROM book_rating bb " +
                     "GROUP BY bb.bookModelId) avgRatings ON avgRatings.bookModelId = bm.bookModelId " +
                     "WHERE u.userId <> ? AND p.publicationState = ? AND LOWER(bm.title) LIKE LOWER(?) "
         );
