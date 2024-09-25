@@ -156,7 +156,7 @@
                                 <figure class="uk-margin-bottom">
                                     <c:choose>
                                         <c:when test="${card.images[0] != null}">
-                                            <img class="book-image" src="${pageContext.request.contextPath}/images/${card.images[0]}" alt="bookImage"/>
+<%--                                            <img class="book-image" src="${pageContext.request.contextPath}/images/${card.images[0]}" alt="bookImage"/>--%>
                                         </c:when>
                                         <c:otherwise>
                                             <img class="book-image" src="${pageContext.request.contextPath}/images/book.jpg" alt="book"/>
@@ -170,7 +170,7 @@
                                         <p class="small-gray-text custom-link">${card.bookModel.authors}</p>
                                     </div>
                                     <c:choose>
-                                        <c:when test="${card.bookState == bookStates.AVAIABLE}">
+                                        <c:when test="${card.available}">
                                             <a class="uk-button uk-button-default uk-button-primary uk-width-1-1" href="#modal-sections-${card.bookId}" uk-toggle>
                                                 <spring:message code="book.publish.button"/>
                                             </a>
