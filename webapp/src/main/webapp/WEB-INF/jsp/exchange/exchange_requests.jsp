@@ -41,18 +41,18 @@
                 <div class="uk-width-3-5 column-exchanges scrollable-content">
                     <c:forEach var="exchange" items="${exchanges}">
                         <div class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-4@s exchange-card"
-                             onclick="selectCard(this, '<c:out value="${exchange.requesterUsername}"/>', '<c:out value="${exchange.requesterMail}"/>', '<c:out value="${exchange.requesterLocation}"/>', '<c:out value="${exchange.offererBookTitle}"/>', '<c:out value="${exchange.offererBookAuthors}"/>', '<c:out value="${exchange.offererBookTitle}"/>', '<c:out value="${exchange.offBookImageId}"/>')"
+                             onclick="selectCard(this, '<c:out value="${exchange.requester.book.owner.username}"/>', '<c:out value="${exchange.requesterMail}"/>', '<c:out value="${exchange.requesterLocation}"/>', '<c:out value="${exchange.offererBookTitle}"/>', '<c:out value="${exchange.offererBookAuthors}"/>', '<c:out value="${exchange.offererBookTitle}"/>', '<c:out value="${exchange.offBookImageId}"/>')"
                              uk-grid>
                             <div class="uk-card-media-left">
                                 <img class="book-image"
-                                     src="${pageContext.request.contextPath}/images/${exchange.reqBookImageId}"
+                                     src="${pageContext.request.contextPath}/images/${exchange.requester.book.bookModel.imageId}"
                                      alt="bookImage"/>
                             </div>
                             <div>
                                 <div class="card-text">
                                     <div class="card-text-left">
                                         <h3 class="uk-h6">
-                                                <c:out value="${exchange.requesterBookTitle}"/>
+                                                <c:out value="${exchange.requester.book.bookModel.title}"/>
                                         </h3>
 
                                     </div>

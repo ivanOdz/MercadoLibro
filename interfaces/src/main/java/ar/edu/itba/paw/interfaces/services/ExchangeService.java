@@ -22,7 +22,7 @@ public interface ExchangeService {
     //List<ExchangeWrapper> getExchangeRequesterWrapperListByUserId(long userId);
 
 
-    //List<ExchangeWrapper> getExchangeOffererWrapperListByUserId(long userId, ExchangeState exchangeState);
+    List<Exchange> getExchangeOffererListByUserId(long userId, ExchangeState exchangeState);
 
     /**
      * confirms that the offerer received the book

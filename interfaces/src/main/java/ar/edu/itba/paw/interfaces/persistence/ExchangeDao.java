@@ -11,22 +11,22 @@ import java.util.Optional;
 
 public interface ExchangeDao {
 	
-    void updateExchangeStatus(int acceptCode, int newStatus);
+//    void updateExchangeStatus(int acceptCode, int newStatus);
 
-    Optional<Exchange> findById(long id);
+//    Optional<Exchange> findById(long id);
 
-    long getIdByAcceptCode(int acceptCode);
+//    long getIdByAcceptCode(int acceptCode);
 
     //ResponseState exchange(int acceptCode, boolean state);
 
-    Exchange createExchange(long offererId, long requesterId, int acceptCode, Timestamp startDate);
+//    Exchange createExchange(long offererId, long requesterId, int acceptCode, Timestamp startDate);
 
-    List<ExchangeWrapper> getExchangesWhereUserIdIsOfferer(long anUserId, ExchangeState exchangeState);
+    List<Exchange> getExchangesWhereUserIdIsOfferer(long anUserId, ExchangeState exchangeState);
 
-    List<Exchange> getExchangesWhereUserIdIsRequester(long anUserId);
+//    List<Exchange> getExchangesWhereUserIdIsRequester(long anUserId);
 
-    void confirmRequester(int acceptCode);
+//    void confirmRequester(int acceptCode);
     
-    void confirmOfferer(int acceptCode);
+//    void confirmOfferer(int acceptCode);
 
 }

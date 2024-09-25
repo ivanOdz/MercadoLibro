@@ -23,7 +23,7 @@ public class PublicationJdbcDao implements PublicationDao {
 
     private static final int PAGE_SIZE = 21;
 
-    private static final RowMapper<Publication> ROW_MAPPER_PUBLICATION =
+    static final RowMapper<Publication> ROW_MAPPER_PUBLICATION =
             (rs, rowNum) -> {
                 long id = rs.getLong("publicationId");
                 Book book = ROW_MAPPER_BOOK.mapRow(rs, rowNum);
@@ -103,8 +103,7 @@ public class PublicationJdbcDao implements PublicationDao {
                     "(SELECT STRING_AGG(a.authorName, ', ') " +
                     " FROM book_author ba " +
                     " JOIN author a ON a.authorId = ba.authorId " +
-                    " WHERE ba.bookModelId = bm.bookModelId) AS authors, "+
-                    "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified " +
+                    " WHERE ba.bookModelId = bm.bookModelId) AS authors "+
                     "FROM publication p " +
                     "JOIN book b ON p.bookId = b.bookId " +
                     "JOIN users u ON b.ownerId = u.userId " +

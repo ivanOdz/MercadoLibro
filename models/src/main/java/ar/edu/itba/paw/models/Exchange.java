@@ -13,8 +13,16 @@ public class Exchange {
     private final long acceptCode;
     private final boolean offererReceivedBook;
     private final boolean requesterReceivedBook;
-    private Timestamp exchangeStartDate;
 
+    public boolean isOffererReceivedBook() {
+        return offererReceivedBook;
+    }
+
+    public boolean isRequesterReceivedBook() {
+        return requesterReceivedBook;
+    }
+
+    private Timestamp exchangeStartDate;
     private Timestamp exchangeEndDate;
 
     public Exchange(long exchangeId, Publication offerer, Publication requester, ExchangeState state, long acceptCode, boolean offererReceivedBook, boolean requesterReceivedBook) {
@@ -59,4 +67,7 @@ public class Exchange {
         return offererReceivedBook && requesterReceivedBook;
     }
 
+
 }
+
+
