@@ -95,7 +95,7 @@ public class PublicationJdbcDao implements PublicationDao {
                     "p.publicationState, l.locationId, l.locationString, p.publicationDatetime," +
 
                     //book
-                    "ARRAY_AGG(i.imageId ORDER BY bi.imageOrder) AS images, " +
+                    "b.bookId, ARRAY_AGG(i.imageId ORDER BY bi.imageOrder) AS images, " +
                     "b.bookState, b.exchangesQty," +
                     //book_model
                     "bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
@@ -125,7 +125,7 @@ public class PublicationJdbcDao implements PublicationDao {
             sqlQuery.append("AND b.bookState = ? ");
         }
 
-        sqlQuery.append("GROUP BY u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, p.publicationId, p.publicationState, l.locationId, l.locationString, p.publicationDatetime, b.bookState, b.exchangesQty, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, i.imageId");
+        sqlQuery.append("GROUP BY u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, p.publicationId, p.publicationState, l.locationId, l.locationString, p.publicationDatetime,b.bookId, b.bookState, b.exchangesQty, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, i.imageId");
 
         switch (sortType) {
             case RATING_ASCENDING:
@@ -169,7 +169,7 @@ public class PublicationJdbcDao implements PublicationDao {
                 "p.publicationState, l.locationId, l.locationString, p.publicationDatetime," +
 
                 //book
-                "ARRAY_AGG(i.imageId ORDER BY bi.imageOrder) AS images, " +
+                "b.bookId, ARRAY_AGG(i.imageId ORDER BY bi.imageOrder) AS images, " +
                 "b.bookState, b.exchangesQty," +
                 //book_model
                 "bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
@@ -190,7 +190,7 @@ public class PublicationJdbcDao implements PublicationDao {
                 "FROM book bb " +
                 "GROUP BY bb.bookModelId) avgRatings ON avgRatings.bookModelId = bm.bookModelId " +
                 "WHERE p.publicationId = ? AND p.publicationState = ? " +
-                "GROUP BY u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, p.publicationId, p.publicationState, l.locationId, l.locationString, p.publicationDatetime, b.bookState, b.exchangesQty, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover");
+                "GROUP BY u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, p.publicationId, p.publicationState, l.locationId, l.locationString, p.publicationDatetime, b.bookId, b.bookState, b.exchangesQty, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover");
 
         return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ publicationId, PublicationState.CURRENT.getValue() }, new int[]{ Types.BIGINT, Types.INTEGER }, ROW_MAPPER_PUBLICATION).stream().findFirst().orElse(null);
     }
