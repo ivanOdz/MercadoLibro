@@ -103,8 +103,7 @@ public class PublicationJdbcDao implements PublicationDao {
                     "(SELECT STRING_AGG(a.authorName, ', ') " +
                     " FROM book_author ba " +
                     " JOIN author a ON a.authorId = ba.authorId " +
-                    " WHERE ba.bookModelId = bm.bookModelId) AS authors, "+
-                    "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified " +
+                    " WHERE ba.bookModelId = bm.bookModelId) AS authors "+
                     "FROM publication p " +
                     "JOIN book b ON p.bookId = b.bookId " +
                     "JOIN users u ON b.ownerId = u.userId " +
@@ -115,8 +114,7 @@ public class PublicationJdbcDao implements PublicationDao {
                     "LEFT JOIN book_image bi ON bi.bookId = b.bookId " +
                     "LEFT JOIN image i ON bm.imageId = i.imageId " +
                     "JOIN location l ON p.locationId = l.locationId " +
-                    "LEFT JOIN (SELECT bb.bookModelId, AVG(bb.rating) AS rating, COUNT(bb.rating) AS ratingCount " +
-                    "FROM book_rating bb " +
+                    "LEFT JOIN book_rating br ON br.bookModelId = bm.bookModelId" +
                     "GROUP BY bb.bookModelId) avgRatings ON avgRatings.bookModelId = bm.bookModelId " +
                     "WHERE u.userId <> ? AND p.publicationState = ? AND LOWER(bm.title) LIKE LOWER(?) "
         );
