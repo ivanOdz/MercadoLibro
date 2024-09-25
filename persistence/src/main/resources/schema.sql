@@ -15,6 +15,9 @@ CREATE TABLE IF NOT EXISTS users (
      isVerified          BOOLEAN
 );
 
+
+
+--ALTER TABLE book_model  ADD COLUMN imageId INTEGER REFERENCES image(imageId);
 -- Tabla de modelo de libros
 CREATE TABLE IF NOT EXISTS book_model (
       bookModelId         SERIAL PRIMARY KEY,
@@ -30,7 +33,8 @@ CREATE TABLE IF NOT EXISTS book_model (
       dimension           INTEGER, -- SMALL, MEDIUM, LARGE.
       publicationYear     SMALLINT,
       isPocketEdition     BOOLEAN,
-      isHardcover         BOOLEAN
+      isHardcover         BOOLEAN,
+      imageId             INTEGER REFERENCES image(imageId)
 );
 
 
@@ -56,11 +60,12 @@ CREATE TABLE IF NOT EXISTS book_image (
 );
 
 -- Nueva
-CREATE TABLE book_rating (
-      ratingId SERIAL PRIMARY KEY,
+
+CREATE TABLE IF NOT EXISTS book_rating (
       userId INTEGER NOT NULL REFERENCES users(userId) ON DELETE CASCADE,
       bookModelId INTEGER NOT NULL REFERENCES book_model(bookModelId) ON DELETE CASCADE,
-      rating INTEGER
+      rating INTEGER,
+      PRIMARY KEY(userId, bookModelId)
 );
 
 

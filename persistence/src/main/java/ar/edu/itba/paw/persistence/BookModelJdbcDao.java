@@ -103,13 +103,13 @@ public class BookModelJdbcDao implements BookModelDao {
     public List<BookModel> getFilteredSortedOrderedModelBooksByPage(String search, boolean isGenreFilterActive, Genre genreFilter, int pageIndex, SortType sortType) {
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
-                        "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, i.imageId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount" +
+                        "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, i.imageId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount " +
                         "FROM book_model bm " +
                         "JOIN book b ON b.bookModelId = bm.bookModelId " +
                         "JOIN book_author ba ON ba.bookModelId = bm.bookModelId " +
                         "JOIN author a ON a.authorId = ba.authorId " +
-                        "JOIN image i ON bm.imageId = i.imageId " +
-                        "JOIN book_rating br ON bm.bookModelId = br.bookModelId " +
+                        "LEFT JOIN image i ON bm.imageId = i.imageId " +
+                        "LEFT JOIN book_rating br ON bm.bookModelId = br.bookModelId " +
                         "WHERE LOWER(bm.title) LIKE LOWER(?) ");
 
         if (isGenreFilterActive) {
