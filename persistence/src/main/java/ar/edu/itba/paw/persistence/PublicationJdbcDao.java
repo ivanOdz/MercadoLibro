@@ -105,8 +105,8 @@ public class PublicationJdbcDao implements PublicationDao {
                     "JOIN book b ON p.bookId = b.bookId " +
                     "JOIN users u ON b.ownerId = u.userId " +
                     "JOIN book_model bm ON bm.bookModelId = b.bookModelId " +
-                    "JOIN book_rating br ON bm.bookModelId = br.bookModelId " +
                     "JOIN book_author ba ON ba.bookModelId = bm.bookModelId " +
+                    "JOIN book_rating br ON bm.bookModelId = br.bookModelId " +
                     "JOIN author a ON a.authorId = ba.authorId " +
                     "JOIN book_image bi ON bi.bookId = b.bookId " +
                     "JOIN image i ON bi.imageId = i.imageId " +
