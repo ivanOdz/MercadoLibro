@@ -7,32 +7,25 @@ import java.sql.Timestamp;
 
 public class Publication {
     private final long publicationId;
-    private final long bookId;
-    private final long userId;
+    private final Book book;
     private final PublicationState publicationState;
     private final Timestamp publicationDatetime;
-    private final long locationId;
+    private final Location location;
 
-    // Constructor
-    public Publication(long publicationId, long bookId, long userId, PublicationState publicationState, Timestamp publicationDatetime, long locationId) {
+    public Publication(long publicationId, Book book, PublicationState publicationState, Timestamp publicationDatetime, Location location) {
         this.publicationId = publicationId;
-        this.bookId = bookId;
-        this.userId = userId;
+        this.book = book;
         this.publicationState = publicationState;
         this.publicationDatetime = publicationDatetime;
-        this.locationId = locationId;
+        this.location = location;
     }
 
     public long getPublicationId() {
         return publicationId;
     }
 
-    public long getBookId() {
-        return bookId;
-    }
-
-    public long getUserId() {
-        return userId;
+    public Book getBook() {
+        return book;
     }
 
     public PublicationState getPublicationState() {
@@ -43,7 +36,7 @@ public class Publication {
         return publicationDatetime;
     }
 
-    public long getLocationId() {
-        return locationId;
+    public Location getLocation() {
+        return location;
     }
 }
