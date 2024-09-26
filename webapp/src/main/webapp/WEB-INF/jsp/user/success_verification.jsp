@@ -11,7 +11,7 @@
   <meta charset="UTF-8">
 </head>
 <body>
-<c:url var="okUrl" value="/login"/>
+<c:url var="okUrl" value="/"/>
 
 <div class="uk-background-center-center">
   <div class="uk-position-center uk-card uk-card-default uk-card-body uk-width-1-2@m">
