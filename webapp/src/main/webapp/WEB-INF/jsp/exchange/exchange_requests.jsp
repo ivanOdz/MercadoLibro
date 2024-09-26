@@ -41,7 +41,7 @@
                 <div class="uk-width-3-5 column-exchanges scrollable-content">
                     <c:forEach var="exchange" items="${exchanges}">
                         <div class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-4@s exchange-card"
-                             onclick="selectCard(this, '<c:out value="${exchange.requester.book.owner.username}"/>', '<c:out value="${exchange.requesterMail}"/>', '<c:out value="${exchange.requesterLocation}"/>', '<c:out value="${exchange.offererBookTitle}"/>', '<c:out value="${exchange.offererBookAuthors}"/>', '<c:out value="${exchange.offererBookTitle}"/>', '<c:out value="${exchange.offBookImageId}"/>')"
+                             onclick="selectCard(this, '<c:out value="${exchange.requester.book.owner.username}"/>', '<c:out value="${exchange.requester.book.owner.mail}"/>', '<c:out value="${exchange.requester.location}"/>', '<c:out value="${exchange.offerer.book.bookModel.title}"/>', '<c:out value="${exchange.offerer.book.bookModel.authors}"/>', '<c:out value="${exchange.offerer.book.bookModel.title}"/>', '<c:out value="${exchange.offerer.book.images[0]}"/>')"
                              uk-grid>
                             <div class="uk-card-media-left">
                                 <img class="book-image"

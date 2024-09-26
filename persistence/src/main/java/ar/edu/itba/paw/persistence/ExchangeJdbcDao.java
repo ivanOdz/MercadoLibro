@@ -32,8 +32,8 @@ public class ExchangeJdbcDao implements ExchangeDao {
     private static final RowMapper<Publication> ROW_MAPPER_PUBLICATION_REQUEST =
             (rs, rowNum) -> {
                 long id = rs.getLong("requester_publicationId");
-                PublicationState publicationState = PublicationState.valueOf(rs.getString("requester_publicationState"));
-                Timestamp dateTime = rs.getTimestamp("requester_publicationDate");
+                PublicationState publicationState = PublicationState.fromInt(rs.getInt("requester_publicationState"));
+                Timestamp dateTime = rs.getTimestamp("requester_publicationDatetime");
                 Location location = new Location(rs.getLong("requester_locationId"), rs.getString("requester_locationString"));
 
                 User user = new User(rs.getLong("requester_userId"),
@@ -181,7 +181,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
                 "op.publicationId, op.publicationState, op_l.locationId, op_l.locationString, op.publicationDatetime, " +
 
                 //   offerer_book
-                "op_b.bookId,op_b.bookState, op_b.exchangesQty, " +
+                "op_b.bookId, op_b.bookState, op_b.exchangesQty, " +
                 "(SELECT ARRAY_AGG(op_i.imageId ORDER BY op_bi.imageOrder) FROM book_image op_bi JOIN image op_i ON op_bi.imageId = op_i.imageId WHERE op_bi.bookId = op_b.bookId) AS images, " +
                 "       CASE " +
                 "           WHEN NOT EXISTS (SELECT 1 FROM publication op_p2 WHERE op_p2.bookId = op_b.bookId) THEN TRUE " +
@@ -195,7 +195,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
 
                 //   offerer_book_model
                 "op_bm.bookModelId, op_bm.isbn, op_bm.title, op_bm.editorial, op_bm.description, op_bm.genre, op_bm.edition, op_bm.weight, op_bm.pages, op_bm.bookLanguage, "+
-                "op_bm.dimension, op_bm.publicationYear, op_bm.isPocketEdition, op_bm.isHardcover, op_bm.imageId,, "+
+                "op_bm.dimension, op_bm.publicationYear, op_bm.isPocketEdition, op_bm.isHardcover, op_bm.imageId, "+
                 "(SELECT STRING_AGG(op_a.authorName, ', ') FROM book_author op_ba JOIN author op_a ON op_a.authorId = op_ba.authorId WHERE op_ba.bookModelId = op_bm.bookModelId) AS authors, "+
                 "AVG(op_br.rating) as rating, COUNT(op_br.rating) as ratingCount, "+
 
@@ -203,7 +203,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
                 "rp.publicationId AS requester_publicationId, rp.publicationState AS requester_publicationState, rp_l.locationId AS requester_locationId, rp_l.locationString AS requester_locationString, rp.publicationDatetime AS requester_publicationDatetime, "+
 
                 //   requester_book
-                "rp_b.bookId AS requester_bookId, rp_b.bookState, rp_b.exchangesQty AS requester_exchangesQty, "+
+                "rp_b.bookId AS requester_bookId, rp_b.bookState AS requester_bookState, rp_b.exchangesQty AS requester_exchangesQty, "+
                 "(SELECT ARRAY_AGG(rp_i.imageId ORDER BY rp_bi.imageOrder) FROM book_image rp_bi JOIN image rp_i ON rp_bi.imageId = rp_i.imageId WHERE rp_bi.bookId = rp_b.bookId) AS requester_images, " +
                 "       CASE" +
                 "           WHEN NOT EXISTS (SELECT 1 FROM publication rp_p2 WHERE rp_p2.bookId = rp_b.bookId) THEN TRUE" +
@@ -247,12 +247,12 @@ public class ExchangeJdbcDao implements ExchangeDao {
                 "GROUP BY" +
                 "    e.exchangeId, e.exchangeState, e.acceptCode, e.offererReceivedBook, e.requesterReceivedBook, e.exchangeEndDate, e.exchangeStartDate, " +
                 "    op.publicationId, op.publicationState, op_l.locationId, op_l.locationString, op.publicationDatetime, " +
-                "    op_b.bookId, op_b.bookState, op_b.exchangesQty, \n" +
+                "    op_b.bookId, op_b.bookState, op_b.exchangesQty, " +
                 "    op_bm.bookModelId, op_bm.isbn, op_bm.title, op_bm.editorial, op_bm.description, op_bm.genre, op_bm.edition, op_bm.weight, op_bm.pages, op_bm.bookLanguage, " +
                 "    op_bm.dimension, op_bm.publicationYear, op_bm.isPocketEdition, op_bm.isHardcover, op_bm.imageId, " +
                 "    o.userId, o.username, o.mail, o.password, o.imageId, o.verificationCode, o.isVerified, " +
                 "    rp.publicationId, rp.publicationState, rp_l.locationId, rp_l.locationString, rp.publicationDatetime, " +
-                "    rp_b.bookId, rp_b.bookState, rp_b.exchangesQty, \n" +
+                "    rp_b.bookId, rp_b.bookState, rp_b.exchangesQty, " +
                 "    r.userId, r.username, r.mail, r.password, r.imageId, r.verificationCode, r.isVerified, " +
                 "    rp_bm.bookModelId, rp_bm.isbn, rp_bm.title, rp_bm.editorial, rp_bm.description, rp_bm.genre, rp_bm.edition, rp_bm.weight, rp_bm.pages, rp_bm.bookLanguage, " +
                 "    rp_bm.dimension, rp_bm.publicationYear, rp_bm.isPocketEdition, rp_bm.isHardcover, rp_bm.imageId "+
