@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 
 
---ALTER TABLE book_model  ADD COLUMN imageId INTEGER REFERENCES image(imageId);
+-- ALTER TABLE book_model  ADD COLUMN imageId INTEGER REFERENCES image(imageId);
 -- Tabla de modelo de libros
 CREATE TABLE IF NOT EXISTS book_model (
       bookModelId         SERIAL PRIMARY KEY,

@@ -99,14 +99,14 @@ public class UserController {
         User user = us.getUserToVerify(verificationCode).get();
 
         us.verifyUser(verificationCode);
-//        try {
-//            // create a session and keep the user logged in
-//            UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
-//            final Authentication authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-//            SecurityContextHolder.getContext().setAuthentication(auth.authenticate(authenticationToken));
-//        } catch (Exception e) {
-//            System.out.println(e.getMessage());
-//        }
+        try {
+            // create a session and keep the user logged in
+            UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
+            final Authentication authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
 
 
         return new ModelAndView("redirect:/success_verification");

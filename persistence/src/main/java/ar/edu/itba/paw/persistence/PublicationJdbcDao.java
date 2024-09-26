@@ -23,7 +23,7 @@ public class PublicationJdbcDao implements PublicationDao {
 
     private static final int PAGE_SIZE = 21;
 
-    private static final RowMapper<Publication> ROW_MAPPER_PUBLICATION =
+    static final RowMapper<Publication> ROW_MAPPER_PUBLICATION =
             (rs, rowNum) -> {
                 long id = rs.getLong("publicationId");
                 Book book = ROW_MAPPER_BOOK.mapRow(rs, rowNum);
@@ -99,12 +99,17 @@ public class PublicationJdbcDao implements PublicationDao {
                     "b.bookState, b.exchangesQty," +
                     //book_model
                     "bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
-                    "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, bm.imageId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount, " + "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, " +
+                    "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, bm.imageId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount, u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, " +
                     "(SELECT STRING_AGG(a.authorName, ', ') " +
                     " FROM book_author ba " +
                     " JOIN author a ON a.authorId = ba.authorId " +
-                    " WHERE ba.bookModelId = bm.bookModelId) AS authors, "+
-                    "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified " +
+                    " WHERE ba.bookModelId = bm.bookModelId) AS authors, " +
+                        "CASE " +
+                        "WHEN NOT EXISTS (SELECT 1 FROM publication p2 WHERE p2.bookId = b.bookId) THEN TRUE " +
+                        "WHEN NOT EXISTS (SELECT 1 FROM exchange e2 JOIN publication p2 ON e2.offererPubId = p2.publicationId OR e2.requesterPubId = p2.publicationId " +
+                        "WHERE p2.bookId = b.bookId AND e2.exchangeState = ?) THEN TRUE " +
+                        "ELSE FALSE " +
+                        "END AS available "+
                     "FROM publication p " +
                     "JOIN book b ON p.bookId = b.bookId " +
                     "JOIN users u ON b.ownerId = u.userId " +
@@ -115,9 +120,6 @@ public class PublicationJdbcDao implements PublicationDao {
                     "LEFT JOIN book_image bi ON bi.bookId = b.bookId " +
                     "LEFT JOIN image i ON bm.imageId = i.imageId " +
                     "JOIN location l ON p.locationId = l.locationId " +
-                    "LEFT JOIN (SELECT bb.bookModelId, AVG(bb.rating) AS rating, COUNT(bb.rating) AS ratingCount " +
-                    "FROM book_rating bb " +
-                    "GROUP BY bb.bookModelId) avgRatings ON avgRatings.bookModelId = bm.bookModelId " +
                     "WHERE u.userId <> ? AND p.publicationState = ? AND LOWER(bm.title) LIKE LOWER(?) "
         );
 
@@ -129,7 +131,7 @@ public class PublicationJdbcDao implements PublicationDao {
             sqlQuery.append("AND b.bookState = ? ");
         }
 
-        sqlQuery.append("GROUP BY u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, p.publicationId, p.publicationState, l.locationId, l.locationString, p.publicationDatetime,b.bookId, b.bookState, b.exchangesQty, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, bm.imageId");
+        sqlQuery.append("GROUP BY available, u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, p.publicationId, p.publicationState, l.locationId, l.locationString, p.publicationDatetime,b.bookId, b.bookState, b.exchangesQty, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, bm.imageId");
 
         switch (sortType) {
             case RATING_ASCENDING:
@@ -155,16 +157,17 @@ public class PublicationJdbcDao implements PublicationDao {
         sqlQuery.append(" LIMIT ? OFFSET ?");
 
         if(isGenreFilterActive && isBookStateFilterActive) {
-            return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ userId, PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", genreFilter.getValue(), bookStateFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.BIGINT, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER  }, ROW_MAPPER_PUBLICATION);
+            return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ ExchangeState.ACCEPTED.getValue(), userId, PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", genreFilter.getValue(), bookStateFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.INTEGER, Types.BIGINT, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER  }, ROW_MAPPER_PUBLICATION);
         }
         if(isGenreFilterActive) {
-            return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ userId, PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", genreFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.BIGINT, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_PUBLICATION);
+            return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), userId, PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", genreFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.INTEGER, Types.BIGINT, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_PUBLICATION);
         }
         if(isBookStateFilterActive){
-            return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ userId, PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", bookStateFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.BIGINT, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_PUBLICATION);
+            return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ ExchangeState.ACCEPTED.getValue(),userId, PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", bookStateFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.INTEGER, Types.BIGINT, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_PUBLICATION);
         }
-        return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ userId, PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", PAGE_SIZE, offset }, new int[]{ Types.BIGINT, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_PUBLICATION);
+        return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ ExchangeState.ACCEPTED.getValue(),userId, PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", PAGE_SIZE, offset }, new int[]{ Types.INTEGER, Types.BIGINT, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_PUBLICATION);
     }
+
 
     @Override
     public Publication getPublicationByPublicationId(long publicationId) {
@@ -175,6 +178,12 @@ public class PublicationJdbcDao implements PublicationDao {
                 //book
                 "b.bookId, ARRAY_AGG(bi.imageId ORDER BY bi.imageOrder) AS images, " +
                 "b.bookState, b.exchangesQty," +
+                "CASE " +
+                "WHEN NOT EXISTS (SELECT 1 FROM publication p2 WHERE p2.bookId = b.bookId) THEN TRUE " +
+                "WHEN NOT EXISTS (SELECT 1 FROM exchange e2 JOIN publication p2 ON e2.offererPubId = p2.publicationId OR e2.requesterPubId = p2.publicationId " +
+                "WHERE p2.bookId = b.bookId AND e2.exchangeState = ?) THEN TRUE " +
+                "ELSE FALSE " +
+                "END AS available, " +
                 //book_model
                 "bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
                 "(SELECT STRING_AGG(a.authorName, ', ') " +

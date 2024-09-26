@@ -12,7 +12,7 @@ public class PawUserDetails extends User {
     private final ar.edu.itba.paw.models.User user;
 
     public PawUserDetails(final ar.edu.itba.paw.models.User user, Collection<? extends GrantedAuthority> authorities) {
-        super(user.getUsername(), user.getPassword(), true, true, true, true, authorities);
+        super(user.getUsername(), user.getPassword(), user.isVerified(), true, true, true, authorities);
         this.user = user;
     }
 

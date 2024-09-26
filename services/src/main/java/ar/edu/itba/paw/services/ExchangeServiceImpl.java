@@ -113,15 +113,10 @@ public class ExchangeServiceImpl implements ExchangeService {
     }*/
 
 
-    /*@Override
-    public List<ExchangeWrapper> getExchangeOffererWrapperListByUserId(long userId, ExchangeState exchangeState) {
-
-        //List<Exchange> exchanges = exchangeDao.getExchangesWhereUserIdIsOfferer(userId);
-
+    @Override
+    public List<Exchange> getExchangeOffererListByUserId(long userId, ExchangeState exchangeState) {
         return exchangeDao.getExchangesWhereUserIdIsOfferer(userId, exchangeState);
-
-        //return getExchangeWrapper(exchanges);
-    }*/
+    }
 
     /*@Override
     public void cofirmOfferer(int acceptCode) {

@@ -46,21 +46,21 @@ public class ExchangeController {
 
     // Requests (osea peticiones que me hacen a mi)
     // Paso el ID, y quiero aquellas exchanges en las que soy offerer
-    /*@RequestMapping("/offers")
+    @RequestMapping("/offers")
     public ModelAndView exchangeRequests(@RequestParam(name = "exchange-state", defaultValue = "PENDING") ExchangeState exchangeState) {
         final ModelAndView mav = new ModelAndView("exchange/exchange_requests");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getPrincipal() instanceof PawUserDetails pud) {
 
-            List<ExchangeWrapper> exchangeWrapperList = exchangeService.getExchangeOffererWrapperListByUserId(pud.getUser().getUserId(), exchangeState);
+            List<Exchange> exchangeWrapperList = exchangeService.getExchangeOffererListByUserId(pud.getUser().getUserId(), exchangeState);
             mav.addObject("exchangeState", exchangeState);
             mav.addObject("exchanges", exchangeWrapperList);
             mav.addObject("review", new UserReview());
         }
 
         return mav;
-    }*/
+    }
 
 
     // Estado de mis ofertas

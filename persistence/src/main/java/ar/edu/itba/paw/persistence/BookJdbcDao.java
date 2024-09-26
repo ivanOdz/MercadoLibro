@@ -82,6 +82,16 @@ public class BookJdbcDao implements BookDao {
                 new Object[]{ ownerId, bookStateFilter, bookStateFilter, "%" + search.toLowerCase() + "%", genreFilter, genreFilter}, new int[]{ Types.BIGINT, Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER }, ROWMAPPERBOOKS);
     }*/
 
+
+
+    // TODO: AUTORES DUPLICADOS: REEMPLAZAR EL STRING_AGG POR "(SELECT STRING_AGG(a.authorName, ', ') " +
+    //                " FROM book_author ba " +
+    //                " JOIN author a ON a.authorId = ba.authorId " +
+    //                " WHERE ba.bookModelId = bm.bookModelId) AS authors,
+    // cuando tengo varias imagenes asociadas a un lbro me trae el nombre del autor x # imagenes del libro
+
+
+
     @Override
     public List<Book> getFilteredSortedOrderedBooksByPageFromUser(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, int pageIndex, long userId, SortType sortType) {
 
@@ -89,8 +99,13 @@ public class BookJdbcDao implements BookDao {
                 "SELECT  b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
                         "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, i.imageId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount, " +
                         "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, ARRAY_AGG(i.imageId ORDER BY bi.imageOrder) AS images, " +
-                        "p.publicationState, e.exchangeState, CASE WHEN EXISTS (SELECT 1 FROM exchange e2 JOIN publication p2 ON e2.offererPubId = p2.publicationId OR e2.requesterPubId = p2.publicationId " +
-                        "WHERE (p2.bookId = b.bookId) AND e2.exchangeState = ?) THEN TRUE ELSE FALSE END AS available "+
+                        "p.publicationState, e.exchangeState, " +  // checkear esto, no se si hace falta que este en las tuplas que devuelve
+                        "CASE " +
+                        "WHEN NOT EXISTS (SELECT 1 FROM publication p2 WHERE p2.bookId = b.bookId) THEN TRUE " +
+                        "WHEN NOT EXISTS (SELECT 1 FROM exchange e2 JOIN publication p2 ON e2.offererPubId = p2.publicationId OR e2.requesterPubId = p2.publicationId " +
+                        "WHERE p2.bookId = b.bookId AND e2.exchangeState = ?) THEN TRUE " +
+                        "ELSE FALSE " +
+                        "END AS available "+
                         "FROM book b " +
                         "JOIN users u ON b.ownerId = u.userId " +
                         "JOIN book_model bm ON bm.bookModelId = b.bookModelId " +
