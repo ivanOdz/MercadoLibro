@@ -228,9 +228,9 @@ public class ExchangeJdbcDao implements ExchangeDao {
                 "JOIN users o ON op.userId = o.userId " +
                 "LEFT JOIN book_image op_bi ON op_bi.bookId = op_b.bookId " +
                 "JOIN book_model op_bm ON op_bm.bookModelId = op_b.bookModelId " +
-                "LEFT JOIN (SELECT op_bb.bookModelId, AVG(op_bb.rating) AS rating, COUNT(op_bb.rating) AS ratingCount " +
-                "FROM book op_bb " +
-                "GROUP BY op_bb.bookModelId) op_avgRatings ON op_avgRatings.bookModelId = op_bm.bookModelId " +
+                "LEFT JOIN (SELECT op_br.bookModelId, AVG(op_br.rating) AS rating, COUNT(op_br.rating) AS ratingCount " +
+                "FROM book_rating op_br " +
+                "GROUP BY op_br.bookModelId) op_avgRatings ON op_avgRatings.bookModelId = op_bm.bookModelId " +
                 "LEFT JOIN book_rating op_br ON op_bm.bookModelId = op_br.bookModelId " +
                 // requester_joins
                 "JOIN publication rp ON rp.publicationId = e.requesterPubId " +
@@ -239,9 +239,9 @@ public class ExchangeJdbcDao implements ExchangeDao {
                 "LEFT JOIN book_image rp_bi ON rp_bi.bookId = rp_b.bookId " +
                 "JOIN users r ON rp.userId = r.userId " +
                 "JOIN book_model rp_bm ON rp_bm.bookModelId = rp_b.bookModelId " +
-                "LEFT JOIN (SELECT rp_bb.bookModelId, AVG(rp_bb.rating) AS rating, COUNT(rp_bb.rating) AS ratingCount " +
-                "FROM book rp_bb " +
-                "GROUP BY rp_bb.bookModelId) rp_avgRatings ON rp_avgRatings.bookModelId = rp_bm.bookModelId " +
+                "LEFT JOIN (SELECT rp_br.bookModelId, AVG(rp_br.rating) AS rating, COUNT(rp_br.rating) AS ratingCount " +
+                "FROM book_rating rp_br " +
+                "GROUP BY rp_br.bookModelId) rp_avgRatings ON rp_avgRatings.bookModelId = rp_bm.bookModelId " +
                 "LEFT JOIN book_rating rp_br ON rp_bm.bookModelId = rp_br.bookModelId " +
                 "WHERE o.userId = ? " +
                 "GROUP BY" +
