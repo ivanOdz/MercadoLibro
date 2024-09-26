@@ -168,6 +168,7 @@ public class PublicationJdbcDao implements PublicationDao {
         return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ ExchangeState.ACCEPTED.getValue(),userId, PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", PAGE_SIZE, offset }, new int[]{ Types.INTEGER, Types.BIGINT, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_PUBLICATION);
     }
 
+
     @Override
     public Publication getPublicationByPublicationId(long publicationId) {
         StringBuilder sqlQuery = new StringBuilder(
@@ -177,6 +178,12 @@ public class PublicationJdbcDao implements PublicationDao {
                 //book
                 "b.bookId, ARRAY_AGG(bi.imageId ORDER BY bi.imageOrder) AS images, " +
                 "b.bookState, b.exchangesQty," +
+                "CASE " +
+                "WHEN NOT EXISTS (SELECT 1 FROM publication p2 WHERE p2.bookId = b.bookId) THEN TRUE " +
+                "WHEN NOT EXISTS (SELECT 1 FROM exchange e2 JOIN publication p2 ON e2.offererPubId = p2.publicationId OR e2.requesterPubId = p2.publicationId " +
+                "WHERE p2.bookId = b.bookId AND e2.exchangeState = ?) THEN TRUE " +
+                "ELSE FALSE " +
+                "END AS available, " +
                 //book_model
                 "bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
                 "(SELECT STRING_AGG(a.authorName, ', ') " +

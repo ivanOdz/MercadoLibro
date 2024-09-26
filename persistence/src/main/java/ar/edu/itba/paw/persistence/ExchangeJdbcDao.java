@@ -178,68 +178,71 @@ public class ExchangeJdbcDao implements ExchangeDao {
         String sqlQuery = "SELECT e.exchangeId, e.exchangeState, e.acceptCode, e.offererReceivedBook, e.requesterReceivedBook, e.exchangeEndDate, e.exchangeStartDate, " +
 
                 //---- offererPub
-                "op.publicationId, " +
-                "op.publicationState, op_l.locationId, op_l.locationString, op.publicationDatetime," +
+                "op.publicationId, op.publicationState, op_l.locationId, op_l.locationString, op.publicationDatetime, " +
 
                 //   offerer_book
-                "op_b.bookId, ARRAY_AGG(op_i.imageId ORDER BY op_bi.imageOrder) AS images, " +
-                "op_b.bookState, op_b.exchangesQty," +
-                //   offerer_book_model
-                "op_bm.bookModelId, op_bm.isbn, op_bm.title, op_bm.editorial, op_bm.description, op_bm.genre, op_bm.edition, op_bm.weight, op_bm.pages, op_bm.bookLanguage, " +
-                "op_bm.dimension, op_bm.publicationYear, op_bm.isPocketEdition, op_bm.isHardcover, op_bm.imageId, AVG(op_br.rating) as rating, COUNT(op_br.rating) as ratingCount, " +
+                "op_b.bookId,op_b.bookState, op_b.exchangesQty, " +
+                "(SELECT ARRAY_AGG(op_i.imageId ORDER BY op_bi.imageOrder) FROM book_image op_bi JOIN image op_i ON op_bi.imageId = op_i.imageId WHERE op_bi.bookId = op_b.bookId) AS images, " +
+                "       CASE " +
+                "           WHEN NOT EXISTS (SELECT 1 FROM publication op_p2 WHERE op_p2.bookId = op_b.bookId) THEN TRUE " +
+                "           WHEN NOT EXISTS (SELECT 1 FROM exchange op_e2 JOIN publication op_p2 ON op_e2.offererPubId = op_p2.publicationId OR op_e2.requesterPubId = op_p2.publicationId " +
+                "                            WHERE op_p2.bookId = op_b.bookId AND op_e2.exchangeState = 1) THEN TRUE " +
+                "           ELSE FALSE " +
+                "       END AS available, "+
+
+                //  offerer
                 "o.userId, o.username, o.mail, o.password, o.imageId, o.verificationCode, o.isVerified, " +
-                "(SELECT STRING_AGG(op_a.authorName, ', ') " +
-                " FROM book_author op_ba " +
-                " JOIN author op_a ON op_a.authorId = op_ba.authorId " +
-                " WHERE op_ba.bookModelId = op_bm.bookModelId) AS authors, "+
+
+                //   offerer_book_model
+                "op_bm.bookModelId, op_bm.isbn, op_bm.title, op_bm.editorial, op_bm.description, op_bm.genre, op_bm.edition, op_bm.weight, op_bm.pages, op_bm.bookLanguage, "+
+                "op_bm.dimension, op_bm.publicationYear, op_bm.isPocketEdition, op_bm.isHardcover, op_bm.imageId,, "+
+                "(SELECT STRING_AGG(op_a.authorName, ', ') FROM book_author op_ba JOIN author op_a ON op_a.authorId = op_ba.authorId WHERE op_ba.bookModelId = op_bm.bookModelId) AS authors, "+
+                "AVG(op_br.rating) as rating, COUNT(op_br.rating) as ratingCount, "+
 
                 //----- requesterPub
-                "rp.publicationId AS requester_publicationId, " +
-                "rp.publicationState AS requester_publicationState, rp_l.locationId AS requester_locationId, rp_l.locationString AS requester_locationString, rp.publicationDatetime AS requester_publicationDatetime," +
+                "rp.publicationId AS requester_publicationId, rp.publicationState AS requester_publicationState, rp_l.locationId AS requester_locationId, rp_l.locationString AS requester_locationString, rp.publicationDatetime AS requester_publicationDatetime, "+
 
                 //   requester_book
-                "rp_b.bookId AS requester_bookId, ARRAY_AGG(rp_i.imageId ORDER BY rp_bi.imageOrder) AS requester_images, " +
-                "rp_b.bookState, rp_b.exchangesQty AS requester_exchangesQty, " +
+                "rp_b.bookId AS requester_bookId, rp_b.bookState, rp_b.exchangesQty AS requester_exchangesQty, "+
+                "(SELECT ARRAY_AGG(rp_i.imageId ORDER BY rp_bi.imageOrder) FROM book_image rp_bi JOIN image rp_i ON rp_bi.imageId = rp_i.imageId WHERE rp_bi.bookId = rp_b.bookId) AS requester_images, " +
+                "       CASE" +
+                "           WHEN NOT EXISTS (SELECT 1 FROM publication rp_p2 WHERE rp_p2.bookId = rp_b.bookId) THEN TRUE" +
+                "           WHEN NOT EXISTS (SELECT 1 FROM exchange rp_e2 JOIN publication rp_p2 ON rp_e2.offererPubId = rp_p2.publicationId OR rp_e2.requesterPubId = rp_p2.publicationId" +
+                "                            WHERE rp_p2.bookId = rp_b.bookId AND rp_e2.exchangeState = 1) THEN TRUE" +
+                "           ELSE FALSE" +
+                "           END AS requester_available, "+
+
                 //   requester
                 "r.userId AS requester_userId, r.username AS requester_username, r.mail AS requester_mail, r.password AS requester_password, r.imageId AS requester_imageId, r.verificationCode AS requester_verificationCode, r.isVerified AS requester_isVerified, " +
-                //   requester_book_model
-                "rp_bm.bookModelId AS requester_bookModelId, rp_bm.isbn AS requester_isbn, rp_bm.title AS requester_title, rp_bm.editorial AS requester_editorial, rp_bm.description AS requester_description, rp_bm.genre AS requester_genre, rp_bm.edition AS requester_edition, rp_bm.weight AS requester_weight, rp_bm.pages AS requester_pages, rp_bm.bookLanguage AS requester_bookLanguage, " +
-                "rp_bm.dimension AS requester_dimension, rp_bm.publicationYear AS requester_publicationYear, rp_bm.isPocketEdition AS requester_isPocketEdition, rp_bm.isHardcover AS requester_isHardcover, rp_bm.imageId AS requester_imageId, AVG(rp_br.rating) AS requester_rating, COUNT(rp_br.rating) AS requester_ratingCount, " +
-                "(SELECT STRING_AGG(rp_a.authorName, ', ') " +
-                " FROM book_author rp_ba " +
-                " JOIN author rp_a ON rp_a.authorId = rp_ba.authorId " +
-                " WHERE rp_ba.bookModelId = rp_bm.bookModelId) AS requester_authors "+
-                "FROM exchange e " +
 
+                //   requester_book_model
+                "rp_bm.bookModelId AS requester_bookModelId, rp_bm.isbn AS requester_isbn, rp_bm.title AS requester_title, rp_bm.editorial AS requester_editorial, rp_bm.description AS requester_description, rp_bm.genre AS requester_genre, rp_bm.edition AS requester_edition, rp_bm.weight AS requester_weight, rp_bm.pages AS requester_pages, rp_bm.bookLanguage AS requester_bookLanguage, rp_bm.dimension AS requester_dimension, rp_bm.publicationYear AS requester_publicationYear, rp_bm.isPocketEdition AS requester_isPocketEdition, rp_bm.isHardcover AS requester_isHardcover, rp_bm.imageId AS requester_imageId, "+
+                "(SELECT STRING_AGG(rp_a.authorName, ', ') FROM book_author rp_ba JOIN author rp_a ON rp_a.authorId = rp_ba.authorId WHERE rp_ba.bookModelId = rp_bm.bookModelId) AS requester_authors, "+
+                "AVG(rp_br.rating) AS requester_rating, COUNT(rp_br.rating) AS requester_ratingCount "+
+
+                "FROM exchange e " +
                 // offerer_joins
                 "JOIN publication op ON op.publicationId = e.offererPubId " +
-                "JOIN book op_b ON op_b.bookId = op.bookId " +
-                "JOIN users o ON op_b.ownerId = o.userId " +
-                "JOIN book_model op_bm ON op_bm.bookModelId = op_b.bookModelId " +
-                "LEFT JOIN book_rating op_br ON op_bm.bookModelId = op_br.bookModelId " +
-                "JOIN book_author op_ba ON op_ba.bookModelId = op_bm.bookModelId " +
-                "JOIN author op_a ON op_a.authorId = op_ba.authorId " +
-                "LEFT JOIN book_image op_bi ON op_bi.bookId = op_b.bookId " +
-                "LEFT JOIN image op_i ON op_bm.imageId = op_i.imageId " +
                 "JOIN location op_l ON op.locationId = op_l.locationId " +
+                "JOIN book op_b ON op_b.bookId = op.bookId " +
+                "JOIN users o ON op.userId = o.userId " +
+                "LEFT JOIN book_image op_bi ON op_bi.bookId = op_b.bookId " +
+                "JOIN book_model op_bm ON op_bm.bookModelId = op_b.bookModelId " +
                 "LEFT JOIN (SELECT op_bb.bookModelId, AVG(op_bb.rating) AS rating, COUNT(op_bb.rating) AS ratingCount " +
                 "FROM book op_bb " +
                 "GROUP BY op_bb.bookModelId) op_avgRatings ON op_avgRatings.bookModelId = op_bm.bookModelId " +
-
+                "LEFT JOIN book_rating op_br ON op_bm.bookModelId = op_br.bookModelId " +
                 // requester_joins
                 "JOIN publication rp ON rp.publicationId = e.requesterPubId " +
-                "JOIN book rp_b ON rp_b.bookId = rp.bookId " +
-                "JOIN users r ON rp_b.ownerId = r.userId " +
-                "JOIN book_model rp_bm ON rp_bm.bookModelId = rp_b.bookModelId " +
-                "LEFT JOIN book_rating rp_br ON rp_bm.bookModelId = rp_br.bookModelId " +
-                "JOIN book_author rp_ba ON rp_ba.bookModelId = rp_bm.bookModelId " +
-                "JOIN author rp_a ON rp_a.authorId = rp_ba.authorId " +
-                "LEFT JOIN book_image rp_bi ON rp_bi.bookId = rp_b.bookId " +
-                "LEFT JOIN image rp_i ON rp_bm.imageId = rp_i.imageId " +
                 "JOIN location rp_l ON rp.locationId = rp_l.locationId " +
+                "JOIN book rp_b ON rp_b.bookId = rp.bookId " +
+                "LEFT JOIN book_image rp_bi ON rp_bi.bookId = rp_b.bookId " +
+                "JOIN users r ON rp.userId = r.userId " +
+                "JOIN book_model rp_bm ON rp_bm.bookModelId = rp_b.bookModelId " +
                 "LEFT JOIN (SELECT rp_bb.bookModelId, AVG(rp_bb.rating) AS rating, COUNT(rp_bb.rating) AS ratingCount " +
                 "FROM book rp_bb " +
                 "GROUP BY rp_bb.bookModelId) rp_avgRatings ON rp_avgRatings.bookModelId = rp_bm.bookModelId " +
+                "LEFT JOIN book_rating rp_br ON rp_bm.bookModelId = rp_br.bookModelId " +
                 "WHERE o.userId = ? " +
                 "GROUP BY" +
                 "    e.exchangeId, e.exchangeState, e.acceptCode, e.offererReceivedBook, e.requesterReceivedBook, e.exchangeEndDate, e.exchangeStartDate, " +
