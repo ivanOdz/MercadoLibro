@@ -13,6 +13,7 @@ import java.util.*;
 import java.sql.Timestamp;
 import java.sql.Types;
 
+import static ar.edu.itba.paw.models.utils.Constants.PAGE_SIZE;
 import static ar.edu.itba.paw.persistence.BookJdbcDao.ROW_MAPPER_BOOK;
 
 @Repository
@@ -20,8 +21,6 @@ public class PublicationJdbcDao implements PublicationDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
-
-    private static final int PAGE_SIZE = 21;
 
     static final RowMapper<Publication> ROW_MAPPER_PUBLICATION =
             (rs, rowNum) -> {

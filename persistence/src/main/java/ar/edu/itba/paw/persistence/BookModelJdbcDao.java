@@ -15,13 +15,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static ar.edu.itba.paw.models.utils.Constants.PAGE_SIZE;
+
 @Repository
 public class BookModelJdbcDao implements BookModelDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    private static final int PAGE_SIZE = 21;
 
     // package-private visibility
     static final RowMapper<BookModel> ROW_MAPPER_BOOK_MODEL = (rs, rowNum) -> new BookModel(
@@ -103,12 +104,11 @@ public class BookModelJdbcDao implements BookModelDao {
     public List<BookModel> getFilteredSortedOrderedModelBooksByPage(String search, boolean isGenreFilterActive, Genre genreFilter, int pageIndex, SortType sortType) {
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
-                        "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, i.imageId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount " +
+                        "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, bm.imageId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount " +
                         "FROM book_model bm " +
                         "JOIN book b ON b.bookModelId = bm.bookModelId " +
                         "JOIN book_author ba ON ba.bookModelId = bm.bookModelId " +
                         "JOIN author a ON a.authorId = ba.authorId " +
-                        "LEFT JOIN image i ON bm.imageId = i.imageId " +
                         "LEFT JOIN book_rating br ON bm.bookModelId = br.bookModelId " +
                         "WHERE LOWER(bm.title) LIKE LOWER(?) ");
 
@@ -116,7 +116,7 @@ public class BookModelJdbcDao implements BookModelDao {
             sqlQuery.append("AND bm.genre = ? ");
         }
 
-        sqlQuery.append("GROUP BY bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, i.imageId");
+        sqlQuery.append("GROUP BY bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, bm.imageId");
 
         switch (sortType) {
             case RATING_ASCENDING:
@@ -141,6 +141,18 @@ public class BookModelJdbcDao implements BookModelDao {
         return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ "%" + search.toLowerCase() + "%", PAGE_SIZE, offset }, new int[]{ Types.VARCHAR, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_BOOK_MODEL);
 
     }
+
+    @Override
+    public BookModel createBookModel(String isbn, String title, String publisher, String description, List<String> authors, Genre genre, int edition, int weight, int pages, Language language, BookDimension bookDimension, short publicationYear, boolean isPocketEdition, boolean isHardcover, long imageId) {
+        // Primero creo el Author y el BookModel, y por ultimo creo un BookAuthor por cada autor.
+
+        // Creo el BookModel
+        jdbcInsert.
+
+        return new BookModel();
+    }
+
+
 }
 
 

@@ -12,6 +12,7 @@ import javax.sql.DataSource;
 import java.util.*;
 import java.sql.Types;
 
+import static ar.edu.itba.paw.models.utils.Constants.PAGE_SIZE;
 import static ar.edu.itba.paw.persistence.BookModelJdbcDao.ROW_MAPPER_BOOK_MODEL;
 import static ar.edu.itba.paw.persistence.UserJdbcDao.ROW_MAPPER_USER;
 
@@ -22,7 +23,6 @@ public class BookJdbcDao implements BookDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    private static final int PAGE_SIZE = 21;
 
     static final RowMapper<Book> ROW_MAPPER_BOOK =
             (rs, rowNum) -> {
