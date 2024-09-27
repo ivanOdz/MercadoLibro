@@ -41,7 +41,7 @@ public class BookModelJdbcDao implements BookModelDao {
             rs.getBoolean("isPocketEdition"),
             rs.getBoolean("isHardcover"),
             rs.getString("authors"),
-            rs.getLong("imageId"),
+            rs.getLong("coverId"),
             new Rating(rs.getDouble("rating"), rs.getInt("ratingCount"))
     );
 
@@ -104,7 +104,7 @@ public class BookModelJdbcDao implements BookModelDao {
     public List<BookModel> getFilteredSortedOrderedModelBooksByPage(String search, boolean isGenreFilterActive, Genre genreFilter, int pageIndex, SortType sortType) {
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
-                        "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, bm.imageId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount " +
+                        "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, bm.imageId AS coverId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount " +
                         "FROM book_model bm " +
                         "JOIN book b ON b.bookModelId = bm.bookModelId " +
                         "JOIN book_author ba ON ba.bookModelId = bm.bookModelId " +
@@ -142,15 +142,15 @@ public class BookModelJdbcDao implements BookModelDao {
 
     }
 
-    @Override
-    public BookModel createBookModel(String isbn, String title, String publisher, String description, List<String> authors, Genre genre, int edition, int weight, int pages, Language language, BookDimension bookDimension, short publicationYear, boolean isPocketEdition, boolean isHardcover, long imageId) {
-        // Primero creo el Author y el BookModel, y por ultimo creo un BookAuthor por cada autor.
-
-        // Creo el BookModel
-        jdbcInsert.
-
-        return new BookModel();
-    }
+//    @Override
+//    public BookModel createBookModel(String isbn, String title, String publisher, String description, List<String> authors, Genre genre, int edition, int weight, int pages, Language language, BookDimension bookDimension, short publicationYear, boolean isPocketEdition, boolean isHardcover, long imageId) {
+//        // Primero creo el Author y el BookModel, y por ultimo creo un BookAuthor por cada autor.
+//
+//        // Creo el BookModel
+//        jdbcInsert.
+//
+//        return new BookModel();
+//    }
 
 
 }

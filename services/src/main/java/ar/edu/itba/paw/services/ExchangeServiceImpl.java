@@ -4,14 +4,10 @@ import ar.edu.itba.paw.interfaces.persistence.ExchangeDao;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.ExchangeState;
-import ar.edu.itba.paw.models.utils.PublicationState;
-import ar.edu.itba.paw.models.utils.ResponseState;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class ExchangeServiceImpl implements ExchangeService {
@@ -115,7 +111,12 @@ public class ExchangeServiceImpl implements ExchangeService {
 
     @Override
     public List<Exchange> getExchangeOffererListByUserId(long userId, ExchangeState exchangeState) {
-        return exchangeDao.getExchangesWhereUserIdIsOfferer(userId, exchangeState);
+        return exchangeDao.getAllExchangesByUserId(userId, exchangeState, true);
+    }
+
+    @Override
+    public List<Exchange> getExchangeRequesterListByUserId(long userId, ExchangeState exchangeState) {
+        return exchangeDao.getAllExchangesByUserId(userId, exchangeState, false);
     }
 
     /*@Override
@@ -134,13 +135,13 @@ public class ExchangeServiceImpl implements ExchangeService {
      * @param userId
      * @return function called from the solicited section of exchanges
      */
-    /*@Override
-    public List<ExchangeWrapper> getExchangeRequesterWrapperListByUserId(long userId) {
-
-        List<Exchange> exchanges = exchangeDao.getExchangesWhereUserIdIsRequester(userId);
-
-        return getExchangeWrapper(exchanges);
-    }*/
+//    @Override
+//    public List<ExchangeWrapper> getExchangeRequesterWrapperListByUserId(long userId) {
+//
+//        List<Exchange> exchanges = exchangeDao.getExchangesWhereUserIdIsRequester(userId);
+//
+//        return getExchangeWrapper(exchanges);
+//    }
 
 
     /**

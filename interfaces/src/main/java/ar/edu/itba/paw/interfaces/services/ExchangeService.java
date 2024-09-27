@@ -21,6 +21,8 @@ public interface ExchangeService {
 
     //List<ExchangeWrapper> getExchangeRequesterWrapperListByUserId(long userId);
 
+    List<Exchange> getExchangeRequesterListByUserId(long userId, ExchangeState exchangeState);
+
 
     List<Exchange> getExchangeOffererListByUserId(long userId, ExchangeState exchangeState);
 
