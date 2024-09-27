@@ -1,33 +1,35 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.services.BookService;
+import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.models.Book;
-import ar.edu.itba.paw.models.BookCard;
-import ar.edu.itba.paw.models.BookModelCard;
+
+import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.models.utils.Genre;
-import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.interfaces.persistence.BookDao;
 import ar.edu.itba.paw.models.utils.SortType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 public class BookServiceImpl implements BookService {
 
     private final BookDao bookDao;
 
-    public BookServiceImpl(final BookDao bookDao) {
+    private final BookModelService bookModelService;
+    private final ImageService imageService;
+
+    public BookServiceImpl(final BookDao bookDao, BookModelService bookModelService, ImageService imageService) {
         this.bookDao = bookDao;
+        this.bookModelService = bookModelService;
+        this.imageService = imageService;
     }
 
-    /*@Override
-    public Book createBook (long bookModelId, long ownerId, BookState bookState, int exchangesQty, int rating) {
-        return bookDao.createBook(bookModelId, ownerId, bookState, exchangesQty, rating);
-    }
-
+    /*
     @Override
     public Optional<Book> getBookById(long publicationId) {
         return bookDao.getBookById(publicationId);
@@ -52,7 +54,28 @@ public class BookServiceImpl implements BookService {
     public List<Book> getFilteredSortedOrderedBooksByPageFromUser(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, int pageIndex, long userId, SortType sortType) {
         return bookDao.getFilteredSortedOrderedBooksByPageFromUser(search, isBookStateFilterActive, bookStateFilter, isGenreFilterActive, genreFilter, pageIndex, userId, sortType);
     }
+
+    @Override
+    public Book createBook () {
+
+        // Si el book model ya existia, solamente inserto el book
+        // Caso contrario, inserto primero el bookModel, devuelvo el id, y eso lo tomo para insertar el book
+
+        long bookModelId;
+        if(/*BOOK MODEL NO EXISTE*/){
+            // Inserto Image mediante el service de Image
+            // Inserto los Author, BookAuthor, BookRating mediante el service de book model
+            long imageId = imageService.saveImage(/*Portada book model*/).getFirst().getImageId();
+            bookModelId = bookModelService.createBookModel();
+        }
+
+        // Inserto imagenes del book y recupero los ids.
+        List<Long> imagesId = imageService.saveImage(/*lista de MultipartFile del book*/).stream().map(Image::getImageId).toList();
+
+        // Inserto el book y lo retorno. Si Book = null, informar en la vista
+        return bookDao.createBook();
     }
+}
 
 
 
