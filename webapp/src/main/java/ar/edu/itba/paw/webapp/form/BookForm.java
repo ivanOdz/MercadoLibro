@@ -13,31 +13,31 @@ import java.util.List;
 
 public class BookForm {
 
-    @NotBlank
-    @Pattern(regexp = "^(97[89])\\d{1,5}\\d{1,7}\\d{1,7}\\d$")
+    @NotBlank(groups = {BookFormInfo.class})
+    @Pattern(regexp = "^(97[89])\\d{1,5}\\d{1,7}\\d{1,7}\\d$", groups = {BookFormInfo.class})
     private String isbn;
 
-    @Size(min = 1, max = 255)
+    @Size(min = 1, max = 255, groups = {BookFormInfo.class})
     private String title;
     
-    @NotEmpty
+    @NotEmpty(groups = {BookFormInfo.class})
     private List<String> authors = new ArrayList<>();
     
-    @NotBlank
-    @Size(min = 1, max = 100)
+    @NotBlank(groups = {BookFormInfo.class})
+    @Size(min = 1, max = 100, groups = {BookFormInfo.class})
     private String editorial;
 
-    @Size(min = 10, max = 2000)
+    @Size(min = 10, max = 2000, groups = {BookFormInfo.class})
     private String description;
 
-    @NotNull
+    @NotNull(groups = {BookFormInfo.class})
     private Genre genre;
     
     @NotNull
     private BookState bookState;
-    
-    @Min(1)
-    @Max(99)
+
+    @Min(value = 1, groups = {BookFormInfo.class})
+    @Max(value = 99, groups = {BookFormInfo.class})
     private int edition =1;
 
     @Min(1)
@@ -62,6 +62,10 @@ public class BookForm {
 
     private int weight = 300;
 
+    private MultipartFile bookCover;
+
+
+    // Getters
 
     public @NotBlank @Pattern(regexp = "^(97[89])\\d{1,5}\\d{1,7}\\d{1,7}\\d$") String getIsbn() {
         return isbn;
@@ -82,9 +86,6 @@ public class BookForm {
     public @Size(min = 10, max = 2000) String getDescription() {
         return description;
     }
-
-
-    // Getters
 
     @NotNull
     public Genre getGenre() {
@@ -139,6 +140,18 @@ public class BookForm {
 
     public int getWeight() {
         return weight;
+    }
+
+    public boolean isHardcover() {
+        return isHardcover;
+    }
+
+    public boolean isPocketEdition() {
+        return isPocketEdition;
+    }
+
+    public MultipartFile getBookCover() {
+        return bookCover;
     }
 
     // Setters
@@ -211,5 +224,9 @@ public class BookForm {
 
     public void setWeight(int weight) {
         this.weight = weight;
+    }
+
+    public void setBookCover(MultipartFile bookCover) {
+        this.bookCover = bookCover;
     }
 }
