@@ -48,9 +48,9 @@ public class BookForm {
 
     private Short publicationYear;
 
-    private boolean isHardcover;
+    private boolean isHardcover = false;
 
-    private boolean isPocketEdition;
+    private boolean isPocketEdition = false;
 
     @NotNull
     private BookDimension dimension;
@@ -62,7 +62,12 @@ public class BookForm {
 
     private int weight = 300;
 
-    private MultipartFile bookCover;
+    private int bookCover;
+
+    private boolean publish = false;
+
+    @Pattern(regexp = "^[a-zA-Z\\s]")
+    private String location;
 
 
     // Getters
@@ -150,8 +155,16 @@ public class BookForm {
         return isPocketEdition;
     }
 
-    public MultipartFile getBookCover() {
+    public int getBookCover() {
         return bookCover;
+    }
+
+    public boolean isPublish() {
+        return publish;
+    }
+
+    public @Pattern(regexp = "^[a-zA-Z\\s]") String getLocation() {
+        return location;
     }
 
     // Setters
@@ -226,7 +239,15 @@ public class BookForm {
         this.weight = weight;
     }
 
-    public void setBookCover(MultipartFile bookCover) {
+    public void setBookCover(int bookCover) {
         this.bookCover = bookCover;
+    }
+
+    public void setPublish(boolean publish) {
+        this.publish = publish;
+    }
+
+    public void setLocation(@Pattern(regexp = "^[a-zA-Z\\s]") String location) {
+        this.location = location;
     }
 }

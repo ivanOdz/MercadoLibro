@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -118,32 +120,57 @@ public class BookController {
     }
 
     @GetMapping("/book/form_step1")
-    public ModelAndView bookModelForm(@ModelAttribute("modelBookForm") ModelBookForm modelBookForm, BindingResult errors) {
+    public ModelAndView bookModelForm(@ModelAttribute("bookForm") BookForm bookForm, BindingResult errors) {
 
-        ModelAndView mav = new ModelAndView("book/form/step1");
+        ModelAndView mav = new ModelAndView("book/book_form");
 
-        mav.addObject("modelBookForm", modelBookForm);
+        mav.addObject("bookForm", bookForm);
         mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
         mav.addObject("languages", List.of(Language.values()).stream().map(language -> new LanguageWrapper(language, languageService.getLanguageDisplayName(language))).collect(Collectors.toList()));
         mav.addObject("dimensions", List.of(BookDimension.values()).stream().map(dimension -> new BookDimensionWrapper(dimension, bookDimensionService.getDimensionDisplayName(dimension))).collect(Collectors.toList()));
         mav.addObject("currentYear", Year.now().getValue());
+        mav.addObject("bookStates", List.of(BookState.values()).stream().map(bookStatus -> new BookStateWrapper(bookStatus, bookStateService.getBookStateDisplayName(bookStatus))).collect(Collectors.toList()));
+        mav.addObject("step", 1);
 
         return mav;
     }
 
+    @PostMapping("/book/create_new_book")
+    public ModelAndView createNewBook(@Validated @ModelAttribute("bookForm") BookForm bookForm, BindingResult errors) {
+        if(errors.hasErrors()){
+            return bookModelForm(bookForm, errors);
+        }
+
+        //add new book
+
+        return new ModelAndView("redirect:/book");
+    }
+
     @GetMapping("/book/form_step2")
-    public ModelAndView bookDetailsForm(@ModelAttribute("bookDetailsForm") BookDetailsForm bookDetailsForm, @RequestParam(name = "book_model_id") long bookModelId, BindingResult errors) {
+    public ModelAndView bookDetailsFormNewBook(@ModelAttribute(name = "bookForm") BookForm bookForm, @RequestParam(required = false, name = "book_model_id") long bookModelId, BindingResult errors) {
 
-        ModelAndView mav = new ModelAndView("book/form/step2");
+        ModelAndView mav = new ModelAndView("book/book_form");
 
-        mav.addObject("bookDetailsForm", bookDetailsForm);
+        mav.addObject("bookForm", bookForm);
+        mav.addObject("step", 2);
         mav.addObject("book_model", bookModelService.getBookModelByBookModelId(bookModelId));
         mav.addObject("bookStates", List.of(BookState.values()).stream().map(bookStatus -> new BookStateWrapper(bookStatus, bookStateService.getBookStateDisplayName(bookStatus))).collect(Collectors.toList()));
 
         return mav;
     }
 
-    @GetMapping("/book/book_form")
+    @PostMapping("/book/create_book")
+    public ModelAndView createBook(@Valid @ModelAttribute("bookForm") BookForm bookForm, @RequestParam(required = false, name = "book_model_id") long bookModelId, BindingResult errors) {
+        if(errors.hasErrors()){
+            return bookDetailsFormNewBook(bookForm, bookModelId, errors);
+        }
+
+        //add book from book model
+
+        return new ModelAndView("redirect:/book");
+    }
+
+    /*@GetMapping("/book/book_form")
     public ModelAndView bookForm(@ModelAttribute("bookForm") BookForm bookForm) {
 
         final ModelAndView mav = new ModelAndView("book/book_form");
@@ -159,47 +186,12 @@ public class BookController {
         mav.addObject("dimensions", List.of(BookDimension.values()).stream().map(dimension -> new BookDimensionWrapper(dimension, bookDimensionService.getDimensionDisplayName(dimension))).collect(Collectors.toList()));
         mav.addObject("currentYear", Year.now().getValue());
         return mav;
-    }
-
-    /*@PostMapping("/book/upload_book")
-    public ModelAndView uploadBook(@Valid @ModelAttribute("bookForm") BookForm bookForm, BindingResult errors) {
-        if(errors.hasErrors()){
-            return bookForm(bookForm);
-        }
-
-        BookModel bookModel = bookModelService.addBookModel(
-                bookForm.getAuthors(),
-                bookForm.getIsbn(),
-                bookForm.getTitle(),
-                bookForm.getEditorial(),
-                bookForm.getDescription(),
-                bookForm.getGenre(),
-                bookForm.getEdition(),
-                bookForm.getWeight(),
-                bookForm.getPages(),
-                bookForm.getLanguage(),
-                bookForm.getDimension(),
-                bookForm.getPublicationYear(),
-                bookForm.getIsPocketEdition(),
-                bookForm.getIsHardcover()
-                );
-
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.getPrincipal() instanceof PawUserDetails pud) {
-            Book book = bookService.createBook(bookModel.getBookModelId(), pud.getUser().getUserId(), bookForm.getBookState(), 0,bookForm.getRating());
-
-            List<Image> images = imageService.saveImage(bookForm.getImageFiles());
-            bookImageService.saveBookImage(book.getBookId(), images, new Timestamp(System.currentTimeMillis()));
-        }
-
-        return new ModelAndView("redirect:/book");
     }*/
 
     /*@PostMapping("/book/upload_book_model")
-    public ModelAndView uploadBookModel(@Valid @ModelAttribute("modelBookForm") ModelBookForm modelBookForm, BindingResult errors) {
+    public ModelAndView uploadBookModel(@ModelAttribute(name = "bookForm") BookForm bookForm, BindingResult errors) {
         if(errors.hasErrors()){
-            return bookModelForm(modelBookForm, errors);
+            return bookModelForm(bookForm, errors);
         }
         BookModel bookModel = bookModelService.addBookModel(
                 modelBookForm.getAuthors(),
@@ -218,17 +210,17 @@ public class BookController {
                 modelBookForm.getIsHardcover()
         );
 
-        final ModelAndView mav = new ModelAndView("redirect:/book/form_step2?book_model_id=" + bookModel.getBookModelId());
+        final ModelAndView mav = new ModelAndView("redirect:/book/upload_book");
+        mav.addObject("bookDetailsForm", bookDetailsForm);
         mav.addObject("book_model_id", bookModel.getBookModelId());
 
         return mav;
-    }*/
+    }
 
-    /*@PostMapping("/book/upload_book")
+    @PostMapping("/book/upload_book")
     public ModelAndView uploadBook(@Valid @ModelAttribute("bookDetailsForm") BookDetailsForm bookDetailsForm, @RequestParam(name = "book_model_id") long bookModelId, BindingResult errors) {
-        if(errors.hasErrors()){
-            return bookDetailsForm(bookDetailsForm, bookModelId, errors);
-        }
+
+        ModelAndView mav = new ModelAndView("redirect:/book/form_step3");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.getPrincipal() instanceof PawUserDetails pud) {
@@ -236,7 +228,21 @@ public class BookController {
             if(bookDetailsForm.getImageFiles() != null) {
                 List<Image> images = imageService.saveImage(bookDetailsForm.getImageFiles());
                 bookImageService.saveBookImage(book.getBookId(), images, new Timestamp(System.currentTimeMillis()));
+            } else {
+                return new ModelAndView("redirect:/book");
             }
+            mav.addObject("book_id", book.getBookId());
+        }
+
+        return mav;
+    }
+
+    @PostMapping("/book/set_book_cover")
+    public ModelAndView setBookCover(@RequestParam(name = "book_id") long bookId, @RequestParam(name = "image_id") long imageId, BindingResult errors) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.getPrincipal() instanceof PawUserDetails pud) {
+            bookImageService.setBookCover(bookId, imageId);
         }
 
         return new ModelAndView("redirect:/book");
