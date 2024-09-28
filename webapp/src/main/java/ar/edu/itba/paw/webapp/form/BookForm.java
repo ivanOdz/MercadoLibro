@@ -66,6 +66,9 @@ public class BookForm {
 
     private boolean publish = false;
 
+    @Pattern(regexp = "^[a-zA-Z\\s]")
+    private String location;
+
 
     // Getters
 
@@ -160,6 +163,10 @@ public class BookForm {
         return publish;
     }
 
+    public @Pattern(regexp = "^[a-zA-Z\\s]") String getLocation() {
+        return location;
+    }
+
     // Setters
 
 
@@ -238,5 +245,9 @@ public class BookForm {
 
     public void setPublish(boolean publish) {
         this.publish = publish;
+    }
+
+    public void setLocation(@Pattern(regexp = "^[a-zA-Z\\s]") String location) {
+        this.location = location;
     }
 }

@@ -29,6 +29,15 @@
             var tabs = UIkit.tab('.uk-tab');
             tabs.show(index);
         }
+
+        function addLocation(value){
+            if (value) {
+                var modal = UIkit.modal("#location-modal");
+                modal.show();
+            } else {
+
+            }
+        }
     </script>
 
 </head>
@@ -329,16 +338,24 @@
                     </label>
                     <label class="mr-1">
                         <spring:message code="yes"/>
-                        <form:radiobutton path="publish" value="true" class="uk-checkbox" />
+                        <form:radiobutton path="publish" value="true" class="uk-checkbox" name="publish"/>
                     </label>
 
                     <label class="mr-1">
                         <spring:message code="no"/>
-                        <form:radiobutton path="publish" value="false" class="uk-checkbox" />
+                        <form:radiobutton path="publish" value="false" class="uk-checkbox" name="publish"/>
                     </label>
                 </div>
+
+                <div id="location-q" class="uk-inline" style="display: none;">
+                    <label class="form-group">
+                        <spring:message code="book.set.location"/>
+                        <form:input path="location" type="text" class="uk-input"/>
+                    </label>
+                </div>
+
                 <div style="margin-top: 2%; align-self: auto;">
-                    <button class="uk-button uk-button-primary" type="button" onclick="nextSection(2)"><spring:message code="add.publication.next"/></button>
+                    <button class="uk-button uk-button-primary" type="submit"><spring:message code="add.publication.upload"/></button>
                 </div>
             </div>
                 <%---------------------------------------------------------------- END STEP 2 ----------------------------------------------------------------%>
@@ -429,6 +446,21 @@
                 };
                 reader.readAsDataURL(file);
             }
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const publishRadioButtons = document.getElementsByName('publish');
+        const locationQuestion = document.getElementById('location-q');
+
+        publishRadioButtons.forEach(function(radio) {
+            radio.addEventListener('change', function() {
+                if (document.querySelector('input[name="publish"]:checked').value === 'true') {
+                    locationQuestion.style.display = 'block';
+                } else {
+                    locationQuestion.style.display = 'none';
+                }
+            });
         });
     });
 
