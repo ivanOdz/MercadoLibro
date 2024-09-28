@@ -4,6 +4,7 @@ import ar.edu.itba.paw.models.Book;
 import ar.edu.itba.paw.models.BookModel;
 import ar.edu.itba.paw.models.utils.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -12,7 +13,6 @@ public interface BookModelService {
 
     BookModel getBookModelByBookModelId(long bookModelId);
 
-    //BookModel addBookModel(List<String> authors, String isbn, String title, String editorial, String description, Genre genre, int edition, int weight, int pages, Language language, BookDimension dimension, Short publicationYear, boolean pocketEdition, boolean hardcover);
 
     List<BookModel> getBookModelByUserId(long userId);
 
@@ -23,5 +23,8 @@ public interface BookModelService {
     //-----------------ADAPTADO------------------------//
 
     List<BookModel> getFilteredSortedOrderedModelBooksByPage(String search, boolean isGenreFilterActive, Genre genreFilter, int pageIndex, SortType sortType);
+
+    long createBookModel(String isbn, String title, List<String> authors, String publisher, String description, Genre genre, int edition,
+                              Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight, List<MultipartFile> images, long bookCoverIndex);
 
 }

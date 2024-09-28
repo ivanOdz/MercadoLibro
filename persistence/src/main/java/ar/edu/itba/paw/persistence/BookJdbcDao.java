@@ -21,7 +21,8 @@ import static ar.edu.itba.paw.persistence.UserJdbcDao.ROW_MAPPER_USER;
 public class BookJdbcDao implements BookDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert jdbcInsert;
+    private final SimpleJdbcInsert jdbcInsertBook;
+    private final SimpleJdbcInsert jdbcInsertBookRating;
 
 
     static final RowMapper<Book> ROW_MAPPER_BOOK =
@@ -39,22 +40,9 @@ public class BookJdbcDao implements BookDao {
     public BookJdbcDao(final DataSource ds) {
 
     	jdbcTemplate = new JdbcTemplate(ds);
-        jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).usingGeneratedKeyColumns("bookid").withTableName("book");
+        jdbcInsertBook = new SimpleJdbcInsert(jdbcTemplate).usingGeneratedKeyColumns("bookid").withTableName("book");
+        jdbcInsertBookRating = new SimpleJdbcInsert(jdbcTemplate).withTableName("book_rating");
     }
-
-    /*@Override
-    public Book createBook(long bookModelId, long ownerId, BookState bookState, int exchangesQty, int rating) {
-
-    	final Map<String, Object> bookData = new HashMap<>();
-        bookData.put("bookModelId", bookModelId);
-        bookData.put("ownerId", ownerId);
-        bookData.put("bookState", bookState.getValue());
-        bookData.put("exchangesQty", exchangesQty);
-        bookData.put("rating", rating);
-
-        final Number generatedId = jdbcInsert.executeAndReturnKey(bookData);
-        return new Book(generatedId.longValue(), bookModelId, ownerId, bookState, exchangesQty, rating);
-    }*/
 
     /*@Override
     public Optional<Book> getBookById(long bookId) {
@@ -83,12 +71,36 @@ public class BookJdbcDao implements BookDao {
     }*/
 
 
+    @Override
+    public Number createBook(long bookModelId, User owner, BookState bookState, List<Integer> images) {
+
+        final Map<String, Object> bookData = new HashMap<>();
+        bookData.put("bookModelId", bookModelId);
+        bookData.put("ownerId", owner.getUserId());
+        bookData.put("bookState", bookState.getValue());
+        bookData.put("exchangesQty", Constants.INITIAL_EXCHANGE_VALUE);
+
+        final Number generatedId = jdbcInsertBook.executeAndReturnKey(bookData);
+        return generatedId;
+    }
+
+    @Override
+    public void createBookRating(User user, long bookModelId, int rating) {
+        final HashMap<String, Object> params = new HashMap<>();
+        params.put("userid", user.getUserId());
+        params.put("bookModelId", bookModelId);
+        params.put("rating", rating);
+
+        jdbcInsertBookRating.execute(params);
+    }
+
 
     // TODO: AUTORES DUPLICADOS: REEMPLAZAR EL STRING_AGG POR "(SELECT STRING_AGG(a.authorName, ', ') " +
     //                " FROM book_author ba " +
     //                " JOIN author a ON a.authorId = ba.authorId " +
     //                " WHERE ba.bookModelId = bm.bookModelId) AS authors,
     // cuando tengo varias imagenes asociadas a un lbro me trae el nombre del autor x # imagenes del libro
+
 
 
 
@@ -157,7 +169,6 @@ public class BookJdbcDao implements BookDao {
         }
         return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ ExchangeState.ACCEPTED.getValue(), userId, "%" + search.toLowerCase() + "%", PAGE_SIZE, offset }, new int[]{ Types.INTEGER, Types.BIGINT, Types.VARCHAR, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_BOOK);
     }
-
 }
 
 

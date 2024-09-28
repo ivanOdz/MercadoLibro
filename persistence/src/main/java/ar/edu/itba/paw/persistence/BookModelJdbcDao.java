@@ -2,18 +2,17 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.BookModelDao;
 import ar.edu.itba.paw.models.BookModel;
-import ar.edu.itba.paw.models.Location;
 import ar.edu.itba.paw.models.utils.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+
 import javax.sql.DataSource;
 import java.sql.Types;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static ar.edu.itba.paw.models.utils.Constants.PAGE_SIZE;
 
@@ -21,7 +20,10 @@ import static ar.edu.itba.paw.models.utils.Constants.PAGE_SIZE;
 public class BookModelJdbcDao implements BookModelDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert jdbcInsert;
+    private final SimpleJdbcInsert jdbcInsertBookModel;
+    private final SimpleJdbcInsert jdbcInsertAuthor;
+    private final SimpleJdbcInsert jdbcInsertBookAuthor;
+
 
 
     // package-private visibility
@@ -46,12 +48,19 @@ public class BookModelJdbcDao implements BookModelDao {
     );
 
 
+
     public BookModelJdbcDao(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
-        jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+        jdbcInsertBookModel = new SimpleJdbcInsert(jdbcTemplate)
                 .usingGeneratedKeyColumns("bookmodelid")
                 .withTableName("book_model");
+        jdbcInsertAuthor = new SimpleJdbcInsert(jdbcTemplate)
+                .usingGeneratedKeyColumns("authorid")
+                .withTableName("author");
+        jdbcInsertBookAuthor = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("book_author");
     }
+
 
 
     @Override
@@ -83,8 +92,8 @@ public class BookModelJdbcDao implements BookModelDao {
 
     @Override
     public List<BookModel> getBookModelByUserId(long userId) {
-        return jdbcTemplate.query("SELECT bm.* FROM book b JOIN book_model bm ON b.bookModelId = bm.bookModelId JOIN users u ON b.ownerId = u.userId WHERE b.ownerId = ?"
-        ,new Object[] { userId }, new int[] {Types.BIGINT}, ROW_MAPPER_BOOK_MODEL);
+        return jdbcTemplate.query("SELECT bm.* FROM book b JOIN book_model bm ON b.bookModelId = bm.bookModelId JOIN users u ON b.ownerId = u.userId WHERE b.ownerId = ?",
+                new Object[] { userId }, new int[] {Types.BIGINT}, ROW_MAPPER_BOOK_MODEL);
     }
 
     @Override
@@ -142,17 +151,53 @@ public class BookModelJdbcDao implements BookModelDao {
 
     }
 
-//    @Override
-//    public BookModel createBookModel(String isbn, String title, String publisher, String description, List<String> authors, Genre genre, int edition, int weight, int pages, Language language, BookDimension bookDimension, short publicationYear, boolean isPocketEdition, boolean isHardcover, long imageId) {
-//        // Primero creo el Author y el BookModel, y por ultimo creo un BookAuthor por cada autor.
-//
-//        // Creo el BookModel
-//        jdbcInsert.
-//
-//        return new BookModel();
-//    }
+    @Override
+    public long createBookModel(String isbn, String title, String publisher, String description, Genre genre, int edition, Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight, long bookCoverId) {
+        final Map<String, Object> md = new HashMap<>();
+        md.put("isbn", isbn);
+        md.put("title", title);
+        md.put("editorial", publisher);
+        md.put("description", description);
+        md.put("genre", genre.getValue());
+        md.put("edition", edition);
+        md.put("weight", weight);
+        md.put("pages", pages);
+        md.put("booklanguage", language.getValue());
+        md.put("dimension", dimension.getValue());
+        md.put("publicationyear", publicationYear);
+        md.put("ispocketedition", isPocketEdition);
+        md.put("ishardcover", isHardcover);
+        md.put("imageid", bookCoverId);
 
+        final Number bookModelId = jdbcInsertBookModel.executeAndReturnKey(md);
 
+        return bookModelId.longValue();
+
+    }
+
+    public List<Long> createAuthors(List<String> authors) {
+        List<Long> authorsIds = new ArrayList<>();
+
+        for (String author : authors) {
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("authorname", author);
+
+            Number id = jdbcInsertAuthor.executeAndReturnKey(parameters);
+            authorsIds.add(id.longValue());
+        }
+        return authorsIds;
+    }
+
+    @Override
+    public void createBookAuthors(List<Long> authorsIds, long bookModelId) {
+        for (Long authorId : authorsIds) {
+            Map<String, Long> parameters = new HashMap<>();
+            parameters.put("authorid", authorId);
+            parameters.put("bookmodelid", bookModelId);
+
+            jdbcInsertBookAuthor.executeAndReturnKey(parameters);
+        }
+    }
 }
 
 

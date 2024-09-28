@@ -8,4 +8,8 @@ public final class Constants {
 
     public static final int PAGE_SIZE = 14;
 
+    public static final int INITIAL_EXCHANGE_VALUE = 0;
+
+    public static final boolean INITIAL_AVAILABLE_VALUE = true;
+
 }

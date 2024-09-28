@@ -21,7 +21,7 @@ public class ImageJdbcDao implements ImageDao {
 
     private static final RowMapper<Image> ROWMAPPERIMAGE = (rs, rowNum) -> new Image(
 
-            rs.getLong("imageId"),
+            rs.getInt("imageId"),
             rs.getBytes("image")
     );
 
@@ -36,7 +36,7 @@ public class ImageJdbcDao implements ImageDao {
     public Image createImage(byte[] image) {
         final Map<String, byte[]> imageData = Map.of("image", image);
         final Number generatedId = jdbcInsert.executeAndReturnKey(imageData);
-        return new Image(generatedId.longValue(), image);
+        return new Image(generatedId.intValue(), image);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class ImageJdbcDao implements ImageDao {
 
         List<Image> images = jdbcTemplate.query(
                 sql,
-                new Object[]{imageId},
+                new Object[]{ imageId },
                 ROWMAPPERIMAGE
         );
 

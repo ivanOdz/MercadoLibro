@@ -4,29 +4,25 @@ import ar.edu.itba.paw.interfaces.persistence.BookModelDao;
 import ar.edu.itba.paw.interfaces.services.AuthorService;
 import ar.edu.itba.paw.interfaces.services.BookAuthorService;
 import ar.edu.itba.paw.interfaces.services.BookModelService;
-import ar.edu.itba.paw.models.Author;
+import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.models.BookModel;
 import ar.edu.itba.paw.models.utils.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
 public class BookModelServiceImpl implements BookModelService {
 
     private final BookModelDao bookModelDao;
+    private final ImageService imageService;
 
-    private final AuthorService authorService;
-
-    private final BookAuthorService bookAuthorService;
-
-
-    public BookModelServiceImpl(BookModelDao bookModelDao, AuthorService authorService, BookAuthorService bookAuthorService) {
+    public BookModelServiceImpl(BookModelDao bookModelDao, ImageService imageService) {
         this.bookModelDao = bookModelDao;
-        this.authorService = authorService;
-        this.bookAuthorService = bookAuthorService;
+        this.imageService = imageService;
     }
-
 
     @Override
     public BookModel getBookModelByBookModelId(long bookModelId) {
@@ -62,4 +58,23 @@ public class BookModelServiceImpl implements BookModelService {
     public List<BookModel> getFilteredSortedOrderedModelBooksByPage(String search, boolean isGenreFilterActive, Genre genreFilter, int pageIndex, SortType sortType) {
         return bookModelDao.getFilteredSortedOrderedModelBooksByPage(search, isGenreFilterActive, genreFilter, pageIndex, sortType);
     }
+
+    @Override
+    public long createBookModel(String isbn, String title, List<String> authors, String publisher, String description, Genre genre, int edition, Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight, List<MultipartFile> images, long bookCoverIndex) {
+        // Inserto Image mediante el service de Image
+        long bookModelImageCoverId = imageService.saveImage(Collections.singletonList(images.get(((int) bookCoverIndex)))).getFirst().getImageId();
+
+        // Inserto autores
+        List<Long> authorsIds = bookModelDao.createAuthors(authors);
+
+        // Inserto BookModel
+        long bookModelId = bookModelDao.createBookModel(isbn, title, publisher, description, genre, edition, publicationYear, isHardcover, isPocketEdition, dimension, language, pages, weight, bookModelImageCoverId);
+
+        // Inserto BookAuthors
+        bookModelDao.createBookAuthors(authorsIds, bookModelId);
+
+        return bookModelId;
+    }
+
+
 }

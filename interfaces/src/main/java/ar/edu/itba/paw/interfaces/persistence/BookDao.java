@@ -11,11 +11,9 @@ import java.util.Optional;
 
 public interface BookDao {
 
-    //Book createBook(long bookModelId, long ownerId, BookState bookState, int exchangesQty, int rating); // Posiblemente hay que rehacer.
 
     //void exchangeOwnership(long b1, long b2);     //Esta hay que rehacerla
 
-    //-------------------------- De aca para abajo posiblemente se borren--------------------
 
     //Optional<Book> getBookById(long bookId);
 
@@ -25,6 +23,8 @@ public interface BookDao {
 
     List<Book> getFilteredSortedOrderedBooksByPageFromUser(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, int pageIndex, long userId, SortType sortType);
 
+    Number createBook(long bookModelId, User owner, BookState bookState, List<Integer> images);
 
+    void createBookRating(User user, long bookModelId, int rating);
 
 }

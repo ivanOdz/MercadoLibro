@@ -1,15 +1,15 @@
 package ar.edu.itba.paw.models;
 
 public class Image {
-    private final long imageId;
+    private final Integer imageId;
     private final byte[] image;
 
-    public Image(long imageId, byte[] image) {
+    public Image(Integer imageId, byte[] image) {
         this.imageId = imageId;
         this.image = image;
     }
 
-    public long getImageId() {
+    public Integer getImageId() {
         return imageId;
     }
 
