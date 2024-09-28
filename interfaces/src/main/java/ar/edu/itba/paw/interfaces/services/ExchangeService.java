@@ -15,7 +15,7 @@ public interface ExchangeService {
 
     //long getId(int acceptCode);
 
-    //String exchange(int acceptCode, boolean state);
+    String exchange(int acceptCode, boolean state);
 
     //void initializeExchange(CompleteBook requesterCompleteData, long offererPubId);
 
@@ -30,12 +30,12 @@ public interface ExchangeService {
      * confirms that the offerer received the book
      * @param acceptCode
      */
-    //void cofirmOfferer(int acceptCode);
+    void cofirmOfferer(int acceptCode);
 
     /**
      * confirms that the requester received the book
      * @param acceptCode
      */
-    //void cofirmRequester(int acceptCode);
+    void cofirmRequester(int acceptCode);
 
 }

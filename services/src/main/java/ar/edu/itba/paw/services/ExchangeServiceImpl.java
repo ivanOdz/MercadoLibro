@@ -4,9 +4,12 @@ import ar.edu.itba.paw.interfaces.persistence.ExchangeDao;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.ExchangeState;
+import ar.edu.itba.paw.models.utils.PublicationState;
+import ar.edu.itba.paw.models.utils.ResponseState;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.*;
 
 @Service
@@ -51,8 +54,22 @@ public class ExchangeServiceImpl implements ExchangeService {
         return exchangeDao.getIdByAcceptCode(acceptCode);
     }*/
 
-    /*@Override
+    @Override
     public String exchange(int acceptCode, boolean state) {
+
+        ResponseState responseState = exchangeDao.exchange(acceptCode, state);
+
+    //        long pubId1 = ex.get().getOfferer().getPublicationId();
+    //        long pubId2 = ex.get().getRequester().getPublicationId();
+    //        long b1 = publicationJdbcDao.getPublicationById(pubId1).get().getBookId();
+    //        long b2 = publicationJdbcDao.getPublicationById(pubId2).get().getBookId();
+
+    //        bookJdbcDao.exchangeOwnership(b1, b2);
+    //
+    //        publicationJdbcDao.terminatePublication(ex.get().getOffererPubId());
+    //        publicationJdbcDao.terminatePublication(ex.get().getRequesterPubId());
+
+
         switch (exchangeDao.exchange(acceptCode, state)){
             case ResponseState.ACCEPTED: {
                 return "exchange/accepted";
@@ -62,51 +79,48 @@ public class ExchangeServiceImpl implements ExchangeService {
             }
             default: return "exchange/invalid";
         }
-    }*/
+    }
 
-    /*@Override
+    @Override
     public void initializeExchange(CompleteBook requesterComplete, long offererPubId) {
         // Insertar tupla de requester en publicacion con fecha actual y publicationState = 2 (OFFERER)
 
         long location = locationService.newLocation(requesterComplete.getLocation());
 
         //System.out.println("Location = " + location);
-        long requesterId = bookService.getBookById(requesterComplete.getSelectedBookId()).get().getOwnerId();
+//        long requesterId = bookService.getBookById(requesterComplete.getSelectedBookId()).get().getOwnerId();
+
+
         long requesterPubId = publicationService.createPublication(requesterComplete.getSelectedBookId(), requesterId, location, PublicationState.OFFERED);
 
         Random random = new Random();
         int acceptCode = Math.abs(random.nextInt());
+
         Date date = new Date();
         Timestamp timestamp = new Timestamp(date.getTime());
+        Optional<Exchange> ex = exchangeDao.createExchange(offererPubId, requesterPubId, acceptCode, timestamp);
 
-        Exchange ex = exchangeDao.createExchange(offererPubId, requesterPubId, acceptCode, timestamp);
+
+        // mail variables setup
 
         Map<String, Object> variables = new HashMap<>();
-        //Publication offererPub = publicationService.getPublicationById(ex.getOffererPubId()).get();
-        //Publication requesterPub = publicationService.getPublicationById(ex.getRequesterPubId()).get();
 
-        /*Book bookOffered = bookService.getBookById(offererPub.getBookId()).get();
-        Book bookRequested = bookService.getBookById(requesterPub.getBookId()).get();
+        User offerer = ex.get().getOfferer().getBook().getOwner();
+        User requester = ex.get().getRequester().getBook().getOwner();
 
-        User oferrer = userService.findById(offererPub.getUserId()).get();
-        User requester = userService.findById(requesterPub.getUserId()).get();
-
-        String oferrerEmail = oferrer.getMail();
-
-        String bookModelOfferedTitle = bookModelService.getBookModelByBookModelId(bookOffered.getBookModelId()).getTitle();
-        String bookModelRequestedTitle = bookModelService.getBookModelByBookModelId(bookRequested.getBookModelId()).getTitle();
-
+        Book bookOffered = ex.get().getOfferer().getBook();
+        Book bookRequested = ex.get().getRequester().getBook();
 
         variables.put("requesterEmail", requester.getMail());
         variables.put("requesterName", requester.getUsername());
-        variables.put("requestedPublication", bookModelRequestedTitle);
-        variables.put("offeredPublication", bookModelOfferedTitle);
-        variables.put("validationUrl", webappUrl + "/createexchange?accept_code=" + ex.getAcceptCode() + "&state=true");
-        variables.put("rejectionUrl", webappUrl + "/createexchange?accept_code=" + ex.getAcceptCode() +"&state=false");
+        variables.put("requestedPublication", bookRequested.getBookModel().getTitle());
+        variables.put("offeredPublication", bookOffered.getBookModel().getTitle());
+        variables.put("validationUrl", webappUrl + "/createexchange?accept_code=" + ex.get().getAcceptCode() + "&state=true");
+        variables.put("rejectionUrl", webappUrl + "/createexchange?accept_code=" + ex.get().getAcceptCode() +"&state=false");
 
-        //emailService.sendEmail(oferrerEmail, variables, "exchangeRequest", "Requesting");
+        emailService.sendEmail(offerer.getMail(), variables, "exchangeRequest", "Requesting");
 
-    }*/
+    }
 
 
     @Override
@@ -119,7 +133,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         return exchangeDao.getAllExchangesByUserId(userId, exchangeState, false);
     }
 
-    /*@Override
+    @Override
     public void cofirmOfferer(int acceptCode) {
         exchangeDao.confirmOfferer(acceptCode);
     }
@@ -127,22 +141,7 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Override
     public void cofirmRequester(int acceptCode) {
         exchangeDao.confirmRequester(acceptCode);
-    }*/
-
-
-    /**
-     *
-     * @param userId
-     * @return function called from the solicited section of exchanges
-     */
-//    @Override
-//    public List<ExchangeWrapper> getExchangeRequesterWrapperListByUserId(long userId) {
-//
-//        List<Exchange> exchanges = exchangeDao.getExchangesWhereUserIdIsRequester(userId);
-//
-//        return getExchangeWrapper(exchanges);
-//    }
-
+    }
 
     /**
      *
@@ -193,4 +192,20 @@ public class ExchangeServiceImpl implements ExchangeService {
         }
         return toReturn;
     }*/
+
+
+
+    /**
+     *
+     * @param userId
+     * @return function called from the solicited section of exchanges
+     */
+//    @Override
+//    public List<ExchangeWrapper> getExchangeRequesterWrapperListByUserId(long userId) {
+//
+//        List<Exchange> exchanges = exchangeDao.getExchangesWhereUserIdIsRequester(userId);
+//
+//        return getExchangeWrapper(exchanges);
+//    }
+
 }

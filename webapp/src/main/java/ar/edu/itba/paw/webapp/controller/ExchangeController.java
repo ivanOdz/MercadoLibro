@@ -66,12 +66,12 @@ public class ExchangeController {
     // Estado de mis ofertas
     // Paso el ID, y quiero aquellas exchanges en las que soy requester
     @RequestMapping(path="/requests", method= RequestMethod.GET)
-    public ModelAndView exchangeOffers() {
+    public ModelAndView exchangeOffers(@RequestParam(name = "exchange-state", defaultValue = "PENDING") ExchangeState exchangeState) {   // TODO: VALOR DE EXCHANGEsTATE
         final ModelAndView mav = new ModelAndView("exchange/exchange_offers");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getPrincipal() instanceof PawUserDetails pud) {
-            //List<ExchangeWrapper> exchangeWrapperList = exchangeService.getExchangeRequesterWrapperListByUserId(pud.getUser().getUserId());
+            List<Exchange> exchangeWrapperList = exchangeService.getExchangeRequesterListByUserId(pud.getUser().getUserId(), exchangeState);
             //mav.addObject("exchanges", exchangeWrapperList);
             mav.addObject("review", new UserReview());
         }

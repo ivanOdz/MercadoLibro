@@ -47,10 +47,6 @@ public class Exchange {
         return acceptCode;
     }
 
-    public ExchangeState getState() {
-        return state;
-    }
-
     public Publication getRequester() {
         return requester;
     }
@@ -65,6 +61,10 @@ public class Exchange {
 
     public boolean isConfirmed(){
         return offererReceivedBook && requesterReceivedBook;
+    }
+
+    public ExchangeState getExchangeState() {
+        return state;
     }
 
 
