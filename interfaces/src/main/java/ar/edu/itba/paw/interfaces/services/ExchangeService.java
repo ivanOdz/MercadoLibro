@@ -17,7 +17,7 @@ public interface ExchangeService {
 
     String exchange(int acceptCode, boolean state);
 
-    //void initializeExchange(CompleteBook requesterCompleteData, long offererPubId);
+    void initializeExchange(CompleteBook requesterCompleteData, long offererPubId);
 
     //List<ExchangeWrapper> getExchangeRequesterWrapperListByUserId(long userId);
 
