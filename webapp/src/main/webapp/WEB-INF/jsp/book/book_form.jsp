@@ -320,7 +320,7 @@
 
                     <div id="image-preview-container" class="uk-margin-top"></div>
 
-                <input type="hidden" id="cover-input" name="bookCover">
+<%--                <input type="hidden" id="cover-input" name="bookCover">--%>
 
                 <!-- Publish -->
                 <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid" style="margin-top: 2%;">
@@ -411,6 +411,7 @@
                     const selectCoverButton = document.createElement('button');
                     selectCoverButton.classList.add('uk-button', 'uk-button-primary', 'uk-button-small');
                     selectCoverButton.innerText = 'Select as cover';
+                    selectCoverButton.type = 'button';
 
                     selectCoverButton.addEventListener('click', function() {
                         document.querySelectorAll('.image-wrapper').forEach(wrapper => {
