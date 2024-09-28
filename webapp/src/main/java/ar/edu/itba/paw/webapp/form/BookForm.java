@@ -62,7 +62,7 @@ public class BookForm {
 
     private int weight = 300;
 
-    private MultipartFile bookCover;
+    private int bookCover;
 
     private boolean publish = false;
 
@@ -152,7 +152,7 @@ public class BookForm {
         return isPocketEdition;
     }
 
-    public MultipartFile getBookCover() {
+    public int getBookCover() {
         return bookCover;
     }
 
@@ -232,7 +232,7 @@ public class BookForm {
         this.weight = weight;
     }
 
-    public void setBookCover(MultipartFile bookCover) {
+    public void setBookCover(int bookCover) {
         this.bookCover = bookCover;
     }
 

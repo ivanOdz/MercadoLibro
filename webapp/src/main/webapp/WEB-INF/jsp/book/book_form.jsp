@@ -320,6 +320,8 @@
 
                     <div id="image-preview-container" class="uk-margin-top"></div>
 
+                <input type="hidden" id="cover-input" name="bookCover">
+
                 <!-- Publish -->
                 <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid" style="margin-top: 2%;">
                     <label>
