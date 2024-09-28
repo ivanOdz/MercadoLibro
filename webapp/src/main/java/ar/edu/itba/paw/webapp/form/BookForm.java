@@ -48,9 +48,9 @@ public class BookForm {
 
     private Short publicationYear;
 
-    private boolean isHardcover;
+    private boolean isHardcover = false;
 
-    private boolean isPocketEdition;
+    private boolean isPocketEdition = false;
 
     @NotNull
     private BookDimension dimension;
@@ -63,6 +63,8 @@ public class BookForm {
     private int weight = 300;
 
     private MultipartFile bookCover;
+
+    private boolean publish = false;
 
 
     // Getters
@@ -154,6 +156,10 @@ public class BookForm {
         return bookCover;
     }
 
+    public boolean isPublish() {
+        return publish;
+    }
+
     // Setters
 
 
@@ -228,5 +234,9 @@ public class BookForm {
 
     public void setBookCover(MultipartFile bookCover) {
         this.bookCover = bookCover;
+    }
+
+    public void setPublish(boolean publish) {
+        this.publish = publish;
     }
 }
