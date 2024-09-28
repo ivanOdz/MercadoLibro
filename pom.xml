@@ -34,7 +34,7 @@
         <logback-ext-spring.version>0.1.1</logback-ext-spring.version>
 
         <!-- plugin versions -->
-        <maven-war-plugin.version>2.6</maven-war-plugin.version>
+        <maven-war-plugin.version>3.2.2</maven-war-plugin.version>
     </properties>
 
 
@@ -193,21 +193,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-war-plugin</artifactId>
-                    <version>${maven-war-plugin.version}</version>
-                    <configuration>
-                        <packagingExcludes>**/logback-test.xml</packagingExcludes>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
 
     <modules>
     
