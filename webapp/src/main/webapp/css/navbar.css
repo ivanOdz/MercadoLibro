@@ -1,5 +1,6 @@
 .custom-style {
     background-color: #f8f8f8;
+    width: 100%;
 }
 
 
@@ -104,9 +105,15 @@
 }
 
 .nav-background {
-    background-color: #6dafbf; !important;
+    background-color: #9ac9d5; !important;
     padding: 0;
     margin:0;
+}
+
+.nav-container {
+    padding: 12px;
+    margin: 0;
+    height: 12%;
 }
 
 .button-text-wo {
@@ -191,4 +198,36 @@ a img:hover,
 
 .image-hover:hover {
     background-color: transparent;
+}
+
+
+.user-button-text {
+    margin: 5%;
+    padding: 20px;
+    max-height: 40px;
+    min-height: 20px
+}
+
+a.uk-button.login-button {
+    height: 100%;
+    min-height: 60%;
+    justify-content: center;
+    max-height: 150%;
+    background-color: #9a9d9e;
+    border-radius: 5%;
+    text-transform: none;
+    margin:  0 5% 0 5%;
+    padding:  0 20px 0 20px;
+}
+
+a.uk-button.register-button {
+    height: 100%;
+    min-height: 60%;
+    justify-content: center;
+    max-height: 150%;
+    border-radius: 5%;
+    margin:  0 5% 0 5%;
+    background-color: #256b7c;
+    text-transform: none;
+    padding:  0 20px 0 20px;
 }

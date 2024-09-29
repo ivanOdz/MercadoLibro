@@ -5,6 +5,8 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,16 +22,19 @@ public class PublicationController {
 
     private final PublicationService ps;
     private final LocationService ls;
-    private final CompleteBookService cbs;
+    private final UserService us;
+
     @Autowired
     private GenreService genreService;
     @Autowired
     private BookStateService bookStateService;
-    
-    public PublicationController(PublicationService ps, LocationService ls,CompleteBookService cbs) {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+
+    public PublicationController(PublicationService ps, LocationService ls, UserService us) {
         this.ps = ps;
         this.ls = ls;
-        this.cbs = cbs;
+        this.us = us;
     }
 
     @RequestMapping("/")
@@ -74,59 +79,73 @@ public class PublicationController {
 //        return index(search, isBookStateFilterActive, bookStateFilter, isGenreFilterActive, genreFilter, pageIndex, sortType);
 //    }
 
-    @RequestMapping(path = "/createpublication", method = RequestMethod.POST)
-    public ModelAndView createPublication(@RequestParam(name = "bookId") long bookId, @RequestParam(name = "location") String location){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.getPrincipal() instanceof PawUserDetails pud) {
-            long locationId = ls.newLocation(location); // Esto se tiene que llamar dentro del publication service.
-            ps.createPublication(bookId, pud.getUser().getUserId(), locationId, PublicationState.CURRENT);
+        @RequestMapping(path = "/createpublication", method = RequestMethod.POST)
+        public ModelAndView createPublication(@RequestParam(name = "bookId") long bookId, @RequestParam(name = "location") String location){
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if(authentication.getPrincipal() instanceof PawUserDetails pud) {
+                long locationId = ls.newLocation(location); // Esto se tiene que llamar dentro del publication service.
+                ps.createPublication(bookId, pud.getUser().getUserId(), locationId, PublicationState.CURRENT);
+            }
+
+            return new ModelAndView("redirect:/book");
         }
 
-        return new ModelAndView("redirect:/book");
-    }
 
 
     /*@RequestMapping("/publication")
     public ModelAndView publication(@RequestParam(name = "publication_id") long publicationId) {
         final ModelAndView mav = new ModelAndView("home/publication");
-
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
+            User loggedUser = us.findById(pud.getUser().getUserId()).get();
+            mav.addObject("loggedUser", loggedUser);
+        }
         if (ps.getPublicationById(publicationId).isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Publication not found");
-        }
-        else {
+        } else {
             mav.addObject("publication", ps.getPublicationById(publicationId).get());
         }
 
         return mav;
     }*/
 
-    @GetMapping("/publications/{publication_id:\\d+}")
-    public ModelAndView publicationDetail(@ModelAttribute("completeBookParam") CompleteBook completeBookParam, @PathVariable(name = "publication_id") long publicationId) {
-        final ModelAndView mav = new ModelAndView("home/publicationDetail");
+        @GetMapping("/publications/{publication_id:\\d+}")
+        public ModelAndView publicationDetail(@ModelAttribute("completeBookParam") CompleteBook completeBookParam, @PathVariable(name = "publication_id") long publicationId) {
+            final ModelAndView mav = new ModelAndView("home/publicationDetail");
 
-        Publication publication = ps.getPublicationByPublicationId(publicationId);
+            Publication publication = ps.getPublicationByPublicationId(publicationId);
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication.getPrincipal() instanceof PawUserDetails pud) {
+                User loggedUser = us.findById(pud.getUser().getUserId()).get();
+                mav.addObject("loggedUser", loggedUser);
+            }
+            if(publication == null){
+                // TODO: Hace vista que la publicacion ya no esta disponible
+                return new ModelAndView("error/forbidden");
+            }
 
-        if(publication == null){
-            // TODO: Hace vista que la publicacion ya no esta disponible
-            return new ModelAndView("error/forbidden");
-        }
-
-        mav.addObject("publication", publication);
-        mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
+            mav.addObject("publication", publication);
+            mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
 //        mav.addObject("completeBookParam", completeBookParam);
 
-        return mav;
-    }
+            return mav;
+        }
 
 
     // Esto tienen que volar
     /*@RequestMapping("/submitmail")
     public ModelAndView submitMail(@RequestParam(name = "publication_id") long publicationId) {
         final ModelAndView mav = new ModelAndView("home/submitmail");
-        if(ps.getPublicationById(publicationId).isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Publication not found");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
+            User loggedUser = us.findById(pud.getUser().getUserId()).get();
+            mav.addObject("loggedUser", loggedUser);
         }
-        else mav.addObject("publication_id", publicationId);
+
+
+        if (ps.getPublicationById(publicationId).isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Publication not found");
+        } else mav.addObject("publication_id", publicationId);
         return mav;
     }*/
 
@@ -134,10 +153,16 @@ public class PublicationController {
     public ModelAndView handleMailSubmission(@RequestParam(name = "submited_mail") String submited_mail, @RequestParam(name = "publication_id") long publicationId) {
         final ModelAndView mav = new ModelAndView("home/comparemail");
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
+            User loggedUser = us.findById(pud.getUser().getUserId()).get();
+            mav.addObject("loggedUser", loggedUser);
+        }
+
         if (ps.getPublicationById(publicationId).isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Publication not found");
         }
-        
+
         long userId = ps.getPublicationById(publicationId).get().getUserId();
         User owner = us.findById(userId).get();
 

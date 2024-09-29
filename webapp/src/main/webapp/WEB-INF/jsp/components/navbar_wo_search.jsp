@@ -24,6 +24,7 @@
               </strong>
             </a>
           </li>
+
         </ul>
       </div>
 
@@ -83,6 +84,15 @@
                 </li>
                 <li class="uk-margin-small-top">
                   <a class="dropdown-wo-buttons" href="#modal-logout" uk-toggle><spring:message code="home.profile.logout"/></a>
+                </li>
+                <li>
+                  <button class="uk-button uk-button-default" type="button">Change Language</button>
+                  <div class="uk-navbar-dropdown">
+                    <ul class="uk-nav uk-dropdown-nav ">
+                      <li><a href="?lang=en"><spring:message code="language.english"/></a></li>
+                      <li><a href="?lang=es"><spring:message code="language.spanish"/></a></li>
+                    </ul>
+                  </div>
                 </li>
               </ul>
             </div>

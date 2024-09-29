@@ -13,7 +13,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,25 +31,12 @@ import java.util.stream.Collectors;
 @Controller
 public class BookController {
 
-//    private final SinglePublicationService ps;
-
-//    private final ImageService imageService;
-
-//    private final EmailService emailService;
-
-//    private final ExchangeService exchangeService;
-
-//    private final PublicationService publicationService;
 
     private final BookService bookService;
 
-//    private final CardBookService cardBookService;
-
-//    private final UserService userService;
+    private final UserService userService;
 
     private final BookModelService bookModelService;
-
-//    private final BookImageService bookImageService;
 
     @Autowired
     private GenreService genreService;
@@ -83,7 +69,10 @@ public class BookController {
         ModelAndView mav = new ModelAndView("book/book_home");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.getPrincipal() instanceof PawUserDetails pud) {
+        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
+
+            User loggedUser = userService.findById(pud.getUser().getUserId()).get();
+            mav.addObject("loggedUser", loggedUser);
 
             List<Book> books =  bookService.getFilteredSortedOrderedBooksByPageFromUser(search, isBookStateFilterActive,
                     bookStateFilter, isGenreFilterActive, genreFilter, pageIndex, pud.getUser().getUserId(), sortType);
@@ -109,6 +98,12 @@ public class BookController {
 
         ModelAndView mav = new ModelAndView("book/book_models");
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
+            User loggedUser = userService.findById(pud.getUser().getUserId()).get();
+            mav.addObject("loggedUser", loggedUser);
+        }
+
         List<BookModel> modelBooks = bookModelService.getFilteredSortedOrderedModelBooksByPage(search, isGenreFilterActive, genreFilter, pageIndex, sortType);
 
         mav.addObject("modelBooks", modelBooks);
@@ -125,6 +120,13 @@ public class BookController {
         ModelAndView mav = new ModelAndView("book/book_form");
 
         mav.addObject("bookForm", bookForm);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
+            User loggedUser = userService.findById(pud.getUser().getUserId()).get();
+            mav.addObject("loggedUser", loggedUser);
+        }
+
+        mav.addObject("modelBookForm", modelBookForm);
         mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
         mav.addObject("languages", List.of(Language.values()).stream().map(language -> new LanguageWrapper(language, languageService.getLanguageDisplayName(language))).collect(Collectors.toList()));
         mav.addObject("dimensions", List.of(BookDimension.values()).stream().map(dimension -> new BookDimensionWrapper(dimension, bookDimensionService.getDimensionDisplayName(dimension))).collect(Collectors.toList()));
@@ -151,6 +153,12 @@ public class BookController {
 
         ModelAndView mav = new ModelAndView("book/book_form");
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
+            User loggedUser = userService.findById(pud.getUser().getUserId()).get();
+            mav.addObject("loggedUser", loggedUser);
+        }
+
         mav.addObject("bookForm", bookForm);
         mav.addObject("step", 2);
         mav.addObject("book_model", bookModelService.getBookModelByBookModelId(bookModelId));
@@ -174,6 +182,12 @@ public class BookController {
     public ModelAndView bookForm(@ModelAttribute("bookForm") BookForm bookForm) {
 
         final ModelAndView mav = new ModelAndView("book/book_form");
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
+            User loggedUser = userService.findById(pud.getUser().getUserId()).get();
+            mav.addObject("loggedUser", loggedUser);
+        }
 
         if (bookForm.getAuthors() == null) {
             bookForm.setAuthors(new ArrayList<>());
@@ -213,6 +227,12 @@ public class BookController {
         final ModelAndView mav = new ModelAndView("redirect:/book/upload_book");
         mav.addObject("bookDetailsForm", bookDetailsForm);
         mav.addObject("book_model_id", bookModel.getBookModelId());
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
+            User loggedUser = userService.findById(pud.getUser().getUserId()).get();
+            mav.addObject("loggedUser", loggedUser);
+        }
 
         return mav;
     }

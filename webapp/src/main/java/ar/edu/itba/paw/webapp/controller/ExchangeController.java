@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,6 +33,7 @@ public class ExchangeController {
     private final PublicationService publicationService;
     private final BookService bookService;
     private final BookModelService bookModelService;
+    @Autowired
     private final UserReviewService userReviewService;
     
     public ExchangeController(final ExchangeService exchangeService, final EmailService emailService, final UserService userService, final BookService bookService, final PublicationService publicationService, BookModelService bookModelService, UserReviewService userReviewService) {
@@ -57,6 +59,8 @@ public class ExchangeController {
             mav.addObject("exchangeState", exchangeState);
             mav.addObject("exchanges", exchangeWrapperList);
             mav.addObject("review", new UserReview());
+            User loggedUser = userService.findById(pud.getUser().getUserId()).get();
+            mav.addObject("loggedUser", loggedUser);
         }
 
         return mav;
@@ -73,6 +77,8 @@ public class ExchangeController {
         if (authentication.getPrincipal() instanceof PawUserDetails pud) {
             List<Exchange> exchangeWrapperList = exchangeService.getExchangeRequesterListByUserId(pud.getUser().getUserId(), exchangeState);
             //mav.addObject("exchanges", exchangeWrapperList);
+            User loggedUser = userService.findById(pud.getUser().getUserId()).get();
+            mav.addObject("loggedUser", loggedUser);
             mav.addObject("review", new UserReview());
         }
         
@@ -194,7 +200,6 @@ public class ExchangeController {
 		@RequestParam("reviewerId") long reviewerId,
 		@RequestParam("subjectId") long subjectId,
 		@RequestParam("reviewDescription") String reviewDescription,
-		/*@RequestParam("reviewDate") java.sql.Timestamp reviewDate,*/
 		@RequestParam("userReviewRating") int userReviewRating/*,
 		BindingResult result, RedirectAttributes redirectAttributes*/) {
 		

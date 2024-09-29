@@ -57,6 +57,13 @@ public class UserReviewJdbcDao implements UserReviewDao {
 
     @Override
     public Boolean createUserReview(UserReview userReview) {
+    	
+    	List<UserReview> reviewList = jdbcTemplate.query("SELECT * FROM user_review WHERE exchangeId = ? AND reviewerId = ? AND subjectId = ?", ROWMAPPER, userReview.getExchangeId(), userReview.getReviewerId(), userReview.getSubjectId());
+    	
+    	if (!reviewList.isEmpty()) {
+    		return false;
+    	}
+    	
         String sql = "INSERT INTO user_review (exchangeId, reviewerId, subjectId, reviewDescription, reviewDate, userReviewRating) VALUES (?, ?, ?, ?, ?, ?)";
 
         int rowsAffected = jdbcTemplate.update(sql, 

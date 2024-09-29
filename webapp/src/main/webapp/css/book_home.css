@@ -10,3 +10,20 @@
     margin: 0 0 2rem 0 !important;
 }
 
+
+.book-search {
+    width: 50%
+}
+.main-content {
+    align-content: center;
+}
+
+.book-search-section {
+    align-content: center; !important;
+    align-items: center; !important;
+    justify-content: center; !important;
+    justify-items: center; !important;
+    margin: 5%;
+    display: flex;
+}
+
