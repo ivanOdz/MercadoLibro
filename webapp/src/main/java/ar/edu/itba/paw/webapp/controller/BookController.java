@@ -141,9 +141,9 @@ public class BookController {
 
     @PostMapping("/book/create_new_book")
     public ModelAndView createNewBook(@Valid @ModelAttribute("bookForm") BookForm bookForm, BindingResult errors) {
-        //if(errors.hasErrors()){
-        //    return bookModelForm(bookForm, errors);
-        //}
+        if(errors.hasErrors()){
+            return bookModelForm(bookForm, errors);
+        }
         User user = null;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.getPrincipal() instanceof PawUserDetails pud) {

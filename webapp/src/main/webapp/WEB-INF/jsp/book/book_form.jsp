@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
+<%@ include file="/WEB-INF/jsp/components/navbar_wo_search.jsp" %>
 
 <html>
 
@@ -29,15 +29,6 @@
             var tabs = UIkit.tab('.uk-tab');
             tabs.show(index);
         }
-
-        function addLocation(value){
-            if (value) {
-                var modal = UIkit.modal("#location-modal");
-                modal.show();
-            } else {
-
-            }
-        }
     </script>
 
 </head>
@@ -52,8 +43,8 @@
     <form:form modelAttribute="bookForm" action="${postUrl}" method="post" enctype="multipart/form-data">
     <div class="uk-container">
         <ul uk-tab>
-            <li><a href="#">Paso 1</a></li>
-            <li><a href="#">Paso 2</a></li>
+            <li><a href="#"><spring:message code="add.book.step1"/></a></li>
+            <li><a href="#"><spring:message code="add.book.step2"/></a></li>
         </ul>
         <div class="uk-switcher uk-margin">
             <%---------------------------------------------------------------- STEP 1 ----------------------------------------------------------------%>
@@ -104,6 +95,7 @@
                         <small class="description">
                             <spring:message code="add.publication.description.authors"/>
                         </small>
+                        <form:errors path="authors" element="p" cssStyle="color: red;"/>
                     </div>
 
                         <%--Género--%>
@@ -237,13 +229,13 @@
                         <!-- Pocket Edition -->
                         <label class="mr-1">
                             <spring:message code="add.book.pocket"/>
-                            <form:checkbox path="isPocketEdition" class="uk-checkbox" />
+                            <form:checkbox path="isPocketEdition" value="true" class="uk-checkbox" />
                         </label>
 
                         <!-- Hardcover -->
                         <label class="mr-1">
                             <spring:message code="add.book.hardcover"/>
-                            <form:checkbox path="isHardcover" class="uk-checkbox" />
+                            <form:checkbox path="isHardcover" value="true" class="uk-checkbox" />
                         </label>
                     </div>
 
@@ -454,16 +446,21 @@
         const publishRadioButtons = document.getElementsByName('publish');
         const locationQuestion = document.getElementById('location-q');
 
+        // Función para mostrar u ocultar el campo "Location"
+        function toggleLocation() {
+            const isChecked = document.querySelector('input[name="publish"]:checked').value === 'true';
+            locationQuestion.style.display = isChecked ? 'block' : 'none';
+        }
+
+        // Añade listeners a los radiobuttons
         publishRadioButtons.forEach(function(radio) {
-            radio.addEventListener('change', function() {
-                if (document.querySelector('input[name="publish"]:checked').value === 'true') {
-                    locationQuestion.style.display = 'block';
-                } else {
-                    locationQuestion.style.display = 'none';
-                }
-            });
+            radio.addEventListener('change', toggleLocation);
         });
+
+        // Llama a la función una vez al cargar la página
+        toggleLocation();
     });
+
 
 
 </script>
