@@ -21,6 +21,8 @@ public interface BookDao {
 
     //List<Book> getAllBooksByOwnerIdAndFilteredBy(long ownerId, String search, int bookStateFilter, int genreFilter);
 
+    void createBookImage(long bookId, List<Integer> images);
+
     List<Book> getFilteredSortedOrderedBooksByPageFromUser(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, int pageIndex, long userId, SortType sortType);
 
     Number createBook(long bookModelId, User owner, BookState bookState, List<Integer> images);

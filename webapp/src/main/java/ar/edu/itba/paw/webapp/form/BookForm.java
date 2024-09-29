@@ -13,31 +13,31 @@ import java.util.List;
 
 public class BookForm {
 
-    @NotBlank(groups = {BookFormInfo.class})
-    @Pattern(regexp = "^(97[89])\\d{1,5}\\d{1,7}\\d{1,7}\\d$", groups = {BookFormInfo.class})
+    @NotBlank
+    @Pattern(regexp = "^(97[89])\\d{1,5}\\d{1,7}\\d{1,7}\\d$")
     private String isbn;
 
-    @Size(min = 1, max = 255, groups = {BookFormInfo.class})
+    @Size(min = 1, max = 255)
     private String title;
     
-    @NotEmpty(groups = {BookFormInfo.class})
+    @NotEmpty
     private List<String> authors = new ArrayList<>();
     
-    @NotBlank(groups = {BookFormInfo.class})
-    @Size(min = 1, max = 100, groups = {BookFormInfo.class})
+    @NotBlank
+    @Size(min = 1, max = 100)
     private String editorial;
 
-    @Size(min = 10, max = 2000, groups = {BookFormInfo.class})
+    @Size(min = 10, max = 2000)
     private String description;
 
-    @NotNull(groups = {BookFormInfo.class})
+    @NotNull
     private Genre genre;
     
     @NotNull
     private BookState bookState;
 
-    @Min(value = 1, groups = {BookFormInfo.class})
-    @Max(value = 99, groups = {BookFormInfo.class})
+    @Min(value = 1)
+    @Max(value = 99)
     private int edition =1;
 
     @Min(1)
@@ -67,7 +67,7 @@ public class BookForm {
     private boolean publish = false;
 
     @Pattern(regexp = "^[a-zA-Z\\s]")
-    private String location;
+    private String location = null;
 
 
     // Getters

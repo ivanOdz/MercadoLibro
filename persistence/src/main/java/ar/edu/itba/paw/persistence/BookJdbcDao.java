@@ -23,6 +23,7 @@ public class BookJdbcDao implements BookDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsertBook;
     private final SimpleJdbcInsert jdbcInsertBookRating;
+    private final SimpleJdbcInsert jdbcInsertBookImage;
 
 
     static final RowMapper<Book> ROW_MAPPER_BOOK =
@@ -42,6 +43,7 @@ public class BookJdbcDao implements BookDao {
     	jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsertBook = new SimpleJdbcInsert(jdbcTemplate).usingGeneratedKeyColumns("bookid").withTableName("book");
         jdbcInsertBookRating = new SimpleJdbcInsert(jdbcTemplate).withTableName("book_rating");
+        jdbcInsertBookImage = new SimpleJdbcInsert(jdbcTemplate).withTableName("book_image");
     }
 
     /*@Override
@@ -81,6 +83,7 @@ public class BookJdbcDao implements BookDao {
         bookData.put("exchangesQty", Constants.INITIAL_EXCHANGE_VALUE);
 
         final Number generatedId = jdbcInsertBook.executeAndReturnKey(bookData);
+        createBookImage(generatedId.longValue(), images);
         return generatedId;
     }
 
@@ -92,6 +95,17 @@ public class BookJdbcDao implements BookDao {
         params.put("rating", rating);
 
         jdbcInsertBookRating.execute(params);
+    }
+
+    @Override
+    public void createBookImage(long bookId, List<Integer> images) {
+        final HashMap<String, Object> params = new HashMap<>();
+        for (int i = 0; i < images.size(); i++) {
+            params.put("bookId", bookId);
+            params.put("imageId", images.get(i));
+            params.put("imageOrder", i);
+            jdbcInsertBookImage.execute(params);
+        }
     }
 
 

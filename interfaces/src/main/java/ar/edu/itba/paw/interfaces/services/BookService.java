@@ -24,7 +24,7 @@ public interface BookService {
 
     Number createBook(String isbn, String title, List<String> authors, String publisher, String description, Genre genre, BookState bookState,
                     int edition, int rating, List<MultipartFile> imageFiles, Short publicationYear, boolean isHardcover, boolean isPocketEdition,
-                    BookDimension dimension, Language language, int pages, int weight, int bookCoverIndex, boolean publish, User user, BookModel bookModel);
+                    BookDimension dimension, Language language, int pages, int weight, int bookCoverIndex, boolean publish, User user, Long bookModelId);
 
 
 

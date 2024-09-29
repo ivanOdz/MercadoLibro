@@ -63,27 +63,22 @@ public class BookServiceImpl implements BookService {
     @Override
     public Number createBook(String isbn, String title, List<String> authors, String publisher, String description, Genre genre, BookState bookState, int edition,
                            int rating, List<MultipartFile> imageFiles, Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension,
-                           Language language, int pages, int weight, int bookCoverIndex, boolean publish, User user, BookModel bookModel) {
+                           Language language, int pages, int weight, int bookCoverIndex, boolean publish, User user, Long bookModelId) {
 
         // Si el book model ya existia, tomo el id y solamente inserto el book
         // Caso contrario, inserto primero el bookModel, devuelvo el bookModel, y a eso le tomo el id para insertar luego el book
-
-        long bookModelId;
-        if(bookModel == null) {
-            bookModelId = bookModelService.createBookModel(isbn, title, authors, publisher, description, genre, edition,
+        Long bmId = bookModelId;
+        if(bmId == null) {
+            bmId = bookModelService.createBookModel(isbn, title, authors, publisher, description, genre, edition,
                                                             publicationYear, isHardcover, isPocketEdition, dimension, language, pages, weight, imageFiles, bookCoverIndex);
-        }
-        else {
-            bookModelId = bookModel.getBookModelId();
         }
 
         // Inserto imagenes del book y recupero los ids.
         List<Integer> imagesId = imageService.saveImage(imageFiles).stream().map(Image::getImageId).toList();
 
-        bookDao.createBookRating(user, bookModelId, rating);
-
+        bookDao.createBookRating(user, bmId, rating);
         // Inserto el book.
-        return bookDao.createBook(bookModelId, user, bookState, imagesId);
+        return bookDao.createBook(bmId, user, bookState, imagesId);
     }
 }
 
