@@ -81,7 +81,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         }
     }
 
-    @Override
+   /* @Override
     public void initializeExchange(CompleteBook requesterComplete, long offererPubId) {
         // Insertar tupla de requester en publicacion con fecha actual y publicationState = 2 (OFFERER)
 
@@ -91,7 +91,7 @@ public class ExchangeServiceImpl implements ExchangeService {
 //        long requesterId = bookService.getBookById(requesterComplete.getSelectedBookId()).get().getOwnerId();
 
 
-        long requesterPubId = publicationService.createPublication(requesterComplete.getSelectedBookId(), requesterId, location, PublicationState.OFFERED);
+        //long requesterPubId = publicationService.createPublication(requesterComplete.getSelectedBookId(), requesterId, location, PublicationState.OFFERED);
 
         Random random = new Random();
         int acceptCode = Math.abs(random.nextInt());
@@ -121,7 +121,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         emailService.sendEmail(offerer.getMail(), variables, "exchangeRequest", "Requesting");
 
     }
-
+*/
 
     @Override
     public List<Exchange> getExchangeOffererListByUserId(long userId, ExchangeState exchangeState) {

@@ -189,7 +189,7 @@ public class PublicationJdbcDao implements PublicationDao {
                 " FROM book_author ba " +
                 " JOIN author a ON a.authorId = ba.authorId " +
                 " WHERE ba.bookModelId = bm.bookModelId) AS authors, "+
-                "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, bm.imageId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount, " +
+                "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, bm.imageId as coverId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount, " +
                 "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified " +
 
                 "FROM publication p " +
@@ -208,7 +208,7 @@ public class PublicationJdbcDao implements PublicationDao {
                 "WHERE p.publicationId = ? AND p.publicationState = ? " +
                 "GROUP BY u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, p.publicationId, p.publicationState, l.locationId, l.locationString, p.publicationDatetime, b.bookId, b.bookState, b.exchangesQty, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, bm.imageId");
 
-        return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ publicationId, PublicationState.CURRENT.getValue() }, new int[]{ Types.BIGINT, Types.INTEGER }, ROW_MAPPER_PUBLICATION).stream().findFirst().orElse(null);
+        return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ ExchangeState.ACCEPTED.getValue(), publicationId, PublicationState.CURRENT.getValue() }, new int[]{ Types.INTEGER, Types.BIGINT, Types.INTEGER }, ROW_MAPPER_PUBLICATION).stream().findFirst().orElse(null);
     }
 }
 
