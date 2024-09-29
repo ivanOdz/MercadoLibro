@@ -49,23 +49,25 @@ public class PublicationController {
         final ModelAndView mav = new ModelAndView("home/publications");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.getPrincipal() instanceof PawUserDetails pud) {
+        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
             List<Publication> publications = ps.getFilteredSortedOrderedPublicationsByPageExcludingUser(search, isBookStateFilterActive,
                     bookStateFilter, isGenreFilterActive, genreFilter, pageIndex, pud.getUser().getUserId(), sortType);
-
+            mav.addObject("loggedUser", pud.getUser());
             mav.addObject("publications", publications);
-            mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
-            mav.addObject("bookStates", List.of(BookState.values()).stream().map(bookStatus -> new BookStateWrapper(bookStatus, bookStateService.getBookStateDisplayName(bookStatus))).collect(Collectors.toList()));
-            mav.addObject("bookStateFilter", bookStateFilter);
-            mav.addObject("isGenreFilterActive", isGenreFilterActive);
-            mav.addObject("genreFilter", genreFilter);
-            mav.addObject("isBookStateFilterActive", isBookStateFilterActive);
-//            mav.addObject("pageIndex", pageIndex);
-
         }
-        
+
+        mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
+        mav.addObject("bookStates", List.of(BookState.values()).stream().map(bookStatus -> new BookStateWrapper(bookStatus, bookStateService.getBookStateDisplayName(bookStatus))).collect(Collectors.toList()));
+        mav.addObject("bookStateFilter", bookStateFilter);
+        mav.addObject("isGenreFilterActive", isGenreFilterActive);
+        mav.addObject("genreFilter", genreFilter);
+        mav.addObject("isBookStateFilterActive", isBookStateFilterActive);
+
+//            mav.addObject("pageIndex", pageIndex);
         return mav;
+
     }
+        
 //
 //    @RequestMapping(path = "/", method = RequestMethod.GET)
 //    public ModelAndView search(@RequestParam(name = "search", defaultValue = "") String search,
@@ -79,16 +81,16 @@ public class PublicationController {
 //        return index(search, isBookStateFilterActive, bookStateFilter, isGenreFilterActive, genreFilter, pageIndex, sortType);
 //    }
 
-        @RequestMapping(path = "/createpublication", method = RequestMethod.POST)
-        public ModelAndView createPublication(@RequestParam(name = "bookId") long bookId, @RequestParam(name = "location") String location){
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if(authentication.getPrincipal() instanceof PawUserDetails pud) {
-                long locationId = ls.newLocation(location); // Esto se tiene que llamar dentro del publication service.
-                ps.createPublication(bookId, pud.getUser().getUserId(), locationId, PublicationState.CURRENT);
-            }
+@RequestMapping(path = "/createpublication", method = RequestMethod.POST)
+public ModelAndView createPublication(@RequestParam(name = "bookId") long bookId, @RequestParam(name = "location") String location) {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication.getPrincipal() instanceof PawUserDetails pud) {
+        long locationId = ls.newLocation(location); // Esto se tiene que llamar dentro del publication service.
+        ps.createPublication(bookId, pud.getUser().getUserId(), locationId, PublicationState.CURRENT);
+    }
 
-            return new ModelAndView("redirect:/book");
-        }
+    return new ModelAndView("redirect:/book");
+}
 
 
 
@@ -109,30 +111,30 @@ public class PublicationController {
         return mav;
     }*/
 
-        @GetMapping("/publications/{publication_id:\\d+}")
-        public ModelAndView publicationDetail(@ModelAttribute("completeBookParam") CompleteBook completeBookParam, @PathVariable(name = "publication_id") long publicationId) {
-            final ModelAndView mav = new ModelAndView("home/publicationDetail");
+@GetMapping("/publications/{publication_id:\\d+}")
+public ModelAndView publicationDetail(@ModelAttribute("completeBookParam") CompleteBook completeBookParam, @PathVariable(name = "publication_id") long publicationId) {
+    final ModelAndView mav = new ModelAndView("home/publicationDetail");
 
-            Publication publication = ps.getPublicationByPublicationId(publicationId);
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication.getPrincipal() instanceof PawUserDetails pud) {
-                User loggedUser = us.findById(pud.getUser().getUserId()).get();
-                mav.addObject("loggedUser", loggedUser);
-            }
-            if(publication == null){
-                // TODO: Hace vista que la publicacion ya no esta disponible
-                return new ModelAndView("error/forbidden");
-            }
+    Publication publication = ps.getPublicationByPublicationId(publicationId);
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication.getPrincipal() instanceof PawUserDetails pud) {
+        User loggedUser = us.findById(pud.getUser().getUserId()).get();
+        mav.addObject("loggedUser", loggedUser);
+    }
+    if (publication == null) {
+        // TODO: Hace vista que la publicacion ya no esta disponible
+        return new ModelAndView("error/forbidden");
+    }
 
-            mav.addObject("publication", publication);
-            mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
+    mav.addObject("publication", publication);
+    mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
 //        mav.addObject("completeBookParam", completeBookParam);
 
-            return mav;
-        }
+    return mav;
+}
 
 
-    // Esto tienen que volar
+// Esto tienen que volar
     /*@RequestMapping("/submitmail")
     public ModelAndView submitMail(@RequestParam(name = "publication_id") long publicationId) {
         final ModelAndView mav = new ModelAndView("home/submitmail");
