@@ -136,12 +136,17 @@ public class BookController {
     }
 
     @PostMapping("/book/create_new_book")
-    public ModelAndView createNewBook(@Validated @ModelAttribute("bookForm") BookForm bookForm, BindingResult errors) {
-        if(errors.hasErrors()){
-            return bookModelForm(bookForm, errors);
+    public ModelAndView createNewBook(@Valid @ModelAttribute("bookForm") BookForm bookForm, BindingResult errors) {
+        //if(errors.hasErrors()){
+        //    return bookModelForm(bookForm, errors);
+        //}
+        User user = null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.getPrincipal() instanceof PawUserDetails pud) {
+            user = pud.getUser();
         }
 
-        //add new book
+        bookService.createBook(bookForm.getIsbn(), bookForm.getTitle(), bookForm.getAuthors(), bookForm.getEditorial(), bookForm.getDescription(), bookForm.getGenre(), bookForm.getBookState(), bookForm.getEdition(), bookForm.getRating(), bookForm.getImageFiles(), bookForm.getPublicationYear(), bookForm.isHardcover(), bookForm.isPocketEdition(), bookForm.getDimension(), bookForm.getLanguage(), bookForm.getPages(), bookForm.getWeight(), bookForm.getBookCover(), bookForm.isPublish(), user, null);
 
         return new ModelAndView("redirect:/book");
     }
@@ -164,8 +169,12 @@ public class BookController {
         if(errors.hasErrors()){
             return bookDetailsFormNewBook(bookForm, bookModelId, errors);
         }
-
-        //add book from book model
+        User user = null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.getPrincipal() instanceof PawUserDetails pud) {
+            user = pud.getUser();
+        }
+        bookService.createBook(null, null, null, null, null, null, bookForm.getBookState(), 0, bookForm.getRating(), bookForm.getImageFiles(), null, false, false, null, null, 0, 0, 0, bookForm.isPublish(), user, bookModelId);
 
         return new ModelAndView("redirect:/book");
     }

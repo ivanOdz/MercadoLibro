@@ -46,7 +46,7 @@
 
 <navbar/>
 
-<c:url var="postUrl" value="/book"/>
+<c:url var="postUrl" value="/book/create_new_book"/>
 
 <div class="uk-background-muted" style="margin-bottom: 2%;">
     <form:form modelAttribute="bookForm" action="${postUrl}" method="post" enctype="multipart/form-data">
@@ -312,6 +312,7 @@
                                 <span uk-icon="icon: star; ratio: 1.5"></span>
                             </label>
                         </div>
+                        <form:errors path="rating" element="p" cssStyle="color: red;"/>
                     </div>
 
                     <%--Images--%>
