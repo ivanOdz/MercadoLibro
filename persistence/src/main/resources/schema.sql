@@ -15,13 +15,11 @@ CREATE TABLE IF NOT EXISTS users (
      isVerified          BOOLEAN
 );
 
-
-
 -- ALTER TABLE book_model  ADD COLUMN imageId INTEGER REFERENCES image(imageId);
 -- Tabla de modelo de libros
 CREATE TABLE IF NOT EXISTS book_model (
       bookModelId         SERIAL PRIMARY KEY,
-      isbn                VARCHAR(13) NOT NULL,
+      isbn                VARCHAR(13) NOT NULL, -- UNIQUE
       title               VARCHAR(255) NOT NULL,
       editorial           VARCHAR(255) NOT NULL,
       description         TEXT,
@@ -60,7 +58,6 @@ CREATE TABLE IF NOT EXISTS book_image (
 );
 
 -- Nueva
-
 CREATE TABLE IF NOT EXISTS book_rating (
       userId INTEGER NOT NULL REFERENCES users(userId) ON DELETE CASCADE,
       bookModelId INTEGER NOT NULL REFERENCES book_model(bookModelId) ON DELETE CASCADE,
@@ -68,11 +65,10 @@ CREATE TABLE IF NOT EXISTS book_rating (
       PRIMARY KEY(userId, bookModelId)
 );
 
-
 -- Tabla de autores
 CREATE TABLE IF NOT EXISTS author (
       authorId            SERIAL PRIMARY KEY,
-      authorName          VARCHAR(255) NOT NULL
+      authorName          VARCHAR(255) NOT NULL -- UNIQUE
 );
 
 -- Relación libro y autor
@@ -85,7 +81,7 @@ CREATE TABLE IF NOT EXISTS book_author (
 -- Tabla de ubicaciones
 CREATE TABLE IF NOT EXISTS location (
         locationId          SERIAL PRIMARY KEY,
-        locationString      VARCHAR(255) NOT NULL
+        locationString      VARCHAR(255) NOT NULL -- UNIQUE
 );
 
 -- Tabla de publicaciones
