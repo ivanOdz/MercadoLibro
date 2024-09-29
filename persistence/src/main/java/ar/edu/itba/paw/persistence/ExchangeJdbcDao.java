@@ -217,7 +217,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
         sqlQuery.append("AND e.exchangeState = ? ");
         sqlQuery.append(groupQuery);
 
-        return jdbcTemplate.query(sqlQuery.toString(), new Object[]{anUserId, exchangeState.getValue()}, new int[]{Types.BIGINT}, ROW_MAPPER_EXCHANGE);
+        return jdbcTemplate.query(sqlQuery.toString(), new Object[]{anUserId, exchangeState.getValue()}, new int[]{Types.BIGINT, Types.INTEGER}, ROW_MAPPER_EXCHANGE);
     }
 
 
@@ -225,6 +225,14 @@ public class ExchangeJdbcDao implements ExchangeDao {
     public void updateExchangeStatus(int acceptCode, int newStatus) {
         String sql = "UPDATE exchange SET exchangeState = ? WHERE acceptCode = ?";
         jdbcTemplate.update(sql, newStatus, acceptCode);
+    }
+
+    @Override
+    public Optional<Exchange> findByAcceptCode(int acceptCode) {
+        StringBuilder sqlQuery = new StringBuilder(baseQuery);
+        sqlQuery.append(" WHERE acceptCode = ? ");
+        sqlQuery.append(groupQuery);
+        return jdbcTemplate.query(sqlQuery.toString(), new Object[]{acceptCode}, new int[]{Types.INTEGER}, ROW_MAPPER_EXCHANGE).stream().findFirst();
     }
 
     @Override

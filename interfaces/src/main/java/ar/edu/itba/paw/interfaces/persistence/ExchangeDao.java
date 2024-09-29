@@ -13,6 +13,7 @@ public interface ExchangeDao {
     void updateExchangeStatus(int acceptCode, int newStatus);
 
 //    Optional<Exchange> findById(long id);
+    Optional<Exchange> findByAcceptCode(int acceptCode);
 
 //    long getIdByAcceptCode(int acceptCode);
 

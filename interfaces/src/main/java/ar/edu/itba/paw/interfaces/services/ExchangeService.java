@@ -11,7 +11,8 @@ import java.util.Optional;
 
 @Service
 public interface ExchangeService {
-    //Optional<Exchange> getExchangeById(long exchangeId);
+
+    Optional<Exchange> getExchangeByAcceptCode(int acceptCode);
 
     //long getId(int acceptCode);
 

@@ -54,6 +54,12 @@ public class ExchangeServiceImpl implements ExchangeService {
         return exchangeDao.getIdByAcceptCode(acceptCode);
     }*/
 
+
+    @Override
+    public Optional<Exchange> getExchangeByAcceptCode(int acceptCode) {
+        return exchangeDao.findByAcceptCode(acceptCode);
+    }
+
     @Override
     public String exchange(int acceptCode, boolean state) {
 

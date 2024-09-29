@@ -177,22 +177,23 @@ public class ExchangeController {
     }
 
 
-    /*@RequestMapping("/confirm_requester")
+    @RequestMapping("/confirm_requester")
     public ModelAndView confirmExchangeRequest(@RequestParam(name = "accept_code") int accept_code) {
         ModelAndView mav = new ModelAndView("error/failed_authentication");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        //System.out.println(authentication.getPrincipal());
+        // TODO: error management of whether its null
+        Exchange exchange = exchangeService.getExchangeByAcceptCode(accept_code).get();
 
         // if the user that is accepting/rejecting the exchange is the one that should
         if (authentication.getPrincipal() instanceof PawUserDetails pud
-                && publicationService.getPublicationById(exchangeService.getExchangeById(exchangeService.getId(accept_code)).get().getRequesterPubId()).get().getUserId() == pud.getUser().getUserId()) {
+                && exchange.getRequester().getBook().getOwner().getUserId() == pud.getUser().getUserId()) {
             exchangeService.cofirmRequester(accept_code);
-            return exchangeRequests();
+            return exchangeRequests(exchange.getExchangeState());
         }
 
         return mav;
-    }*/
+    }
 
     @RequestMapping(path = "/submitReview", method = RequestMethod.POST)
     public ModelAndView submitReview(
