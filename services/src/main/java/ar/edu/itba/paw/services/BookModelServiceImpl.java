@@ -63,16 +63,12 @@ public class BookModelServiceImpl implements BookModelService {
     public long createBookModel(String isbn, String title, List<String> authors, String publisher, String description, Genre genre, int edition, Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight, List<MultipartFile> images, long bookCoverIndex) {
         // Inserto Image mediante el service de Image
         long bookModelImageCoverId = imageService.saveImage(Collections.singletonList(images.get(((int) bookCoverIndex)))).getFirst().getImageId();
-
         // Inserto autores
         List<Long> authorsIds = bookModelDao.createAuthors(authors);
-
         // Inserto BookModel
         long bookModelId = bookModelDao.createBookModel(isbn, title, publisher, description, genre, edition, publicationYear, isHardcover, isPocketEdition, dimension, language, pages, weight, bookModelImageCoverId);
-
         // Inserto BookAuthors
         bookModelDao.createBookAuthors(authorsIds, bookModelId);
-
         return bookModelId;
     }
 

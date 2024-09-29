@@ -58,7 +58,7 @@ public class BookModelJdbcDao implements BookModelDao {
                 .usingGeneratedKeyColumns("authorid")
                 .withTableName("author");
         jdbcInsertBookAuthor = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("book_author");
+                .withTableName("book_author").usingColumns("bookmodelid", "authorid");
     }
 
 
@@ -192,10 +192,10 @@ public class BookModelJdbcDao implements BookModelDao {
     public void createBookAuthors(List<Long> authorsIds, long bookModelId) {
         for (Long authorId : authorsIds) {
             Map<String, Long> parameters = new HashMap<>();
-            parameters.put("authorid", authorId);
             parameters.put("bookmodelid", bookModelId);
+            parameters.put("authorid", authorId);
 
-            jdbcInsertBookAuthor.executeAndReturnKey(parameters);
+            jdbcInsertBookAuthor.execute(parameters);
         }
     }
 }
