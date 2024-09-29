@@ -240,7 +240,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
         jdbcTemplate.update("UPDATE exchange SET offererReceivedBook = ? WHERE acceptcode = ?", true, acceptCode);
 
         StringBuilder sqlQuery = new StringBuilder(baseQuery);
-        sqlQuery.append("WHERE acceptcode = ? ");
+        sqlQuery.append(" WHERE acceptcode = ? ");
         sqlQuery.append(groupQuery);
 
         Optional<Exchange> exchange= jdbcTemplate.query(sqlQuery.toString(), new Object[]{ acceptCode },
@@ -256,7 +256,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
         jdbcTemplate.update("UPDATE exchange SET requesterReceivedBook = ? WHERE acceptcode = ?", true, acceptCode);
 
         StringBuilder sqlQuery = new StringBuilder(baseQuery);
-        sqlQuery.append("WHERE acceptcode = ? ");
+        sqlQuery.append(" WHERE acceptcode = ? ");
         sqlQuery.append(groupQuery);
 
         Optional<Exchange> exchange = jdbcTemplate.query(sqlQuery.toString(), new Object[]{acceptCode},

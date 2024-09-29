@@ -155,21 +155,22 @@ public class ExchangeController {
     }*/
 
 
-    /*@RequestMapping("/confirm_offerer")
+    @RequestMapping("/confirm_offerer")
     public ModelAndView confirmExchangeOffer(@RequestParam(name = "accept_code") int accept_code) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        //System.out.println(authentication.getPrincipal());
+        // TODO: error management of whether its null
+        Exchange exchange = exchangeService.getExchangeByAcceptCode(accept_code).get();
 
         // if the user that is accepting/rejecting the exchange is the one that should
         if (authentication.getPrincipal() instanceof PawUserDetails pud
-                && publicationService.getPublicationById(exchangeService.getExchangeById(exchangeService.getId(accept_code)).get().getOffererPubId()).get().getUserId() == pud.getUser().getUserId()) {
+                && exchange.getOfferer().getBook().getOwner().getUserId() == pud.getUser().getUserId()) {
             exchangeService.cofirmOfferer(accept_code);
-            return exchangeRequests();
+            return exchangeRequests(exchange.getExchangeState());
         }
 
         return new ModelAndView("redirect:/failed_authentication");
-    }*/
+    }
 
     @RequestMapping("/failed_authentication")
     public ModelAndView failedAuthentication() {
