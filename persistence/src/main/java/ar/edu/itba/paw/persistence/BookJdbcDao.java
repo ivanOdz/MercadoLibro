@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.sql.Types;
 
@@ -42,7 +43,7 @@ public class BookJdbcDao implements BookDao {
 
     	jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsertBook = new SimpleJdbcInsert(jdbcTemplate).usingGeneratedKeyColumns("bookid").withTableName("book");
-        jdbcInsertBookRating = new SimpleJdbcInsert(jdbcTemplate).withTableName("book_rating");
+        jdbcInsertBookRating = new SimpleJdbcInsert(jdbcTemplate).withTableName("book_rating").usingGeneratedKeyColumns("ratingid");
         jdbcInsertBookImage = new SimpleJdbcInsert(jdbcTemplate).withTableName("book_image");
     }
 
@@ -83,7 +84,6 @@ public class BookJdbcDao implements BookDao {
         bookData.put("exchangesQty", Constants.INITIAL_EXCHANGE_VALUE);
 
         final Number generatedId = jdbcInsertBook.executeAndReturnKey(bookData);
-        createBookImage(generatedId.longValue(), images);
         return generatedId;
     }
 
@@ -99,11 +99,13 @@ public class BookJdbcDao implements BookDao {
 
     @Override
     public void createBookImage(long bookId, List<Integer> images) {
-        final HashMap<String, Object> params = new HashMap<>();
-        for (int i = 0; i < images.size(); i++) {
+        int i = 0;
+        for (Integer imageId : images) {
+            HashMap<String, Object> params = new HashMap<>();
             params.put("bookId", bookId);
-            params.put("imageId", images.get(i));
-            params.put("imageOrder", i);
+            params.put("imageId", imageId);
+            params.put("imageOrder", i++);
+            params.put("imageDatetime", LocalDateTime.now());
             jdbcInsertBookImage.execute(params);
         }
     }
@@ -123,7 +125,7 @@ public class BookJdbcDao implements BookDao {
 
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT  b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
-                        "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, i.imageId AS coverId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount, " +
+                        "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, bm.imageId AS coverId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount, " +
                         "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, ARRAY_AGG(i.imageId ORDER BY bi.imageOrder) AS images, " +
                         "p.publicationState, e.exchangeState, " +  // checkear esto, no se si hace falta que este en las tuplas que devuelve
                         "CASE " +
@@ -142,7 +144,7 @@ public class BookJdbcDao implements BookDao {
                         "JOIN book_image bi ON bi.bookId = b.bookId " +
                         "LEFT JOIN book_rating br ON bm.bookModelId = br.bookModelId " +
                         "JOIN image i ON bi.imageId = i.imageId " +
-                        "WHERE u.userid = ? AND LOWER(bm.title) LIKE LOWER(?) ");
+                        "WHERE u.userid = ? AND LOWER(bm.title) LIKE LOWER(?)  ");
 
         if (isGenreFilterActive) {
             sqlQuery.append("AND bm.genre = ? ");
@@ -153,7 +155,7 @@ public class BookJdbcDao implements BookDao {
         }
 
         sqlQuery.append("GROUP BY available, b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, bm.dimension, bm.publicationYear, " +
-                "bm.isPocketEdition, bm.isHardcover, p.publicationState, i.imageId, u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, e.exchangeState");
+                "bm.isPocketEdition, bm.isHardcover, p.publicationState, bm.imageId, u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, e.exchangeState");
 
         switch (sortType) {
             case RATING_ASCENDING:

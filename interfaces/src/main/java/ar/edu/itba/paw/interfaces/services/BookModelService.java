@@ -25,6 +25,6 @@ public interface BookModelService {
     List<BookModel> getFilteredSortedOrderedModelBooksByPage(String search, boolean isGenreFilterActive, Genre genreFilter, int pageIndex, SortType sortType);
 
     long createBookModel(String isbn, String title, List<String> authors, String publisher, String description, Genre genre, int edition,
-                              Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight, List<MultipartFile> images, long bookCoverIndex);
+                              Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight, Integer imageId);
 
 }

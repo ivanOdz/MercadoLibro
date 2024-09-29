@@ -38,7 +38,7 @@
                        aria-label="Search"
                        name="search"
                        id="search"
-                       value="${param.search != null ? param.search : ''}">
+                       value="<c:out value='${param.search}'/>">
                 <button class="uk-search-icon-flip" uk-search-icon></button>
             </form>
         </div>

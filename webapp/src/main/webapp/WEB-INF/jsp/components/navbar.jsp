@@ -16,9 +16,6 @@
              margin: 0px;
              padding-left: 2rem;
         " uk-navbar>
-<nav class="uk-navbar-container uk-box-shadow-small uk-width-1-1" uk-sticky>
-    <div class="uk-container uk-width-1-1  nav-background">
-        <div class="uk-width-1-1 nav-container" uk-navbar>
             <div class="uk-navbar-left">
                 <ul class="uk-navbar-nav">
                     <li>

@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,6 +35,7 @@ public class BookController {
 
     private final BookService bookService;
 
+    @Autowired
     private final UserService userService;
 
     private final BookModelService bookModelService;
@@ -50,8 +52,9 @@ public class BookController {
     @Autowired
     private BookDimensionService bookDimensionService;
 
-    public BookController(BookService bookService, BookModelService bookModelService) {
+    public BookController(BookService bookService, UserService userService, BookModelService bookModelService) {
         this.bookService = bookService;
+        this.userService = userService;
         this.bookModelService = bookModelService;
     }
 
@@ -100,7 +103,7 @@ public class BookController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getPrincipal() instanceof PawUserDetails pud) {
-            User loggedUser = userService.findById(pud.getUser().getUserId()).get();
+            User loggedUser = pud.getUser();
             mav.addObject("loggedUser", loggedUser);
         }
 
@@ -122,11 +125,10 @@ public class BookController {
         mav.addObject("bookForm", bookForm);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getPrincipal() instanceof PawUserDetails pud) {
-            User loggedUser = userService.findById(pud.getUser().getUserId()).get();
+            User loggedUser = pud.getUser();
             mav.addObject("loggedUser", loggedUser);
         }
 
-        mav.addObject("modelBookForm", modelBookForm);
         mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
         mav.addObject("languages", List.of(Language.values()).stream().map(language -> new LanguageWrapper(language, languageService.getLanguageDisplayName(language))).collect(Collectors.toList()));
         mav.addObject("dimensions", List.of(BookDimension.values()).stream().map(dimension -> new BookDimensionWrapper(dimension, bookDimensionService.getDimensionDisplayName(dimension))).collect(Collectors.toList()));

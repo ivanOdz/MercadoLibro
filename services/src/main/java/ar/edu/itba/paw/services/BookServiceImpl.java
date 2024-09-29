@@ -65,20 +65,27 @@ public class BookServiceImpl implements BookService {
                            int rating, List<MultipartFile> imageFiles, Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension,
                            Language language, int pages, int weight, int bookCoverIndex, boolean publish, User user, Long bookModelId) {
 
+        // Inserto imagenes del book y recupero los ids.
+        List<Integer> imagesId = imageService.saveImage(imageFiles).stream().map(Image::getImageId).toList();
+
         // Si el book model ya existia, tomo el id y solamente inserto el book
         // Caso contrario, inserto primero el bookModel, devuelvo el bookModel, y a eso le tomo el id para insertar luego el book
         Long bmId = bookModelId;
         if(bmId == null) {
             bmId = bookModelService.createBookModel(isbn, title, authors, publisher, description, genre, edition,
-                                                            publicationYear, isHardcover, isPocketEdition, dimension, language, pages, weight, imageFiles, bookCoverIndex);
+                                                            publicationYear, isHardcover, isPocketEdition, dimension, language, pages, weight, imagesId.get(bookCoverIndex));
         }
 
-        // Inserto imagenes del book y recupero los ids.
-        List<Integer> imagesId = imageService.saveImage(imageFiles).stream().map(Image::getImageId).toList();
-
+        // Creo el book_rating
         bookDao.createBookRating(user, bmId, rating);
-        // Inserto el book.
-        return bookDao.createBook(bmId, user, bookState, imagesId);
+
+        // Inserto el book
+        Number toReturn = bookDao.createBook(bmId, user, bookState, imagesId);
+
+        // Con los ids de las imagenes y el bookId, creo los book_images
+        bookDao.createBookImage(toReturn.longValue(), imagesId);
+
+        return toReturn;
     }
 }
 
