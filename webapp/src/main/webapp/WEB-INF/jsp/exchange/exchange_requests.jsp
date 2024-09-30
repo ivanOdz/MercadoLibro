@@ -39,10 +39,10 @@
             <div class="uk-width-3-5 column-exchanges scrollable-content">
                 <div>
                     <ul uk-tab>
-                        <li class="uk-active"><a href="#">Pendientes</a></li>
-                        <li><a href="#">En progreso</a></li>
-                        <li><a href="#">Finalizados</a></li>
-                        <li><a href="#">Rechazados</a></li>
+                        <li class="uk-active"><a href="#"><spring:message code="exchange.status.pending"/> </a></li>
+                        <li><a href="#"><spring:message code="exchange.status.in_progress"/></a></li>
+                        <li><a href="#"><spring:message code="exchange.status.terminated"/></a></li>
+                        <li><a href="#"><spring:message code="exchange.status.rejected"/></a></li>
                     </ul>
                     <ul class="uk-switcher uk-margin">
                         <!-- Pending -->
@@ -57,7 +57,11 @@
                                                  '<c:out value="${pending.offerer.book.bookModel.title}"/>',
                                                  '<c:out value="${pending.offerer.book.bookModel.authors}"/>',
                                                  '<c:out value="${pending.offerer.book.bookModel.title}"/>',
-                                                 '<c:out value="${pending.offerer.book.images[0]}"/>')"
+                                                 '<c:out value="${pending.offerer.book.images}"/>',
+                                                 '<c:out value="${pending.exchangeId}"/>',
+                                                 '<c:out value="${pending.requester.book.owner.userId}"/>',
+                                                 '<c:out value="${pending.offerer.book.owner.ownerId}"/>',
+                                                 '${pending.isReviewable}')"
                                          uk-grid>
                                         <div class="uk-card-media-left">
                                             <img class="book-image"
@@ -162,8 +166,13 @@
                                                  '<c:out value="${inProgress.offerer.book.bookModel.title}"/>',
                                                  '<c:out value="${inProgress.offerer.book.bookModel.authors}"/>',
                                                  '<c:out value="${inProgress.offerer.book.bookModel.title}"/>',
-                                                 '<c:out value="${inProgress.offerer.book.images[0]}"/>')"
+                                                 '<c:out value="${inProgress.offerer.book.images}"/>',
+                                                 '<c:out value="${inProgress.exchangeId}"/>',
+                                                 '<c:out value="${inProgress.requester.book.owner.userId}"/>',
+                                                 '<c:out value="${inProgress.offerer.book.owner.ownerId}"/>',
+                                                 '${inProgress.isReviewable}')"
                                          uk-grid>
+
                                         <div class="uk-card-media-left">
                                             <img class="book-image"
                                                  src="${pageContext.request.contextPath}/images/${inProgress.requester.book.bookModel.imageId}"
@@ -243,7 +252,11 @@
                                                  '<c:out value="${completed.offerer.book.bookModel.title}"/>',
                                                  '<c:out value="${completed.offerer.book.bookModel.authors}"/>',
                                                  '<c:out value="${completed.offerer.book.bookModel.title}"/>',
-                                                 '<c:out value="${completed.offerer.book.images[0]}"/>')"
+                                                 '<c:out value="${completed.offerer.book.images}"/>',
+                                                 '<c:out value="${completed.exchangeId}"/>',
+                                                 '<c:out value="${completed.requester.book.owner.userId}"/>',
+                                                 '<c:out value="${completed.offerer.book.owner.ownerId}"/>',
+                                                 '${completed.isReviewable}')"
                                          uk-grid>
                                         <div class="uk-card-media-left">
                                             <img class="book-image"
@@ -282,7 +295,11 @@
                                                  '<c:out value="${rejected.offerer.book.bookModel.title}"/>',
                                                  '<c:out value="${rejected.offerer.book.bookModel.authors}"/>',
                                                  '<c:out value="${rejected.offerer.book.bookModel.title}"/>',
-                                                 '<c:out value="${rejected.offerer.book.images[0]}"/>')"
+                                                 '<c:out value="${rejected.offerer.book.images}"/>',
+                                                 '<c:out value="${rejected.exchangeId}"/>',
+                                                 '<c:out value="${rejected.requester.book.owner.userId}"/>',
+                                                 '<c:out value="${rejected.offerer.book.owner.ownerId}"/>',
+                                                 '${rejected.isReviewable}')"
                                          uk-grid>
                                         <div class="uk-card-media-left">
                                             <img class="book-image"
