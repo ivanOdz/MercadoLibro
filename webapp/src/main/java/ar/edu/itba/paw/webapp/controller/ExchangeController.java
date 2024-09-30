@@ -76,7 +76,7 @@ public class ExchangeController {
             mav.addObject("completed", completedExchanges);
             mav.addObject("rejected", rejectedExchanges);
             mav.addObject("review", new UserReview());
-            User loggedUser = userService.findById(pud.getUser().getUserId()).get();
+            User loggedUser = pud.getUser();
             mav.addObject("loggedUser", loggedUser);
         }
 
@@ -104,7 +104,7 @@ public class ExchangeController {
             mav.addObject("inProgress", inProcessExchanges);
             mav.addObject("completed", completedExchanges);
             mav.addObject("rejected", rejectedExchanges);
-            User loggedUser = userService.findById(pud.getUser().getUserId()).get();
+            User loggedUser = pud.getUser();
             mav.addObject("loggedUser", loggedUser);
             mav.addObject("review", new UserReview());
         }

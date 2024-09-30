@@ -180,13 +180,13 @@
                                                 <div class="uk-align-right card-text-right">
                                                     <c:choose>
 
-                                                        <c:when test="${inProgress.state == 'ACCEPTED' && inProgress.offererReceivedBook == true}">
+                                                        <c:when test="${inProgress.offererReceivedBook == true}">
                                                         <span class="uk-badge state-awaiting">
                                                             <spring:message code="exchange.status.awaiting"/>
                                                         </span>
                                                         </c:when>
 
-                                                        <c:when test="${inProgress.state == 'ACCEPTED'}">
+                                                        <c:otherwise>
                                                             <a class="uk-button uk-button-default uk-button-small uk-margin-right"
                                                                href="#modal-confirm-exchange-${inProgress.acceptCode}"
                                                                onclick="event.stopPropagation()" uk-toggle>
@@ -195,7 +195,7 @@
                                                             </a>
                                                             <span class="uk-badge state-inprogress">
                                                             <spring:message code="exchange.status.in_progress"/>
-                                                        </span>
+                                                            </span>
 
                                                             <!-- Confirm exchange modal -->
 
@@ -218,7 +218,7 @@
                                                                     </p>
                                                                 </div>
                                                             </div>
-                                                        </c:when>
+                                                        </c:otherwise>
                                                     </c:choose>
                                                 </div>
 
@@ -299,7 +299,7 @@
                                                 </div>
                                                 <div class="uk-align-right card-text-right">
                                                     <span class="uk-badge state-rejected"><spring:message
-                                                        code="exchange.status.rejected"/></span>
+                                                            code="exchange.status.rejected"/></span>
                                                 </div>
                                             </div>
                                         </div>
