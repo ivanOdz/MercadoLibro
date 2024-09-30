@@ -142,7 +142,7 @@
                                                 <div class="uk-width-1-1">
                                                     <div class="uk-margin-top uk-button-group"
                                                          style="margin-left: 50px;">
-                                                        <a href="${pageContext.request.contextPath}/book/form_step2?book_model_id=${card.bookModelId}"
+                                                        <a href="${pageContext.request.contextPath}/book/new_book_model?book_model_id=${card.bookModelId}"
                                                            type="submit" class="uk-button uk-button-primary">
                                                             <spring:message code="book.model.view.button"/></a>
                                                     </div>
