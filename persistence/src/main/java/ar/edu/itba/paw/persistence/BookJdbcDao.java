@@ -94,12 +94,21 @@ public class BookJdbcDao implements BookDao {
 
     @Override
     public void createBookRating(User user, long bookModelId, int rating) {
-        final HashMap<String, Object> params = new HashMap<>();
-        params.put("userid", user.getUserId());
-        params.put("bookModelId", bookModelId);
-        params.put("rating", rating);
 
-        jdbcInsertBookRating.execute(params);
+        String checkQuery = "SELECT COUNT(*) FROM book_rating WHERE userId = ? AND bookModelId = ?";
+        int count = jdbcTemplate.queryForObject(checkQuery, new Object[]{user.getUserId(), bookModelId}, Integer.class);
+
+        if(count > 0) {
+            String updateQuery = "UPDATE book_rating SET rating = ? WHERE userId = ? AND bookModelId = ?";
+            jdbcTemplate.update(updateQuery, rating, user.getUserId(), bookModelId);
+        } else {
+            final HashMap<String, Object> params = new HashMap<>();
+            params.put("userid", user.getUserId());
+            params.put("bookModelId", bookModelId);
+            params.put("rating", rating);
+
+            jdbcInsertBookRating.execute(params);
+        }
     }
 
     @Override
