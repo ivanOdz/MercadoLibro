@@ -6,14 +6,11 @@ import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 import ar.edu.itba.paw.webapp.form.BookDetailsForm;
 import ar.edu.itba.paw.webapp.form.BookForm;
-import ar.edu.itba.paw.webapp.form.ModelBookForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,9 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import java.sql.Timestamp;
 import java.time.Year;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -120,10 +115,10 @@ public class BookController {
         return mav;
     }
 
-    @GetMapping("/book/form_step1")
+    @GetMapping("/book/new_book")
     public ModelAndView bookModelForm(@ModelAttribute("bookForm") BookForm bookForm, BindingResult errors) {
 
-        ModelAndView mav = new ModelAndView("book/book_form");
+        ModelAndView mav = new ModelAndView("/book/new_book_form");
 
         mav.addObject("bookForm", bookForm);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -160,10 +155,10 @@ public class BookController {
         return new ModelAndView("redirect:/book");
     }
 
-    @GetMapping("/book/form_step2")
-    public ModelAndView bookDetailsFormNewBook(@ModelAttribute(name = "bookForm") BookForm bookForm, @RequestParam(required = false, name = "book_model_id") long bookModelId, BindingResult errors) {
+    @GetMapping("/book/new_book_model")
+    public ModelAndView bookDetailsFormNewBook(@ModelAttribute(name = "bookDetailsForm") BookDetailsForm bookDetailsForm, @RequestParam("book_model_id") long bookModelId, BindingResult errors) {
 
-        ModelAndView mav = new ModelAndView("book/book_form");
+        ModelAndView mav = new ModelAndView("/book/book_form");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getPrincipal() instanceof PawUserDetails pud) {
@@ -171,25 +166,29 @@ public class BookController {
             mav.addObject("loggedUser", loggedUser);
         }
 
-        mav.addObject("bookForm", bookForm);
+        mav.addObject("bookDetailsForm", bookDetailsForm);
         mav.addObject("step", 2);
         mav.addObject("book_model", bookModelService.getBookModelByBookModelId(bookModelId));
+        mav.addObject("book_model_id", bookModelId);
         mav.addObject("bookStates", List.of(BookState.values()).stream().map(bookStatus -> new BookStateWrapper(bookStatus, bookStateService.getBookStateDisplayName(bookStatus))).collect(Collectors.toList()));
 
         return mav;
     }
 
     @PostMapping("/book/create_book")
-    public ModelAndView createBook(@Valid @ModelAttribute("bookForm") BookForm bookForm, @RequestParam(required = false, name = "book_model_id") long bookModelId, BindingResult errors) {
+    public ModelAndView createBook(@Valid @ModelAttribute(name = "bookDetailsForm") BookDetailsForm bookDetailsForm, BindingResult errors, @RequestParam("book_model_id") long bookModelId) {
         if(errors.hasErrors()){
-            return bookDetailsFormNewBook(bookForm, bookModelId, errors);
+            System.out.println("ERRORS: " + errors);
+            return bookDetailsFormNewBook(bookDetailsForm, bookModelId, errors);
         }
         User user = null;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.getPrincipal() instanceof PawUserDetails pud) {
             user = pud.getUser();
         }
-        bookService.createBook(null, null, null, null, null, null, bookForm.getBookState(), 0, bookForm.getRating(), bookForm.getImageFiles(), null, false, false, null, null, 0, 0, 0, bookForm.isPublish(), user, bookModelId);
+        bookService.createBook(null, null, null, null, null, null, bookDetailsForm.getBookState(), 0, bookDetailsForm.getRating(), bookDetailsForm.getImageFiles(), null, false, false, null, null, 0, 0, 0, bookDetailsForm.isPublish(), user, bookModelId);
+
+        publicationService.createPublicationIfNeeded(bookDetailsForm.isPublish(), bookModelId, user.getUserId(), bookDetailsForm.getLocation(), PublicationState.CURRENT);
 
         return new ModelAndView("redirect:/book");
     }
