@@ -1,11 +1,13 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.models.utils.BookDimension;
 import ar.edu.itba.paw.models.utils.BookState;
+import ar.edu.itba.paw.models.utils.Genre;
+import ar.edu.itba.paw.models.utils.Language;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class BookDetailsForm {
@@ -18,6 +20,15 @@ public class BookDetailsForm {
     private int rating;
 
     private List<MultipartFile> imageFiles;
+
+    private int bookCover;
+
+    private boolean publish = false;
+
+    private String location = null;
+
+
+    // Getters
 
     @NotNull
     public BookState getBookState() {
@@ -34,6 +45,20 @@ public class BookDetailsForm {
         return imageFiles;
     }
 
+    public int getBookCover() {
+        return bookCover;
+    }
+
+    public boolean isPublish() {
+        return publish;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    // Setters
+
     public void setBookState(@NotNull BookState bookState) {
         this.bookState = bookState;
     }
@@ -42,8 +67,21 @@ public class BookDetailsForm {
         this.rating = rating;
     }
 
+
     public void setImageFiles(List<MultipartFile> imageFiles) {
         this.imageFiles = imageFiles;
+    }
+
+    public void setBookCover(int bookCover) {
+        this.bookCover = bookCover;
+    }
+
+    public void setPublish(boolean publish) {
+        this.publish = publish;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
 }
