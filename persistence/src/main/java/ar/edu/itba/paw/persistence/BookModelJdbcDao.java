@@ -47,6 +47,23 @@ public class BookModelJdbcDao implements BookModelDao {
             new Rating(rs.getDouble("rating"), rs.getInt("ratingCount"))
     );
 
+    static final RowMapper<BookModel> ROW_MAPPER_BOOK_MODEL_DB = (rs, rowNum) -> new BookModel(
+            rs.getLong("bookModelId"),
+            rs.getString("isbn"),
+            rs.getString("title"),
+            rs.getString("editorial"),
+            rs.getString("description"),
+            Genre.fromInt(rs.getInt("genre")),
+            rs.getInt("edition"),
+            rs.getInt("weight"),
+            rs.getInt("pages"),
+            Language.fromInt(rs.getInt("bookLanguage")),
+            rs.getInt("dimension"),
+            rs.getShort("publicationYear"),
+            rs.getBoolean("isPocketEdition"),
+            rs.getBoolean("isHardcover")
+    );
+
 
 
     public BookModelJdbcDao(final DataSource ds) {
@@ -65,7 +82,7 @@ public class BookModelJdbcDao implements BookModelDao {
 
     @Override
     public BookModel getBookModelByBookModelId(long bookModelId) {
-        return jdbcTemplate.query("SELECT * FROM book_model WHERE bookModelId = ?", new Object[]{ bookModelId }, new int[]{Types.BIGINT}, ROW_MAPPER_BOOK_MODEL).stream().findFirst().get();
+        return jdbcTemplate.query("SELECT * FROM book_model WHERE bookModelId = ?", new Object[]{ bookModelId }, new int[]{Types.BIGINT}, ROW_MAPPER_BOOK_MODEL_DB).stream().findFirst().get();
     }
 
     /*@Override

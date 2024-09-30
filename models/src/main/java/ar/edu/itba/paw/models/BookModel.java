@@ -45,6 +45,26 @@ public class BookModel {
         this.rating = rating;
     }
 
+    public BookModel(long bookModelId, String isbn, String title, String editorial, String description, Genre genre, int edition, int weight, int pages, Language bookLanguage, int dimension, short publicationYear, boolean isPocketEdition, boolean isHardcover) {
+        this.bookModelId = bookModelId;
+        this.isbn = isbn;
+        this.title = title;
+        this.editorial = editorial;
+        this.description = description;
+        this.genre = genre;
+        this.edition = edition;
+        this.weight = weight;
+        this.pages = pages;
+        this.bookLanguage = bookLanguage;
+        this.dimension = dimension;
+        this.publicationYear = publicationYear;
+        this.isPocketEdition = isPocketEdition;
+        this.isHardcover = isHardcover;
+        this.imageId = null;
+        this.rating = null;
+        this.authors = null;
+    }
+
     public Rating getRating() {
         return rating;
     }
