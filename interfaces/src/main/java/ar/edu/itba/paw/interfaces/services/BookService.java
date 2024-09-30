@@ -13,7 +13,7 @@ public interface BookService {
 
     //Optional<Book> getBookById(long bookId);
 
-    //void exchangeOwnership(long b1, long b2);
+    void exchangeOwnership(Book b1, Book b2);
 
     //Book getBookByPubId(long pubId);
 

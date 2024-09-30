@@ -41,7 +41,7 @@ public class BookJdbcDao implements BookDao {
 
     public BookJdbcDao(final DataSource ds) {
 
-    	jdbcTemplate = new JdbcTemplate(ds);
+        jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsertBook = new SimpleJdbcInsert(jdbcTemplate).usingGeneratedKeyColumns("bookid").withTableName("book");
         jdbcInsertBookRating = new SimpleJdbcInsert(jdbcTemplate).withTableName("book_rating").usingGeneratedKeyColumns("ratingid");
         jdbcInsertBookImage = new SimpleJdbcInsert(jdbcTemplate).withTableName("book_image");
@@ -53,14 +53,19 @@ public class BookJdbcDao implements BookDao {
                 new int[]{ Types.BIGINT }, ROW_MAPPER_BOOK).stream().findFirst();
     }*/
 
-    /*@Override
-    public void exchangeOwnership(long b1, long b2) {
-        Book book1 = getBookById(b1).get();
-        Book book2 = getBookById(b2).get();
+//    @Override
+//    public void exchangeOwnership(Book b1, Book b2) {
+//        Book book1 = getBookById(b1).get();
+//        Book book2 = getBookById(b2).get();
+//
+//        jdbcTemplate.update("UPDATE book SET ownerId = ? WHERE bookId = ?", book1.getOwnerId(), book2.getBookId());
+//    }
 
-        jdbcTemplate.update("UPDATE book SET ownerId = ? WHERE bookId = ?", book2.getOwnerId(), book1.getBookId());
-        jdbcTemplate.update("UPDATE book SET ownerId = ? WHERE bookId = ?", book1.getOwnerId(), book2.getBookId());
-    }*/
+
+    @Override
+    public void setOwner(long bookId, long userId) {
+        jdbcTemplate.update("UPDATE book SET ownerId = ? WHERE bookId = ?", userId, bookId);
+    }
 
     /*@Override
     public Book getBookByPubId(long pubId) {
@@ -118,8 +123,6 @@ public class BookJdbcDao implements BookDao {
     // cuando tengo varias imagenes asociadas a un lbro me trae el nombre del autor x # imagenes del libro
 
 
-
-
     @Override
     public List<Book> getFilteredSortedOrderedBooksByPageFromUser(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, int pageIndex, long userId, SortType sortType) {
 
@@ -133,7 +136,7 @@ public class BookJdbcDao implements BookDao {
                         "WHEN NOT EXISTS (SELECT 1 FROM exchange e2 JOIN publication p2 ON e2.offererPubId = p2.publicationId OR e2.requesterPubId = p2.publicationId " +
                         "WHERE p2.bookId = b.bookId AND e2.exchangeState = ?) THEN TRUE " +
                         "ELSE FALSE " +
-                        "END AS available "+
+                        "END AS available " +
                         "FROM book b " +
                         "JOIN users u ON b.ownerId = u.userId " +
                         "JOIN book_model bm ON bm.bookModelId = b.bookModelId " +
@@ -174,16 +177,16 @@ public class BookJdbcDao implements BookDao {
         int offset = pageIndex * PAGE_SIZE;
         sqlQuery.append(" LIMIT ? OFFSET ?");
 
-        if(isGenreFilterActive && isBookStateFilterActive) {
-            return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ ExchangeState.ACCEPTED.getValue(), userId, "%" + search.toLowerCase() + "%", genreFilter.getValue(), bookStateFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.INTEGER, Types.BIGINT, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER  }, ROW_MAPPER_BOOK);
+        if (isGenreFilterActive && isBookStateFilterActive) {
+            return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), userId, "%" + search.toLowerCase() + "%", genreFilter.getValue(), bookStateFilter.getValue(), PAGE_SIZE, offset}, new int[]{Types.INTEGER, Types.BIGINT, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_BOOK);
         }
-        if(isGenreFilterActive) {
-            return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ ExchangeState.ACCEPTED.getValue(), userId, "%" + search.toLowerCase() + "%", genreFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.INTEGER, Types.BIGINT,  Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_BOOK);
+        if (isGenreFilterActive) {
+            return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), userId, "%" + search.toLowerCase() + "%", genreFilter.getValue(), PAGE_SIZE, offset}, new int[]{Types.INTEGER, Types.BIGINT, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_BOOK);
         }
-        if(isBookStateFilterActive){
-            return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ ExchangeState.ACCEPTED.getValue(), userId, "%" + search.toLowerCase() + "%", bookStateFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.INTEGER, Types.BIGINT,  Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_BOOK);
+        if (isBookStateFilterActive) {
+            return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), userId, "%" + search.toLowerCase() + "%", bookStateFilter.getValue(), PAGE_SIZE, offset}, new int[]{Types.INTEGER, Types.BIGINT, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_BOOK);
         }
-        return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ ExchangeState.ACCEPTED.getValue(), userId, "%" + search.toLowerCase() + "%", PAGE_SIZE, offset }, new int[]{ Types.INTEGER, Types.BIGINT, Types.VARCHAR, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_BOOK);
+        return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), userId, "%" + search.toLowerCase() + "%", PAGE_SIZE, offset}, new int[]{Types.INTEGER, Types.BIGINT, Types.VARCHAR, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_BOOK);
     }
 }
 

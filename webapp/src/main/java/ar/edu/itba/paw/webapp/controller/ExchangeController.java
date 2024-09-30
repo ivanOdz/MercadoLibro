@@ -5,6 +5,8 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
@@ -23,26 +25,27 @@ import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 public class ExchangeController {
 
     private final ExchangeService exchangeService;
-    private final EmailService emailService;
     private final UserService userService;
-    private final PublicationService publicationService;
-    private final BookService bookService;
-    private final BookModelService bookModelService;
+
     @Autowired
     private final UserReviewService userReviewService;
-    
-    public ExchangeController(final ExchangeService exchangeService, final EmailService emailService, final UserService userService, final BookService bookService, final PublicationService publicationService, BookModelService bookModelService, UserReviewService userReviewService) {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExchangeController.class);
+
+
+    public ExchangeController(final ExchangeService exchangeService, final UserService userService, UserReviewService userReviewService) {
         this.exchangeService = exchangeService;
-        this.emailService = emailService;
+//        this.emailService = emailService;
         this.userService = userService;
-        this.bookService = bookService;
-        this.publicationService = publicationService;
-        this.bookModelService = bookModelService;
+//        this.bookService = bookService;
+//        this.publicationService = publicationService;
+//        this.bookModelService = bookModelService;
         this.userReviewService = userReviewService;
     }
 
@@ -52,12 +55,26 @@ public class ExchangeController {
     public ModelAndView exchangeRequests(@RequestParam(name = "exchange-state", defaultValue = "PENDING") ExchangeState exchangeState) {
         final ModelAndView mav = new ModelAndView("exchange/exchange_requests");
 
+
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getPrincipal() instanceof PawUserDetails pud) {
 
-            List<Exchange> exchangeWrapperList = exchangeService.getExchangeOffererListByUserId(pud.getUser().getUserId(), exchangeState);
-            mav.addObject("exchangeState", exchangeState);
-            mav.addObject("exchanges", exchangeWrapperList);
+            List<Exchange> pendingExchanges = exchangeService.getExchangeOffererListByUserId(pud.getUser().getUserId(), ExchangeState.PENDING);
+            List<Exchange> inProcessExchanges = exchangeService.getExchangeOffererListByUserId(pud.getUser().getUserId(), ExchangeState.ACCEPTED);
+            List<Exchange> completedExchanges = exchangeService.getExchangeOffererListByUserId(pud.getUser().getUserId(), ExchangeState.TERMINATED);
+            List<Exchange> rejectedExchanges = exchangeService.getExchangeOffererListByUserId(pud.getUser().getUserId(), ExchangeState.REJECTED);
+
+
+            LOGGER.debug(pendingExchanges.toString());
+            LOGGER.debug(inProcessExchanges.toString());
+            LOGGER.debug(completedExchanges.toString());
+            LOGGER.debug(rejectedExchanges.toString());
+
+            mav.addObject("pending", pendingExchanges);
+            mav.addObject("inProgress", inProcessExchanges);
+            mav.addObject("completed", completedExchanges);
+            mav.addObject("rejected", rejectedExchanges);
             mav.addObject("review", new UserReview());
             User loggedUser = userService.findById(pud.getUser().getUserId()).get();
             mav.addObject("loggedUser", loggedUser);
@@ -69,32 +86,42 @@ public class ExchangeController {
 
     // Estado de mis ofertas
     // Paso el ID, y quiero aquellas exchanges en las que soy requester
-    @RequestMapping(path="/requests", method= RequestMethod.GET)
+    @RequestMapping(path = "/requests", method = RequestMethod.GET)
     public ModelAndView exchangeOffers(@RequestParam(name = "exchange-state", defaultValue = "PENDING") ExchangeState exchangeState) {   // TODO: VALOR DE EXCHANGEsTATE
         final ModelAndView mav = new ModelAndView("exchange/exchange_offers");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getPrincipal() instanceof PawUserDetails pud) {
-            List<Exchange> exchangeWrapperList = exchangeService.getExchangeRequesterListByUserId(pud.getUser().getUserId(), exchangeState);
-            //mav.addObject("exchanges", exchangeWrapperList);
+            List<Exchange> pendingExchanges = exchangeService.getExchangeRequesterListByUserId(pud.getUser().getUserId(), ExchangeState.PENDING);
+            List<Exchange> inProcessExchanges = exchangeService.getExchangeRequesterListByUserId(pud.getUser().getUserId(), ExchangeState.ACCEPTED);
+            List<Exchange> completedExchanges = exchangeService.getExchangeRequesterListByUserId(pud.getUser().getUserId(), ExchangeState.TERMINATED);
+            List<Exchange> rejectedExchanges = exchangeService.getExchangeRequesterListByUserId(pud.getUser().getUserId(), ExchangeState.REJECTED);
+
+
+
+
+            mav.addObject("pending", pendingExchanges);
+            mav.addObject("inProgress", inProcessExchanges);
+            mav.addObject("completed", completedExchanges);
+            mav.addObject("rejected", rejectedExchanges);
             User loggedUser = userService.findById(pud.getUser().getUserId()).get();
             mav.addObject("loggedUser", loggedUser);
             mav.addObject("review", new UserReview());
         }
-        
+
         return mav;
     }
 
-    /*@RequestMapping(path = "/exchange/initializeexchange", method = RequestMethod.POST)
-    // public ModelAndView createExchange(@RequestParam (name = "publication_id") long offererPubId, @RequestParam (name = "bookId") long bookId){
-    public ModelAndView createExchange(@ModelAttribute("completeBookParam") CompleteBook completeBook, @RequestParam("publication_id") long publicationId){
-
-        final ModelAndView mav = new ModelAndView("exchange/exchange_initialized_confirmation");
-
-        exchangeService.initializeExchange(completeBook, publicationId);
-
-        return mav;
-    }*/
+//    @RequestMapping(path = "/exchange/initializeexchange", method = RequestMethod.POST)
+//    // public ModelAndView createExchange(@RequestParam (name = "publication_id") long offererPubId, @RequestParam (name = "bookId") long bookId){
+//    public ModelAndView createExchange(@ModelAttribute("completeBookParam") CompleteBook completeBook, @RequestParam("publication_id") long publicationId){
+//
+//        final ModelAndView mav = new ModelAndView("exchange/exchange_initialized_confirmation");
+//
+//        exchangeService.initializeExchange(completeBook, publicationId);
+//
+//        return mav;
+//    }
 
 
     @RequestMapping("/exchange/accepted")
@@ -109,50 +136,21 @@ public class ExchangeController {
         return new ModelAndView("/exchange/invalid");
     }
 
-    /*@RequestMapping("/createexchange")
+    @RequestMapping("/createexchange")
     public ModelAndView exchange(@RequestParam(name = "accept_code") int acceptCode, @RequestParam(name = "state") boolean state) {
         ModelAndView mav = new ModelAndView("error/failed_authentication");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
+        Optional<Exchange> ex = exchangeService.getExchangeByAcceptCode(acceptCode);
 
         // if the user that is accepting/rejecting the exchange is the one that should
-        if (authentication.getPrincipal() instanceof PawUserDetails pud
-            && publicationService.getPublicationById(exchangeService.getExchangeById(exchangeService.getId(acceptCode)).get().getOffererPubId()).get().getUserId() == pud.getUser().getUserId()){
-        mav = new ModelAndView(exchangeService.exchange(acceptCode, state));
-
-        Map<String, Object> variables = new HashMap<>();
-        long exchangeId = exchangeService.getId(acceptCode);
-
-        Exchange exchange = exchangeService.getExchangeById(exchangeId).get();
-        Publication offererPub = publicationService.getPublicationById(exchange.getOffererPubId()).get();
-        Publication requesterPub = publicationService.getPublicationById(exchange.getRequesterPubId()).get();
-
-        Book bookOffered = bookService.getBookById(offererPub.getBookId()).get();
-        Book bookRequested = bookService.getBookById(requesterPub.getBookId()).get();
-
-        User requester = userService.findById(requesterPub.getUserId()).get();
-        User offerer = userService.findById(offererPub.getUserId()).get();
-
-        String offererEmail = offerer.getMail();
-        String requesterEmail = requester.getMail();
-
-        BookModel offeredBookModel = bookModelService.getBookModelByBookModelId(bookOffered.getBookModelId());
-        BookModel requestedBookModel = bookModelService.getBookModelByBookModelId(bookRequested.getBookModelId());
-
-        variables.put("requestedBook", requestedBookModel.getTitle());
-        variables.put("offeredBook", offeredBookModel.getTitle());
-
-        variables.put("requesterEmail", requesterEmail);
-        variables.put("requesterName", requester.getUsername());
-
-        variables.put("offererName", offerer.getUsername());
-        variables.put("offererEmail", offererEmail);
-
-        emailService.sendExchangeEmail(requesterEmail, variables, state);
+        if (authentication.getPrincipal() instanceof PawUserDetails pud &&
+                ex.get().getOfferer().getBook().getOwner().getUserId() == pud.getUser().getUserId()) {
+            mav = new ModelAndView(exchangeService.exchange(acceptCode, state));
         }
 
         return mav;
-    }*/
+    }
 
 
     @RequestMapping("/confirm_offerer")
@@ -198,16 +196,16 @@ public class ExchangeController {
 
     @RequestMapping(path = "/submitReview", method = RequestMethod.POST)
     public ModelAndView submitReview(
-		@RequestParam("exchangeId") long exchangeId,
-		@RequestParam("reviewerId") long reviewerId,
-		@RequestParam("subjectId") long subjectId,
-		@RequestParam("reviewDescription") String reviewDescription,
-		@RequestParam("userReviewRating") int userReviewRating/*,
+            @RequestParam("exchangeId") long exchangeId,
+            @RequestParam("reviewerId") long reviewerId,
+            @RequestParam("subjectId") long subjectId,
+            @RequestParam("reviewDescription") String reviewDescription,
+            @RequestParam("userReviewRating") int userReviewRating/*,
 		BindingResult result, RedirectAttributes redirectAttributes*/) {
-		
-		UserReview userReview = new UserReview((long)0, exchangeId, reviewerId, subjectId, reviewDescription, new java.sql.Timestamp(0), userReviewRating);
 
-		boolean success = userReviewService.createUserReview(userReview);
+        UserReview userReview = new UserReview((long) 0, exchangeId, reviewerId, subjectId, reviewDescription, new java.sql.Timestamp(0), userReviewRating);
+
+        boolean success = userReviewService.createUserReview(userReview);
 
         /*
         if (success) {
@@ -215,7 +213,7 @@ public class ExchangeController {
         } else {
             return new ModelAndView("redirect:/errorPage");
         }*/
-        
+
         return new ModelAndView("redirect:/requests");
     }
 }

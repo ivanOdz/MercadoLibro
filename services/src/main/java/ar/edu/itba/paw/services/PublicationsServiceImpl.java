@@ -68,5 +68,10 @@ public class PublicationsServiceImpl implements PublicationService {
         return pubDao.getPublicationByPublicationId(publicationId);
     }
 
+    @Override
+    public void terminatePublication(Publication publication) {
+        pubDao.terminatePublication(publication.getPublicationId());
+    }
+
 
 }

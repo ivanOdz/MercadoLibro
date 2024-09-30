@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface BookDao {
 
 
-    //void exchangeOwnership(long b1, long b2);     //Esta hay que rehacerla
+    void setOwner(long bookId, long userId);
 
 
     //Optional<Book> getBookById(long bookId);

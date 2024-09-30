@@ -160,7 +160,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
     }
 
     @Override
-    public ResponseState exchange(int acceptCode, boolean state) {
+    public Optional<Exchange> exchange(int acceptCode, boolean state) {
 
         StringBuilder sqlQuery = new StringBuilder(baseQuery);
         sqlQuery.append(" WHERE acceptCode = ? ");
@@ -168,24 +168,17 @@ public class ExchangeJdbcDao implements ExchangeDao {
         Optional<Exchange> ex = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ acceptCode },
                 new int[]{ Types.INTEGER }, ROW_MAPPER_EXCHANGE).stream().findFirst();
 
-        if(ex.isEmpty()) {
-            return ResponseState.INVALID;
-        }
-        if(ex.get().getExchangeState().getValue() == ExchangeState.REJECTED.getValue()){
-            return ResponseState.REJECTED;
-        }
-        if(ex.get().getExchangeState().getValue() == ExchangeState.ACCEPTED.getValue()){
-            return ResponseState.ACCEPTED;
-        }
         if(!state) {
             jdbcTemplate.update("UPDATE exchange SET exchangeState = ? WHERE acceptCode = ?", ExchangeState.REJECTED.getValue(), acceptCode);
-            return ResponseState.REJECTED;
+            return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ acceptCode },
+                    new int[]{ Types.INTEGER }, ROW_MAPPER_EXCHANGE).stream().findFirst();
         }
 
         jdbcTemplate.update("UPDATE exchange SET exchangeState = ? WHERE acceptCode = ?", ExchangeState.ACCEPTED.getValue(), acceptCode);
         jdbcTemplate.update("UPDATE exchange SET exchangeState = ? WHERE offererPubId = ? AND acceptCode <> ?", ExchangeState.REJECTED.getValue(), ex.get().getOfferer().getPublicationId(), acceptCode);
 
-        return ResponseState.ACCEPTED;
+        return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ acceptCode },
+                new int[]{ Types.INTEGER }, ROW_MAPPER_EXCHANGE).stream().findFirst();
     }
 
     @Override
