@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.services.LocationService;
 import ar.edu.itba.paw.interfaces.services.PublicationService;
 import ar.edu.itba.paw.interfaces.persistence.PublicationDao;
 import ar.edu.itba.paw.models.Publication;
@@ -18,9 +19,11 @@ import java.util.List;
 public class PublicationsServiceImpl implements PublicationService {
 
     private final PublicationDao pubDao;
+    private final LocationService locationService;
 
-    public PublicationsServiceImpl(final PublicationDao pubDao) {
+    public PublicationsServiceImpl(final PublicationDao pubDao, LocationService locationService) {
         this.pubDao = pubDao;
+        this.locationService = locationService;
     }
 
     /*@Override
@@ -46,6 +49,14 @@ public class PublicationsServiceImpl implements PublicationService {
     @Override
     public long createPublication(long bookId, long userId, long locationId, PublicationState publicationState){
         return pubDao.createPublication(bookId, userId, locationId, publicationState);
+    }
+
+    @Override
+    public void createPublicationIfNeeded(boolean publish, long bookId, long userId, String location, PublicationState publicationState) {
+        if(publish){
+            long locationId = locationService.newLocation(location);
+            createPublication(bookId, userId, locationId, publicationState);
+        }
     }
 
     public List<Publication> getFilteredSortedOrderedPublicationsByPageExcludingUser(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, int pageIndex, long userId, SortType sortType){

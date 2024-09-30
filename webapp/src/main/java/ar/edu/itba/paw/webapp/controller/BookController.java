@@ -40,6 +40,8 @@ public class BookController {
 
     private final BookModelService bookModelService;
 
+    private final PublicationService publicationService;
+
     @Autowired
     private GenreService genreService;
 
@@ -52,10 +54,11 @@ public class BookController {
     @Autowired
     private BookDimensionService bookDimensionService;
 
-    public BookController(BookService bookService, UserService userService, BookModelService bookModelService) {
+    public BookController(BookService bookService, UserService userService, BookModelService bookModelService, PublicationService publicationService) {
         this.bookService = bookService;
         this.userService = userService;
         this.bookModelService = bookModelService;
+        this.publicationService = publicationService;
     }
 
 
@@ -150,7 +153,9 @@ public class BookController {
             user = pud.getUser();
         }
 
-        bookService.createBook(bookForm.getIsbn(), bookForm.getTitle(), bookForm.getAuthors(), bookForm.getEditorial(), bookForm.getDescription(), bookForm.getGenre(), bookForm.getBookState(), bookForm.getEdition(), bookForm.getRating(), bookForm.getImageFiles(), bookForm.getPublicationYear(), bookForm.isHardcover(), bookForm.isPocketEdition(), bookForm.getDimension(), bookForm.getLanguage(), bookForm.getPages(), bookForm.getWeight(), bookForm.getBookCover(), bookForm.isPublish(), user, null);
+        Number bookId = bookService.createBook(bookForm.getIsbn(), bookForm.getTitle(), bookForm.getAuthors(), bookForm.getEditorial(), bookForm.getDescription(), bookForm.getGenre(), bookForm.getBookState(), bookForm.getEdition(), bookForm.getRating(), bookForm.getImageFiles(), bookForm.getPublicationYear(), bookForm.isHardcover(), bookForm.isPocketEdition(), bookForm.getDimension(), bookForm.getLanguage(), bookForm.getPages(), bookForm.getWeight(), bookForm.getBookCover(), bookForm.isPublish(), user, null);
+
+        publicationService.createPublicationIfNeeded(bookForm.isPublish(), bookId.longValue(), user.getUserId(), bookForm.getLocation(), PublicationState.CURRENT);
 
         return new ModelAndView("redirect:/book");
     }
