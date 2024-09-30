@@ -23,6 +23,8 @@ public interface PublicationService {
 
     long createPublication(long bookId, long userId, long locationId, PublicationState publicationState);
 
+    void createPublicationIfNeeded(boolean publish, long bookId, long userId, String location, PublicationState publicationState);
+
     List<Publication> getFilteredSortedOrderedPublicationsByPageExcludingUser(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, int pageIndex, long userId, SortType sortType);
 
     Publication getPublicationByPublicationId(long publicationId);

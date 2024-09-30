@@ -173,8 +173,7 @@ public class PublicationJdbcDao implements PublicationDao {
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT p.publicationId, " +
                 "p.publicationState, l.locationId, l.locationString, p.publicationDatetime," +
-
-                //book
+                // -- book
                 "b.bookId, ARRAY_AGG(bi.imageId ORDER BY bi.imageOrder) AS images, " +
                 "b.bookState, b.exchangesQty," +
                 "CASE " +
@@ -183,7 +182,7 @@ public class PublicationJdbcDao implements PublicationDao {
                 "WHERE p2.bookId = b.bookId AND e2.exchangeState = ?) THEN TRUE " +
                 "ELSE FALSE " +
                 "END AS available, " +
-                //book_model
+                // -- book_model
                 "bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
                 "(SELECT STRING_AGG(a.authorName, ', ') " +
                 " FROM book_author ba " +
@@ -202,9 +201,9 @@ public class PublicationJdbcDao implements PublicationDao {
                 "LEFT JOIN book_image bi ON bi.bookId = b.bookId " +
                 "LEFT JOIN image i ON bm.imageId = i.imageId " +
                 "JOIN location l ON p.locationId = l.locationId " +
-                "LEFT JOIN (SELECT bb.bookModelId, AVG(bb.rating) AS rating, COUNT(bb.rating) AS ratingCount " +
-                "FROM book bb " +
-                "GROUP BY bb.bookModelId) avgRatings ON avgRatings.bookModelId = bm.bookModelId " +
+                // "-- LEFT JOIN (SELECT bb.bookModelId, AVG(bb.rating) AS rating, COUNT(bb.rating) AS ratingCount " +
+                // "-- FROM book bb " +
+                // "-- GROUP BY bb.bookModelId) avgRatings ON avgRatings.bookModelId = bm.bookModelId " +
                 "WHERE p.publicationId = ? AND p.publicationState = ? " +
                 "GROUP BY u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, p.publicationId, p.publicationState, l.locationId, l.locationString, p.publicationDatetime, b.bookId, b.bookState, b.exchangesQty, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, bm.imageId");
 

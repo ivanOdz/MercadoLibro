@@ -67,7 +67,7 @@ public class PublicationController {
         return mav;
 
     }
-        
+
 //
 //    @RequestMapping(path = "/", method = RequestMethod.GET)
 //    public ModelAndView search(@RequestParam(name = "search", defaultValue = "") String search,
@@ -81,7 +81,7 @@ public class PublicationController {
 //        return index(search, isBookStateFilterActive, bookStateFilter, isGenreFilterActive, genreFilter, pageIndex, sortType);
 //    }
 
-@RequestMapping(path = "/createpublication", method = RequestMethod.POST)
+@PostMapping(path = "/createpublication")
 public ModelAndView createPublication(@RequestParam(name = "bookId") long bookId, @RequestParam(name = "location") String location) {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     if (authentication.getPrincipal() instanceof PawUserDetails pud) {
