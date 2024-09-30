@@ -47,25 +47,6 @@ public class BookModelJdbcDao implements BookModelDao {
             new Rating(rs.getDouble("rating"), rs.getInt("ratingCount"))
     );
 
-    static final RowMapper<BookModel> ROW_MAPPER_BOOK_MODEL_DB = (rs, rowNum) -> new BookModel(
-            rs.getLong("bookModelId"),
-            rs.getString("isbn"),
-            rs.getString("title"),
-            rs.getString("editorial"),
-            rs.getString("description"),
-            Genre.fromInt(rs.getInt("genre")),
-            rs.getInt("edition"),
-            rs.getInt("weight"),
-            rs.getInt("pages"),
-            Language.fromInt(rs.getInt("bookLanguage")),
-            rs.getInt("dimension"),
-            rs.getShort("publicationYear"),
-            rs.getBoolean("isPocketEdition"),
-            rs.getBoolean("isHardcover")
-    );
-
-
-
     public BookModelJdbcDao(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsertBookModel = new SimpleJdbcInsert(jdbcTemplate)
@@ -82,8 +63,23 @@ public class BookModelJdbcDao implements BookModelDao {
 
     @Override
     public BookModel getBookModelByBookModelId(long bookModelId) {
-        return jdbcTemplate.query("SELECT * FROM book_model WHERE bookModelId = ?", new Object[]{ bookModelId }, new int[]{Types.BIGINT}, ROW_MAPPER_BOOK_MODEL_DB).stream().findFirst().get();
+        StringBuilder sqlQuery = new StringBuilder(
+                "SELECT bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
+                        "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, bm.imageId AS coverId, " +
+                        "AVG(br.rating) as rating, COUNT(br.rating) as ratingCount " +
+                        "FROM book_model bm " +
+                        "JOIN book_author ba ON ba.bookModelId = bm.bookModelId " +
+                        "JOIN author a ON a.authorId = ba.authorId " +
+                        "LEFT JOIN book_rating br ON bm.bookModelId = br.bookModelId " +
+                        "WHERE bm.bookModelId = ? " +
+                        "GROUP BY bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
+                        "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, bm.imageId"
+        );
+
+        return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ bookModelId }, new int[]{Types.BIGINT}, ROW_MAPPER_BOOK_MODEL)
+                .stream().findFirst().orElse(null);
     }
+
 
     /*@Override
     public BookModel addBookModel(String isbn, String title, String editorial, String description, Genre genre, int edition, int weight, int pages, Language language, BookDimension dimension, Short publicationYear, boolean pocketEdition, boolean hardcover) {
