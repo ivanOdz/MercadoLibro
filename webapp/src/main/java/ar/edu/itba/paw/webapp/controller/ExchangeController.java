@@ -31,20 +31,17 @@ import java.util.Optional;
 public class ExchangeController {
 
     private final ExchangeService exchangeService;
-    private final EmailService emailService;
     private final UserService userService;
-//    private final PublicationService publicationService;
-//    private final BookService bookService;
-//    private final BookModelService bookModelService;
+
     @Autowired
     private final UserReviewService userReviewService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExchangeController.class);
 
 
-    public ExchangeController(final ExchangeService exchangeService, final EmailService emailService, final UserService userService, final BookService bookService, final PublicationService publicationService, BookModelService bookModelService, UserReviewService userReviewService) {
+    public ExchangeController(final ExchangeService exchangeService, final UserService userService, UserReviewService userReviewService) {
         this.exchangeService = exchangeService;
-        this.emailService = emailService;
+//        this.emailService = emailService;
         this.userService = userService;
 //        this.bookService = bookService;
 //        this.publicationService = publicationService;
@@ -108,16 +105,16 @@ public class ExchangeController {
         return mav;
     }
 
-    /*@RequestMapping(path = "/exchange/initializeexchange", method = RequestMethod.POST)
-    // public ModelAndView createExchange(@RequestParam (name = "publication_id") long offererPubId, @RequestParam (name = "bookId") long bookId){
-    public ModelAndView createExchange(@ModelAttribute("completeBookParam") CompleteBook completeBook, @RequestParam("publication_id") long publicationId){
-
-        final ModelAndView mav = new ModelAndView("exchange/exchange_initialized_confirmation");
-
-        exchangeService.initializeExchange(completeBook, publicationId);
-
-        return mav;
-    }*/
+//    @RequestMapping(path = "/exchange/initializeexchange", method = RequestMethod.POST)
+//    // public ModelAndView createExchange(@RequestParam (name = "publication_id") long offererPubId, @RequestParam (name = "bookId") long bookId){
+//    public ModelAndView createExchange(@ModelAttribute("completeBookParam") CompleteBook completeBook, @RequestParam("publication_id") long publicationId){
+//
+//        final ModelAndView mav = new ModelAndView("exchange/exchange_initialized_confirmation");
+//
+//        exchangeService.initializeExchange(completeBook, publicationId);
+//
+//        return mav;
+//    }
 
 
     @RequestMapping("/exchange/accepted")
@@ -143,28 +140,6 @@ public class ExchangeController {
         if (authentication.getPrincipal() instanceof PawUserDetails pud &&
                 ex.get().getOfferer().getBook().getOwner().getUserId() == pud.getUser().getUserId()) {
             mav = new ModelAndView(exchangeService.exchange(acceptCode, state));
-
-
-            //TODO: MOVER A EXCHANGE
-
-            Map<String, Object> variables = new HashMap<>();
-
-            Book bookOffered = ex.get().getOfferer().getBook();
-            Book bookRequested = ex.get().getRequester().getBook();
-
-            User requester = bookRequested.getOwner();
-            User offerer = bookOffered.getOwner();
-
-            variables.put("requestedBook", bookRequested.getBookModel().getTitle());
-            variables.put("offeredBook", bookOffered.getBookModel().getTitle());
-
-            variables.put("requesterEmail", requester.getMail());
-            variables.put("requesterName", requester.getUsername());
-
-            variables.put("offererName", offerer.getUsername());
-            variables.put("offererEmail", offerer.getMail());
-
-            emailService.sendExchangeEmail(requester.getMail(), variables, state);
         }
 
         return mav;
