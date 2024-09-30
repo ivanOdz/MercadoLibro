@@ -1,25 +1,23 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
-
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<!DOCTYPE html>
-<%@include file="/WEB-INF/jsp/head/headers.jsp" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 
 <html lang="es" class="custom-style">
+<%@include file="/WEB-INF/jsp/head/headers.jsp" %>
+<%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
 <head>
-    <link href="${pageContext.request.contextPath}/css/exchange.css?v=1.0" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
 
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
-    <link href="${pageContext.request.contextPath}/css/exchange.css" rel="stylesheet"/>
+
     <link href="${pageContext.request.contextPath}/css/navbar.css" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/css/exchange.css" rel="stylesheet"/>
 
     <title><spring:message code="exchanges.view.title"/></title>
 
@@ -176,7 +174,6 @@
                     </c:forEach>
                 </div>
 
-
                 <!-- contenedor derecho donde se ve la info del exchange -->
 				<div class="uk-width-2-5" uk-sticky>
 				    <div class="uk-container">
@@ -207,60 +204,60 @@
 								    <div class="uk-modal-dialog uk-modal-body">
 								        <h2 class="uk-modal-title"><spring:message code="exchange.add_review.title"/></h2>
 
-								        <form:form action="/submitReview" method="post" modelAttribute="userReview">
+<%--								        <form:form action="/submitReview" method="post" modelAttribute="userReview">--%>
 
-								            <div class="form-group uk-margin-top uk-margin-bottom">
-								                <label><spring:message code="review.rating.label"/></label>
+<%--								            <div class="form-group uk-margin-top uk-margin-bottom">--%>
+<%--								                <label><spring:message code="review.rating.label"/></label>--%>
 
-								                <div class="star-rating">
+<%--								                <div class="star-rating">--%>
 
-								                    <form:radiobutton path="userReviewRating" value="5" id="star5"/>
-								                    <label for="star5" title="5 stars">
-								                        <span uk-icon="icon: star; ratio: 1.5"></span>
-								                    </label>
+<%--								                    <form:radiobutton path="userReviewRating" value="5" id="star5"/>--%>
+<%--								                    <label for="star5" title="5 stars">--%>
+<%--								                        <span uk-icon="icon: star; ratio: 1.5"></span>--%>
+<%--								                    </label>--%>
 
-								                    <form:radiobutton path="userReviewRating" value="4" id="star4"/>
-	  							                    <label for="star4" title="4 stars">
-								                        <span uk-icon="icon: star; ratio: 1.5"></span>
-								                    </label>
+<%--								                    <form:radiobutton path="userReviewRating" value="4" id="star4"/>--%>
+<%--	  							                    <label for="star4" title="4 stars">--%>
+<%--								                        <span uk-icon="icon: star; ratio: 1.5"></span>--%>
+<%--								                    </label>--%>
 
-								                    <form:radiobutton path="userReviewRating" value="3" id="star3"/>
-								                    <label for="star3" title="3 stars">
-								                        <span uk-icon="icon: star; ratio: 1.5"></span>
-								                    </label>
+<%--								                    <form:radiobutton path="userReviewRating" value="3" id="star3"/>--%>
+<%--								                    <label for="star3" title="3 stars">--%>
+<%--								                        <span uk-icon="icon: star; ratio: 1.5"></span>--%>
+<%--								                    </label>--%>
 
-								                    <form:radiobutton path="userReviewRating" value="2" id="star2"/>
-								                    <label for="star2" title="2 stars">
-								                        <span uk-icon="icon: star; ratio: 1.5"></span>
-								                    </label>
+<%--								                    <form:radiobutton path="userReviewRating" value="2" id="star2"/>--%>
+<%--								                    <label for="star2" title="2 stars">--%>
+<%--								                        <span uk-icon="icon: star; ratio: 1.5"></span>--%>
+<%--								                    </label>--%>
 
-								                    <form:radiobutton path="userReviewRating" value="1" id="star1"/>
-								                    <label for="star1" title="1 star">
-								                        <span uk-icon="icon: star; ratio: 1.5"></span>
-								                    </label>
+<%--								                    <form:radiobutton path="userReviewRating" value="1" id="star1"/>--%>
+<%--								                    <label for="star1" title="1 star">--%>
+<%--								                        <span uk-icon="icon: star; ratio: 1.5"></span>--%>
+<%--								                    </label>--%>
 
-								                </div>
-								            </div>
+<%--								                </div>--%>
+<%--								            </div>--%>
 
-								            <div class="uk-margin">
-								                <label for="reviewDescription"><spring:message code="review.comments.label"/></label>
-								                <form:textarea path="reviewDescription" rows="4" class="uk-textarea"/>
-								            </div>
+<%--								            <div class="uk-margin">--%>
+<%--								                <label for="reviewDescription"><spring:message code="review.comments.label"/></label>--%>
+<%--								                <form:textarea path="reviewDescription" rows="4" class="uk-textarea"/>--%>
+<%--								            </div>--%>
 
-								            <form:hidden path="exchangeId"/>
-								            <form:hidden path="reviewerId"/>
-								            <form:hidden path="subjectId"/>
+<%--								            <form:hidden path="exchangeId"/>--%>
+<%--								            <form:hidden path="reviewerId"/>--%>
+<%--								            <form:hidden path="subjectId"/>--%>
 
-								            <p class="uk-text-right">
-								                <button class="uk-button uk-button-default uk-modal-close" type="button">
-								                    <spring:message code="exchange.button.cancel"/>
-								                </button>
-								                <button class="uk-button uk-button-primary" type="submit">
-								                    <spring:message code="exchange.button.accept"/>
-								                </button>
-								            </p>
+<%--								            <p class="uk-text-right">--%>
+<%--								                <button class="uk-button uk-button-default uk-modal-close" type="button">--%>
+<%--								                    <spring:message code="exchange.button.cancel"/>--%>
+<%--								                </button>--%>
+<%--								                <button class="uk-button uk-button-primary" type="submit">--%>
+<%--								                    <spring:message code="exchange.button.accept"/>--%>
+<%--								                </button>--%>
+<%--								            </p>--%>
 
-								        </form:form>
+<%--								        </form:form>--%>
 								    </div>
 								</div>
 

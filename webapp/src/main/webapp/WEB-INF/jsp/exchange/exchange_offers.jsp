@@ -44,108 +44,128 @@
 		    </div>
 		</c:if>
 
-        <c:if test="${!(exchanges.size() eq 0)}">
+<%--        <c:if test="${empty exchanges.size() eq 0}">--%>
             <div class="main-content">
                 <!-- columna de exchanges -->
                 <div class="uk-width-3-5 column-exchanges scrollable-content">
 					<div>
-						<ul class="uk-child-width-expand" uk-tab>
-							<li ><a href="#">Pendientes</a></li>
+						<ul uk-tab>
+							<li class="uk-active"><a href="#">Pendientes</a></li>
 							<li><a href="#">Aceptados</a></li>
 							<li><a href="#">Finalizados</a></li>
-							<li class="uk-active"> <a href="#">Rechazados</a></li>
+							<li><a href="#">Rechazados</a></li>
 						</ul>
-					</div>
-                    <c:forEach var="exchange" items="${exchanges}">
-                        <div class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-4@s exchange-card"
-                             onclick="selectCard(this,  '<c:out value="${exchange.offererUsername}"/>',
-                             							'<c:out value="${exchange.offererMail}"/>',
-                             							'<c:out value="${exchange.offererLocation}"/>',
-                             							'<c:out value="${exchange.requesterBookModel.title}"/>',
-                             							'<c:out value="${exchange.requesterBookAuthor}"/>',
-                             							'<c:out value="${exchange.requesterBookModel.edition}"/>',
-                             							'<c:out value="${exchange.requesterBookImages}"/>',
-                             							'<c:out value="${exchange.exchange.exchangeId}"/>',
-                             							'<c:out value="${exchange.offererBook.ownerId}"/>',
-                             							'<c:out value="${exchange.requesterBook.ownerId}"/>',
-                             							'${exchange.isReviewable}'
-                             							)" uk-grid>
+						<ul class="uk-switcher uk-margin">
+							<li>
+								<c:forEach var="pending" items="${pending}">
+									<div class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-4@s exchange-card"
+										 onclick="selectCard(this,  '<c:out value="${pending.offerer.book.owner.username}"/>',
+												 '<c:out value="${pending.offerer.book.owner.mail}"/>',
+												 '<c:out value="${pending.offerer.location}"/>',
+												 '<c:out value="${pending.requester.book.bookModel.title}"/>',
+												 '<c:out value="${pending.requester.book.bookModel.authors}"/>',
+												 '<c:out value="${pending.requester.book.bookModel.edition}"/>',
+												 '<c:out value="${pending.requester.book.images}"/>',
+												 '<c:out value="${pending.exchangeId}"/>',
+												 '<c:out value="${pending.offerer.book.owner.userId}"/>',
+												 '<c:out value="${pending.requester.book.owner.ownerId}"/>',
+												 '${pending.isReviewable}'
+												 )" uk-grid>
 
-                            <div class="uk-card-media-left">
-                                <img class="book-image"
-                                     src="${pageContext.request.contextPath}/images/${exchange.offererBookImages[0].imageId}"
-                                     alt="bookImage"/>
-                            </div>
-                            <div>
-                                <div class="card-text2">
-                                    <div class="card-text-left">
-                                        <h3 class="uk-h6">
-                                            <c:out value="${exchange.offererBookModel.title}"/>
-                                        </h3>
-                                        <h4 class="date-text">
-                                            <fmt:formatDate
-                                                    value="${exchange.exchange.exchangeStartDate}"
-                                                    pattern="dd/MM/yyyy"/>
-                                        </h4>
-                                    </div>
-                                    <div class="uk-align-right card-text-right state-padding">
-                                        <c:choose>
-                                            <c:when test="${exchange.exchange.exchangeState == 'ACCEPTED'
+										<div class="uk-card-media-left">
+											<img class="book-image"
+												 src="${pageContext.request.contextPath}/images/${pending.offerer.book.images[0]}"
+												 alt="bookImage"/>
+										</div>
+										<div>
+											<div class="card-text2">
+												<div class="card-text-left">
+													<h3 class="uk-h6">
+														<c:out value="${exchange.offererBookModel.title}"/>
+													</h3>
+													<h4 class="date-text">
+														<fmt:formatDate
+																value="${exchange.exchange.exchangeStartDate}"
+																pattern="dd/MM/yyyy"/>
+													</h4>
+												</div>
+												<div class="uk-align-right card-text-right state-padding">
+													<c:choose>
+														<c:when test="${exchange.exchange.exchangeState == 'ACCEPTED'
                                                     && exchange.exchange.requesterReceivedBook == true}">
                                                 <span class="uk-badge state-awaiting">
                                                     <spring:message
-                                                            code="exchange.status.awaiting"/>
+															code="exchange.status.awaiting"/>
                                                 </span>
-                                            </c:when>
+														</c:when>
 
-                                            <c:when test="${exchange.exchange.exchangeState == 'ACCEPTED'}">
-                                                <a class="uk-button uk-button-default uk-button-small uk-margin-right"
-                                                   href="#modal-confirm-exchange-${exchange.exchange.acceptCode}"
-                                                   onclick="event.stopPropagation()" uk-toggle>
-                                                    <spring:message code="exchange.button.confirm.exchange"/>
-                                                </a>
-                                                <span class="uk-badge state-inprogress"><spring:message
-                                                        code="exchange.status.in_progress"/></span>
+														<c:when test="${exchange.exchange.exchangeState == 'ACCEPTED'}">
+															<a class="uk-button uk-button-default uk-button-small uk-margin-right"
+															   href="#modal-confirm-exchange-${exchange.exchange.acceptCode}"
+															   onclick="event.stopPropagation()" uk-toggle>
+																<spring:message code="exchange.button.confirm.exchange"/>
+															</a>
+															<span class="uk-badge state-inprogress"><spring:message
+																	code="exchange.status.in_progress"/></span>
 
-                                                <div id="modal-confirm-exchange-${exchange.exchange.acceptCode}"
-                                                     uk-modal>
-                                                    <div class="uk-modal-dialog uk-modal-body">
-                                                        <h3 class="uk-h4"><spring:message
-                                                                code="exchange.confirm.title"/></h3>
-                                                        <p class="uk-text-right">
-                                                            <button class="uk-button uk-button-default uk-modal-close"
-                                                                    type="button"><spring:message
-                                                                    code="button.cancel"/></button>
-                                                            <button class="uk-button uk-button-primary" type="button">
-                                                                <a class="button-text-accept"
-                                                                   href="<c:url value='/confirm_requester'>
+															<div id="modal-confirm-exchange-${exchange.exchange.acceptCode}"
+																 uk-modal>
+																<div class="uk-modal-dialog uk-modal-body">
+																	<h3 class="uk-h4"><spring:message
+																			code="exchange.confirm.title"/></h3>
+																	<p class="uk-text-right">
+																		<button class="uk-button uk-button-default uk-modal-close"
+																				type="button"><spring:message
+																				code="button.cancel"/></button>
+																		<button class="uk-button uk-button-primary" type="button">
+																			<a class="button-text-accept"
+																			   href="<c:url value='/confirm_requester'>
                                                                             <c:param name='accept_code' value='${exchange.exchange.acceptCode}'/>
                                                                             </c:url>">
-                                                                    <spring:message code="button.confirm"/>
-                                                                </a>
-                                                            </button>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </c:when>
-                                            <c:when test="${exchange.exchange.exchangeState == 'REJECTED'}">
+																				<spring:message code="button.confirm"/>
+																			</a>
+																		</button>
+																	</p>
+																</div>
+															</div>
+														</c:when>
+														<c:when test="${exchange.exchange.exchangeState == 'REJECTED'}">
                                                 <span class="uk-badge state-rejected"><spring:message
-                                                        code="exchange.status.rejected"/></span>
-                                            </c:when>
-                                            <c:when test="${exchange.exchange.exchangeState == 'PENDING'}">
+														code="exchange.status.rejected"/></span>
+														</c:when>
+														<c:when test="${exchange.exchange.exchangeState == 'PENDING'}">
                                                 <span class="uk-badge state-pending"><spring:message
-                                                        code="exchange.status.pending"/></span>
-                                            </c:when>
-                                            <c:when test="${exchange.exchange.exchangeState == 'TERMINATED'}">
+														code="exchange.status.pending"/></span>
+														</c:when>
+														<c:when test="${exchange.exchange.exchangeState == 'TERMINATED'}">
                                                 <span class="uk-badge state-approved"><spring:message
-                                                        code="exchange.status.terminated"/></span>
-                                            </c:when>
-                                        </c:choose>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </c:forEach>
+														code="exchange.status.terminated"/></span>
+														</c:when>
+													</c:choose>
+												</div>
+											</div>
+										</div>
+									</div>
+								</c:forEach>
+							</li>
+							<li>
+								<!-- Contenido para la primera pestaña -->
+								<h3>Contenido de la pestaña 2</h3>
+								<p>Este es el contenido que se muestra cuando la pestaña Left está activa.</p>
+							</li>
+							<li>
+								<!-- Contenido para la primera pestaña -->
+								<h3>Contenido de la pestaña 3</h3>
+								<p>Este es el contenido que se muestra cuando la pestaña Left está activa.</p>
+							</li>
+							<li>
+								<!-- Contenido para la primera pestaña -->
+								<h3>Contenido de la pestaña 4</h3>
+								<p>Este es el contenido que se muestra cuando la pestaña Left está activa.</p>
+							</li>
+						</ul>
+					</div>
+
                 </div>
                 
 				<div class="uk-width-2-5" uk-sticky>
@@ -239,7 +259,7 @@
 				    </div>
 				</div>
             </div>
-        </c:if>
+<%--        </c:if>--%>
     </div>
 </div>
 
@@ -301,6 +321,8 @@
     document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('no-selection-message').style.display = 'block';
         document.getElementById('exchange-details').style.display = 'none';
-    });
+		document.getElementById('add-review-button').style.display = 'block';
+		document.getElementById('add-review-button').style.display = 'none';
+	});
 </script>
 </html>

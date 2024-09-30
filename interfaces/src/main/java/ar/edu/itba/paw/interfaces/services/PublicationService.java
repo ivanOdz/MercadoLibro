@@ -27,4 +27,5 @@ public interface PublicationService {
 
     Publication getPublicationByPublicationId(long publicationId);
 
+    void terminatePublication(Publication publication);
 }

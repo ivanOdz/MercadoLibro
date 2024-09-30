@@ -38,13 +38,9 @@ public class BookServiceImpl implements BookService {
     @Override
     public Optional<Book> getBookById(long publicationId) {
         return bookDao.getBookById(publicationId);
-    }
+    }*/
 
-    @Override
-    public void exchangeOwnership(long b1, long b2) {
-        bookDao.exchangeOwnership(b1, b2);
-    }
-
+/*
     @Override
     public Book getBookByPubId(long pubId) {
         return bookDao.getBookByPubId(pubId);
@@ -54,10 +50,15 @@ public class BookServiceImpl implements BookService {
     public List<Book> getAllBooksByOwnerIdAndFilteredBy(long ownerId, String search, int bookStateFilter, int genreFilter) {
         return bookDao.getAllBooksByOwnerIdAndFilteredBy(ownerId, search, bookStateFilter, genreFilter);
     }*/
-
     @Override
     public List<Book> getFilteredSortedOrderedBooksByPageFromUser(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, int pageIndex, long userId, SortType sortType) {
         return bookDao.getFilteredSortedOrderedBooksByPageFromUser(search, isBookStateFilterActive, bookStateFilter, isGenreFilterActive, genreFilter, pageIndex, userId, sortType);
+    }
+
+    @Override
+    public void exchangeOwnership(Book b1, Book b2) {
+        bookDao.setOwner(b1.getBookId(), b2.getOwner().getUserId());
+        bookDao.setOwner(b2.getBookId(), b1.getOwner().getUserId());
     }
 
     @Override
