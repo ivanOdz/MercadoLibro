@@ -12,9 +12,8 @@
 <nav class="uk-navbar-container uk-box-shadow-small " uk-sticky>
     <div class="uk-container uk-width-1-1 nav-background">
         <div class="uk-width-1-1" style="
-             padding: 0px;
-             margin: 0px;
-             padding-left: 2rem;
+             margin: 0;
+             padding: 0 0 0 2rem;
         " uk-navbar>
             <div class="uk-navbar-left">
                 <ul class="uk-navbar-nav">
@@ -32,7 +31,7 @@
                         </a>
                     </li>
                     <li>
-                        <button class="uk-button uk-button-default" type="button"><spring:message code="langauge"/></button>
+                        <button class="uk-button uk-button-default" type="button"><spring:message code="language"/></button>
                         <div class="uk-navbar-dropdown">
                             <ul class="uk-nav uk-dropdown-nav ">
                                 <li><a href="?lang=en"><spring:message code="language.english"/></a></li>
