@@ -60,11 +60,16 @@ public class ExchangeController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getPrincipal() instanceof PawUserDetails pud) {
 
-            List<Exchange> pendingExchanges = exchangeService.getExchangeRequesterListByUserId(pud.getUser().getUserId(), ExchangeState.PENDING);
-            List<Exchange> inProcessExchanges = exchangeService.getExchangeRequesterListByUserId(pud.getUser().getUserId(), ExchangeState.ACCEPTED);
-            List<Exchange> completedExchanges = exchangeService.getExchangeRequesterListByUserId(pud.getUser().getUserId(), ExchangeState.TERMINATED);
-            List<Exchange> rejectedExchanges = exchangeService.getExchangeRequesterListByUserId(pud.getUser().getUserId(), ExchangeState.REJECTED);
+            List<Exchange> pendingExchanges = exchangeService.getExchangeOffererListByUserId(pud.getUser().getUserId(), ExchangeState.PENDING);
+            List<Exchange> inProcessExchanges = exchangeService.getExchangeOffererListByUserId(pud.getUser().getUserId(), ExchangeState.ACCEPTED);
+            List<Exchange> completedExchanges = exchangeService.getExchangeOffererListByUserId(pud.getUser().getUserId(), ExchangeState.TERMINATED);
+            List<Exchange> rejectedExchanges = exchangeService.getExchangeOffererListByUserId(pud.getUser().getUserId(), ExchangeState.REJECTED);
 
+
+            LOGGER.debug(pendingExchanges.toString());
+            LOGGER.debug(inProcessExchanges.toString());
+            LOGGER.debug(completedExchanges.toString());
+            LOGGER.debug(rejectedExchanges.toString());
 
             mav.addObject("pending", pendingExchanges);
             mav.addObject("inProgress", inProcessExchanges);
@@ -91,6 +96,8 @@ public class ExchangeController {
             List<Exchange> inProcessExchanges = exchangeService.getExchangeRequesterListByUserId(pud.getUser().getUserId(), ExchangeState.ACCEPTED);
             List<Exchange> completedExchanges = exchangeService.getExchangeRequesterListByUserId(pud.getUser().getUserId(), ExchangeState.TERMINATED);
             List<Exchange> rejectedExchanges = exchangeService.getExchangeRequesterListByUserId(pud.getUser().getUserId(), ExchangeState.REJECTED);
+
+
 
 
             mav.addObject("pending", pendingExchanges);

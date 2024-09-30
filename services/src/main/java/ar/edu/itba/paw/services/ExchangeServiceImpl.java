@@ -123,11 +123,13 @@ public class ExchangeServiceImpl implements ExchangeService {
     }
 */
 
+    // exchanges where user is the publication owner
     @Override
     public List<Exchange> getExchangeOffererListByUserId(long userId, ExchangeState exchangeState) {
         return exchangeDao.getAllExchangesByUserId(userId, exchangeState, true);
     }
 
+    // exchanges where user is the requester owner
     @Override
     public List<Exchange> getExchangeRequesterListByUserId(long userId, ExchangeState exchangeState) {
         return exchangeDao.getAllExchangesByUserId(userId, exchangeState, false);
