@@ -60,7 +60,7 @@
                                                  '<c:out value="${pending.offerer.book.images}"/>',
                                                  '<c:out value="${pending.exchangeId}"/>',
                                                  '<c:out value="${pending.requester.book.owner.userId}"/>',
-                                                 '<c:out value="${pending.offerer.book.owner.ownerId}"/>',
+                                                 '<c:out value="${pending.offerer.book.owner.userId}"/>',
                                                  '${pending.isReviewable}')"
                                          uk-grid>
                                         <div class="uk-card-media-left">
@@ -169,7 +169,7 @@
                                                  '<c:out value="${inProgress.offerer.book.images}"/>',
                                                  '<c:out value="${inProgress.exchangeId}"/>',
                                                  '<c:out value="${inProgress.requester.book.owner.userId}"/>',
-                                                 '<c:out value="${inProgress.offerer.book.owner.ownerId}"/>',
+                                                 '<c:out value="${inProgress.offerer.book.owner.userId}"/>',
                                                  '${inProgress.isReviewable}')"
                                          uk-grid>
 
@@ -255,7 +255,7 @@
                                                  '<c:out value="${completed.offerer.book.images}"/>',
                                                  '<c:out value="${completed.exchangeId}"/>',
                                                  '<c:out value="${completed.requester.book.owner.userId}"/>',
-                                                 '<c:out value="${completed.offerer.book.owner.ownerId}"/>',
+                                                 '<c:out value="${completed.offerer.book.owner.userId}"/>',
                                                  '${completed.isReviewable}')"
                                          uk-grid>
                                         <div class="uk-card-media-left">
@@ -298,7 +298,7 @@
                                                  '<c:out value="${rejected.offerer.book.images}"/>',
                                                  '<c:out value="${rejected.exchangeId}"/>',
                                                  '<c:out value="${rejected.requester.book.owner.userId}"/>',
-                                                 '<c:out value="${rejected.offerer.book.owner.ownerId}"/>',
+                                                 '<c:out value="${rejected.offerer.book.owner.userId}"/>',
                                                  '${rejected.isReviewable}')"
                                          uk-grid>
                                         <div class="uk-card-media-left">
