@@ -13,17 +13,10 @@ public class Exchange {
     private final long acceptCode;
     private final boolean offererReceivedBook;
     private final boolean requesterReceivedBook;
-
-    public boolean isOffererReceivedBook() {
-        return offererReceivedBook;
-    }
-
-    public boolean isRequesterReceivedBook() {
-        return requesterReceivedBook;
-    }
-
     private Timestamp exchangeStartDate;
     private Timestamp exchangeEndDate;
+
+    private final boolean isReviewable;
 
     public Exchange(long exchangeId, Publication offerer, Publication requester, ExchangeState state, long acceptCode, boolean offererReceivedBook, boolean requesterReceivedBook) {
         this.exchangeId = exchangeId;
@@ -33,6 +26,19 @@ public class Exchange {
         this.acceptCode = acceptCode;
         this.offererReceivedBook = offererReceivedBook;
         this.requesterReceivedBook = requesterReceivedBook;
+        this.isReviewable = state.getValue() != ExchangeState.REJECTED.getValue() && state.getValue() != ExchangeState.PENDING.getValue();
+    }
+
+    public boolean getIsReviewable() {
+        return isReviewable;
+    }
+
+    public boolean isOffererReceivedBook() {
+        return offererReceivedBook;
+    }
+
+    public boolean isRequesterReceivedBook() {
+        return requesterReceivedBook;
     }
 
     public Timestamp getExchangeEndDate() {

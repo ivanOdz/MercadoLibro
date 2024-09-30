@@ -16,7 +16,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
     <link href="${pageContext.request.contextPath}/css/navbar.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/css/exchange.css" rel="stylesheet"/>
-    
+
     <title><spring:message code="publications.list.brand.logo"/></title>
 
 </head>
@@ -26,240 +26,358 @@
 
 <div class="uk-grid">
     <div class="uk-width-5-6 uk-align-center main-section">
-<%--        <div>--%>
-<%--            <h2 class="uk-h2 title"><spring:message code="exchange.offers.title"/></h2>--%>
-<%--            <h3 class="uk-h5"><spring:message code="exchange.offers.subtitle"/></h3>--%>
-<%--        </div>--%>
-<%--		--%>
+        <div>
+            <h2 class="uk-h2 title"><spring:message code="exchange.offers.title"/></h2>
+            <h3 class="uk-h5"><spring:message code="exchange.offers.subtitle"/></h3>
+        </div>
 
 
-		<c:if test="${!empty successMessage}">
-		    <div class="uk-alert-success" uk-alert>
-		        <p>${successMessage}</p>
-		    </div>
-		</c:if>
-		<c:if test="${!empty errorMessage}">
-		    <div class="uk-alert-danger" uk-alert>
-		        <p>${errorMessage}</p>
-		    </div>
-		</c:if>
+        <%--		<c:if test="${!empty successMessage}">--%>
+        <%--		    <div class="uk-alert-success" uk-alert>--%>
+        <%--		        <p>${successMessage}</p>--%>
+        <%--		    </div>--%>
+        <%--		</c:if>--%>
+        <%--		<c:if test="${!empty errorMessage}">--%>
+        <%--		    <div class="uk-alert-danger" uk-alert>--%>
+        <%--		        <p>${errorMessage}</p>--%>
+        <%--		    </div>--%>
+        <%--		</c:if>--%>
 
-<%--        <c:if test="${empty exchanges.size() eq 0}">--%>
-            <div class="main-content">
-                <!-- columna de exchanges -->
-                <div class="uk-width-3-5 column-exchanges scrollable-content">
-					<div>
-						<ul uk-tab>
-							<li class="uk-active"><a href="#">Pendientes</a></li>
-							<li><a href="#">Aceptados</a></li>
-							<li><a href="#">Finalizados</a></li>
-							<li><a href="#">Rechazados</a></li>
-						</ul>
-						<ul class="uk-switcher uk-margin">
-							<li>
-								<c:forEach var="pending" items="${pending}">
+        <%--        <c:if test="${empty exchanges.size() eq 0}">--%>
+        <div class="main-content">
+            <!-- columna de exchanges -->
+            <div class="uk-width-3-5 column-exchanges scrollable-content">
+                <div>
+                    <ul uk-tab>
+                        <li class="uk-active"><a href="#"><spring:message code="exchange.status.pending"/> </a></li>
+                        <li><a href="#"><spring:message code="exchange.status.in_progress"/></a></li>
+                        <li><a href="#"><spring:message code="exchange.status.terminated"/></a></li>
+                        <li><a href="#"><spring:message code="exchange.status.rejected"/></a></li>
+                    </ul>
+                    <ul class="uk-switcher uk-margin">
+
+                        <!-- Pending -->
+
+                        <li>
+                            <c:if test="${!empty pending}">
+                                <c:forEach var="pending" items="${pending}">
+                                    <div class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-4@s exchange-card"
+                                         onclick="selectCard(this,
+                                                 '<c:out value="${pending.offerer.book.owner.username}"/>',
+                                                 '<c:out value="${pending.offerer.book.owner.mail}"/>',
+                                                 '<c:out value="${pending.offerer.location}"/>',
+                                                 '<c:out value="${pending.requester.book.bookModel.title}"/>',
+                                                 '<c:out value="${pending.requester.book.bookModel.authors}"/>',
+                                                 '<c:out value="${pending.requester.book.bookModel.edition}"/>',
+                                                 '<c:out value="${pending.requester.book.images}"/>',
+                                                 '<c:out value="${pending.exchangeId}"/>',
+                                                 '<c:out value="${pending.offerer.book.owner.userId}"/>',
+                                                 '<c:out value="${pending.requester.book.owner.userId}"/>',
+                                                 '${pending.isReviewable}'
+                                                 )" uk-grid>
+
+                                        <div class="uk-card-media-left">
+                                            <img class="book-image"
+                                                 src="${pageContext.request.contextPath}/images/${pending.offerer.book.images[0]}"
+                                                 alt="bookImage"/>
+                                        </div>
+                                        <div>
+                                            <div class="card-text2">
+                                                <div class="card-text-left">
+                                                    <h3 class="uk-h6">
+                                                        <c:out value="${pending.offerer.book.bookModel.title}"/>
+                                                    </h3>
+                                                    <h4 class="date-text">
+                                                        <fmt:formatDate
+                                                                value="${pending.exchange.exchangeStartDate}"
+                                                                pattern="dd/MM/yyyy"/>
+                                                    </h4>
+                                                </div>
+                                                <div class="uk-align-right card-text-right state-padding">
+                                                <span class="uk-badge state-awaiting">
+                                                    <spring:message
+                                                            code="exchange.status.awaiting"/>
+                                                </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </c:forEach>
+                            </c:if>
+                        </li>
+
+                        <!-- In Progress -->
+
+                        <li>
+                            <c:if test="${!empty inProgress}">
+                                <c:forEach var="inProgress" items="${inProgress}">
+                                    <div class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-4@s exchange-card"
+                                         onclick="selectCard(this,
+                                                 '<c:out value="${inProgress.offerer.book.owner.username}"/>',
+                                                 '<c:out value="${inProgress.offerer.book.owner.mail}"/>',
+                                                 '<c:out value="${inProgress.offerer.location}"/>',
+                                                 '<c:out value="${inProgress.requester.book.bookModel.title}"/>',
+                                                 '<c:out value="${inProgress.requester.book.bookModel.authors}"/>',
+                                                 '<c:out value="${inProgress.requester.book.bookModel.edition}"/>',
+                                                 '<c:out value="${inProgress.requester.book.images}"/>',
+                                                 '<c:out value="${inProgress.exchangeId}"/>',
+                                                 '<c:out value="${inProgress.offerer.book.owner.userId}"/>',
+                                                 '<c:out value="${inProgress.requester.book.owner.userId}"/>',
+                                                 '${inProgress.isReviewable}'
+                                                 )" uk-grid>
+
+                                        <div class="uk-card-media-left">
+                                            <img class="book-image"
+                                                 src="${pageContext.request.contextPath}/images/${inProgress.offerer.book.images[0]}"
+                                                 alt="bookImage"/>
+                                        </div>
+                                        <div>
+                                            <div class="card-text2">
+                                                <div class="card-text-left">
+                                                    <h3 class="uk-h6">
+                                                        <c:out value="${inProgress.offerer.book.bookModel.title}"/>
+                                                    </h3>
+                                                    <h4 class="date-text">
+                                                        <fmt:formatDate
+                                                                value="${inProgress.exchangeStartDate}"
+                                                                pattern="dd/MM/yyyy"/>
+                                                    </h4>
+                                                </div>
+                                                <div class="uk-align-right card-text-right state-padding">
+
+                                                    <a class="uk-button uk-button-default uk-button-small uk-margin-right"
+                                                       href="#modal-confirm-exchange-${inProgress.acceptCode}"
+                                                       onclick="event.stopPropagation()" uk-toggle>
+                                                        <spring:message code="exchange.button.confirm.exchange"/>
+                                                    </a>
+                                                    <span class="uk-badge state-inprogress">
+														<spring:message code="exchange.status.in_progress"/>
+													</span>
+
+                                                    <!-- Confirm exchange modal -->
+
+                                                    <div id="modal-confirm-exchange-${inProgress.acceptCode}"
+                                                         uk-modal>
+                                                        <div class="uk-modal-dialog uk-modal-body">
+                                                            <h3 class="uk-h4"><spring:message
+                                                                    code="exchange.confirm.title"/></h3>
+                                                            <p class="uk-text-right">
+                                                                <button class="uk-button uk-button-default uk-modal-close"
+                                                                        type="button"><spring:message
+                                                                        code="button.cancel"/></button>
+                                                                <button class="uk-button uk-button-primary"
+                                                                        type="button">
+                                                                    <a class="button-text-accept custom-link"
+                                                                       href="<c:url value='/confirm_requester'><c:param name='accept_code' value='${inProgress.acceptCode}'/></c:url>">
+                                                                        <spring:message code="button.confirm"/>
+                                                                    </a>
+                                                                </button>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </c:forEach>
+                            </c:if>
+                        </li>
+
+                        <!-- Completed -->
+
+                        <li>
+                            <c:if test="${!empty completed}">
+                                <c:forEach var="completed" items="${completed}">
+                                    <div class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-4@s exchange-card"
+                                         onclick="selectCard(this,
+                                                 '<c:out value="${completed.offerer.book.owner.username}"/>',
+                                                 '<c:out value="${completed.offerer.book.owner.mail}"/>',
+                                                 '<c:out value="${completed.offerer.location}"/>',
+                                                 '<c:out value="${completed.requester.book.bookModel.title}"/>',
+                                                 '<c:out value="${completed.requester.book.bookModel.authors}"/>',
+                                                 '<c:out value="${completed.requester.book.bookModel.edition}"/>',
+                                                 '<c:out value="${completed.requester.book.images}"/>',
+                                                 '<c:out value="${completed.exchangeId}"/>',
+                                                 '<c:out value="${completed.offerer.book.owner.userId}"/>',
+                                                 '<c:out value="${completed.requester.book.owner.userId}"/>',
+                                                 '${completed.isReviewable}'
+                                                 )" uk-grid>
+
+                                        <div class="uk-card-media-left">
+                                            <img class="book-image"
+                                                 src="${pageContext.request.contextPath}/images/${completed.offerer.book.images[0]}"
+                                                 alt="bookImage"/>
+                                        </div>
+                                        <div>
+                                            <div class="card-text2">
+                                                <div class="card-text-left">
+                                                    <h3 class="uk-h6">
+                                                        <c:out value="${completed.offerer.book.bookModel.title}"/>
+                                                    </h3>
+                                                    <h4 class="date-text">
+                                                        <fmt:formatDate
+                                                                value="${completed.exchangeStartDate}"
+                                                                pattern="dd/MM/yyyy"/>
+                                                    </h4>
+                                                </div>
+                                                <div class="uk-align-right card-text-right state-padding">
+
+												<span class="uk-badge state-approved"><spring:message
+                                                        code="exchange.status.terminated"/></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </c:forEach>
+                            </c:if>
+                        </li>
+
+						<!-- Rejected -->
+
+						<li>
+							<c:if test="${!empty rejected}">
+								<c:forEach var="rejected" items="${rejected}">
 									<div class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-4@s exchange-card"
-										 onclick="selectCard(this,  '<c:out value="${pending.offerer.book.owner.username}"/>',
-												 '<c:out value="${pending.offerer.book.owner.mail}"/>',
-												 '<c:out value="${pending.offerer.location}"/>',
-												 '<c:out value="${pending.requester.book.bookModel.title}"/>',
-												 '<c:out value="${pending.requester.book.bookModel.authors}"/>',
-												 '<c:out value="${pending.requester.book.bookModel.edition}"/>',
-												 '<c:out value="${pending.requester.book.images}"/>',
-												 '<c:out value="${pending.exchangeId}"/>',
-												 '<c:out value="${pending.offerer.book.owner.userId}"/>',
-												 '<c:out value="${pending.requester.book.owner.ownerId}"/>',
-												 '${pending.isReviewable}'
+										 onclick="selectCard(this,
+												 '<c:out value="${rejected.offerer.book.owner.username}"/>',
+												 '<c:out value="${rejected.offerer.book.owner.mail}"/>',
+												 '<c:out value="${rejected.offerer.location}"/>',
+												 '<c:out value="${rejected.requester.book.bookModel.title}"/>',
+												 '<c:out value="${rejected.requester.book.bookModel.authors}"/>',
+												 '<c:out value="${rejected.requester.book.bookModel.edition}"/>',
+												 '<c:out value="${rejected.requester.book.images}"/>',
+												 '<c:out value="${rejected.exchangeId}"/>',
+												 '<c:out value="${rejected.offerer.book.owner.userId}"/>',
+												 '<c:out value="${rejected.requester.book.owner.userId}"/>',
+												 '${rejected.isReviewable}'
 												 )" uk-grid>
 
 										<div class="uk-card-media-left">
 											<img class="book-image"
-												 src="${pageContext.request.contextPath}/images/${pending.offerer.book.images[0]}"
+												 src="${pageContext.request.contextPath}/images/${rejected.offerer.book.images[0]}"
 												 alt="bookImage"/>
 										</div>
 										<div>
 											<div class="card-text2">
 												<div class="card-text-left">
 													<h3 class="uk-h6">
-														<c:out value="${exchange.offererBookModel.title}"/>
+														<c:out value="${rejected.offerer.book.bookModel.title}"/>
 													</h3>
 													<h4 class="date-text">
 														<fmt:formatDate
-																value="${exchange.exchange.exchangeStartDate}"
+																value="${rejected.exchangeStartDate}"
 																pattern="dd/MM/yyyy"/>
 													</h4>
 												</div>
 												<div class="uk-align-right card-text-right state-padding">
-													<c:choose>
-														<c:when test="${exchange.exchange.exchangeState == 'ACCEPTED'
-                                                    && exchange.exchange.requesterReceivedBook == true}">
-                                                <span class="uk-badge state-awaiting">
-                                                    <spring:message
-															code="exchange.status.awaiting"/>
-                                                </span>
-														</c:when>
 
-														<c:when test="${exchange.exchange.exchangeState == 'ACCEPTED'}">
-															<a class="uk-button uk-button-default uk-button-small uk-margin-right"
-															   href="#modal-confirm-exchange-${exchange.exchange.acceptCode}"
-															   onclick="event.stopPropagation()" uk-toggle>
-																<spring:message code="exchange.button.confirm.exchange"/>
-															</a>
-															<span class="uk-badge state-inprogress"><spring:message
-																	code="exchange.status.in_progress"/></span>
-
-															<div id="modal-confirm-exchange-${exchange.exchange.acceptCode}"
-																 uk-modal>
-																<div class="uk-modal-dialog uk-modal-body">
-																	<h3 class="uk-h4"><spring:message
-																			code="exchange.confirm.title"/></h3>
-																	<p class="uk-text-right">
-																		<button class="uk-button uk-button-default uk-modal-close"
-																				type="button"><spring:message
-																				code="button.cancel"/></button>
-																		<button class="uk-button uk-button-primary" type="button">
-																			<a class="button-text-accept"
-																			   href="<c:url value='/confirm_requester'>
-                                                                            <c:param name='accept_code' value='${exchange.exchange.acceptCode}'/>
-                                                                            </c:url>">
-																				<spring:message code="button.confirm"/>
-																			</a>
-																		</button>
-																	</p>
-																</div>
-															</div>
-														</c:when>
-														<c:when test="${exchange.exchange.exchangeState == 'REJECTED'}">
-                                                <span class="uk-badge state-rejected"><spring:message
-														code="exchange.status.rejected"/></span>
-														</c:when>
-														<c:when test="${exchange.exchange.exchangeState == 'PENDING'}">
-                                                <span class="uk-badge state-pending"><spring:message
-														code="exchange.status.pending"/></span>
-														</c:when>
-														<c:when test="${exchange.exchange.exchangeState == 'TERMINATED'}">
-                                                <span class="uk-badge state-approved"><spring:message
+												<span class="uk-badge state-approved"><spring:message
 														code="exchange.status.terminated"/></span>
-														</c:when>
-													</c:choose>
 												</div>
 											</div>
 										</div>
 									</div>
 								</c:forEach>
-							</li>
-							<li>
-								<!-- Contenido para la primera pestaña -->
-								<h3>Contenido de la pestaña 2</h3>
-								<p>Este es el contenido que se muestra cuando la pestaña Left está activa.</p>
-							</li>
-							<li>
-								<!-- Contenido para la primera pestaña -->
-								<h3>Contenido de la pestaña 3</h3>
-								<p>Este es el contenido que se muestra cuando la pestaña Left está activa.</p>
-							</li>
-							<li>
-								<!-- Contenido para la primera pestaña -->
-								<h3>Contenido de la pestaña 4</h3>
-								<p>Este es el contenido que se muestra cuando la pestaña Left está activa.</p>
-							</li>
-						</ul>
-					</div>
-
+							</c:if>
+                        </li>
+                    </ul>
                 </div>
-                
-				<div class="uk-width-2-5" uk-sticky>
-				    <div class="uk-container">
-				        <div class="uk-card uk-card-default uk-card-body exchange-info-container">
-				            <div id="no-selection-message" class="uk-h6">
-				                <h4 class="uk-h6">
-				                    <spring:message code="exchange.choose.message"/>
-				                </h4>
-				            </div>
-				
-				            <div id="exchange-details" style="display: none;">
-				                <h3 id="info-requester-username"><spring:message code="exchange.with"/></h3>
-				                <p id="info-requester-mail"><spring:message code="exchange.with_email"/></p>
-				                <p id="info-requester-location"><spring:message code="exchange.location"/></p>
-				
-				                <h4><spring:message code="exchange.your_book"/></h4>
-				                <p id="info-offered-book-title"><spring:message code="exchange.book.title"/></p>
-				                <p id="info-offered-book-authors"><spring:message code="exchange.book.authors"/></p>
-				                <p id="info-offered-book-edition"><spring:message code="exchange.book.edition"/></p>
-				
-				                <div id="info-offered-book-images" uk-grid></div>
-				
-							    <button id="add-review-button" class="uk-button uk-button-primary" uk-toggle="target: #modal-add-review">
-							        <spring:message code="exchange.button.add_review"/>
-							    </button>
-				
-								<div id="modal-add-review" uk-modal>
-								    <div class="uk-modal-dialog uk-modal-body">
-								        <h2 class="uk-modal-title"><spring:message code="exchange.add_review.title"/></h2>
-								        
-								        <form:form action="/submitReview" method="post" modelAttribute="userReview">
-									         
-								            <div class="form-group uk-margin-top uk-margin-bottom">
-								                <label><spring:message code="review.rating.label"/></label>
-								
-								                <div class="star-rating">
-								                
-								                    <form:radiobutton path="userReviewRating" value="5" id="star5"/>
-								                    <label for="star5" title="5 stars">
-								                        <span uk-icon="icon: star; ratio: 1.5"></span>
-								                    </label>
-								                    
-								                    <form:radiobutton path="userReviewRating" value="4" id="star4"/>
-	  							                    <label for="star4" title="4 stars">
-								                        <span uk-icon="icon: star; ratio: 1.5"></span>
-								                    </label>
-								
-								                    <form:radiobutton path="userReviewRating" value="3" id="star3"/>
-								                    <label for="star3" title="3 stars">
-								                        <span uk-icon="icon: star; ratio: 1.5"></span>
-								                    </label>
-								
-								                    <form:radiobutton path="userReviewRating" value="2" id="star2"/>
-								                    <label for="star2" title="2 stars">
-								                        <span uk-icon="icon: star; ratio: 1.5"></span>
-								                    </label>
-								
-								                    <form:radiobutton path="userReviewRating" value="1" id="star1"/>
-								                    <label for="star1" title="1 star">
-								                        <span uk-icon="icon: star; ratio: 1.5"></span>
-								                    </label>
-								                    
-								                </div>
-								            </div>
-								
-								            <div class="uk-margin">
-								                <label for="reviewDescription"><spring:message code="review.comments.label"/></label>
-								                <form:textarea path="reviewDescription" rows="4" class="uk-textarea"/>
-								            </div>
-											
-								            <form:hidden path="exchangeId"/>
-								            <form:hidden path="reviewerId"/>
-								            <form:hidden path="subjectId"/>
-								            
-								            <p class="uk-text-right">
-								                <button class="uk-button uk-button-default uk-modal-close" type="button">
-								                    <spring:message code="exchange.button.cancel"/>
-								                </button>
-								                <button class="uk-button uk-button-primary" type="submit">
-								                    <spring:message code="exchange.button.accept"/>
-								                </button>
-								            </p>
-								            
-								        </form:form>
-								    </div>
-								</div>
-				
-				            </div>
-				        </div>
-				    </div>
-				</div>
+
             </div>
-<%--        </c:if>--%>
+
+            <div class="uk-width-2-5" uk-sticky>
+                <div class="uk-container">
+                    <div class="uk-card uk-card-default uk-card-body exchange-info-container">
+                        <div id="no-selection-message" class="uk-h6">
+                            <h4 class="uk-h6">
+                                <spring:message code="exchange.choose.message"/>
+                            </h4>
+                        </div>
+
+                        <div id="exchange-details" style="display: none;">
+                            <h3 id="info-requester-username"><spring:message code="exchange.with"/></h3>
+                            <p id="info-requester-mail"><spring:message code="exchange.with_email"/></p>
+                            <p id="info-requester-location"><spring:message code="exchange.location"/></p>
+
+                            <h4><spring:message code="exchange.your_book"/></h4>
+                            <p id="info-offered-book-title"><spring:message code="exchange.book.title"/></p>
+                            <p id="info-offered-book-authors"><spring:message code="exchange.book.authors"/></p>
+                            <p id="info-offered-book-edition"><spring:message code="exchange.book.edition"/></p>
+
+                            <div id="info-offered-book-images" uk-grid></div>
+
+                            <button id="add-review-button" class="uk-button uk-button-primary"
+                                    uk-toggle="target: #modal-add-review">
+                                <spring:message code="exchange.button.add_review"/>
+                            </button>
+
+                            <div id="modal-add-review" uk-modal>
+                                <div class="uk-modal-dialog uk-modal-body">
+                                    <h2 class="uk-modal-title"><spring:message code="exchange.add_review.title"/></h2>
+
+                                    <form:form action="/submitReview" method="post" modelAttribute="review">
+
+                                        <div class="form-group uk-margin-top uk-margin-bottom">
+                                            <label><spring:message code="review.rating.label"/></label>
+
+                                            <div class="star-rating">
+
+                                                <form:radiobutton path="userReviewRating" value="5" id="star5"/>
+                                                <label for="star5" title="5 stars">
+                                                    <span uk-icon="icon: star; ratio: 1.5"></span>
+                                                </label>
+
+                                                <form:radiobutton path="userReviewRating" value="4" id="star4"/>
+                                                <label for="star4" title="4 stars">
+                                                    <span uk-icon="icon: star; ratio: 1.5"></span>
+                                                </label>
+
+                                                <form:radiobutton path="userReviewRating" value="3" id="star3"/>
+                                                <label for="star3" title="3 stars">
+                                                    <span uk-icon="icon: star; ratio: 1.5"></span>
+                                                </label>
+
+                                                <form:radiobutton path="userReviewRating" value="2" id="star2"/>
+                                                <label for="star2" title="2 stars">
+                                                    <span uk-icon="icon: star; ratio: 1.5"></span>
+                                                </label>
+
+                                                <form:radiobutton path="userReviewRating" value="1" id="star1"/>
+                                                <label for="star1" title="1 star">
+                                                    <span uk-icon="icon: star; ratio: 1.5"></span>
+                                                </label>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="uk-margin">
+                                            <label for="reviewDescription"><spring:message
+                                                    code="review.comments.label"/></label>
+                                            <form:textarea path="reviewDescription" rows="4" class="uk-textarea"/>
+                                        </div>
+
+                                        <form:hidden path="exchangeId"/>
+                                        <form:hidden path="reviewerId"/>
+                                        <form:hidden path="subjectId"/>
+
+                                        <p class="uk-text-right">
+                                            <button class="uk-button uk-button-default uk-modal-close" type="button">
+                                                <spring:message code="exchange.button.cancel"/>
+                                            </button>
+                                            <button class="uk-button uk-button-primary" type="submit">
+                                                <spring:message code="exchange.button.accept"/>
+                                            </button>
+                                        </p>
+
+                                    </form:form>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -267,8 +385,8 @@
 
 <script>
     function selectCard(card, offererUsername, offererMail, offererLocation, requestedBookTitle, requestedBookAuthors, requestedBookEdition, requestedBookImages, exchangeId, reviewerId, subjectId, isReviewable) {
-		
-    	// Remover la clase 'selected-card' de todas las tarjetas
+
+        // Remover la clase 'selected-card' de todas las tarjetas
         document.querySelectorAll('.exchange-card').forEach(function (el) {
             el.classList.remove('selected-card');
         });
@@ -293,12 +411,12 @@
         } else {
             document.getElementById('add-review-button').style.display = 'none';
         }
-        
+
         // Actualizar los campos ocultos del formulario de reseña
         document.querySelector('input[name="exchangeId"]').value = exchangeId;
         document.querySelector('input[name="reviewerId"]').value = reviewerId;
         document.querySelector('input[name="subjectId"]').value = subjectId;
-        
+
         // Limpiar imágenes anteriores
         const imageContainer = document.getElementById('info-offered-book-images');
         imageContainer.innerHTML = '';
@@ -321,8 +439,8 @@
     document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('no-selection-message').style.display = 'block';
         document.getElementById('exchange-details').style.display = 'none';
-		document.getElementById('add-review-button').style.display = 'block';
-		document.getElementById('add-review-button').style.display = 'none';
-	});
+        document.getElementById('add-review-button').style.display = 'block';
+        document.getElementById('add-review-button').style.display = 'none';
+    });
 </script>
 </html>

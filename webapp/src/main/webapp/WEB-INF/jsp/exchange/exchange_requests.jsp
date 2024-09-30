@@ -39,10 +39,10 @@
             <div class="uk-width-3-5 column-exchanges scrollable-content">
                 <div>
                     <ul uk-tab>
-                        <li class="uk-active"><a href="#">Pendientes</a></li>
-                        <li><a href="#">En progreso</a></li>
-                        <li><a href="#">Finalizados</a></li>
-                        <li><a href="#">Rechazados</a></li>
+                        <li class="uk-active"><a href="#"><spring:message code="exchange.status.pending"/> </a></li>
+                        <li><a href="#"><spring:message code="exchange.status.in_progress"/></a></li>
+                        <li><a href="#"><spring:message code="exchange.status.terminated"/></a></li>
+                        <li><a href="#"><spring:message code="exchange.status.rejected"/></a></li>
                     </ul>
                     <ul class="uk-switcher uk-margin">
                         <!-- Pending -->
@@ -57,7 +57,11 @@
                                                  '<c:out value="${pending.offerer.book.bookModel.title}"/>',
                                                  '<c:out value="${pending.offerer.book.bookModel.authors}"/>',
                                                  '<c:out value="${pending.offerer.book.bookModel.title}"/>',
-                                                 '<c:out value="${pending.offerer.book.images[0]}"/>')"
+                                                 '<c:out value="${pending.offerer.book.images}"/>',
+                                                 '<c:out value="${pending.exchangeId}"/>',
+                                                 '<c:out value="${pending.requester.book.owner.userId}"/>',
+                                                 '<c:out value="${pending.offerer.book.owner.userId}"/>',
+                                                 '${pending.isReviewable}')"
                                          uk-grid>
                                         <div class="uk-card-media-left">
                                             <img class="book-image"
@@ -162,8 +166,13 @@
                                                  '<c:out value="${inProgress.offerer.book.bookModel.title}"/>',
                                                  '<c:out value="${inProgress.offerer.book.bookModel.authors}"/>',
                                                  '<c:out value="${inProgress.offerer.book.bookModel.title}"/>',
-                                                 '<c:out value="${inProgress.offerer.book.images[0]}"/>')"
+                                                 '<c:out value="${inProgress.offerer.book.images}"/>',
+                                                 '<c:out value="${inProgress.exchangeId}"/>',
+                                                 '<c:out value="${inProgress.requester.book.owner.userId}"/>',
+                                                 '<c:out value="${inProgress.offerer.book.owner.userId}"/>',
+                                                 '${inProgress.isReviewable}')"
                                          uk-grid>
+
                                         <div class="uk-card-media-left">
                                             <img class="book-image"
                                                  src="${pageContext.request.contextPath}/images/${inProgress.requester.book.bookModel.imageId}"
@@ -243,7 +252,11 @@
                                                  '<c:out value="${completed.offerer.book.bookModel.title}"/>',
                                                  '<c:out value="${completed.offerer.book.bookModel.authors}"/>',
                                                  '<c:out value="${completed.offerer.book.bookModel.title}"/>',
-                                                 '<c:out value="${completed.offerer.book.images[0]}"/>')"
+                                                 '<c:out value="${completed.offerer.book.images}"/>',
+                                                 '<c:out value="${completed.exchangeId}"/>',
+                                                 '<c:out value="${completed.requester.book.owner.userId}"/>',
+                                                 '<c:out value="${completed.offerer.book.owner.userId}"/>',
+                                                 '${completed.isReviewable}')"
                                          uk-grid>
                                         <div class="uk-card-media-left">
                                             <img class="book-image"
@@ -282,7 +295,11 @@
                                                  '<c:out value="${rejected.offerer.book.bookModel.title}"/>',
                                                  '<c:out value="${rejected.offerer.book.bookModel.authors}"/>',
                                                  '<c:out value="${rejected.offerer.book.bookModel.title}"/>',
-                                                 '<c:out value="${rejected.offerer.book.images[0]}"/>')"
+                                                 '<c:out value="${rejected.offerer.book.images}"/>',
+                                                 '<c:out value="${rejected.exchangeId}"/>',
+                                                 '<c:out value="${rejected.requester.book.owner.userId}"/>',
+                                                 '<c:out value="${rejected.offerer.book.owner.userId}"/>',
+                                                 '${rejected.isReviewable}')"
                                          uk-grid>
                                         <div class="uk-card-media-left">
                                             <img class="book-image"
@@ -344,60 +361,61 @@
                                     <h2 class="uk-modal-title"><spring:message
                                             code="exchange.add_review.title"/></h2>
 
-                                    <%--								        <form:form action="/submitReview" method="post" modelAttribute="userReview">--%>
+                                    <form:form action="/submitReview" method="post" modelAttribute="review">
 
-                                    <%--								            <div class="form-group uk-margin-top uk-margin-bottom">--%>
-                                    <%--								                <label><spring:message code="review.rating.label"/></label>--%>
+                                        <div class="form-group uk-margin-top uk-margin-bottom">
+                                            <label><spring:message code="review.rating.label"/></label>
 
-                                    <%--								                <div class="star-rating">--%>
+                                            <div class="star-rating">
 
-                                    <%--								                    <form:radiobutton path="userReviewRating" value="5" id="star5"/>--%>
-                                    <%--								                    <label for="star5" title="5 stars">--%>
-                                    <%--								                        <span uk-icon="icon: star; ratio: 1.5"></span>--%>
-                                    <%--								                    </label>--%>
+                                                <form:radiobutton path="userReviewRating" value="5" id="star5"/>
+                                                <label for="star5" title="5 stars">
+                                                    <span uk-icon="icon: star; ratio: 1.5"></span>
+                                                </label>
 
-                                    <%--								                    <form:radiobutton path="userReviewRating" value="4" id="star4"/>--%>
-                                    <%--	  							                    <label for="star4" title="4 stars">--%>
-                                    <%--								                        <span uk-icon="icon: star; ratio: 1.5"></span>--%>
-                                    <%--								                    </label>--%>
+                                                <form:radiobutton path="userReviewRating" value="4" id="star4"/>
+                                                <label for="star4" title="4 stars">
+                                                    <span uk-icon="icon: star; ratio: 1.5"></span>
+                                                </label>
 
-                                    <%--								                    <form:radiobutton path="userReviewRating" value="3" id="star3"/>--%>
-                                    <%--								                    <label for="star3" title="3 stars">--%>
-                                    <%--								                        <span uk-icon="icon: star; ratio: 1.5"></span>--%>
-                                    <%--								                    </label>--%>
+                                                <form:radiobutton path="userReviewRating" value="3" id="star3"/>
+                                                <label for="star3" title="3 stars">
+                                                    <span uk-icon="icon: star; ratio: 1.5"></span>
+                                                </label>
 
-                                    <%--								                    <form:radiobutton path="userReviewRating" value="2" id="star2"/>--%>
-                                    <%--								                    <label for="star2" title="2 stars">--%>
-                                    <%--								                        <span uk-icon="icon: star; ratio: 1.5"></span>--%>
-                                    <%--								                    </label>--%>
+                                                <form:radiobutton path="userReviewRating" value="2" id="star2"/>
+                                                <label for="star2" title="2 stars">
+                                                    <span uk-icon="icon: star; ratio: 1.5"></span>
+                                                </label>
 
-                                    <%--								                    <form:radiobutton path="userReviewRating" value="1" id="star1"/>--%>
-                                    <%--								                    <label for="star1" title="1 star">--%>
-                                    <%--								                        <span uk-icon="icon: star; ratio: 1.5"></span>--%>
-                                    <%--								                    </label>--%>
+                                                <form:radiobutton path="userReviewRating" value="1" id="star1"/>
+                                                <label for="star1" title="1 star">
+                                                    <span uk-icon="icon: star; ratio: 1.5"></span>
+                                                </label>
 
-                                    <%--								                </div>--%>
-                                    <%--								            </div>--%>
+                                            </div>
+                                        </div>
 
-                                    <%--								            <div class="uk-margin">--%>
-                                    <%--								                <label for="reviewDescription"><spring:message code="review.comments.label"/></label>--%>
-                                    <%--								                <form:textarea path="reviewDescription" rows="4" class="uk-textarea"/>--%>
-                                    <%--								            </div>--%>
+                                        <div class="uk-margin">
+                                            <label for="reviewDescription"><spring:message
+                                                    code="review.comments.label"/></label>
+                                            <form:textarea path="reviewDescription" rows="4" class="uk-textarea"/>
+                                        </div>
 
-                                    <%--								            <form:hidden path="exchangeId"/>--%>
-                                    <%--								            <form:hidden path="reviewerId"/>--%>
-                                    <%--								            <form:hidden path="subjectId"/>--%>
+                                        <form:hidden path="exchangeId"/>
+                                        <form:hidden path="reviewerId"/>
+                                        <form:hidden path="subjectId"/>
 
-                                    <%--								            <p class="uk-text-right">--%>
-                                    <%--								                <button class="uk-button uk-button-default uk-modal-close" type="button">--%>
-                                    <%--								                    <spring:message code="exchange.button.cancel"/>--%>
-                                    <%--								                </button>--%>
-                                    <%--								                <button class="uk-button uk-button-primary" type="submit">--%>
-                                    <%--								                    <spring:message code="exchange.button.accept"/>--%>
-                                    <%--								                </button>--%>
-                                    <%--								            </p>--%>
+                                        <p class="uk-text-right">
+                                            <button class="uk-button uk-button-default uk-modal-close" type="button">
+                                                <spring:message code="exchange.button.cancel"/>
+                                            </button>
+                                            <button class="uk-button uk-button-primary" type="submit">
+                                                <spring:message code="exchange.button.accept"/>
+                                            </button>
+                                        </p>
 
-                                    <%--								        </form:form>--%>
+                                    </form:form>
                                 </div>
                             </div>
 
@@ -423,8 +441,8 @@
         card.classList.add('selected-card');
 
         // Mostrar la sección de detalles y ocultar el mensaje de selección
-        // document.getElementById('no-selection-message').style.display = 'none';
-        // document.getElementById('exchange-details').style.display = 'block';
+        document.getElementById('no-selection-message').style.display = 'none';
+        document.getElementById('exchange-details').style.display = 'block';
 
         // Actualizar la información en la columna izquierda
         document.getElementById('info-requester-username').textContent = "<spring:message code="exchange.with"/>" + " " + requesterUsername;
@@ -434,11 +452,11 @@
         document.getElementById('info-offered-book-authors').textContent = "<spring:message code="exchange.book.authors"/>" + " " + offeredBookAuthors;
         document.getElementById('info-offered-book-edition').textContent = "<spring:message code="exchange.book.edition"/>" + " " + offeredBookEdition;
 
-        // if (isReviewable === 'true') {
-        //     document.getElementById('add-review-button').style.display = 'block';
-        // } else {
-        //     document.getElementById('add-review-button').style.display = 'none';
-        // }
+        if (isReviewable === 'true') {
+            document.getElementById('add-review-button').style.display = 'block';
+        } else {
+            document.getElementById('add-review-button').style.display = 'none';
+        }
 
         // Actualizar los campos ocultos del formulario de reseña
         document.querySelector('input[name="exchangeId"]').value = exchangeId;
@@ -465,30 +483,10 @@
 
     // Inicialmente, mostrar el mensaje de selección
     document.addEventListener('DOMContentLoaded', function () {
-        // document.getElementById('no-selection-message').style.display = 'block';
-        // document.getElementById('exchange-details').style.display = 'none';
+        document.getElementById('no-selection-message').style.display = 'block';
+        document.getElementById('exchange-details').style.display = 'none';
     });
 </script>
 
 </html>
-
-
-<!-- Información del libro solicitado -->
-<%--                        <h4>Libro solicitado:</h4>--%>
-<%--                        <p>Título: ${exchange.requesterBookModel.title}</p>--%>
-<%--                        <p>Autor(es):--%>
-<%--                            <c:forEach var="author" items="${exchange.requesterBookAuthor}">--%>
-<%--                                ${author.authorName}--%>
-<%--                            </c:forEach>--%>
-<%--                        </p>--%>
-<%--                        <p>Edición: ${exchange.requesterBookModel.edition}</p>--%>
-<%--    --%>
-<!-- Mostrar imágenes del libro solicitado -->
-<%--                        <div uk-grid>--%>
-<%--                            <c:forEach var="image" items="${exchange.requesterBookImages}">--%>
-<%--                                <div class="uk-width-1-4">--%>
-<%--                                    <img src="${image.imageId}" class="uk-border-rounded" alt="Imagen del libro">--%>
-<%--                                </div>--%>
-<%--                            </c:forEach>--%>
-<%--                        </div>--%>
 
