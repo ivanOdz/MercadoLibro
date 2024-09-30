@@ -3,7 +3,7 @@
 <c:url var="exchangeOffersUrl" value="/offers"/>
 <c:url var="booksUrl" value="/book"/>
 <c:url var="profileUrl" value="/profile"/>
-<c:url var="newBookFromScratch" value="/book/form_step1"/>
+<c:url var="newBookFromScratch" value="/book/new_book"/>
 <c:url var="uploadNewPrecharged" value="/book/book_models"/>
 <c:url var="logout" value="/logout"/>
 
