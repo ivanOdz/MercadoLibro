@@ -202,7 +202,7 @@
                             <span uk-icon="icon: location" style="margin-left: 25px;"></span>
                             <p style="text-align: center">
                                 <strong>
-                                    <c:out value="${publication.location}"/>
+                                    <c:out value="${publication.location.locationString}"/>
                                 </strong>
                             </p>
                         </div>
