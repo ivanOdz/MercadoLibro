@@ -98,7 +98,7 @@ public class BookJdbcDao implements BookDao {
         String checkQuery = "SELECT COUNT(*) FROM book_rating WHERE userId = ? AND bookModelId = ?";
         int count = jdbcTemplate.queryForObject(checkQuery, new Object[]{user.getUserId(), bookModelId}, Integer.class);
 
-        if(count > 0) {
+        if (count > 0) {
             String updateQuery = "UPDATE book_rating SET rating = ? WHERE userId = ? AND bookModelId = ?";
             jdbcTemplate.update(updateQuery, rating, user.getUserId(), bookModelId);
         } else {
@@ -195,6 +195,35 @@ public class BookJdbcDao implements BookDao {
             return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), userId, "%" + search.toLowerCase() + "%", bookStateFilter.getValue(), PAGE_SIZE, offset}, new int[]{Types.INTEGER, Types.BIGINT, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_BOOK);
         }
         return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), userId, "%" + search.toLowerCase() + "%", PAGE_SIZE, offset}, new int[]{Types.INTEGER, Types.BIGINT, Types.VARCHAR, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_BOOK);
+    }
+
+    @Override
+    public List<Book> getAllBooksByUser(long userId) {
+        String sqlQuery = "SELECT  b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
+                "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, bm.imageId AS coverId, AVG(br.rating) AS rating, COUNT(br.rating) AS ratingCount, " +
+                "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, ARRAY_AGG(i.imageId ORDER BY bi.imageOrder) AS images, " +
+                "p.publicationState, e.exchangeState, " +  // Checkear esto, no se si hace falta que este en las tuplas que devuelve
+                "CASE " +
+                "WHEN NOT EXISTS (SELECT 1 FROM publication p2 WHERE p2.bookId = b.bookId) THEN TRUE " +
+                "WHEN NOT EXISTS (SELECT 1 FROM exchange e2 JOIN publication p2 ON e2.offererPubId = p2.publicationId OR e2.requesterPubId = p2.publicationId WHERE p2.bookId = b.bookId AND e2.exchangeState = ?) THEN TRUE " +
+                "ELSE FALSE " +
+                "END AS available " +
+                "FROM book AS b " +
+                "JOIN users AS u ON b.ownerId = u.userId " +
+                "JOIN book_model AS bm ON bm.bookModelId = b.bookModelId " +
+                "JOIN book_author AS ba ON ba.bookModelId = bm.bookModelId " +
+                "JOIN author AS a ON a.authorId = ba.authorId " +
+                "LEFT JOIN (SELECT DISTINCT ON (bookId) * FROM publication ORDER BY bookId, publicationDatetime DESC) AS p ON p.bookId = b.bookId " +
+                "LEFT JOIN exchange AS e ON e.offererPubId = p.publicationId OR e.requesterPubId = p.publicationId " +
+                "LEFT JOIN book_image AS bi ON bi.bookId = b.bookId " +
+                "LEFT JOIN book_rating AS br ON bm.bookModelId = br.bookModelId " +
+                "LEFT JOIN image AS i ON bi.imageId = i.imageId " +
+                "WHERE u.userid = ? " +
+                "GROUP BY available, b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, bm.dimension, bm.publicationYear, " +
+                "bm.isPocketEdition, bm.isHardcover, p.publicationState, bm.imageId, u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, e.exchangeState";
+
+        return jdbcTemplate.query(sqlQuery,  new Object[]{userId}, new int[]{Types.BIGINT}, ROW_MAPPER_BOOK);
+
     }
 }
 

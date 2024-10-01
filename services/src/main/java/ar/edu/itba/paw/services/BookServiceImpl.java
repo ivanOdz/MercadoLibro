@@ -102,6 +102,11 @@ public class BookServiceImpl implements BookService {
         }
         return toReturn;
     }
+
+
+    public List<Book> getAvailableBooksByUser(User user){
+        return bookDao.getAllBooksByUser(user.getUserId()).stream().filter((b) -> b.isAvailable()).toList();
+    }
 }
 
 

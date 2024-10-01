@@ -26,7 +26,7 @@ public interface BookService {
                     int edition, int rating, List<MultipartFile> imageFiles, Short publicationYear, boolean isHardcover, boolean isPocketEdition,
                     BookDimension dimension, Language language, int pages, int weight, int bookCoverIndex, boolean publish, User user, Long bookModelId);
 
-
+    List<Book> getAvailableBooksByUser(User user);
 
     /*private final User owner;
     private final BookModel bookModel;

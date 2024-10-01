@@ -29,4 +29,5 @@ public interface BookDao {
 
     void createBookRating(User user, long bookModelId, int rating);
 
+    List<Book> getAllBooksByUser(long userId);
 }
