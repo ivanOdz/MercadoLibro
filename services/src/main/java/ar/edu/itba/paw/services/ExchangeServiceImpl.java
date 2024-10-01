@@ -57,6 +57,9 @@ public class ExchangeServiceImpl implements ExchangeService {
         variables.put("requesterName", requester.getUsername());
         variables.put("offererName", offerer.getUsername());
         variables.put("offererEmail", offerer.getMail());
+        variables.put("exchangeUrl", webappUrl + "/requests");
+        variables.put("publicationsUrl", webappUrl + "/publications");
+        // link para redirigir a la página de exchanges que corresponda para el call-to-action de marcar como confirmado
 
         emailService.sendExchangeEmail(requester.getMail(), variables, state);
 
@@ -113,6 +116,8 @@ public class ExchangeServiceImpl implements ExchangeService {
         variables.put("offeredPublication", bookOffered.getBookModel().getTitle());
         variables.put("validationUrl", webappUrl + "/createexchange?accept_code=" + ex.get().getAcceptCode() + "&state=true");
         variables.put("rejectionUrl", webappUrl + "/createexchange?accept_code=" + ex.get().getAcceptCode() +"&state=false");
+        variables.put("exchangeUrl", webappUrl + "/offers"); //TODO: verificar el funcionamiento de esto
+
 
         emailService.sendEmail(offerer.getMail(), variables, "exchangeRequest", "Requesting");
 
