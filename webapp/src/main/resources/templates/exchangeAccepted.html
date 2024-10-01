@@ -32,7 +32,12 @@
         <span th:text="#{email.offererContact(${offererName}, ${offererEmail})}" style="font-size: 16px;"></span>
     </p>
 
-
+    <p>
+        <span th:text="#{email.callToAction.confirmed}" style="font-size: 16px;"></span>
+        <a th:href="@{${exchangeUrl}}"
+           th:text="#{email.exchange}">
+        </a>
+    </p>
 
     <p th:text="#{email.acceptanceThankYouMessage}" style="font-size: 16px;"></p>
 </div>
