@@ -65,7 +65,7 @@
                                          uk-grid>
                                         <div class="uk-card-media-left">
                                             <img class="book-image"
-                                                 src="${pageContext.request.contextPath}/images/${pending.requester.book.bookModel.imageId}"
+                                                 src="${pageContext.request.contextPath}/images/${pending.requester.book.images[0]}"
                                                  alt="bookImage"/>
                                         </div>
                                         <div>
@@ -175,7 +175,7 @@
 
                                         <div class="uk-card-media-left">
                                             <img class="book-image"
-                                                 src="${pageContext.request.contextPath}/images/${inProgress.requester.book.bookModel.imageId}"
+                                                 src="${pageContext.request.contextPath}/images/${inProgress.requester.book.images[0]}"
                                                  alt="bookImage"/>
                                         </div>
                                         <div>
@@ -260,7 +260,7 @@
                                          uk-grid>
                                         <div class="uk-card-media-left">
                                             <img class="book-image"
-                                                 src="${pageContext.request.contextPath}/images/${completed.requester.book.bookModel.imageId}"
+                                                 src="${pageContext.request.contextPath}/images/${completed.requester.book.images[0]}"
                                                  alt="bookImage"/>
                                         </div>
                                         <div>
@@ -303,7 +303,7 @@
                                          uk-grid>
                                         <div class="uk-card-media-left">
                                             <img class="book-image"
-                                                 src="${pageContext.request.contextPath}/images/${rejected.requester.book.bookModel.imageId}"
+                                                 src="${pageContext.request.contextPath}/images/${rejected.requester.book.images[0]}"
                                                  alt="bookImage"/>
                                         </div>
                                         <div>
