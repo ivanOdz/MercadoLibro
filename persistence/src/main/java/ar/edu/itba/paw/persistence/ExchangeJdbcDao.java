@@ -229,35 +229,18 @@ public class ExchangeJdbcDao implements ExchangeDao {
     }
 
     @Override
-    public void confirmOfferer(int acceptCode) {
+    public Optional<Exchange> confirmOfferer(int acceptCode) {
         jdbcTemplate.update("UPDATE exchange SET offererReceivedBook = ? WHERE acceptcode = ?", true, acceptCode);
 
-        StringBuilder sqlQuery = new StringBuilder(baseQuery);
-        sqlQuery.append(" WHERE acceptcode = ? ");
-        sqlQuery.append(groupQuery);
-
-        Optional<Exchange> exchange= jdbcTemplate.query(sqlQuery.toString(), new Object[]{ acceptCode },
-                new int[]{ Types.INTEGER }, ROW_MAPPER_EXCHANGE).stream().findFirst();
-
-        if(exchange.get().isConfirmed())
-            updateExchangeStatus(acceptCode, ExchangeState.TERMINATED.getValue());
+        return findByAcceptCode(acceptCode);
 
     }
 
     @Override
-    public void confirmRequester(int acceptCode) {
+    public Optional<Exchange> confirmRequester(int acceptCode) {
         jdbcTemplate.update("UPDATE exchange SET requesterReceivedBook = ? WHERE acceptcode = ?", true, acceptCode);
 
-        StringBuilder sqlQuery = new StringBuilder(baseQuery);
-        sqlQuery.append(" WHERE acceptcode = ? ");
-        sqlQuery.append(groupQuery);
-
-        Optional<Exchange> exchange = jdbcTemplate.query(sqlQuery.toString(), new Object[]{acceptCode},
-                new int[]{Types.INTEGER}, ROW_MAPPER_EXCHANGE).stream().findFirst();
-
-        if (exchange.get().isConfirmed()){
-            updateExchangeStatus(acceptCode, ExchangeState.TERMINATED.getValue());
-        }
+        return findByAcceptCode(acceptCode);
     }
 
 

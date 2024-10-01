@@ -23,9 +23,9 @@ public interface ExchangeDao {
 
     List<Exchange> getAllExchangesByUserId(long anUserId, ExchangeState exchangeState, boolean isOfferer);
 
-    void confirmRequester(int acceptCode);
-    
-    void confirmOfferer(int acceptCode);
+    Optional<Exchange> confirmRequester(int acceptCode);
+
+    Optional<Exchange> confirmOfferer(int acceptCode);
 
     Optional<Exchange> getExchangeById(long exchangeId);
 

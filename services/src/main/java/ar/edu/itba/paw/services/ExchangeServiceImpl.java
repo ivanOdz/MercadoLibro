@@ -59,10 +59,6 @@ public class ExchangeServiceImpl implements ExchangeService {
         variables.put("offererEmail", offerer.getMail());
 
         emailService.sendExchangeEmail(requester.getMail(), variables, state);
-        // ---
-
-
-        bs.exchangeOwnership(bookOffered, bookRequested);
 
         ps.terminatePublication(ex.get().getOfferer());
         ps.terminatePublication(ex.get().getRequester());
@@ -137,12 +133,22 @@ public class ExchangeServiceImpl implements ExchangeService {
 
     @Override
     public void cofirmOfferer(int acceptCode) {
-        exchangeDao.confirmOfferer(acceptCode);
+        Optional<Exchange> ex = exchangeDao.confirmOfferer(acceptCode);
+
+        if(ex.get().isConfirmed()){
+            exchangeDao.updateExchangeStatus(acceptCode, ExchangeState.TERMINATED.getValue());
+            bs.exchangeOwnership(ex.get().getOfferer().getBook(), ex.get().getRequester().getBook());
+        }
     }
 
     @Override
     public void cofirmRequester(int acceptCode) {
-        exchangeDao.confirmRequester(acceptCode);
+        Optional<Exchange> ex = exchangeDao.confirmRequester(acceptCode);
+
+        if(ex.get().isConfirmed()){
+            exchangeDao.updateExchangeStatus(acceptCode, ExchangeState.TERMINATED.getValue());
+            bs.exchangeOwnership(ex.get().getOfferer().getBook(), ex.get().getRequester().getBook());
+        }
     }
 
     /**
