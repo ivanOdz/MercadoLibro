@@ -89,14 +89,14 @@
                                                     </h3>
                                                     <h4 class="date-text">
                                                         <fmt:formatDate
-                                                                value="${pending.exchange.exchangeStartDate}"
+                                                                value="${pending.exchangeStartDate}"
                                                                 pattern="dd/MM/yyyy"/>
                                                     </h4>
                                                 </div>
                                                 <div class="uk-align-right card-text-right state-padding">
-                                                <span class="uk-badge state-awaiting">
+                                                <span class="uk-badge state-pending">
                                                     <spring:message
-                                                            code="exchange.status.awaiting"/>
+                                                            code="exchange.status.pending"/>
                                                 </span>
                                                 </div>
                                             </div>
@@ -144,16 +144,21 @@
                                                     </h4>
                                                 </div>
                                                 <div class="uk-align-right card-text-right state-padding">
-
-                                                    <a class="uk-button uk-button-default uk-button-small uk-margin-right"
-                                                       href="#modal-confirm-exchange-${inProgress.acceptCode}"
-                                                       onclick="event.stopPropagation()" uk-toggle>
-                                                        <spring:message code="exchange.button.confirm.exchange"/>
-                                                    </a>
-                                                    <span class="uk-badge state-inprogress">
-														<spring:message code="exchange.status.in_progress"/>
-													</span>
-
+                                                    <c:if test="${inProgress.requesterReceivedBook}">
+                                                        <span class="uk-badge state-awaiting">
+                                                            <spring:message code="exchange.status.awaiting"/>
+													    </span>
+                                                    </c:if>
+                                                    <c:if test="${!inProgress.requesterReceivedBook}">
+                                                        <a class="uk-button uk-button-default uk-button-small uk-margin-right"
+                                                           href="#modal-confirm-exchange-${inProgress.acceptCode}"
+                                                           onclick="event.stopPropagation()" uk-toggle>
+                                                            <spring:message code="exchange.button.confirm.exchange"/>
+                                                        </a>
+                                                        <span class="uk-badge state-inprogress">
+                                                        <spring:message code="exchange.status.in_progress"/>
+													    </span>
+                                                    </c:if>
                                                     <!-- Confirm exchange modal -->
 
                                                     <div id="modal-confirm-exchange-${inProgress.acceptCode}"
@@ -271,8 +276,8 @@
 												</div>
 												<div class="uk-align-right card-text-right state-padding">
 
-												<span class="uk-badge state-approved"><spring:message
-														code="exchange.status.terminated"/></span>
+												<span class="uk-badge state-rejected"><spring:message
+														code="exchange.status.rejected"/></span>
 												</div>
 											</div>
 										</div>

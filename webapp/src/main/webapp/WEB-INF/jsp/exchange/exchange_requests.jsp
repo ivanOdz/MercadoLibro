@@ -196,15 +196,22 @@
                                                         </c:when>
 
                                                         <c:otherwise>
-                                                            <a class="uk-button uk-button-default uk-button-small uk-margin-right"
-                                                               href="#modal-confirm-exchange-${inProgress.acceptCode}"
-                                                               onclick="event.stopPropagation()" uk-toggle>
-                                                                <spring:message
-                                                                        code="exchange.button.confirm.exchange"/>
-                                                            </a>
-                                                            <span class="uk-badge state-inprogress">
-                                                            <spring:message code="exchange.status.in_progress"/>
-                                                            </span>
+                                                            <c:if test="${inProgress.offererReceivedBook}">
+                                                                <span class="uk-badge state-awaiting">
+                                                            <spring:message code="exchange.status.awaiting"/>
+													            </span>
+                                                            </c:if>
+                                                            <c:if test="${inProgress.offererReceivedBook}">
+                                                                <a class="uk-button uk-button-default uk-button-small uk-margin-right"
+                                                                   href="#modal-confirm-exchange-${inProgress.acceptCode}"
+                                                                   onclick="event.stopPropagation()" uk-toggle>
+                                                                    <spring:message
+                                                                            code="exchange.button.confirm.exchange"/>
+                                                                </a>
+                                                                <span class="uk-badge state-inprogress">
+                                                                    <spring:message code="exchange.status.in_progress"/>
+                                                                </span>
+                                                            </c:if>
 
                                                             <!-- Confirm exchange modal -->
 
