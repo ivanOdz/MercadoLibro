@@ -23,7 +23,7 @@ public interface PublicationService {
 //
 //    Optional<Publication> getPublicationStateByBookId(long bookId);
 
-    long createPublication(long bookId, long userId, long locationId, PublicationState publicationState);
+    long createPublication(long bookId, long userId, String location, PublicationState publicationState);
 
     void createPublicationIfNeeded(boolean publish, long bookId, long userId, String location, PublicationState publicationState);
 

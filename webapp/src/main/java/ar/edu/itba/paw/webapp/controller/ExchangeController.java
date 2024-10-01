@@ -31,7 +31,6 @@ import java.util.Optional;
 public class ExchangeController {
 
     private final ExchangeService exchangeService;
-    private final UserService userService;
 
     @Autowired
     private final UserReviewService userReviewService;
@@ -39,13 +38,8 @@ public class ExchangeController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExchangeController.class);
 
 
-    public ExchangeController(final ExchangeService exchangeService, final UserService userService, UserReviewService userReviewService) {
+    public ExchangeController(final ExchangeService exchangeService, UserReviewService userReviewService) {
         this.exchangeService = exchangeService;
-//        this.emailService = emailService;
-        this.userService = userService;
-//        this.bookService = bookService;
-//        this.publicationService = publicationService;
-//        this.bookModelService = bookModelService;
         this.userReviewService = userReviewService;
     }
 
@@ -55,8 +49,6 @@ public class ExchangeController {
     public ModelAndView exchangeRequests(@RequestParam(name = "exchange-state", defaultValue = "PENDING") ExchangeState exchangeState) {
         final ModelAndView mav = new ModelAndView("exchange/exchange_requests");
 
-
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getPrincipal() instanceof PawUserDetails pud) {
 
@@ -64,12 +56,6 @@ public class ExchangeController {
             List<Exchange> inProcessExchanges = exchangeService.getExchangeOffererListByUserId(pud.getUser().getUserId(), ExchangeState.ACCEPTED);
             List<Exchange> completedExchanges = exchangeService.getExchangeOffererListByUserId(pud.getUser().getUserId(), ExchangeState.TERMINATED);
             List<Exchange> rejectedExchanges = exchangeService.getExchangeOffererListByUserId(pud.getUser().getUserId(), ExchangeState.REJECTED);
-
-
-            LOGGER.debug(pendingExchanges.toString());
-            LOGGER.debug(inProcessExchanges.toString());
-            LOGGER.debug(completedExchanges.toString());
-            LOGGER.debug(rejectedExchanges.toString());
 
             mav.addObject("pending", pendingExchanges);
             mav.addObject("inProgress", inProcessExchanges);
@@ -97,9 +83,6 @@ public class ExchangeController {
             List<Exchange> completedExchanges = exchangeService.getExchangeRequesterListByUserId(pud.getUser().getUserId(), ExchangeState.TERMINATED);
             List<Exchange> rejectedExchanges = exchangeService.getExchangeRequesterListByUserId(pud.getUser().getUserId(), ExchangeState.REJECTED);
 
-
-
-
             mav.addObject("pending", pendingExchanges);
             mav.addObject("inProgress", inProcessExchanges);
             mav.addObject("completed", completedExchanges);
@@ -112,22 +95,10 @@ public class ExchangeController {
         return mav;
     }
 
-//    @RequestMapping(path = "/exchange/initializeexchange", method = RequestMethod.POST)
-//    // public ModelAndView createExchange(@RequestParam (name = "publication_id") long offererPubId, @RequestParam (name = "bookId") long bookId){
-//    public ModelAndView createExchange(@ModelAttribute("completeBookParam") CompleteBook completeBook, @RequestParam("publication_id") long publicationId){
-//
-//        final ModelAndView mav = new ModelAndView("exchange/exchange_initialized_confirmation");
-//
-//        exchangeService.initializeExchange(completeBook, publicationId);
-//
-//        return mav;
-//    }
-
 
     @RequestMapping("/exchange/accepted")
     public ModelAndView exchangeAccepted(@RequestParam long acceptCode) {
         final ModelAndView mav = new ModelAndView("exchange/exchange_accepted");
-
         return mav;
     }
 

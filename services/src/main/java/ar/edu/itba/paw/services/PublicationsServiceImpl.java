@@ -45,15 +45,14 @@ public class PublicationsServiceImpl implements PublicationService {
     }*/
 
     @Override
-    public long createPublication(long bookId, long userId, long locationId, PublicationState publicationState){
-        return pubDao.createPublication(bookId, userId, locationId, publicationState);
+    public long createPublication(long bookId, long userId, String location, PublicationState publicationState){
+        return pubDao.createPublication(bookId, userId, locationService.newLocation(location), publicationState);
     }
 
     @Override
     public void createPublicationIfNeeded(boolean publish, long bookId, long userId, String location, PublicationState publicationState) {
         if(publish){
-            long locationId = locationService.newLocation(location);
-            createPublication(bookId, userId, locationId, publicationState);
+            createPublication(bookId, userId, location, publicationState);
         }
     }
 

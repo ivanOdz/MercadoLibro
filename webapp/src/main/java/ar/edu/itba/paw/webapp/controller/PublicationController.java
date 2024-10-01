@@ -93,8 +93,7 @@ public class PublicationController {
 public ModelAndView createPublication(@RequestParam(name = "bookId") long bookId, @RequestParam(name = "location") String location) {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     if (authentication.getPrincipal() instanceof PawUserDetails pud) {
-        long locationId = ls.newLocation(location); // Esto se tiene que llamar dentro del publication service.
-        ps.createPublication(bookId, pud.getUser().getUserId(), locationId, PublicationState.CURRENT);
+        ps.createPublication(bookId, pud.getUser().getUserId(), location, PublicationState.CURRENT);
     }
 
     return new ModelAndView("redirect:/book");
@@ -120,7 +119,7 @@ public ModelAndView createPublication(@RequestParam(name = "bookId") long bookId
     }*/
 
 @GetMapping("/publications/{publication_id:\\d+}")
-public ModelAndView publicationDetail(@ModelAttribute("completeBookParam") CompleteBook completeBookParam, @PathVariable(name = "publication_id") long publicationId) {
+public ModelAndView publicationDetail(@PathVariable(name = "publication_id") long publicationId) {
     final ModelAndView mav = new ModelAndView("home/publicationDetail");
 
     Publication publication = ps.getPublicationByPublicationId(publicationId);
@@ -136,8 +135,6 @@ public ModelAndView publicationDetail(@ModelAttribute("completeBookParam") Compl
 
     mav.addObject("publication", publication);
     mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
-//        mav.addObject("completeBookParam", completeBookParam);
-
     return mav;
 }
 
