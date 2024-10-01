@@ -14,6 +14,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -165,9 +166,10 @@ public class ExchangeController {
     }
 
     @RequestMapping(path = "/exchange/initializeexchange", method = RequestMethod.POST)
-    public void initializeExchange(@ModelAttribute("exchangeForm") ExchangeForm exchangeInput) {
+    public ModelAndView initializeExchange(@ModelAttribute("exchangeForm") ExchangeForm exchangeInput) {
         // Insertar tupla de requester en publicacion con fecha actual y publicationState = 2 (OFFERER)
         exchangeService.initializeExchange(exchangeInput.getBookId(), exchangeInput.getLocation(), exchangeInput.getPublicationId());
+        return new ModelAndView("redirect:/requests");  // TOOD: se podría redirigir a una página de éxito
     }
 
     @RequestMapping(path = "/submitReview", method = RequestMethod.POST)
