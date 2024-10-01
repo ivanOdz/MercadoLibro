@@ -15,7 +15,7 @@ public interface BookDao {
     void setOwner(long bookId, long userId);
 
 
-    //Optional<Book> getBookById(long bookId);
+    Optional<Book> getBookById(long bookId);
 
     //Book getBookByPubId(long pubId);
 

@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 
+import ar.edu.itba.paw.webapp.form.ExchangeForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -164,11 +165,9 @@ public class ExchangeController {
     }
 
     @RequestMapping(path = "/exchange/initializeexchange", method = RequestMethod.POST)
-    public void initializeExchange(@ModelAttribute("bookForm") Book book,
-                                   @RequestParam("location") String location,
-                                   @RequestParam("publication_id") long publicationId) {
+    public void initializeExchange(@ModelAttribute("exchangeForm") ExchangeForm exchangeInput) {
         // Insertar tupla de requester en publicacion con fecha actual y publicationState = 2 (OFFERER)
-        exchangeService.initializeExchange(book, location, publicationId);
+        exchangeService.initializeExchange(exchangeInput.getBookId(), exchangeInput.getLocation(), exchangeInput.getPublicationId());
     }
 
     @RequestMapping(path = "/submitReview", method = RequestMethod.POST)
@@ -193,4 +192,7 @@ public class ExchangeController {
 
         return new ModelAndView("redirect:/requests");
     }
+
+
+
 }

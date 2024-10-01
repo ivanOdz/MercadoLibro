@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -34,11 +35,11 @@ public class BookServiceImpl implements BookService {
         this.imageService = imageService;
     }
 
-    /*
+
     @Override
-    public Optional<Book> getBookById(long publicationId) {
-        return bookDao.getBookById(publicationId);
-    }*/
+    public Optional<Book> getBookById(long bookId) {
+        return bookDao.getBookById(bookId);
+    }
 
 /*
     @Override

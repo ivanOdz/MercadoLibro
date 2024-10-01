@@ -47,11 +47,39 @@ public class BookJdbcDao implements BookDao {
         jdbcInsertBookImage = new SimpleJdbcInsert(jdbcTemplate).withTableName("book_image");
     }
 
-    /*@Override
+    @Override
     public Optional<Book> getBookById(long bookId) {
-        return jdbcTemplate.query("SELECT * FROM book WHERE bookId = ?", new Object[]{ bookId },
-                new int[]{ Types.BIGINT }, ROW_MAPPER_BOOK).stream().findFirst();
-    }*/
+        String sqlQuery = "SELECT  b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
+                "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, "+
+                "(SELECT STRING_AGG(a.authorName, ', ') " +
+                "FROM book_author ba " +
+                " JOIN author a ON a.authorId = ba.authorId " +
+                " WHERE ba.bookModelId = bm.bookModelId) AS authors, "+
+                "bm.imageId AS coverId, AVG(br.rating) AS rating, COUNT(br.rating) AS ratingCount, " +
+                "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, ARRAY_AGG(i.imageId ORDER BY bi.imageOrder) AS images, " +
+                "p.publicationState, e.exchangeState, " +  // Checkear esto, no se si hace falta que este en las tuplas que devuelve
+                "CASE " +
+                "WHEN NOT EXISTS (SELECT 1 FROM publication p2 WHERE p2.bookId = b.bookId) THEN TRUE " +
+                "WHEN NOT EXISTS (SELECT 1 FROM exchange e2 JOIN publication p2 ON e2.offererPubId = p2.publicationId OR e2.requesterPubId = p2.publicationId WHERE p2.bookId = b.bookId AND e2.exchangeState = ?) THEN TRUE " +
+                "ELSE FALSE " +
+                "END AS available " +
+                "FROM book AS b " +
+                "JOIN users AS u ON b.ownerId = u.userId " +
+                "JOIN book_model AS bm ON bm.bookModelId = b.bookModelId " +
+                "JOIN book_author AS ba ON ba.bookModelId = bm.bookModelId " +
+                "JOIN author AS a ON a.authorId = ba.authorId " +
+                "LEFT JOIN (SELECT DISTINCT ON (bookId) * FROM publication ORDER BY bookId, publicationDatetime DESC) AS p ON p.bookId = b.bookId " +
+                "LEFT JOIN exchange AS e ON e.offererPubId = p.publicationId OR e.requesterPubId = p.publicationId " +
+                "LEFT JOIN book_image AS bi ON bi.bookId = b.bookId " +
+                "LEFT JOIN book_rating AS br ON bm.bookModelId = br.bookModelId " +
+                "LEFT JOIN image AS i ON bi.imageId = i.imageId " +
+                "WHERE b.bookId = ? " +
+                "GROUP BY available, b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, bm.dimension, bm.publicationYear, " +
+                "bm.isPocketEdition, bm.isHardcover, p.publicationState, bm.imageId, u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, e.exchangeState";
+
+        return jdbcTemplate.query(sqlQuery, new Object[]{ ExchangeState.ACCEPTED.getValue(), bookId },
+                new int[]{ Types.INTEGER, Types.BIGINT }, ROW_MAPPER_BOOK).stream().findFirst();
+    }
 
 //    @Override
 //    public void exchangeOwnership(Book b1, Book b2) {
@@ -137,7 +165,12 @@ public class BookJdbcDao implements BookDao {
 
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT  b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
-                        "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, bm.imageId AS coverId, AVG(br.rating) AS rating, COUNT(br.rating) AS ratingCount, " +
+                        "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, "+
+                        "(SELECT STRING_AGG(a.authorName, ', ') " +
+                        "FROM book_author ba " +
+                        " JOIN author a ON a.authorId = ba.authorId " +
+                        " WHERE ba.bookModelId = bm.bookModelId) AS authors, "+
+                        "bm.imageId AS coverId, AVG(br.rating) AS rating, COUNT(br.rating) AS ratingCount, " +
                         "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, ARRAY_AGG(i.imageId ORDER BY bi.imageOrder) AS images, " +
                         "p.publicationState, e.exchangeState, " +  // Checkear esto, no se si hace falta que este en las tuplas que devuelve
                         "CASE " +

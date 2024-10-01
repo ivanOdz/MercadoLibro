@@ -79,12 +79,11 @@ public class ExchangeServiceImpl implements ExchangeService {
     }
 
 
-    // TODO: initialize exchange
     @Override
-    public void initializeExchange(Book book, String location, long offererPubId) {
+    public void initializeExchange(long bookId, String location, long offererPubId) {
         // Insertar tupla de requester en publicacion con fecha actual y publicationState = 2 (OFFERER)
 
-        long requesterPubId = ps.createPublication(book.getBookId(), book.getOwner().getUserId(), location, PublicationState.OFFERED);
+        long requesterPubId = ps.createPublication(bookId, bs.getBookById(bookId).get().getOwner().getUserId(), location, PublicationState.OFFERED);
 
         Random random = new Random();
         int acceptCode = Math.abs(random.nextInt());

@@ -19,7 +19,7 @@ public interface ExchangeService {
 
     String exchange(int acceptCode, boolean state);
 
-    void initializeExchange(Book book, String location, long offererPubId);
+    void initializeExchange(long bookId, String location, long offererPubId);
 
     //List<ExchangeWrapper> getExchangeRequesterWrapperListByUserId(long userId);
 

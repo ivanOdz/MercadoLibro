@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 
+import ar.edu.itba.paw.webapp.form.ExchangeForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -139,6 +140,7 @@ public ModelAndView publicationDetail(@PathVariable(name = "publication_id") lon
         return new ModelAndView("error/forbidden");
     }
 
+    mav.addObject("exchangeForm", new ExchangeForm());
     mav.addObject("publication", publication);
     mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
     return mav;

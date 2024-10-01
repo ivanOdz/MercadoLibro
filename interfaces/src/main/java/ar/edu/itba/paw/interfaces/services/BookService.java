@@ -7,11 +7,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public interface BookService {
 
-    //Optional<Book> getBookById(long bookId);
+    Optional<Book> getBookById(long bookId);
 
     void exchangeOwnership(Book b1, Book b2);
 
