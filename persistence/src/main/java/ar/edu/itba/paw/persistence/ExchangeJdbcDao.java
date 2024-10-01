@@ -139,8 +139,8 @@ public class ExchangeJdbcDao implements ExchangeDao {
                         rs.getLong("requester_coverId"),
                         new Rating(rs.getDouble("requester_rating"), rs.getInt("requester_ratingCount")));
 
-                Book book = new Book(rs.getLong("requester_bookId"), user, bookModel, BookState.fromInt(rs.getInt("requester_bookState")), rs.getInt("requester_exchangesQty"), rs.getBoolean("requester_available"), Arrays.asList((Integer[]) rs.getArray("requester_images").getArray()));
-
+                Book book = new Book(rs.getLong("requester_bookId"), user, bookModel, BookState.fromInt(rs.getInt("requester_bookState")), rs.getInt("requester_exchangesQty"), rs.getBoolean("requester_available"), rs.getObject("requester_images") == null ? new ArrayList<>() : Arrays.asList((Integer[]) rs.getArray("requester_images").getArray()));
+                
                 return new Publication(id, book, publicationState, dateTime, location);
             };
 
