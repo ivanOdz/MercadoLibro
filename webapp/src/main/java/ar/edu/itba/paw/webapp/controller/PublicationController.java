@@ -43,30 +43,38 @@ public class PublicationController {
                               @RequestParam(name = "book-state-filter", required = false) BookState bookStateFilter,
                               @RequestParam(name = "is-genre-filter-active", defaultValue = "false") boolean isGenreFilterActive,
                               @RequestParam(name = "genre-filter", required = false) Genre genreFilter,
-                              @RequestParam(name = "page-index", defaultValue = "0") int pageIndex,
-                              @RequestParam(name = "sort-type", defaultValue = "PUBLICATION_DATE_ASCENDING") SortType sortType) {
+                              @RequestParam(name = "sort-type", defaultValue = "PUBLICATION_DATE_ASCENDING") SortType sortType,
+                              @RequestParam(name = "currentPage", defaultValue = "0") int currentPage) {
 
         final ModelAndView mav = new ModelAndView("home/publications");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getPrincipal() instanceof PawUserDetails pud) {
-            List<Publication> publications = ps.getFilteredSortedOrderedPublicationsByPageExcludingUser(search, isBookStateFilterActive,
-                    bookStateFilter, isGenreFilterActive, genreFilter, pageIndex, pud.getUser().getUserId(), sortType);
+
+            /*List<Publication> publications = ps.getFilteredSortedOrderedPublicationsByPageExcludingUser(search, isBookStateFilterActive,
+                    bookStateFilter, isGenreFilterActive, genreFilter, pageIndex, pud.getUser().getUserId(), sortType);*/
+
+            PaginatedResponse<Publication> publications = ps.getFilteredSortedOrderedPublicationsByPageExcludingUser(search, isBookStateFilterActive,
+                    bookStateFilter, isGenreFilterActive, genreFilter, pud.getUser(), sortType, currentPage);
+
             mav.addObject("loggedUser", pud.getUser());
             mav.addObject("publications", publications);
         }
 
         mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
         mav.addObject("bookStates", List.of(BookState.values()).stream().map(bookStatus -> new BookStateWrapper(bookStatus, bookStateService.getBookStateDisplayName(bookStatus))).collect(Collectors.toList()));
-        mav.addObject("bookStateFilter", bookStateFilter);
-        mav.addObject("isGenreFilterActive", isGenreFilterActive);
-        mav.addObject("genreFilter", genreFilter);
-        mav.addObject("isBookStateFilterActive", isBookStateFilterActive);
 
-//            mav.addObject("pageIndex", pageIndex);
+        //mav.addObject("bookStateFilter", bookStateFilter);
+        //mav.addObject("isGenreFilterActive", isGenreFilterActive);
+        //mav.addObject("genreFilter", genreFilter);
+       // mav.addObject("isBookStateFilterActive", isBookStateFilterActive);
+
         return mav;
 
     }
+
+
+
 
 //
 //    @RequestMapping(path = "/", method = RequestMethod.GET)

@@ -3,9 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.services.LocationService;
 import ar.edu.itba.paw.interfaces.services.PublicationService;
 import ar.edu.itba.paw.interfaces.persistence.PublicationDao;
-import ar.edu.itba.paw.models.Publication;
-import ar.edu.itba.paw.models.PublicationCard;
-import ar.edu.itba.paw.models.PublicationDetail;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.models.utils.Genre;
 import ar.edu.itba.paw.models.utils.PublicationState;
@@ -59,8 +57,8 @@ public class PublicationsServiceImpl implements PublicationService {
         }
     }
 
-    public List<Publication> getFilteredSortedOrderedPublicationsByPageExcludingUser(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, int pageIndex, long userId, SortType sortType){
-        return pubDao.getFilteredSortedOrderedPublicationsByPageExcludingUser(search, isBookStateFilterActive, bookStateFilter, isGenreFilterActive, genreFilter, pageIndex, userId, sortType);
+    public PaginatedResponse<Publication> getFilteredSortedOrderedPublicationsByPageExcludingUser(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, User user, SortType sortType, int currentPage){
+        return pubDao.getFilteredSortedOrderedPublicationsByPageExcludingUser(search, isBookStateFilterActive, bookStateFilter, isGenreFilterActive, genreFilter, user.getUserId(), sortType, currentPage);
     }
 
     @Override

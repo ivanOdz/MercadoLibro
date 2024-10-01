@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.interfaces.services;
 
+import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.models.PublicationCard;
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.models.utils.Genre;
 import ar.edu.itba.paw.models.utils.PublicationState;
@@ -25,7 +27,7 @@ public interface PublicationService {
 
     void createPublicationIfNeeded(boolean publish, long bookId, long userId, String location, PublicationState publicationState);
 
-    List<Publication> getFilteredSortedOrderedPublicationsByPageExcludingUser(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, int pageIndex, long userId, SortType sortType);
+    PaginatedResponse<Publication> getFilteredSortedOrderedPublicationsByPageExcludingUser(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, User user, SortType sortType, int currentPage);
 
     Publication getPublicationByPublicationId(long publicationId);
 

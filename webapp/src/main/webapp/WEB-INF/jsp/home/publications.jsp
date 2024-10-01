@@ -26,16 +26,16 @@
         <div class="uk-grid ml-1 uk-margin-top" uk-grid>
             <div class="uk-width-1-4@s filter-section uk-border-rounded uk-box-shadow-small mt-1 mb-1">
                 <h2>
-                    <c:out value='${param.search}'/>
+                    <c:out value='${publications.pageInfo.search}'/>
                 </h2>
 
                 <!-- Esto tiene que aparecer solo si hay algo buscado -->
-                <c:if test="${not empty param.search}">
+                <c:if test="${not empty publications.pageInfo.search}">
                     <form action="<c:url value='' />" method="get">
-                        <input type="hidden" name="is-book-state-filter-active" value="${isBookStateFilterActive}">
-                        <input type="hidden" name="is-genre-filter-active" value=${isGenreFilterActive}>
-                        <input type="hidden" name="genre-filter" value=${genreFilter}>
-                        <input type="hidden" name="book-state-filter" value=${bookStateFilter}>
+                        <input type="hidden" name="is-book-state-filter-active" value="${publications.pageInfo.isBookStateFilterActive}">
+                        <input type="hidden" name="is-genre-filter-active" value=${publications.pageInfo.isGenreFilterActive}>
+                        <input type="hidden" name="genre-filter" value=${publications.pageInfo.genreFilter}>
+                        <input type="hidden" name="book-state-filter" value=${publications.pageInfo.bookStateFilter}>
                         <input type="hidden" name="search" value=""/>
 
                         <button type="submit" class="ui-search-button uk-button uk-button-default uk-button-small"
@@ -49,12 +49,12 @@
                 </c:if>
 
                 <!-- Esto tiene que aparecer solo si hay un filtro de BookState -->
-                <c:if test="${isBookStateFilterActive}">
+                <c:if test="${publications.pageInfo.isBookStateFilterActive}">
                     <form action="<c:url value='' />" method="get">
                         <input type="hidden" name="is-book-state-filter-active" value="false">
-                        <input type="hidden" name="is-genre-filter-active" value=${isGenreFilterActive}>
-                        <input type="hidden" name="genre-filter" value=${genreFilter}>
-                        <input type="hidden" name="search" value="<c:out value='${param.search}'/>"/>
+                        <input type="hidden" name="is-genre-filter-active" value=${publications.pageInfo.isGenreFilterActive}>
+                        <input type="hidden" name="genre-filter" value=${publications.pageInfo.genreFilter}>
+                        <input type="hidden" name="search" value="<c:out value='${publications.pageInfo.search}'/>"/>
 
                         <button type="submit" class="ui-search-button uk-button uk-button-default uk-button-small"
                                 title="BookStateRemove" uk-close-icon>
@@ -67,12 +67,12 @@
                 </c:if>
 
                 <!-- Esto tiene que aparecer solo si hay un filtro de Genero -->
-                <c:if test="${isGenreFilterActive}">
+                <c:if test="${publications.pageInfo.isGenreFilterActive}">
                     <form action="<c:url value='' />" method="get">
                         <input type="hidden" name="is-genre-filter-active" value="false">
-                        <input type="hidden" name="is-book-state-filter-active" value=${isBookStateFilterActive}>
-                        <input type="hidden" name="book-state-filter" value=${bookStateFilter}>
-                        <input type="hidden" name="search" value="<c:out value='${param.search}'/>">
+                        <input type="hidden" name="is-book-state-filter-active" value=${publications.pageInfo.isBookStateFilterActive}>
+                        <input type="hidden" name="book-state-filter" value=${publications.pageInfo.bookStateFilter}>
+                        <input type="hidden" name="search" value="<c:out value='${publications.pageInfo.search}'/>">
 
                         <button type="submit"
                                 class="uk-inline uk-search-button uk-button uk-button-default uk-button-small"
@@ -85,18 +85,18 @@
                     </form>
                 </c:if>
 
-                <c:if test="${!isBookStateFilterActive}">
+                <c:if test="${!publications.pageInfo.isBookStateFilterActive}">
                     <h3><spring:message code="filter.condition"/></h3>
                     <ul class="uk-list">
                         <c:forEach var="bookStateWrapper" items="${bookStates}">
                             <li class="ui-search-filter-container">
                                 <form action="<c:url value='' />" method="get">
-                                    <input type="hidden" name="search" value="<c:out value='${param.search}'/>">
+                                    <input type="hidden" name="search" value="<c:out value='${publications.pageInfo.search}'/>">
                                     <input type="hidden" name="is-book-state-filter-active" value='true'>
                                     <input type="hidden" name="book-state-filter"
                                            value="${bookStateWrapper.bookState}">
-                                    <input type="hidden" name="is-genre-filter-active" value="${isGenreFilterActive}">
-                                    <input type="hidden" name="genre-filter" value="${genreFilter}">
+                                    <input type="hidden" name="is-genre-filter-active" value="${publications.pageInfo.isGenreFilterActive}">
+                                    <input type="hidden" name="genre-filter" value="${publications.pageInfo.genreFilter}">
 
 
                                     <button type="submit"
@@ -110,7 +110,7 @@
                     </ul>
                 </c:if>
 
-                <c:if test="${!isGenreFilterActive}">
+                <c:if test="${!publications.pageInfo.isGenreFilterActive}">
                     <h3><spring:message code="filter.genre"/></h3>
                     <ul class="uk-list">
                         <c:forEach var="genreWrapper" items="${genres}">
@@ -118,14 +118,15 @@
                                 <form action="<c:url value='' />" method="get">
                                     <input type="hidden" name="genre-filter" value="${genreWrapper.genre}">
                                     <input type="hidden" name="is-genre-filter-active" value="true">
-                                    <input type="hidden" name="book-state-filter" value="${bookStateFilter}">
-                                    <input type="hidden" name="is-book-state-filter-active" value="${isBookStateFilterActive}">
+                                    <input type="hidden" name="book-state-filter" value="${publications.pageInfo.bookStateFilter}">
+                                    <input type="hidden" name="is-book-state-filter-active" value="${publications.pageInfo.isBookStateFilterActive}">
                                     <input type="hidden" name="search" value="<c:out value='${param.search}'/>"/>
 
                                     <button type="submit"
                                             class="ui-search-button uk-button uk-button-default uk-button-small"
                                             title="${genreWrapper.displayName}">
                                         <span class="ui-search-filter-name">${genreWrapper.displayName}</span>
+<%--                                        <span class="ui-search-filter-name">(${genreWrapper.resultByGenre})</span>--%>
                                     </button>
                                 </form>
                             </li>
@@ -141,7 +142,7 @@
                 </div>
 
                 <div class="uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m mb-1" uk-grid>
-                    <c:forEach var="card" items="${publications}">
+                    <c:forEach var="card" items="${publications.data}">
                         <div>
                             <a href="<c:url value='publications/${card.publicationId}'>
 								</c:url>"
