@@ -485,6 +485,8 @@
     document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('no-selection-message').style.display = 'block';
         document.getElementById('exchange-details').style.display = 'none';
+        document.getElementById('add-review-button').style.display = 'block';
+        document.getElementById('add-review-button').style.display = 'none';
     });
 </script>
 
