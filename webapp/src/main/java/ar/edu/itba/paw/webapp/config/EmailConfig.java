@@ -36,8 +36,8 @@ public class EmailConfig {
         ms.setPort(587);
         ms.setDefaultEncoding("UTF-8");
 
-        ms.setUsername("paw2024b09@gmail.com");
-        ms.setPassword("xezundljivwsqyni");
+        ms.setUsername("mercado.libro.staff@gmail.com");
+        ms.setPassword("crqfgwcnazldhiiq");
 
         Properties props = ms.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");

@@ -36,7 +36,7 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void sendEmail(final String receiver, Map<String, Object> variables, String templatePath, String subject) {
             MimeMessage message = mailSender.createMimeMessage();
-            Locale locale =  LocaleContextHolder.getLocale();
+            Locale locale =  LocaleContextHolder.getLocale();   // TODO: asegurarse q esto funcione cuando se configure el locale
 
             Context context = new Context(locale);
             context.setVariables(variables);
@@ -49,7 +49,7 @@ public class EmailServiceImpl implements EmailService {
                 helper.setTo(receiver);
                 helper.setSubject(subject);
                 helper.setText(html, true);
-                helper.setFrom("paw@mail.com");
+                helper.setFrom("mercado.libro.staff@gmail.com");
             } catch (MessagingException e) {
                 e.printStackTrace();
             }
