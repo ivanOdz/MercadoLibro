@@ -58,7 +58,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         variables.put("offererName", offerer.getUsername());
         variables.put("offererEmail", offerer.getMail());
         variables.put("exchangeUrl", webappUrl + "/requests");
-        variables.put("publicationsUrl", webappUrl + "/publications");
+        variables.put("publicationsUrl", webappUrl);
         // link para redirigir a la página de exchanges que corresponda para el call-to-action de marcar como confirmado
 
         emailService.sendExchangeEmail(requester.getMail(), variables, state);
