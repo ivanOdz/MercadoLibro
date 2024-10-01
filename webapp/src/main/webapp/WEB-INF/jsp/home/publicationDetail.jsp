@@ -251,51 +251,51 @@
                 <spring:message code="exchange.description2"/></p>
         </div>
 
-<%--        <div class="column-container" style="margin-left: 10%;">--%>
-<%--            <label class="form-group" style="margin-left: 10px;">--%>
-<%--                <spring:message code="book.set.book"/>--%>
-<%--            </label>--%>
-<%--            <c:if test="${!(completeBooks.size() eq 0)}">--%>
-<%--                <div class="uk-container uk-margin-top">--%>
-<%--                    <form:form action="${pageContext.request.contextPath}/exchange/initializeexchange" method="post"--%>
-<%--                               modelAttribute="completeBookParam" enctype="multipart/form-data">--%>
-<%--                        <div class="uk-margin">--%>
-<%--                            <div class="uk-form-controls">--%>
-<%--                                <form:select path="selectedBookId" cssClass="uk-select">--%>
-<%--                                    <c:forEach var="completeBook" items="${completeBooks}">--%>
-<%--                                        <form:option value="${completeBook.book.bookId}">--%>
-<%--                                            <c:out value='${completeBook.bookModel.title}'/>--%>
-<%--                                        </form:option>--%>
-<%--                                    </c:forEach>--%>
-<%--                                </form:select>--%>
+        <div class="column-container" style="margin-left: 10%;">
+            <label class="form-group" style="margin-left: 10px;">
+                <spring:message code="book.set.book"/>
+            </label>
+            <c:if test="${not empty availableBooks}">
+                <div class="uk-container uk-margin-top">
+                    <form:form action="${pageContext.request.contextPath}/exchange/initializeexchange" method="post"
+                               modelAttribute="bookForm" enctype="multipart/form-data">
+                        <div class="uk-margin">
+                            <div class="uk-form-controls">
+                                <form:select path="book.bookId" cssClass="uk-select">
+                                    <c:forEach var="availableBook" items="${availableBooks}">
+                                        <form:option value="${availableBook.bookId}">
+                                            <c:out value='${availableBook.bookModel.title}'/>
+                                        </form:option>
+                                    </c:forEach>
+                                </form:select>
 
-<%--                            </div>--%>
-<%--                        </div>--%>
-<%--                        <div class="uk-inline">--%>
-<%--                            <label class="form-group">--%>
-<%--                                <spring:message code="book.set.location"/>--%>
-<%--                                <form:input path="location" type="text" class="uk-input"/>--%>
-<%--                            </label>--%>
-<%--                        </div>--%>
+                            </div>
+                        </div>
+                        <div class="uk-inline">
+                            <label class="form-group">
+                                <spring:message code="book.set.location"/>
+                                <form:input path="location" type="text" class="uk-input"/>
+                            </label>
+                        </div>
 
-<%--                        <div class="form-container" style="margin-top: 5%; margin-left: 35%;">--%>
-<%--                            <input type="hidden" name="publication_id" value="${publication_id}">--%>
-<%--                            <button type="submit" class="uk-button uk-button-primary">--%>
-<%--                                <spring:message code="add.exchange.submit"/>--%>
-<%--                            </button>--%>
-<%--                        </div>--%>
-<%--                    </form:form>--%>
-<%--                </div>--%>
-<%--            </c:if>--%>
-<%--            <c:if test="${completeBooks.size() eq 0}">--%>
-<%--                <button class="uk-button uk-button-primary">--%>
-<%--                    <a class="button-text" href="${pageContext.request.contextPath}/book/book_models">--%>
-<%--                        <spring:message code="add.book.missing"/>--%>
-<%--                    </a>--%>
-<%--                </button>--%>
-<%--            </c:if>--%>
-<%--        </div>--%>
-<%--        </div>--%>
+                        <div class="form-container" style="margin-top: 5%; margin-left: 35%;">
+                            <input type="hidden" name="publication_id" value="${publication_id}">
+                            <button type="submit" class="uk-button uk-button-primary">
+                                <spring:message code="add.exchange.submit"/>
+                            </button>
+                        </div>
+                    </form:form>
+                </div>
+            </c:if>
+            <c:if test="${availableBooks.size() eq 0}">
+                <button class="uk-button uk-button-primary">
+                    <a class="button-text" href="${pageContext.request.contextPath}/book/book_models">
+                        <spring:message code="add.book.missing"/>
+                    </a>
+                </button>
+            </c:if>
+        </div>
+        </div>
     </div>
 </div>
 </div>

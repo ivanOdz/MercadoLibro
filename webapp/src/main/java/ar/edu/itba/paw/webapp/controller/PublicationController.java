@@ -23,6 +23,7 @@ public class PublicationController {
     private final PublicationService ps;
     private final LocationService ls;
     private final UserService us;
+    private final BookService bs;
 
     @Autowired
     private GenreService genreService;
@@ -31,10 +32,11 @@ public class PublicationController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
-    public PublicationController(PublicationService ps, LocationService ls, UserService us) {
+    public PublicationController(PublicationService ps, LocationService ls, UserService us, BookService bs) {
         this.ps = ps;
         this.ls = ls;
         this.us = us;
+        this.bs = bs;
     }
 
     @RequestMapping("/")
@@ -121,12 +123,16 @@ public ModelAndView createPublication(@RequestParam(name = "bookId") long bookId
 @GetMapping("/publications/{publication_id:\\d+}")
 public ModelAndView publicationDetail(@PathVariable(name = "publication_id") long publicationId) {
     final ModelAndView mav = new ModelAndView("home/publicationDetail");
-
     Publication publication = ps.getPublicationByPublicationId(publicationId);
+    List<Book> availableBooks;
+
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     if (authentication.getPrincipal() instanceof PawUserDetails pud) {
         User loggedUser = us.findById(pud.getUser().getUserId()).get();
         mav.addObject("loggedUser", loggedUser);
+
+        availableBooks = bs.getAvailableBooksByUser(pud.getUser());
+        mav.addObject("availableBooks", availableBooks);
     }
     if (publication == null) {
         // TODO: Hace vista que la publicacion ya no esta disponible
@@ -137,7 +143,6 @@ public ModelAndView publicationDetail(@PathVariable(name = "publication_id") lon
     mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
     return mav;
 }
-
 
 // Esto tienen que volar
     /*@RequestMapping("/submitmail")

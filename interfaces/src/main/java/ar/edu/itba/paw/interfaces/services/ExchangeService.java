@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces.services;
 
+import ar.edu.itba.paw.models.Book;
 import ar.edu.itba.paw.models.CompleteBook;
 import ar.edu.itba.paw.models.Exchange;
 import ar.edu.itba.paw.models.ExchangeWrapper;
@@ -18,7 +19,7 @@ public interface ExchangeService {
 
     String exchange(int acceptCode, boolean state);
 
-    //void initializeExchange(CompleteBook requesterCompleteData, long offererPubId);
+    void initializeExchange(Book book, String location, long offererPubId);
 
     //List<ExchangeWrapper> getExchangeRequesterWrapperListByUserId(long userId);
 

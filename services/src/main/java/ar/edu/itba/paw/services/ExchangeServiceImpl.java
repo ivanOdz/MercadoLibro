@@ -80,17 +80,11 @@ public class ExchangeServiceImpl implements ExchangeService {
 
 
     // TODO: initialize exchange
-   /* @Override
-    public void initializeExchange(CompleteBook requesterComplete, long offererPubId) {
+    @Override
+    public void initializeExchange(Book book, String location, long offererPubId) {
         // Insertar tupla de requester en publicacion con fecha actual y publicationState = 2 (OFFERER)
 
-        long location = locationService.newLocation(requesterComplete.getLocation());
-
-        //System.out.println("Location = " + location);
-//        long requesterId = bookService.getBookById(requesterComplete.getSelectedBookId()).get().getOwnerId();
-
-
-        Publication requesterPub = ps.createPublication(requesterComplete, requesterId, location, PublicationState.OFFERED);
+        long requesterPubId = ps.createPublication(book.getBookId(), book.getOwner().getUserId(), location, PublicationState.OFFERED);
 
         Random random = new Random();
         int acceptCode = Math.abs(random.nextInt());
@@ -98,7 +92,6 @@ public class ExchangeServiceImpl implements ExchangeService {
         Date date = new Date();
         Timestamp timestamp = new Timestamp(date.getTime());
         Optional<Exchange> ex = exchangeDao.createExchange(offererPubId, requesterPubId, acceptCode, timestamp);
-
 
         // mail variables setup
 
@@ -122,7 +115,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         emailService.sendEmail(offerer.getMail(), variables, "exchangeRequest", "Requesting");
 
     }
-*/
+
 
     // exchanges where user is the publication owner
     @Override

@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.ExchangeState;
+import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 
 import org.slf4j.Logger;
@@ -20,17 +21,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.security.Timestamp;
-import java.sql.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.sql.Timestamp;
+import java.util.*;
 
 @Controller
 public class ExchangeController {
 
     private final ExchangeService exchangeService;
+
 
     @Autowired
     private final UserReviewService userReviewService;
@@ -163,6 +161,14 @@ public class ExchangeController {
         }
 
         return mav;
+    }
+
+    @RequestMapping(path = "/exchange/initializeexchange", method = RequestMethod.POST)
+    public void initializeExchange(@ModelAttribute("bookForm") Book book,
+                                   @RequestParam("location") String location,
+                                   @RequestParam("publication_id") long publicationId) {
+        // Insertar tupla de requester en publicacion con fecha actual y publicationState = 2 (OFFERER)
+        exchangeService.initializeExchange(book, location, publicationId);
     }
 
     @RequestMapping(path = "/submitReview", method = RequestMethod.POST)
