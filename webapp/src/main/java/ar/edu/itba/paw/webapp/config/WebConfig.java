@@ -23,6 +23,7 @@ import org.springframework.web.servlet.view.JstlView;
 import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Locale;
 
 @PropertySource("classpath:application${spring.profiles.active}.properties")
 @EnableWebMvc
@@ -62,6 +63,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
                 ReloadableResourceBundleMessageSource();
         ms.setDefaultEncoding(StandardCharsets.UTF_8.displayName());
         ms.setBasename("classpath:i18n/messages");
+        ms.setFallbackToSystemLocale(false);
         ms.setCacheSeconds(5);
         return ms;
     }
@@ -80,15 +82,15 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Bean
     public LocaleChangeInterceptor localeInterceptor() {
         LocaleChangeInterceptor lci = new LocaleChangeInterceptor();
-
         lci.setParamName("lang");
-
         return lci;
     }
 
     @Bean
     public LocaleResolver localeResolver() {
-        return new SessionLocaleResolver();
+        SessionLocaleResolver slr = new SessionLocaleResolver();
+        slr.setDefaultLocale(Locale.ENGLISH);
+        return slr;
     }
 
 
