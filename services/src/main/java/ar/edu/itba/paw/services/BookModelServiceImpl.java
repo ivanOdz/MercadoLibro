@@ -2,10 +2,8 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.BookModelDao;
 import ar.edu.itba.paw.interfaces.services.BookModelService;
-import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.models.BookModel;
 import ar.edu.itba.paw.models.utils.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,16 +18,6 @@ public class BookModelServiceImpl implements BookModelService {
         this.bookModelDao = bookModelDao;
     }
 
-    @Override
-    public BookModel getBookModelByBookModelId(long bookModelId) {
-        return bookModelDao.getBookModelByBookModelId(bookModelId);
-    }
-
-    @Override
-    public List<BookModel> getFilteredSortedOrderedModelBooksByPage(String search, boolean isGenreFilterActive, Genre genreFilter, int pageIndex, SortType sortType) {
-        return bookModelDao.getFilteredSortedOrderedModelBooksByPage(search, isGenreFilterActive, genreFilter, pageIndex, sortType);
-    }
-
     @Transactional
     @Override
     public long createBookModel(String isbn, String title, List<String> authors, String publisher, String description, Genre genre, int edition, Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight, Integer imageId) {
@@ -39,5 +27,15 @@ public class BookModelServiceImpl implements BookModelService {
 
         bookModelDao.createBookAuthors(authorsIds, bookModelId);
         return bookModelId;
+    }
+
+    @Override
+    public BookModel getBookModelByBookModelId(long bookModelId) {
+        return bookModelDao.getBookModelByBookModelId(bookModelId);
+    }
+
+    @Override
+    public List<BookModel> getFilteredSortedOrderedModelBooksByPage(String search, boolean isGenreFilterActive, Genre genreFilter, int pageIndex, SortType sortType) {
+        return bookModelDao.getFilteredSortedOrderedModelBooksByPage(search, isGenreFilterActive, genreFilter, pageIndex, sortType);
     }
 }
