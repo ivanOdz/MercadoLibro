@@ -247,53 +247,61 @@
                 <spring:message code="exchange.description"/></p>
         </div>
         <div>
-            <p class="uk-text-medium" style="font-size: 25px; max-width: 9lh; text-align: center; margin-left: 1lh;">
+            <p class="uk-text-medium" style="font-size: 25px; max-width: 9lh; text-align: center; margin-left: 2lh;">
                 <spring:message code="exchange.description2"/></p>
         </div>
+        <div>
+            <button class="uk-button uk-button-primary" uk-toggle="target: #exchange-modal" style="margin-left: 3lh;">
+                <spring:message code="add.exchange.submit"/>
+            </button>
+        </div>
 
-        <div class="column-container" style="margin-left: 10%;">
-            <label class="form-group" style="margin-left: 10px;">
-                <spring:message code="book.set.book"/>
-            </label>
-            <c:if test="${not empty availableBooks}">
-                <div class="uk-container uk-margin-top">
-                    <form:form action="${pageContext.request.contextPath}/exchange/initializeexchange" method="post"
-                               modelAttribute="exchangeForm" enctype="multipart/form-data">
-                        <div class="uk-margin">
-                            <div class="uk-form-controls">
-                                <form:select path="bookId" cssClass="uk-select">
-                                    <c:forEach var="availableBook" items="${availableBooks}">
-                                        <form:option value="${availableBook.bookId}">
-                                            <c:out value='${availableBook.bookModel.title}'/>
-                                        </form:option>
-                                    </c:forEach>
-                                </form:select>
+        <div id="exchange-modal" uk-modal>
+            <div class="uk-modal-dialog uk-modal-body">
+                <button class="uk-modal-close-default" type="button" uk-close></button>
 
+                <label class="form-group" style="margin-left: 10px;">
+                    <spring:message code="book.set.book"/>
+                </label>
+
+                <c:if test="${not empty availableBooks}">
+                    <div class="uk-container uk-margin-top">
+                        <form:form action="${pageContext.request.contextPath}/exchange/initializeexchange" method="post"
+                                   modelAttribute="exchangeForm" enctype="multipart/form-data">
+                            <div class="uk-margin">
+                                <div class="uk-form-controls">
+                                    <form:select path="bookId" cssClass="uk-select">
+                                        <c:forEach var="availableBook" items="${availableBooks}">
+                                            <form:option value="${availableBook.bookId}">
+                                                <c:out value='${availableBook.bookModel.title}'/>
+                                            </form:option>
+                                        </c:forEach>
+                                    </form:select>
+                                </div>
                             </div>
-                        </div>
-                        <div class="uk-inline">
-                            <label class="form-group">
-                                <spring:message code="book.set.location"/>
-                                <form:input path="location" type="text" class="uk-input"/>
-                            </label>
-                        </div>
-
-                        <div class="form-container" style="margin-top: 5%; margin-left: 35%;">
-                            <input type="hidden" name="publicationId" value="${publication.publicationId}">
-                            <button type="submit" class="uk-button uk-button-primary">
-                                <spring:message code="add.exchange.submit"/>
-                            </button>
-                        </div>
-                    </form:form>
-                </div>
-            </c:if>
-            <c:if test="${empty availableBooks}">
-                <button class="uk-button uk-button-primary">
-                    <a class="button-text" href="${pageContext.request.contextPath}/book/book_models">
-                        <spring:message code="add.book.missing"/>
-                    </a>
-                </button>
-            </c:if>
+                            <div class="uk-inline">
+                                <label class="form-group">
+                                    <spring:message code="book.set.location"/>
+                                    <form:input path="location" type="text" class="uk-input"/>
+                                </label>
+                            </div>
+                            <div class="form-container" style="margin-top: 5%; margin-left: 35%;">
+                                <input type="hidden" name="publicationId" value="${publication.publicationId}">
+                                <button type="submit" class="uk-button uk-button-primary">
+                                    <spring:message code="add.exchange.submit"/>
+                                </button>
+                            </div>
+                        </form:form>
+                    </div>
+                </c:if>
+                <c:if test="${empty availableBooks}">
+                    <button class="uk-button uk-button-primary">
+                        <a class="button-text" href="${pageContext.request.contextPath}/book/book_models">
+                            <spring:message code="add.book.missing"/>
+                        </a>
+                    </button>
+                </c:if>
+            </div>
         </div>
         </div>
     </div>
