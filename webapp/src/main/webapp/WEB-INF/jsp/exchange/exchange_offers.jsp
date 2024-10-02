@@ -58,10 +58,10 @@
 
                         <!-- Pending -->
 
-                        <li>
+                        <li class="uk-container uk-align-center">
                             <c:if test="${!empty pending}">
                                 <c:forEach var="pending" items="${pending}">
-                                    <div class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-4@s exchange-card"
+                                    <div class="uk-card uk-card-default exchange-card"
                                          onclick="selectCard(this,
                                                  '<c:out value="${pending.offerer.book.owner.username}"/>',
                                                  '<c:out value="${pending.offerer.book.owner.mail}"/>',
@@ -76,30 +76,37 @@
                                                  '${pending.isReviewable}'
                                                  )" uk-grid>
 
-                                        <div class="uk-card-media-left">
+                                        <div style="padding: 0">
+                                            <img class="book-image"
+                                                 src="${pageContext.request.contextPath}/images/${pending.requester.book.images[0]}"
+                                                 alt="bookImage"/>
+                                            <div class="card-text-container">
+                                                <h3 class="card-text3">
+                                                    <c:out value="${pending.requester.book.bookModel.title}"/>
+                                                </h3></div>
+                                        </div>
+                                        <div class="arrow-icon" style="padding: 0">
+                                            <span uk-icon="icon: chevron-double-right; ratio: 2"></span>
+                                        </div>
+                                        <div style="padding: 0">
                                             <img class="book-image"
                                                  src="${pageContext.request.contextPath}/images/${pending.offerer.book.images[0]}"
                                                  alt="bookImage"/>
+                                            <div class="card-text-container">
+                                                <h3 class="card-text3">
+                                                    <c:out value="${pending.offerer.book.bookModel.title}"/>
+                                                </h3>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <div class="card-text2">
-                                                <div class="card-text-left">
-                                                    <h3 class="uk-h6">
-                                                        <c:out value="${pending.offerer.book.bookModel.title}"/>
-                                                    </h3>
-                                                    <h4 class="date-text">
-                                                        <fmt:formatDate
-                                                                value="${pending.exchangeStartDate}"
-                                                                pattern="dd/MM/yyyy"/>
-                                                    </h4>
-                                                </div>
-                                                <div class="uk-align-right card-text-right state-padding">
+
+                                        <div style="width: 40%; margin-bottom: 25px">
                                                 <span class="uk-badge state-pending">
                                                     <spring:message
                                                             code="exchange.status.pending"/>
                                                 </span>
-                                                </div>
-                                            </div>
+                                            <fmt:formatDate
+                                                    value="${pending.exchangeStartDate}"
+                                                    pattern="dd/MM/yyyy"/>
                                         </div>
                                     </div>
                                 </c:forEach>
@@ -108,10 +115,10 @@
 
                         <!-- In Progress -->
 
-                        <li>
+                        <li class="uk-container">
                             <c:if test="${!empty inProgress}">
                                 <c:forEach var="inProgress" items="${inProgress}">
-                                    <div class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-4@s exchange-card"
+                                    <div class="uk-card uk-card-default exchange-card"
                                          onclick="selectCard(this,
                                                  '<c:out value="${inProgress.offerer.book.owner.username}"/>',
                                                  '<c:out value="${inProgress.offerer.book.owner.mail}"/>',
@@ -126,60 +133,70 @@
                                                  '${inProgress.isReviewable}'
                                                  )" uk-grid>
 
-                                        <div class="uk-card-media-left">
+                                        <div style="padding: 0">
+                                            <img class="book-image"
+                                                 src="${pageContext.request.contextPath}/images/${inProgress.requester.book.images[0]}"
+                                                 alt="bookImage"/>
+                                            <div class="card-text-container">
+                                                <h3 class="card-text3">
+                                                    <c:out value="${inProgress.requester.book.bookModel.title}"/>
+                                                </h3>
+                                            </div>
+                                        </div>
+                                        <div class="arrow-icon" style="padding: 0">
+                                            <span uk-icon="icon: chevron-double-right; ratio: 2"></span>
+                                        </div>
+                                        <div style="padding: 0">
                                             <img class="book-image"
                                                  src="${pageContext.request.contextPath}/images/${inProgress.offerer.book.images[0]}"
                                                  alt="bookImage"/>
+                                            <div class="card-text-container">
+                                                <h3 class="card-text3">
+                                                    <c:out value="${inProgress.offerer.book.bookModel.title}"/>
+                                                </h3>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <div class="card-text2">
-                                                <div class="card-text-left">
-                                                    <h3 class="uk-h6">
-                                                        <c:out value="${inProgress.offerer.book.bookModel.title}"/>
-                                                    </h3>
-                                                    <h4 class="date-text">
-                                                        <fmt:formatDate
-                                                                value="${inProgress.exchangeStartDate}"
-                                                                pattern="dd/MM/yyyy"/>
-                                                    </h4>
-                                                </div>
-                                                <div class="uk-align-right card-text-right state-padding">
-                                                    <c:if test="${inProgress.requesterReceivedBook}">
-                                                        <span class="uk-badge state-awaiting">
+
+                                        <div style="width:40%; margin-bottom: 15px; display: flex; flex-direction: column; align-items: center">
+                                            <c:if test="${inProgress.requesterReceivedBook}">
+                                                        <span style="margin-bottom: 25px" class="uk-badge state-awaiting">
                                                             <spring:message code="exchange.status.awaiting"/>
 													    </span>
-                                                    </c:if>
-                                                    <c:if test="${!inProgress.requesterReceivedBook}">
-                                                        <a class="uk-button uk-button-default uk-button-small uk-margin-right"
-                                                           href="#modal-confirm-exchange-${inProgress.acceptCode}"
-                                                           onclick="event.stopPropagation()" uk-toggle>
-                                                            <spring:message code="exchange.button.confirm.exchange"/>
-                                                        </a>
-                                                        <span class="uk-badge state-inprogress">
+                                            </c:if>
+                                            <c:if test="${!inProgress.requesterReceivedBook}">
+                                                <a class="uk-button uk-button-default uk-button-small"
+                                                   href="#modal-confirm-exchange-${inProgress.acceptCode}"
+                                                   onclick="event.stopPropagation()" uk-toggle>
+                                                    <spring:message code="exchange.button.confirm.exchange"/>
+                                                </a>
+                                                <span class="uk-badge state-inprogress">
                                                         <spring:message code="exchange.status.in_progress"/>
 													    </span>
-                                                    </c:if>
-                                                    <!-- Confirm exchange modal -->
+                                            </c:if>
+                                            <fmt:formatDate
+                                                    value="${inProgress.exchangeStartDate}"
+                                                    pattern="dd/MM/yyyy"/>
 
-                                                    <div id="modal-confirm-exchange-${inProgress.acceptCode}"
-                                                         uk-modal>
-                                                        <div class="uk-modal-dialog uk-modal-body">
-                                                            <h3 class="uk-h4"><spring:message
-                                                                    code="exchange.confirm.title"/></h3>
-                                                            <p class="uk-text-right">
-                                                                <button class="uk-button uk-button-default uk-modal-close"
-                                                                        type="button"><spring:message
-                                                                        code="button.cancel"/></button>
-                                                                <button class="uk-button uk-button-primary"
-                                                                        type="button">
-                                                                    <a class="button-text-accept custom-link"
-                                                                       href="<c:url value='/confirm_requester'><c:param name='accept_code' value='${inProgress.acceptCode}'/></c:url>">
-                                                                        <spring:message code="button.confirm"/>
-                                                                    </a>
-                                                                </button>
-                                                            </p>
-                                                        </div>
-                                                    </div>
+
+                                            <!-- Confirm exchange modal -->
+
+                                            <div id="modal-confirm-exchange-${inProgress.acceptCode}"
+                                                 uk-modal>
+                                                <div class="uk-modal-dialog uk-modal-body">
+                                                    <h3 class="uk-h4"><spring:message
+                                                            code="exchange.confirm.title"/></h3>
+                                                    <p class="uk-text-right">
+                                                        <button class="uk-button uk-button-default uk-modal-close"
+                                                                type="button"><spring:message
+                                                                code="button.cancel"/></button>
+                                                        <button class="uk-button uk-button-primary"
+                                                                type="button">
+                                                            <a class="button-text-accept custom-link"
+                                                               href="<c:url value='/confirm_requester'><c:param name='accept_code' value='${inProgress.acceptCode}'/></c:url>">
+                                                                <spring:message code="button.confirm"/>
+                                                            </a>
+                                                        </button>
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
@@ -190,10 +207,10 @@
 
                         <!-- Completed -->
 
-                        <li>
+                        <li style="margin-top: 0" class="uk-container">
                             <c:if test="${!empty completed}">
                                 <c:forEach var="completed" items="${completed}">
-                                    <div class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-4@s exchange-card"
+                                    <div class="uk-card uk-card-default exchange-card"
                                          onclick="selectCard(this,
                                                  '<c:out value="${completed.offerer.book.owner.username}"/>',
                                                  '<c:out value="${completed.offerer.book.owner.mail}"/>',
@@ -208,82 +225,97 @@
                                                  '${completed.isReviewable}'
                                                  )" uk-grid>
 
-                                        <div class="uk-card-media-left">
+                                        <div style="padding: 0">
+                                            <img class="book-image"
+                                                 src="${pageContext.request.contextPath}/images/${completed.requester.book.images[0]}"
+                                                 alt="bookImage"/>
+                                            <div class="card-text-container">
+                                                <h3 class="card-text3">
+                                                    <c:out value="${completed.requester.book.bookModel.title}"/>
+                                                </h3></div>
+                                        </div>
+                                        <div class="arrow-icon" style="padding: 0">
+                                            <span uk-icon="icon: chevron-double-right; ratio: 2"></span>
+                                        </div>
+                                        <div style="padding: 0">
                                             <img class="book-image"
                                                  src="${pageContext.request.contextPath}/images/${completed.offerer.book.images[0]}"
                                                  alt="bookImage"/>
-                                        </div>
-                                        <div>
-                                            <div class="card-text2">
-                                                <div class="card-text-left">
-                                                    <h3 class="uk-h6">
-                                                        <c:out value="${completed.offerer.book.bookModel.title}"/>
-                                                    </h3>
-                                                    <h4 class="date-text">
-                                                        <fmt:formatDate
-                                                                value="${completed.exchangeStartDate}"
-                                                                pattern="dd/MM/yyyy"/>
-                                                    </h4>
-                                                </div>
-                                                <div class="uk-align-right card-text-right state-padding">
-
-												<span class="uk-badge state-approved"><spring:message
-                                                        code="exchange.status.terminated"/></span>
-                                                </div>
+                                            <div class="card-text-container">
+                                                <h3 class="card-text3">
+                                                    <c:out value="${completed.offerer.book.bookModel.title}"/>
+                                                </h3>
                                             </div>
+                                        </div>
+
+                                        <div style="width: 40%; margin-bottom: 25px">
+                                                <span class="uk-badge state-approved"><spring:message
+                                                        code="exchange.status.terminated"/></span>
+                                            <fmt:formatDate
+                                                    value="${completed.exchangeStartDate}"
+                                                    pattern="dd/MM/yyyy"/>
                                         </div>
                                     </div>
                                 </c:forEach>
                             </c:if>
                         </li>
 
-						<!-- Rejected -->
+                        <!-- Rejected -->
 
-						<li>
-							<c:if test="${!empty rejected}">
-								<c:forEach var="rejected" items="${rejected}">
-									<div class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-4@s exchange-card"
-										 onclick="selectCard(this,
-												 '<c:out value="${rejected.offerer.book.owner.username}"/>',
-												 '<c:out value="${rejected.offerer.book.owner.mail}"/>',
-												 '<c:out value="${rejected.offerer.location}"/>',
-												 '<c:out value="${rejected.requester.book.bookModel.title}"/>',
-												 '<c:out value="${rejected.requester.book.bookModel.authors}"/>',
-												 '<c:out value="${rejected.requester.book.bookModel.edition}"/>',
-												 '<c:out value="${rejected.requester.book.images}"/>',
-												 '<c:out value="${rejected.exchangeId}"/>',
-												 '<c:out value="${rejected.offerer.book.owner.userId}"/>',
-												 '<c:out value="${rejected.requester.book.owner.userId}"/>',
-												 '${rejected.isReviewable}'
-												 )" uk-grid>
+                        <li class="uk-container">
+                            <c:if test="${!empty rejected}">
+                                <c:forEach var="rejected" items="${rejected}">
+                                    <div class="uk-card uk-card-default exchange-card"
+                                         onclick="selectCard(this,
+                                                 '<c:out value="${rejected.offerer.book.owner.username}"/>',
+                                                 '<c:out value="${rejected.offerer.book.owner.mail}"/>',
+                                                 '<c:out value="${rejected.offerer.location}"/>',
+                                                 '<c:out value="${rejected.requester.book.bookModel.title}"/>',
+                                                 '<c:out value="${rejected.requester.book.bookModel.authors}"/>',
+                                                 '<c:out value="${rejected.requester.book.bookModel.edition}"/>',
+                                                 '<c:out value="${rejected.requester.book.images}"/>',
+                                                 '<c:out value="${rejected.exchangeId}"/>',
+                                                 '<c:out value="${rejected.offerer.book.owner.userId}"/>',
+                                                 '<c:out value="${rejected.requester.book.owner.userId}"/>',
+                                                 '${rejected.isReviewable}'
+                                                 )" uk-grid>
 
-										<div class="uk-card-media-left">
-											<img class="book-image"
-												 src="${pageContext.request.contextPath}/images/${rejected.offerer.book.images[0]}"
-												 alt="bookImage"/>
-										</div>
-										<div>
-											<div class="card-text2">
-												<div class="card-text-left">
-													<h3 class="uk-h6">
-														<c:out value="${rejected.offerer.book.bookModel.title}"/>
-													</h3>
-													<h4 class="date-text">
-														<fmt:formatDate
-																value="${rejected.exchangeStartDate}"
-																pattern="dd/MM/yyyy"/>
-													</h4>
-												</div>
-												<div class="uk-align-right card-text-right state-padding">
 
-												<span class="uk-badge state-rejected"><spring:message
-														code="exchange.status.rejected"/></span>
-												</div>
-											</div>
-										</div>
-									</div>
-								</c:forEach>
-							</c:if>
+
+                                        <div style="padding: 0">
+                                            <img class="book-image"
+                                                 src="${pageContext.request.contextPath}/images/${rejected.requester.book.images[0]}"
+                                                 alt="bookImage"/>
+                                            <div class="card-text-container">
+                                                <h3 class="card-text3">
+                                                    <c:out value="${rejected.requester.book.bookModel.title}"/>
+                                                </h3>
+                                            </div>
+                                        </div>
+                                        <div class="arrow-icon" style="padding: 0">
+                                            <span uk-icon="icon: chevron-double-right; ratio: 2"></span>
+                                        </div>
+                                        <div style="padding: 0">
+                                            <img class="book-image"
+                                                 src="${pageContext.request.contextPath}/images/${rejected.offerer.book.images[0]}"
+                                                 alt="bookImage"/>
+                                            <div class="card-text-container">
+                                                <h3 class="card-text3">
+                                                    <c:out value="${rejected.offerer.book.bookModel.title}"/>
+                                                </h3>
+                                            </div>
+                                        </div>
+
+                                        <div style="width: 40%; margin-bottom: 25px">
+                                            <span class="uk-badge state-rejected"><spring:message
+                                                    code="exchange.status.rejected"/></span>
+                                            <fmt:formatDate
+                                                    value="${rejected.exchangeStartDate}"
+                                                    pattern="dd/MM/yyyy"/>
+                                        </div>
+                                    </div>
+                                </c:forEach>
+                            </c:if>
                         </li>
                     </ul>
                 </div>
