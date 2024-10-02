@@ -160,6 +160,23 @@ public class ExchangeJdbcDao implements ExchangeDao {
     }
 
     @Override
+    public Optional<Exchange> createExchange(long offererPubId, long requesterPubId, int acceptCode, Timestamp startDate) {
+        final Map<String, Object> exchangeData = new HashMap<>();
+        exchangeData.put("offererPubId", offererPubId);
+        exchangeData.put("requesterPubId", requesterPubId);
+        exchangeData.put("exchangeState", ExchangeState.PENDING.getValue());
+        exchangeData.put("acceptCode", acceptCode);
+        exchangeData.put("offererReceivedBook", false);
+        exchangeData.put("requesterReceivedBook", false);
+        exchangeData.put("exchangeStartDate", startDate);
+        exchangeData.put("exchangeEndDate", null);
+
+        Number id = jdbcInsert.executeAndReturnKey(exchangeData);
+
+        return getExchangeById(id.longValue());
+    }
+
+    @Override
     public Optional<Exchange> exchange(int acceptCode, boolean state) {
 
         StringBuilder sqlQuery = new StringBuilder(baseQuery);
@@ -182,37 +199,16 @@ public class ExchangeJdbcDao implements ExchangeDao {
     }
 
     @Override
-    public Optional<Exchange> createExchange(long offererPubId, long requesterPubId, int acceptCode, Timestamp startDate) {
-        final Map<String, Object> exchangeData = new HashMap<>();
-        exchangeData.put("offererPubId", offererPubId);
-        exchangeData.put("requesterPubId", requesterPubId);
-        exchangeData.put("exchangeState", ExchangeState.PENDING.getValue());
-        exchangeData.put("acceptCode", acceptCode);
-        exchangeData.put("offererReceivedBook", false);
-        exchangeData.put("requesterReceivedBook", false);
-        exchangeData.put("exchangeStartDate", startDate);
-        exchangeData.put("exchangeEndDate", null);
-
-        Number id = jdbcInsert.executeAndReturnKey(exchangeData);
-
-        return getExchangeById(id.longValue());
+    public Optional<Exchange> confirmOfferer(int acceptCode) {
+        jdbcTemplate.update("UPDATE exchange SET offererReceivedBook = ? WHERE acceptcode = ?", true, acceptCode);
+        return findByAcceptCode(acceptCode);
     }
 
-    public List<Exchange> getAllExchangesByUserId(long anUserId, ExchangeState exchangeState, boolean isOfferer) {
-        StringBuilder sqlQuery = new StringBuilder(baseQuery);
-
-        if (isOfferer) {
-            sqlQuery.append("WHERE o.userId = ? ");
-        } else {
-            sqlQuery.append("WHERE r.userId = ? ");
-        }
-
-        sqlQuery.append("AND e.exchangeState = ? ");
-        sqlQuery.append(groupQuery);
-
-        return jdbcTemplate.query(sqlQuery.toString(), new Object[]{anUserId, exchangeState.getValue()}, new int[]{Types.BIGINT, Types.INTEGER}, ROW_MAPPER_EXCHANGE);
+    @Override
+    public Optional<Exchange> confirmRequester(int acceptCode) {
+        jdbcTemplate.update("UPDATE exchange SET requesterReceivedBook = ? WHERE acceptcode = ?", true, acceptCode);
+        return findByAcceptCode(acceptCode);
     }
-
 
     @Override
     public void updateExchangeStatus(int acceptCode, int newStatus) {
@@ -229,22 +225,6 @@ public class ExchangeJdbcDao implements ExchangeDao {
     }
 
     @Override
-    public Optional<Exchange> confirmOfferer(int acceptCode) {
-        jdbcTemplate.update("UPDATE exchange SET offererReceivedBook = ? WHERE acceptcode = ?", true, acceptCode);
-
-        return findByAcceptCode(acceptCode);
-
-    }
-
-    @Override
-    public Optional<Exchange> confirmRequester(int acceptCode) {
-        jdbcTemplate.update("UPDATE exchange SET requesterReceivedBook = ? WHERE acceptcode = ?", true, acceptCode);
-
-        return findByAcceptCode(acceptCode);
-    }
-
-
-    @Override
     public Optional<Exchange> getExchangeById(long exchangeId){
         StringBuilder sqlQuery = new StringBuilder(baseQuery);
         sqlQuery.append(" WHERE exchangeId = ? ");
@@ -254,20 +234,19 @@ public class ExchangeJdbcDao implements ExchangeDao {
 
     }
 
+    @Override
+    public List<Exchange> getAllExchangesByUserId(long anUserId, ExchangeState exchangeState, boolean isOfferer) {
+        StringBuilder sqlQuery = new StringBuilder(baseQuery);
 
+        if (isOfferer) {
+            sqlQuery.append("WHERE o.userId = ? ");
+        } else {
+            sqlQuery.append("WHERE r.userId = ? ");
+        }
 
-//
-//    @Override
-//    public Optional<Exchange> findById(long id) {
-//        return jdbcTemplate.query("SELECT * FROM exchange WHERE exchangeId = ?", new Object[]{ id },
-//                new int[]{ Types.BIGINT }, ROW_MAPPER_EXCHANGE).stream().findFirst();
-//    }
-//
-//    @Override
-//    public long getIdByAcceptCode(int acceptCode) {
-//        //System.out.println(acceptCode);
-//        return jdbcTemplate.query("SELECT * FROM exchange WHERE acceptCode = ?", new Object[]{ acceptCode },
-//                new int[]{ Types.INTEGER }, ROW_MAPPER_EXCHANGE).stream().findFirst().get().getExchangeId();
-//    }
+        sqlQuery.append("AND e.exchangeState = ? ");
+        sqlQuery.append(groupQuery);
 
+        return jdbcTemplate.query(sqlQuery.toString(), new Object[]{anUserId, exchangeState.getValue()}, new int[]{Types.BIGINT, Types.INTEGER}, ROW_MAPPER_EXCHANGE);
+    }
 }
