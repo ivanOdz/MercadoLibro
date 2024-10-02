@@ -15,5 +15,5 @@ public interface PublicationDao {
 
     Publication getPublicationByPublicationId(long publicationId);
 
-    PaginatedResponse<Publication> getFilteredSortedOrderedPublicationsByPageExcludingUser(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, long userId, SortType sortType, int currentPage);
+    PaginatedResponse<Publication> getPaginatedPublications(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, SortType sortType, int currentPage);
 }
