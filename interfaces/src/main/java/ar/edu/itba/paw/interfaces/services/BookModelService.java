@@ -11,20 +11,11 @@ import java.util.List;
 @Service
 public interface BookModelService {
 
+    long createBookModel(String isbn, String title, List<String> authors, String publisher, String description, Genre genre, int edition,
+                         Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight, Integer imageId);
+
     BookModel getBookModelByBookModelId(long bookModelId);
 
-
-    List<BookModel> getBookModelByUserId(long userId);
-
-    List<BookModel> getAllBookModelFilteredBy(String search, int genreFilter);
-
-    Rating getRatingByBookModelId(long bookModelId);
-
-    //-----------------ADAPTADO------------------------//
-
     List<BookModel> getFilteredSortedOrderedModelBooksByPage(String search, boolean isGenreFilterActive, Genre genreFilter, int pageIndex, SortType sortType);
-
-    long createBookModel(String isbn, String title, List<String> authors, String publisher, String description, Genre genre, int edition,
-                              Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight, Integer imageId);
 
 }

@@ -1,27 +1,23 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.BookModelDao;
-import ar.edu.itba.paw.interfaces.services.AuthorService;
-import ar.edu.itba.paw.interfaces.services.BookAuthorService;
 import ar.edu.itba.paw.interfaces.services.BookModelService;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.models.BookModel;
 import ar.edu.itba.paw.models.utils.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service
 public class BookModelServiceImpl implements BookModelService {
 
     private final BookModelDao bookModelDao;
-    private final ImageService imageService;
 
-    public BookModelServiceImpl(BookModelDao bookModelDao, ImageService imageService) {
+    public BookModelServiceImpl(BookModelDao bookModelDao) {
         this.bookModelDao = bookModelDao;
-        this.imageService = imageService;
     }
 
     @Override
@@ -29,46 +25,19 @@ public class BookModelServiceImpl implements BookModelService {
         return bookModelDao.getBookModelByBookModelId(bookModelId);
     }
 
-    /*@Override
-    public BookModel addBookModel(List<String> authors, String isbn, String title, String editorial, String description, Genre genre, int edition, int weight, int pages, Language language, BookDimension dimension, Short publicationYear, boolean pocketEdition, boolean hardcover) {
-        BookModel bookModel = bookModelDao.addBookModel(isbn, title, editorial, description, genre, edition, weight, pages, language, dimension, publicationYear, pocketEdition, hardcover);
-        for(String author : authors) {
-            Author a = authorService.createAuthor(author);
-            bookAuthorService.createBookAuthor(bookModel.getBookModelId(),a.getAuthorId());
-        }
-        return bookModel;
-    }*/
-
-    @Override
-    public List<BookModel> getBookModelByUserId(long userId) {
-        return bookModelDao.getBookModelByUserId(userId);
-    }
-
-    @Override
-    public List<BookModel> getAllBookModelFilteredBy(String search, int genreFilter) {
-        return bookModelDao.getAllBookModel(search, genreFilter);
-    }
-
-    @Override
-    public Rating getRatingByBookModelId(long bookModelId) {
-        return bookModelDao.getRatingByBookModelId(bookModelId);
-    }
-
     @Override
     public List<BookModel> getFilteredSortedOrderedModelBooksByPage(String search, boolean isGenreFilterActive, Genre genreFilter, int pageIndex, SortType sortType) {
         return bookModelDao.getFilteredSortedOrderedModelBooksByPage(search, isGenreFilterActive, genreFilter, pageIndex, sortType);
     }
 
+    @Transactional
     @Override
     public long createBookModel(String isbn, String title, List<String> authors, String publisher, String description, Genre genre, int edition, Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight, Integer imageId) {
-        // Inserto autores
         List<Long> authorsIds = bookModelDao.createAuthors(authors);
-        // Inserto BookModel
+
         long bookModelId = bookModelDao.createBookModel(isbn, title, publisher, description, genre, edition, publicationYear, isHardcover, isPocketEdition, dimension, language, pages, weight, imageId);
-        // Inserto BookAuthors
+
         bookModelDao.createBookAuthors(authorsIds, bookModelId);
         return bookModelId;
     }
-
-
 }
