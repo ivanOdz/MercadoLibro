@@ -186,9 +186,9 @@ public class BookController {
         if(authentication.getPrincipal() instanceof PawUserDetails pud) {
             user = pud.getUser();
         }
-        bookService.createBook(null, null, null, null, null, null, bookDetailsForm.getBookState(), 0, bookDetailsForm.getRating(), bookDetailsForm.getImageFiles(), null, false, false, null, null, 0, 0, 0, bookDetailsForm.isPublish(), user, bookModelId);
+        Number bookId = bookService.createBook(null, null, null, null, null, null, bookDetailsForm.getBookState(), 0, bookDetailsForm.getRating(), bookDetailsForm.getImageFiles(), null, false, false, null, null, 0, 0, 0, bookDetailsForm.isPublish(), user, bookModelId);
 
-        publicationService.createPublicationIfNeeded(bookDetailsForm.isPublish(), bookModelId, user.getUserId(), bookDetailsForm.getLocation(), PublicationState.CURRENT);
+        publicationService.createPublicationIfNeeded(bookDetailsForm.isPublish(), bookId.longValue(), user.getUserId(), bookDetailsForm.getLocation(), PublicationState.CURRENT);
 
         return new ModelAndView("redirect:/book");
     }
