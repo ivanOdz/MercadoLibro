@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -31,21 +32,8 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
     }
-    @Override
-    public Optional<User> findById(long id) {
-        return userDao.findById(id);
-    }
 
-    @Override
-    public Optional<User> findUserByEmail(String mail) {
-        return userDao.find(mail);
-    }
-
-    @Override
-    public String findUsernameByEmail(String mail){
-        return findUserByEmail(mail).map(User::getUsername).orElse("");
-    }
-
+    @Transactional
     @Override
     public User createUser(String username, String mail, String password) {
         //register user
@@ -70,19 +58,14 @@ public class UserServiceImpl implements UserService {
         emailService.sendEmail(user.getMail(), variables, "verification", "User verification");
 
         return user;
-
     }
 
     @Override
-    public Optional<User> findByUsername(String username) {
-        return userDao.findByUsername(username);
+    public void changePassword(int verificationCode, String newPassword) {
+        userDao.changePassword(verificationCode,passwordEncoder.encode(newPassword));
     }
 
-    @Override
-    public void verifyUser(int verificationCode) {
-        userDao.verifyUser(verificationCode);
-    }
-
+    @Transactional
     @Override
     public void changePasswordSolicited(String email) {
         int verificationCode = generateVerificationCode();
@@ -96,14 +79,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changePassword(int verificationCode, String newPassword) {
-        userDao.changePassword(verificationCode,passwordEncoder.encode(newPassword));
+    public Optional<User> findById(long id) {
+        return userDao.findById(id);
     }
 
     @Override
-    public List<UserReview> getReviewsByUserId(long userId, int pageIndex) {
-        //return userReviewsService.getReviewsByUserId(userId, pageIndex);
-       return userDao.getReviewsByUserId(userId, pageIndex);
+    public Optional<User> findUserByEmail(String mail) {
+        return userDao.find(mail);
+    }
+
+    @Override
+    public String findUsernameByEmail(String mail){
+        return findUserByEmail(mail).map(User::getUsername).orElse("");
+    }
+
+    @Override
+    public Optional<User> findByUsername(String username) {
+        return userDao.findByUsername(username);
+    }
+
+    @Override
+    public void verifyUser(int verificationCode) {
+        userDao.verifyUser(verificationCode);
     }
 
     @Override
@@ -116,10 +113,6 @@ public class UserServiceImpl implements UserService {
         return userDao.find(mail).isPresent();
     }
 
-//    @Override
-//    public void changePassword(String email, String newPassword) {
-//        userDao.changePassword(passwordEncoder.encode(newPassword))
-//    }
 
     /**
      * Generates random verification code when verifying user or updating password
@@ -132,7 +125,6 @@ public class UserServiceImpl implements UserService {
     
     @Override
     public boolean changeUserName(long userId, String newName) {
-    	
     	return userDao.updateUsername(userId, newName);
     }
 
@@ -141,6 +133,13 @@ public class UserServiceImpl implements UserService {
         return userDao.getUserToVerify(verificationCode);
     }
 
+
+    // Mudar la logica al UserReviewService.
+    @Override
+    public List<UserReview> getReviewsByUserId(long userId, int pageIndex) {
+        return userDao.getReviewsByUserId(userId, pageIndex);
+    }
+    // Mudar la logica al UserReviewService.
     @Override
     public Double getUserRating(long userId) {
         return userDao.getUserRating(userId);
