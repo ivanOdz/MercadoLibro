@@ -123,7 +123,7 @@ public ModelAndView createPublication(@RequestParam(name = "bookId") long bookId
 
 @GetMapping("/publications/{publication_id:\\d+}")
 public ModelAndView publicationDetail(@PathVariable(name = "publication_id") long publicationId) {
-    final ModelAndView mav = new ModelAndView("home/publicationDetail");
+    final ModelAndView mav = new ModelAndView("/home/publication_detail");
     Publication publication = ps.getPublicationByPublicationId(publicationId);
     List<Book> availableBooks;
 

@@ -199,7 +199,7 @@
                     <div class="column-container" style="place-items: center; display: flex;">
                         <div>
                             <p style="text-align: center"><spring:message code="publication.details.location"/></p>
-                            <span uk-icon="icon: location" style="margin-left: 25px;"></span>
+                            <span uk-icon="icon: location" style="margin-left: 30px;"></span>
                             <p style="text-align: center">
                                 <strong>
                                     <c:out value="${publication.location.locationString}"/>
