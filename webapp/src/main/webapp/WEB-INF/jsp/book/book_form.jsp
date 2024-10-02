@@ -143,12 +143,12 @@
                         </label>
                         <label class="mr-1">
                             <spring:message code="yes"/>
-                            <form:radiobutton path="publish" value="true" class="uk-checkbox" name="publish"/>
+                            <form:radiobutton path="publish" value="true" class="uk-radiobutton" name="publish"/>
                         </label>
 
                         <label class="mr-1">
                             <spring:message code="no"/>
-                            <form:radiobutton path="publish" value="false" class="uk-checkbox" name="publish"/>
+                            <form:radiobutton path="publish" value="false" class="uk-radiobutton" name="publish"/>
                         </label>
                     </div>
 
