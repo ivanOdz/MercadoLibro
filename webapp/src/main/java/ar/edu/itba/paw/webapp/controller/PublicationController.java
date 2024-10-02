@@ -51,19 +51,10 @@ public class PublicationController {
 
         final ModelAndView mav = new ModelAndView("home/publications");
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
+        PaginatedResponse<Publication> publications = ps.getPaginatedPublications(search, isBookStateFilterActive,
+                bookStateFilter, isGenreFilterActive, genreFilter, sortType, currentPage);
 
-            /*List<Publication> publications = ps.getFilteredSortedOrderedPublicationsByPageExcludingUser(search, isBookStateFilterActive,
-                    bookStateFilter, isGenreFilterActive, genreFilter, pageIndex, pud.getUser().getUserId(), sortType);*/
-
-            PaginatedResponse<Publication> publications = ps.getFilteredSortedOrderedPublicationsByPageExcludingUser(search, isBookStateFilterActive,
-                    bookStateFilter, isGenreFilterActive, genreFilter, pud.getUser(), sortType, currentPage);
-
-            mav.addObject("loggedUser", pud.getUser());
-            mav.addObject("publications", publications);
-        }
-
+        mav.addObject("publications", publications);
         mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
         mav.addObject("bookStates", List.of(BookState.values()).stream().map(bookStatus -> new BookStateWrapper(bookStatus, bookStateService.getBookStateDisplayName(bookStatus))).collect(Collectors.toList()));
 

@@ -179,7 +179,7 @@
                                 </figure>
 
                                 <div class="uk-flex uk-flex-column uk-flex-column uk-margin-bottom">
-                                    <div class="" >
+                                    <div class="">
                                         <h5 class="uk-card-title custom-link">${card.bookModel.title}</h5>
                                         <p class="small-gray-text custom-link">${card.bookModel.authors}</p>
                                     </div>
@@ -198,8 +198,45 @@
                                 </div>
                             </div>
 
+                            <!-- Modal específico para cada card -->
+                            <div id="modal-sections-${card.bookId}" uk-modal>
+                                <div class="uk-modal-dialog">
+                                    <button class="uk-modal-close-default" type="button" uk-close></button>
+                                    <div class="uk-modal-header">
+                                        <form action="${pageContext.request.contextPath}/createpublication"
+                                              method="post" class="uk-grid-large uk-grid"
+                                              style="justify-content: center;">
+                                            <div class="uk-margin" style="justify-content: center">
+                                                <div class="uk-width-1-1">
+                                                    <div class="uk-width-1-1 uk-margin-top">
+                                                        <div class="uk-margin-bottom">
+                                                            <label class="uk-margin">
+                                                                <spring:message code="book.set.location"/>
+                                                            </label>
+                                                        </div>
+                                                        <div class="uk-inline">
+                                                            <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: location"></span>
+                                                            <input class="uk-input" type="text" name="location"
+                                                                   aria-label="Not clickable icon"/>
+                                                        </div>
+                                                        <input class="uk-input" type="hidden"
+                                                               value="${card.bookId}" name="bookId"
+                                                               aria-label="Not clickable icon"/>
+                                                    </div>
+                                                    <div class="uk-margin-top uk-button-group"
+                                                         style="margin-left: 50px;">
+                                                        <button class="uk-button uk-button-primary"><spring:message
+                                                                code="book.publish.button"/></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </c:forEach>
+
                 </div>
             </div>
         </div>
