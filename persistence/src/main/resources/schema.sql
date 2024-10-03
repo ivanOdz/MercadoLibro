@@ -4,6 +4,8 @@ CREATE TABLE IF NOT EXISTS image (
      image               BYTEA NOT NULL
 );
 
+-- ALTER TABLE users ADD COLUMN language VARCHAR(64);
+
 -- Tabla de usuarios
 CREATE TABLE IF NOT EXISTS users (
      userId              SERIAL PRIMARY KEY,
