@@ -22,6 +22,9 @@ public class GenreWrapper {
 		this.resultByGenre = resultByGenre;
 	}
 
+	public int getResultByGenre() {
+		return resultByGenre;
+	}
 
 	public Genre getGenre() {
 		
