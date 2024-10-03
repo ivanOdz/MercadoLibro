@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.services.EmailService;
-import ar.edu.itba.paw.interfaces.services.UserReviewService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
@@ -54,7 +53,7 @@ public class UserServiceImpl implements UserService {
         variables.put("username", user.getUsername());
         variables.put("validationUrl", webappUrl + "/verification?verification_code=" + user.getVerificationCode());
 
-        emailService.sendEmail(user.getMail(), variables, "verification", "User verification");
+        emailService.sendEmail(user.getMail(), variables, "verification", "User verification", Locale.getDefault().getLanguage());
 
         return user;
     }
@@ -70,11 +69,15 @@ public class UserServiceImpl implements UserService {
         int verificationCode = generateVerificationCode();
         userDao.changePasswordSolicited(email, verificationCode);
 
+        Optional<User> u = getUserToVerify(verificationCode);
+
         Map<String, Object> variables = new HashMap<>();
 
         variables.put("validationUrl", webappUrl +"/change_password?verification_code=" + verificationCode);
 
-        emailService.sendEmail(email, variables, "changePassword", "Password change");
+        String locale = u.get().getLanguage() != null ? u.get().getLanguage() : Locale.getDefault().getLanguage();
+
+        emailService.sendEmail(email, variables, "changePassword", "Password change", locale);
     }
 
     @Override

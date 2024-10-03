@@ -59,7 +59,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         variables.put("rejectionUrl", webappUrl + "/createexchange?accept_code=" + ex.get().getAcceptCode() + "&state=false");
         variables.put("exchangeUrl", webappUrl + "/offers"); //TODO: verificar el funcionamiento de esto
 
-        emailService.sendEmail(offerer.getMail(), variables, "exchangeRequest", "Requesting");
+        emailService.sendEmail(offerer.getMail(), variables, "exchangeRequest", "Requesting", offerer.getLanguage());
     }
 
     @Transactional
@@ -88,7 +88,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         variables.put("publicationsUrl", webappUrl);
         // link para redirigir a la página de exchanges que corresponda para el call-to-action de marcar como confirmado
 
-        emailService.sendExchangeEmail(requester.getMail(), variables, state);
+        emailService.sendExchangeEmail(requester.getMail(), variables, state, requester.getLanguage());
 
         ps.terminatePublication(ex.get().getOfferer());
         ps.terminatePublication(ex.get().getRequester());
