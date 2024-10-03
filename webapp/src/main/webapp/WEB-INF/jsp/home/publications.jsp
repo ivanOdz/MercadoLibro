@@ -90,7 +90,7 @@
                 <c:if test="${!publications.pageInfo.isBookStateFilterActive}">
                     <h3><spring:message code="filter.condition"/></h3>
                     <ul class="uk-list">
-                        <c:forEach var="bookStateWrapper" items="${bookStates}">
+                        <c:forEach var="bookStateWrapper" items="${publications.pageInfo.bookStateWrapperList}">
                             <li class="ui-search-filter-container">
                                 <form action="<c:url value='' />" method="get">
                                     <input type="hidden" name="search" value="<c:out value='${publications.pageInfo.search}'/>">
@@ -116,7 +116,7 @@
                 <c:if test="${!publications.pageInfo.isGenreFilterActive}">
                     <h3><spring:message code="filter.genre"/></h3>
                     <ul class="uk-list">
-                        <c:forEach var="genreWrapper" items="${genres}">
+                        <c:forEach var="genreWrapper" items="${publications.pageInfo.genreWrapperList}">
                             <li class="ui-search-filter-container">
                                 <form action="<c:url value='' />" method="get">
                                     <input type="hidden" name="genre-filter" value="${genreWrapper.genre}">

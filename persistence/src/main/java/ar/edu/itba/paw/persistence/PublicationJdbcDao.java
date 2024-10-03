@@ -13,6 +13,7 @@ import javax.sql.DataSource;
 import java.util.*;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.models.utils.Constants.PAGE_SIZE;
 import static ar.edu.itba.paw.persistence.BookJdbcDao.ROW_MAPPER_BOOK;
@@ -97,7 +98,7 @@ public class PublicationJdbcDao implements PublicationDao {
                         // "-- FROM book bb " +
                         // "-- GROUP BY bb.bookModelId) avgRatings ON avgRatings.bookModelId = bm.bookModelId " +
                         "WHERE p.publicationId = ? AND p.publicationState = ? " +
-                        "GROUP BY u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language , p.publicationId, p.publicationState, l.locationId, l.locationString, p.publicationDatetime, b.bookId, b.bookState, b.exchangesQty, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, bm.imageId");
+                        "GROUP BY u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language , p.publicationId, p.publicationState, l.locationId, l.locationString, p.publicationDatetime, b.bookId, b.bookState, b.exchangesQty, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, bm.imageId";
 
         return jdbcTemplate.query(sqlQuery, new Object[]{ ExchangeState.ACCEPTED.getValue(), publicationId, PublicationState.CURRENT.getValue() }, new int[]{ Types.INTEGER, Types.BIGINT, Types.INTEGER }, ROW_MAPPER_PUBLICATION).stream().findFirst().orElse(null);
     }
@@ -175,13 +176,13 @@ public class PublicationJdbcDao implements PublicationDao {
         if(isGenreFilterActive && isBookStateFilterActive) {
             data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ ExchangeState.ACCEPTED.getValue(), PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", genreFilter.getValue(), bookStateFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER  }, ROW_MAPPER_PUBLICATION);
         }
-        if(isGenreFilterActive) {
+        else if(isGenreFilterActive) {
             data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", genreFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_PUBLICATION);
         }
-        if(isBookStateFilterActive){
+        else if(isBookStateFilterActive){
             data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ ExchangeState.ACCEPTED.getValue(), PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", bookStateFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_PUBLICATION);
         }
-        data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ ExchangeState.ACCEPTED.getValue(), PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", PAGE_SIZE, offset }, new int[]{ Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_PUBLICATION);
+        else data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ ExchangeState.ACCEPTED.getValue(), PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", PAGE_SIZE, offset }, new int[]{ Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_PUBLICATION);
 
         List<GenreWrapper> genreWrapperList = getGenreQtyByBook(search, isBookStateFilterActive, bookStateFilter);
         List<BookStateWrapper> bookStateWrapperList = getBookStateQtyByBook(search, isGenreFilterActive, genreFilter);
@@ -198,24 +199,20 @@ public class PublicationJdbcDao implements PublicationDao {
                         "JOIN book_model bm ON b.bookModelId = bm.bookModelId " +
                         "WHERE p.publicationState = ? AND LOWER(bm.title) LIKE LOWER(?) ");
 
-        // Agregar el filtro por estado del libro si está activo
         if (isBookStateFilterActive) {
             sqlQuery.append("AND b.bookState = ? ");
         }
 
         sqlQuery.append("GROUP BY bm.genre");
 
-        // Parámetros para la consulta
         List<Object> params = new ArrayList<>();
-        params.add(PublicationState.CURRENT.getValue());  // Estado de publicación actual
-        params.add("%" + search.toLowerCase() + "%");     // Filtro de búsqueda (coincidencia parcial)
+        params.add(PublicationState.CURRENT.getValue());
+        params.add("%" + search.toLowerCase() + "%");
 
-        // Añadir el filtro del estado del libro si está activo
         if (isBookStateFilterActive) {
             params.add(bookStateFilter.getValue());
         }
 
-        // Definir los tipos de parámetros para la consulta
         int[] paramTypes;
         if (isBookStateFilterActive) {
             paramTypes = new int[]{Types.INTEGER, Types.VARCHAR, Types.INTEGER};
@@ -223,12 +220,20 @@ public class PublicationJdbcDao implements PublicationDao {
             paramTypes = new int[]{Types.INTEGER, Types.VARCHAR};
         }
 
-        // Ejecutar la consulta y mapear los resultados a una lista de GenreWrapper
-        return jdbcTemplate.query(sqlQuery.toString(), params.toArray(), paramTypes, (rs, rowNum) -> {
-            int genreValue = rs.getInt("genre"); // Asumiendo que el valor del género es un entero
-            Genre genre = Genre.fromInt(genreValue); // Usa fromInt para obtener el enum
-            return new GenreWrapper(genre, genre.toString(), rs.getInt("genreCount"));
+        Map<Genre, Integer> resultByGenreMap = new HashMap<>();
+        jdbcTemplate.query(sqlQuery.toString(), params.toArray(), paramTypes, (rs, rowNum) -> {
+            int genreValue = rs.getInt("genre");
+            Genre genre = Genre.fromInt(genreValue);
+            resultByGenreMap.put(genre, rs.getInt("genreCount"));
+            return null;
         });
+
+        List<GenreWrapper> genreWrappers = new ArrayList<>();
+        for (Genre genre : Genre.values()) {
+            genreWrappers.add(new GenreWrapper(genre, genre.toString(), resultByGenreMap.getOrDefault(genre, 0)));
+        }
+
+        return genreWrappers;
     }
 
     private List<BookStateWrapper> getBookStateQtyByBook(String search, boolean isGenreFilterActive, Genre genreFilter) {
@@ -239,24 +244,20 @@ public class PublicationJdbcDao implements PublicationDao {
                         "JOIN book_model bm ON b.bookModelId = bm.bookModelId " +
                         "WHERE p.publicationState = ? AND LOWER(bm.title) LIKE LOWER(?) ");
 
-        // Agregar el filtro por género si está activo
         if (isGenreFilterActive) {
             sqlQuery.append("AND bm.genre = ? ");
         }
 
         sqlQuery.append("GROUP BY b.bookState");
 
-        // Parámetros para la consulta
         List<Object> params = new ArrayList<>();
-        params.add(PublicationState.CURRENT.getValue());  // Estado de publicación actual
-        params.add("%" + search.toLowerCase() + "%");     // Filtro de búsqueda (coincidencia parcial)
+        params.add(PublicationState.CURRENT.getValue());
+        params.add("%" + search.toLowerCase() + "%");
 
-        // Añadir el filtro del género si está activo
         if (isGenreFilterActive) {
             params.add(genreFilter.getValue());
         }
 
-        // Definir los tipos de parámetros para la consulta
         int[] paramTypes;
         if (isGenreFilterActive) {
             paramTypes = new int[]{Types.INTEGER, Types.VARCHAR, Types.INTEGER};
@@ -264,12 +265,21 @@ public class PublicationJdbcDao implements PublicationDao {
             paramTypes = new int[]{Types.INTEGER, Types.VARCHAR};
         }
 
-        // Ejecutar la consulta y mapear los resultados a una lista de BookStateWrapper
-        return jdbcTemplate.query(sqlQuery.toString(), params.toArray(), paramTypes, (rs, rowNum) -> {
-            int stateValue = rs.getInt("bookState"); // Asumiendo que el valor del estado del libro es un entero
-            BookState bookState = BookState.fromInt(stateValue); // Usa fromInt para obtener el enum
+        List<BookStateWrapper> results = jdbcTemplate.query(sqlQuery.toString(), params.toArray(), paramTypes, (rs, rowNum) -> {
+            int stateValue = rs.getInt("bookState");
+            BookState bookState = BookState.fromInt(stateValue);
             return new BookStateWrapper(bookState, bookState.toString(), rs.getInt("stateCount"));
         });
+
+        Map<BookState, Integer> resultByStateMap = results.stream()
+                .collect(Collectors.toMap(BookStateWrapper::getBookState, BookStateWrapper::getResultByState));
+
+        List<BookStateWrapper> toReturn = new ArrayList<>();
+        for (BookState state : BookState.values()) {
+            toReturn.add(new BookStateWrapper(state, state.toString(), resultByStateMap.getOrDefault(state, 0)));
+        }
+
+        return toReturn;
     }
 
 
