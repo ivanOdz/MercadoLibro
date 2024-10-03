@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.PublicationDao;
+import ar.edu.itba.paw.interfaces.services.GenreService;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,6 +23,8 @@ public class PublicationJdbcDao implements PublicationDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
+    private final GenreService genreService;
+
     static final RowMapper<Publication> ROW_MAPPER_PUBLICATION =
             (rs, rowNum) -> {
                 long id = rs.getLong("publicationId");
@@ -32,8 +35,9 @@ public class PublicationJdbcDao implements PublicationDao {
                 return new Publication(id, book, publicationState, dateTime, location);
             };
 
-    public PublicationJdbcDao(final DataSource ds) {
+    public PublicationJdbcDao(final DataSource ds, GenreService genreService) {
         jdbcTemplate =  new JdbcTemplate(ds);
+        this.genreService = genreService;
         jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .usingGeneratedKeyColumns("publicationid")
                 .withTableName("publication");
@@ -179,13 +183,137 @@ public class PublicationJdbcDao implements PublicationDao {
         }
         data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ ExchangeState.ACCEPTED.getValue(), PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", PAGE_SIZE, offset }, new int[]{ Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_PUBLICATION);
 
-        List<GenreWrapper> genreWrapperList = new ArrayList<>();
-        List<BookStateWrapper> bookStateWrapperList = new ArrayList<>();
+        List<GenreWrapper> genreWrapperList = getGenreQtyByBook(search, isBookStateFilterActive, bookStateFilter);
+        List<BookStateWrapper> bookStateWrapperList = getBookStateQtyByBook(search, isGenreFilterActive, genreFilter);
 
-        //int totalResults = sumGenreResults + bookStateResults;
-        int totalResults = 0;
+        int totalResults = getTotalResultsByBook(search, isGenreFilterActive, genreFilter, isBookStateFilterActive, bookStateFilter);
         return new PaginatedResponse<>(data, new PageInfo(search, isBookStateFilterActive, isGenreFilterActive, genreFilter, bookStateFilter, sortType,  genreWrapperList, bookStateWrapperList, currentPage, totalResults));
     }
+
+    private List<GenreWrapper> getGenreQtyByBook(String search, boolean isBookStateFilterActive, BookState bookStateFilter) {
+        StringBuilder sqlQuery = new StringBuilder(
+                "SELECT bm.genre, COUNT(*) AS genreCount " +
+                        "FROM publication p " +
+                        "JOIN book b ON p.bookId = b.bookId " +
+                        "JOIN book_model bm ON b.bookModelId = bm.bookModelId " +
+                        "WHERE p.publicationState = ? AND LOWER(bm.title) LIKE LOWER(?) ");
+
+        // Agregar el filtro por estado del libro si está activo
+        if (isBookStateFilterActive) {
+            sqlQuery.append("AND b.bookState = ? ");
+        }
+
+        sqlQuery.append("GROUP BY bm.genre");
+
+        // Parámetros para la consulta
+        List<Object> params = new ArrayList<>();
+        params.add(PublicationState.CURRENT.getValue());  // Estado de publicación actual
+        params.add("%" + search.toLowerCase() + "%");     // Filtro de búsqueda (coincidencia parcial)
+
+        // Añadir el filtro del estado del libro si está activo
+        if (isBookStateFilterActive) {
+            params.add(bookStateFilter.getValue());
+        }
+
+        // Definir los tipos de parámetros para la consulta
+        int[] paramTypes;
+        if (isBookStateFilterActive) {
+            paramTypes = new int[]{Types.INTEGER, Types.VARCHAR, Types.INTEGER};
+        } else {
+            paramTypes = new int[]{Types.INTEGER, Types.VARCHAR};
+        }
+
+        // Ejecutar la consulta y mapear los resultados a una lista de GenreWrapper
+        return jdbcTemplate.query(sqlQuery.toString(), params.toArray(), paramTypes, (rs, rowNum) -> {
+            int genreValue = rs.getInt("genre"); // Asumiendo que el valor del género es un entero
+            Genre genre = Genre.fromInt(genreValue); // Usa fromInt para obtener el enum
+            return new GenreWrapper(genre, genre.toString(), rs.getInt("genreCount"));
+        });
+    }
+
+    private List<BookStateWrapper> getBookStateQtyByBook(String search, boolean isGenreFilterActive, Genre genreFilter) {
+        StringBuilder sqlQuery = new StringBuilder(
+                "SELECT b.bookState, COUNT(*) AS stateCount " +
+                        "FROM publication p " +
+                        "JOIN book b ON p.bookId = b.bookId " +
+                        "JOIN book_model bm ON b.bookModelId = bm.bookModelId " +
+                        "WHERE p.publicationState = ? AND LOWER(bm.title) LIKE LOWER(?) ");
+
+        // Agregar el filtro por género si está activo
+        if (isGenreFilterActive) {
+            sqlQuery.append("AND bm.genre = ? ");
+        }
+
+        sqlQuery.append("GROUP BY b.bookState");
+
+        // Parámetros para la consulta
+        List<Object> params = new ArrayList<>();
+        params.add(PublicationState.CURRENT.getValue());  // Estado de publicación actual
+        params.add("%" + search.toLowerCase() + "%");     // Filtro de búsqueda (coincidencia parcial)
+
+        // Añadir el filtro del género si está activo
+        if (isGenreFilterActive) {
+            params.add(genreFilter.getValue());
+        }
+
+        // Definir los tipos de parámetros para la consulta
+        int[] paramTypes;
+        if (isGenreFilterActive) {
+            paramTypes = new int[]{Types.INTEGER, Types.VARCHAR, Types.INTEGER};
+        } else {
+            paramTypes = new int[]{Types.INTEGER, Types.VARCHAR};
+        }
+
+        // Ejecutar la consulta y mapear los resultados a una lista de BookStateWrapper
+        return jdbcTemplate.query(sqlQuery.toString(), params.toArray(), paramTypes, (rs, rowNum) -> {
+            int stateValue = rs.getInt("bookState"); // Asumiendo que el valor del estado del libro es un entero
+            BookState bookState = BookState.fromInt(stateValue); // Usa fromInt para obtener el enum
+            return new BookStateWrapper(bookState, bookState.toString(), rs.getInt("stateCount"));
+        });
+    }
+
+
+    private int getTotalResultsByBook(String search, boolean isGenreFilterActive, Genre genreFilter,
+                                      boolean isBookStateFilterActive, BookState bookStateFilter) {
+        StringBuilder sqlQuery = new StringBuilder(
+                "SELECT COUNT(*) " +
+                        "FROM publication p " +
+                        "JOIN book b ON p.bookId = b.bookId " +
+                        "JOIN book_model bm ON b.bookModelId = bm.bookModelId " +
+                        "WHERE p.publicationState = ? AND LOWER(bm.title) LIKE LOWER(?) ");
+
+        // Agregar el filtro de estado del libro si está activo
+        if (isBookStateFilterActive) {
+            sqlQuery.append("AND b.bookState = ? ");
+        }
+
+        // Agregar el filtro por género si está activo
+        if (isGenreFilterActive) {
+            sqlQuery.append("AND bm.genre = ? ");
+        }
+
+        // Parámetros para la consulta
+        List<Object> params = new ArrayList<>();
+        params.add(PublicationState.CURRENT.getValue());  // Estado de publicación actual
+        params.add("%" + search.toLowerCase() + "%");     // Filtro de búsqueda (coincidencia parcial)
+
+        // Añadir el filtro del estado del libro si está activo
+        if (isBookStateFilterActive) {
+            params.add(bookStateFilter.getValue());
+        }
+
+        // Añadir el filtro de género si está activo
+        if (isGenreFilterActive) {
+            params.add(genreFilter.getValue());
+        }
+
+        // Ejecutar la consulta y obtener el total de resultados
+        Integer totalResults = jdbcTemplate.queryForObject(sqlQuery.toString(), params.toArray(), Integer.class);
+
+        // Devolver 0 si totalResults es null
+        return totalResults != null ? totalResults : 0;
+    }
+
 }
 
 

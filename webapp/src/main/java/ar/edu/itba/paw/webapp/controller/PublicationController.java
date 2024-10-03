@@ -58,11 +58,6 @@ public class PublicationController {
         mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
         mav.addObject("bookStates", List.of(BookState.values()).stream().map(bookStatus -> new BookStateWrapper(bookStatus, bookStateService.getBookStateDisplayName(bookStatus))).collect(Collectors.toList()));
 
-        //mav.addObject("bookStateFilter", bookStateFilter);
-        //mav.addObject("isGenreFilterActive", isGenreFilterActive);
-        //mav.addObject("genreFilter", genreFilter);
-       // mav.addObject("isBookStateFilterActive", isBookStateFilterActive);
-
         return mav;
 
     }
