@@ -56,7 +56,7 @@ public class BookJdbcDao implements BookDao {
         bookData.put("bookState", bookState.getValue());
         bookData.put("exchangesQty", Constants.INITIAL_EXCHANGE_VALUE);
 
-        return jdbcInsertBook.executeAndReturnKey(bookData);;
+        return jdbcInsertBook.executeAndReturnKey(bookData);
     }
 
     @Override
