@@ -39,41 +39,6 @@ public class PublicationJdbcDao implements PublicationDao {
                 .withTableName("publication");
     }
 
-
-//    @Override
-//    public List<Publication> getAllPublications() {
-//        return jdbcTemplate.query("SELECT * FROM publication", ROWMAPPERPUBLICATIONS);
-//    }
-//
-//    @Override
-//    public Optional<Publication> getPublicationById(long pubId) {
-//        return jdbcTemplate.query("SELECT * FROM publication WHERE publicationId = ?", new Object[]{ pubId },
-//                new int[]{ Types.BIGINT }, ROWMAPPERPUBLICATIONS).stream().findFirst();
-//    }
-//
-//    @Override
-//    public List<Publication> getAllPublicationsFilteredBy(String search, int bookStateFilter, int genreFilter,long userId) {
-//
-//        return jdbcTemplate.query(
-//                "SELECT * FROM publication WHERE publicationState = ? AND userId <> ? AND bookId IN (SELECT bookId FROM book WHERE (? = 6 OR bookstate = ?) AND bookModelId IN (SELECT bookModelId FROM book_model WHERE LOWER(title) LIKE LOWER(?) AND (? = 32 OR genre = ?)))",
-//                new Object[]{ PublicationState.CURRENT.getValue(), userId, bookStateFilter, bookStateFilter, "%" + search.toLowerCase() + "%", genreFilter, genreFilter },
-//                new int[]{ Types.INTEGER, Types.BIGINT, Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER },
-//                ROWMAPPERPUBLICATIONS
-//        );
-//    }
-
-    @Override
-    public void terminatePublication(long pubId) {
-        jdbcTemplate.update("UPDATE publication SET publicationState = ? WHERE publicationId = ?",PublicationState.TERMINATED.getValue(), pubId);
-    }
-
-//
-//    @Override
-//    public Optional<Publication> getPublicationStateByBookId(long bookId) {
-//        return jdbcTemplate.query("SELECT * FROM publication WHERE bookId = ? ORDER BY publicationDatetime DESC LIMIT 1", new Object[]{ bookId }, new int[]{ Types.BIGINT }, ROWMAPPERPUBLICATIONS).stream().findFirst();
-//
-//    }
-
     @Override
     public long createPublication(long bookId, long userId, long locationId, PublicationState publicationState) {
         final Map<String, Object> md = new HashMap<>();
@@ -87,7 +52,54 @@ public class PublicationJdbcDao implements PublicationDao {
     }
 
     @Override
-    public PaginatedResponse<Publication> getFilteredSortedOrderedPublicationsByPageExcludingUser(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, long userId, SortType sortType, int currentPage) {
+    public void terminatePublication(long pubId) {
+        jdbcTemplate.update("UPDATE publication SET publicationState = ? WHERE publicationId = ?",PublicationState.TERMINATED.getValue(), pubId);
+    }
+
+    @Override
+    public Publication getPublicationByPublicationId(long publicationId) {
+        StringBuilder sqlQuery = new StringBuilder(
+                "SELECT p.publicationId, " +
+                        "p.publicationState, l.locationId, l.locationString, p.publicationDatetime," +
+                        // -- book
+                        "b.bookId, ARRAY_AGG(bi.imageId ORDER BY bi.imageOrder) AS images, " +
+                        "b.bookState, b.exchangesQty," +
+                        "CASE " +
+                        "WHEN NOT EXISTS (SELECT 1 FROM publication p2 WHERE p2.bookId = b.bookId) THEN TRUE " +
+                        "WHEN NOT EXISTS (SELECT 1 FROM exchange e2 JOIN publication p2 ON e2.offererPubId = p2.publicationId OR e2.requesterPubId = p2.publicationId " +
+                        "WHERE p2.bookId = b.bookId AND e2.exchangeState = ?) THEN TRUE " +
+                        "ELSE FALSE " +
+                        "END AS available, " +
+                        // -- book_model
+                        "bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
+                        "(SELECT STRING_AGG(a.authorName, ', ') " +
+                        " FROM book_author ba " +
+                        " JOIN author a ON a.authorId = ba.authorId " +
+                        " WHERE ba.bookModelId = bm.bookModelId) AS authors, "+
+                        "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, bm.imageId as coverId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount, " +
+                        "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified " +
+
+                        "FROM publication p " +
+                        "JOIN book b ON p.bookId = b.bookId " +
+                        "JOIN users u ON b.ownerId = u.userId " +
+                        "JOIN book_model bm ON bm.bookModelId = b.bookModelId " +
+                        "LEFT JOIN book_rating br ON bm.bookModelId = br.bookModelId " +
+                        "JOIN book_author ba ON ba.bookModelId = bm.bookModelId " +
+                        "JOIN author a ON a.authorId = ba.authorId " +
+                        "LEFT JOIN book_image bi ON bi.bookId = b.bookId " +
+                        "LEFT JOIN image i ON bm.imageId = i.imageId " +
+                        "JOIN location l ON p.locationId = l.locationId " +
+                        // "-- LEFT JOIN (SELECT bb.bookModelId, AVG(bb.rating) AS rating, COUNT(bb.rating) AS ratingCount " +
+                        // "-- FROM book bb " +
+                        // "-- GROUP BY bb.bookModelId) avgRatings ON avgRatings.bookModelId = bm.bookModelId " +
+                        "WHERE p.publicationId = ? AND p.publicationState = ? " +
+                        "GROUP BY u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, p.publicationId, p.publicationState, l.locationId, l.locationString, p.publicationDatetime, b.bookId, b.bookState, b.exchangesQty, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, bm.imageId");
+
+        return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ ExchangeState.ACCEPTED.getValue(), publicationId, PublicationState.CURRENT.getValue() }, new int[]{ Types.INTEGER, Types.BIGINT, Types.INTEGER }, ROW_MAPPER_PUBLICATION).stream().findFirst().orElse(null);
+    }
+
+    @Override
+    public PaginatedResponse<Publication> getPaginatedPublications(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, SortType sortType, int currentPage) {
 
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT p.publicationId, " +
@@ -119,7 +131,7 @@ public class PublicationJdbcDao implements PublicationDao {
                     "LEFT JOIN book_image bi ON bi.bookId = b.bookId " +
                     "LEFT JOIN image i ON bm.imageId = i.imageId " +
                     "JOIN location l ON p.locationId = l.locationId " +
-                    "WHERE u.userId <> ? AND p.publicationState = ? AND LOWER(bm.title) LIKE LOWER(?) "
+                    "WHERE p.publicationState = ? AND LOWER(bm.title) LIKE LOWER(?) "
         );
 
         if (isGenreFilterActive) {
@@ -157,15 +169,15 @@ public class PublicationJdbcDao implements PublicationDao {
 
         List<Publication> data;
         if(isGenreFilterActive && isBookStateFilterActive) {
-            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ ExchangeState.ACCEPTED.getValue(), userId, PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", genreFilter.getValue(), bookStateFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.INTEGER, Types.BIGINT, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER  }, ROW_MAPPER_PUBLICATION);
+            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ ExchangeState.ACCEPTED.getValue(), PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", genreFilter.getValue(), bookStateFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER  }, ROW_MAPPER_PUBLICATION);
         }
         if(isGenreFilterActive) {
-            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), userId, PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", genreFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.INTEGER, Types.BIGINT, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_PUBLICATION);
+            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", genreFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_PUBLICATION);
         }
         if(isBookStateFilterActive){
-            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ ExchangeState.ACCEPTED.getValue(),userId, PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", bookStateFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.INTEGER, Types.BIGINT, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_PUBLICATION);
+            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ ExchangeState.ACCEPTED.getValue(), PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", bookStateFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_PUBLICATION);
         }
-        data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ ExchangeState.ACCEPTED.getValue(),userId, PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", PAGE_SIZE, offset }, new int[]{ Types.INTEGER, Types.BIGINT, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_PUBLICATION);
+        data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ ExchangeState.ACCEPTED.getValue(), PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", PAGE_SIZE, offset }, new int[]{ Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_PUBLICATION);
 
         List<GenreWrapper> genreWrapperList = new ArrayList<>();
         List<BookStateWrapper> bookStateWrapperList = new ArrayList<>();
@@ -173,49 +185,6 @@ public class PublicationJdbcDao implements PublicationDao {
         //int totalResults = sumGenreResults + bookStateResults;
         int totalResults = 0;
         return new PaginatedResponse<>(data, new PageInfo(search, isBookStateFilterActive, isGenreFilterActive, genreFilter, bookStateFilter, sortType,  genreWrapperList, bookStateWrapperList, currentPage, totalResults));
-    }
-
-
-    @Override
-    public Publication getPublicationByPublicationId(long publicationId) {
-        StringBuilder sqlQuery = new StringBuilder(
-                "SELECT p.publicationId, " +
-                "p.publicationState, l.locationId, l.locationString, p.publicationDatetime," +
-                // -- book
-                "b.bookId, ARRAY_AGG(bi.imageId ORDER BY bi.imageOrder) AS images, " +
-                "b.bookState, b.exchangesQty," +
-                "CASE " +
-                "WHEN NOT EXISTS (SELECT 1 FROM publication p2 WHERE p2.bookId = b.bookId) THEN TRUE " +
-                "WHEN NOT EXISTS (SELECT 1 FROM exchange e2 JOIN publication p2 ON e2.offererPubId = p2.publicationId OR e2.requesterPubId = p2.publicationId " +
-                "WHERE p2.bookId = b.bookId AND e2.exchangeState = ?) THEN TRUE " +
-                "ELSE FALSE " +
-                "END AS available, " +
-                // -- book_model
-                "bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
-                "(SELECT STRING_AGG(a.authorName, ', ') " +
-                " FROM book_author ba " +
-                " JOIN author a ON a.authorId = ba.authorId " +
-                " WHERE ba.bookModelId = bm.bookModelId) AS authors, "+
-                "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, bm.imageId as coverId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount, " +
-                "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified " +
-
-                "FROM publication p " +
-                "JOIN book b ON p.bookId = b.bookId " +
-                "JOIN users u ON b.ownerId = u.userId " +
-                "JOIN book_model bm ON bm.bookModelId = b.bookModelId " +
-                "LEFT JOIN book_rating br ON bm.bookModelId = br.bookModelId " +
-                "JOIN book_author ba ON ba.bookModelId = bm.bookModelId " +
-                "JOIN author a ON a.authorId = ba.authorId " +
-                "LEFT JOIN book_image bi ON bi.bookId = b.bookId " +
-                "LEFT JOIN image i ON bm.imageId = i.imageId " +
-                "JOIN location l ON p.locationId = l.locationId " +
-                "LEFT JOIN (SELECT bb.bookModelId, AVG(bb.rating) AS rating, COUNT(bb.rating) AS ratingCount " +
-                "FROM book bb " +
-                "GROUP BY bb.bookModelId) avgRatings ON avgRatings.bookModelId = bm.bookModelId " +
-                "WHERE p.publicationId = ? AND p.publicationState = ? " +
-                "GROUP BY u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language, p.publicationId, p.publicationState, l.locationId, l.locationString, p.publicationDatetime, b.bookId, b.bookState, b.exchangesQty, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, bm.imageId");
-
-        return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ ExchangeState.ACCEPTED.getValue(), publicationId, PublicationState.CURRENT.getValue() }, new int[]{ Types.INTEGER, Types.BIGINT, Types.INTEGER }, ROW_MAPPER_PUBLICATION).stream().findFirst().orElse(null);
     }
 }
 

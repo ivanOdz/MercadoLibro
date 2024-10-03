@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.interfaces.services;
 
-import ar.edu.itba.paw.models.Book;
-import ar.edu.itba.paw.models.CompleteBook;
 import ar.edu.itba.paw.models.Exchange;
-import ar.edu.itba.paw.models.ExchangeWrapper;
 import ar.edu.itba.paw.models.utils.ExchangeState;
 import org.springframework.stereotype.Service;
 
@@ -13,20 +10,9 @@ import java.util.Optional;
 @Service
 public interface ExchangeService {
 
-    Optional<Exchange> getExchangeByAcceptCode(int acceptCode);
-
-    //long getId(int acceptCode);
-
-    String exchange(int acceptCode, boolean state);
-
     void initializeExchange(long bookId, String location, long offererPubId);
 
-    //List<ExchangeWrapper> getExchangeRequesterWrapperListByUserId(long userId);
-
-    List<Exchange> getExchangeRequesterListByUserId(long userId, ExchangeState exchangeState);
-
-
-    List<Exchange> getExchangeOffererListByUserId(long userId, ExchangeState exchangeState);
+    String exchange(int acceptCode, boolean state);
 
     /**
      * confirms that the offerer received the book
@@ -40,4 +26,9 @@ public interface ExchangeService {
      */
     void cofirmRequester(int acceptCode);
 
+    Optional<Exchange> getExchangeByAcceptCode(int acceptCode);
+
+    List<Exchange> getExchangeOffererListByUserId(long userId, ExchangeState exchangeState);
+
+    List<Exchange> getExchangeRequesterListByUserId(long userId, ExchangeState exchangeState);
 }

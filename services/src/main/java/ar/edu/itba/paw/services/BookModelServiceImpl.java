@@ -14,7 +14,7 @@ public class BookModelServiceImpl implements BookModelService {
 
     private final BookModelDao bookModelDao;
 
-    public BookModelServiceImpl(BookModelDao bookModelDao) {
+    public BookModelServiceImpl(final BookModelDao bookModelDao) {
         this.bookModelDao = bookModelDao;
     }
 
