@@ -14,7 +14,8 @@ CREATE TABLE IF NOT EXISTS users (
      password            VARCHAR(255), -- NOT NULL
      imageId             INTEGER REFERENCES image(imageId),
      verificationCode    INTEGER,
-     isVerified          BOOLEAN
+     isVerified          BOOLEAN,
+    language        VARCHAR(64)
 );
 
 -- ALTER TABLE book_model  ADD COLUMN imageId INTEGER REFERENCES image(imageId);
