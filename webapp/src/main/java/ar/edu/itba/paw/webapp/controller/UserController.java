@@ -7,7 +7,6 @@ import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.webapp.auth.PawUserDetailsService;
 import ar.edu.itba.paw.webapp.form.PasswordForm;
 import ar.edu.itba.paw.webapp.form.UserForm;
-import com.sun.mail.imap.IMAPFolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +21,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Locale;
 
@@ -61,7 +62,7 @@ public class UserController {
         mav.addObject("userId", userId);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.getPrincipal() instanceof PawUserDetails pud) {
+        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
             mav.addObject("loggedUser", pud.getUser());
         }
         return mav;
@@ -152,29 +153,31 @@ public class UserController {
         us.changePassword(verificationCode, passwordForm.getPassword() );
         return new ModelAndView("redirect:/success_password");
     }
-    
+
     @PostMapping(value = "/changeUsername")
     public String changeUsername(@RequestParam("loggedUserId") long userId, @RequestParam("newUsername") String newUsername, RedirectAttributes redirectAttributes) {
-    	
+
     	boolean updated = us.changeUserName(userId, newUsername);
-    	
+
     	if (updated) {
     		redirectAttributes.addFlashAttribute("message", "done");
     	}
     	else {
     		redirectAttributes.addFlashAttribute("errorMessage",  "failed");
     	}
-    	
+
     	return "redirect:/profile";
     }
-    
+
     @RequestMapping(path = "/create", method = RequestMethod.GET)
     public ModelAndView createForm(@ModelAttribute("userForm") UserForm userForm) {
         return new ModelAndView("user/create");
     }
 
     @RequestMapping(path = "/create", method = RequestMethod.POST)
-    public ModelAndView create(@Valid @ModelAttribute("userForm") UserForm userForm, BindingResult errors) {
+    public ModelAndView create(HttpServletRequest request,
+                               @Valid @ModelAttribute("userForm") UserForm userForm,
+                               BindingResult errors) {
 
         if (errors.hasErrors()){
             return createForm(userForm);
@@ -185,8 +188,11 @@ public class UserController {
             return createForm(userForm);
         }
 
+        // using browserLanguage as user default
+        String browserLanguage = request.getHeader("Accept-Language");
+
         // verify date, create an user and send a verification email
-        final User user = us.createUser(userForm.getUsername(), userForm.getMail(), userForm.getPassword());
+        final User user = us.createUser(userForm.getUsername(), userForm.getMail(), userForm.getPassword(), browserLanguage.split(",")[0]);
 
         return new ModelAndView("redirect:/success_registration");
     }
@@ -227,11 +233,10 @@ public class UserController {
     @RequestMapping("/profile")
     public ModelAndView profileHome(RedirectAttributes redirectAttributes,
                                     @RequestParam(name = "pageIndex", defaultValue = "0") int pageIndex) {
-    	
+
         ModelAndView mav = new ModelAndView("profile/profile_home");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         LOGGER.info("Este es un mensaje de info");
         LOGGER.error("Este es un mensaje de error");
         LOGGER.debug("Este es un mensaje de debug");
@@ -244,5 +249,18 @@ public class UserController {
         }
 
         return mav;
+    }
+
+    @RequestMapping("/language")
+    public ModelAndView changeLanguage(@RequestParam(name = "lang") String lang, HttpServletRequest request) {
+        Locale locale = Locale.forLanguageTag(lang);
+        request.getSession().setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, locale);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
+            us.setUserLanguage(pud.getUser(), lang);
+        }
+
+        return new ModelAndView("redirect:/");
     }
 }

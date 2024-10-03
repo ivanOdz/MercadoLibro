@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface UserDao {
     Optional<User> findById(long id);
 
-    User createUser(String username, String mail, String password, int verificationCode);
+    User createUser(String username, String mail, String password, String language, int verificationCode);
     
     Optional<User> find(String mail);
 
@@ -31,5 +31,8 @@ public interface UserDao {
 
     Double getUserRating(long userId);
 
+    String getUserLanguage(long userId);
+
+    void setUserLanguage(long userId, String language);
 
 }
