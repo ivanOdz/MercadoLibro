@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.services.EmailService;
-import ar.edu.itba.paw.interfaces.services.UserReviewService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
@@ -23,7 +22,6 @@ public class UserServiceImpl implements UserService {
     private final EmailService emailService;
     //private final UserReviewService userReviewsService;
 
-
     @Value("#{environment.webappUrl}")
     private String webappUrl;
 
@@ -35,7 +33,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public User createUser(String username, String mail, String password) {
+    public User createUser(String username, String mail, String password, String language) {
         //register user
         //TODO
         //  1. validar inputs
@@ -45,7 +43,7 @@ public class UserServiceImpl implements UserService {
         //  5. agregar al usuario a una cola de verificacion manual
 
 
-        User user = userDao.createUser(username, mail, passwordEncoder.encode(password), generateVerificationCode());
+        User user = userDao.createUser(username, mail, passwordEncoder.encode(password), language, generateVerificationCode());
         if(user == null) {
             return null; // user exists -> returns null
         }
@@ -55,7 +53,7 @@ public class UserServiceImpl implements UserService {
         variables.put("username", user.getUsername());
         variables.put("validationUrl", webappUrl + "/verification?verification_code=" + user.getVerificationCode());
 
-        emailService.sendEmail(user.getMail(), variables, "verification", "User verification");
+        emailService.sendEmail(user.getMail(), variables, "verification", "User verification", Locale.getDefault().getLanguage());
 
         return user;
     }
@@ -71,11 +69,15 @@ public class UserServiceImpl implements UserService {
         int verificationCode = generateVerificationCode();
         userDao.changePasswordSolicited(email, verificationCode);
 
+        Optional<User> u = getUserToVerify(verificationCode);
+
         Map<String, Object> variables = new HashMap<>();
 
         variables.put("validationUrl", webappUrl +"/change_password?verification_code=" + verificationCode);
 
-        emailService.sendEmail(email, variables, "changePassword", "Password change");
+        String locale = u.get().getLanguage() != null ? u.get().getLanguage() : Locale.getDefault().getLanguage();
+
+        emailService.sendEmail(email, variables, "changePassword", "Password change", locale);
     }
 
     @Override
@@ -143,5 +145,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public Double getUserRating(long userId) {
         return userDao.getUserRating(userId);
+    }
+
+    @Override
+    public String getUserLanguage(User user) {
+        return userDao.getUserLanguage(user.getUserId());
+    }
+
+    @Override
+    public void setUserLanguage(User user, String language) {
+        userDao.setUserLanguage(user.getUserId(),language);
     }
 }

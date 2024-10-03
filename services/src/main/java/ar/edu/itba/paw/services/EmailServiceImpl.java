@@ -1,23 +1,15 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.Book;
-import ar.edu.itba.paw.models.Exchange;
-import ar.edu.itba.paw.models.Publication;
-import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.models.utils.ExchangeState;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -34,11 +26,11 @@ public class EmailServiceImpl implements EmailService {
 
     @Async
     @Override
-    public void sendEmail(final String receiver, Map<String, Object> variables, String templatePath, String subject) {
+    public void sendEmail(final String receiver, Map<String, Object> variables, String templatePath, String subject, String locale) {
             MimeMessage message = mailSender.createMimeMessage();
-            Locale locale =  LocaleContextHolder.getLocale();   // TODO: asegurarse q esto funcione cuando se configure el locale
+            Locale l = Locale.forLanguageTag(locale); // TODO: asegurarse q esto funcione cuando se configure el locale
 
-            Context context = new Context(locale);
+            Context context = new Context(l);
             context.setVariables(variables);
 
             try {
@@ -59,10 +51,10 @@ public class EmailServiceImpl implements EmailService {
 
     @Async
     @Override
-        public void sendExchangeEmail(final String receiver, Map<String, Object> variables, boolean state) {
+        public void sendExchangeEmail(final String receiver, Map<String, Object> variables, boolean state, String locale) {
          if(!state) {
-            sendEmail(receiver, variables, "exchangeRejected", "Book Exchange Rejected");
+            sendEmail(receiver, variables, "exchangeRejected", "Book Exchange Rejected", locale);
         }
-        else sendEmail(receiver, variables, "exchangeAccepted", "Book Exchange Accepted");
+        else sendEmail(receiver, variables, "exchangeAccepted", "Book Exchange Accepted", locale);
     }
 }

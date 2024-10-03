@@ -114,7 +114,7 @@ public class PublicationJdbcDao implements PublicationDao {
                     "b.bookState, b.exchangesQty," +
                     //book_model
                     "bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
-                    "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, bm.imageId AS coverId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount, u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, " +
+                    "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, bm.imageId AS coverId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount, u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language, " +
                     "(SELECT STRING_AGG(a.authorName, ', ') " +
                     " FROM book_author ba " +
                     " JOIN author a ON a.authorId = ba.authorId " +
@@ -146,7 +146,7 @@ public class PublicationJdbcDao implements PublicationDao {
             sqlQuery.append("AND b.bookState = ? ");
         }
 
-        sqlQuery.append("GROUP BY available, u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, p.publicationId, p.publicationState, l.locationId, l.locationString, p.publicationDatetime,b.bookId, b.bookState, b.exchangesQty, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, bm.imageId");
+        sqlQuery.append("GROUP BY available, u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language, p.publicationId, p.publicationState, l.locationId, l.locationString, p.publicationDatetime,b.bookId, b.bookState, b.exchangesQty, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, bm.imageId");
 
         switch (sortType) {
             case RATING_ASCENDING:

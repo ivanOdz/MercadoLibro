@@ -17,7 +17,7 @@ public interface UserService {
 
     String findUsernameByEmail(String mail);
 
-    User createUser(String username, String mail, String password);
+    User createUser(String username, String mail, String password, String language);
 
     Optional<User> findByUsername(String username);
 
@@ -38,5 +38,9 @@ public interface UserService {
     Optional<User> getUserToVerify(int verificationCode);
 
     Double getUserRating(long userId);
+
+    String getUserLanguage(User user);
+
+    void setUserLanguage(User user, String language);
 
 }

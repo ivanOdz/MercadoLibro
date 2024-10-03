@@ -26,7 +26,8 @@ public class UserJdbcDao implements UserDao {
                                      rs.getString("password"),
                                      rs.getLong("imageId"),
                                      rs.getInt("verificationCode"),
-                                     rs.getBoolean("isVerified"));
+                                     rs.getBoolean("isVerified"),
+                                     rs.getString("language"));
 
     private static final RowMapper<UserReview> ROWMAPPER_USER_REVIEW =
             (rs, rowNum) -> new UserReview(rs.getLong("userReviewId"),
@@ -91,15 +92,28 @@ public class UserJdbcDao implements UserDao {
         return jdbcTemplate.query(sql, new Object[]{userId}, new int[]{ Types.BIGINT }, ROWMAPPER_USER_REVIEW_RATING).stream().findFirst().get();
     }
 
+    @Override
+    public String getUserLanguage(long userId) {
+        return jdbcTemplate.query("SELECT * FROM users WHERE userId = ?", new Object[]{ userId },
+                new int[]{ Types.BIGINT }, ROW_MAPPER_USER).stream().findFirst().get().getLanguage();
+    }
+
+    @Override
+    public void setUserLanguage(long userId, String language) {
+        jdbcTemplate.update("UPDATE users SET language = ? WHERE userId = ?", new Object[]{ language, userId },
+                new int[]{ Types.VARCHAR, Types.BIGINT });
+    }
 
 
     @Override
-    public User createUser(String username, String mail, String password, int verificationCode) {
+    public User createUser(String username, String mail, String password, String language, int verificationCode) {
         Optional<User> user = find(mail);
 
         if (user.isPresent()) {
             return null;
         }
+
+
 
         final Map<String, Object> userData = new HashMap<>();
         userData.put("username", username);
@@ -108,10 +122,12 @@ public class UserJdbcDao implements UserDao {
         userData.put("imageId", null); // Permite null
         userData.put("verificationCode", verificationCode);
         userData.put("isVerified", false);
+        userData.put("language", language);
 
         final Number userId = jdbcInsert.executeAndReturnKey(userData);
 
-        return new User(userId.longValue(), username, mail, password, null, verificationCode, false);
+
+        return new User(userId.longValue(), username, mail, password, null, verificationCode, false, language);
     }
 
 
