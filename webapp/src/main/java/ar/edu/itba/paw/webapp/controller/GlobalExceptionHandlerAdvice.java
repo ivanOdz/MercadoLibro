@@ -3,7 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
-
+/*
 @ControllerAdvice
 public class GlobalExceptionHandlerAdvice {
 
@@ -13,4 +13,4 @@ public class GlobalExceptionHandlerAdvice {
         mav.addObject("errorMessage", "Ocurrió un error inesperado: " + ex.getMessage());
         return mav;
     }
-}
+}*/

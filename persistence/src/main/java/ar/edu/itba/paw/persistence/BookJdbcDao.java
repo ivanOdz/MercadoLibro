@@ -56,8 +56,7 @@ public class BookJdbcDao implements BookDao {
         bookData.put("bookState", bookState.getValue());
         bookData.put("exchangesQty", Constants.INITIAL_EXCHANGE_VALUE);
 
-        final Number generatedId = jdbcInsertBook.executeAndReturnKey(bookData);
-        return generatedId;
+        return jdbcInsertBook.executeAndReturnKey(bookData);;
     }
 
     @Override
@@ -106,7 +105,7 @@ public class BookJdbcDao implements BookDao {
                 " JOIN author a ON a.authorId = ba.authorId " +
                 " WHERE ba.bookModelId = bm.bookModelId) AS authors, "+
                 "bm.imageId AS coverId, AVG(br.rating) AS rating, COUNT(br.rating) AS ratingCount, " +
-                "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, ARRAY_AGG(i.imageId ORDER BY bi.imageOrder) AS images, " +
+                "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language, ARRAY_AGG(i.imageId ORDER BY bi.imageOrder) AS images, " +
                 "p.publicationState, e.exchangeState, " +  // Checkear esto, no se si hace falta que este en las tuplas que devuelve
                 "CASE " +
                 "WHEN NOT EXISTS (SELECT 1 FROM publication p2 WHERE p2.bookId = b.bookId) THEN TRUE " +
@@ -125,7 +124,7 @@ public class BookJdbcDao implements BookDao {
                 "LEFT JOIN image AS i ON bi.imageId = i.imageId " +
                 "WHERE b.bookId = ? " +
                 "GROUP BY available, b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, bm.dimension, bm.publicationYear, " +
-                "bm.isPocketEdition, bm.isHardcover, p.publicationState, bm.imageId, u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, e.exchangeState";
+                "bm.isPocketEdition, bm.isHardcover, p.publicationState, bm.imageId, u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language, e.exchangeState";
 
         return jdbcTemplate.query(sqlQuery, new Object[]{ ExchangeState.ACCEPTED.getValue(), bookId },
                 new int[]{ Types.INTEGER, Types.BIGINT }, ROW_MAPPER_BOOK).stream().findFirst();
@@ -135,7 +134,7 @@ public class BookJdbcDao implements BookDao {
     public List<Book> getAllBooksByUser(long userId) {
         String sqlQuery = "SELECT  b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
                 "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, bm.imageId AS coverId, AVG(br.rating) AS rating, COUNT(br.rating) AS ratingCount, " +
-                "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, ARRAY_AGG(i.imageId ORDER BY bi.imageOrder) AS images, " +
+                "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language, ARRAY_AGG(i.imageId ORDER BY bi.imageOrder) AS images, " +
                 "p.publicationState, e.exchangeState, " +  // Checkear esto, no se si hace falta que este en las tuplas que devuelve
                 "CASE " +
                 "WHEN NOT EXISTS (SELECT 1 FROM publication p2 WHERE p2.bookId = b.bookId) THEN TRUE " +
@@ -154,7 +153,7 @@ public class BookJdbcDao implements BookDao {
                 "LEFT JOIN image AS i ON bi.imageId = i.imageId " +
                 "WHERE u.userid = ? " +
                 "GROUP BY available, b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, bm.dimension, bm.publicationYear, " +
-                "bm.isPocketEdition, bm.isHardcover, p.publicationState, bm.imageId, u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, e.exchangeState";
+                "bm.isPocketEdition, bm.isHardcover, p.publicationState, bm.imageId, u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language, e.exchangeState";
 
         return jdbcTemplate.query(sqlQuery, new Object[]{ExchangeState.ACCEPTED.getValue(),userId}, new int[]{Types.INTEGER,Types.BIGINT}, ROW_MAPPER_BOOK);
 
@@ -171,7 +170,7 @@ public class BookJdbcDao implements BookDao {
                         " JOIN author a ON a.authorId = ba.authorId " +
                         " WHERE ba.bookModelId = bm.bookModelId) AS authors, "+
                         "bm.imageId AS coverId, AVG(br.rating) AS rating, COUNT(br.rating) AS ratingCount, " +
-                        "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, ARRAY_AGG(i.imageId ORDER BY bi.imageOrder) AS images, " +
+                        "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language , ARRAY_AGG(i.imageId ORDER BY bi.imageOrder) AS images, " +
                         "p.publicationState, e.exchangeState, " +  // Checkear esto, no se si hace falta que este en las tuplas que devuelve
                         "CASE " +
                         "WHEN NOT EXISTS (SELECT 1 FROM publication p2 WHERE p2.bookId = b.bookId) THEN TRUE " +
@@ -199,7 +198,7 @@ public class BookJdbcDao implements BookDao {
         }
 
         sqlQuery.append("GROUP BY available, b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, bm.dimension, bm.publicationYear, " +
-                "bm.isPocketEdition, bm.isHardcover, p.publicationState, bm.imageId, u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, e.exchangeState");
+                "bm.isPocketEdition, bm.isHardcover, p.publicationState, bm.imageId, u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language, e.exchangeState");
 
         switch (sortType) {
             case RATING_ASCENDING:

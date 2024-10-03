@@ -27,6 +27,8 @@
             <div class="uk-width-1-4@s filter-section uk-border-rounded uk-box-shadow-small mt-1 mb-1">
                 <h2>
                     <c:out value='${publications.pageInfo.search}'/>
+                </h2><h2>
+                    <c:out value='${publications.pageInfo.totalResults}'/>
                 </h2>
 
                 <!-- Esto tiene que aparecer solo si hay algo buscado -->
@@ -88,7 +90,7 @@
                 <c:if test="${!publications.pageInfo.isBookStateFilterActive}">
                     <h3><spring:message code="filter.condition"/></h3>
                     <ul class="uk-list">
-                        <c:forEach var="bookStateWrapper" items="${bookStates}">
+                        <c:forEach var="bookStateWrapper" items="${publications.pageInfo.bookStateWrapperList}">
                             <li class="ui-search-filter-container">
                                 <form action="<c:url value='' />" method="get">
                                     <input type="hidden" name="search" value="<c:out value='${publications.pageInfo.search}'/>">
@@ -103,6 +105,7 @@
                                             class="ui-search-button uk-button uk-button-default uk-button-small"
                                             title="${bookStateWrapper.displayName}">
                                         <span class="ui-search-filter-name">${bookStateWrapper.displayName}</span>
+                                        <span class="ui-search-filter-name">(${bookStateWrapper.resultByState})</span>
                                     </button>
                                 </form>
                             </li>
@@ -113,7 +116,7 @@
                 <c:if test="${!publications.pageInfo.isGenreFilterActive}">
                     <h3><spring:message code="filter.genre"/></h3>
                     <ul class="uk-list">
-                        <c:forEach var="genreWrapper" items="${genres}">
+                        <c:forEach var="genreWrapper" items="${publications.pageInfo.genreWrapperList}">
                             <li class="ui-search-filter-container">
                                 <form action="<c:url value='' />" method="get">
                                     <input type="hidden" name="genre-filter" value="${genreWrapper.genre}">
@@ -126,7 +129,7 @@
                                             class="ui-search-button uk-button uk-button-default uk-button-small"
                                             title="${genreWrapper.displayName}">
                                         <span class="ui-search-filter-name">${genreWrapper.displayName}</span>
-<%--                                        <span class="ui-search-filter-name">(${genreWrapper.resultByGenre})</span>--%>
+                                        <span class="ui-search-filter-name">(${genreWrapper.resultByGenre})</span>
                                     </button>
                                 </form>
                             </li>
