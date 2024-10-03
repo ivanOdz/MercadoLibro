@@ -34,8 +34,8 @@
                         <button class="uk-button uk-button-default" type="button"><spring:message code="language"/></button>
                         <div class="uk-navbar-dropdown">
                             <ul class="uk-nav uk-dropdown-nav ">
-                                <li><a href="?lang=en"><spring:message code="language.english"/></a></li>
-                                <li><a href="?lang=es"><spring:message code="language.spanish"/></a></li>
+                                <li><a href="${pageContext.request.contextPath}/language?lang=en"><spring:message code="language.english"/></a></li>
+                                <li><a href="${pageContext.request.contextPath}/language?lang=es"><spring:message code="language.spanish"/></a></li>
                             </ul>
                         </div>
                     </li>

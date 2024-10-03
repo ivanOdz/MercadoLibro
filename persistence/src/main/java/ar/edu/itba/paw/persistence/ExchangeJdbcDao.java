@@ -38,7 +38,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
             "       END AS available, " +
 
             //  offerer
-            "o.userId, o.username, o.mail, o.password, o.imageId, o.verificationCode, o.isVerified, " +
+            "o.userId, o.username, o.mail, o.password, o.imageId, o.verificationCode, o.isVerified, o.language " +
 
             //   offerer_book_model
             "op_bm.bookModelId, op_bm.isbn, op_bm.title, op_bm.editorial, op_bm.description, op_bm.genre, op_bm.edition, op_bm.weight, op_bm.pages, op_bm.bookLanguage, " +
@@ -60,7 +60,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
             "           END AS requester_available, " +
 
             //   requester
-            "r.userId AS requester_userId, r.username AS requester_username, r.mail AS requester_mail, r.password AS requester_password, r.imageId AS requester_imageId, r.verificationCode AS requester_verificationCode, r.isVerified AS requester_isVerified, " +
+            "r.userId AS requester_userId, r.username AS requester_username, r.mail AS requester_mail, r.password AS requester_password, r.imageId AS requester_imageId, r.verificationCode AS requester_verificationCode, r.isVerified AS requester_isVerified, r.language AS requester_language" +
 
             //   requester_book_model
             "rp_bm.bookModelId AS requester_bookModelId, rp_bm.isbn AS requester_isbn, rp_bm.title AS requester_title, rp_bm.editorial AS requester_editorial, rp_bm.description AS requester_description, rp_bm.genre AS requester_genre, rp_bm.edition AS requester_edition, rp_bm.weight AS requester_weight, rp_bm.pages AS requester_pages, rp_bm.bookLanguage AS requester_bookLanguage, rp_bm.dimension AS requester_dimension, rp_bm.publicationYear AS requester_publicationYear, rp_bm.isPocketEdition AS requester_isPocketEdition, rp_bm.isHardcover AS requester_isHardcover, rp_bm.imageId AS requester_coverId, " +
@@ -98,10 +98,10 @@ public class ExchangeJdbcDao implements ExchangeDao {
             "    op_b.bookId, op_b.bookState, op_b.exchangesQty, " +
             "    op_bm.bookModelId, op_bm.isbn, op_bm.title, op_bm.editorial, op_bm.description, op_bm.genre, op_bm.edition, op_bm.weight, op_bm.pages, op_bm.bookLanguage, " +
             "    op_bm.dimension, op_bm.publicationYear, op_bm.isPocketEdition, op_bm.isHardcover, op_bm.imageId, " +
-            "    o.userId, o.username, o.mail, o.password, o.imageId, o.verificationCode, o.isVerified, " +
+            "    o.userId, o.username, o.mail, o.password, o.imageId, o.verificationCode, o.isVerified, o.language" +
             "    rp.publicationId, rp.publicationState, rp_l.locationId, rp_l.locationString, rp.publicationDatetime, " +
             "    rp_b.bookId, rp_b.bookState, rp_b.exchangesQty, " +
-            "    r.userId, r.username, r.mail, r.password, r.imageId, r.verificationCode, r.isVerified, " +
+            "    r.userId, r.username, r.mail, r.password, r.imageId, r.verificationCode, r.isVerified, r.language" +
             "    rp_bm.bookModelId, rp_bm.isbn, rp_bm.title, rp_bm.editorial, rp_bm.description, rp_bm.genre, rp_bm.edition, rp_bm.weight, rp_bm.pages, rp_bm.bookLanguage, " +
             "    rp_bm.dimension, rp_bm.publicationYear, rp_bm.isPocketEdition, rp_bm.isHardcover, rp_bm.imageId " +
             "ORDER BY e.exchangeStartDate DESC";
@@ -119,7 +119,8 @@ public class ExchangeJdbcDao implements ExchangeDao {
                         rs.getString("requester_password"),
                         rs.getLong("requester_imageId"),
                         rs.getInt("requester_verificationCode"),
-                        rs.getBoolean("requester_isVerified"));
+                        rs.getBoolean("requester_isVerified"),
+                        rs.getString("requester_language"));
 
                 BookModel bookModel = new BookModel(rs.getLong("requester_bookModelId"),
                         rs.getString("requester_isbn"),
@@ -139,8 +140,8 @@ public class ExchangeJdbcDao implements ExchangeDao {
                         rs.getLong("requester_coverId"),
                         new Rating(rs.getDouble("requester_rating"), rs.getInt("requester_ratingCount")));
 
-                Book book = new Book(rs.getLong("requester_bookId"), user, bookModel, BookState.fromInt(rs.getInt("requester_bookState")), rs.getInt("requester_exchangesQty"), rs.getBoolean("requester_available"), rs.getObject("requester_images") == null ? new ArrayList<>() : Arrays.asList((Integer[]) rs.getArray("requester_images").getArray()));
-                
+                Book book = new Book(rs.getLong("requester_bookId"), user, bookModel, BookState.fromInt(rs.getInt("requester_bookState")), rs.getInt("requester_exchangesQty"), rs.getBoolean("requester_available"), Arrays.asList((Integer[]) rs.getArray("requester_images").getArray()));
+
                 return new Publication(id, book, publicationState, dateTime, location);
             };
 

@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.config;
 
 
+import ar.edu.itba.paw.webapp.locale.UserLocaleResolver;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.*;
@@ -33,6 +34,7 @@ import java.util.Locale;
 @EnableWebMvc
 @ComponentScan({
         "ar.edu.itba.paw.webapp.controller",
+        "ar.edu.itba.paw.webapp.locale",
         "ar.edu.itba.paw.services",
         "ar.edu.itba.paw.persistence"
 })
