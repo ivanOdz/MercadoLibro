@@ -90,9 +90,10 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         return lci;
     }
 
+
     @Bean
     public LocaleResolver localeResolver() {
-        SessionLocaleResolver slr = new SessionLocaleResolver();
+        SessionLocaleResolver slr = new UserLocaleResolver();
         slr.setDefaultLocale(Locale.ENGLISH);
         return slr;
     }

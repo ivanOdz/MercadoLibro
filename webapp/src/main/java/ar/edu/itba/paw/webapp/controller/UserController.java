@@ -22,12 +22,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Locale;
 
@@ -61,7 +64,7 @@ public class UserController {
         mav.addObject("userId", userId);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.getPrincipal() instanceof PawUserDetails pud) {
+        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
             mav.addObject("loggedUser", pud.getUser());
         }
         return mav;
@@ -96,7 +99,7 @@ public class UserController {
     }
 
     @RequestMapping("/verification")
-    public ModelAndView verificationController(@RequestParam(name = "verification_code") int verificationCode){
+    public ModelAndView verificationController(@RequestParam(name = "verification_code") int verificationCode) {
 //         obtengo la sesion activa
         User user = us.getUserToVerify(verificationCode).get();
 
@@ -115,10 +118,10 @@ public class UserController {
     }
 
     @RequestMapping("/check_verify")
-    public ModelAndView checkVerify(){
+    public ModelAndView checkVerify() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.getPrincipal() instanceof PawUserDetails pud) {
-            if(pud.getUser().isVerified()){
+        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
+            if (pud.getUser().isVerified()) {
                 return new ModelAndView("redirect:/");
             }
         }
@@ -126,48 +129,47 @@ public class UserController {
     }
 
     @RequestMapping("/mail_input")
-    public ModelAndView mailInput(){
+    public ModelAndView mailInput() {
         return new ModelAndView("user/mail_input");
     }
 
     @RequestMapping("/change_password_solicited")
-    public ModelAndView changePasswordSolicited(@RequestParam(name = "email") String email){
+    public ModelAndView changePasswordSolicited(@RequestParam(name = "email") String email) {
         us.changePasswordSolicited(email);
         return new ModelAndView("redirect:/mail_input_message");
     }
 
     @RequestMapping(path = "/change_password", method = RequestMethod.GET)
-    public ModelAndView createPasswordForm(@ModelAttribute("passwordForm") PasswordForm passwordForm, @RequestParam(name = "verification_code") int verificationCode){
+    public ModelAndView createPasswordForm(@ModelAttribute("passwordForm") PasswordForm passwordForm, @RequestParam(name = "verification_code") int verificationCode) {
         ModelAndView mav = new ModelAndView("user/new_password");
         mav.addObject("verification_code", verificationCode);
         return mav;
     }
 
     @RequestMapping(value = "/change_password", method = RequestMethod.POST)
-    public ModelAndView changePassword(@Valid @ModelAttribute("passwordForm") PasswordForm passwordForm, BindingResult errors, @RequestParam(name = "verification_code") int verificationCode){
-        if(errors.hasErrors()){
-           //System.out.print(errors.getAllErrors());
+    public ModelAndView changePassword(@Valid @ModelAttribute("passwordForm") PasswordForm passwordForm, BindingResult errors, @RequestParam(name = "verification_code") int verificationCode) {
+        if (errors.hasErrors()) {
+            //System.out.print(errors.getAllErrors());
             return createPasswordForm(passwordForm, verificationCode);
         }
-        us.changePassword(verificationCode, passwordForm.getPassword() );
+        us.changePassword(verificationCode, passwordForm.getPassword());
         return new ModelAndView("redirect:/success_password");
     }
-    
+
     @PostMapping(value = "/changeUsername")
     public String changeUsername(@RequestParam("loggedUserId") long userId, @RequestParam("newUsername") String newUsername, RedirectAttributes redirectAttributes) {
-    	
-    	boolean updated = us.changeUserName(userId, newUsername);
-    	
-    	if (updated) {
-    		redirectAttributes.addFlashAttribute("message", "done");
-    	}
-    	else {
-    		redirectAttributes.addFlashAttribute("errorMessage",  "failed");
-    	}
-    	
-    	return "redirect:/profile";
+
+        boolean updated = us.changeUserName(userId, newUsername);
+
+        if (updated) {
+            redirectAttributes.addFlashAttribute("message", "done");
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage", "failed");
+        }
+
+        return "redirect:/profile";
     }
-    
+
     @RequestMapping(path = "/create", method = RequestMethod.GET)
     public ModelAndView createForm(@ModelAttribute("userForm") UserForm userForm) {
         return new ModelAndView("user/create");
@@ -176,11 +178,11 @@ public class UserController {
     @RequestMapping(path = "/create", method = RequestMethod.POST)
     public ModelAndView create(@Valid @ModelAttribute("userForm") UserForm userForm, BindingResult errors) {
 
-        if (errors.hasErrors()){
+        if (errors.hasErrors()) {
             return createForm(userForm);
         }
 
-        if(us.userExists(userForm.getMail())){
+        if (us.userExists(userForm.getMail())) {
             errors.rejectValue("mail", "error.user.exists");
             return createForm(userForm);
         }
@@ -193,31 +195,31 @@ public class UserController {
 
     // success screens
 
-    @RequestMapping( "/success_registration")
-    public ModelAndView successRegistration(){
+    @RequestMapping("/success_registration")
+    public ModelAndView successRegistration() {
         return new ModelAndView("user/success_registration");
     }
 
-    @RequestMapping( "/success_verification")
-    public ModelAndView successVerification(){
+    @RequestMapping("/success_verification")
+    public ModelAndView successVerification() {
         return new ModelAndView("user/success_verification");
     }
 
     @RequestMapping("/mail_input_message")
-    public ModelAndView mailInputMessage(){
+    public ModelAndView mailInputMessage() {
         return new ModelAndView("user/mail_input_message");
     }
 
-    @RequestMapping( "/success_password")
-    public ModelAndView successPassword(){
+    @RequestMapping("/success_password")
+    public ModelAndView successPassword() {
         return new ModelAndView("user/success_password");
     }
 
     // binding=false -> read only attribute
-    @ModelAttribute(name="loggedUser", binding = false)
-    public User getLoggedUser(){
+    @ModelAttribute(name = "loggedUser", binding = false)
+    public User getLoggedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.getPrincipal() instanceof PawUserDetails pud){
+        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
             LOGGER.debug("Logged user is {}", pud.getUser());
             return pud.getUser();
         }
@@ -226,8 +228,9 @@ public class UserController {
 
     @RequestMapping("/profile")
     public ModelAndView profileHome(RedirectAttributes redirectAttributes,
-                                    @RequestParam(name = "pageIndex", defaultValue = "0") int pageIndex) {
-    	
+                                    @RequestParam(name = "pageIndex", defaultValue = "0") int pageIndex,
+                                    HttpServletRequest request) {
+
         ModelAndView mav = new ModelAndView("profile/profile_home");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -235,8 +238,8 @@ public class UserController {
         LOGGER.info("Este es un mensaje de info");
         LOGGER.error("Este es un mensaje de error");
         LOGGER.debug("Este es un mensaje de debug");
-        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
 
+        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
             User loggedUser = us.findById(pud.getUser().getUserId()).get();
             mav.addObject("loggedUser", loggedUser);
             mav.addObject("reviews", us.getReviewsByUserId(loggedUser.getUserId(), pageIndex));
@@ -244,5 +247,14 @@ public class UserController {
         }
 
         return mav;
+    }
+
+    @RequestMapping("/language")
+    public ModelAndView changeLanguage(@RequestParam(name = "lang") String lang, HttpServletRequest request) {
+        Locale locale = Locale.forLanguageTag(lang);
+        request.getSession().setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, locale);
+
+
+        return new ModelAndView("redirect:/");
     }
 }
