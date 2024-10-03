@@ -22,7 +22,6 @@ public class UserServiceImpl implements UserService {
     private final EmailService emailService;
     //private final UserReviewService userReviewsService;
 
-
     @Value("#{environment.webappUrl}")
     private String webappUrl;
 
@@ -47,7 +46,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User createUser(String username, String mail, String password) {
+    public User createUser(String username, String mail, String password, String language) {
         //register user
         //TODO
         //  1. validar inputs
@@ -57,7 +56,7 @@ public class UserServiceImpl implements UserService {
         //  5. agregar al usuario a una cola de verificacion manual
 
 
-        User user = userDao.createUser(username, mail, passwordEncoder.encode(password), generateVerificationCode());
+        User user = userDao.createUser(username, mail, passwordEncoder.encode(password), language, generateVerificationCode());
         if(user == null) {
             return null; // user exists -> returns null
         }
@@ -144,5 +143,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public Double getUserRating(long userId) {
         return userDao.getUserRating(userId);
+    }
+
+    @Override
+    public String getUserLanguage(User user) {
+        return userDao.getUserLanguage(user.getUserId());
+    }
+
+    @Override
+    public void setUserLanguage(User user, String language) {
+        userDao.setUserLanguage(user.getUserId(),language);
     }
 }

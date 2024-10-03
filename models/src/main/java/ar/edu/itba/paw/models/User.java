@@ -9,8 +9,9 @@ public class User {
     private final Long imageId;
     private final Integer verificationCode;
     private final boolean isVerified;
+    private final String language;
 
-    public User(long userId, String username, String mail, String password, Long imageId, Integer verificationCode, boolean isVerified) {
+    public User(long userId, String username, String mail, String password, Long imageId, Integer verificationCode, boolean isVerified, String language) {
         this.userId = userId;
         this.username = username;
         this.mail = mail;
@@ -18,10 +19,15 @@ public class User {
         this.imageId = imageId;
         this.verificationCode = verificationCode;
         this.isVerified = isVerified;
+        this.language = language;
     }
 
     public long getUserId() {
         return userId;
+    }
+
+    public String getLanguage() {
+        return language;
     }
 
     public String getUsername() {
