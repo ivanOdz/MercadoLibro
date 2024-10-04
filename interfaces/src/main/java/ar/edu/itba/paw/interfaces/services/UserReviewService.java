@@ -7,12 +7,14 @@ import java.util.List;
 
 @Service
 public interface UserReviewService {
-	
-    List<UserReview> getReviewsByUserId(long userId);
     
     Boolean createUserReview(long exchangeId, long userId, String description, int rating);
     
     UserReview getUserReview(long exchangeId, long reviewerId);
+    
+    List<UserReview> getReviewsGivenByUserId(long userId);
+    
+    List<UserReview> getReviewsEarnedByUserId(long userId);
     
     int getUserAverageRatingEarned(long userId);
     

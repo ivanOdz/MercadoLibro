@@ -155,10 +155,8 @@
                             </div>
 
                             <p class="date-text"><fmt:formatDate value="${review.reviewDate}" pattern="dd/MM/yyyy"/></p>
-                            <p>
-                                <c:out value='${review.reviewDescription}'/>
-                            </p>
-
+                            <p><c:out value='${review.reviewer.username}'/>: <c:out value='${review.reviewDescription}'/></p>
+                        
                         </div>
 
                     </c:forEach>

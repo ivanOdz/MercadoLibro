@@ -19,12 +19,6 @@ public class UserReviewServiceImpl implements UserReviewService {
 	}
 	
 	@Override
-	public List<UserReview> getReviewsByUserId(long userId) {
-		
-		return urDao.getReviewsByUserId(userId);
-	}
-	
-	@Override
 	public Boolean createUserReview(long exchangeId, long userId, String description, int rating) {
 		return urDao.createUserReview(exchangeId, userId, description, rating);
 	}
@@ -39,6 +33,18 @@ public class UserReviewServiceImpl implements UserReviewService {
 	public int getUserAverageRatingEarned(long userId) {
 		
 		return urDao.getUserAverageRatingEarned(userId);
+	}
+	
+	@Override
+	public List<UserReview> getReviewsGivenByUserId(long userId) {
+		
+		return urDao.getReviewsGivenByUserId(userId);
+	}
+	
+	@Override
+	public List<UserReview> getReviewsEarnedByUserId(long userId) {
+		
+		return urDao.getReviewsEarnedByUserId(userId);
 	}
 	
 	@Override

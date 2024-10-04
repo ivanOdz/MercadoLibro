@@ -6,15 +6,17 @@ public class UserReview {
 	
 	private long userReviewId;
 	private User reviewer;
+	private User subject;
 	private Exchange exchange;
 	private String reviewDescription;
 	private Timestamp reviewDate;
 	private int reviewRating;
 	
-	public UserReview(long userReviewId, User reviewer, Exchange exchange, String reviewDescription, Timestamp reviewDate, int reviewRating) {
+	public UserReview(long userReviewId, User reviewer, User subject, Exchange exchange, String reviewDescription, Timestamp reviewDate, int reviewRating) {
 		
 		this.userReviewId = userReviewId;
 		this.reviewer = reviewer;
+		this.subject = subject;
 		this.exchange = exchange;
 		this.reviewDescription = reviewDescription;
 		this.reviewDate = reviewDate;
@@ -29,6 +31,11 @@ public class UserReview {
 	public User getReviewer() {
 		
 		return reviewer;
+	}
+	
+	public User getSubject() {
+		
+		return subject;
 	}
 	
 	public Exchange getExchange() {
