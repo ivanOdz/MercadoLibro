@@ -20,7 +20,7 @@ public interface BookService {
 
     Optional<Book> getBookById(long bookId);
 
-    List<Book> getFilteredSortedOrderedBooksByPageFromUser(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, int pageIndex, long userId, SortType sortType);
+    PaginatedResponse<Book> getPaginatedBooks(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, int currentPage, long userId, SortType sortType);
 
     List<Book> getAvailableBooksByUser(User user);
 }
