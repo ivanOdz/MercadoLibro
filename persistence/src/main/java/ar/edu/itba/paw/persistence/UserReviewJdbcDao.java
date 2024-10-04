@@ -65,7 +65,7 @@ public class UserReviewJdbcDao implements UserReviewDao {
 													rs.getInt("edition"),
 													rs.getInt("weight"),
 													rs.getInt("pages"),
-													Language.fromInt(rs.getInt("language")),
+													Language.fromInt(rs.getString("language") == "es-AR" ? Language.SPANISH.getValue() : Language.ENGLISH.getValue()),
 													rs.getInt("dimension"),
 													rs.getShort("publicationYear"),
 													rs.getBoolean("isPocketEdition"),
