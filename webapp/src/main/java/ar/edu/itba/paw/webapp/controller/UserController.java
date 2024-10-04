@@ -200,7 +200,7 @@ public class UserController {
 
     @RequestMapping("/profile")
     public ModelAndView profileHome(RedirectAttributes redirectAttributes,
-                                    @RequestParam(name = "pageIndex", defaultValue = "0") int pageIndex) {
+                                    @RequestParam(name = "current-page", defaultValue = "0") int currentPage) {
 
         ModelAndView mav = new ModelAndView("profile/profile_home");
 

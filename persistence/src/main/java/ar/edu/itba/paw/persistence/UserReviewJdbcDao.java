@@ -2,13 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.UserReviewDao;
 import ar.edu.itba.paw.interfaces.services.GenreService;
-import ar.edu.itba.paw.models.Book;
-import ar.edu.itba.paw.models.BookModel;
-import ar.edu.itba.paw.models.Exchange;
-import ar.edu.itba.paw.models.Location;
-import ar.edu.itba.paw.models.Publication;
-import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.models.UserReview;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.models.utils.Genre;
@@ -149,23 +143,27 @@ public class UserReviewJdbcDao implements UserReviewDao {
 	}
 	
 	@Override
-	public List<UserReview> getReviewsGivenByUserId(long userId) {
+	public PaginatedResponse<UserReview> getReviewsGivenByUserId(long userId) {
 		
 		StringBuilder sqlQuery = new StringBuilder(baseQuery);
 		
 		sqlQuery.append(" WHERE reviewer.userId = ?");
 		
-		return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ userId }, new int[]{ Types.BIGINT }, ROW_MAPPER_USER_REVIEW);
+		List<UserReview> data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ userId }, new int[]{ Types.BIGINT }, ROW_MAPPER_USER_REVIEW);
+
+		return new PaginatedResponse<>(data, new PageInfo(null, false, false, null, null, null, null, null, 0, 0));
 	}
 	
 	@Override
-	public List<UserReview> getReviewsEarnedByUserId(long userId) {
-		
+	public PaginatedResponse<UserReview> getReviewsEarnedByUserId(long userId) {
+
 		StringBuilder sqlQuery = new StringBuilder(baseQuery);
-		
+
 		sqlQuery.append(" WHERE subject.userId = ?");
-		
-		return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ userId }, new int[]{ Types.BIGINT }, ROW_MAPPER_USER_REVIEW);
+
+		List<UserReview> data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ userId }, new int[]{ Types.BIGINT }, ROW_MAPPER_USER_REVIEW);
+
+		return new PaginatedResponse<>(data, new PageInfo(null, false, false, null, null, null, null, null, 0, 0));
 	}
 	
 	@Override
