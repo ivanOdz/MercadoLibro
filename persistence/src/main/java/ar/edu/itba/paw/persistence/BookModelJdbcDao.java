@@ -179,7 +179,7 @@ public class BookModelJdbcDao implements BookModelDao {
 
         int totalResults = getTotalResultsByBook(search, isGenreFilterActive, genreFilter);
 
-        return new PaginatedResponse<>(data, new PageInfo(search, false, isGenreFilterActive, genreFilter, null, sortType, genreWrapperList, null, currentPage, totalResults));
+        return new PaginatedResponse<>(data, new PageInfo(search, false, isGenreFilterActive, genreFilter, null, sortType, genreWrapperList, null, 0, totalResults));
 
     }
 

@@ -9,21 +9,20 @@ public class PageInfo {
 
     // Search related attributes
     // TODO: Move defaults to Constants file
-    private String search = "";
-    private boolean isBookStateFilterActive = false;
-    private boolean isGenreFilterActive = false;
-    private Genre genreFilter;
-    private BookState bookStateFilter;
-    private SortType sortType = SortType.PUBLICATION_DATE_ASCENDING;
+    private final String search;
+    private final boolean isBookStateFilterActive;
+    private final boolean isGenreFilterActive;
+    private final Genre genreFilter;
+    private final BookState bookStateFilter;
+    private final SortType sortType;
 
-    private List<GenreWrapper> genreWrapperList;
-    private List<BookStateWrapper> bookStateWrapperList;
+    private final List<GenreWrapper> genreWrapperList;
+    private final List<BookStateWrapper> bookStateWrapperList;
 
     // Pagination related attributes
-    private boolean nextPage, lastPage;
-    private int currentPage = 0;    //
-    private int maxPage = 1;        // ceil(totalResults/Constants.DEFAULT_PAGE_SIZE);
-    private int totalResults = 0;
+    private final int currentPage;
+    private final int maxPage;
+    private final int totalResults;
 
     public PageInfo(String search, boolean isBookStateFilterActive, boolean isGenreFilterActive, Genre genreFilter, BookState bookStateFilter, SortType sortType, List<GenreWrapper> genreWrapperList, List<BookStateWrapper> bookStateWrapperList, int currentPage, int totalResults) {
         this.search = search;
@@ -36,7 +35,7 @@ public class PageInfo {
         this.bookStateWrapperList = bookStateWrapperList;
         this.currentPage = currentPage;
         this.totalResults = totalResults;
-        this.maxPage =  (int) Math.ceil((double) totalResults/Constants.PAGE_SIZE);
+        this.maxPage =  (int) Math.ceil((double) totalResults/Constants.PAGE_SIZE) - 1;
     }
 
     public String getSearch() {

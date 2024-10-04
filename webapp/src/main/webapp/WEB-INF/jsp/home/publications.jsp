@@ -174,12 +174,50 @@
                         </div>
                     </c:forEach>
                 </div>
-<%--                <nav>--%>
-<%--                    <ul class="uk-pagination">--%>
-<%--                        <li><a href="#"><span class="uk-margin-small-right" uk-pagination-previous></span> Previous</a></li>--%>
-<%--                        <li class="uk-margin-auto-left"><a href="#">Next <span class="uk-margin-small-left" uk-pagination-next></span></a></li>--%>
-<%--                    </ul>--%>
-<%--                </nav>--%>
+                <nav aria-label="Pagination">
+                    <ul class="uk-pagination uk-flex-center" uk-margin>
+                        <!-- Botón Previous (solo mostrar si currentPage > 0) -->
+                        <c:if test="${publications.pageInfo.currentPage > 0}">
+                            <li>
+                                <a href="?page=${publications.pageInfo.currentPage - 1}">
+                                    <span uk-pagination-previous></span>
+                                </a>
+                            </li>
+                        </c:if>
+
+                        <!-- Página anterior (mostrar si currentPage > 0) -->
+                        <c:if test="${publications.pageInfo.currentPage > 0}">
+                            <li>
+                                <a href="?page=${publications.pageInfo.currentPage - 1}">
+                                        ${publications.pageInfo.currentPage} <!-- Mostrar página anterior -->
+                                </a>
+                            </li>
+                        </c:if>
+
+                        <!-- Página actual (siempre visible y centrada) -->
+                        <li class="uk-active">
+                            <span aria-current="page">${publications.pageInfo.currentPage + 1}</span>
+                        </li>
+
+                        <!-- Página siguiente (mostrar si currentPage < maxPage) -->
+                        <c:if test="${publications.pageInfo.currentPage < publications.pageInfo.maxPage}">
+                            <li>
+                                <a href="?page=${publications.pageInfo.currentPage + 1}">
+                                        ${publications.pageInfo.currentPage + 2} <!-- Mostrar página siguiente -->
+                                </a>
+                            </li>
+                        </c:if>
+
+                        <!-- Botón Next (solo mostrar si currentPage < maxPage) -->
+                        <c:if test="${publications.pageInfo.currentPage < publications.pageInfo.maxPage}">
+                            <li>
+                                <a href="?page=${publications.pageInfo.currentPage + 1}">
+                                    <span uk-pagination-next></span>
+                                </a>
+                            </li>
+                        </c:if>
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>
