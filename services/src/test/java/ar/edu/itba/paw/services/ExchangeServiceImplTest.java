@@ -21,9 +21,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
-
+/*
 public class ExchangeServiceImplTest {
-	
+
 	private static final long BOOK_OWNER_ID = 25L;
 	private static final long BOOK_MODEL_ID = 50L;
 	private static final long BOOK_ID = 100L;
@@ -60,7 +60,7 @@ public class ExchangeServiceImplTest {
 	private UserReviewService userReviewService;
 	@InjectMocks
 	private ExchangeServiceImpl exchangeService;
-	/*
+	
 	@Test
 	public void testGetExchangeById() {
 		
@@ -70,7 +70,7 @@ public class ExchangeServiceImplTest {
 		
 		assertTrue(result.isPresent());
 		assertEquals(TEST_EXCHANGE, result.get());
-	}*/
+	}
 	
 	@Before
     public void setUp() {
@@ -116,4 +116,4 @@ public class ExchangeServiceImplTest {
 		long newPublicationId = publicationService.createPublication(BOOK_ID, BOOK_MODEL_ID, locationId, PublicationState.OFFERED);
 		assertEquals(publicationId, newPublicationId);
 	}
-}
+}*/

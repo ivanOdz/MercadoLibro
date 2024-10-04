@@ -61,7 +61,7 @@ public class ExchangeController {
             mav.addObject("inProgress", inProcessExchanges);
             mav.addObject("completed", completedExchanges);
             mav.addObject("rejected", rejectedExchanges);
-            mav.addObject("review", new UserReview());
+            mav.addObject("review", new UserReview(0, null, null, null, null, 0));
             User loggedUser = pud.getUser();
             mav.addObject("loggedUser", loggedUser);
         }
@@ -89,7 +89,7 @@ public class ExchangeController {
             mav.addObject("rejected", rejectedExchanges);
             User loggedUser = pud.getUser();
             mav.addObject("loggedUser", loggedUser);
-            mav.addObject("review", new UserReview());
+            mav.addObject("review", new UserReview(0, null, null, null, null, 0));
         }
 
         return mav;
@@ -180,10 +180,9 @@ public class ExchangeController {
             @RequestParam("reviewDescription") String reviewDescription,
             @RequestParam("userReviewRating") int userReviewRating/*,
 		BindingResult result, RedirectAttributes redirectAttributes*/) {
+    
 
-        UserReview userReview = new UserReview((long) 0, exchangeId, reviewerId, subjectId, reviewDescription, new java.sql.Timestamp(0), userReviewRating);
-
-        boolean success = userReviewService.createUserReview(userReview);
+        boolean success = userReviewService.createUserReview(exchangeId, reviewerId, reviewDescription, userReviewRating);
 
         /*
         if (success) {
@@ -194,7 +193,5 @@ public class ExchangeController {
 
         return new ModelAndView("redirect:/requests");
     }
-
-
 
 }

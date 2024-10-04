@@ -135,7 +135,7 @@ public class UserServiceImpl implements UserService {
         return userDao.getUserToVerify(verificationCode);
     }
 
-
+/*
     // Mudar la logica al UserReviewService.
     @Override
     public List<UserReview> getReviewsByUserId(long userId, int pageIndex) {
@@ -145,7 +145,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Double getUserRating(long userId) {
         return userDao.getUserRating(userId);
-    }
+    }*/
 
     @Override
     public String getUserLanguage(User user) {

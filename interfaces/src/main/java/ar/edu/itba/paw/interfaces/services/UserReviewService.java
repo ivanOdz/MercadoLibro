@@ -10,9 +10,13 @@ public interface UserReviewService {
 	
     List<UserReview> getReviewsByUserId(long userId);
     
+    Boolean createUserReview(long exchangeId, long userId, String description, int rating);
+    
     UserReview getUserReview(long exchangeId, long reviewerId);
     
-    int getUserRating(long userId);
+    int getUserAverageRatingEarned(long userId);
     
-    Boolean createUserReview(UserReview userReview);
+    int getUserAverageRatingGiven(long userId);
+    
+    boolean isReviewable(long exchangeId, long userId);
 }

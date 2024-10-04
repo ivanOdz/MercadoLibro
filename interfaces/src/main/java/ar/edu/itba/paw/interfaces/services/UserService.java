@@ -27,7 +27,7 @@ public interface UserService {
     
     void changePassword(int verificationCode, String newPassword);
 
-    List<UserReview> getReviewsByUserId(long userId, int pageIndex);
+    //List<UserReview> getReviewsByUserId(long userId, int pageIndex);
 
     User getUserByPubId(long pubId);
 
@@ -37,7 +37,7 @@ public interface UserService {
 
     Optional<User> getUserToVerify(int verificationCode);
 
-    Double getUserRating(long userId);
+    //Double getUserRating(long userId);
 
     String getUserLanguage(User user);
 
