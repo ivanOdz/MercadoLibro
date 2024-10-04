@@ -245,7 +245,7 @@ public class BookJdbcDao implements BookDao {
         int totalResults = getTotalResultsByBook(search, isGenreFilterActive, genreFilter, isBookStateFilterActive, bookStateFilter, userId);
 
 
-        return new PaginatedResponse<>(data, new PageInfo(search, isBookStateFilterActive, isGenreFilterActive, genreFilter, bookStateFilter, sortType,  genreWrapperList, bookStateWrapperList, 0, totalResults));
+        return new PaginatedResponse<>(data, new PageInfo(search, isBookStateFilterActive, isGenreFilterActive, genreFilter, bookStateFilter, sortType,  genreWrapperList, bookStateWrapperList, currentPage, totalResults));
     }
 
     private List<GenreWrapper> getGenreQtyByBook(String search, boolean isBookStateFilterActive, BookState bookStateFilter, long userId) {
