@@ -40,6 +40,12 @@
 <c:url var="postUrl" value="/book/create_new_book"/>
 
 <div class="uk-background-muted" style="margin-bottom: 2%;">
+    <div class="uk-container uk-margin-bottom" style="margin-top: 1%">
+        <a class="uk-button uk-button-text" href="${pageContext.request.contextPath}/book">
+            <span uk-icon="icon:  chevron-left"></span>
+            <spring:message code="add.book.return_home"/>
+        </a>
+    </div>
     <form:form modelAttribute="bookForm" action="${postUrl}" method="post" enctype="multipart/form-data">
     <div class="uk-container">
         <ul uk-tab>
@@ -331,12 +337,12 @@
                     </label>
                     <label class="mr-1">
                         <spring:message code="yes"/>
-                        <form:radiobutton path="publish" value="true" class="uk-checkbox" name="publish"/>
+                        <form:radiobutton path="publish" value="true" class="uk-radiobutton" name="publish"/>
                     </label>
 
                     <label class="mr-1">
                         <spring:message code="no"/>
-                        <form:radiobutton path="publish" value="false" class="uk-checkbox" name="publish"/>
+                        <form:radiobutton path="publish" value="false" class="uk-radiobutton" name="publish"/>
                     </label>
                 </div>
 

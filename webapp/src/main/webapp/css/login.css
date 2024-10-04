@@ -12,6 +12,16 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.mini_container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    max-width: 100px;
+    width: 30%;
+    padding: 20px;
+}
+
 .custom-logo {
     display: flex;
     align-items: center;
@@ -32,4 +42,9 @@ label {
 .link-text {
     text-decoration: underline;
     font-weight: bold;
+}
+
+.icon-style {
+    width: 2%;
+    height: 2%;
 }

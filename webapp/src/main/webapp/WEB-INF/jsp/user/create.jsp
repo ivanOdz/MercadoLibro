@@ -19,8 +19,16 @@
 <c:url var="postUrl" value="/create"/>
 <c:url var="signInUrl" value="/login"/>
 <div style="display: flex; place-items: center; height: 100%;">
-    <div class="uk-container container">
-        <h3 style="justify-content: center; margin-left: 30px;">
+    <div class="uk-container container uk-align-center">
+
+        <div class="mini_container uk-align-center" style="max-width: 30%;">
+            <a href="${pageContext.request.contextPath}/">
+                <img src="${pageContext.request.contextPath}/images/logo_w_name.png" alt="Logo Icon"
+                     class="icon-style">
+            </a>
+        </div>
+
+        <h3 style="text-align: center;">
             <spring:message code="register.title"/>
         </h3>
 
