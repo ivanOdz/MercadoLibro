@@ -240,12 +240,13 @@ public class UserController {
         LOGGER.info("Este es un mensaje de info");
         LOGGER.error("Este es un mensaje de error");
         LOGGER.debug("Este es un mensaje de debug");
+        
         if (authentication.getPrincipal() instanceof PawUserDetails pud) {
 
             User loggedUser = us.findById(pud.getUser().getUserId()).get();
             mav.addObject("loggedUser", loggedUser);
-            mav.addObject("reviews", us.getReviewsByUserId(loggedUser.getUserId(), pageIndex));
-            mav.addObject("userRating", us.getUserRating(loggedUser.getUserId()));
+            mav.addObject("reviews", userReviewService.getReviewsByUserId(loggedUser.getUserId()));
+            mav.addObject("userRating", userReviewService.getUserAverageRatingEarned(loggedUser.getUserId()));
         }
 
         return mav;
