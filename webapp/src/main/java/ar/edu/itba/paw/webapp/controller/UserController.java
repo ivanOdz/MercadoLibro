@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -48,6 +47,9 @@ public class UserController {
     @Autowired
     private UserReviewService userReviewService;
 
+    @Autowired
+    private LoggedUserAdvice loggedUserAdvice;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     public UserController(final UserService us, AuthenticationManager auth) {
@@ -55,27 +57,6 @@ public class UserController {
         this.auth = auth;
     }
 
-    @RequestMapping("/index")
-    public ModelAndView index(@RequestParam(name = "userId", defaultValue = "1") long userId) {
-        final ModelAndView mav = new ModelAndView("user/index");
-        mav.addObject("username", us.findById(userId).get().getUsername());
-        mav.addObject("userId", userId);
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
-            mav.addObject("loggedUser", pud.getUser());
-        }
-        return mav;
-    }
-
-    @RequestMapping("/{userId:\\d+}")
-    public ModelAndView profile(@PathVariable(name = "userId") long userId) {
-        final ModelAndView mav = new ModelAndView("user/profile");
-        mav.addObject("username", us.findById(userId).get().getUsername());
-        mav.addObject("mail", us.findById(userId).get());
-        mav.addObject("userId", userId);
-        return mav;
-    }
 
     @RequestMapping("/login")
     public ModelAndView login(@RequestParam(value = "error", required = false) String error,
@@ -98,17 +79,15 @@ public class UserController {
 
     @RequestMapping("/verification")
     public ModelAndView verificationController(@RequestParam(name = "verification_code") int verificationCode){
-//         obtengo la sesion activa
         User user = us.getUserToVerify(verificationCode).get();
 
         us.verifyUser(verificationCode);
         try {
-            // create a session and keep the user logged in
             UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
             final Authentication authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println(e.getMessage()); // TODO: Poner un debug aca, y redirigir a pagina correspondiente.
         }
 
 
@@ -219,35 +198,20 @@ public class UserController {
         return new ModelAndView("user/success_password");
     }
 
-    // binding=false -> read only attribute
-    @ModelAttribute(name="loggedUser", binding = false)
-    public User getLoggedUser(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.getPrincipal() instanceof PawUserDetails pud){
-            LOGGER.debug("Logged user is {}", pud.getUser());
-            return pud.getUser();
-        }
-        return null;
-    }
-
     @RequestMapping("/profile")
     public ModelAndView profileHome(RedirectAttributes redirectAttributes,
                                     @RequestParam(name = "pageIndex", defaultValue = "0") int pageIndex) {
 
         ModelAndView mav = new ModelAndView("profile/profile_home");
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // TODO: Sacar esto
         LOGGER.info("Este es un mensaje de info");
         LOGGER.error("Este es un mensaje de error");
         LOGGER.debug("Este es un mensaje de debug");
-        
-        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
 
-            User loggedUser = us.findById(pud.getUser().getUserId()).get();
-            mav.addObject("loggedUser", loggedUser);
-            mav.addObject("reviews", userReviewService.getReviewsByUserId(loggedUser.getUserId()));
-            mav.addObject("userRating", userReviewService.getUserAverageRatingEarned(loggedUser.getUserId()));
-        }
+        mav.addObject("reviews", userReviewService.getReviewsByUserId(loggedUserAdvice.getLoggedUser().getUserId()));
+        mav.addObject("userRating", userReviewService.getUserAverageRatingEarned(loggedUserAdvice.getLoggedUser().getUserId()));
 
         return mav;
     }
