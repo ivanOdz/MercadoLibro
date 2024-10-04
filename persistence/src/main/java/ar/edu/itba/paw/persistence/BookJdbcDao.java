@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.BookDao;
+import ar.edu.itba.paw.interfaces.services.BookStateService;
+import ar.edu.itba.paw.interfaces.services.GenreService;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -28,6 +30,10 @@ public class BookJdbcDao implements BookDao {
     private final SimpleJdbcInsert jdbcInsertBookImage;
 
 
+    private final GenreService genreService;
+    private final BookStateService bookStateService;
+
+
     static final RowMapper<Book> ROW_MAPPER_BOOK =
             (rs, rowNum) -> {
                 User owner = ROW_MAPPER_USER.mapRow(rs, rowNum);
@@ -40,9 +46,11 @@ public class BookJdbcDao implements BookDao {
                 return new Book(rs.getLong("bookId"), owner, bookModel, bookState, exchangesQty, rs.getBoolean("available"), images);
             };
 
-    public BookJdbcDao(final DataSource ds) {
+    public BookJdbcDao(final DataSource ds, GenreService genreService, BookStateService bookStateService) {
 
         jdbcTemplate = new JdbcTemplate(ds);
+        this.genreService = genreService;
+        this.bookStateService = bookStateService;
         jdbcInsertBook = new SimpleJdbcInsert(jdbcTemplate).usingGeneratedKeyColumns("bookid").withTableName("book");
         jdbcInsertBookRating = new SimpleJdbcInsert(jdbcTemplate).withTableName("book_rating").usingGeneratedKeyColumns("ratingid");
         jdbcInsertBookImage = new SimpleJdbcInsert(jdbcTemplate).withTableName("book_image");
@@ -278,7 +286,7 @@ public class BookJdbcDao implements BookDao {
 
         List<GenreWrapper> genreWrappers = new ArrayList<>();
         for (Genre genre : Genre.values()) {
-            genreWrappers.add(new GenreWrapper(genre, genre.toString(), resultByGenreMap.getOrDefault(genre, 0)));
+            genreWrappers.add(new GenreWrapper(genre, genreService.getGenreDisplayName(genre), resultByGenreMap.getOrDefault(genre, 0)));
         }
 
         return genreWrappers;
@@ -323,7 +331,7 @@ public class BookJdbcDao implements BookDao {
 
         List<BookStateWrapper> toReturn = new ArrayList<>();
         for (BookState state : BookState.values()) {
-            toReturn.add(new BookStateWrapper(state, state.toString(), resultByStateMap.getOrDefault(state, 0)));
+            toReturn.add(new BookStateWrapper(state, bookStateService.getBookStateDisplayName(state), resultByStateMap.getOrDefault(state, 0)));
         }
 
         return toReturn;

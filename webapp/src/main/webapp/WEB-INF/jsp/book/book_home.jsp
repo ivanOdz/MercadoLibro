@@ -250,6 +250,8 @@
                         </div>
                     </c:forEach>
                 </div>
+                <hr class="uk-divider-icon">
+
                 <nav aria-label="Pagination">
                     <ul class="uk-pagination uk-flex-center" uk-margin>
                         <!-- Botón Previous (solo mostrar si currentPage > 0) -->

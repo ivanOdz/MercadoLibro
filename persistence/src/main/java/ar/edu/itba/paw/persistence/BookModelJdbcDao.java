@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.exceptions.base.BadRequestException;
 import ar.edu.itba.paw.interfaces.exceptions.base.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.BookModelDao;
+import ar.edu.itba.paw.interfaces.services.GenreService;
 import ar.edu.itba.paw.models.BookModel;
 import ar.edu.itba.paw.models.PageInfo;
 import ar.edu.itba.paw.models.PaginatedResponse;
@@ -27,6 +28,8 @@ public class BookModelJdbcDao implements BookModelDao {
     private final SimpleJdbcInsert jdbcInsertAuthor;
     private final SimpleJdbcInsert jdbcInsertBookAuthor;
 
+    private final GenreService genreService;
+
     // package-private visibility
     static final RowMapper<BookModel> ROW_MAPPER_BOOK_MODEL = (rs, rowNum) -> new BookModel(
             rs.getLong("bookModelId"),
@@ -48,8 +51,9 @@ public class BookModelJdbcDao implements BookModelDao {
             new Rating(rs.getDouble("rating"), rs.getInt("ratingCount"))
     );
 
-    public BookModelJdbcDao(final DataSource ds) {
+    public BookModelJdbcDao(final DataSource ds, GenreService genreService) {
         jdbcTemplate = new JdbcTemplate(ds);
+        this.genreService = genreService;
         jdbcInsertBookModel = new SimpleJdbcInsert(jdbcTemplate)
                 .usingGeneratedKeyColumns("bookmodelid")
                 .withTableName("book_model");
@@ -207,7 +211,7 @@ public class BookModelJdbcDao implements BookModelDao {
 
         List<GenreWrapper> genreWrappers = new ArrayList<>();
         for (Genre genre : Genre.values()) {
-            genreWrappers.add(new GenreWrapper(genre, genre.toString(), resultByGenreMap.getOrDefault(genre, 0)));
+            genreWrappers.add(new GenreWrapper(genre, genreService.getGenreDisplayName(genre), resultByGenreMap.getOrDefault(genre, 0)));
         }
 
         return genreWrappers;

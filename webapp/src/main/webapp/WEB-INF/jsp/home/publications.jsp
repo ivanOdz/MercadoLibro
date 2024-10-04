@@ -101,12 +101,18 @@
                                     <input type="hidden" name="genre-filter" value="${publications.pageInfo.genreFilter}">
 
 
-                                    <button type="submit"
-                                            class="ui-search-button uk-button uk-button-default uk-button-small"
-                                            title="${bookStateWrapper.displayName}">
-                                        <span class="ui-search-filter-name">${bookStateWrapper.displayName}</span>
-                                        <span class="ui-search-filter-name">(${bookStateWrapper.resultByState})</span>
-                                    </button>
+                                    <a href="#" class="uk-inline uk-search-button uk-button-link" title="BookStateFilterRemove" onclick="this.closest('form').submit(); return false;">
+                                        <span class="ui-search-filter-name">
+                                                ${bookStateWrapper.displayName} (${bookStateWrapper.resultByState})
+                                        </span>
+                                    </a>
+
+                                <%--                                    <button type="submit"--%>
+<%--                                            class="ui-search-button uk-button uk-button-default uk-button-small"--%>
+<%--                                            title="${bookStateWrapper.displayName}">--%>
+<%--                                        <span class="ui-search-filter-name">${bookStateWrapper.displayName}</span>--%>
+<%--                                        <span class="ui-search-filter-name">(${bookStateWrapper.resultByState})</span>--%>
+<%--                                    </button>--%>
                                 </form>
                             </li>
                         </c:forEach>
@@ -125,12 +131,18 @@
                                     <input type="hidden" name="is-book-state-filter-active" value="${publications.pageInfo.isBookStateFilterActive}">
                                     <input type="hidden" name="search" value="<c:out value='${param.search}'/>"/>
 
-                                    <button type="submit"
-                                            class="ui-search-button uk-button uk-button-default uk-button-small"
-                                            title="${genreWrapper.displayName}">
-                                        <span class="ui-search-filter-name">${genreWrapper.displayName}</span>
-                                        <span class="ui-search-filter-name">(${genreWrapper.resultByGenre})</span>
-                                    </button>
+<%--                                    <button type="submit"--%>
+<%--                                            class="ui-search-button uk-button uk-button-default uk-button-small"--%>
+<%--                                            title="${genreWrapper.displayName}">--%>
+<%--                                        <span class="ui-search-filter-name">${genreWrapper.displayName}</span>--%>
+<%--                                        <span class="ui-search-filter-name">(${genreWrapper.resultByGenre})</span>--%>
+<%--                                    </button>--%>
+                                    <a href="#" class="uk-inline uk-search-button uk-button-link" title="GenreFilterRemove" onclick="this.closest('form').submit(); return false;">
+                                        <span class="ui-search-filter-name">
+                                                ${genreWrapper.displayName} (${genreWrapper.resultByGenre})
+                                        </span>
+                                    </a>
+
                                 </form>
                             </li>
                         </c:forEach>
@@ -174,6 +186,8 @@
                         </div>
                     </c:forEach>
                 </div>
+                <hr class="uk-divider-icon">
+
                 <nav aria-label="Pagination">
                     <ul class="uk-pagination uk-flex-center" uk-margin>
                         <!-- Botón Previous (solo mostrar si currentPage > 0) -->
