@@ -26,14 +26,14 @@
         <div class="uk-grid ml-1 uk-margin-top" uk-grid>
             <div class="uk-width-1-4@s filter-section uk-border-rounded uk-box-shadow-small mt-1 mb-1">
                 <h2>
-                    <c:out value="${param.search}"/>
+                    <c:out value="${modelBooks.pageInfo.search}"/>
                 </h2>
 
                 <!-- Esto tiene que aparecer solo si hay algo buscado -->
                 <c:if test="${not empty param.search}">
                     <form action="<c:url value='' />" method="get">
-                        <input type="hidden" name="is-genre-filter-active" value=${isGenreFilterActive}>
-                        <input type="hidden" name="genre-filter" value=${genreFilter}>
+                        <input type="hidden" name="is-genre-filter-active" value=${modelBooks.pageInfo.isGenreFilterActive}>
+                        <input type="hidden" name="genre-filter" value=${modelBooks.pageInfo.genreFilter}>
                         <input type="hidden" name="search" value=""/>
 
                         <button type="submit" class="ui-search-button uk-button uk-button-default uk-button-small"
@@ -46,10 +46,10 @@
                     </form>
                 </c:if>
 
-                <c:if test="${isGenreFilterActive}">
+                <c:if test="${modelBooks.pageInfo.isGenreFilterActive}">
                     <form action="<c:url value='' />" method="get">
                         <input type="hidden" name="is-genre-filter-active" value="false">
-                        <input type="hidden" name="search" value="<c:out value='${param.search}'/>">
+                        <input type="hidden" name="search" value="<c:out value='${modelBooks.pageInfo.search}'/>">
 
                         <button type="submit"
                                 class="uk-inline uk-search-button uk-button uk-button-default uk-button-small"
@@ -62,21 +62,27 @@
                     </form>
                 </c:if>
 
-                <c:if test="${!isGenreFilterActive}">
+                <c:if test="${!modelBooks.pageInfo.isGenreFilterActive}">
                     <h3><spring:message code="filter.genre"/></h3>
                     <ul class="uk-list">
-                        <c:forEach var="genreWrapper" items="${genres}">
+                        <c:forEach var="genreWrapper" items="${modelBooks.pageInfo.genreWrapperList}">
                             <li class="ui-search-filter-container">
                                 <form action="<c:url value='' />" method="get">
                                     <input type="hidden" name="genre-filter" value="${genreWrapper.genre}">
                                     <input type="hidden" name="is-genre-filter-active" value="true">
-                                    <input type="hidden" name="search" value="<c:out value='${param.search}'/>"/>
+                                    <input type="hidden" name="search" value="<c:out value='${modelBooks.pageInfo.search}'/>"/>
 
-                                    <button type="submit"
-                                            class="ui-search-button uk-button uk-button-default uk-button-small"
-                                            title="${genreWrapper.displayName}">
-                                        <span class="ui-search-filter-name">${genreWrapper.displayName}</span>
-                                    </button>
+                                    <a href="#" class="uk-inline uk-search-button uk-button-link" title="GenreFilterRemove" onclick="this.closest('form').submit(); return false;">
+                                        <span class="ui-search-filter-name">
+                                                ${genreWrapper.displayName} (${genreWrapper.resultByGenre})
+                                        </span>
+                                    </a>
+
+<%--                                    <button type="submit"--%>
+<%--                                            class="ui-search-button uk-button uk-button-default uk-button-small"--%>
+<%--                                            title="${genreWrapper.displayName}">--%>
+<%--                                        <span class="ui-search-filter-name">${genreWrapper.displayName}</span>--%>
+<%--                                    </button>--%>
                                 </form>
                             </li>
                         </c:forEach>
@@ -91,7 +97,7 @@
                 </div>
 
                 <div class="uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m mb-1" uk-grid>
-                    <c:forEach var="card" items="${modelBooks}">
+                    <c:forEach var="card" items="${modelBooks.data}">
                         <div>
                             <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-border-rounded custom-link">
                                 <figure class="uk-margin-bottom">

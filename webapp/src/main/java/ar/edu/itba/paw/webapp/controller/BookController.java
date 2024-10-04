@@ -65,7 +65,7 @@ public class BookController {
                                  @RequestParam(name = "book-state-filter", required = false) BookState bookStateFilter,
                                  @RequestParam(name = "is-genre-filter-active", defaultValue = "false") boolean isGenreFilterActive,
                                  @RequestParam(name = "genre-filter", required = false) Genre genreFilter,
-                                 @RequestParam(name = "currentPage", defaultValue = "0") int currentPage,
+                                 @RequestParam(name = "current-Page", defaultValue = "0") int currentPage,
                                  @RequestParam(name = "sort-type", defaultValue = "BOOK_NAME_ASCENDING") SortType sortType) {
 
 
@@ -83,14 +83,14 @@ public class BookController {
     public ModelAndView bookModels(@RequestParam(name = "search", defaultValue = "") String search,
                                    @RequestParam(name = "is-genre-filter-active", defaultValue = "false") boolean isGenreFilterActive,
                                    @RequestParam(name = "genre-filter", required = false) Genre genreFilter,
-                                   @RequestParam(name = "page-index", defaultValue = "0") int pageIndex,
+                                   @RequestParam(name = "current-Page", defaultValue = "0") int currentPage,
                                    @RequestParam(name = "sort-type", defaultValue = "BOOK_NAME_ASCENDING") SortType sortType) {
 
         ModelAndView mav = new ModelAndView("book/book_models");
 
-        //PaginatedResponse<BookModel> modelBooks = bookModelService.getFilteredSortedOrderedModelBooksByPage(search, isGenreFilterActive, genreFilter, pageIndex, sortType);
+        PaginatedResponse<BookModel> modelBooks = bookModelService.getPaginatedBookModels(search, isGenreFilterActive, genreFilter, currentPage, sortType);
 
-        //mav.addObject("modelBooks", modelBooks);
+        mav.addObject("modelBooks", modelBooks);
 
         return mav;
     }

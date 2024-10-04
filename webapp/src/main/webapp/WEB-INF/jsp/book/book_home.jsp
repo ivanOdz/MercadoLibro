@@ -150,8 +150,6 @@
                                     <input type="hidden" name="is-book-state-filter-active" value="${books.pageInfo.isBookStateFilterActive}">
                                     <input type="hidden" name="search" value="<c:out value='${books.pageInfo.search}'/>"/>
 
-
-
                                     <a href="#" class="uk-inline uk-search-button uk-button-link" title="GenreFilterRemove" onclick="this.closest('form').submit(); return false;">
                                         <span class="ui-search-filter-name">
                                                 ${genreWrapper.displayName} (${genreWrapper.resultByGenre})
