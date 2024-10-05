@@ -111,7 +111,7 @@
 }
 
 .nav-container {
-    padding: 12px;
+    padding: 5px 25px 5px 25px;
     margin: 0;
     height: 12%;
 }
@@ -119,7 +119,7 @@
 .nav-empty-container {
     padding: 1px;
     margin: 0;
-    height: 12%;
+    height: 10%; !important;
 }
 
 .button-text-wo {

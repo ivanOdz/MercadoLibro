@@ -7,9 +7,9 @@
 <c:url var="uploadNewPrecharged" value="/book/book_models"/>
 <c:url var="logout" value="/logout"/>
 
-<nav class="uk-navbar-container uk-box-shadow-small " uk-sticky>
-  <div class="uk-container uk-width-1-1  nav-background">
-    <div class="uk-width-1-1 nav-container"  uk-navbar>
+<nav class="uk-navbar-container uk-box-shadow-small " style="height: 6rem;" uk-sticky>
+  <div class="uk-container uk-width-1-1  nav-background" style="height: 100%;">
+    <div class="uk-width-1-1 nav-container"   uk-navbar>
       <div class="uk-navbar-left">
         <ul class="uk-navbar-nav">
           <li>
@@ -84,15 +84,6 @@
                 </li>
                 <li class="uk-margin-small-top">
                   <a class="dropdown-wo-buttons" href="#modal-logout" uk-toggle><spring:message code="home.profile.logout"/></a>
-                </li>
-                <li>
-                  <button class="uk-button uk-button-default" type="button">Change Language</button>
-                  <div class="uk-navbar-dropdown">
-                    <ul class="uk-nav uk-dropdown-nav ">
-                      <li><a href="${pageContext.request.contextPath}/language?lang=en"><spring:message code="language.english"/></a></li>
-                      <li><a href="${pageContext.request.contextPath}/language?lang=es"><spring:message code="language.spanish"/></a></li>
-                    </ul>
-                  </div>
                 </li>
               </ul>
             </div>

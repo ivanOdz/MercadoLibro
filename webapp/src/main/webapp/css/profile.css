@@ -6,9 +6,10 @@
 .card-profile {
     align-content: center;
     align-items: center;
-    display: flex;
+    display: grid;
     flex-direction: column;
     margin-top: 5rem !important;
+    padding: 10%
 }
 
 .title-profile {

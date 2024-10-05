@@ -32,10 +32,10 @@
 <div class="uk-background-muted">
     <div class="uk-container">
         <div class="uk-grid ml-1 uk-margin-top" uk-grid>
-            <div class="uk-width-1-2 main-margin uk-align-center mt-1">
-                <div class="uk-card uk-card-default card-profile">
+            <div class="uk-width-2-3 main-margin uk-align-center mt-1">
+                <div class="uk-card uk-align-center uk-card-default card-profile">
                     <h1 class="uk-h1 title-profile"><spring:message code="profile.title"/></h1>
-                    <div class="profile-content">
+                    <div class="profile-content uk-align-center">
 
                         <h3 class="profile-pic">
                             <c:choose>
@@ -116,6 +116,14 @@
                                 </div>
                             </c:when>
                         </c:choose>
+
+                        <button class="uk-button uk-button-default" type="button"><spring:message code="language"/></button>
+                        <div uk-dropdown>
+                            <ul class="uk-nav uk-dropdown-nav ">
+                                <li><a href="${pageContext.request.contextPath}/language?lang=en"><spring:message code="language.english"/></a></li>
+                                <li><a href="${pageContext.request.contextPath}/language?lang=es"><spring:message code="language.spanish"/></a></li>
+                            </ul>
+                        </div>
 
                         <div>
                             <h3 class="uk-h5"><c:out value="${loggedUser.mail}"/></h3>
