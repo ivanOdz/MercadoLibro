@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.models.utils.Genre;
 import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.models.utils.SortType;
+import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -44,7 +45,7 @@ public class PublicationServiceImpl implements PublicationService {
     }
 
     @Override
-    public PaginatedResponse<Publication> getPaginatedPublications(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, SortType sortType, int currentPage) {
+    public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, SortType sortType, int currentPage) {
         return pubDao.getPaginatedPublications(search, isBookStateFilterActive, bookStateFilter, isGenreFilterActive, genreFilter, sortType, currentPage);
     }
 }

@@ -1,8 +1,11 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.exceptions.BookModelCreationException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
+import ar.edu.itba.paw.models.utils.pagination.BookModelMetadata;
+import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 import ar.edu.itba.paw.webapp.form.BookDetailsForm;
 import ar.edu.itba.paw.webapp.form.BookForm;
@@ -71,10 +74,9 @@ public class BookController {
 
         ModelAndView mav = new ModelAndView("book/book_home");
 
-        PaginatedResponse<Book> books =  bookService.getPaginatedBooks(search, isBookStateFilterActive,
+            PaginatedResponse<Book, ItemFilterMetadata> books = bookService.getPaginatedBooks(search, isBookStateFilterActive,
                     bookStateFilter, isGenreFilterActive, genreFilter, currentPage, loggedUserAdvice.getLoggedUser().getUserId(), sortType);
-
-        mav.addObject("books", books);
+            mav.addObject("books", books);
 
         return mav;
     }
@@ -88,7 +90,7 @@ public class BookController {
 
         ModelAndView mav = new ModelAndView("book/book_models");
 
-        PaginatedResponse<BookModel> modelBooks = bookModelService.getPaginatedBookModels(search, isGenreFilterActive, genreFilter, currentPage, sortType);
+        PaginatedResponse<BookModel, BookModelMetadata> modelBooks = bookModelService.getPaginatedBookModels(search, isGenreFilterActive, genreFilter, currentPage, sortType);
 
         mav.addObject("modelBooks", modelBooks);
 

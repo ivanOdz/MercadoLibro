@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.services.BookStateService;
 import ar.edu.itba.paw.interfaces.services.GenreService;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
+import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.core.RowMapper;
@@ -169,7 +170,7 @@ public class BookJdbcDao implements BookDao {
     }
 
     @Override
-    public PaginatedResponse<Book> getPaginatedBooks(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, int currentPage, long userId, SortType sortType) {
+    public PaginatedResponse<Book, ItemFilterMetadata> getPaginatedBooks(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, int currentPage, long userId, SortType sortType) {
 
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT  b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
@@ -244,8 +245,7 @@ public class BookJdbcDao implements BookDao {
 
         int totalResults = getTotalResultsByBook(search, isGenreFilterActive, genreFilter, isBookStateFilterActive, bookStateFilter, userId);
 
-
-        return new PaginatedResponse<>(data, new PageInfo(search, isBookStateFilterActive, isGenreFilterActive, genreFilter, bookStateFilter, sortType,  genreWrapperList, bookStateWrapperList, currentPage, totalResults));
+        return new PaginatedResponse<>(data, new ItemFilterMetadata(currentPage, totalResults, search, isGenreFilterActive, genreFilter, sortType, genreWrapperList, isBookStateFilterActive, bookStateFilter, bookStateWrapperList));
     }
 
     private List<GenreWrapper> getGenreQtyByBook(String search, boolean isBookStateFilterActive, BookState bookStateFilter, long userId) {

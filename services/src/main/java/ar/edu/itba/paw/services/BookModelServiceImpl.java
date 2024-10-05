@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.services.BookModelService;
 import ar.edu.itba.paw.models.BookModel;
 import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.utils.*;
+import ar.edu.itba.paw.models.utils.pagination.BookModelMetadata;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +37,7 @@ public class BookModelServiceImpl implements BookModelService {
     }
 
     @Override
-    public PaginatedResponse<BookModel> getPaginatedBookModels(String search, boolean isGenreFilterActive, Genre genreFilter, int currentPage, SortType sortType) {
+    public PaginatedResponse<BookModel, BookModelMetadata> getPaginatedBookModels(String search, boolean isGenreFilterActive, Genre genreFilter, int currentPage, SortType sortType) {
         return bookModelDao.getPaginatedBookModels(search, isGenreFilterActive, genreFilter, currentPage, sortType);
     }
 }

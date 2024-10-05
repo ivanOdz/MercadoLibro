@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.persistence.UserReviewDao;
 import ar.edu.itba.paw.interfaces.services.UserReviewService;
 import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.UserReview;
+import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.standard.expression.Each;
 
@@ -37,13 +38,13 @@ public class UserReviewServiceImpl implements UserReviewService {
 	}
 	
 	@Override
-	public PaginatedResponse<UserReview> getReviewsGivenByUserId(long userId) {
+	public PaginatedResponse<UserReview, BasicMetadata> getReviewsGivenByUserId(long userId) {
 
 		return urDao.getReviewsGivenByUserId(userId);
 	}
 
 	@Override
-	public PaginatedResponse<UserReview> getReviewsEarnedByUserId(long userId) {
+	public PaginatedResponse<UserReview, BasicMetadata> getReviewsEarnedByUserId(long userId) {
 
 		return urDao.getReviewsEarnedByUserId(userId);
 	}

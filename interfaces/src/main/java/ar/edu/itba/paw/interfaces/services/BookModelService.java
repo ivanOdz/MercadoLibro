@@ -3,6 +3,8 @@ package ar.edu.itba.paw.interfaces.services;
 import ar.edu.itba.paw.models.BookModel;
 import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.utils.*;
+import ar.edu.itba.paw.models.utils.pagination.BookModelMetadata;
+import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,5 +17,5 @@ public interface BookModelService {
 
     BookModel getBookModelByBookModelId(long bookModelId);
 
-    PaginatedResponse<BookModel> getPaginatedBookModels(String search, boolean isGenreFilterActive, Genre genreFilter, int currentPage, SortType sortType);
+    PaginatedResponse<BookModel, BookModelMetadata> getPaginatedBookModels(String search, boolean isGenreFilterActive, Genre genreFilter, int currentPage, SortType sortType);
 }

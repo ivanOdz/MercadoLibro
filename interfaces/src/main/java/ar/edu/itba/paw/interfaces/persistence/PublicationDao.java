@@ -6,6 +6,8 @@ import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.models.utils.Genre;
 import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.models.utils.SortType;
+import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
+import ar.edu.itba.paw.models.utils.pagination.Metadata;
 
 public interface PublicationDao {
 
@@ -15,5 +17,5 @@ public interface PublicationDao {
 
     Publication getPublicationByPublicationId(long publicationId);
 
-    PaginatedResponse<Publication> getPaginatedPublications(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, SortType sortType, int currentPage);
+    PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, SortType sortType, int currentPage);
 }

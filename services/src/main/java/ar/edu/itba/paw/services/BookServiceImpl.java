@@ -9,6 +9,7 @@ import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.interfaces.persistence.BookDao;
+import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -66,7 +67,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public PaginatedResponse<Book> getPaginatedBooks(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, int currentPage, long userId, SortType sortType) {
+    public PaginatedResponse<Book, ItemFilterMetadata> getPaginatedBooks(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, int currentPage, long userId, SortType sortType) {
         return bookDao.getPaginatedBooks(search, isBookStateFilterActive, bookStateFilter, isGenreFilterActive, genreFilter, currentPage, userId, sortType);
     }
 

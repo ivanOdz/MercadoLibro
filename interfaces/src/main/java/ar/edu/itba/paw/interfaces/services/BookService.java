@@ -3,6 +3,7 @@ package ar.edu.itba.paw.interfaces.services;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 
+import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,7 +21,7 @@ public interface BookService {
 
     Optional<Book> getBookById(long bookId);
 
-    PaginatedResponse<Book> getPaginatedBooks(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, int currentPage, long userId, SortType sortType);
+    PaginatedResponse<Book, ItemFilterMetadata> getPaginatedBooks(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, int currentPage, long userId, SortType sortType);
 
     List<Book> getAvailableBooksByUser(User user);
 }
