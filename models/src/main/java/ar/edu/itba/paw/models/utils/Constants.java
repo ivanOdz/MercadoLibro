@@ -6,7 +6,7 @@ public final class Constants {
         // restrict instantiation
     }
 
-    public static final int PAGE_SIZE = 14;
+    public static final int PAGE_SIZE = 10;
 
     public static final int INITIAL_EXCHANGE_VALUE = 0;
 

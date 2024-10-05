@@ -50,6 +50,7 @@ public class BookController {
 
     @Autowired
     private BookDimensionService bookDimensionService;
+
     @Autowired
     private LoggedUserAdvice loggedUserAdvice;
 
@@ -67,7 +68,7 @@ public class BookController {
                                  @RequestParam(name = "book-state-filter", required = false) BookState bookStateFilter,
                                  @RequestParam(name = "is-genre-filter-active", defaultValue = "false") boolean isGenreFilterActive,
                                  @RequestParam(name = "genre-filter", required = false) Genre genreFilter,
-                                 @RequestParam(name = "current-Page", defaultValue = "0") int currentPage,
+                                 @RequestParam(name = "page", defaultValue = "0") int currentPage,
                                  @RequestParam(name = "sort-type", defaultValue = "BOOK_NAME_ASCENDING") SortType sortType) {
 
 
