@@ -38,7 +38,7 @@
                        aria-label="Search"
                        name="search"
                        id="search"
-                       value="<c:out value='${param.search}'/>">
+                       value="<c:out value='${books.pageInfo.search}'/>">
                 <button class="uk-search-icon-flip" uk-search-icon></button>
             </form>
         </div>
@@ -47,16 +47,16 @@
 
 
             <div class="uk-width-1-4@s filter-section uk-border-rounded uk-box-shadow-small mt-1 mb-1">
-                <h2><c:out value="${param.search}"/></h2>
+                <h2><c:out value="${books.pageInfo.search}"/></h2>
 
 
                 <!-- Esto tiene que aparecer solo si hay algo buscado -->
-                <c:if test="${not empty param.search}">
+                <c:if test="${not empty books.pageInfo.search}">
                     <form action="<c:url value='' />" method="get">
-                        <input type="hidden" name="is-book-state-filter-active" value="${isBookStateFilterActive}">
-                        <input type="hidden" name="is-genre-filter-active" value=${isGenreFilterActive}>
-                        <input type="hidden" name="genre-filter" value=${genreFilter}>
-                        <input type="hidden" name="book-state-filter" value=${bookStateFilter}>
+                        <input type="hidden" name="is-book-state-filter-active" value="${books.pageInfo.isBookStateFilterActive}">
+                        <input type="hidden" name="is-genre-filter-active" value=${books.pageInfo.isGenreFilterActive}>
+                        <input type="hidden" name="genre-filter" value=${books.pageInfo.genreFilter}>
+                        <input type="hidden" name="book-state-filter" value=${books.pageInfo.bookStateFilter}>
                         <input type="hidden" name="search" value=""/>
 
                         <button type="submit" class="ui-search-button uk-button uk-button-default uk-button-small"
@@ -70,12 +70,12 @@
                 </c:if>
 
                 <!-- Esto tiene que aparecer solo si hay un filtro de BookState -->
-                <c:if test="${isBookStateFilterActive}">
+                <c:if test="${books.pageInfo.isBookStateFilterActive}">
                     <form action="<c:url value='' />" method="get">
                         <input type="hidden" name="is-book-state-filter-active" value="false">
-                        <input type="hidden" name="is-genre-filter-active" value=${isGenreFilterActive}>
-                        <input type="hidden" name="genre-filter" value=${genreFilter}>
-                        <input type="hidden" name="search" value="<c:out value='${param.search}'/>"/>
+                        <input type="hidden" name="is-genre-filter-active" value=${books.pageInfo.isGenreFilterActive}>
+                        <input type="hidden" name="genre-filter" value=${books.pageInfo.genreFilter}>
+                        <input type="hidden" name="search" value="<c:out value='${books.pageInfo.search}'/>"/>
 
                         <button type="submit" class="ui-search-button uk-button uk-button-default uk-button-small"
                                 title="BookStateRemove" uk-close-icon>
@@ -88,12 +88,12 @@
                 </c:if>
 
                 <!-- Esto tiene que aparecer solo si hay un filtro de Genero -->
-                <c:if test="${isGenreFilterActive}">
+                <c:if test="${books.pageInfo.isGenreFilterActive}">
                     <form action="<c:url value='' />" method="get">
                         <input type="hidden" name="is-genre-filter-active" value="false">
-                        <input type="hidden" name="is-book-state-filter-active" value=${isBookStateFilterActive}>
-                        <input type="hidden" name="book-state-filter" value=${bookStateFilter}>
-                        <input type="hidden" name="search" value="<c:out value='${param.search}'/>">
+                        <input type="hidden" name="is-book-state-filter-active" value=${books.pageInfo.isBookStateFilterActive}>
+                        <input type="hidden" name="book-state-filter" value=${books.pageInfo.bookStateFilter}>
+                        <input type="hidden" name="search" value="<c:out value='${books.pageInfo.search}'/>">
 
                         <button type="submit"
                                 class="uk-inline uk-search-button uk-button uk-button-default uk-button-small"
@@ -106,48 +106,61 @@
                     </form>
                 </c:if>
 
-                <c:if test="${!isBookStateFilterActive}">
+                <c:if test="${!books.pageInfo.isBookStateFilterActive}">
                     <h3><spring:message code="filter.condition"/></h3>
                     <ul class="uk-list">
-                        <c:forEach var="bookStateWrapper" items="${bookStates}">
+                        <c:forEach var="bookStateWrapper" items="${books.pageInfo.bookStateWrapperList}">
                             <li class="ui-search-filter-container">
                                 <form action="<c:url value='' />" method="get">
-                                    <input type="hidden" name="search" value="<c:out value='${param.search}'/>">
+                                    <input type="hidden" name="search" value="<c:out value='${books.pageInfo.search}'/>">
                                     <input type="hidden" name="is-book-state-filter-active" value='true'>
                                     <input type="hidden" name="book-state-filter"
                                            value="${bookStateWrapper.bookState}">
-                                    <input type="hidden" name="is-genre-filter-active" value="${isGenreFilterActive}">
-                                    <input type="hidden" name="genre-filter" value="${genreFilter}">
+                                    <input type="hidden" name="is-genre-filter-active" value="${books.pageInfo.isGenreFilterActive}">
+                                    <input type="hidden" name="genre-filter" value="${books.pageInfo.genreFilter}">
 
+<%--                                    <button type="submit"--%>
 
-                                    <button type="submit"
-                                            class="ui-search-button uk-button uk-button-default uk-button-small"
-                                            title="${bookStateWrapper.displayName}">
-                                        <span class="ui-search-filter-name">${bookStateWrapper.displayName}</span>
-                                    </button>
+<%--                                            class="ui-search-button uk-button uk-button-default uk-button-small"--%>
+<%--                                            title="${bookStateWrapper.displayName}">--%>
+<%--                                        <span class="ui-search-filter-name">${bookStateWrapper.displayName}</span>--%>
+<%--                                        <span class="ui-search-filter-name">(${bookStateWrapper.resultByState})</span>--%>
+<%--                                    </button>--%>
+                                    <a href="#" class="uk-inline uk-search-button uk-button-link" title="BookStateFilterRemove" onclick="this.closest('form').submit(); return false;">
+                                        <span class="ui-search-filter-name">
+                                                ${bookStateWrapper.displayName} (${bookStateWrapper.resultByState})
+                                        </span>
+                                    </a>
+
                                 </form>
                             </li>
                         </c:forEach>
                     </ul>
                 </c:if>
 
-                <c:if test="${!isGenreFilterActive}">
+                <c:if test="${!books.pageInfo.isGenreFilterActive}">
                     <h3><spring:message code="filter.genre"/></h3>
                     <ul class="uk-list">
-                        <c:forEach var="genreWrapper" items="${genres}">
+                        <c:forEach var="genreWrapper" items="${books.pageInfo.genreWrapperList}">
                             <li class="ui-search-filter-container">
                                 <form action="<c:url value='' />" method="get">
                                     <input type="hidden" name="genre-filter" value="${genreWrapper.genre}">
                                     <input type="hidden" name="is-genre-filter-active" value="true">
-                                    <input type="hidden" name="book-state-filter" value="${bookStateFilter}">
-                                    <input type="hidden" name="is-book-state-filter-active" value="${isBookStateFilterActive}">
-                                    <input type="hidden" name="search" value="<c:out value='${param.search}'/>"/>
+                                    <input type="hidden" name="book-state-filter" value="${books.pageInfo.bookStateFilter}">
+                                    <input type="hidden" name="is-book-state-filter-active" value="${books.pageInfo.isBookStateFilterActive}">
+                                    <input type="hidden" name="search" value="<c:out value='${books.pageInfo.search}'/>"/>
 
-                                    <button type="submit"
-                                            class="ui-search-button uk-button uk-button-default uk-button-small"
-                                            title="${genreWrapper.displayName}">
-                                        <span class="ui-search-filter-name">${genreWrapper.displayName}</span>
-                                    </button>
+                                    <a href="#" class="uk-inline uk-search-button uk-button-link" title="GenreFilterRemove" onclick="this.closest('form').submit(); return false;">
+                                        <span class="ui-search-filter-name">
+                                                ${genreWrapper.displayName} (${genreWrapper.resultByGenre})
+                                        </span>
+                                    </a>
+<%--                                    <button type="submit"--%>
+<%--                                            class="ui-search-button uk-button uk-button-default uk-button-small"--%>
+<%--                                            title="${genreWrapper.displayName}">--%>
+<%--                                        <span class="ui-search-filter-name">${genreWrapper.displayName}</span>--%>
+<%--                                        <span class="ui-search-filter-name">(${genreWrapper.resultByGenre})</span>--%>
+<%--                                    </button>--%>
                                 </form>
                             </li>
                         </c:forEach>
@@ -164,7 +177,7 @@
 
                 <div class="uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m mb-1" uk-grid
                      uk-height-match="target: > div > .uk-card">
-                    <c:forEach var="card" items="${books}">
+                    <c:forEach var="card" items="${books.data}">
                         <div>
                             <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-border-rounded custom-link">
                                 <figure class="uk-margin-bottom">
@@ -236,8 +249,53 @@
                             </div>
                         </div>
                     </c:forEach>
-
                 </div>
+                <hr class="uk-divider-icon">
+
+                <nav aria-label="Pagination">
+                    <ul class="uk-pagination uk-flex-center" uk-margin>
+                        <!-- Botón Previous (solo mostrar si currentPage > 0) -->
+                        <c:if test="${books.pageInfo.currentPage > 0}">
+                            <li>
+                                <a href="?page=${books.pageInfo.currentPage - 1}">
+                                    <span uk-pagination-previous></span>
+                                </a>
+                            </li>
+                        </c:if>
+
+                        <!-- Página anterior (mostrar si currentPage > 0) -->
+                        <c:if test="${books.pageInfo.currentPage > 0}">
+                            <li>
+                                <a href="?page=${books.pageInfo.currentPage - 1}">
+                                        ${books.pageInfo.currentPage} <!-- Mostrar página anterior -->
+                                </a>
+                            </li>
+                        </c:if>
+
+                        <!-- Página actual (siempre visible y centrada) -->
+                        <li class="uk-active">
+                            <span aria-current="page">${books.pageInfo.currentPage + 1}</span>
+                        </li>
+
+                        <!-- Página siguiente (mostrar si currentPage < maxPage) -->
+                        <c:if test="${books.pageInfo.currentPage < books.pageInfo.maxPage}">
+                            <li>
+                                <a href="?page=${books.pageInfo.currentPage + 1}">
+                                        ${books.pageInfo.currentPage + 2} <!-- Mostrar página siguiente -->
+                                </a>
+                            </li>
+                        </c:if>
+
+                        <!-- Botón Next (solo mostrar si currentPage < maxPage) -->
+                        <c:if test="${books.pageInfo.currentPage < books.pageInfo.maxPage}">
+                            <li>
+                                <a href="?page=${books.pageInfo.currentPage + 1}">
+                                    <span uk-pagination-next></span>
+                                </a>
+                            </li>
+                        </c:if>
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>

@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.services.BookService;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.models.Book;
 import ar.edu.itba.paw.models.Image;
+import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.interfaces.persistence.BookDao;
@@ -65,8 +66,8 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> getFilteredSortedOrderedBooksByPageFromUser(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, int pageIndex, long userId, SortType sortType) {
-        return bookDao.getFilteredSortedOrderedBooksByPageFromUser(search, isBookStateFilterActive, bookStateFilter, isGenreFilterActive, genreFilter, pageIndex, userId, sortType);
+    public PaginatedResponse<Book> getPaginatedBooks(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, int currentPage, long userId, SortType sortType) {
+        return bookDao.getPaginatedBooks(search, isBookStateFilterActive, bookStateFilter, isGenreFilterActive, genreFilter, currentPage, userId, sortType);
     }
 
     public List<MultipartFile> arrangeImages(List<MultipartFile> images, int bookCoverIndex) {

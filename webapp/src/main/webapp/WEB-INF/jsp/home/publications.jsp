@@ -101,12 +101,18 @@
                                     <input type="hidden" name="genre-filter" value="${publications.pageInfo.genreFilter}">
 
 
-                                    <button type="submit"
-                                            class="ui-search-button uk-button uk-button-default uk-button-small"
-                                            title="${bookStateWrapper.displayName}">
-                                        <span class="ui-search-filter-name">${bookStateWrapper.displayName}</span>
-                                        <span class="ui-search-filter-name">(${bookStateWrapper.resultByState})</span>
-                                    </button>
+                                    <a href="#" class="uk-inline uk-search-button uk-button-link" title="BookStateFilterRemove" onclick="this.closest('form').submit(); return false;">
+                                        <span class="ui-search-filter-name">
+                                                ${bookStateWrapper.displayName} (${bookStateWrapper.resultByState})
+                                        </span>
+                                    </a>
+
+                                <%--                                    <button type="submit"--%>
+<%--                                            class="ui-search-button uk-button uk-button-default uk-button-small"--%>
+<%--                                            title="${bookStateWrapper.displayName}">--%>
+<%--                                        <span class="ui-search-filter-name">${bookStateWrapper.displayName}</span>--%>
+<%--                                        <span class="ui-search-filter-name">(${bookStateWrapper.resultByState})</span>--%>
+<%--                                    </button>--%>
                                 </form>
                             </li>
                         </c:forEach>
@@ -125,12 +131,18 @@
                                     <input type="hidden" name="is-book-state-filter-active" value="${publications.pageInfo.isBookStateFilterActive}">
                                     <input type="hidden" name="search" value="<c:out value='${param.search}'/>"/>
 
-                                    <button type="submit"
-                                            class="ui-search-button uk-button uk-button-default uk-button-small"
-                                            title="${genreWrapper.displayName}">
-                                        <span class="ui-search-filter-name">${genreWrapper.displayName}</span>
-                                        <span class="ui-search-filter-name">(${genreWrapper.resultByGenre})</span>
-                                    </button>
+<%--                                    <button type="submit"--%>
+<%--                                            class="ui-search-button uk-button uk-button-default uk-button-small"--%>
+<%--                                            title="${genreWrapper.displayName}">--%>
+<%--                                        <span class="ui-search-filter-name">${genreWrapper.displayName}</span>--%>
+<%--                                        <span class="ui-search-filter-name">(${genreWrapper.resultByGenre})</span>--%>
+<%--                                    </button>--%>
+                                    <a href="#" class="uk-inline uk-search-button uk-button-link" title="GenreFilterRemove" onclick="this.closest('form').submit(); return false;">
+                                        <span class="ui-search-filter-name">
+                                                ${genreWrapper.displayName} (${genreWrapper.resultByGenre})
+                                        </span>
+                                    </a>
+
                                 </form>
                             </li>
                         </c:forEach>
@@ -174,12 +186,52 @@
                         </div>
                     </c:forEach>
                 </div>
-<%--                <nav>--%>
-<%--                    <ul class="uk-pagination">--%>
-<%--                        <li><a href="#"><span class="uk-margin-small-right" uk-pagination-previous></span> Previous</a></li>--%>
-<%--                        <li class="uk-margin-auto-left"><a href="#">Next <span class="uk-margin-small-left" uk-pagination-next></span></a></li>--%>
-<%--                    </ul>--%>
-<%--                </nav>--%>
+                <hr class="uk-divider-icon">
+
+                <nav aria-label="Pagination">
+                    <ul class="uk-pagination uk-flex-center" uk-margin>
+                        <!-- Botón Previous (solo mostrar si currentPage > 0) -->
+                        <c:if test="${publications.pageInfo.currentPage > 0}">
+                            <li>
+                                <a href="?page=${publications.pageInfo.currentPage - 1}">
+                                    <span uk-pagination-previous></span>
+                                </a>
+                            </li>
+                        </c:if>
+
+                        <!-- Página anterior (mostrar si currentPage > 0) -->
+                        <c:if test="${publications.pageInfo.currentPage > 0}">
+                            <li>
+                                <a href="?page=${publications.pageInfo.currentPage - 1}">
+                                        ${publications.pageInfo.currentPage} <!-- Mostrar página anterior -->
+                                </a>
+                            </li>
+                        </c:if>
+
+                        <!-- Página actual (siempre visible y centrada) -->
+                        <li class="uk-active">
+                            <span aria-current="page">${publications.pageInfo.currentPage + 1}</span>
+                        </li>
+
+                        <!-- Página siguiente (mostrar si currentPage < maxPage) -->
+                        <c:if test="${publications.pageInfo.currentPage < publications.pageInfo.maxPage}">
+                            <li>
+                                <a href="?page=${publications.pageInfo.currentPage + 1}">
+                                        ${publications.pageInfo.currentPage + 2} <!-- Mostrar página siguiente -->
+                                </a>
+                            </li>
+                        </c:if>
+
+                        <!-- Botón Next (solo mostrar si currentPage < maxPage) -->
+                        <c:if test="${publications.pageInfo.currentPage < publications.pageInfo.maxPage}">
+                            <li>
+                                <a href="?page=${publications.pageInfo.currentPage + 1}">
+                                    <span uk-pagination-next></span>
+                                </a>
+                            </li>
+                        </c:if>
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>

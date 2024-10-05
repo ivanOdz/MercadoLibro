@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
 import ar.edu.itba.paw.models.BookModel;
+import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.utils.*;
 
 import java.util.List;
@@ -15,5 +16,5 @@ public interface BookModelDao {
 
     BookModel getBookModelByBookModelId(long bookModelId);
 
-    List<BookModel> getFilteredSortedOrderedModelBooksByPage(String search, boolean isGenreFilterActive, Genre genreFilter, int pageIndex, SortType sortType);
+    PaginatedResponse<BookModel> getPaginatedBookModels(String search, boolean isGenreFilterActive, Genre genreFilter, int currentPage, SortType sortType);
 }

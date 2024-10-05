@@ -1,8 +1,14 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.exceptions.base.BadRequestException;
+import ar.edu.itba.paw.interfaces.exceptions.base.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.BookModelDao;
+import ar.edu.itba.paw.interfaces.services.GenreService;
 import ar.edu.itba.paw.models.BookModel;
+import ar.edu.itba.paw.models.PageInfo;
+import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.utils.*;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -21,6 +27,8 @@ public class BookModelJdbcDao implements BookModelDao {
     private final SimpleJdbcInsert jdbcInsertBookModel;
     private final SimpleJdbcInsert jdbcInsertAuthor;
     private final SimpleJdbcInsert jdbcInsertBookAuthor;
+
+    private final GenreService genreService;
 
     // package-private visibility
     static final RowMapper<BookModel> ROW_MAPPER_BOOK_MODEL = (rs, rowNum) -> new BookModel(
@@ -43,8 +51,9 @@ public class BookModelJdbcDao implements BookModelDao {
             new Rating(rs.getDouble("rating"), rs.getInt("ratingCount"))
     );
 
-    public BookModelJdbcDao(final DataSource ds) {
+    public BookModelJdbcDao(final DataSource ds, GenreService genreService) {
         jdbcTemplate = new JdbcTemplate(ds);
+        this.genreService = genreService;
         jdbcInsertBookModel = new SimpleJdbcInsert(jdbcTemplate)
                 .usingGeneratedKeyColumns("bookmodelid")
                 .withTableName("book_model");
@@ -73,9 +82,12 @@ public class BookModelJdbcDao implements BookModelDao {
         md.put("ishardcover", isHardcover);
         md.put("imageid", bookCoverId);
 
-        final Number bookModelId = jdbcInsertBookModel.executeAndReturnKey(md);
-
-        return bookModelId.longValue();
+        try {
+            final Number bookModelId = jdbcInsertBookModel.executeAndReturnKey(md);
+            return bookModelId.longValue();
+        } catch (DataIntegrityViolationException e) {
+            throw new BadRequestException("Data integrity violation: One or more fields contain invalid values, or the book model already exists.");
+        }
     }
 
     public List<Long> createAuthors(List<String> authors) {
@@ -117,12 +129,17 @@ public class BookModelJdbcDao implements BookModelDao {
                         "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, bm.imageId"
         );
 
-        return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ bookModelId }, new int[]{Types.BIGINT}, ROW_MAPPER_BOOK_MODEL)
+        BookModel bookModel = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ bookModelId }, new int[]{Types.BIGINT}, ROW_MAPPER_BOOK_MODEL)
                 .stream().findFirst().orElse(null);
+
+        if (bookModel == null) {
+            throw new NotFoundException("Book model with ID " + bookModelId + " not found.");
+        }
+        return bookModel;
     }
 
     @Override
-    public List<BookModel> getFilteredSortedOrderedModelBooksByPage(String search, boolean isGenreFilterActive, Genre genreFilter, int pageIndex, SortType sortType) {
+    public PaginatedResponse<BookModel> getPaginatedBookModels(String search, boolean isGenreFilterActive, Genre genreFilter, int currentPage, SortType sortType) {
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
                         "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, bm.imageId AS coverId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount " +
@@ -153,16 +170,77 @@ public class BookModelJdbcDao implements BookModelDao {
                 sqlQuery.append(" ORDER BY title DESC");
         }
 
-        int offset = pageIndex * PAGE_SIZE;
+        int offset = currentPage * PAGE_SIZE;
         sqlQuery.append(" LIMIT ? OFFSET ?");
 
+        List<BookModel> data;
         if(isGenreFilterActive) {
-            return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ "%" + search.toLowerCase() + "%", genreFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_BOOK_MODEL);
+            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ "%" + search.toLowerCase() + "%", genreFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_BOOK_MODEL);
         }
-        return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ "%" + search.toLowerCase() + "%", PAGE_SIZE, offset }, new int[]{ Types.VARCHAR, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_BOOK_MODEL);
+        else data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ "%" + search.toLowerCase() + "%", PAGE_SIZE, offset }, new int[]{ Types.VARCHAR, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_BOOK_MODEL);
+
+        List<GenreWrapper> genreWrapperList = getGenreQtyByBook(search);
+
+        int totalResults = getTotalResultsByBook(search, isGenreFilterActive, genreFilter);
+
+        return new PaginatedResponse<>(data, new PageInfo(search, false, isGenreFilterActive, genreFilter, null, sortType, genreWrapperList, null, currentPage, totalResults));
 
     }
+
+    private List<GenreWrapper> getGenreQtyByBook(String search) {
+        StringBuilder sqlQuery = new StringBuilder(
+                "SELECT bm.genre, COUNT(*) AS genreCount " +
+                        "FROM book_model bm " +
+                        "WHERE LOWER(bm.title) LIKE LOWER(?) ");
+
+        sqlQuery.append("GROUP BY bm.genre");
+
+        List<Object> params = new ArrayList<>();
+        params.add("%" + search.toLowerCase() + "%");
+
+        int[] paramTypes;
+        paramTypes = new int[]{Types.VARCHAR};
+
+        Map<Genre, Integer> resultByGenreMap = new HashMap<>();
+        jdbcTemplate.query(sqlQuery.toString(), params.toArray(), paramTypes, (rs, rowNum) -> {
+            int genreValue = rs.getInt("genre");
+            Genre genre = Genre.fromInt(genreValue);
+            resultByGenreMap.put(genre, rs.getInt("genreCount"));
+            return null;
+        });
+
+        List<GenreWrapper> genreWrappers = new ArrayList<>();
+        for (Genre genre : Genre.values()) {
+            genreWrappers.add(new GenreWrapper(genre, genreService.getGenreDisplayName(genre), resultByGenreMap.getOrDefault(genre, 0)));
+        }
+
+        return genreWrappers;
+    }
+
+    private int getTotalResultsByBook(String search, boolean isGenreFilterActive, Genre genreFilter) {
+        StringBuilder sqlQuery = new StringBuilder(
+                "SELECT COUNT(*) " +
+                        "FROM book_model bm " +
+                        "WHERE LOWER(bm.title) LIKE LOWER(?) ");
+
+        if (isGenreFilterActive) {
+            sqlQuery.append("AND bm.genre = ? ");
+        }
+
+        List<Object> params = new ArrayList<>();
+        params.add("%" + search.toLowerCase() + "%");
+
+        if (isGenreFilterActive) {
+            params.add(genreFilter.getValue());
+        }
+
+        Integer totalResults = jdbcTemplate.queryForObject(sqlQuery.toString(), params.toArray(), Integer.class);
+
+        return totalResults != null ? totalResults : 0;
+    }
 }
+
+
 
 
 

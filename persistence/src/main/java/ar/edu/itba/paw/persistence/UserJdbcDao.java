@@ -28,7 +28,7 @@ public class UserJdbcDao implements UserDao {
                                      rs.getInt("verificationCode"),
                                      rs.getBoolean("isVerified"),
                                      rs.getString("language"));
-
+/*
     private static final RowMapper<UserReview> ROWMAPPER_USER_REVIEW =
             (rs, rowNum) -> new UserReview(rs.getLong("userReviewId"),
                                            rs.getLong("exchangeId"),
@@ -40,7 +40,7 @@ public class UserJdbcDao implements UserDao {
 
     private static final RowMapper<Double> ROWMAPPER_USER_REVIEW_RATING =
             (rs, rowNum) -> rs.getDouble("userReviewRating");
-
+*/
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
@@ -79,7 +79,7 @@ public class UserJdbcDao implements UserDao {
         return jdbcTemplate.query("SELECT * FROM users WHERE verificationcode = ?", new Object[]{ verificationCode },
                 new int[]{ Types.INTEGER }, ROW_MAPPER_USER).stream().findFirst();
     }
-
+/*
     @Override
     public List<UserReview> getReviewsByUserId(long userId, int pageIndex) {
         int offset = PAGE_SIZE * pageIndex;
@@ -91,7 +91,7 @@ public class UserJdbcDao implements UserDao {
         String sql = "SELECT AVG(userReviewRating) AS userReviewRating FROM user_review WHERE subjectId = ?";
         return jdbcTemplate.query(sql, new Object[]{userId}, new int[]{ Types.BIGINT }, ROWMAPPER_USER_REVIEW_RATING).stream().findFirst().get();
     }
-
+*/
     @Override
     public String getUserLanguage(long userId) {
         return jdbcTemplate.query("SELECT * FROM users WHERE userId = ?", new Object[]{ userId },

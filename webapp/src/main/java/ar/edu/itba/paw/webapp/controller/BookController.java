@@ -48,6 +48,8 @@ public class BookController {
 
     @Autowired
     private BookDimensionService bookDimensionService;
+    @Autowired
+    private LoggedUserAdvice loggedUserAdvice;
 
     public BookController(BookService bookService, UserService userService, BookModelService bookModelService, PublicationService publicationService) {
         this.bookService = bookService;
@@ -63,29 +65,16 @@ public class BookController {
                                  @RequestParam(name = "book-state-filter", required = false) BookState bookStateFilter,
                                  @RequestParam(name = "is-genre-filter-active", defaultValue = "false") boolean isGenreFilterActive,
                                  @RequestParam(name = "genre-filter", required = false) Genre genreFilter,
-                                 @RequestParam(name = "page-index", defaultValue = "0") int pageIndex,
+                                 @RequestParam(name = "current-Page", defaultValue = "0") int currentPage,
                                  @RequestParam(name = "sort-type", defaultValue = "BOOK_NAME_ASCENDING") SortType sortType) {
 
 
         ModelAndView mav = new ModelAndView("book/book_home");
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
+        PaginatedResponse<Book> books =  bookService.getPaginatedBooks(search, isBookStateFilterActive,
+                    bookStateFilter, isGenreFilterActive, genreFilter, currentPage, loggedUserAdvice.getLoggedUser().getUserId(), sortType);
 
-            User loggedUser = userService.findById(pud.getUser().getUserId()).get();
-            mav.addObject("loggedUser", loggedUser);
-
-            List<Book> books =  bookService.getFilteredSortedOrderedBooksByPageFromUser(search, isBookStateFilterActive,
-                    bookStateFilter, isGenreFilterActive, genreFilter, pageIndex, pud.getUser().getUserId(), sortType);
-
-            mav.addObject("books", books);
-            mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
-            mav.addObject("bookStates", List.of(BookState.values()).stream().map(bookStatus -> new BookStateWrapper(bookStatus, bookStateService.getBookStateDisplayName(bookStatus))).collect(Collectors.toList()));
-            mav.addObject("bookStateFilter", bookStateFilter);
-            mav.addObject("isGenreFilterActive", isGenreFilterActive);
-            mav.addObject("genreFilter", genreFilter);
-            mav.addObject("isBookStateFilterActive", isBookStateFilterActive);
-        }
+        mav.addObject("books", books);
 
         return mav;
     }
@@ -94,23 +83,14 @@ public class BookController {
     public ModelAndView bookModels(@RequestParam(name = "search", defaultValue = "") String search,
                                    @RequestParam(name = "is-genre-filter-active", defaultValue = "false") boolean isGenreFilterActive,
                                    @RequestParam(name = "genre-filter", required = false) Genre genreFilter,
-                                   @RequestParam(name = "page-index", defaultValue = "0") int pageIndex,
+                                   @RequestParam(name = "current-Page", defaultValue = "0") int currentPage,
                                    @RequestParam(name = "sort-type", defaultValue = "BOOK_NAME_ASCENDING") SortType sortType) {
 
         ModelAndView mav = new ModelAndView("book/book_models");
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
-            User loggedUser = pud.getUser();
-            mav.addObject("loggedUser", loggedUser);
-        }
-
-        List<BookModel> modelBooks = bookModelService.getFilteredSortedOrderedModelBooksByPage(search, isGenreFilterActive, genreFilter, pageIndex, sortType);
+        PaginatedResponse<BookModel> modelBooks = bookModelService.getPaginatedBookModels(search, isGenreFilterActive, genreFilter, currentPage, sortType);
 
         mav.addObject("modelBooks", modelBooks);
-        mav.addObject("isGenreFilterActive", isGenreFilterActive);
-        mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
-        mav.addObject("genreFilter", genreFilter);
 
         return mav;
     }

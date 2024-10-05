@@ -144,7 +144,7 @@
                             <div class="reviewStars">
                                 <c:forEach var="i" begin="1" end="5">
                                     <c:choose>
-                                        <c:when test="${i <= review.userReviewRating}">
+                                        <c:when test="${i <= review.reviewRating}">
                                             <i class="material-icons yellow-text">star</i>
                                         </c:when>
                                         <c:otherwise>
@@ -155,10 +155,8 @@
                             </div>
 
                             <p class="date-text"><fmt:formatDate value="${review.reviewDate}" pattern="dd/MM/yyyy"/></p>
-                            <p>
-                                <c:out value='${review.reviewDescription}'/>
-                            </p>
-
+                            <p><c:out value='${review.reviewer.username}'/>: <c:out value='${review.reviewDescription}'/></p>
+                        
                         </div>
 
                     </c:forEach>

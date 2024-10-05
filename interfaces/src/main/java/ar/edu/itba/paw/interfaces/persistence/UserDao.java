@@ -27,9 +27,9 @@ public interface UserDao {
 
     Optional<User> getUserToVerify(int verificationCode);
 
-    List<UserReview> getReviewsByUserId(long userId, int pageIndex);
+    //List<UserReview> getReviewsByUserId(long userId, int pageIndex);
 
-    Double getUserRating(long userId);
+    //Double getUserRating(long userId);
 
     String getUserLanguage(long userId);
 

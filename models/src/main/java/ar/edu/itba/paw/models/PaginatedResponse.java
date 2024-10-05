@@ -1,21 +1,23 @@
 package ar.edu.itba.paw.models;
 
+import ar.edu.itba.paw.models.utils.pagination.Metadata;
+
 import java.util.List;
 
-public class PaginatedResponse<T> {
+public class PaginatedResponse<T, P extends Metadata> {
     private final List<T> data;
-    private final PageInfo pageInfo;
+    private final P metadata;
 
-    public PaginatedResponse(List<T> data, PageInfo pageInfo) {
+    public PaginatedResponse(List<T> data, P metadata) {
         this.data = data;
-        this.pageInfo = pageInfo;
+        this.metadata = metadata;
     }
 
     public List<T> getData() {
         return data;
     }
 
-    public PageInfo getPageInfo() {
-        return pageInfo;
+    public P getMetadata() {
+        return metadata;
     }
 }
