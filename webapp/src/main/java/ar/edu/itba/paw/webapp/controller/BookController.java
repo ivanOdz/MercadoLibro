@@ -103,11 +103,6 @@ public class BookController {
         ModelAndView mav = new ModelAndView("/book/new_book_form");
 
         mav.addObject("bookForm", bookForm);
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
-            User loggedUser = pud.getUser();
-            mav.addObject("loggedUser", loggedUser);
-        }
 
         mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
         mav.addObject("languages", List.of(Language.values()).stream().map(language -> new LanguageWrapper(language, languageService.getLanguageDisplayName(language))).collect(Collectors.toList()));
@@ -124,11 +119,8 @@ public class BookController {
         if(errors.hasErrors()){
             return bookModelForm(bookForm, errors);
         }
-        User user = null;
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.getPrincipal() instanceof PawUserDetails pud) {
-            user = pud.getUser();
-        }
+
+        User user = loggedUserAdvice.getLoggedUser();
 
         Number bookId = bookService.createBook(bookForm.getIsbn(), bookForm.getTitle(), bookForm.getAuthors(), bookForm.getEditorial(), bookForm.getDescription(), bookForm.getGenre(), bookForm.getBookState(), bookForm.getEdition(), bookForm.getRating(), bookForm.getImageFiles(), bookForm.getPublicationYear(), bookForm.isHardcover(), bookForm.isPocketEdition(), bookForm.getDimension(), bookForm.getLanguage(), bookForm.getPages(), bookForm.getWeight(), bookForm.getBookCover(), bookForm.isPublish(), user, null);
 
@@ -141,12 +133,6 @@ public class BookController {
     public ModelAndView bookDetailsFormNewBook(@ModelAttribute(name = "bookDetailsForm") BookDetailsForm bookDetailsForm, @RequestParam("book_model_id") long bookModelId, BindingResult errors) {
 
         ModelAndView mav = new ModelAndView("/book/book_form");
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
-            User loggedUser = userService.findById(pud.getUser().getUserId()).get();
-            mav.addObject("loggedUser", loggedUser);
-        }
 
         mav.addObject("bookDetailsForm", bookDetailsForm);
         mav.addObject("step", 2);
@@ -163,11 +149,8 @@ public class BookController {
             System.out.println("ERRORS: " + errors);
             return bookDetailsFormNewBook(bookDetailsForm, bookModelId, errors);
         }
-        User user = null;
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.getPrincipal() instanceof PawUserDetails pud) {
-            user = pud.getUser();
-        }
+        User user = loggedUserAdvice.getLoggedUser();
+
         Number bookId = bookService.createBook(null, null, null, null, null, null, bookDetailsForm.getBookState(), 0, bookDetailsForm.getRating(), bookDetailsForm.getImageFiles(), null, false, false, null, null, 0, 0, 0, bookDetailsForm.isPublish(), user, bookModelId);
 
         publicationService.createPublicationIfNeeded(bookDetailsForm.isPublish(), bookId.longValue(), user.getUserId(), bookDetailsForm.getLocation(), PublicationState.CURRENT);
