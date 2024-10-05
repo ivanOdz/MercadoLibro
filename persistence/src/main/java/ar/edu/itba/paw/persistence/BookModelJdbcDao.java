@@ -1,13 +1,16 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.exceptions.BookModelCreationException;
 import ar.edu.itba.paw.interfaces.exceptions.base.BadRequestException;
 import ar.edu.itba.paw.interfaces.exceptions.base.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.BookModelDao;
 import ar.edu.itba.paw.interfaces.services.GenreService;
+import ar.edu.itba.paw.models.Book;
 import ar.edu.itba.paw.models.BookModel;
 import ar.edu.itba.paw.models.PageInfo;
 import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.utils.*;
+import ar.edu.itba.paw.models.utils.pagination.BookModelMetadata;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -86,7 +89,7 @@ public class BookModelJdbcDao implements BookModelDao {
             final Number bookModelId = jdbcInsertBookModel.executeAndReturnKey(md);
             return bookModelId.longValue();
         } catch (DataIntegrityViolationException e) {
-            throw new BadRequestException("Data integrity violation: One or more fields contain invalid values, or the book model already exists.");
+            throw new BookModelCreationException("Data integrity violation: One or more fields contain invalid values, or the book model already exists.");
         }
     }
 
@@ -130,7 +133,7 @@ public class BookModelJdbcDao implements BookModelDao {
         );
 
         BookModel bookModel = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ bookModelId }, new int[]{Types.BIGINT}, ROW_MAPPER_BOOK_MODEL)
-                .stream().findFirst().orElse(null);
+                .stream().findFirst().orElseThrow(null);
 
         if (bookModel == null) {
             throw new NotFoundException("Book model with ID " + bookModelId + " not found.");
@@ -139,7 +142,7 @@ public class BookModelJdbcDao implements BookModelDao {
     }
 
     @Override
-    public PaginatedResponse<BookModel> getPaginatedBookModels(String search, boolean isGenreFilterActive, Genre genreFilter, int currentPage, SortType sortType) {
+    public PaginatedResponse<BookModel, BookModelMetadata> getPaginatedBookModels(String search, boolean isGenreFilterActive, Genre genreFilter, int currentPage, SortType sortType) {
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
                         "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, bm.imageId AS coverId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount " +
@@ -183,7 +186,7 @@ public class BookModelJdbcDao implements BookModelDao {
 
         int totalResults = getTotalResultsByBook(search, isGenreFilterActive, genreFilter);
 
-        return new PaginatedResponse<>(data, new PageInfo(search, false, isGenreFilterActive, genreFilter, null, sortType, genreWrapperList, null, currentPage, totalResults));
+        return new PaginatedResponse<>(data, new BookModelMetadata(currentPage, totalResults, search, isGenreFilterActive, genreFilter, sortType, genreWrapperList));
 
     }
 

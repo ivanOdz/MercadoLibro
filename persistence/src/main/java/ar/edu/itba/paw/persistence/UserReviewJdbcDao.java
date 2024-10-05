@@ -10,6 +10,7 @@ import ar.edu.itba.paw.models.utils.Language;
 import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.models.utils.Rating;
 
+import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -143,7 +144,7 @@ public class UserReviewJdbcDao implements UserReviewDao {
 	}
 	
 	@Override
-	public PaginatedResponse<UserReview> getReviewsGivenByUserId(long userId) {
+	public PaginatedResponse<UserReview, BasicMetadata> getReviewsGivenByUserId(long userId) {
 		
 		StringBuilder sqlQuery = new StringBuilder(baseQuery);
 		
@@ -151,11 +152,11 @@ public class UserReviewJdbcDao implements UserReviewDao {
 		
 		List<UserReview> data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ userId }, new int[]{ Types.BIGINT }, ROW_MAPPER_USER_REVIEW);
 
-		return new PaginatedResponse<>(data, new PageInfo(null, false, false, null, null, null, null, null, 0, 0));
+		return new PaginatedResponse<>(data, new BasicMetadata(0, 0));
 	}
 	
 	@Override
-	public PaginatedResponse<UserReview> getReviewsEarnedByUserId(long userId) {
+	public PaginatedResponse<UserReview, BasicMetadata> getReviewsEarnedByUserId(long userId) {
 
 		StringBuilder sqlQuery = new StringBuilder(baseQuery);
 
@@ -163,7 +164,7 @@ public class UserReviewJdbcDao implements UserReviewDao {
 
 		List<UserReview> data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ userId }, new int[]{ Types.BIGINT }, ROW_MAPPER_USER_REVIEW);
 
-		return new PaginatedResponse<>(data, new PageInfo(null, false, false, null, null, null, null, null, 0, 0));
+		return new PaginatedResponse<>(data, new BasicMetadata(0, 0));
 	}
 	
 	@Override

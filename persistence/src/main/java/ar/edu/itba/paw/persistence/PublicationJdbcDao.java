@@ -5,6 +5,8 @@ import ar.edu.itba.paw.interfaces.services.BookStateService;
 import ar.edu.itba.paw.interfaces.services.GenreService;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
+import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
+import ar.edu.itba.paw.models.utils.pagination.Metadata;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -107,7 +109,7 @@ public class PublicationJdbcDao implements PublicationDao {
     }
 
     @Override
-    public PaginatedResponse<Publication> getPaginatedPublications(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, SortType sortType, int currentPage) {
+    public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, SortType sortType, int currentPage) {
 
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT p.publicationId, " +
@@ -191,7 +193,7 @@ public class PublicationJdbcDao implements PublicationDao {
         List<BookStateWrapper> bookStateWrapperList = getBookStateQtyByBook(search, isGenreFilterActive, genreFilter);
 
         int totalResults = getTotalResultsByBook(search, isGenreFilterActive, genreFilter, isBookStateFilterActive, bookStateFilter);
-        return new PaginatedResponse<>(data, new PageInfo(search, isBookStateFilterActive, isGenreFilterActive, genreFilter, bookStateFilter, sortType,  genreWrapperList, bookStateWrapperList, currentPage, totalResults));
+        return new PaginatedResponse<>(data, new ItemFilterMetadata(currentPage, totalResults, search, isGenreFilterActive, genreFilter, sortType, genreWrapperList, isBookStateFilterActive, bookStateFilter, bookStateWrapperList));
     }
 
     private List<GenreWrapper> getGenreQtyByBook(String search, boolean isBookStateFilterActive, BookState bookStateFilter) {

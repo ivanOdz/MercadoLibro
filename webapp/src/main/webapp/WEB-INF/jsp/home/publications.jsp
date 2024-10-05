@@ -26,18 +26,18 @@
         <div class="uk-grid ml-1 uk-margin-top" uk-grid>
             <div class="uk-width-1-4@s filter-section uk-border-rounded uk-box-shadow-small mt-1 mb-1">
                 <h2>
-                    <c:out value='${publications.pageInfo.search}'/>
+                    <c:out value='${publications.metadata.search}'/>
                 </h2><h2>
-                    <c:out value='${publications.pageInfo.totalResults}'/>
+                    <c:out value='${publications.metadata.totalResults}'/>
                 </h2>
 
                 <!-- Esto tiene que aparecer solo si hay algo buscado -->
-                <c:if test="${not empty publications.pageInfo.search}">
+                <c:if test="${not empty publications.metadata.search}">
                     <form action="<c:url value='' />" method="get">
-                        <input type="hidden" name="is-book-state-filter-active" value="${publications.pageInfo.isBookStateFilterActive}">
-                        <input type="hidden" name="is-genre-filter-active" value=${publications.pageInfo.isGenreFilterActive}>
-                        <input type="hidden" name="genre-filter" value=${publications.pageInfo.genreFilter}>
-                        <input type="hidden" name="book-state-filter" value=${publications.pageInfo.bookStateFilter}>
+                        <input type="hidden" name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}">
+                        <input type="hidden" name="is-genre-filter-active" value=${publications.metadata.isGenreFilterActive}>
+                        <input type="hidden" name="genre-filter" value=${publications.metadata.genreFilter}>
+                        <input type="hidden" name="book-state-filter" value=${publications.metadata.bookStateFilter}>
                         <input type="hidden" name="search" value=""/>
 
                         <button type="submit" class="ui-search-button uk-button uk-button-default uk-button-small"
@@ -51,12 +51,12 @@
                 </c:if>
 
                 <!-- Esto tiene que aparecer solo si hay un filtro de BookState -->
-                <c:if test="${publications.pageInfo.isBookStateFilterActive}">
+                <c:if test="${publications.metadata.isBookStateFilterActive}">
                     <form action="<c:url value='' />" method="get">
                         <input type="hidden" name="is-book-state-filter-active" value="false">
-                        <input type="hidden" name="is-genre-filter-active" value=${publications.pageInfo.isGenreFilterActive}>
-                        <input type="hidden" name="genre-filter" value=${publications.pageInfo.genreFilter}>
-                        <input type="hidden" name="search" value="<c:out value='${publications.pageInfo.search}'/>"/>
+                        <input type="hidden" name="is-genre-filter-active" value=${publications.metadata.isGenreFilterActive}>
+                        <input type="hidden" name="genre-filter" value=${publications.metadata.genreFilter}>
+                        <input type="hidden" name="search" value="<c:out value='${publications.metadata.search}'/>"/>
 
                         <button type="submit" class="ui-search-button uk-button uk-button-default uk-button-small"
                                 title="BookStateRemove" uk-close-icon>
@@ -69,12 +69,12 @@
                 </c:if>
 
                 <!-- Esto tiene que aparecer solo si hay un filtro de Genero -->
-                <c:if test="${publications.pageInfo.isGenreFilterActive}">
+                <c:if test="${publications.metadata.isGenreFilterActive}">
                     <form action="<c:url value='' />" method="get">
                         <input type="hidden" name="is-genre-filter-active" value="false">
-                        <input type="hidden" name="is-book-state-filter-active" value=${publications.pageInfo.isBookStateFilterActive}>
-                        <input type="hidden" name="book-state-filter" value=${publications.pageInfo.bookStateFilter}>
-                        <input type="hidden" name="search" value="<c:out value='${publications.pageInfo.search}'/>">
+                        <input type="hidden" name="is-book-state-filter-active" value=${publications.metadata.isBookStateFilterActive}>
+                        <input type="hidden" name="book-state-filter" value=${publications.metadata.bookStateFilter}>
+                        <input type="hidden" name="search" value="<c:out value='${publications.metadata.search}'/>">
 
                         <button type="submit"
                                 class="uk-inline uk-search-button uk-button uk-button-default uk-button-small"
@@ -87,18 +87,18 @@
                     </form>
                 </c:if>
 
-                <c:if test="${!publications.pageInfo.isBookStateFilterActive}">
+                <c:if test="${!publications.metadata.isBookStateFilterActive}">
                     <h3><spring:message code="filter.condition"/></h3>
                     <ul class="uk-list">
-                        <c:forEach var="bookStateWrapper" items="${publications.pageInfo.bookStateWrapperList}">
+                        <c:forEach var="bookStateWrapper" items="${publications.metadata.bookStateWrapperList}">
                             <li class="ui-search-filter-container">
                                 <form action="<c:url value='' />" method="get">
-                                    <input type="hidden" name="search" value="<c:out value='${publications.pageInfo.search}'/>">
+                                    <input type="hidden" name="search" value="<c:out value='${publications.metadata.search}'/>">
                                     <input type="hidden" name="is-book-state-filter-active" value='true'>
                                     <input type="hidden" name="book-state-filter"
                                            value="${bookStateWrapper.bookState}">
-                                    <input type="hidden" name="is-genre-filter-active" value="${publications.pageInfo.isGenreFilterActive}">
-                                    <input type="hidden" name="genre-filter" value="${publications.pageInfo.genreFilter}">
+                                    <input type="hidden" name="is-genre-filter-active" value="${publications.metadata.isGenreFilterActive}">
+                                    <input type="hidden" name="genre-filter" value="${publications.metadata.genreFilter}">
 
 
                                     <a href="#" class="uk-inline uk-search-button uk-button-link" title="BookStateFilterRemove" onclick="this.closest('form').submit(); return false;">
@@ -119,16 +119,16 @@
                     </ul>
                 </c:if>
 
-                <c:if test="${!publications.pageInfo.isGenreFilterActive}">
+                <c:if test="${!publications.metadata.isGenreFilterActive}">
                     <h3><spring:message code="filter.genre"/></h3>
                     <ul class="uk-list">
-                        <c:forEach var="genreWrapper" items="${publications.pageInfo.genreWrapperList}">
+                        <c:forEach var="genreWrapper" items="${publications.metadata.genreWrapperList}">
                             <li class="ui-search-filter-container">
                                 <form action="<c:url value='' />" method="get">
                                     <input type="hidden" name="genre-filter" value="${genreWrapper.genre}">
                                     <input type="hidden" name="is-genre-filter-active" value="true">
-                                    <input type="hidden" name="book-state-filter" value="${publications.pageInfo.bookStateFilter}">
-                                    <input type="hidden" name="is-book-state-filter-active" value="${publications.pageInfo.isBookStateFilterActive}">
+                                    <input type="hidden" name="book-state-filter" value="${publications.metadata.bookStateFilter}">
+                                    <input type="hidden" name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}">
                                     <input type="hidden" name="search" value="<c:out value='${param.search}'/>"/>
 
 <%--                                    <button type="submit"--%>
@@ -151,12 +151,12 @@
             </div>
 
             <div class="uk-width-3-4@s col-content">
+                    <h5 class="uk-text-large mt-1"><spring:message code="publications.list.available"/></h5>
                 <div class="uk-card uk-card-default uk-card-body uk-margin-bottom mt-1 uk-border-rounded uk-border-rounded-medium">
-                    <h5 class="uk-text-large"><spring:message code="publications.list.available"/></h5>
-                    <h6 class="uk-text-muted"><spring:message code="publications.list.select"/></h6>
+<%--                    <h6 class="uk-text-muted"><spring:message code="publications.list.select"/></h6>--%>
                 </div>
 
-                <div class="uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m mb-1" uk-grid>
+                <div class="uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m mb-1 mt-1" uk-grid>
                     <c:forEach var="card" items="${publications.data}">
                         <div>
                             <a href="<c:url value='publications/${card.publicationId}'>
@@ -188,49 +188,54 @@
                 </div>
                 <hr class="uk-divider-icon">
 
-                <nav aria-label="Pagination">
-                    <ul class="uk-pagination uk-flex-center" uk-margin>
+                <nav aria-label="Pagination" class="uk-position-relative uk-margin">
+                    <!-- Paginación centrada -->
+                    <ul class="uk-pagination uk-flex-center uk-position-center">
                         <!-- Botón Previous (solo mostrar si currentPage > 0) -->
-                        <c:if test="${publications.pageInfo.currentPage > 0}">
+                        <c:if test="${publications.metadata.currentPage > 0}">
                             <li>
-                                <a href="?page=${publications.pageInfo.currentPage - 1}">
+                                <a href="?page=${publications.metadata.currentPage - 1}">
                                     <span uk-pagination-previous></span>
                                 </a>
                             </li>
                         </c:if>
 
                         <!-- Página anterior (mostrar si currentPage > 0) -->
-                        <c:if test="${publications.pageInfo.currentPage > 0}">
+                        <c:if test="${publications.metadata.currentPage > 0}">
                             <li>
-                                <a href="?page=${publications.pageInfo.currentPage - 1}">
-                                        ${publications.pageInfo.currentPage} <!-- Mostrar página anterior -->
+
+                                <a href="?page=${publications.metadata.currentPage - 1}">
+                                        ${publications.metadata.currentPage} <!-- Mostrar página anterior -->
                                 </a>
                             </li>
                         </c:if>
 
                         <!-- Página actual (siempre visible y centrada) -->
                         <li class="uk-active">
-                            <span aria-current="page">${publications.pageInfo.currentPage + 1}</span>
+                            <span aria-current="page">${publications.metadata.currentPage + 1}</span>
                         </li>
 
                         <!-- Página siguiente (mostrar si currentPage < maxPage) -->
-                        <c:if test="${publications.pageInfo.currentPage < publications.pageInfo.maxPage}">
+                        <c:if test="${publications.metadata.currentPage < publications.metadata.maxPage}">
                             <li>
-                                <a href="?page=${publications.pageInfo.currentPage + 1}">
-                                        ${publications.pageInfo.currentPage + 2} <!-- Mostrar página siguiente -->
+                                <a href="?page=${publications.metadata.currentPage + 1}">
+                                        ${publications.metadata.currentPage + 2} <!-- Mostrar página siguiente -->
                                 </a>
                             </li>
                         </c:if>
 
                         <!-- Botón Next (solo mostrar si currentPage < maxPage) -->
-                        <c:if test="${publications.pageInfo.currentPage < publications.pageInfo.maxPage}">
+                        <c:if test="${publications.metadata.currentPage < publications.metadata.maxPage}">
                             <li>
-                                <a href="?page=${publications.pageInfo.currentPage + 1}">
+                                <a href="?page=${publications.metadata.currentPage + 1}">
                                     <span uk-pagination-next></span>
                                 </a>
                             </li>
                         </c:if>
                     </ul>
+
+                    <!-- Botón "Ir al inicio" alineado a la derecha -->
+                    <a href="" uk-totop uk-scroll class="uk-position-right uk-margin-right"></a>
                 </nav>
             </div>
         </div>

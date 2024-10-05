@@ -26,14 +26,14 @@
         <div class="uk-grid ml-1 uk-margin-top" uk-grid>
             <div class="uk-width-1-4@s filter-section uk-border-rounded uk-box-shadow-small mt-1 mb-1">
                 <h2>
-                    <c:out value="${modelBooks.pageInfo.search}"/>
+                    <c:out value="${modelBooks.metadata.search}"/>
                 </h2>
 
                 <!-- Esto tiene que aparecer solo si hay algo buscado -->
                 <c:if test="${not empty param.search}">
                     <form action="<c:url value='' />" method="get">
-                        <input type="hidden" name="is-genre-filter-active" value=${modelBooks.pageInfo.isGenreFilterActive}>
-                        <input type="hidden" name="genre-filter" value=${modelBooks.pageInfo.genreFilter}>
+                        <input type="hidden" name="is-genre-filter-active" value=${modelBooks.metadata.isGenreFilterActive}>
+                        <input type="hidden" name="genre-filter" value=${modelBooks.metadata.genreFilter}>
                         <input type="hidden" name="search" value=""/>
 
                         <button type="submit" class="ui-search-button uk-button uk-button-default uk-button-small"
@@ -46,10 +46,10 @@
                     </form>
                 </c:if>
 
-                <c:if test="${modelBooks.pageInfo.isGenreFilterActive}">
+                <c:if test="${modelBooks.metadata.isGenreFilterActive}">
                     <form action="<c:url value='' />" method="get">
                         <input type="hidden" name="is-genre-filter-active" value="false">
-                        <input type="hidden" name="search" value="<c:out value='${modelBooks.pageInfo.search}'/>">
+                        <input type="hidden" name="search" value="<c:out value='${modelBooks.metadata.search}'/>">
 
                         <button type="submit"
                                 class="uk-inline uk-search-button uk-button uk-button-default uk-button-small"
@@ -62,15 +62,15 @@
                     </form>
                 </c:if>
 
-                <c:if test="${!modelBooks.pageInfo.isGenreFilterActive}">
+                <c:if test="${!modelBooks.metadata.isGenreFilterActive}">
                     <h3><spring:message code="filter.genre"/></h3>
                     <ul class="uk-list">
-                        <c:forEach var="genreWrapper" items="${modelBooks.pageInfo.genreWrapperList}">
+                        <c:forEach var="genreWrapper" items="${modelBooks.metadata.genreWrapperList}">
                             <li class="ui-search-filter-container">
                                 <form action="<c:url value='' />" method="get">
                                     <input type="hidden" name="genre-filter" value="${genreWrapper.genre}">
                                     <input type="hidden" name="is-genre-filter-active" value="true">
-                                    <input type="hidden" name="search" value="<c:out value='${modelBooks.pageInfo.search}'/>"/>
+                                    <input type="hidden" name="search" value="<c:out value='${modelBooks.metadata.search}'/>"/>
 
                                     <a href="#" class="uk-inline uk-search-button uk-button-link" title="GenreFilterRemove" onclick="this.closest('form').submit(); return false;">
                                         <span class="ui-search-filter-name">
@@ -166,41 +166,41 @@
                 <nav aria-label="Pagination">
                     <ul class="uk-pagination uk-flex-center" uk-margin>
                         <!-- Botón Previous (solo mostrar si currentPage > 0) -->
-                        <c:if test="${modelBooks.pageInfo.currentPage > 0}">
+                        <c:if test="${modelBooks.metadata.currentPage > 0}">
                             <li>
-                                <a href="?page=${modelBooks.pageInfo.currentPage - 1}">
+                                <a href="?page=${modelBooks.metadata.currentPage - 1}">
                                     <span uk-pagination-previous></span>
                                 </a>
                             </li>
                         </c:if>
 
                         <!-- Página anterior (mostrar si currentPage > 0) -->
-                        <c:if test="${modelBooks.pageInfo.currentPage > 0}">
+                        <c:if test="${modelBooks.metadata.currentPage > 0}">
                             <li>
-                                <a href="?page=${modelBooks.pageInfo.currentPage - 1}">
-                                        ${modelBooks.pageInfo.currentPage} <!-- Mostrar página anterior -->
+                                <a href="?page=${modelBooks.metadata.currentPage - 1}">
+                                        ${modelBooks.metadata.currentPage} <!-- Mostrar página anterior -->
                                 </a>
                             </li>
                         </c:if>
 
                         <!-- Página actual (siempre visible y centrada) -->
                         <li class="uk-active">
-                            <span aria-current="page">${modelBooks.pageInfo.currentPage + 1}</span>
+                            <span aria-current="page">${modelBooks.metadata.currentPage + 1}</span>
                         </li>
 
                         <!-- Página siguiente (mostrar si currentPage < maxPage) -->
-                        <c:if test="${modelBooks.pageInfo.currentPage < modelBooks.pageInfo.maxPage}">
+                        <c:if test="${modelBooks.metadata.currentPage < modelBooks.metadata.maxPage}">
                             <li>
-                                <a href="?page=${modelBooks.pageInfo.currentPage + 1}">
-                                        ${modelBooks.pageInfo.currentPage + 2} <!-- Mostrar página siguiente -->
+                                <a href="?page=${modelBooks.metadata.currentPage + 1}">
+                                        ${modelBooks.metadata.currentPage + 2} <!-- Mostrar página siguiente -->
                                 </a>
                             </li>
                         </c:if>
 
                         <!-- Botón Next (solo mostrar si currentPage < maxPage) -->
-                        <c:if test="${modelBooks.pageInfo.currentPage < modelBooks.pageInfo.maxPage}">
+                        <c:if test="${modelBooks.metadata.currentPage < modelBooks.metadata.maxPage}">
                             <li>
-                                <a href="?page=${modelBooks.pageInfo.currentPage + 1}">
+                                <a href="?page=${modelBooks.metadata.currentPage + 1}">
                                     <span uk-pagination-next></span>
                                 </a>
                             </li>
