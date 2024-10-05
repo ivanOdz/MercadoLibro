@@ -99,14 +99,13 @@
                                             </div>
                                         </div>
 
-                                        <div style="width: 40%; margin-bottom: 25px">
-                                                <span class="uk-badge state-pending">
+                                        <div style="width: 40%; margin-bottom: 25px; display: grid; justify-items: center;">
+                                        <span style="width: 20%" class="uk-badge state-pending">
                                                     <spring:message
                                                             code="exchange.status.pending"/>
                                                 </span>
-                                            <fmt:formatDate
-                                                    value="${pending.exchangeStartDate}"
-                                                    pattern="dd/MM/yyyy"/>
+                                            <spring:message code="date.format" var="dateFormat"/>
+                                            <fmt:formatDate value="${pending.exchangeStartDate}" pattern="${dateFormat}"/>
                                         </div>
                                     </div>
                                 </c:forEach>
@@ -309,10 +308,8 @@
                                         <div style="width: 40%; margin-bottom: 25px">
                                             <span class="uk-badge state-rejected"><spring:message
                                                     code="exchange.status.rejected"/></span>
-                                            <fmt:formatDate
-                                                    value="${rejected.exchangeStartDate}"
-                                                    pattern="dd/MM/yyyy"/>
-                                        </div>
+                                                <fmt:formatDate value="${rejected.exchangeStartDate}" pattern="dd/MM/yyyy"/>
+                                                                               </div>
                                     </div>
                                 </c:forEach>
                             </c:if>
@@ -352,7 +349,7 @@
                                 <div class="uk-modal-dialog uk-modal-body">
                                     <h2 class="uk-modal-title"><spring:message code="exchange.add_review.title"/></h2>
 
-                                    <form:form action="/submitReview" method="post" modelAttribute="review">
+                                    <form:form action="/submitReview" method="post" modelAttribute="userReviewForm">
 
                                         <div class="form-group uk-margin-top uk-margin-bottom">
                                             <label><spring:message code="review.rating.label"/></label>
@@ -394,8 +391,8 @@
                                         </div>
 
                                         <form:hidden path="exchangeId"/>
-                                        <form:hidden path="reviewerId"/>
-                                        <form:hidden path="subjectId"/>
+<%--                                        <form:hidden path="reviewerId"/>--%>
+<%--                                        <form:hidden path="subjectId"/>--%>
 
                                         <p class="uk-text-right">
                                             <button class="uk-button uk-button-default uk-modal-close" type="button">

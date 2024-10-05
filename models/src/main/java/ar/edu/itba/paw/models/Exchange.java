@@ -14,11 +14,12 @@ public class Exchange {
     private final boolean offererReceivedBook;
     private final boolean requesterReceivedBook;
     private Timestamp exchangeStartDate;
+
     private Timestamp exchangeEndDate;
 
     private final boolean isReviewable;
 
-    public Exchange(long exchangeId, Publication offerer, Publication requester, ExchangeState state, long acceptCode, boolean offererReceivedBook, boolean requesterReceivedBook) {
+    public Exchange(long exchangeId, Publication offerer, Publication requester, ExchangeState state, long acceptCode, boolean offererReceivedBook, boolean requesterReceivedBook, Timestamp exchangeStartDate, Timestamp exchangeEndDate) {
         this.exchangeId = exchangeId;
         this.offerer = offerer;
         this.requester = requester;
@@ -27,6 +28,16 @@ public class Exchange {
         this.offererReceivedBook = offererReceivedBook;
         this.requesterReceivedBook = requesterReceivedBook;
         this.isReviewable = state.getValue() != ExchangeState.REJECTED.getValue() && state.getValue() != ExchangeState.PENDING.getValue();
+        this.exchangeStartDate = exchangeStartDate;
+        this.exchangeEndDate = exchangeEndDate;
+    }
+
+    public ExchangeState getState() {
+        return state;
+    }
+
+    public boolean isReviewable() {
+        return isReviewable;
     }
 
     public boolean getIsReviewable() {
@@ -72,8 +83,6 @@ public class Exchange {
     public ExchangeState getExchangeState() {
         return state;
     }
-
-
 }
 
 

@@ -413,7 +413,7 @@
                                 <h2 class="uk-modal-title"><spring:message
                                         code="exchange.add_review.title"/></h2>
 
-                                <form:form action="/submitReview" method="post" modelAttribute="review">
+                                <form:form action="/submitReview" method="post" modelAttribute="userReviewForm">
 
                                     <div class="form-group uk-margin-top uk-margin-bottom">
                                         <label><spring:message code="review.rating.label"/></label>
@@ -454,9 +454,9 @@
                                         <form:textarea path="reviewDescription" rows="4" class="uk-textarea"/>
                                     </div>
 
-                                    <form:hidden path="exchangeId"/>
-                                    <form:hidden path="reviewerId"/>
-                                    <form:hidden path="subjectId"/>
+<%--                                    <form:hidden path="exchangeId"/>--%>
+<%--                                    <form:hidden path="reviewerId"/>--%>
+<%--                                    <form:hidden path="subjectId"/>--%>
 
                                     <p class="uk-text-right">
                                         <button class="uk-button uk-button-default uk-modal-close" type="button">

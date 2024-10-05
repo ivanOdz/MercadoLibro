@@ -150,7 +150,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
                 Publication offererPub = ROW_MAPPER_PUBLICATION.mapRow(rs, rowNum);
                 Publication requesterPub = ROW_MAPPER_PUBLICATION_REQUEST.mapRow(rs, rowNum);
                 ExchangeState exchangeState = ExchangeState.fromInt(rs.getInt("exchangeState"));
-                return new Exchange(rs.getLong("exchangeId"), offererPub, requesterPub, exchangeState, rs.getLong("acceptCode"), rs.getBoolean("offererReceivedBook"), rs.getBoolean("requesterReceivedBook"));
+                return new Exchange(rs.getLong("exchangeId"), offererPub, requesterPub, exchangeState, rs.getLong("acceptCode"), rs.getBoolean("offererReceivedBook"), rs.getBoolean("requesterReceivedBook"), rs.getTimestamp("exchangeStartDate"), rs.getTimestamp("exchangeEndDate"));
             };
 
     public ExchangeJdbcDao(final DataSource ds) {

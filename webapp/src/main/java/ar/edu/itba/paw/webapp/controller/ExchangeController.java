@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 
 import ar.edu.itba.paw.webapp.form.ExchangeForm;
+import ar.edu.itba.paw.webapp.form.UserReviewForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ public class ExchangeController {
     // Requests (osea peticiones que me hacen a mi)
     // Paso el ID, y quiero aquellas exchanges en las que soy offerer
     @RequestMapping("/offers")
-    public ModelAndView exchangeRequests(@RequestParam(name = "exchange-state", defaultValue = "PENDING") ExchangeState exchangeState) {
+    public ModelAndView exchangeRequests() {
         final ModelAndView mav = new ModelAndView("exchange/exchange_requests");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -61,7 +62,7 @@ public class ExchangeController {
             mav.addObject("inProgress", inProcessExchanges);
             mav.addObject("completed", completedExchanges);
             mav.addObject("rejected", rejectedExchanges);
-            mav.addObject("review", new UserReview(0, null, null, null, null, null, 0));
+            mav.addObject("userReviewForm", new UserReviewForm());
             User loggedUser = pud.getUser();
             mav.addObject("loggedUser", loggedUser);
         }
@@ -73,8 +74,9 @@ public class ExchangeController {
     // Estado de mis ofertas
     // Paso el ID, y quiero aquellas exchanges en las que soy requester
     @RequestMapping(path = "/requests", method = RequestMethod.GET)
-    public ModelAndView exchangeOffers(@RequestParam(name = "exchange-state", defaultValue = "PENDING") ExchangeState exchangeState) {   // TODO: VALOR DE EXCHANGEsTATE
+    public ModelAndView exchangeOffers() {
         final ModelAndView mav = new ModelAndView("exchange/exchange_offers");
+
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getPrincipal() instanceof PawUserDetails pud) {
@@ -89,7 +91,7 @@ public class ExchangeController {
             mav.addObject("rejected", rejectedExchanges);
             User loggedUser = pud.getUser();
             mav.addObject("loggedUser", loggedUser);
-            mav.addObject("review", new UserReview(0, null, null, null, null, null, 0));
+            mav.addObject("userReviewForm", new UserReviewForm());
         }
 
         return mav;
@@ -135,7 +137,7 @@ public class ExchangeController {
         if (authentication.getPrincipal() instanceof PawUserDetails pud
                 && exchange.getOfferer().getBook().getOwner().getUserId() == pud.getUser().getUserId()) {
             exchangeService.cofirmOfferer(accept_code);
-            return exchangeRequests(exchange.getExchangeState());
+            return exchangeRequests();
         }
 
         return new ModelAndView("redirect:/failed_authentication");
@@ -159,7 +161,7 @@ public class ExchangeController {
         if (authentication.getPrincipal() instanceof PawUserDetails pud
                 && exchange.getRequester().getBook().getOwner().getUserId() == pud.getUser().getUserId()) {
             exchangeService.cofirmRequester(accept_code);
-            return exchangeRequests(exchange.getExchangeState());
+            return exchangeRequests();
         }
 
         return mav;
