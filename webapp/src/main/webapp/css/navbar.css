@@ -116,6 +116,12 @@
     height: 12%;
 }
 
+.nav-empty-container {
+    padding: 1px;
+    margin: 0;
+    height: 12%;
+}
+
 .button-text-wo {
     color: black;
     font-size: 14px;
