@@ -34,13 +34,13 @@
           <li>
             <a class="right-icons-nav pl-1 pr-1" href="${exchangeRequestsUrl}"><spring:message code="home.exchange.view"/></a>
             <div class="uk-navbar-dropdown">
-              <ul class="uk-nav uk-navbar-dropdown-nav">
-                <li>
+              <ul class="uk-nav uk-navbar-dropdown-nav column">
+                <li class="uk-active uk-margin-small-top">
                   <a class="dropdown-wo-buttons" href="${exchangeRequestsUrl}">
                     <spring:message  code="home.exchange.requests"/>
                   </a>
                 </li>
-                <li>
+                <li class="uk-margin-small-top">
                   <a class="dropdown-wo-buttons" href="${exchangeOffersUrl}">
                       <spring:message code="home.exchange.offers"/>
                   </a>
@@ -54,18 +54,18 @@
               <spring:message code="home.book.view"/>
             </a>
             <div class="uk-navbar-dropdown">
-              <ul class="uk-nav uk-navbar-dropdown-nav">
-                <li>
+              <ul class="uk-nav uk-navbar-dropdown-nav column">
+                <li class="uk-active uk-margin-small-top">
                   <a class="dropdown-wo-buttons" href="${booksUrl}">
                     <spring:message code="home.book.view.books"/>
                   </a>
                 </li>
-                <li>
+                <li class="uk-margin-small-top">
                   <a class="dropdown-wo-buttons" href="${newBookFromScratch}">
                     <spring:message code="home.book.view.uploadnew"/>
                   </a>
                 </li>
-                <li>
+                <li class="uk-margin-small-top">
                   <a  class="dropdown-wo-buttons" href="${uploadNewPrecharged}">
                     <spring:message code="home.book.view.uploadnewprecharged"/>
                   </a>
