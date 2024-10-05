@@ -48,4 +48,9 @@ public class PublicationServiceImpl implements PublicationService {
     public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, SortType sortType, int currentPage) {
         return pubDao.getPaginatedPublications(search, isBookStateFilterActive, bookStateFilter, isGenreFilterActive, genreFilter, sortType, currentPage);
     }
+
+    @Override
+    public int getPublicationCountByUserId(long userId) {
+        return pubDao.getPublicationCountByUserId(userId);
+    }
 }
