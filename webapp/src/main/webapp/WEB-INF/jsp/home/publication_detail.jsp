@@ -263,59 +263,36 @@
                     <spring:message code="exchange.description2"/></p>
             </div>
             <div>
-                <button class="uk-button uk-button-primary" uk-toggle="target: #exchange-modal"
-                        style="margin-left: 3lh;">
-                    <spring:message code="add.exchange.submit"/>
-                </button>
+                <%-- if they dont have books than open the modal --%>
+                <c:if test="${empty availableBooks}">
+                    <button class="uk-button uk-button-primary" uk-toggle="target: #exchange-modal"
+                            style="margin-left: 3lh;">
+                        <spring:message code="add.exchange.submit"/>
+                    </button>
+                </c:if>
+                <c:if test="${not empty availableBooks}">
+                    <button type="submit" class="uk-button uk-button-primary" style="margin-left: 3lh;">
+                        <a class="button-text" href="${pageContext.request.contextPath}/start_exchange?publication_id=${publication.publicationId}">
+                            <spring:message code="add.exchange.submit"/>
+                        </a>
+                    </button>
+                </c:if>
             </div>
 
             <div id="exchange-modal" uk-modal>
                 <div class="uk-modal-dialog uk-modal-body">
                     <button class="uk-modal-close-default" type="button" uk-close></button>
 
-                    <label class="form-group" style="margin-left: 10px;">
+                    <label class="form-group" style="margin-bottom: 2%;">
                         <spring:message code="book.set.book"/>
                     </label>
 
-                    <c:if test="${not empty availableBooks}">
-                        <div class="uk-container uk-margin-top">
-                            <form:form id="exchangeForm"
-                                       action="${pageContext.request.contextPath}/exchange/initializeexchange"
-                                       method="post" modelAttribute="exchangeForm" enctype="multipart/form-data"
-                                       onsubmit="return validateForm()">
-                                <div class="uk-margin">
-                                    <div class="uk-form-controls">
-                                        <form:select path="bookId" cssClass="uk-select">
-                                            <c:forEach var="availableBook" items="${availableBooks}">
-                                                <form:option value="${availableBook.bookId}">
-                                                    <c:out value='${availableBook.bookModel.title}'/>
-                                                </form:option>
-                                            </c:forEach>
-                                        </form:select>
-                                    </div>
-                                </div>
-                                <div class="uk-inline">
-                                    <label class="form-group">
-                                        <spring:message code="book.set.location"/>
-                                        <form:input path="location" type="text" class="uk-input" id="locationField"/>
-                                    </label>
-                                </div>
-                                <div class="form-container" style="margin-top: 5%; margin-left: 35%;">
-                                    <input type="hidden" name="publicationId" value="${publication.publicationId}">
-                                    <button type="submit" class="uk-button uk-button-primary">
-                                        <spring:message code="add.exchange.submit"/>
-                                    </button>
-                                </div>
-                            </form:form>
-                        </div>
-                    </c:if>
-                    <c:if test="${empty availableBooks}">
-                        <button class="uk-button uk-button-primary">
-                            <a class="button-text" href="${pageContext.request.contextPath}/book/book_models">
-                                <spring:message code="add.book.missing"/>
-                            </a>
-                        </button>
-                    </c:if>
+                    <button class="uk-button uk-button-primary">
+                        <a class="button-text" href="${pageContext.request.contextPath}/book/book_models">
+                            <spring:message code="add.book.missing"/>
+                        </a>
+                    </button>
+
                 </div>
             </div>
         </div>
