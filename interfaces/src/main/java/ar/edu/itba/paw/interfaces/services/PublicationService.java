@@ -22,4 +22,6 @@ public interface PublicationService {
     Publication getPublicationByPublicationId(long publicationId);
 
     PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, SortType sortType, int currentPage);
+
+    int getPublicationCountByUserId(long userId);
 }

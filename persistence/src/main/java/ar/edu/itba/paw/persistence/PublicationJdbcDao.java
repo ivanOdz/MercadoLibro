@@ -196,6 +196,12 @@ public class PublicationJdbcDao implements PublicationDao {
         return new PaginatedResponse<>(data, new ItemFilterMetadata(currentPage, totalResults, search, isGenreFilterActive, genreFilter, sortType, genreWrapperList, isBookStateFilterActive, bookStateFilter, bookStateWrapperList));
     }
 
+    @Override
+    public int getPublicationCountByUserId(long userId) {
+        String sql = "SELECT COUNT(*) FROM publication WHERE userId = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{userId}, Integer.class);
+    }
+
     private List<GenreWrapper> getGenreQtyByBook(String search, boolean isBookStateFilterActive, BookState bookStateFilter) {
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT bm.genre, COUNT(*) AS genreCount " +

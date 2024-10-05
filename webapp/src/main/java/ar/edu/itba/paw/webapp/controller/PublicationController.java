@@ -115,6 +115,11 @@ public ModelAndView publicationDetail(@PathVariable(name = "publication_id") lon
     return mav;
 }
 
+    @RequestMapping(path = "/user_auth")
+    public ModelAndView forceUserAuth() {
+        return new ModelAndView("/user/demand_auth");
+    }
+
 // Esto tienen que volar
     /*@RequestMapping("/submitmail")
     public ModelAndView submitMail(@RequestParam(name = "publication_id") long publicationId) {
