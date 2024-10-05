@@ -170,7 +170,7 @@
                     <div class="uk-margin-top uk-margin-bottom" style="margin-bottom: 10px">
                         <label class="form-group">
                             <spring:message code="add.publication.description"/>
-                            <form:textarea path="description" class="uk-textarea uk-height-small"/>
+                            <form:textarea path="description" class="uk-textarea" style="min-width: 100%; min-height: 2.5rem; max-height: 30rem; height:10rem"/>
                         </label>
                         <form:errors path="description" element="p" cssStyle="color: red;"/>
                         <small class="description">
