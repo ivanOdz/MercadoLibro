@@ -189,45 +189,98 @@
                 <hr class="uk-divider-icon">
 
                 <nav aria-label="Pagination" class="uk-position-relative uk-margin">
-                    <!-- Paginación centrada -->
                     <ul class="uk-pagination uk-flex-center uk-position-center">
-                        <!-- Botón Previous (solo mostrar si currentPage > 0) -->
+
+                        <!-- Botón Previous -->
                         <c:if test="${publications.metadata.currentPage > 0}">
                             <li>
-                                <a href="?page=${publications.metadata.currentPage - 1}">
+                                <c:url var="prevPageUrl" value="">
+                                    <c:param name="page" value="${publications.metadata.currentPage - 1}" />
+                                    <c:param name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}" />
+                                    <c:param name="is-genre-filter-active" value="${publications.metadata.isGenreFilterActive}" />
+                                    <c:param name="genre-filter" value="${publications.metadata.genreFilter}" />
+                                    <c:param name="book-state-filter" value="${publications.metadata.bookStateFilter}" />
+                                    <c:param name="search" value="${publications.metadata.search}" />
+                                    <c:param name="sort-type" value="${publications.metadata.sortType}" />
+                                </c:url>
+                                <a href="${prevPageUrl}">
                                     <span uk-pagination-previous></span>
+                                    Anterior
                                 </a>
                             </li>
                         </c:if>
 
-                        <!-- Página anterior (mostrar si currentPage > 0) -->
-                        <c:if test="${publications.metadata.currentPage > 0}">
+                        <!-- Botón de la primera página -->
+                        <c:if test="${publications.metadata.currentPage > 1}">
                             <li>
-
-                                <a href="?page=${publications.metadata.currentPage - 1}">
-                                        ${publications.metadata.currentPage} <!-- Mostrar página anterior -->
-                                </a>
+                                <c:url var="firstPageUrl" value="">
+                                    <c:param name="page" value="0" />
+                                    <c:param name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}" />
+                                    <c:param name="is-genre-filter-active" value="${publications.metadata.isGenreFilterActive}" />
+                                    <c:param name="genre-filter" value="${publications.metadata.genreFilter}" />
+                                    <c:param name="book-state-filter" value="${publications.metadata.bookStateFilter}" />
+                                    <c:param name="search" value="${publications.metadata.search}" />
+                                    <c:param name="sort-type" value="${publications.metadata.sortType}" />
+                                </c:url>
+                                <a href="${firstPageUrl}">1</a>
                             </li>
                         </c:if>
 
-                        <!-- Página actual (siempre visible y centrada) -->
-                        <li class="uk-active">
-                            <span aria-current="page">${publications.metadata.currentPage + 1}</span>
-                        </li>
+                        <c:if test="${publications.metadata.currentPage - 2 > 0}">
+                            <li><span>...</span></li>
+                        </c:if>
 
-                        <!-- Página siguiente (mostrar si currentPage < maxPage) -->
+                        <!-- Páginas centrales -->
+                        <c:forEach var="i" begin="${publications.metadata.currentPage > 0 ? publications.metadata.currentPage - 1 : 0}"
+                                   end="${publications.metadata.currentPage + 1 <= publications.metadata.maxPage ? publications.metadata.currentPage + 1 : publications.metadata.maxPage}">
+                            <li class="${i == publications.metadata.currentPage ? 'uk-active' : ''}">
+                                <c:url var="centralPageUrl" value="">
+                                    <c:param name="page" value="${i}" />
+                                    <c:param name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}" />
+                                    <c:param name="is-genre-filter-active" value="${publications.metadata.isGenreFilterActive}" />
+                                    <c:param name="genre-filter" value="${publications.metadata.genreFilter}" />
+                                    <c:param name="book-state-filter" value="${publications.metadata.bookStateFilter}" />
+                                    <c:param name="search" value="${publications.metadata.search}" />
+                                    <c:param name="sort-type" value="${publications.metadata.sortType}" />
+                                </c:url>
+                                <a href="${centralPageUrl}">${i + 1}</a> <!-- Mostrar i + 1 para la numeración -->
+                            </li>
+                        </c:forEach>
+
+                        <c:if test="${publications.metadata.currentPage + 2 < publications.metadata.maxPage}">
+                            <li><span>...</span></li>
+                        </c:if>
+
+                        <!-- Botón de la última página -->
+                        <c:if test="${publications.metadata.currentPage + 1 < publications.metadata.maxPage}">
+                            <li>
+                                <c:url var="lastPageUrl" value="">
+                                    <c:param name="page" value="${publications.metadata.maxPage}" />
+                                    <c:param name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}" />
+                                    <c:param name="is-genre-filter-active" value="${publications.metadata.isGenreFilterActive}" />
+                                    <c:param name="genre-filter" value="${publications.metadata.genreFilter}" />
+                                    <c:param name="book-state-filter" value="${publications.metadata.bookStateFilter}" />
+                                    <c:param name="search" value="${publications.metadata.search}" />
+                                    <c:param name="sort-type" value="${publications.metadata.sortType}" />
+                                </c:url>
+                                <a href="${lastPageUrl}">${publications.metadata.maxPage + 1}</a> <!-- Mostrar maxPage + 1 -->
+                            </li>
+                        </c:if>
+
+                        <!-- Botón Next -->
                         <c:if test="${publications.metadata.currentPage < publications.metadata.maxPage}">
                             <li>
-                                <a href="?page=${publications.metadata.currentPage + 1}">
-                                        ${publications.metadata.currentPage + 2} <!-- Mostrar página siguiente -->
-                                </a>
-                            </li>
-                        </c:if>
-
-                        <!-- Botón Next (solo mostrar si currentPage < maxPage) -->
-                        <c:if test="${publications.metadata.currentPage < publications.metadata.maxPage}">
-                            <li>
-                                <a href="?page=${publications.metadata.currentPage + 1}">
+                                <c:url var="nextPageUrl" value="">
+                                    <c:param name="page" value="${publications.metadata.currentPage + 1}" />
+                                    <c:param name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}" />
+                                    <c:param name="is-genre-filter-active" value="${publications.metadata.isGenreFilterActive}" />
+                                    <c:param name="genre-filter" value="${publications.metadata.genreFilter}" />
+                                    <c:param name="book-state-filter" value="${publications.metadata.bookStateFilter}" />
+                                    <c:param name="search" value="${publications.metadata.search}" />
+                                    <c:param name="sort-type" value="${publications.metadata.sortType}" />
+                                </c:url>
+                                <a href="${nextPageUrl}">
+                                    Siguiente
                                     <span uk-pagination-next></span>
                                 </a>
                             </li>
@@ -235,8 +288,11 @@
                     </ul>
 
                     <!-- Botón "Ir al inicio" alineado a la derecha -->
-                    <a href="" uk-totop uk-scroll class="uk-position-right uk-margin-right"></a>
+                    <a href="" uk-totop uk-scroll class="uk-position-right uk-margin-right">
+                        Back to top
+                    </a>
                 </nav>
+
             </div>
         </div>
     </div>
