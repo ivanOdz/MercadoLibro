@@ -1,13 +1,10 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.exceptions.BookModelCreationException;
-import ar.edu.itba.paw.interfaces.exceptions.base.BadRequestException;
 import ar.edu.itba.paw.interfaces.exceptions.base.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.BookModelDao;
 import ar.edu.itba.paw.interfaces.services.GenreService;
-import ar.edu.itba.paw.models.Book;
 import ar.edu.itba.paw.models.BookModel;
-import ar.edu.itba.paw.models.PageInfo;
 import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.BookModelMetadata;
