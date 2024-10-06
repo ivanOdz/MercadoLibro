@@ -327,14 +327,6 @@
     prevBtn.addEventListener('click', () => showImage(currentIndex - 1));
     nextBtn.addEventListener('click', () => showImage(currentIndex + 1));
 
-    function validateForm() {
-        const locationField = document.getElementById("locationField").value;
-        if (locationField.trim() === "") {
-            alert("Por favor, introduce una ubicación.");
-            return false;  // Evita el envío del formulario
-        }
-        return true;  // Permite el envío del formulario
-    }
 </script>
 
 </body>
