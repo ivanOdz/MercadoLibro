@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.models.utils.PublicationState;
+import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 
 import ar.edu.itba.paw.webapp.form.ExchangeForm;
@@ -53,25 +54,23 @@ public class ExchangeController {
     // Requests (osea peticiones que me hacen a mi)
     // Paso el ID, y quiero aquellas exchanges en las que soy offerer
     @RequestMapping("/offers")
-    public ModelAndView exchangeRequests() {
+    public ModelAndView exchangeRequests(@RequestParam(name = "pending-page", defaultValue = "0") int pendingPage,
+                                        @RequestParam(name = "in-progress-page", defaultValue = "0") int inProgressPage,
+                                        @RequestParam(name = "completed-page", defaultValue = "0") int completedPage,
+                                        @RequestParam(name = "rejected-page", defaultValue = "0") int rejectedPage) {
         final ModelAndView mav = new ModelAndView("exchange/exchange_requests");
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
+        User user = loggedUserAdvice.getLoggedUser();
+        PaginatedResponse<Exchange, BasicMetadata> pendingExchanges = exchangeService.getExchangeOffererListByUserId(user.getUserId(), pendingPage, ExchangeState.PENDING);
+        PaginatedResponse<Exchange, BasicMetadata> inProcessExchanges = exchangeService.getExchangeOffererListByUserId(user.getUserId(), inProgressPage, ExchangeState.ACCEPTED);
+        PaginatedResponse<Exchange, BasicMetadata> completedExchanges = exchangeService.getExchangeOffererListByUserId(user.getUserId(), completedPage, ExchangeState.TERMINATED);
+        PaginatedResponse<Exchange, BasicMetadata> rejectedExchanges = exchangeService.getExchangeOffererListByUserId(user.getUserId(), rejectedPage, ExchangeState.REJECTED);
 
-            List<Exchange> pendingExchanges = exchangeService.getExchangeOffererListByUserId(pud.getUser().getUserId(), ExchangeState.PENDING);
-            List<Exchange> inProcessExchanges = exchangeService.getExchangeOffererListByUserId(pud.getUser().getUserId(), ExchangeState.ACCEPTED);
-            List<Exchange> completedExchanges = exchangeService.getExchangeOffererListByUserId(pud.getUser().getUserId(), ExchangeState.TERMINATED);
-            List<Exchange> rejectedExchanges = exchangeService.getExchangeOffererListByUserId(pud.getUser().getUserId(), ExchangeState.REJECTED);
-
-            mav.addObject("pending", pendingExchanges);
-            mav.addObject("inProgress", inProcessExchanges);
-            mav.addObject("completed", completedExchanges);
-            mav.addObject("rejected", rejectedExchanges);
-            mav.addObject("userReviewForm", new UserReviewForm());
-            User loggedUser = pud.getUser();
-            mav.addObject("loggedUser", loggedUser);
-        }
+        mav.addObject("pending", pendingExchanges);
+        mav.addObject("inProgress", inProcessExchanges);
+        mav.addObject("completed", completedExchanges);
+        mav.addObject("rejected", rejectedExchanges);
+        mav.addObject("userReviewForm", new UserReviewForm());
 
         return mav;
     }
@@ -80,25 +79,23 @@ public class ExchangeController {
     // Estado de mis ofertas
     // Paso el ID, y quiero aquellas exchanges en las que soy requester
     @RequestMapping(path = "/requests", method = RequestMethod.GET)
-    public ModelAndView exchangeOffers() {
+    public ModelAndView exchangeOffers(@RequestParam(name = "pending-page", defaultValue = "0") int pendingPage,
+                                       @RequestParam(name = "in-progress-page", defaultValue = "0") int inProgressPage,
+                                       @RequestParam(name = "completed-page", defaultValue = "0") int completedPage,
+                                       @RequestParam(name = "rejected-page", defaultValue = "0") int rejectedPage) {
         final ModelAndView mav = new ModelAndView("exchange/exchange_offers");
 
+        User user = loggedUserAdvice.getLoggedUser();
+        PaginatedResponse<Exchange, BasicMetadata> pendingExchanges = exchangeService.getExchangeRequesterListByUserId(user.getUserId(), pendingPage, ExchangeState.PENDING);
+        PaginatedResponse<Exchange, BasicMetadata> inProcessExchanges = exchangeService.getExchangeRequesterListByUserId(user.getUserId(), inProgressPage, ExchangeState.ACCEPTED);
+        PaginatedResponse<Exchange, BasicMetadata> completedExchanges = exchangeService.getExchangeRequesterListByUserId(user.getUserId(), completedPage,ExchangeState.TERMINATED);
+        PaginatedResponse<Exchange, BasicMetadata> rejectedExchanges = exchangeService.getExchangeRequesterListByUserId(user.getUserId(), rejectedPage, ExchangeState.REJECTED);
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
-            List<Exchange> pendingExchanges = exchangeService.getExchangeRequesterListByUserId(pud.getUser().getUserId(), ExchangeState.PENDING);
-            List<Exchange> inProcessExchanges = exchangeService.getExchangeRequesterListByUserId(pud.getUser().getUserId(), ExchangeState.ACCEPTED);
-            List<Exchange> completedExchanges = exchangeService.getExchangeRequesterListByUserId(pud.getUser().getUserId(), ExchangeState.TERMINATED);
-            List<Exchange> rejectedExchanges = exchangeService.getExchangeRequesterListByUserId(pud.getUser().getUserId(), ExchangeState.REJECTED);
-
-            mav.addObject("pending", pendingExchanges);
-            mav.addObject("inProgress", inProcessExchanges);
-            mav.addObject("completed", completedExchanges);
-            mav.addObject("rejected", rejectedExchanges);
-            User loggedUser = pud.getUser();
-            mav.addObject("loggedUser", loggedUser);
-            mav.addObject("userReviewForm", new UserReviewForm());
-        }
+        mav.addObject("pending", pendingExchanges);
+        mav.addObject("inProgress", inProcessExchanges);
+        mav.addObject("completed", completedExchanges);
+        mav.addObject("rejected", rejectedExchanges);
+        mav.addObject("userReviewForm", new UserReviewForm());
 
         return mav;
     }
@@ -143,7 +140,7 @@ public class ExchangeController {
         if (authentication.getPrincipal() instanceof PawUserDetails pud
                 && exchange.getOfferer().getBook().getOwner().getUserId() == pud.getUser().getUserId()) {
             exchangeService.cofirmOfferer(accept_code);
-            return exchangeRequests();
+            return new ModelAndView("redirect:/offers");
         }
 
         return new ModelAndView("redirect:/failed_authentication");
@@ -167,7 +164,7 @@ public class ExchangeController {
         if (authentication.getPrincipal() instanceof PawUserDetails pud
                 && exchange.getRequester().getBook().getOwner().getUserId() == pud.getUser().getUserId()) {
             exchangeService.cofirmRequester(accept_code);
-            return exchangeRequests();
+            return new ModelAndView("redirect:/requests");
         }
 
         return mav;

@@ -3,17 +3,21 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.persistence.ExchangeDao;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
+import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import javax.swing.plaf.basic.BasicArrowButton;
 
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.*;
 
+import static ar.edu.itba.paw.models.utils.Constants.BOOKS_PAGE_SIZE;
+import static ar.edu.itba.paw.models.utils.Constants.EXCHANGES_PAGE_SIZE;
 import static ar.edu.itba.paw.persistence.PublicationJdbcDao.ROW_MAPPER_PUBLICATION;
 
 @Repository
@@ -253,7 +257,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
     }
 
     @Override
-    public List<Exchange> getAllExchangesByUserId(long anUserId, ExchangeState exchangeState, boolean isOfferer) {
+    public PaginatedResponse<Exchange, BasicMetadata> getAllExchangesByUserId(long anUserId, ExchangeState exchangeState, int currentPage, boolean isOfferer) {
         StringBuilder sqlQuery = new StringBuilder(baseQuery);
 
         if (isOfferer) {
@@ -265,6 +269,12 @@ public class ExchangeJdbcDao implements ExchangeDao {
         sqlQuery.append("AND e.exchangeState = ? ");
         sqlQuery.append(groupQuery);
 
-        return jdbcTemplate.query(sqlQuery.toString(), new Object[]{anUserId, exchangeState.getValue()}, new int[]{Types.BIGINT, Types.INTEGER}, ROW_MAPPER_EXCHANGE);
+        int offset = currentPage * EXCHANGES_PAGE_SIZE;
+        sqlQuery.append(" LIMIT ? OFFSET ?");
+
+
+        List<Exchange> data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{anUserId, exchangeState.getValue(), EXCHANGES_PAGE_SIZE, offset}, new int[]{Types.BIGINT, Types.INTEGER, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_EXCHANGE);
+
+        return new PaginatedResponse<>(data, new BasicMetadata(currentPage, data.size(), EXCHANGES_PAGE_SIZE));
     }
 }

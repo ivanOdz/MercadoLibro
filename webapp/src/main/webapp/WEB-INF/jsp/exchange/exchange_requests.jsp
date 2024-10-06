@@ -47,31 +47,31 @@
                     <ul class="uk-switcher uk-margin">
                         <!-- Pending -->
                         <li style="min-height: 40%; align-content: center;" class="uk-container uk-align-center">
-                            <c:if test="${!empty pending}">
-                                <c:forEach var="pending" items="${pending}">
+                            <c:if test="${!empty pending.data}">
+                                <c:forEach var="data" items="${pending.data}">
                                     <div class="uk-card uk-card-default exchange-card"
                                          onclick="selectCard(this,
-                                                 '<c:out value="${pending.requester.book.owner.username}"/>',
-                                                 '<c:out value="${pending.requester.book.owner.mail}"/>',
-                                                 '<c:out value="${pending.requester.location}"/>',
-                                                 '<c:out value="${pending.offerer.book.bookModel.title}"/>',
-                                                 '<c:out value="${pending.offerer.book.bookModel.authors}"/>',
-                                                 '<c:out value="${pending.offerer.book.bookModel.title}"/>',
-                                                 '<c:out value="${pending.offerer.book.images}"/>',
-                                                 '<c:out value="${pending.exchangeId}"/>',
-                                                 '<c:out value="${pending.requester.book.owner.userId}"/>',
-                                                 '<c:out value="${pending.offerer.book.owner.userId}"/>',
-                                                 '${pending.isReviewable}')"
+                                                 '<c:out value="${data.requester.book.owner.username}"/>',
+                                                 '<c:out value="${data.requester.book.owner.mail}"/>',
+                                                 '<c:out value="${data.requester.location}"/>',
+                                                 '<c:out value="${data.offerer.book.bookModel.title}"/>',
+                                                 '<c:out value="${data.offerer.book.bookModel.authors}"/>',
+                                                 '<c:out value="${data.offerer.book.bookModel.title}"/>',
+                                                 '<c:out value="${data.offerer.book.images}"/>',
+                                                 '<c:out value="${data.exchangeId}"/>',
+                                                 '<c:out value="${data.requester.book.owner.userId}"/>',
+                                                 '<c:out value="${data.offerer.book.owner.userId}"/>',
+                                                 '${data.isReviewable}')"
                                          uk-grid>
 
 
                                         <div style="padding: 0">
                                             <img class="book-image"
-                                                 src="${pageContext.request.contextPath}/images/${pending.offerer.book.images[0]}"
+                                                 src="${pageContext.request.contextPath}/images/${v.offerer.book.images[0]}"
                                                  alt="bookImage"/>
                                             <div class="card-text-container">
                                                 <h3 class="card-text3">
-                                                    <c:out value="${pending.offerer.book.bookModel.title}"/>
+                                                    <c:out value="${data.offerer.book.bookModel.title}"/>
                                                 </h3>
                                             </div>
                                         </div>
@@ -82,12 +82,12 @@
                                             <div style="padding-left: 0;width:40%; margin-bottom: 15px; display: flex; flex-direction: column; align-items: center">
                                                 <div class="uk-button-group">
                                                     <a class="uk-button uk-button-default uk-button-small"
-                                                       href="#modal-exchange-accepted-${pending.acceptCode}"
+                                                       href="#modal-exchange-accepted-${data.acceptCode}"
                                                        onclick="event.stopPropagation()" uk-toggle>
                                                         <spring:message code="exchange.button.accept"/>
                                                     </a>
                                                     <a class="uk-button uk-button-default uk-button-small custom-link"
-                                                       href="#modal-exchange-rejected-${pending.acceptCode}"
+                                                       href="#modal-exchange-rejected-${data.acceptCode}"
                                                        onclick="event.stopPropagation()" uk-toggle>
                                                         <spring:message code="email.rejectButton"/>
                                                     </a>
@@ -98,7 +98,7 @@
                                                 <div style="width: 400%; font-size: 10px; padding: 5%">
                                                     <spring:message code="date.start"/>
                                                     <spring:message code="date.format" var="dateFormat"/>
-                                                    <fmt:formatDate value="${pending.exchangeStartDate}"
+                                                    <fmt:formatDate value="${data.exchangeStartDate}"
                                                                     pattern="${dateFormat}"/>
                                                 </div>
                                             </div>
@@ -106,18 +106,18 @@
 
                                         <div style="padding: 0">
                                             <img class="book-image"
-                                                 src="${pageContext.request.contextPath}/images/${pending.requester.book.images[0]}"
+                                                 src="${pageContext.request.contextPath}/images/${data.requester.book.images[0]}"
                                                  alt="bookImage"/>
                                             <div class="card-text-container">
                                                 <h3 class="card-text3">
-                                                    <c:out value="${pending.requester.book.bookModel.title}"/>
+                                                    <c:out value="${data.requester.book.bookModel.title}"/>
                                                 </h3></div>
                                         </div>
 
 
                                         <!-- Exchange Rejected modal -->
 
-                                        <div id="modal-exchange-rejected-${pending.acceptCode}"
+                                        <div id="modal-exchange-rejected-${data.acceptCode}"
                                              uk-modal>
                                             <div class="uk-modal-dialog uk-modal-body">
                                                 <h3 class="uk-h4"><spring:message
@@ -129,7 +129,7 @@
                                                     <button class="uk-button uk-button-danger"
                                                             type="button">
                                                         <a href="<c:url value='/createexchange'>
-                                                        <c:param name='accept_code' value='${pending.acceptCode}'/>
+                                                        <c:param name='accept_code' value='${data.acceptCode}'/>
                                                         <c:param name='state' value='false'/>
                                                             </c:url>">
                                                             <spring:message
@@ -143,7 +143,7 @@
 
                                         <!-- Exchange Accepted modal -->
 
-                                        <div id="modal-exchange-accepted-${pending.acceptCode}"
+                                        <div id="modal-exchange-accepted-${data.acceptCode}"
                                              uk-modal>
                                             <div class="uk-modal-dialog uk-modal-body">
                                                 <h3 class="uk-h4"><spring:message
@@ -156,7 +156,7 @@
                                                             type="button">
                                                         <a class="button-text-accept custom-link"
                                                            href="<c:url value='/createexchange'>
-                                                                   <c:param name='accept_code' value='${pending.acceptCode}'/>
+                                                                   <c:param name='accept_code' value='${data.acceptCode}'/>
                                                                     <c:param name='state' value='true'/>
                                                                          </c:url>">
                                                             <spring:message
@@ -169,7 +169,7 @@
                                     </div>
                                 </c:forEach>
                             </c:if>
-                            <c:if test="${empty pending}">
+                            <c:if test="${empty pending.data}">
                                 <div>
                                     <h4 class="uk-h6">
                                         <spring:message code="exchange.pending.empty"/>
@@ -181,31 +181,31 @@
                         <!-- In Progress -->
 
                         <li style="min-height: 40%; align-content: center;" class="uk-container">
-                            <c:if test="${!empty inProgress}">
-                                <c:forEach var="inProgress" items="${inProgress}">
+                            <c:if test="${!empty inProgress.data}">
+                                <c:forEach var="data" items="${inProgress.data}">
                                     <div class="uk-card uk-card-default exchange-card"
                                          onclick="selectCard(this,
-                                                 '<c:out value="${inProgress.requester.book.owner.username}"/>',
-                                                 '<c:out value="${inProgress.requester.book.owner.mail}"/>',
-                                                 '<c:out value="${inProgress.requester.location.locationString}"/>',
-                                                 '<c:out value="${inProgress.offerer.book.bookModel.title}"/>',
-                                                 '<c:out value="${inProgress.offerer.book.bookModel.authors}"/>',
-                                                 '<c:out value="${inProgress.offerer.book.bookModel.title}"/>',
-                                                 '<c:out value="${inProgress.offerer.book.images}"/>',
-                                                 '<c:out value="${inProgress.exchangeId}"/>',
-                                                 '<c:out value="${inProgress.requester.book.owner.userId}"/>',
-                                                 '<c:out value="${inProgress.offerer.book.owner.userId}"/>',
-                                                 '${inProgress.isReviewable}')"
+                                                 '<c:out value="${data.requester.book.owner.username}"/>',
+                                                 '<c:out value="${data.requester.book.owner.mail}"/>',
+                                                 '<c:out value="${data.requester.location.locationString}"/>',
+                                                 '<c:out value="${data.offerer.book.bookModel.title}"/>',
+                                                 '<c:out value="${data.offerer.book.bookModel.authors}"/>',
+                                                 '<c:out value="${data.offerer.book.bookModel.title}"/>',
+                                                 '<c:out value="${data.offerer.book.images}"/>',
+                                                 '<c:out value="${data.exchangeId}"/>',
+                                                 '<c:out value="${data.requester.book.owner.userId}"/>',
+                                                 '<c:out value="${data.offerer.book.owner.userId}"/>',
+                                                 '${data.isReviewable}')"
                                          uk-grid>
 
 
                                         <div style="padding: 0">
                                             <img class="book-image"
-                                                 src="${pageContext.request.contextPath}/images/${inProgress.offerer.book.images[0]}"
+                                                 src="${pageContext.request.contextPath}/images/${data.offerer.book.images[0]}"
                                                  alt="bookImage"/>
                                             <div class="card-text-container">
                                                 <h3 class="card-text3">
-                                                    <c:out value="${inProgress.offerer.book.bookModel.title}"/>
+                                                    <c:out value="${data.offerer.book.bookModel.title}"/>
                                                 </h3>
                                             </div>
                                         </div>
@@ -213,14 +213,14 @@
                                             <div class="arrow-icon" style="padding: 0">
                                                 <span uk-icon="icon: chevron-double-right; ratio: 2"></span>
                                             </div>
-                                            <c:if test="${inProgress.offererReceivedBook}">
+                                            <c:if test="${data.offererReceivedBook}">
                                                                 <span class="uk-badge state-awaiting">
                                                             <spring:message code="exchange.status.awaiting"/>
 													            </span>
                                             </c:if>
-                                            <c:if test="${!inProgress.offererReceivedBook}">
+                                            <c:if test="${!data.offererReceivedBook}">
                                                 <a class="uk-button uk-button-default uk-button-small"
-                                                   href="#modal-confirm-exchange-${inProgress.acceptCode}"
+                                                   href="#modal-confirm-exchange-${data.acceptCode}"
                                                    onclick="event.stopPropagation()" uk-toggle>
                                                     <spring:message
                                                             code="exchange.button.confirm.exchange"/>
@@ -232,14 +232,14 @@
                                             <div style="font-size: 10px; padding: 5%">
                                                 <spring:message code="date.start"/>
                                                 <spring:message code="date.format" var="dateFormat"/>
-                                                <fmt:formatDate value="${inProgress.exchangeStartDate}"
+                                                <fmt:formatDate value="${data.exchangeStartDate}"
                                                                 pattern="${dateFormat}"/>
                                             </div>
 
 
                                             <!-- Confirm exchange modal -->
 
-                                            <div id="modal-confirm-exchange-${inProgress.acceptCode}"
+                                            <div id="modal-confirm-exchange-${data.acceptCode}"
                                                  uk-modal>
                                                 <div class="uk-modal-dialog uk-modal-body">
                                                     <h3 class="uk-h4"><spring:message
@@ -251,7 +251,7 @@
                                                         <button class="uk-button uk-button-primary"
                                                                 type="button">
                                                             <a class="button-text-accept custom-link"
-                                                               href="<c:url value='/confirm_offerer'><c:param name='accept_code' value='${inProgress.acceptCode}'/></c:url>">
+                                                               href="<c:url value='/confirm_offerer'><c:param name='accept_code' value='${data.acceptCode}'/></c:url>">
                                                                 <spring:message code="button.confirm"/>
                                                             </a>
                                                         </button>
@@ -262,11 +262,11 @@
 
                                         <div style="padding: 0">
                                             <img class="book-image"
-                                                 src="${pageContext.request.contextPath}/images/${inProgress.requester.book.images[0]}"
+                                                 src="${pageContext.request.contextPath}/images/${data.requester.book.images[0]}"
                                                  alt="bookImage"/>
                                             <div class="card-text-container">
                                                 <h3 class="card-text3">
-                                                    <c:out value="${inProgress.requester.book.bookModel.title}"/>
+                                                    <c:out value="${data.requester.book.bookModel.title}"/>
                                                 </h3>
                                             </div>
                                         </div>
@@ -275,7 +275,7 @@
                                     </div>
                                 </c:forEach>
                             </c:if>
-                            <c:if test="${empty inProgress}">
+                            <c:if test="${empty inProgress.data}">
                                 <div>
                                     <h4 class="uk-h6">
                                         <spring:message code="exchange.inProgress.empty"/>
@@ -287,30 +287,30 @@
                         <!-- Completed -->
 
                         <li style="margin-top: 0;min-height: 40%; align-content: center;" class="uk-container">
-                            <c:if test="${!empty completed}">
-                                <c:forEach var="completed" items="${completed}">
+                            <c:if test="${!empty completed.data}">
+                                <c:forEach var="data" items="${completed.data}">
                                     <div class="uk-card uk-card-default exchange-card"
                                          onclick="selectCard(this,
-                                                 '<c:out value="${completed.requester.book.owner.username}"/>',
-                                                 '<c:out value="${completed.requester.book.owner.mail}"/>',
-                                                 '<c:out value="${completed.requester.location.locationString}"/>',
-                                                 '<c:out value="${completed.offerer.book.bookModel.title}"/>',
-                                                 '<c:out value="${completed.offerer.book.bookModel.authors}"/>',
-                                                 '<c:out value="${completed.offerer.book.bookModel.title}"/>',
-                                                 '<c:out value="${completed.offerer.book.images}"/>',
-                                                 '<c:out value="${completed.exchangeId}"/>',
-                                                 '<c:out value="${completed.requester.book.owner.userId}"/>',
-                                                 '<c:out value="${completed.offerer.book.owner.userId}"/>',
-                                                 '${completed.isReviewable}')"
+                                                 '<c:out value="${data.requester.book.owner.username}"/>',
+                                                 '<c:out value="${data.requester.book.owner.mail}"/>',
+                                                 '<c:out value="${data.requester.location.locationString}"/>',
+                                                 '<c:out value="${data.offerer.book.bookModel.title}"/>',
+                                                 '<c:out value="${data.offerer.book.bookModel.authors}"/>',
+                                                 '<c:out value="${data.offerer.book.bookModel.title}"/>',
+                                                 '<c:out value="${data.offerer.book.images}"/>',
+                                                 '<c:out value="${data.exchangeId}"/>',
+                                                 '<c:out value="${data.requester.book.owner.userId}"/>',
+                                                 '<c:out value="${data.offerer.book.owner.userId}"/>',
+                                                 '${data.isReviewable}')"
                                          uk-grid>
 
                                         <div style="padding: 0">
                                             <img class="book-image"
-                                                 src="${pageContext.request.contextPath}/images/${completed.offerer.book.images[0]}"
+                                                 src="${pageContext.request.contextPath}/images/${data.offerer.book.images[0]}"
                                                  alt="bookImage"/>
                                             <div class="card-text-container">
                                                 <h3 class="card-text3">
-                                                    <c:out value="${completed.offerer.book.bookModel.title}"/>
+                                                    <c:out value="${data.offerer.book.bookModel.title}"/>
                                                 </h3></div>
                                         </div>
 
@@ -324,13 +324,13 @@
                                                 <div style="font-size: 10px; padding: 5%">
                                                     <spring:message code="date.start"/>
                                                     <spring:message code="date.format" var="dateFormat"/>
-                                                    <fmt:formatDate value="${completed.exchangeStartDate}"
+                                                    <fmt:formatDate value="${data.exchangeStartDate}"
                                                                     pattern="${dateFormat}"/>
                                                 </div>
                                                 <div style="font-size: 10px; margin-bottom: 25px; font-size: 10px;  padding: 0 5% 5% 5%;">
                                                     <spring:message code="date.end"/>
                                                     <spring:message code="date.format" var="dateFormat"/>
-                                                    <fmt:formatDate value="${completed.exchangeEndDate}"
+                                                    <fmt:formatDate value="${data.exchangeEndDate}"
                                                                     pattern="${dateFormat}"/>
                                                 </div>
                                             </div>
@@ -338,11 +338,11 @@
 
                                         <div style="padding: 0">
                                             <img class="book-image"
-                                                 src="${pageContext.request.contextPath}/images/${completed.requester.book.images[0]}"
+                                                 src="${pageContext.request.contextPath}/images/${data.requester.book.images[0]}"
                                                  alt="bookImage"/>
                                             <div class="card-text-container">
                                                 <h3 class="card-text3">
-                                                    <c:out value="${completed.requester.book.bookModel.title}"/>
+                                                    <c:out value="${data.requester.book.bookModel.title}"/>
                                                 </h3>
                                             </div>
                                         </div>
@@ -351,7 +351,7 @@
                                     </div>
                                 </c:forEach>
                             </c:if>
-                            <c:if test="${empty completed}">
+                            <c:if test="${empty completed.data}">
                                 <div>
                                     <h4 class="uk-h6">
                                         <spring:message code="exchange.completed.empty"/>
@@ -363,31 +363,31 @@
                         <!-- Rejected -->
 
                         <li style="min-height: 40%; align-content: center" class="uk-container">
-                            <c:if test="${!empty rejected}">
-                                <c:forEach var="rejected" items="${rejected}">
+                            <c:if test="${!empty rejected.data}">
+                                <c:forEach var="data" items="${rejected.data}">
                                     <div class="uk-card uk-card-default exchange-card"
                                          onclick="selectCard(this,
-                                                 '<c:out value="${rejected.requester.book.owner.username}"/>',
-                                                 '<c:out value="${rejected.requester.book.owner.mail}"/>',
-                                                 '<c:out value="${rejected.requester.location.locationString}"/>',
-                                                 '<c:out value="${rejected.offerer.book.bookModel.title}"/>',
-                                                 '<c:out value="${rejected.offerer.book.bookModel.authors}"/>',
-                                                 '<c:out value="${rejected.offerer.book.bookModel.title}"/>',
-                                                 '<c:out value="${rejected.offerer.book.images}"/>',
-                                                 '<c:out value="${rejected.exchangeId}"/>',
-                                                 '<c:out value="${rejected.requester.book.owner.userId}"/>',
-                                                 '<c:out value="${rejected.offerer.book.owner.userId}"/>',
-                                                 '${rejected.isReviewable}')"
+                                                 '<c:out value="${data.requester.book.owner.username}"/>',
+                                                 '<c:out value="${data.requester.book.owner.mail}"/>',
+                                                 '<c:out value="${data.requester.location.locationString}"/>',
+                                                 '<c:out value="${data.offerer.book.bookModel.title}"/>',
+                                                 '<c:out value="${data.offerer.book.bookModel.authors}"/>',
+                                                 '<c:out value="${data.offerer.book.bookModel.title}"/>',
+                                                 '<c:out value="${data.offerer.book.images}"/>',
+                                                 '<c:out value="${data.exchangeId}"/>',
+                                                 '<c:out value="${data.requester.book.owner.userId}"/>',
+                                                 '<c:out value="${data.offerer.book.owner.userId}"/>',
+                                                 '${data.isReviewable}')"
                                          uk-grid>
 
 
                                         <div style="padding: 0">
                                             <img class="book-image"
-                                                 src="${pageContext.request.contextPath}/images/${rejected.offerer.book.images[0]}"
+                                                 src="${pageContext.request.contextPath}/images/${data.offerer.book.images[0]}"
                                                  alt="bookImage"/>
                                             <div class="card-text-container">
                                                 <h3 class="card-text3">
-                                                    <c:out value="${rejected.offerer.book.bookModel.title}"/>
+                                                    <c:out value="${data.offerer.book.bookModel.title}"/>
                                                 </h3>
                                             </div>
                                         </div>
@@ -402,30 +402,30 @@
                                             <div style="width: 400%;font-size: 10px; padding: 5%">
                                                 <spring:message code="date.start"/>
                                                 <spring:message code="date.format" var="dateFormat"/>
-                                                <fmt:formatDate value="${rejected.exchangeStartDate}"
+                                                <fmt:formatDate value="${data.exchangeStartDate}"
                                                                 pattern="${dateFormat}"/>
                                             </div>
                                             <div style="width: 400%; margin-bottom: 25px;font-size: 10px; padding: 0 5% 5% 5%;">
                                                 <spring:message code="date.end"/>
                                                 <spring:message code="date.format" var="dateFormat"/>
-                                                <fmt:formatDate value="${rejected.exchangeEndDate}"
+                                                <fmt:formatDate value="${data.exchangeEndDate}"
                                                                 pattern="${dateFormat}"/>
                                             </div>
                                         </div>
                                         <div style="padding: 0">
                                             <img class="book-image"
-                                                 src="${pageContext.request.contextPath}/images/${rejected.requester.book.images[0]}"
+                                                 src="${pageContext.request.contextPath}/images/${data.requester.book.images[0]}"
                                                  alt="bookImage"/>
                                             <div class="card-text-container">
                                                 <h3 class="card-text3">
-                                                    <c:out value="${rejected.requester.book.bookModel.title}"/>
+                                                    <c:out value="${data.requester.book.bookModel.title}"/>
                                                 </h3>
                                             </div>
                                         </div>
                                     </div>
                                 </c:forEach>
                             </c:if>
-                            <c:if test="${empty rejected}">
+                            <c:if test="${empty rejected.data}">
                                 <div>
                                     <h4 class="uk-h6">
                                         <spring:message code="exchange.rejected.empty"/>

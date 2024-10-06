@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.models.utils.PublicationState;
+import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -153,13 +154,13 @@ public class ExchangeServiceImpl implements ExchangeService {
 
     // exchanges where user is the publication owner
     @Override
-    public List<Exchange> getExchangeOffererListByUserId(long userId, ExchangeState exchangeState) {
-        return exchangeDao.getAllExchangesByUserId(userId, exchangeState, true);
+    public PaginatedResponse<Exchange, BasicMetadata> getExchangeOffererListByUserId(long userId, int currentPage, ExchangeState exchangeState) {
+        return exchangeDao.getAllExchangesByUserId(userId, exchangeState, currentPage, true);
     }
 
     // exchanges where user is the requester owner
     @Override
-    public List<Exchange> getExchangeRequesterListByUserId(long userId, ExchangeState exchangeState) {
-        return exchangeDao.getAllExchangesByUserId(userId, exchangeState, false);
+    public PaginatedResponse<Exchange, BasicMetadata> getExchangeRequesterListByUserId(long userId, int currentPage, ExchangeState exchangeState) {
+        return exchangeDao.getAllExchangesByUserId(userId, exchangeState, currentPage, false);
     }
 }
