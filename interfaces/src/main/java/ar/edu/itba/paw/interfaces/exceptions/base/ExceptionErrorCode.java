@@ -16,5 +16,4 @@ public final class ExceptionErrorCode {
     private ExceptionErrorCode() {
         // Private constructor to hide the implicit public one
     }
-
 }

@@ -11,4 +11,9 @@ public class ErrorController {
     public ModelAndView forbidden() {
         return new ModelAndView("error/forbidden");
     }
+
+    @RequestMapping("/404")
+    public ModelAndView notFound() {
+        return new ModelAndView("error/notFound");
+    }
 }

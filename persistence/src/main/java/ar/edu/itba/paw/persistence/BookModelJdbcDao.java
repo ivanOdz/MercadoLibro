@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.exceptions.BookModelCreationException;
+import ar.edu.itba.paw.interfaces.exceptions.BookModelNotFoundException;
 import ar.edu.itba.paw.interfaces.exceptions.base.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.BookModelDao;
 import ar.edu.itba.paw.interfaces.services.GenreService;
@@ -129,13 +130,8 @@ public class BookModelJdbcDao implements BookModelDao {
                         "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, bm.imageId"
         );
 
-        BookModel bookModel = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ bookModelId }, new int[]{Types.BIGINT}, ROW_MAPPER_BOOK_MODEL)
-                .stream().findFirst().orElseThrow(null);
-
-        if (bookModel == null) {
-            throw new NotFoundException("Book model with ID " + bookModelId + " not found.");
-        }
-        return bookModel;
+        return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ bookModelId }, new int[]{Types.BIGINT}, ROW_MAPPER_BOOK_MODEL)
+                .stream().findFirst().orElseThrow(BookModelNotFoundException::new);
     }
 
     @Override
