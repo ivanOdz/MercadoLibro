@@ -225,7 +225,7 @@
                     </c:forEach>
                 </div>
                 </c:if>
-                <c:if test="${not empty publications}">
+                <c:if test="${empty publications.data}">
                     <div class="uk-grid empty-publications">
                         <spring:message code="publications.empty"/>
                     </div>

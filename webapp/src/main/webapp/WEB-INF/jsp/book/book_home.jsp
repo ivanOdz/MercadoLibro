@@ -53,7 +53,8 @@
                 <!-- Esto tiene que aparecer solo si hay algo buscado -->
                 <c:if test="${not empty books.metadata.search}">
                     <form action="<c:url value='' />" method="get">
-                        <input type="hidden" name="is-book-state-filter-active" value="${books.metadata.isBookStateFilterActive}">
+                        <input type="hidden" name="is-book-state-filter-active"
+                               value="${books.metadata.isBookStateFilterActive}">
                         <input type="hidden" name="is-genre-filter-active" value=${books.metadata.isGenreFilterActive}>
                         <input type="hidden" name="genre-filter" value=${books.metadata.genreFilter}>
                         <input type="hidden" name="book-state-filter" value=${books.metadata.bookStateFilter}>
@@ -91,7 +92,8 @@
                 <c:if test="${books.metadata.isGenreFilterActive}">
                     <form action="<c:url value='' />" method="get">
                         <input type="hidden" name="is-genre-filter-active" value="false">
-                        <input type="hidden" name="is-book-state-filter-active" value=${books.metadata.isBookStateFilterActive}>
+                        <input type="hidden" name="is-book-state-filter-active"
+                               value=${books.metadata.isBookStateFilterActive}>
                         <input type="hidden" name="book-state-filter" value=${books.metadata.bookStateFilter}>
                         <input type="hidden" name="search" value="<c:out value='${books.metadata.search}'/>">
 
@@ -112,21 +114,25 @@
                         <c:forEach var="bookStateWrapper" items="${books.metadata.bookStateWrapperList}">
                             <li class="ui-search-filter-container">
                                 <form action="<c:url value='' />" method="get">
-                                    <input type="hidden" name="search" value="<c:out value='${books.metadata.search}'/>">
+                                    <input type="hidden" name="search"
+                                           value="<c:out value='${books.metadata.search}'/>">
                                     <input type="hidden" name="is-book-state-filter-active" value='true'>
                                     <input type="hidden" name="book-state-filter"
                                            value="${bookStateWrapper.bookState}">
-                                    <input type="hidden" name="is-genre-filter-active" value="${books.metadata.isGenreFilterActive}">
+                                    <input type="hidden" name="is-genre-filter-active"
+                                           value="${books.metadata.isGenreFilterActive}">
                                     <input type="hidden" name="genre-filter" value="${books.metadata.genreFilter}">
 
-<%--                                    <button type="submit"--%>
+                                        <%--                                    <button type="submit"--%>
 
-<%--                                            class="ui-search-button uk-button uk-button-default uk-button-small"--%>
-<%--                                            title="${bookStateWrapper.displayName}">--%>
-<%--                                        <span class="ui-search-filter-name">${bookStateWrapper.displayName}</span>--%>
-<%--                                        <span class="ui-search-filter-name">(${bookStateWrapper.resultByState})</span>--%>
-<%--                                    </button>--%>
-                                    <a href="#" class="uk-inline uk-search-button uk-button-link" title="BookStateFilterRemove" onclick="this.closest('form').submit(); return false;">
+                                        <%--                                            class="ui-search-button uk-button uk-button-default uk-button-small"--%>
+                                        <%--                                            title="${bookStateWrapper.displayName}">--%>
+                                        <%--                                        <span class="ui-search-filter-name">${bookStateWrapper.displayName}</span>--%>
+                                        <%--                                        <span class="ui-search-filter-name">(${bookStateWrapper.resultByState})</span>--%>
+                                        <%--                                    </button>--%>
+                                    <a href="#" class="uk-inline uk-search-button uk-button-link"
+                                       title="BookStateFilterRemove"
+                                       onclick="this.closest('form').submit(); return false;">
                                         <span class="ui-search-filter-name">
                                                 ${bookStateWrapper.displayName} (${bookStateWrapper.resultByState})
                                         </span>
@@ -146,21 +152,25 @@
                                 <form action="<c:url value='' />" method="get">
                                     <input type="hidden" name="genre-filter" value="${genreWrapper.genre}">
                                     <input type="hidden" name="is-genre-filter-active" value="true">
-                                    <input type="hidden" name="book-state-filter" value="${books.metadata.bookStateFilter}">
-                                    <input type="hidden" name="is-book-state-filter-active" value="${books.metadata.isBookStateFilterActive}">
-                                    <input type="hidden" name="search" value="<c:out value='${books.metadata.search}'/>"/>
+                                    <input type="hidden" name="book-state-filter"
+                                           value="${books.metadata.bookStateFilter}">
+                                    <input type="hidden" name="is-book-state-filter-active"
+                                           value="${books.metadata.isBookStateFilterActive}">
+                                    <input type="hidden" name="search"
+                                           value="<c:out value='${books.metadata.search}'/>"/>
 
-                                    <a href="#" class="uk-inline uk-search-button uk-button-link" title="GenreFilterRemove" onclick="this.closest('form').submit(); return false;">
+                                    <a href="#" class="uk-inline uk-search-button uk-button-link"
+                                       title="GenreFilterRemove" onclick="this.closest('form').submit(); return false;">
                                         <span class="ui-search-filter-name">
                                                 ${genreWrapper.displayName} (${genreWrapper.resultByGenre})
                                         </span>
                                     </a>
-<%--                                    <button type="submit"--%>
-<%--                                            class="ui-search-button uk-button uk-button-default uk-button-small"--%>
-<%--                                            title="${genreWrapper.displayName}">--%>
-<%--                                        <span class="ui-search-filter-name">${genreWrapper.displayName}</span>--%>
-<%--                                        <span class="ui-search-filter-name">(${genreWrapper.resultByGenre})</span>--%>
-<%--                                    </button>--%>
+                                        <%--                                    <button type="submit"--%>
+                                        <%--                                            class="ui-search-button uk-button uk-button-default uk-button-small"--%>
+                                        <%--                                            title="${genreWrapper.displayName}">--%>
+                                        <%--                                        <span class="ui-search-filter-name">${genreWrapper.displayName}</span>--%>
+                                        <%--                                        <span class="ui-search-filter-name">(${genreWrapper.resultByGenre})</span>--%>
+                                        <%--                                    </button>--%>
                                 </form>
                             </li>
                         </c:forEach>
@@ -177,79 +187,107 @@
 
                 <div class="uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m mb-1" uk-grid
                      uk-height-match="target: > div > .uk-card">
-                    <c:forEach var="card" items="${books.data}">
-                        <div>
-                            <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-border-rounded custom-link">
-                                <figure class="uk-margin-bottom">
-                                    <c:choose>
-                                        <c:when test="${card.images[0] != null}">
-                                            <img class="book-image" src="${pageContext.request.contextPath}/images/${card.images[0]}" alt="bookImage"/>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <img class="book-image" src="${pageContext.request.contextPath}/images/book.jpg" alt="book"/>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </figure>
 
-                                <div class="uk-flex uk-flex-column uk-flex-column uk-margin-bottom">
-                                    <div class="">
-                                        <h5 class="uk-card-title custom-link">${card.bookModel.title}</h5>
-                                        <p class="small-gray-text custom-link">${card.bookModel.authors}</p>
+                    <c:if test="${not empty books.data}">
+                        <c:forEach var="card" items="${books.data}">
+                            <div>
+                                <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-border-rounded custom-link">
+                                    <figure class="uk-margin-bottom">
+                                        <c:choose>
+                                            <c:when test="${card.images[0] != null}">
+                                                <img class="book-image"
+                                                     src="${pageContext.request.contextPath}/images/${card.images[0]}"
+                                                     alt="bookImage"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <img class="book-image"
+                                                     src="${pageContext.request.contextPath}/images/book.jpg"
+                                                     alt="book"/>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </figure>
+
+                                    <div class="uk-flex uk-flex-column uk-flex-column uk-margin-bottom">
+                                        <div class="">
+                                            <h5 class="uk-card-title custom-link">${card.bookModel.title}</h5>
+                                            <p class="small-gray-text custom-link">${card.bookModel.authors}</p>
+                                        </div>
+                                        <c:choose>
+                                            <c:when test="${card.available}">
+                                                <a class="uk-button uk-button-default uk-button-primary uk-width-1-1"
+                                                   href="#modal-sections-${card.bookId}" uk-toggle>
+                                                    <spring:message code="book.publish.button"/>
+                                                </a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <button class="uk-button uk-button-primary uk-width-1-1" disabled>
+                                                    <spring:message code="book.published.button"/>
+                                                </button>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </div>
-                                    <c:choose>
-                                        <c:when test="${card.available}">
-                                            <a class="uk-button uk-button-default uk-button-primary uk-width-1-1" href="#modal-sections-${card.bookId}" uk-toggle>
-                                                <spring:message code="book.publish.button"/>
-                                            </a>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <button class="uk-button uk-button-primary uk-width-1-1" disabled>
-                                                <spring:message code="book.published.button"/>
-                                            </button>
-                                        </c:otherwise>
-                                    </c:choose>
                                 </div>
-                            </div>
 
-                            <!-- Modal específico para cada card -->
-                            <div id="modal-sections-${card.bookId}" uk-modal>
-                                <div class="uk-modal-dialog">
-                                    <button class="uk-modal-close-default" type="button" uk-close></button>
-                                    <div class="uk-modal-header">
-                                        <form action="${pageContext.request.contextPath}/createpublication"
-                                              method="post" class="uk-grid-large uk-grid"
-                                              style="justify-content: center;">
-                                            <div class="uk-margin" style="justify-content: center">
-                                                <div class="uk-width-1-1">
-                                                    <div class="uk-width-1-1 uk-margin-top">
-                                                        <div class="uk-margin-bottom">
-                                                            <label class="uk-margin">
-                                                                <spring:message code="book.set.location"/>
-                                                            </label>
-                                                        </div>
-                                                        <div class="uk-inline">
-                                                            <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: location"></span>
-                                                            <input class="uk-input" type="text" name="location"
+                                <!-- Modal específico para cada card -->
+                                <div id="modal-sections-${card.bookId}" uk-modal>
+                                    <div class="uk-modal-dialog">
+                                        <button class="uk-modal-close-default" type="button" uk-close></button>
+                                        <div class="uk-modal-header">
+                                            <form action="${pageContext.request.contextPath}/createpublication"
+                                                  method="post" class="uk-grid-large uk-grid"
+                                                  style="justify-content: center;">
+                                                <div class="uk-margin" style="justify-content: center">
+                                                    <div class="uk-width-1-1">
+                                                        <div class="uk-width-1-1 uk-margin-top">
+                                                            <div class="uk-margin-bottom">
+                                                                <label class="uk-margin">
+                                                                    <spring:message code="book.set.location"/>
+                                                                </label>
+                                                            </div>
+                                                            <div class="uk-inline">
+                                                                <span class="uk-form-icon uk-form-icon-flip"
+                                                                      uk-icon="icon: location"></span>
+                                                                <input class="uk-input" type="text" name="location"
+                                                                       aria-label="Not clickable icon"/>
+                                                            </div>
+                                                            <input class="uk-input" type="hidden"
+                                                                   value="${card.bookId}" name="bookId"
                                                                    aria-label="Not clickable icon"/>
                                                         </div>
-                                                        <input class="uk-input" type="hidden"
-                                                               value="${card.bookId}" name="bookId"
-                                                               aria-label="Not clickable icon"/>
-                                                    </div>
-                                                    <div class="uk-margin-top uk-button-group"
-                                                         style="margin-left: 50px;">
-                                                        <button class="uk-button uk-button-primary"><spring:message
-                                                                code="book.publish.button"/></button>
+                                                        <div class="uk-margin-top uk-button-group"
+                                                             style="margin-left: 50px;">
+                                                            <button class="uk-button uk-button-primary"><spring:message
+                                                                    code="book.publish.button"/></button>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </form>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </c:forEach>
+                        </c:forEach>
+                    </c:if>
+
                 </div>
+                <c:if test="${empty books.data}">
+                    <div class="book-empty">
+                        <div style="margin:2%;width: max-content;">
+                            <spring:message code="books.empty"/>
+                        </div>
+                        <a style="margin:2%" class="uk-button uk-button-primary"
+                           href="${pageContext.request.contextPath}/book/new_book">
+                            <spring:message code="books.empty.upload"/>
+                        </a>
+                        <a style="margin:2%" class="uk-button uk-button-primary"
+                           href="${pageContext.request.contextPath}/book/book_models">
+                            <spring:message code="books.empty.preloaded"/>
+                        </a>
+
+                    </div>
+
+                </c:if>
+
                 <hr class="uk-divider-icon">
 
 
@@ -260,13 +298,15 @@
                         <c:if test="${books.metadata.currentPage > 0}">
                             <li>
                                 <c:url var="prevPageUrl" value="">
-                                    <c:param name="page" value="${books.metadata.currentPage - 1}" />
-                                    <c:param name="is-book-state-filter-active" value="${books.metadata.isBookStateFilterActive}" />
-                                    <c:param name="is-genre-filter-active" value="${books.metadata.isGenreFilterActive}" />
-                                    <c:param name="genre-filter" value="${books.metadata.genreFilter}" />
-                                    <c:param name="book-state-filter" value="${books.metadata.bookStateFilter}" />
-                                    <c:param name="search" value="${books.metadata.search}" />
-                                    <c:param name="sort-type" value="${books.metadata.sortType}" />
+                                    <c:param name="page" value="${books.metadata.currentPage - 1}"/>
+                                    <c:param name="is-book-state-filter-active"
+                                             value="${books.metadata.isBookStateFilterActive}"/>
+                                    <c:param name="is-genre-filter-active"
+                                             value="${books.metadata.isGenreFilterActive}"/>
+                                    <c:param name="genre-filter" value="${books.metadata.genreFilter}"/>
+                                    <c:param name="book-state-filter" value="${books.metadata.bookStateFilter}"/>
+                                    <c:param name="search" value="${books.metadata.search}"/>
+                                    <c:param name="sort-type" value="${books.metadata.sortType}"/>
                                 </c:url>
                                 <a href="${prevPageUrl}">
                                     <span uk-pagination-previous></span>
@@ -279,13 +319,15 @@
                         <c:if test="${books.metadata.currentPage > 1}">
                             <li>
                                 <c:url var="firstPageUrl" value="">
-                                    <c:param name="page" value="0" />
-                                    <c:param name="is-book-state-filter-active" value="${books.metadata.isBookStateFilterActive}" />
-                                    <c:param name="is-genre-filter-active" value="${books.metadata.isGenreFilterActive}" />
-                                    <c:param name="genre-filter" value="${books.metadata.genreFilter}" />
-                                    <c:param name="book-state-filter" value="${books.metadata.bookStateFilter}" />
-                                    <c:param name="search" value="${books.metadata.search}" />
-                                    <c:param name="sort-type" value="${books.metadata.sortType}" />
+                                    <c:param name="page" value="0"/>
+                                    <c:param name="is-book-state-filter-active"
+                                             value="${books.metadata.isBookStateFilterActive}"/>
+                                    <c:param name="is-genre-filter-active"
+                                             value="${books.metadata.isGenreFilterActive}"/>
+                                    <c:param name="genre-filter" value="${books.metadata.genreFilter}"/>
+                                    <c:param name="book-state-filter" value="${books.metadata.bookStateFilter}"/>
+                                    <c:param name="search" value="${books.metadata.search}"/>
+                                    <c:param name="sort-type" value="${books.metadata.sortType}"/>
                                 </c:url>
                                 <a href="${firstPageUrl}">1</a>
                             </li>
@@ -296,17 +338,20 @@
                         </c:if>
 
                         <!-- Páginas centrales -->
-                        <c:forEach var="i" begin="${books.metadata.currentPage > 0 ? books.metadata.currentPage - 1 : 0}"
+                        <c:forEach var="i"
+                                   begin="${books.metadata.currentPage > 0 ? books.metadata.currentPage - 1 : 0}"
                                    end="${books.metadata.currentPage + 1 <= books.metadata.maxPage ? books.metadata.currentPage + 1 : books.metadata.maxPage}">
                             <li class="${i == books.metadata.currentPage ? 'uk-active' : ''}">
                                 <c:url var="centralPageUrl" value="">
-                                    <c:param name="page" value="${i}" />
-                                    <c:param name="is-book-state-filter-active" value="${books.metadata.isBookStateFilterActive}" />
-                                    <c:param name="is-genre-filter-active" value="${books.metadata.isGenreFilterActive}" />
-                                    <c:param name="genre-filter" value="${books.metadata.genreFilter}" />
-                                    <c:param name="book-state-filter" value="${books.metadata.bookStateFilter}" />
-                                    <c:param name="search" value="${books.metadata.search}" />
-                                    <c:param name="sort-type" value="${books.metadata.sortType}" />
+                                    <c:param name="page" value="${i}"/>
+                                    <c:param name="is-book-state-filter-active"
+                                             value="${books.metadata.isBookStateFilterActive}"/>
+                                    <c:param name="is-genre-filter-active"
+                                             value="${books.metadata.isGenreFilterActive}"/>
+                                    <c:param name="genre-filter" value="${books.metadata.genreFilter}"/>
+                                    <c:param name="book-state-filter" value="${books.metadata.bookStateFilter}"/>
+                                    <c:param name="search" value="${books.metadata.search}"/>
+                                    <c:param name="sort-type" value="${books.metadata.sortType}"/>
                                 </c:url>
                                 <a href="${centralPageUrl}">${i + 1}</a> <!-- Mostrar i + 1 para la numeración -->
                             </li>
@@ -320,13 +365,15 @@
                         <c:if test="${books.metadata.currentPage + 1 < books.metadata.maxPage}">
                             <li>
                                 <c:url var="lastPageUrl" value="">
-                                    <c:param name="page" value="${books.metadata.maxPage}" />
-                                    <c:param name="is-book-state-filter-active" value="${books.metadata.isBookStateFilterActive}" />
-                                    <c:param name="is-genre-filter-active" value="${books.metadata.isGenreFilterActive}" />
-                                    <c:param name="genre-filter" value="${books.metadata.genreFilter}" />
-                                    <c:param name="book-state-filter" value="${books.metadata.bookStateFilter}" />
-                                    <c:param name="search" value="${books.metadata.search}" />
-                                    <c:param name="sort-type" value="${books.metadata.sortType}" />
+                                    <c:param name="page" value="${books.metadata.maxPage}"/>
+                                    <c:param name="is-book-state-filter-active"
+                                             value="${books.metadata.isBookStateFilterActive}"/>
+                                    <c:param name="is-genre-filter-active"
+                                             value="${books.metadata.isGenreFilterActive}"/>
+                                    <c:param name="genre-filter" value="${books.metadata.genreFilter}"/>
+                                    <c:param name="book-state-filter" value="${books.metadata.bookStateFilter}"/>
+                                    <c:param name="search" value="${books.metadata.search}"/>
+                                    <c:param name="sort-type" value="${books.metadata.sortType}"/>
                                 </c:url>
                                 <a href="${lastPageUrl}">${books.metadata.maxPage + 1}</a> <!-- Mostrar maxPage + 1 -->
                             </li>
@@ -336,13 +383,15 @@
                         <c:if test="${books.metadata.currentPage < books.metadata.maxPage}">
                             <li>
                                 <c:url var="nextPageUrl" value="">
-                                    <c:param name="page" value="${books.metadata.currentPage + 1}" />
-                                    <c:param name="is-book-state-filter-active" value="${books.metadata.isBookStateFilterActive}" />
-                                    <c:param name="is-genre-filter-active" value="${books.metadata.isGenreFilterActive}" />
-                                    <c:param name="genre-filter" value="${books.metadata.genreFilter}" />
-                                    <c:param name="book-state-filter" value="${books.metadata.bookStateFilter}" />
-                                    <c:param name="search" value="${books.metadata.search}" />
-                                    <c:param name="sort-type" value="${books.metadata.sortType}" />
+                                    <c:param name="page" value="${books.metadata.currentPage + 1}"/>
+                                    <c:param name="is-book-state-filter-active"
+                                             value="${books.metadata.isBookStateFilterActive}"/>
+                                    <c:param name="is-genre-filter-active"
+                                             value="${books.metadata.isGenreFilterActive}"/>
+                                    <c:param name="genre-filter" value="${books.metadata.genreFilter}"/>
+                                    <c:param name="book-state-filter" value="${books.metadata.bookStateFilter}"/>
+                                    <c:param name="search" value="${books.metadata.search}"/>
+                                    <c:param name="sort-type" value="${books.metadata.sortType}"/>
                                 </c:url>
                                 <a href="${nextPageUrl}">
                                     Siguiente
