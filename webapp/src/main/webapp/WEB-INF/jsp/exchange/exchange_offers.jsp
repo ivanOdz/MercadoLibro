@@ -114,8 +114,8 @@
                         <!-- In Progress -->
 
                         <li style="min-height: 40%; align-content: center" class="uk-container">
-                            <c:if test="${!empty inProgress}">
-                                <c:forEach var="data" items="${inProgress}">
+                            <c:if test="${!empty inProgress.data}">
+                                <c:forEach var="data" items="${inProgress.data}">
                                     <div class="uk-card uk-card-default exchange-card"
                                          onclick="selectCard(this,
                                                  '<c:out value="${data.offerer.book.owner.username}"/>',
