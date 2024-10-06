@@ -46,7 +46,7 @@
                     </ul>
                     <ul class="uk-switcher uk-margin">
                         <!-- Pending -->
-                        <li class="uk-container uk-align-center">
+                        <li style="min-height: 40%; align-content: center;" class="uk-container uk-align-center">
                             <c:if test="${!empty pending}">
                                 <c:forEach var="pending" items="${pending}">
                                     <div class="uk-card uk-card-default exchange-card"
@@ -169,11 +169,18 @@
                                     </div>
                                 </c:forEach>
                             </c:if>
+                            <c:if test="${empty pending}">
+                                <div>
+                                    <h4 class="uk-h6">
+                                        <spring:message code="exchange.pending.empty"/>
+                                    </h4>
+                                </div>
+                            </c:if>
                         </li>
 
                         <!-- In Progress -->
 
-                        <li class="uk-container">
+                        <li style="min-height: 40%; align-content: center;" class="uk-container">
                             <c:if test="${!empty inProgress}">
                                 <c:forEach var="inProgress" items="${inProgress}">
                                     <div class="uk-card uk-card-default exchange-card"
@@ -268,11 +275,18 @@
                                     </div>
                                 </c:forEach>
                             </c:if>
+                            <c:if test="${empty inProgress}">
+                                <div>
+                                    <h4 class="uk-h6">
+                                        <spring:message code="exchange.inProgress.empty"/>
+                                    </h4>
+                                </div>
+                            </c:if>
                         </li>
 
                         <!-- Completed -->
 
-                        <li style="margin-top: 0" class="uk-container">
+                        <li style="margin-top: 0;min-height: 40%; align-content: center;" class="uk-container">
                             <c:if test="${!empty completed}">
                                 <c:forEach var="completed" items="${completed}">
                                     <div class="uk-card uk-card-default exchange-card"
@@ -337,11 +351,18 @@
                                     </div>
                                 </c:forEach>
                             </c:if>
+                            <c:if test="${empty completed}">
+                                <div>
+                                    <h4 class="uk-h6">
+                                        <spring:message code="exchange.completed.empty"/>
+                                    </h4>
+                                </div>
+                            </c:if>
                         </li>
 
                         <!-- Rejected -->
 
-                        <li class="uk-container">
+                        <li style="min-height: 40%; align-content: center" class="uk-container">
                             <c:if test="${!empty rejected}">
                                 <c:forEach var="rejected" items="${rejected}">
                                     <div class="uk-card uk-card-default exchange-card"
@@ -403,6 +424,13 @@
                                         </div>
                                     </div>
                                 </c:forEach>
+                            </c:if>
+                            <c:if test="${empty rejected}">
+                                <div>
+                                    <h4 class="uk-h6">
+                                        <spring:message code="exchange.rejected.empty"/>
+                                    </h4>
+                                </div>
                             </c:if>
                         </li>
                     </ul>

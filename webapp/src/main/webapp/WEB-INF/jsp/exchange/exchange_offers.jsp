@@ -31,19 +31,6 @@
             <h3 class="uk-h5"><spring:message code="exchange.offers.subtitle"/></h3>
         </div>
 
-
-        <%--		<c:if test="${!empty successMessage}">--%>
-        <%--		    <div class="uk-alert-success" uk-alert>--%>
-        <%--		        <p>${successMessage}</p>--%>
-        <%--		    </div>--%>
-        <%--		</c:if>--%>
-        <%--		<c:if test="${!empty errorMessage}">--%>
-        <%--		    <div class="uk-alert-danger" uk-alert>--%>
-        <%--		        <p>${errorMessage}</p>--%>
-        <%--		    </div>--%>
-        <%--		</c:if>--%>
-
-        <%--        <c:if test="${empty exchanges.size() eq 0}">--%>
         <div class="main-content">
             <!-- columna de exchanges -->
             <div class="uk-width-3-5 column-exchanges scrollable-content">
@@ -58,7 +45,7 @@
 
                         <!-- Pending -->
 
-                        <li class="uk-container uk-align-center">
+                        <li style="min-height: 40%; align-content: center" class="uk-container uk-align-center">
                             <c:if test="${!empty pending}">
                                 <c:forEach var="pending" items="${pending}">
                                     <div class="uk-card uk-card-default exchange-card"
@@ -115,11 +102,18 @@
                                     </div>
                                 </c:forEach>
                             </c:if>
+                            <c:if test="${empty pending}">
+                                <div>
+                                    <h4 class="uk-h6">
+                                        <spring:message code="exchange.pending.empty"/>
+                                    </h4>
+                                </div>
+                            </c:if>
                         </li>
 
                         <!-- In Progress -->
 
-                        <li class="uk-container">
+                        <li style="min-height: 40%; align-content: center" class="uk-container">
                             <c:if test="${!empty inProgress}">
                                 <c:forEach var="inProgress" items="${inProgress}">
                                     <div class="uk-card uk-card-default exchange-card"
@@ -212,11 +206,18 @@
                                     </div>
                                 </c:forEach>
                             </c:if>
+                            <c:if test="${empty inProgress}">
+                                <div>
+                                    <h4 class="uk-h6">
+                                        <spring:message code="exchange.inProgress.empty"/>
+                                    </h4>
+                                </div>
+                            </c:if>
                         </li>
 
                         <!-- Completed -->
 
-                        <li style="margin-top: 0" class="uk-container">
+                        <li style="margin-top: 0;min-height: 40%; align-content: center" class="uk-container">
                             <c:if test="${!empty completed}">
                                 <c:forEach var="completed" items="${completed}">
                                     <div class="uk-card uk-card-default exchange-card"
@@ -275,11 +276,18 @@
                                     </div>
                                 </c:forEach>
                             </c:if>
+                            <c:if test="${empty completed}">
+                                <div>
+                                    <h4 class="uk-h6">
+                                        <spring:message code="exchange.completed.empty"/>
+                                    </h4>
+                                </div>
+                            </c:if>
                         </li>
 
                         <!-- Rejected -->
 
-                        <li class="uk-container">
+                        <li style="min-height: 40%; align-content: center" class="uk-container">
                             <c:if test="${!empty rejected}">
                                 <c:forEach var="rejected" items="${rejected}">
                                     <div class="uk-card uk-card-default exchange-card"
@@ -343,6 +351,13 @@
 
                                     </div>
                                 </c:forEach>
+                            </c:if>
+                            <c:if test="${empty rejected}">
+                                <div>
+                                    <h4 class="uk-h6">
+                                        <spring:message code="exchange.rejected.empty"/>
+                                    </h4>
+                                </div>
                             </c:if>
                         </li>
                     </ul>
