@@ -27,3 +27,9 @@
     display: flex;
 }
 
+.book-empty {
+    height: 25%;
+    align-content: center;
+    justify-content: center;
+    display: grid;
+}
