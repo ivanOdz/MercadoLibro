@@ -7,7 +7,8 @@
 <%@include file="/WEB-INF/jsp/head/headers.jsp" %>
 <%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
 <head>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
@@ -23,7 +24,7 @@
 
 <div class="uk-background-muted">
     <div class="uk-container">
-        <div class="uk-grid ml-1 uk-margin-top" uk-grid>
+        <div class="uk-grid ml-1 uk-margin-top mb-2" uk-grid>
             <div class="uk-width-1-4@s filter-section uk-border-rounded uk-box-shadow-small mt-1 mb-1">
                 <h2>
                     <c:out value='${publications.metadata.search}'/>
@@ -150,42 +151,80 @@
                 </c:if>
             </div>
 
-            <div class="uk-width-3-4@s col-content">
-                    <h5 class="uk-text-large mt-1"><spring:message code="publications.list.available"/></h5>
-                <div class="uk-card uk-card-default uk-card-body uk-margin-bottom mt-1 uk-border-rounded uk-border-rounded-medium">
-<%--                    <h6 class="uk-text-muted"><spring:message code="publications.list.select"/></h6>--%>
+            <div class="uk-width-3-4 col-content mb-1">
+                <h5 class="uk-text-large mt-1"><spring:message code="publications.list.available"/></h5>
+                <div class="uk-card uk-card-default uk-card-body uk-margin-bottom uk-border-rounded uk-border-rounded-medium">
                 </div>
 
-                <div class="uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m mb-1 mt-1" uk-grid>
+                <div class="uk-grid-match" uk-grid>
                     <c:forEach var="card" items="${publications.data}">
-                        <div>
-                            <a href="<c:url value='publications/${card.publicationId}'>
-								</c:url>"
-                               class="uk-card uk-card-default uk-card-hover uk-card-body uk-border-rounded custom-link">
-                                <figure class="uk-margin-bottom">
-                                    <c:choose>
-                                        <c:when test="${card.book.images[0] != null}">
-                                            <img class="book-image"
-                                                 src="${pageContext.request.contextPath}/images/${card.book.images[0]}"
-                                                 alt="bookImage"/>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <img class="book-image"
-                                                 src="${pageContext.request.contextPath}/images/book.jpg" alt="book"/>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </figure>
+                        <div class="uk-width-1-1">
+                            <a href="<c:url value='publications/${card.publicationId}' />"
+                               class="uk-card uk-card-default uk-card-hover uk-card-body uk-border-rounded custom-link uk-flex uk-flex-middle"
+                            style="padding: 1rem !important;">
 
-                                <h5 class="uk-card-title custom-link">
-                                    <c:out value='${card.book.bookModel.title}'/>
-                                </h5>
-                                <p class="small-gray-text custom-link">
-                                    <c:out value='${card.book.bookModel.authors}'/>
-                                </p>
+                                <!-- Contenedor de la imagen (Columna izquierda) -->
+                                <div class="uk-width-1-4 uk-flex uk-flex-center">
+                                    <figure class="uk-margin-remove">
+                                        <c:choose>
+                                            <c:when test="${card.book.images[0] != null}">
+                                                <img class="book-image uk-border-rounded"
+                                                     src="${pageContext.request.contextPath}/images/${card.book.images[0]}"
+                                                     alt="bookImage"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <img class="book-image uk-border-rounded"
+                                                     src="${pageContext.request.contextPath}/images/book.jpg" alt="book"/>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </figure>
+                                </div>
+
+                                <!-- Contenedor del texto (Columna derecha) -->
+                                <div class="uk-width-3-4 uk-margin-small-left" style="width:10rem;">
+                                    <!-- Título del libro -->
+                                    <h5 class="uk-card-title custom-link uk-margin-remove-bottom">
+                                        <c:out value="${card.book.bookModel.title}"/>
+                                    </h5>
+
+                                    <!-- Autores del libro -->
+                                    <p class="small-gray-text custom-link uk-margin-remove-top">
+                                        <c:out value="${card.book.bookModel.authors}"/>
+                                    </p>
+                                    <div>
+                                        <span class="uk-margin-small-right" uk-icon="location">
+                                        </span>
+                                        <span>${card.location.locationString}</span>
+                                    </div>
+                                </div>
+
+                                <div class="row-container" style="width:15rem; padding-left:10rem;">
+                                    <div class="star-rating">
+                                        <p class="small-gray-text custom-link" style="display: inline;">
+                                            <c:out value="${card.book.bookModel.rating.rating}"/>
+                                        </p>
+                                        <c:forEach var="i" begin="1" end="5">
+                                            <c:choose>
+                                                <c:when test="${i <= card.book.bookModel.rating.rating}">
+                                                    <!-- Estrella llena -->
+                                                    <span uk-icon="icon: star; ratio: 1.5" style="color: gold; display: inline;"></span>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <!-- Estrella vacía -->
+                                                    <span uk-icon="icon: star; ratio: 1.5" style="color: lightgray; display: inline;"></span>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </c:forEach>
+                                        <p class="small-gray-text custom-link" style="display: inline;">(<c:out
+                                                value="${card.book.bookModel.rating.ratingCount}"/>)
+                                        </p>
+                                    </div>
+                                </div>
                             </a>
                         </div>
                     </c:forEach>
                 </div>
+
                 <hr class="uk-divider-icon">
 
                 <nav aria-label="Pagination" class="uk-position-relative uk-margin">
