@@ -190,11 +190,6 @@ public class ExchangeController {
 
     @PostMapping(path = "/exchange/initializeexchange")
     public ModelAndView initializeExchange(@NotEmpty @Valid @ModelAttribute("exchangeForm") ExchangeForm exchangeInput, BindingResult errors) {
-        System.out.println("initializeExchange");
-        System.out.println("errors: " + errors);
-        System.out.println("publication ID: " + exchangeInput.getPublicationId());
-        System.out.println("book ID: " + exchangeInput.getBookId());
-        System.out.println("location: " + exchangeInput.getLocation());
         if(errors.hasErrors()){
             startExchange(exchangeInput, errors, exchangeInput.getPublicationId());
         }
