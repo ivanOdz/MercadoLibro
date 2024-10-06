@@ -61,7 +61,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/post/edit").authenticated()
                 .antMatchers("/post/{postId}").access("@accessHelper.isOwner(#pricipal, #postId)") // para areas de acceso a un admin
 //                    .antMatchers("/**").authenticated()
-                .antMatchers("/book/new_book","/book/new_book_model/**", "/start_exchange").authenticated()
+                .antMatchers("/book/new_book","/book/new_book_model/**", "/start_exchange", "/profile", "/requests", "/offers").authenticated()
                 //.antMatchers("/book/edit_book").hasRole("EXPLORER")
                 //.antMatchers("/publications/edit_publication").hasRole("PUBLISHER")
                 .and().formLogin()
