@@ -24,23 +24,18 @@ import java.util.stream.Collectors;
 public class PublicationController {
 
     private final PublicationService ps;
-    private final LocationService ls;
-    private final UserService us;
     private final BookService bs;
 
     @Autowired
     private GenreService genreService;
-    @Autowired
-    private BookStateService bookStateService;
+
     @Autowired
     private LoggedUserAdvice loggedUserAdvice;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
-    public PublicationController(PublicationService ps, LocationService ls, UserService us, BookService bs) {
+    public PublicationController(PublicationService ps, BookService bs) {
         this.ps = ps;
-        this.ls = ls;
-        this.us = us;
         this.bs = bs;
     }
 
