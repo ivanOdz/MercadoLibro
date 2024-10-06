@@ -270,7 +270,7 @@
                                 </c:url>
                                 <a href="${prevPageUrl}">
                                     <span uk-pagination-previous></span>
-                                    Anterior
+                                    <spring:message code="publications.pagination.previous"/>
                                 </a>
                             </li>
                         </c:if>
@@ -345,7 +345,7 @@
                                     <c:param name="sort-type" value="${books.metadata.sortType}" />
                                 </c:url>
                                 <a href="${nextPageUrl}">
-                                    Siguiente
+                                    <spring:message code="publications.pagination.next"/>
                                     <span uk-pagination-next></span>
                                 </a>
                             </li>
@@ -354,7 +354,7 @@
 
                     <!-- Botón "Ir al inicio" alineado a la derecha -->
                     <a href="" uk-totop uk-scroll class="uk-position-right uk-margin-right">
-                        Back to top
+                        <spring:message code="publications.pagination.totop"/>
                     </a>
                 </nav>
             </div>
