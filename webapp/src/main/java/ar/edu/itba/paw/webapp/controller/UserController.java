@@ -7,7 +7,7 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 import ar.edu.itba.paw.interfaces.services.UserReviewService;
 import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.webapp.auth.UserDetailsService;
+import ar.edu.itba.paw.webapp.auth.PawUserDetailsService;
 import ar.edu.itba.paw.webapp.form.PasswordForm;
 import ar.edu.itba.paw.webapp.form.UserForm;
 import org.slf4j.Logger;
@@ -40,7 +40,7 @@ public class UserController {
     private final UserService us;
 
     @Autowired
-    private UserDetailsService userDetailsService;
+    private PawUserDetailsService userDetailsService;
     @Autowired
     private UserReviewService userReviewService;
 
@@ -49,10 +49,14 @@ public class UserController {
     @Autowired
     private LoggedUserAdvice loggedUserAdvice;
 
+
+    private AuthenticationManager auth;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     public UserController(final UserService us, AuthenticationManager auth) {
         this.us = us;
+        this.auth = auth;
     }
 
 

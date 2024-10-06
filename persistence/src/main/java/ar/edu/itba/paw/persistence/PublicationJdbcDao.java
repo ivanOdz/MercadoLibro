@@ -10,6 +10,7 @@ import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -69,7 +70,7 @@ public class PublicationJdbcDao implements PublicationDao {
         try {
             publicationId = jdbcInsert.executeAndReturnKey(md).longValue();
         } catch (DataIntegrityViolationException e) {
-            String message = messageSource.getMessage("error.createPublication", new Object[]{e.getStackTrace()}, Locale.getDefault());
+            String message = messageSource.getMessage("error.createPublication", new Object[]{e.getStackTrace()}, LocaleContextHolder.getLocale());
             throw new PublicationBadRequestException(message);
         }
         return publicationId;
@@ -122,7 +123,7 @@ public class PublicationJdbcDao implements PublicationDao {
         Optional<Publication> publication =  jdbcTemplate.query(sqlQuery, new Object[]{ExchangeState.ACCEPTED.getValue(), publicationId, PublicationState.CURRENT.getValue()}, new int[]{Types.INTEGER, Types.BIGINT, Types.INTEGER}, ROW_MAPPER_PUBLICATION).stream().findFirst();
 
         if (publication.isEmpty()) {
-            String message = messageSource.getMessage("error.publicationNotFound", new Object[]{publicationId}, Locale.getDefault());
+            String message = messageSource.getMessage("error.publicationNotFound", new Object[]{publicationId}, LocaleContextHolder.getLocale());
             throw new PublicationNotFoundException(message);
         }
 

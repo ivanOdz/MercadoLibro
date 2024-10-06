@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -75,7 +76,7 @@ public class UserJdbcDao implements UserDao {
         try {
             rowsAffected = jdbcTemplate.update("UPDATE users SET userName = ? WHERE userId = ? AND NOT EXISTS (SELECT * FROM users WHERE userName = ?)", new Object[]{newUsername, userId, newUsername}, new int[]{Types.VARCHAR, Types.BIGINT, Types.VARCHAR});
         } catch (DataIntegrityViolationException e) {
-            String errorMessage = messageSource.getMessage("error.changeUserName", new Object[]{e.getStackTrace()}, Locale.getDefault());
+            String errorMessage = messageSource.getMessage("error.changeUserName", new Object[]{e.getStackTrace()}, LocaleContextHolder.getLocale());
             throw new UserModifyBadRequestException(errorMessage);
         }
         return rowsAffected >= 1;
@@ -87,7 +88,7 @@ public class UserJdbcDao implements UserDao {
                 new int[]{Types.INTEGER}, ROW_MAPPER_USER).stream().findFirst();
 
         if (u.isEmpty()) {
-            String errorMessage = messageSource.getMessage("error.userToVerifyNotFound", new Object[]{verificationCode}, Locale.getDefault());
+            String errorMessage = messageSource.getMessage("error.userToVerifyNotFound", new Object[]{verificationCode}, LocaleContextHolder.getLocale());
             throw new UserNotFoundException(errorMessage);
         }
 
@@ -114,7 +115,7 @@ public class UserJdbcDao implements UserDao {
             jdbcTemplate.update("UPDATE users SET language = ? WHERE userId = ?", new Object[]{language, userId},
                     new int[]{Types.VARCHAR, Types.BIGINT});
         }catch (DataIntegrityViolationException e){
-            String errorMessage = messageSource.getMessage("error.setUserLanguage", new Object[]{e.getStackTrace()}, Locale.getDefault());
+            String errorMessage = messageSource.getMessage("error.setUserLanguage", new Object[]{e.getStackTrace()}, LocaleContextHolder.getLocale());
             throw new UserModifyBadRequestException(errorMessage);
         }
     }
@@ -135,7 +136,7 @@ public class UserJdbcDao implements UserDao {
         try {
             userId = jdbcInsert.executeAndReturnKey(userData);
         } catch (DataIntegrityViolationException e) {
-            String errorMessage = messageSource.getMessage("error.createUser", new Object[]{e.getStackTrace()}, Locale.getDefault());
+            String errorMessage = messageSource.getMessage("error.createUser", new Object[]{e.getStackTrace()}, LocaleContextHolder.getLocale());
             throw new UserBadRequestException(errorMessage);
         }
 
@@ -157,7 +158,7 @@ public class UserJdbcDao implements UserDao {
                     new int[]{Types.NULL, Types.INTEGER});
 
         } catch (DataIntegrityViolationException e) {
-            String errorMessage = messageSource.getMessage("error.verifyUser", new Object[]{e.getStackTrace()}, Locale.getDefault());
+            String errorMessage = messageSource.getMessage("error.verifyUser", new Object[]{e.getStackTrace()}, LocaleContextHolder.getLocale());
             throw new UserVerificationBadRequestException(errorMessage);
         }
     }
@@ -168,7 +169,7 @@ public class UserJdbcDao implements UserDao {
             jdbcTemplate.update("UPDATE users SET verificationCode = ? WHERE mail = ?", new Object[]{verificationCode, email},
                     new int[]{Types.INTEGER, Types.VARCHAR});
         } catch (DataIntegrityViolationException e) {
-            String errorMessage = messageSource.getMessage("error.changePasswordSolicited", new Object[]{e.getStackTrace()}, Locale.getDefault());
+            String errorMessage = messageSource.getMessage("error.changePasswordSolicited", new Object[]{e.getStackTrace()}, LocaleContextHolder.getLocale());
             throw new PasswordChangeBadRequestException(errorMessage);
         }
     }

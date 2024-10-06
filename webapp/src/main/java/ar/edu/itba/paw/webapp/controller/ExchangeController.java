@@ -3,7 +3,6 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.ExchangeState;
-import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 
 import ar.edu.itba.paw.webapp.form.ExchangeForm;
@@ -11,19 +10,15 @@ import ar.edu.itba.paw.webapp.form.UserReviewForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
-import java.sql.Timestamp;
 import java.util.*;
 
 @Controller

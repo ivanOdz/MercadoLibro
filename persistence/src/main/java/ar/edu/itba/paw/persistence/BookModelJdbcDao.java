@@ -12,6 +12,7 @@ import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.BookModelMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -93,7 +94,7 @@ public class BookModelJdbcDao implements BookModelDao {
         try {
             bookModelId = jdbcInsertBookModel.executeAndReturnKey(md);
         } catch (DataIntegrityViolationException e) {
-            String errorMessage = messageSource.getMessage("error.bookModelCreation", new Object[]{e.getStackTrace()}, Locale.getDefault());
+            String errorMessage = messageSource.getMessage("error.bookModelCreation", new Object[]{e.getStackTrace()}, LocaleContextHolder.getLocale());
             throw new BookModelBadRequestException(errorMessage);
         }
         return bookModelId.longValue();
@@ -110,7 +111,7 @@ public class BookModelJdbcDao implements BookModelDao {
             try{
                 id = jdbcInsertAuthor.execute(parameters);
             } catch (DataIntegrityViolationException e) {
-                String errorMessage = messageSource.getMessage("error.authorCreation", new Object[]{e.getStackTrace()}, Locale.getDefault());
+                String errorMessage = messageSource.getMessage("error.authorCreation", new Object[]{e.getStackTrace()}, LocaleContextHolder.getLocale());
                 throw new AuthorBadRequestException(errorMessage);
             }
             authorsIds.add(id.longValue());
@@ -128,7 +129,7 @@ public class BookModelJdbcDao implements BookModelDao {
             try{
                 jdbcInsertBookAuthor.execute(parameters);
             } catch (DataIntegrityViolationException e) {
-                String errorMessage = messageSource.getMessage("error.bookAuthorCreation", new Object[]{e.getStackTrace()}, Locale.getDefault());
+                String errorMessage = messageSource.getMessage("error.bookAuthorCreation", new Object[]{e.getStackTrace()},LocaleContextHolder.getLocale());
                 throw new BookAuthorBadRequestException(errorMessage);
             }
         }
@@ -151,7 +152,7 @@ public class BookModelJdbcDao implements BookModelDao {
                 .stream().findFirst();
 
         if(bm.isEmpty()){
-            String errorMessage = messageSource.getMessage("error.bookModelNotFound", new Object[]{bookModelId}, Locale.getDefault());
+            String errorMessage = messageSource.getMessage("error.bookModelNotFound", new Object[]{bookModelId}, LocaleContextHolder.getLocale());
             throw new BookModelNotFoundException(errorMessage);
         }
         return bm.get();

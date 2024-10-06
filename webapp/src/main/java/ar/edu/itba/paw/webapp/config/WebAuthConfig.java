@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.config;
 
-import ar.edu.itba.paw.webapp.auth.UserDetailsService;
+import ar.edu.itba.paw.webapp.auth.PawUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -25,8 +25,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Value("classpath:rememberme.key")
     private Resource rememberMeKey;
+
     @Autowired
-    private UserDetailsService userDetails;
+    private PawUserDetailsService userDetails;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
