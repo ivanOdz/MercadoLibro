@@ -32,8 +32,12 @@ public class ExchangeServiceImpl implements ExchangeService {
 
     @Transactional
     @Override
-    public void initializeExchange(long bookId, String location, long offererPubId) {
-        long requesterPubId = ps.createPublication(bookId, bs.getBookById(bookId).get().getOwner().getUserId(), location, PublicationState.OFFERED);
+    public void initializeExchange(long bookId, String location, long offererPubId, User currentUser) {
+        long userId = bs.getBookById(bookId).get().getOwner().getUserId();
+        if(userId == currentUser.getUserId()) {
+            return;
+        }
+        long requesterPubId = ps.createPublication(bookId, userId, location, PublicationState.OFFERED);
 
         Random random = new Random();
         int acceptCode = Math.abs(random.nextInt());
