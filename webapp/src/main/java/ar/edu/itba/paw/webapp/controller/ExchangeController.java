@@ -17,13 +17,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -31,16 +30,23 @@ import java.util.*;
 public class ExchangeController {
 
     private final ExchangeService exchangeService;
+    private final PublicationService publicationService;
+    private final BookService bookService;
 
 
     @Autowired
     private final UserReviewService userReviewService;
 
+    @Autowired
+    private LoggedUserAdvice loggedUserAdvice;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ExchangeController.class);
 
 
-    public ExchangeController(final ExchangeService exchangeService, UserReviewService userReviewService) {
+    public ExchangeController(final ExchangeService exchangeService, PublicationService publicationService, BookService bookService, UserReviewService userReviewService) {
         this.exchangeService = exchangeService;
+        this.publicationService = publicationService;
+        this.bookService = bookService;
         this.userReviewService = userReviewService;
     }
 
@@ -167,8 +173,31 @@ public class ExchangeController {
         return mav;
     }
 
-    @RequestMapping(path = "/exchange/initializeexchange", method = RequestMethod.POST)
-    public ModelAndView initializeExchange(@ModelAttribute("exchangeForm") ExchangeForm exchangeInput) {
+    @GetMapping("/start_exchange")
+    public ModelAndView startExchange(@ModelAttribute("exchangeForm") ExchangeForm exchangeForm, BindingResult errors, @RequestParam(name = "publication_id") long publicationId) {
+        final ModelAndView mav = new ModelAndView("/exchange/solicit_exchange");
+        Publication publication = publicationService.getPublicationByPublicationId(publicationId);
+        List<Book> availableBooks;
+
+        availableBooks = bookService.getAvailableBooksByUser(loggedUserAdvice.getLoggedUser());
+        mav.addObject("availableBooks", availableBooks);
+
+        mav.addObject("exchangeForm", exchangeForm);
+        mav.addObject("publication", publication);
+
+        return mav;
+    }
+
+    @PostMapping(path = "/exchange/initializeexchange")
+    public ModelAndView initializeExchange(@NotEmpty @Valid @ModelAttribute("exchangeForm") ExchangeForm exchangeInput, BindingResult errors) {
+        System.out.println("initializeExchange");
+        System.out.println("errors: " + errors);
+        System.out.println("publication ID: " + exchangeInput.getPublicationId());
+        System.out.println("book ID: " + exchangeInput.getBookId());
+        System.out.println("location: " + exchangeInput.getLocation());
+        if(errors.hasErrors()){
+            startExchange(exchangeInput, errors, exchangeInput.getPublicationId());
+        }
         // Insertar tupla de requester en publicacion con fecha actual y publicationState = 2 (OFFERER)
         exchangeService.initializeExchange(exchangeInput.getBookId(), exchangeInput.getLocation(), exchangeInput.getPublicationId());
         return new ModelAndView("redirect:/requests");  // TOOD: se podría redirigir a una página de éxito
