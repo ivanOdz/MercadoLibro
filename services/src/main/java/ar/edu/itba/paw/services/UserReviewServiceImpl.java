@@ -1,31 +1,33 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.UserReviewDao;
+import ar.edu.itba.paw.interfaces.services.ExchangeService;
 import ar.edu.itba.paw.interfaces.services.UserReviewService;
+import ar.edu.itba.paw.models.Exchange;
 import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.UserReview;
 import ar.edu.itba.paw.models.utils.Rating;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.standard.expression.Each;
-
-import java.util.List;
 
 @Service
 public class UserReviewServiceImpl implements UserReviewService {
 
 	private final UserReviewDao urDao;
-
-	public UserReviewServiceImpl(UserReviewDao urDao) {
+	private final ExchangeService exchangeService;
+	
+	public UserReviewServiceImpl(final UserReviewDao urDao, final ExchangeService exchangeService) {
 		
 		this.urDao = urDao;
+		this.exchangeService = exchangeService;
 	}
 
 	@Override
-	public Boolean createUserReview(long exchangeId, long userId, long userSubjectId, String description, int rating) {
+	public Boolean createUserReview(long exchangeId, long userId, String description, int rating) {
 		
-		// VALIDAR!
-		return urDao.createUserReview(exchangeId, userId, userSubjectId, description, rating);
+		Exchange exchange = exchangeService.getExchangeById(exchangeId).get();
+		
+		return urDao.createUserReview(exchangeId, userId, 0, description, rating);
 	}
 	
 	@Override

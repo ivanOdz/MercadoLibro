@@ -11,7 +11,7 @@ import java.util.List;
 @Service
 public interface UserReviewService {
 
-	Boolean createUserReview(long exchangeId, long userId, long userSubjectId, String description, int rating);
+	Boolean createUserReview(long exchangeId, long userId, String description, int rating);
 
 	PaginatedResponse<UserReview, BasicMetadata> getReviewsGivenByUserId(long userId);
 

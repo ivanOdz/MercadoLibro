@@ -13,9 +13,8 @@ public interface ExchangeDao {
 
     Optional<Exchange> createExchange(long offererPubId, long requesterPubId, int acceptCode, Timestamp startDate);
 
-//    Optional<Exchange> exchange(int acceptCode, boolean state);
-
     Optional<Exchange> rejectExchange(int acceptCode);
+    
     void setEndDate(int acceptCode, Timestamp endDate);
 
     Optional<Exchange> acceptExchange(int acceptCode);

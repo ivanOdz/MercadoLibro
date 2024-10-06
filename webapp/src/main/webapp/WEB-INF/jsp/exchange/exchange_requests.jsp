@@ -511,9 +511,7 @@
                                             <form:textarea path="reviewDescription" rows="4" class="uk-textarea"/>
                                         </div>
 
-                                        <%--                                    <form:hidden path="exchangeId"/>--%>
-                                        <%--                                    <form:hidden path="reviewerId"/>--%>
-                                        <%--                                    <form:hidden path="subjectId"/>--%>
+                                        <form:hidden path="exchangeId"/>
 
                                         <p class="uk-text-right">
                                             <button class="uk-button uk-button-default uk-modal-close" type="button">

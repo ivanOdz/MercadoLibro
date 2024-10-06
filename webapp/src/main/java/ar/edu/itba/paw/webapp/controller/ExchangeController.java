@@ -198,14 +198,11 @@ public class ExchangeController {
     @RequestMapping(path = "/submitReview", method = RequestMethod.POST)
     public ModelAndView submitReview(
             @RequestParam("exchangeId") long exchangeId,
-            @RequestParam("reviewerId") long reviewerId,
-            @RequestParam("subjectId") long subjectId,
             @RequestParam("reviewDescription") String reviewDescription,
             @RequestParam("userReviewRating") int userReviewRating/*,
 		BindingResult result, RedirectAttributes redirectAttributes*/) {
     
-
-        boolean success = userReviewService.createUserReview(exchangeId, reviewerId, subjectId, reviewDescription, userReviewRating);
+        boolean success = userReviewService.createUserReview(exchangeId, loggedUserAdvice.getLoggedUser().getUserId(), reviewDescription, userReviewRating);
 
         /*
         if (success) {

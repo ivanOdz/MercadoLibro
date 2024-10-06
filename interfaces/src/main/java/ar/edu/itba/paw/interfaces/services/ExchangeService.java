@@ -30,7 +30,9 @@ public interface ExchangeService {
     void cofirmRequester(int acceptCode);
 
     Optional<Exchange> getExchangeByAcceptCode(int acceptCode);
-
+    
+    Optional<Exchange> getExchangeById(long exchangeId);
+    
     PaginatedResponse<Exchange, BasicMetadata> getExchangeOffererListByUserId(long userId, int currentPage, ExchangeState exchangeState);
 
     PaginatedResponse<Exchange, BasicMetadata> getExchangeRequesterListByUserId(long userId, int currentPage, ExchangeState exchangeState);
