@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.Exchange;
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.utils.ExchangeState;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +11,7 @@ import java.util.Optional;
 @Service
 public interface ExchangeService {
 
-    void initializeExchange(long bookId, String location, long offererPubId);
+    void initializeExchange(long bookId, String location, long offererPubId, User currentUser);
 
     String exchange(int acceptCode, boolean state);
 
