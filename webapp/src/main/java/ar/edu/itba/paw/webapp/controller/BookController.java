@@ -146,7 +146,6 @@ public class BookController {
     @PostMapping("/book/create_book")
     public ModelAndView createBook(@Valid @ModelAttribute(name = "bookDetailsForm") BookDetailsForm bookDetailsForm, BindingResult errors, @RequestParam("book_model_id") long bookModelId) {
         if(errors.hasErrors()){
-            System.out.println("ERRORS: " + errors);
             return bookDetailsFormNewBook(bookDetailsForm, bookModelId, errors);
         }
         User user = loggedUserAdvice.getLoggedUser();
