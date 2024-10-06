@@ -1,24 +1,22 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.exceptions.base.ApplicationRuntimeException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
-import ar.edu.itba.paw.models.utils.pagination.Metadata;
-import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 
 import ar.edu.itba.paw.webapp.form.ExchangeForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Controller
 public class PublicationController {
@@ -60,99 +58,46 @@ public class PublicationController {
 
     @PostMapping(path = "/createpublication")
     public ModelAndView createPublication(@RequestParam(name = "bookId") long bookId, @RequestParam(name = "location") String location) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
-            ps.createPublication(bookId, pud.getUser().getUserId(), location, PublicationState.CURRENT);
+
+        try {
+            ps.createPublication(bookId, loggedUserAdvice.getLoggedUser().getUserId(), location, PublicationState.CURRENT);
+        } catch (ApplicationRuntimeException e) {
+            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
+            return new ModelAndView("redirect:/400");
         }
 
         return new ModelAndView("redirect:/book");
     }
 
+    @GetMapping("/publications/{publication_id:\\d+}")
+    public ModelAndView publicationDetail(@PathVariable(name = "publication_id") long publicationId) {
+        final ModelAndView mav = new ModelAndView("/home/publication_detail");
 
-
-    /*@RequestMapping("/publication")
-    public ModelAndView publication(@RequestParam(name = "publication_id") long publicationId) {
-        final ModelAndView mav = new ModelAndView("home/publication");
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
-            User loggedUser = us.findById(pud.getUser().getUserId()).get();
-            mav.addObject("loggedUser", loggedUser);
-        }
-        if (ps.getPublicationById(publicationId).isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Publication not found");
-        } else {
-            mav.addObject("publication", ps.getPublicationById(publicationId).get());
+        Publication publication;
+        try{
+            publication = ps.getPublicationByPublicationId(publicationId);
+        } catch (ApplicationRuntimeException e) {
+            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
+            return new ModelAndView("redirect:/404");
         }
 
+        List<Book> availableBooks;
+        User user = loggedUserAdvice.getLoggedUser();
+        if (user != null) {
+            // IMPLEMENT: excepción no implementada, si queda páginada no hace falta una excepción, únicamente un checkeo en el jsp
+            availableBooks = bs.getAvailableBooksByUser(user);
+            mav.addObject("availableBooks", availableBooks);
+        }
+
+        mav.addObject("exchangeForm", new ExchangeForm());
+        mav.addObject("publication", publication);
+        mav.addObject("genres", Stream.of(Genre.values()).map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
         return mav;
-    }*/
-
-@GetMapping("/publications/{publication_id:\\d+}")
-public ModelAndView publicationDetail(@PathVariable(name = "publication_id") long publicationId) {
-    final ModelAndView mav = new ModelAndView("/home/publication_detail");
-    Publication publication = ps.getPublicationByPublicationId(publicationId);
-    List<Book> availableBooks;
-    User user = loggedUserAdvice.getLoggedUser();
-    if (user != null) {
-        availableBooks = bs.getAvailableBooksByUser(user);
-        mav.addObject("availableBooks", availableBooks);
     }
-    if (publication == null) {
-        // TODO: Hace vista que la publicacion ya no esta disponible
-        return new ModelAndView("error/forbidden");
-    }
-
-    mav.addObject("exchangeForm", new ExchangeForm());
-    mav.addObject("publication", publication);
-    mav.addObject("genres", List.of(Genre.values()).stream().map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
-    return mav;
-}
 
     @RequestMapping(path = "/user_auth")
     public ModelAndView forceUserAuth() {
         return new ModelAndView("/user/demand_auth");
     }
-
-// Esto tienen que volar
-    /*@RequestMapping("/submitmail")
-    public ModelAndView submitMail(@RequestParam(name = "publication_id") long publicationId) {
-        final ModelAndView mav = new ModelAndView("home/submitmail");
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
-            User loggedUser = us.findById(pud.getUser().getUserId()).get();
-            mav.addObject("loggedUser", loggedUser);
-        }
-
-
-        if (ps.getPublicationById(publicationId).isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Publication not found");
-        } else mav.addObject("publication_id", publicationId);
-        return mav;
-    }*/
-
-    /*@RequestMapping(value = "/submitmail", method = RequestMethod.POST)
-    public ModelAndView handleMailSubmission(@RequestParam(name = "submited_mail") String submited_mail, @RequestParam(name = "publication_id") long publicationId) {
-        final ModelAndView mav = new ModelAndView("home/comparemail");
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
-            User loggedUser = us.findById(pud.getUser().getUserId()).get();
-            mav.addObject("loggedUser", loggedUser);
-        }
-
-        if (ps.getPublicationById(publicationId).isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Publication not found");
-        }
-
-        long userId = ps.getPublicationById(publicationId).get().getUserId();
-        User owner = us.findById(userId).get();
-
-        mav.addObject("ownerMail", owner.getMail());
-        mav.addObject("submited_mail", submited_mail);
-        mav.addObject("publication_id", publicationId);
-        mav.addObject("is_for_exchange", true);
-
-        return mav;
-    }*/
 
 }

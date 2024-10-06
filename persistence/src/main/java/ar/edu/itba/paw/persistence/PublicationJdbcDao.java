@@ -1,12 +1,16 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.exceptions.PublicationBadRequestException;
+import ar.edu.itba.paw.interfaces.exceptions.PublicationNotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.PublicationDao;
 import ar.edu.itba.paw.interfaces.services.BookStateService;
 import ar.edu.itba.paw.interfaces.services.GenreService;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
-import ar.edu.itba.paw.models.utils.pagination.Metadata;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -30,6 +34,9 @@ public class PublicationJdbcDao implements PublicationDao {
     private final GenreService genreService;
     private final BookStateService bookStateService;
 
+    @Autowired
+    private MessageSource messageSource;
+
     static final RowMapper<Publication> ROW_MAPPER_PUBLICATION =
             (rs, rowNum) -> {
                 long id = rs.getLong("publicationId");
@@ -41,7 +48,7 @@ public class PublicationJdbcDao implements PublicationDao {
             };
 
     public PublicationJdbcDao(final DataSource ds, GenreService genreService, BookStateService bookStateService) {
-        jdbcTemplate =  new JdbcTemplate(ds);
+        jdbcTemplate = new JdbcTemplate(ds);
         this.genreService = genreService;
         this.bookStateService = bookStateService;
         jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
@@ -58,12 +65,19 @@ public class PublicationJdbcDao implements PublicationDao {
         md.put("publicationDatetime", new Timestamp(new Date().getTime()));
         md.put("locationId", locationId);
 
-        return jdbcInsert.executeAndReturnKey(md).longValue();
+        long publicationId;
+        try {
+            publicationId = jdbcInsert.executeAndReturnKey(md).longValue();
+        } catch (DataIntegrityViolationException e) {
+            String message = messageSource.getMessage("error.createPublication", new Object[]{e.getStackTrace()}, Locale.getDefault());
+            throw new PublicationBadRequestException(message);
+        }
+        return publicationId;
     }
 
     @Override
     public void terminatePublication(long pubId) {
-        jdbcTemplate.update("UPDATE publication SET publicationState = ? WHERE publicationId = ?",PublicationState.TERMINATED.getValue(), pubId);
+        jdbcTemplate.update("UPDATE publication SET publicationState = ? WHERE publicationId = ?", PublicationState.TERMINATED.getValue(), pubId);
     }
 
     @Override
@@ -85,7 +99,7 @@ public class PublicationJdbcDao implements PublicationDao {
                         "(SELECT STRING_AGG(a.authorName, ', ') " +
                         " FROM book_author ba " +
                         " JOIN author a ON a.authorId = ba.authorId " +
-                        " WHERE ba.bookModelId = bm.bookModelId) AS authors, "+
+                        " WHERE ba.bookModelId = bm.bookModelId) AS authors, " +
                         "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, bm.imageId as coverId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount, " +
                         "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language " +
 
@@ -105,7 +119,14 @@ public class PublicationJdbcDao implements PublicationDao {
                         "WHERE p.publicationId = ? AND p.publicationState = ? " +
                         "GROUP BY u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language , p.publicationId, p.publicationState, l.locationId, l.locationString, p.publicationDatetime, b.bookId, b.bookState, b.exchangesQty, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, coverId";
 
-        return jdbcTemplate.query(sqlQuery, new Object[]{ ExchangeState.ACCEPTED.getValue(), publicationId, PublicationState.CURRENT.getValue() }, new int[]{ Types.INTEGER, Types.BIGINT, Types.INTEGER }, ROW_MAPPER_PUBLICATION).stream().findFirst().orElse(null);
+        Optional<Publication> publication =  jdbcTemplate.query(sqlQuery, new Object[]{ExchangeState.ACCEPTED.getValue(), publicationId, PublicationState.CURRENT.getValue()}, new int[]{Types.INTEGER, Types.BIGINT, Types.INTEGER}, ROW_MAPPER_PUBLICATION).stream().findFirst();
+
+        if (publication.isEmpty()) {
+            String message = messageSource.getMessage("error.publicationNotFound", new Object[]{publicationId}, Locale.getDefault());
+            throw new PublicationNotFoundException(message);
+        }
+
+        return publication.get();
     }
 
     @Override
@@ -113,35 +134,35 @@ public class PublicationJdbcDao implements PublicationDao {
 
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT p.publicationId, " +
-                    "p.publicationState, l.locationId, l.locationString, p.publicationDatetime," +
+                        "p.publicationState, l.locationId, l.locationString, p.publicationDatetime," +
 
-                    //book
-                    "b.bookId, ARRAY_AGG(i.imageId ORDER BY bi.imageOrder) AS images, " +
-                    "b.bookState, b.exchangesQty," +
-                    //book_model
-                    "bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
-                    "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, bm.imageId AS coverId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount, u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language, " +
-                    "(SELECT STRING_AGG(a.authorName, ', ') " +
-                    " FROM book_author ba " +
-                    " JOIN author a ON a.authorId = ba.authorId " +
-                    " WHERE ba.bookModelId = bm.bookModelId) AS authors, " +
+                        //book
+                        "b.bookId, ARRAY_AGG(i.imageId ORDER BY bi.imageOrder) AS images, " +
+                        "b.bookState, b.exchangesQty," +
+                        //book_model
+                        "bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
+                        "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, bm.imageId AS coverId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount, u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language, " +
+                        "(SELECT STRING_AGG(a.authorName, ', ') " +
+                        " FROM book_author ba " +
+                        " JOIN author a ON a.authorId = ba.authorId " +
+                        " WHERE ba.bookModelId = bm.bookModelId) AS authors, " +
                         "CASE " +
                         "WHEN NOT EXISTS (SELECT 1 FROM publication p2 WHERE p2.bookId = b.bookId) THEN TRUE " +
                         "WHEN NOT EXISTS (SELECT 1 FROM exchange e2 JOIN publication p2 ON e2.offererPubId = p2.publicationId OR e2.requesterPubId = p2.publicationId " +
                         "WHERE p2.bookId = b.bookId AND e2.exchangeState = ?) THEN TRUE " +
                         "ELSE FALSE " +
-                        "END AS available "+
-                    "FROM publication p " +
-                    "JOIN book b ON p.bookId = b.bookId " +
-                    "JOIN users u ON b.ownerId = u.userId " +
-                    "JOIN book_model bm ON bm.bookModelId = b.bookModelId " +
-                    "LEFT JOIN book_rating br ON bm.bookModelId = br.bookModelId " +
-                    "JOIN book_author ba ON ba.bookModelId = bm.bookModelId " +
-                    "JOIN author a ON a.authorId = ba.authorId " +
-                    "LEFT JOIN book_image bi ON bi.bookId = b.bookId " +
-                    "LEFT JOIN image i ON bm.imageId = i.imageId " +
-                    "JOIN location l ON p.locationId = l.locationId " +
-                    "WHERE p.publicationState = ? AND LOWER(bm.title) LIKE LOWER(?) "
+                        "END AS available " +
+                        "FROM publication p " +
+                        "JOIN book b ON p.bookId = b.bookId " +
+                        "JOIN users u ON b.ownerId = u.userId " +
+                        "JOIN book_model bm ON bm.bookModelId = b.bookModelId " +
+                        "LEFT JOIN book_rating br ON bm.bookModelId = br.bookModelId " +
+                        "JOIN book_author ba ON ba.bookModelId = bm.bookModelId " +
+                        "JOIN author a ON a.authorId = ba.authorId " +
+                        "LEFT JOIN book_image bi ON bi.bookId = b.bookId " +
+                        "LEFT JOIN image i ON bm.imageId = i.imageId " +
+                        "JOIN location l ON p.locationId = l.locationId " +
+                        "WHERE p.publicationState = ? AND LOWER(bm.title) LIKE LOWER(?) "
         );
 
         if (isGenreFilterActive) {
@@ -178,16 +199,14 @@ public class PublicationJdbcDao implements PublicationDao {
         sqlQuery.append(" LIMIT ? OFFSET ?");
 
         List<Publication> data;
-        if(isGenreFilterActive && isBookStateFilterActive) {
-            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ ExchangeState.ACCEPTED.getValue(), PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", genreFilter.getValue(), bookStateFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER  }, ROW_MAPPER_PUBLICATION);
-        }
-        else if(isGenreFilterActive) {
-            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", genreFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_PUBLICATION);
-        }
-        else if(isBookStateFilterActive){
-            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ ExchangeState.ACCEPTED.getValue(), PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", bookStateFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_PUBLICATION);
-        }
-        else data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ ExchangeState.ACCEPTED.getValue(), PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", PAGE_SIZE, offset }, new int[]{ Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_PUBLICATION);
+        if (isGenreFilterActive && isBookStateFilterActive) {
+            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", genreFilter.getValue(), bookStateFilter.getValue(), PAGE_SIZE, offset}, new int[]{Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_PUBLICATION);
+        } else if (isGenreFilterActive) {
+            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", genreFilter.getValue(), PAGE_SIZE, offset}, new int[]{Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_PUBLICATION);
+        } else if (isBookStateFilterActive) {
+            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", bookStateFilter.getValue(), PAGE_SIZE, offset}, new int[]{Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_PUBLICATION);
+        } else
+            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", PAGE_SIZE, offset}, new int[]{Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_PUBLICATION);
 
         List<GenreWrapper> genreWrapperList = getGenreQtyByBook(search, isBookStateFilterActive, bookStateFilter);
         List<BookStateWrapper> bookStateWrapperList = getBookStateQtyByBook(search, isGenreFilterActive, genreFilter);

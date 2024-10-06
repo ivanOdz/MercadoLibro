@@ -6,6 +6,8 @@ import ar.edu.itba.paw.interfaces.services.GenreService;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.core.RowMapper;
@@ -34,6 +36,8 @@ public class BookJdbcDao implements BookDao {
     private final GenreService genreService;
     private final BookStateService bookStateService;
 
+    @Autowired
+    private MessageSource messageSource;
 
     static final RowMapper<Book> ROW_MAPPER_BOOK =
             (rs, rowNum) -> {
