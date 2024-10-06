@@ -1,10 +1,13 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.exceptions.base.ApplicationRuntimeException;
+import ar.edu.itba.paw.interfaces.exceptions.base.BadRequestException;
+import ar.edu.itba.paw.interfaces.exceptions.base.NotFoundException;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 import ar.edu.itba.paw.interfaces.services.UserReviewService;
 import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.webapp.auth.PawUserDetailsService;
+import ar.edu.itba.paw.webapp.auth.UserDetailsService;
 import ar.edu.itba.paw.webapp.form.PasswordForm;
 import ar.edu.itba.paw.webapp.form.UserForm;
 import org.slf4j.Logger;
@@ -37,16 +40,12 @@ public class UserController {
     private final UserService us;
 
     @Autowired
-    private PawUserDetailsService userDetailsService;
-
-
-    private AuthenticationManager auth;
-
-    @Autowired
-    private MessageSource messageSource;
+    private UserDetailsService userDetailsService;
     @Autowired
     private UserReviewService userReviewService;
 
+    @Autowired
+    private MessageSource messageSource;
     @Autowired
     private LoggedUserAdvice loggedUserAdvice;
 
@@ -54,7 +53,6 @@ public class UserController {
 
     public UserController(final UserService us, AuthenticationManager auth) {
         this.us = us;
-        this.auth = auth;
     }
 
 
@@ -78,27 +76,37 @@ public class UserController {
     }
 
     @RequestMapping("/verification")
-    public ModelAndView verificationController(@RequestParam(name = "verification_code") int verificationCode){
-        User user = us.getUserToVerify(verificationCode).get();
+    public ModelAndView verificationController(@RequestParam(name = "verification_code") int verificationCode) {
 
-        us.verifyUser(verificationCode);
+        User user;
         try {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
-            final Authentication authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-        } catch (Exception e) {
-            System.out.println(e.getMessage()); // TODO: Poner un debug aca, y redirigir a pagina correspondiente.
+            user = us.getUserToVerify(verificationCode);
+        } catch (ApplicationRuntimeException e) {
+            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
+            return new ModelAndView("redirect:/404");
         }
 
+        try {
+            us.verifyUser(verificationCode);
+        } catch (ApplicationRuntimeException e) {
+            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
+            return new ModelAndView("redirect:/400");
+        }
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
+        final Authentication authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
+        LOGGER.info("User {} has been verified", user.getUsername());
 
         return new ModelAndView("redirect:/success_verification");
     }
 
     @RequestMapping("/check_verify")
-    public ModelAndView checkVerify(){
+    public ModelAndView checkVerify() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication.getPrincipal() instanceof PawUserDetails pud) {
-            if(pud.getUser().isVerified()){
+        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
+            if (pud.getUser().isVerified()) {
                 return new ModelAndView("redirect:/");
             }
         }
@@ -106,46 +114,68 @@ public class UserController {
     }
 
     @RequestMapping("/mail_input")
-    public ModelAndView mailInput(){
+    public ModelAndView mailInput() {
         return new ModelAndView("user/mail_input");
     }
 
     @RequestMapping("/change_password_solicited")
-    public ModelAndView changePasswordSolicited(@RequestParam(name = "email") String email){
-        us.changePasswordSolicited(email);
+    public ModelAndView changePasswordSolicited(@RequestParam(name = "email") String email) {
+
+        try {
+            us.changePasswordSolicited(email);
+        } catch (BadRequestException e) {
+            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
+            return new ModelAndView("redirect:/400");
+        } catch (NotFoundException e) {
+            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
+            return new ModelAndView("redirect:/404");
+        }
+
         return new ModelAndView("redirect:/mail_input_message");
     }
 
     @RequestMapping(path = "/change_password", method = RequestMethod.GET)
-    public ModelAndView createPasswordForm(@ModelAttribute("passwordForm") PasswordForm passwordForm, @RequestParam(name = "verification_code") int verificationCode){
+    public ModelAndView createPasswordForm(@ModelAttribute("passwordForm") PasswordForm passwordForm, @RequestParam(name = "verification_code") int verificationCode) {
         ModelAndView mav = new ModelAndView("user/new_password");
         mav.addObject("verification_code", verificationCode);
         return mav;
     }
 
     @RequestMapping(value = "/change_password", method = RequestMethod.POST)
-    public ModelAndView changePassword(@Valid @ModelAttribute("passwordForm") PasswordForm passwordForm, BindingResult errors, @RequestParam(name = "verification_code") int verificationCode){
-        if(errors.hasErrors()){
-           //System.out.print(errors.getAllErrors());
+    public ModelAndView changePassword(@Valid @ModelAttribute("passwordForm") PasswordForm passwordForm, BindingResult errors, @RequestParam(name = "verification_code") int verificationCode) {
+        if (errors.hasErrors()) {
+            LOGGER.debug("Password form has errors. Redirecting to password form");
             return createPasswordForm(passwordForm, verificationCode);
         }
-        us.changePassword(verificationCode, passwordForm.getPassword() );
+
+        try {
+            us.changePassword(verificationCode, passwordForm.getPassword());
+        } catch (ApplicationRuntimeException e) {
+            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
+            return new ModelAndView("redirect:/400");
+        }
+
         return new ModelAndView("redirect:/success_password");
     }
 
     @PostMapping(value = "/changeUsername")
     public String changeUsername(@RequestParam("loggedUserId") long userId, @RequestParam("newUsername") String newUsername, RedirectAttributes redirectAttributes) {
 
-    	boolean updated = us.changeUserName(userId, newUsername);
+        boolean updated;
+        try{
+            updated = us.changeUserName(userId, newUsername);
+        }catch (ApplicationRuntimeException e){
+            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
+            return "redirect:/400";
+        }
 
-    	if (updated) {
-    		redirectAttributes.addFlashAttribute("message", "done");
-    	}
-    	else {
-    		redirectAttributes.addFlashAttribute("errorMessage",  "failed");
-    	}
+        if (updated) {
+            redirectAttributes.addFlashAttribute("message", "done");
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage", "failed");
+        }
 
-    	return "redirect:/profile";
+        return "redirect:/profile";
     }
 
     @RequestMapping(path = "/create", method = RequestMethod.GET)
@@ -158,11 +188,11 @@ public class UserController {
                                @Valid @ModelAttribute("userForm") UserForm userForm,
                                BindingResult errors) {
 
-        if (errors.hasErrors()){
+        if (errors.hasErrors()) {
             return createForm(userForm);
         }
 
-        if(us.userExists(userForm.getMail())){
+        if (us.userExists(userForm.getMail())) {
             errors.rejectValue("mail", "error.user.exists");
             return createForm(userForm);
         }
@@ -171,30 +201,36 @@ public class UserController {
         String browserLanguage = request.getHeader("Accept-Language");
 
         // verify date, create an user and send a verification email
-        final User user = us.createUser(userForm.getUsername(), userForm.getMail(), userForm.getPassword(), browserLanguage.split(",")[0]);
+
+        try {
+            final User user = us.createUser(userForm.getUsername(), userForm.getMail(), userForm.getPassword(), browserLanguage.split(",")[0]);
+        } catch (ApplicationRuntimeException e) {
+            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
+            return new ModelAndView("redirect:/400");
+        }
 
         return new ModelAndView("redirect:/success_registration");
     }
 
     // success screens
 
-    @RequestMapping( "/success_registration")
-    public ModelAndView successRegistration(){
+    @RequestMapping("/success_registration")
+    public ModelAndView successRegistration() {
         return new ModelAndView("user/success_registration");
     }
 
-    @RequestMapping( "/success_verification")
-    public ModelAndView successVerification(){
+    @RequestMapping("/success_verification")
+    public ModelAndView successVerification() {
         return new ModelAndView("user/success_verification");
     }
 
     @RequestMapping("/mail_input_message")
-    public ModelAndView mailInputMessage(){
+    public ModelAndView mailInputMessage() {
         return new ModelAndView("user/mail_input_message");
     }
 
-    @RequestMapping( "/success_password")
-    public ModelAndView successPassword(){
+    @RequestMapping("/success_password")
+    public ModelAndView successPassword() {
         return new ModelAndView("user/success_password");
     }
 
@@ -203,12 +239,6 @@ public class UserController {
                                     @RequestParam(name = "current-page", defaultValue = "0") int currentPage) {
 
         ModelAndView mav = new ModelAndView("profile/profile_home");
-
-
-        // TODO: Sacar esto
-        LOGGER.info("Este es un mensaje de info");
-        LOGGER.error("Este es un mensaje de error");
-        LOGGER.debug("Este es un mensaje de debug");
 
         mav.addObject("reviews", userReviewService.getReviewsEarnedByUserId(loggedUserAdvice.getLoggedUser().getUserId()));
         mav.addObject("userRating", userReviewService.getUserAverageRatingEarned(loggedUserAdvice.getLoggedUser().getUserId()));
@@ -223,7 +253,13 @@ public class UserController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getPrincipal() instanceof PawUserDetails pud) {
-            us.setUserLanguage(pud.getUser(), lang);
+
+            try {
+                us.setUserLanguage(pud.getUser(), lang);
+            } catch (ApplicationRuntimeException e) {
+                LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
+                return new ModelAndView("redirect:/400");
+            }
         }
 
         return new ModelAndView("redirect:/");

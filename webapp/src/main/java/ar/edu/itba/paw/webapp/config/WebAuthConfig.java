@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.config;
 
-import ar.edu.itba.paw.webapp.auth.PawUserDetailsService;
+import ar.edu.itba.paw.webapp.auth.UserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +15,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.util.ResourceUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -27,7 +26,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Value("classpath:rememberme.key")
     private Resource rememberMeKey;
     @Autowired
-    private PawUserDetailsService userDetails;
+    private UserDetailsService userDetails;
 
     @Bean
     public PasswordEncoder passwordEncoder(){

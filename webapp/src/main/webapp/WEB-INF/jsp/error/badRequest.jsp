@@ -15,7 +15,9 @@
 
 <div class="uk-background-center-center uk-margin-right uk-margin-left">
     <div class="uk-position-center uk-card uk-card-default uk-card-body uk-width-1-3">
-        <h3 class="uk-card-title"><spring:message code="error.notFound"/></h3>
+        <h3 class="uk-card-title">
+            <spring:message code="error.badRequest"/>
+        </h3>
         <a href="${okUrl}">
             <button class="uk-button uk-button-primary uk-align-center">
                 <spring:message code="hwc.registration.ok"/>

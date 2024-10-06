@@ -25,13 +25,11 @@ public interface UserDao {
     
     boolean updateUsername(long userId, String newUsername);
 
-    Optional<User> getUserToVerify(int verificationCode);
+    User getUserToVerify(int verificationCode);
 
     //List<UserReview> getReviewsByUserId(long userId, int pageIndex);
 
     //Double getUserRating(long userId);
-
-    String getUserLanguage(long userId);
 
     void setUserLanguage(long userId, String language);
 

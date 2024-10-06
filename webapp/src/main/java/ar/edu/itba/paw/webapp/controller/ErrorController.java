@@ -16,4 +16,9 @@ public class ErrorController {
     public ModelAndView notFound() {
         return new ModelAndView("error/notFound");
     }
+
+    @RequestMapping("/400")
+    public ModelAndView badRequest() {
+        return new ModelAndView("error/badRequest");
+    }
 }

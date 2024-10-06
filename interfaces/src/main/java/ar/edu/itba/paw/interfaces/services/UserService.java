@@ -35,11 +35,9 @@ public interface UserService {
     
     boolean changeUserName(long userId, String newName);
 
-    Optional<User> getUserToVerify(int verificationCode);
+    User getUserToVerify(int verificationCode);
 
     //Double getUserRating(long userId);
-
-    String getUserLanguage(User user);
 
     void setUserLanguage(User user, String language);
 

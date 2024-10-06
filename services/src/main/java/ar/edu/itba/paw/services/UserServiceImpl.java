@@ -34,25 +34,22 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public User createUser(String username, String mail, String password, String language) {
-        //register user
-        //TODO
-        //  1. validar inputs
-        //  2. ingresarlo en la base de datos
-        //  3. generar un Token de validacion y guardarlo en la base de datos
-        //  4. enviar el token de validacion en un correo de bienvenida
-        //  5. agregar al usuario a una cola de verificacion manual
+        // 1. validar inputs
+        // 2. ingresarlo en la base de datos
+        // 3. generar un Token de validacion y guardarlo en la base de datos
+        // 4. enviar el token de validacion en un correo de bienvenida
+        // 5. agregar al usuario a una cola de verificacion manual
 
-
-        User user = userDao.createUser(username, mail, passwordEncoder.encode(password), language, generateVerificationCode());
-        if(user == null) {
-            return null; // user exists -> returns null
+        Optional<User> u = userDao.find(mail);
+        if(u.isPresent()) {
+            return u.get();
         }
 
-        Map<String, Object> variables = new HashMap<>();
+        User user = userDao.createUser(username, mail, passwordEncoder.encode(password), language, generateVerificationCode());
 
+        Map<String, Object> variables = new HashMap<>();
         variables.put("username", user.getUsername());
         variables.put("validationUrl", webappUrl + "/verification?verification_code=" + user.getVerificationCode());
-
         emailService.sendEmail(user.getMail(), variables, "verification", "User verification", Locale.getDefault().getLanguage());
 
         return user;
@@ -67,15 +64,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public void changePasswordSolicited(String email) {
         int verificationCode = generateVerificationCode();
-        userDao.changePasswordSolicited(email, verificationCode);
 
-        Optional<User> u = getUserToVerify(verificationCode);
+        userDao.changePasswordSolicited(email, verificationCode);
+        User u = getUserToVerify(verificationCode);
 
         Map<String, Object> variables = new HashMap<>();
-
         variables.put("validationUrl", webappUrl +"/change_password?verification_code=" + verificationCode);
 
-        String locale = u.get().getLanguage() != null ? u.get().getLanguage() : Locale.getDefault().getLanguage();
+        String locale = u.getLanguage() != null ? u.getLanguage() : Locale.getDefault().getLanguage();
 
         emailService.sendEmail(email, variables, "changePassword", "Password change", locale);
     }
@@ -100,6 +96,7 @@ public class UserServiceImpl implements UserService {
         return userDao.findByUsername(username);
     }
 
+    @Transactional
     @Override
     public void verifyUser(int verificationCode) {
         userDao.verifyUser(verificationCode);
@@ -131,7 +128,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> getUserToVerify(int verificationCode) {
+    public User getUserToVerify(int verificationCode) {
         return userDao.getUserToVerify(verificationCode);
     }
 
@@ -146,11 +143,6 @@ public class UserServiceImpl implements UserService {
     public Double getUserRating(long userId) {
         return userDao.getUserRating(userId);
     }*/
-
-    @Override
-    public String getUserLanguage(User user) {
-        return userDao.getUserLanguage(user.getUserId());
-    }
 
     @Override
     public void setUserLanguage(User user, String language) {
