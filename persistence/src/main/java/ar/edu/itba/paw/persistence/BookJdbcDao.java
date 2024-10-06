@@ -17,7 +17,7 @@ import java.util.*;
 import java.sql.Types;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.models.utils.Constants.PAGE_SIZE;
+import static ar.edu.itba.paw.models.utils.Constants.BOOKS_PAGE_SIZE;
 import static ar.edu.itba.paw.persistence.BookModelJdbcDao.ROW_MAPPER_BOOK_MODEL;
 import static ar.edu.itba.paw.persistence.UserJdbcDao.ROW_MAPPER_USER;
 
@@ -224,28 +224,28 @@ public class BookJdbcDao implements BookDao {
                 sqlQuery.append(" ORDER BY title DESC");
         }
 
-        int offset = currentPage * PAGE_SIZE;
+        int offset = currentPage * BOOKS_PAGE_SIZE;
         sqlQuery.append(" LIMIT ? OFFSET ?");
 
         List<Book> data;
 
         if (isGenreFilterActive && isBookStateFilterActive) {
-            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), userId, "%" + search.toLowerCase() + "%", genreFilter.getValue(), bookStateFilter.getValue(), PAGE_SIZE, offset}, new int[]{Types.INTEGER, Types.BIGINT, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_BOOK);
+            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), userId, "%" + search.toLowerCase() + "%", genreFilter.getValue(), bookStateFilter.getValue(), BOOKS_PAGE_SIZE, offset}, new int[]{Types.INTEGER, Types.BIGINT, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_BOOK);
         }
         else if (isGenreFilterActive) {
-            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), userId, "%" + search.toLowerCase() + "%", genreFilter.getValue(), PAGE_SIZE, offset}, new int[]{Types.INTEGER, Types.BIGINT, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_BOOK);
+            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), userId, "%" + search.toLowerCase() + "%", genreFilter.getValue(), BOOKS_PAGE_SIZE, offset}, new int[]{Types.INTEGER, Types.BIGINT, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_BOOK);
         }
         else if (isBookStateFilterActive) {
-            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), userId, "%" + search.toLowerCase() + "%", bookStateFilter.getValue(), PAGE_SIZE, offset}, new int[]{Types.INTEGER, Types.BIGINT, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_BOOK);
+            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), userId, "%" + search.toLowerCase() + "%", bookStateFilter.getValue(), BOOKS_PAGE_SIZE, offset}, new int[]{Types.INTEGER, Types.BIGINT, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_BOOK);
         }
-        else data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), userId, "%" + search.toLowerCase() + "%", PAGE_SIZE, offset}, new int[]{Types.INTEGER, Types.BIGINT, Types.VARCHAR, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_BOOK);
+        else data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), userId, "%" + search.toLowerCase() + "%", BOOKS_PAGE_SIZE, offset}, new int[]{Types.INTEGER, Types.BIGINT, Types.VARCHAR, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_BOOK);
 
         List<GenreWrapper> genreWrapperList = getGenreQtyByBook(search, isBookStateFilterActive, bookStateFilter, userId);
         List<BookStateWrapper> bookStateWrapperList = getBookStateQtyByBook(search, isGenreFilterActive, genreFilter, userId);
 
         int totalResults = getTotalResultsByBook(search, isGenreFilterActive, genreFilter, isBookStateFilterActive, bookStateFilter, userId);
 
-        return new PaginatedResponse<>(data, new ItemFilterMetadata(currentPage, totalResults, search, isGenreFilterActive, genreFilter, sortType, genreWrapperList, isBookStateFilterActive, bookStateFilter, bookStateWrapperList));
+        return new PaginatedResponse<>(data, new ItemFilterMetadata(currentPage, BOOKS_PAGE_SIZE, totalResults, search, isGenreFilterActive, genreFilter, sortType, genreWrapperList, isBookStateFilterActive, bookStateFilter, bookStateWrapperList));
     }
 
     private List<GenreWrapper> getGenreQtyByBook(String search, boolean isBookStateFilterActive, BookState bookStateFilter, long userId) {

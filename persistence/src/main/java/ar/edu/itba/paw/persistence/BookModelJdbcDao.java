@@ -18,7 +18,7 @@ import javax.sql.DataSource;
 import java.sql.Types;
 import java.util.*;
 
-import static ar.edu.itba.paw.models.utils.Constants.PAGE_SIZE;
+import static ar.edu.itba.paw.models.utils.Constants.BOOKS_PAGE_SIZE;
 
 @Repository
 public class BookModelJdbcDao implements BookModelDao {
@@ -170,20 +170,20 @@ public class BookModelJdbcDao implements BookModelDao {
                 sqlQuery.append(" ORDER BY title DESC");
         }
 
-        int offset = currentPage * PAGE_SIZE;
+        int offset = currentPage * BOOKS_PAGE_SIZE;
         sqlQuery.append(" LIMIT ? OFFSET ?");
 
         List<BookModel> data;
         if(isGenreFilterActive) {
-            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ "%" + search.toLowerCase() + "%", genreFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_BOOK_MODEL);
+            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ "%" + search.toLowerCase() + "%", genreFilter.getValue(), BOOKS_PAGE_SIZE, offset }, new int[]{ Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_BOOK_MODEL);
         }
-        else data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ "%" + search.toLowerCase() + "%", PAGE_SIZE, offset }, new int[]{ Types.VARCHAR, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_BOOK_MODEL);
+        else data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ "%" + search.toLowerCase() + "%", BOOKS_PAGE_SIZE, offset }, new int[]{ Types.VARCHAR, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_BOOK_MODEL);
 
         List<GenreWrapper> genreWrapperList = getGenreQtyByBook(search);
 
         int totalResults = getTotalResultsByBook(search, isGenreFilterActive, genreFilter);
 
-        return new PaginatedResponse<>(data, new BookModelMetadata(currentPage, totalResults, search, isGenreFilterActive, genreFilter, sortType, genreWrapperList));
+        return new PaginatedResponse<>(data, new BookModelMetadata(currentPage, BOOKS_PAGE_SIZE, totalResults, search, isGenreFilterActive, genreFilter, sortType, genreWrapperList));
 
     }
 

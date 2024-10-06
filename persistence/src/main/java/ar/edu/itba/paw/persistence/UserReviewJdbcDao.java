@@ -153,7 +153,7 @@ public class UserReviewJdbcDao implements UserReviewDao {
 
         List<UserReview> data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{userId}, new int[]{Types.BIGINT}, ROW_MAPPER_USER_REVIEW);
 
-        return new PaginatedResponse<>(data, new BasicMetadata(0, 0));
+        return new PaginatedResponse<>(data, new BasicMetadata(0, 0, 0));
     }
 
     @Override
@@ -165,7 +165,7 @@ public class UserReviewJdbcDao implements UserReviewDao {
 
         List<UserReview> data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{userId}, new int[]{Types.BIGINT}, ROW_MAPPER_USER_REVIEW);
 
-        return new PaginatedResponse<>(data, new BasicMetadata(0, 0));
+        return new PaginatedResponse<>(data, new BasicMetadata(0, 0, 0));
     }
 
     @Override

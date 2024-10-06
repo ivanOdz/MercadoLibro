@@ -13,8 +13,8 @@ public abstract class GenreFilterMetadata extends Metadata{
 
     protected List<GenreWrapper> genreWrapperList;
 
-    public GenreFilterMetadata(int currentPage, int totalResults, String search, boolean isGenreFilterActive, Genre genreFilter, SortType sortType, List<GenreWrapper> genreWrapperList) {
-        super(currentPage, totalResults);
+    public GenreFilterMetadata(int currentPage, int pageSize, int totalResults, String search, boolean isGenreFilterActive, Genre genreFilter, SortType sortType, List<GenreWrapper> genreWrapperList) {
+        super(currentPage, totalResults, pageSize);
         this.search = search;
         this.isGenreFilterActive = isGenreFilterActive;
         this.genreFilter = genreFilter;
