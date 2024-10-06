@@ -32,6 +32,8 @@ public class PublicationController {
     private GenreService genreService;
     @Autowired
     private BookStateService bookStateService;
+    @Autowired
+    private LoggedUserAdvice loggedUserAdvice;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
@@ -95,13 +97,9 @@ public ModelAndView publicationDetail(@PathVariable(name = "publication_id") lon
     final ModelAndView mav = new ModelAndView("/home/publication_detail");
     Publication publication = ps.getPublicationByPublicationId(publicationId);
     List<Book> availableBooks;
-
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    if (authentication.getPrincipal() instanceof PawUserDetails pud) {
-        User loggedUser = us.findById(pud.getUser().getUserId()).get();
-        mav.addObject("loggedUser", loggedUser);
-
-        availableBooks = bs.getAvailableBooksByUser(pud.getUser());
+    User user = loggedUserAdvice.getLoggedUser();
+    if (user != null) {
+        availableBooks = bs.getAvailableBooksByUser(user);
         mav.addObject("availableBooks", availableBooks);
     }
     if (publication == null) {
