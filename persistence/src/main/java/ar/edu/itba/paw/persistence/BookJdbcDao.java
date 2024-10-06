@@ -134,7 +134,7 @@ public class BookJdbcDao implements BookDao {
                 "LEFT JOIN image AS i ON bi.imageId = i.imageId " +
                 "WHERE b.bookId = ? " +
                 "GROUP BY available, b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, bm.dimension, bm.publicationYear, " +
-                "bm.isPocketEdition, bm.isHardcover, p.publicationState, bm.imageId, u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language, e.exchangeState";
+                "bm.isPocketEdition, bm.isHardcover, p.publicationState, coverId, u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language, e.exchangeState";
 
         return jdbcTemplate.query(sqlQuery, new Object[]{ ExchangeState.ACCEPTED.getValue(), bookId },
                 new int[]{ Types.INTEGER, Types.BIGINT }, ROW_MAPPER_BOOK).stream().findFirst();
@@ -163,7 +163,7 @@ public class BookJdbcDao implements BookDao {
                 "LEFT JOIN image AS i ON bi.imageId = i.imageId " +
                 "WHERE u.userid = ? " +
                 "GROUP BY available, b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, bm.dimension, bm.publicationYear, " +
-                "bm.isPocketEdition, bm.isHardcover, p.publicationState, bm.imageId, u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language, e.exchangeState";
+                "bm.isPocketEdition, bm.isHardcover, p.publicationState, coverId, u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language, e.exchangeState";
 
         return jdbcTemplate.query(sqlQuery, new Object[]{ExchangeState.ACCEPTED.getValue(),userId}, new int[]{Types.INTEGER,Types.BIGINT}, ROW_MAPPER_BOOK);
 
