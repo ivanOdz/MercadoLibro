@@ -55,10 +55,10 @@
                         <div class="stars">
                             <c:forEach var="i" begin="1" end="5">
                                 <c:choose>
-                                    <c:when test="${i <= userRating}">
+                                    <c:when test="${i <= userRating.rating}">
                                         <i class="material-icons yellow-text">star</i>
                                     </c:when>
-                                    <c:when test="${i - 0.5 <= userRating && userRating < i}">
+                                    <c:when test="${i - 0.5 <= userRating.rating && userRating.rating < i}">
                                         <i class="material-icons yellow-text">star_half</i>
                                     </c:when>
                                     <c:otherwise>
@@ -146,7 +146,7 @@
                         <h2 class="uk-h4 subtitles-profile"><spring:message code="review.title"/></h2>
                     </div>
 
-                    <c:forEach var="review" items="${reviews}">
+                    <c:forEach var="review" items="${reviews.data}"> <!-- ESTO ES CULPA DE IVAN -->
 
                         <div class="uk-card uk-card-body uk-border-rounded uk-box-shadow-small uk-width-expand">
                             <div class="reviewStars">

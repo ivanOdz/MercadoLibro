@@ -246,7 +246,7 @@ public class UserReviewJdbcDao implements UserReviewDao {
 			return userReview;
 	};
 	
-	String baseQueryRating = "SELECT COALESCE(AVG(userReviewRating), 5.00) AS averageRating, COUNT(userReviewRating) AS countRating FROM user_review WHERE subjectId = ?\r\n";
+	String baseQueryRating = "SELECT COALESCE(AVG(userReviewRating), 5.00) AS averageRating, COUNT(userReviewRating) AS countRating FROM user_review\r\n";
 	
 	private static final RowMapper<Rating> ROW_MAPPER_RATING =
 			
