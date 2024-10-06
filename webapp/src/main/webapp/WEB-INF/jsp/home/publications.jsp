@@ -9,7 +9,6 @@
 <head>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
 
-
     <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
@@ -156,6 +155,7 @@
                 <div class="uk-card uk-card-default uk-card-body uk-margin-bottom uk-border-rounded uk-border-rounded-medium">
                 </div>
 
+                <c:if test="${not empty publications.data}">
                 <div class="uk-grid-match" uk-grid>
                     <c:forEach var="card" items="${publications.data}">
                         <div class="uk-width-1-1">
@@ -224,6 +224,12 @@
                         </div>
                     </c:forEach>
                 </div>
+                </c:if>
+                <c:if test="${not empty publications}">
+                    <div class="uk-grid empty-publications">
+                        <spring:message code="publications.empty"/>
+                    </div>
+                </c:if>
 
                 <hr class="uk-divider-icon">
 
