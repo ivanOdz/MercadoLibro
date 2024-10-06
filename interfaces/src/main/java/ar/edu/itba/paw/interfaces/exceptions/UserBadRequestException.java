@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.interfaces.exceptions;
 
-public class UserBadRequestException extends RuntimeException {
+import ar.edu.itba.paw.interfaces.exceptions.base.BadRequestException;
+
+public class UserBadRequestException extends BadRequestException {
     public UserBadRequestException(String message) {
         super(message);
     }
