@@ -23,7 +23,7 @@ import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.models.utils.Constants.PAGE_SIZE;
+import static ar.edu.itba.paw.models.utils.Constants.PUBLICATIONS_PAGE_SIZE;
 import static ar.edu.itba.paw.persistence.BookJdbcDao.ROW_MAPPER_BOOK;
 
 @Repository
@@ -196,7 +196,7 @@ public class PublicationJdbcDao implements PublicationDao {
                 sqlQuery.append(" ORDER BY publicationDatetime ASC");
         }
 
-        int offset = currentPage * PAGE_SIZE;
+        int offset = currentPage * PUBLICATIONS_PAGE_SIZE;
         sqlQuery.append(" LIMIT ? OFFSET ?");
 
         List<Publication> data;
@@ -213,7 +213,7 @@ public class PublicationJdbcDao implements PublicationDao {
         List<BookStateWrapper> bookStateWrapperList = getBookStateQtyByBook(search, isGenreFilterActive, genreFilter);
 
         int totalResults = getTotalResultsByBook(search, isGenreFilterActive, genreFilter, isBookStateFilterActive, bookStateFilter);
-        return new PaginatedResponse<>(data, new ItemFilterMetadata(currentPage, totalResults, search, isGenreFilterActive, genreFilter, sortType, genreWrapperList, isBookStateFilterActive, bookStateFilter, bookStateWrapperList));
+        return new PaginatedResponse<>(data, new ItemFilterMetadata(currentPage, PUBLICATIONS_PAGE_SIZE, totalResults, search, isGenreFilterActive, genreFilter, sortType, genreWrapperList, isBookStateFilterActive, bookStateFilter, bookStateWrapperList));
     }
 
     @Override

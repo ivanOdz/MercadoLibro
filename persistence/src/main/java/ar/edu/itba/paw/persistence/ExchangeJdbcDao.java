@@ -3,17 +3,21 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.persistence.ExchangeDao;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
+import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import javax.swing.plaf.basic.BasicArrowButton;
 
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.*;
 
+import static ar.edu.itba.paw.models.utils.Constants.BOOKS_PAGE_SIZE;
+import static ar.edu.itba.paw.models.utils.Constants.EXCHANGES_PAGE_SIZE;
 import static ar.edu.itba.paw.persistence.PublicationJdbcDao.ROW_MAPPER_PUBLICATION;
 
 @Repository
@@ -104,9 +108,10 @@ public class ExchangeJdbcDao implements ExchangeDao {
             "    r.userId, r.username, r.mail, r.password, r.imageId, r.verificationCode, r.isVerified, r.language, " +
             "    rp_bm.bookModelId, rp_bm.isbn, rp_bm.title, rp_bm.editorial, rp_bm.description, rp_bm.genre, rp_bm.edition, rp_bm.weight, rp_bm.pages, rp_bm.bookLanguage, " +
             "    rp_bm.dimension, rp_bm.publicationYear, rp_bm.isPocketEdition, rp_bm.isHardcover, requester_coverId " +
-            "ORDER BY e.exchangeStartDate DESC";
+            "	 ORDER BY e.exchangeStartDate DESC";
 
     private static final RowMapper<Publication> ROW_MAPPER_PUBLICATION_REQUEST =
+    		
             (rs, rowNum) -> {
                 long id = rs.getLong("requester_publicationId");
                 PublicationState publicationState = PublicationState.fromInt(rs.getInt("requester_publicationState"));
@@ -146,6 +151,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
             };
 
     private static final RowMapper<Exchange> ROW_MAPPER_EXCHANGE =
+    		
             (rs, rowNum) -> {
                 Publication offererPub = ROW_MAPPER_PUBLICATION.mapRow(rs, rowNum);
                 Publication requesterPub = ROW_MAPPER_PUBLICATION_REQUEST.mapRow(rs, rowNum);
@@ -154,6 +160,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
             };
 
     public ExchangeJdbcDao(final DataSource ds) {
+    	
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .usingGeneratedKeyColumns("exchangeid")
@@ -162,6 +169,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
 
     @Override
     public Optional<Exchange> createExchange(long offererPubId, long requesterPubId, int acceptCode, Timestamp startDate) {
+    	
         final Map<String, Object> exchangeData = new HashMap<>();
         exchangeData.put("offererPubId", offererPubId);
         exchangeData.put("requesterPubId", requesterPubId);
@@ -185,7 +193,6 @@ public class ExchangeJdbcDao implements ExchangeDao {
         sqlQuery.append(groupQuery);
         Optional<Exchange> ex = jdbcTemplate.query(sqlQuery.toString(), new Object[]{acceptCode},
                 new int[]{Types.INTEGER}, ROW_MAPPER_EXCHANGE).stream().findFirst();
-
 
         jdbcTemplate.update("UPDATE exchange SET exchangeState = ? WHERE acceptCode = ?", ExchangeState.ACCEPTED.getValue(), acceptCode);
         jdbcTemplate.update("UPDATE exchange SET exchangeState = ? WHERE offererPubId = ? AND acceptCode <> ?", ExchangeState.REJECTED.getValue(), ex.get().getOfferer().getPublicationId(), acceptCode);
@@ -212,30 +219,35 @@ public class ExchangeJdbcDao implements ExchangeDao {
 
     @Override
     public void setEndDate(int acceptCode, Timestamp endDate) {
+    	
         jdbcTemplate.update("UPDATE exchange SET exchangeenddate = ? WHERE acceptCode = ?", endDate, acceptCode);
 
     }
 
     @Override
     public Optional<Exchange> confirmOfferer(int acceptCode) {
+    	
         jdbcTemplate.update("UPDATE exchange SET offererReceivedBook = ? WHERE acceptcode = ?", true, acceptCode);
         return findByAcceptCode(acceptCode);
     }
 
     @Override
     public Optional<Exchange> confirmRequester(int acceptCode) {
+    	
         jdbcTemplate.update("UPDATE exchange SET requesterReceivedBook = ? WHERE acceptcode = ?", true, acceptCode);
         return findByAcceptCode(acceptCode);
     }
 
     @Override
     public void updateExchangeStatus(int acceptCode, int newStatus) {
+    	
         String sql = "UPDATE exchange SET exchangeState = ? WHERE acceptCode = ?";
         jdbcTemplate.update(sql, newStatus, acceptCode);
     }
 
     @Override
     public Optional<Exchange> findByAcceptCode(int acceptCode) {
+    	
         StringBuilder sqlQuery = new StringBuilder(baseQuery);
         sqlQuery.append(" WHERE acceptCode = ? ");
         sqlQuery.append(groupQuery);
@@ -244,6 +256,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
 
     @Override
     public Optional<Exchange> getExchangeById(long exchangeId) {
+    	
         StringBuilder sqlQuery = new StringBuilder(baseQuery);
         sqlQuery.append(" WHERE exchangeId = ? ");
         sqlQuery.append(groupQuery);
@@ -253,7 +266,8 @@ public class ExchangeJdbcDao implements ExchangeDao {
     }
 
     @Override
-    public List<Exchange> getAllExchangesByUserId(long anUserId, ExchangeState exchangeState, boolean isOfferer) {
+    public PaginatedResponse<Exchange, BasicMetadata> getAllExchangesByUserId(long anUserId, ExchangeState exchangeState, int currentPage, boolean isOfferer) {
+    	
         StringBuilder sqlQuery = new StringBuilder(baseQuery);
 
         if (isOfferer) {
@@ -265,6 +279,12 @@ public class ExchangeJdbcDao implements ExchangeDao {
         sqlQuery.append("AND e.exchangeState = ? ");
         sqlQuery.append(groupQuery);
 
-        return jdbcTemplate.query(sqlQuery.toString(), new Object[]{anUserId, exchangeState.getValue()}, new int[]{Types.BIGINT, Types.INTEGER}, ROW_MAPPER_EXCHANGE);
+        int offset = currentPage * EXCHANGES_PAGE_SIZE;
+        sqlQuery.append(" LIMIT ? OFFSET ?");
+
+
+        List<Exchange> data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{anUserId, exchangeState.getValue(), EXCHANGES_PAGE_SIZE, offset}, new int[]{Types.BIGINT, Types.INTEGER, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_EXCHANGE);
+
+        return new PaginatedResponse<>(data, new BasicMetadata(currentPage, data.size(), EXCHANGES_PAGE_SIZE));
     }
 }

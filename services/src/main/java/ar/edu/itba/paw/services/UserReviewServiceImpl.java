@@ -1,40 +1,33 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.UserReviewDao;
+import ar.edu.itba.paw.interfaces.services.ExchangeService;
 import ar.edu.itba.paw.interfaces.services.UserReviewService;
+import ar.edu.itba.paw.models.Exchange;
 import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.UserReview;
+import ar.edu.itba.paw.models.utils.Rating;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.standard.expression.Each;
-
-import java.util.List;
 
 @Service
 public class UserReviewServiceImpl implements UserReviewService {
 
 	private final UserReviewDao urDao;
-
-	public UserReviewServiceImpl(UserReviewDao urDao) {
+	private final ExchangeService exchangeService;
+	
+	public UserReviewServiceImpl(final UserReviewDao urDao, final ExchangeService exchangeService) {
 		
 		this.urDao = urDao;
+		this.exchangeService = exchangeService;
 	}
 
 	@Override
 	public Boolean createUserReview(long exchangeId, long userId, String description, int rating) {
-		return urDao.createUserReview(exchangeId, userId, description, rating);
-	}
-	
-	@Override
-	public UserReview getUserReview(long exchangeId, long reviewerId) {
 		
-		return urDao.getUserReview(exchangeId, reviewerId);
-	}
-	
-	@Override
-	public int getUserAverageRatingEarned(long userId) {
+		Exchange exchange = exchangeService.getExchangeById(exchangeId).get();
 		
-		return urDao.getUserAverageRatingEarned(userId);
+		return urDao.createUserReview(exchangeId, userId, 0, description, rating);
 	}
 	
 	@Override
@@ -48,16 +41,28 @@ public class UserReviewServiceImpl implements UserReviewService {
 
 		return urDao.getReviewsEarnedByUserId(userId);
 	}
-
+	
 	@Override
-	public int getUserAverageRatingGiven(long userId) {
+	public UserReview getUserReviewEarned(long exchangeId, long userId) {
 		
-		return urDao.getUserAverageRatingGiven(userId);
+		return urDao.getUserReviewEarned(exchangeId, userId);
+	}
+	
+	@Override
+	public UserReview getUserReviewGiven(long exchangeId, long userId) {
+		
+		return urDao.getUserReviewGiven(exchangeId, userId);
+	}
+	
+	@Override
+	public Rating getUserRatingEarned(long userId) {
+		
+		return urDao.getUserRatingEarned(userId);
 	}
     
 	@Override
-    public boolean isReviewable(long exchangeId, long userId) {
-    	
-    	return urDao.isReviewable(exchangeId, userId);
-    }
+	public Rating getUserRatingGiven(long userId) {
+		
+		return urDao.getUserRatingGiven(userId);
+	}
 }

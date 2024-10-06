@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.models.utils.PublicationState;
+import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,8 +15,8 @@ import java.util.*;
 
 @Service
 public class ExchangeServiceImpl implements ExchangeService {
+	
     private final ExchangeDao exchangeDao;
-
     private final BookService bs;
     private final PublicationService ps;
     private final EmailService emailService;
@@ -24,6 +25,7 @@ public class ExchangeServiceImpl implements ExchangeService {
     private String webappUrl;
 
     public ExchangeServiceImpl(final ExchangeDao exchangeDao, final BookService bs, final PublicationService ps, final EmailService emailService) {
+    	
         this.exchangeDao = exchangeDao;
         this.bs = bs;
         this.ps = ps;
@@ -33,12 +35,14 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Transactional
     @Override
     public void initializeExchange(long bookId, String location, long offererPubId, User currentUser) {
+    	
         long userId = bs.getBookById(bookId).get().getOwner().getUserId();
-        if(userId == currentUser.getUserId()) {
+        
+        if (userId == currentUser.getUserId()) {
             return;
         }
+        
         long requesterPubId = ps.createPublication(bookId, userId, location, PublicationState.OFFERED);
-
         Random random = new Random();
         int acceptCode = Math.abs(random.nextInt());
 
@@ -69,8 +73,10 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Transactional
     @Override
     public String exchange(int acceptCode, boolean state) {
+    	
         Optional<Exchange> ex = Optional.empty();
-        if(state)
+        
+        if (state)
             ex = exchangeDao.acceptExchange(acceptCode);
         else {
             Date date = new Date();
@@ -121,6 +127,7 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Transactional
     @Override
     public void cofirmOfferer(int acceptCode) {
+    	
         Optional<Exchange> ex = exchangeDao.confirmOfferer(acceptCode);
 
         if (ex.get().isConfirmed()) {
@@ -135,9 +142,11 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Transactional
     @Override
     public void cofirmRequester(int acceptCode) {
+    	
         Optional<Exchange> ex = exchangeDao.confirmRequester(acceptCode);
 
         if (ex.get().isConfirmed()) {
+        	
             Date date = new Date();
             Timestamp timestamp = new Timestamp(date.getTime());
             exchangeDao.updateExchangeStatus(acceptCode, ExchangeState.TERMINATED.getValue());
@@ -148,18 +157,25 @@ public class ExchangeServiceImpl implements ExchangeService {
 
     @Override
     public Optional<Exchange> getExchangeByAcceptCode(int acceptCode) {
+    	
         return exchangeDao.findByAcceptCode(acceptCode);
+    }
+    
+    @Override
+    public Optional<Exchange> getExchangeById(long exchangeId) {
+    	
+    	return exchangeDao.getExchangeById(exchangeId);
     }
 
     // exchanges where user is the publication owner
     @Override
-    public List<Exchange> getExchangeOffererListByUserId(long userId, ExchangeState exchangeState) {
-        return exchangeDao.getAllExchangesByUserId(userId, exchangeState, true);
+    public PaginatedResponse<Exchange, BasicMetadata> getExchangeOffererListByUserId(long userId, int currentPage, ExchangeState exchangeState) {
+        return exchangeDao.getAllExchangesByUserId(userId, exchangeState, currentPage, true);
     }
 
     // exchanges where user is the requester owner
     @Override
-    public List<Exchange> getExchangeRequesterListByUserId(long userId, ExchangeState exchangeState) {
-        return exchangeDao.getAllExchangesByUserId(userId, exchangeState, false);
+    public PaginatedResponse<Exchange, BasicMetadata> getExchangeRequesterListByUserId(long userId, int currentPage, ExchangeState exchangeState) {
+        return exchangeDao.getAllExchangesByUserId(userId, exchangeState, currentPage, false);
     }
 }

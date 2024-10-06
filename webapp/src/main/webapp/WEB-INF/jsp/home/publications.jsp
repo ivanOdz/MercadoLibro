@@ -9,7 +9,6 @@
 <head>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
 
-
     <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
@@ -156,6 +155,7 @@
                 <div class="uk-card uk-card-default uk-card-body uk-margin-bottom uk-border-rounded uk-border-rounded-medium">
                 </div>
 
+                <c:if test="${not empty publications.data}">
                 <div class="uk-grid-match" uk-grid>
                     <c:forEach var="card" items="${publications.data}">
                         <div class="uk-width-1-1">
@@ -224,6 +224,12 @@
                         </div>
                     </c:forEach>
                 </div>
+                </c:if>
+                <c:if test="${empty publications.data}">
+                    <div class="uk-grid empty-publications">
+                        <spring:message code="publications.empty"/>
+                    </div>
+                </c:if>
 
                 <hr class="uk-divider-icon">
 
@@ -244,7 +250,7 @@
                                 </c:url>
                                 <a href="${prevPageUrl}">
                                     <span uk-pagination-previous></span>
-                                    Anterior
+                                    <spring:message code="publications.pagination.previous"/>
                                 </a>
                             </li>
                         </c:if>
@@ -319,7 +325,7 @@
                                     <c:param name="sort-type" value="${publications.metadata.sortType}" />
                                 </c:url>
                                 <a href="${nextPageUrl}">
-                                    Siguiente
+                                    <spring:message code="publications.pagination.next"/>
                                     <span uk-pagination-next></span>
                                 </a>
                             </li>
@@ -328,7 +334,7 @@
 
                     <!-- Botón "Ir al inicio" alineado a la derecha -->
                     <a href="" uk-totop uk-scroll class="uk-position-right uk-margin-right">
-                        Back to top
+                        <spring:message code="publications.pagination.totop"/>
                     </a>
                 </nav>
 

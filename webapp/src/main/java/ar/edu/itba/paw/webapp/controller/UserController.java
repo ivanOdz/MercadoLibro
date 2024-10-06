@@ -245,7 +245,7 @@ public class UserController {
         ModelAndView mav = new ModelAndView("profile/profile_home");
 
         mav.addObject("reviews", userReviewService.getReviewsEarnedByUserId(loggedUserAdvice.getLoggedUser().getUserId()));
-        mav.addObject("userRating", userReviewService.getUserAverageRatingEarned(loggedUserAdvice.getLoggedUser().getUserId()));
+        mav.addObject("userRating", userReviewService.getUserRatingEarned(loggedUserAdvice.getLoggedUser().getUserId()));
 
         return mav;
     }

@@ -1,8 +1,10 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.Exchange;
+import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.utils.ExchangeState;
+import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,8 +30,10 @@ public interface ExchangeService {
     void cofirmRequester(int acceptCode);
 
     Optional<Exchange> getExchangeByAcceptCode(int acceptCode);
+    
+    Optional<Exchange> getExchangeById(long exchangeId);
+    
+    PaginatedResponse<Exchange, BasicMetadata> getExchangeOffererListByUserId(long userId, int currentPage, ExchangeState exchangeState);
 
-    List<Exchange> getExchangeOffererListByUserId(long userId, ExchangeState exchangeState);
-
-    List<Exchange> getExchangeRequesterListByUserId(long userId, ExchangeState exchangeState);
+    PaginatedResponse<Exchange, BasicMetadata> getExchangeRequesterListByUserId(long userId, int currentPage, ExchangeState exchangeState);
 }

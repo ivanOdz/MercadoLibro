@@ -123,3 +123,9 @@
     border: none !important;;
 }
 
+.empty-publications {
+    height: 25%;
+    align-content: center;
+    justify-content: center;
+}
+

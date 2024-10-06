@@ -23,7 +23,7 @@ import javax.sql.DataSource;
 import java.sql.Types;
 import java.util.*;
 
-import static ar.edu.itba.paw.models.utils.Constants.PAGE_SIZE;
+import static ar.edu.itba.paw.models.utils.Constants.BOOKS_PAGE_SIZE;
 
 @Repository
 public class BookModelJdbcDao implements BookModelDao {
@@ -137,16 +137,17 @@ public class BookModelJdbcDao implements BookModelDao {
 
     @Override
     public BookModel getBookModelByBookModelId(long bookModelId) {
-        String sqlQuery = "SELECT bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
-                "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, bm.imageId AS coverId, " +
-                "AVG(br.rating) as rating, COUNT(br.rating) as ratingCount " +
-                "FROM book_model bm " +
-                "JOIN book_author ba ON ba.bookModelId = bm.bookModelId " +
-                "JOIN author a ON a.authorId = ba.authorId " +
-                "LEFT JOIN book_rating br ON bm.bookModelId = br.bookModelId " +
-                "WHERE bm.bookModelId = ? " +
-                "GROUP BY bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
-                "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, bm.imageId";
+        String  sqlQuery =
+                "SELECT bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
+                        "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, (SELECT STRING_AGG(a.authorName, ', ') FROM book_author ba JOIN author a ON a.authorId = ba.authorId WHERE ba.bookModelId = bm.bookModelId) AS authors, bm.imageId AS coverId, " +
+                        "AVG(br.rating) as rating, COUNT(br.rating) as ratingCount " +
+                        "FROM book_model bm " +
+                        "JOIN book_author ba ON ba.bookModelId = bm.bookModelId " +
+                        "JOIN author a ON a.authorId = ba.authorId " +
+                        "LEFT JOIN book_rating br ON bm.bookModelId = br.bookModelId " +
+                        "WHERE bm.bookModelId = ? " +
+                        "GROUP BY bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
+                        "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, bm.imageId";
 
         Optional<BookModel> bm = jdbcTemplate.query(sqlQuery, new Object[]{ bookModelId }, new int[]{Types.BIGINT}, ROW_MAPPER_BOOK_MODEL)
                 .stream().findFirst();
@@ -162,7 +163,7 @@ public class BookModelJdbcDao implements BookModelDao {
     public PaginatedResponse<BookModel, BookModelMetadata> getPaginatedBookModels(String search, boolean isGenreFilterActive, Genre genreFilter, int currentPage, SortType sortType) {
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
-                        "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, bm.imageId AS coverId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount " +
+                        "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, (SELECT STRING_AGG(a.authorName, ', ') FROM book_author ba JOIN author a ON a.authorId = ba.authorId WHERE ba.bookModelId = bm.bookModelId) AS authors, bm.imageId AS coverId, AVG(br.rating) as rating, COUNT(br.rating) as ratingCount " +
                         "FROM book_model bm " +
                         "JOIN book b ON b.bookModelId = bm.bookModelId " +
                         "JOIN book_author ba ON ba.bookModelId = bm.bookModelId " +
@@ -190,20 +191,20 @@ public class BookModelJdbcDao implements BookModelDao {
                 sqlQuery.append(" ORDER BY title DESC");
         }
 
-        int offset = currentPage * PAGE_SIZE;
+        int offset = currentPage * BOOKS_PAGE_SIZE;
         sqlQuery.append(" LIMIT ? OFFSET ?");
 
         List<BookModel> data;
         if(isGenreFilterActive) {
-            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ "%" + search.toLowerCase() + "%", genreFilter.getValue(), PAGE_SIZE, offset }, new int[]{ Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_BOOK_MODEL);
+            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ "%" + search.toLowerCase() + "%", genreFilter.getValue(), BOOKS_PAGE_SIZE, offset }, new int[]{ Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_BOOK_MODEL);
         }
-        else data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ "%" + search.toLowerCase() + "%", PAGE_SIZE, offset }, new int[]{ Types.VARCHAR, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_BOOK_MODEL);
+        else data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ "%" + search.toLowerCase() + "%", BOOKS_PAGE_SIZE, offset }, new int[]{ Types.VARCHAR, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_BOOK_MODEL);
 
         List<GenreWrapper> genreWrapperList = getGenreQtyByBook(search);
 
         int totalResults = getTotalResultsByBook(search, isGenreFilterActive, genreFilter);
 
-        return new PaginatedResponse<>(data, new BookModelMetadata(currentPage, totalResults, search, isGenreFilterActive, genreFilter, sortType, genreWrapperList));
+        return new PaginatedResponse<>(data, new BookModelMetadata(currentPage, BOOKS_PAGE_SIZE, totalResults, search, isGenreFilterActive, genreFilter, sortType, genreWrapperList));
 
     }
 
