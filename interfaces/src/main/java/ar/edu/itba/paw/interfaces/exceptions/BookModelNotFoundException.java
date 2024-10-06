@@ -1,12 +1,10 @@
 package ar.edu.itba.paw.interfaces.exceptions;
 
-public class BookModelNotFoundException extends RuntimeException {
+import ar.edu.itba.paw.interfaces.exceptions.base.NotFoundException;
 
-    public BookModelNotFoundException(String messsage) {
-        super(messsage);
-    }
+public class BookModelNotFoundException extends NotFoundException {
 
-    public BookModelNotFoundException() {
-        super();
+    public BookModelNotFoundException(String message) {
+        super(message);
     }
 }

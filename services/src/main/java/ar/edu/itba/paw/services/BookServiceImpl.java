@@ -41,6 +41,9 @@ public class BookServiceImpl implements BookService {
         List<Integer> imagesId = imageService.saveImage(arrangeImages(imageFiles, bookCoverIndex)).stream().map(Image::getImageId).toList();
 
         Long bmId = bookModelId;
+
+        // CHECK: implementation
+
         if(bmId == null) {
             bmId = bookModelService.createBookModel(isbn, title, authors, publisher, description, genre, edition,
                     publicationYear, isHardcover, isPocketEdition, dimension, language, pages, weight, imagesId.get(bookCoverIndex));

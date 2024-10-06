@@ -10,6 +10,12 @@ public class ApplicationRuntimeException extends RuntimeException implements Bas
         this.exceptionMessage = exceptionMessage;
     }
 
+    public ApplicationRuntimeException(int statusCode) {
+        super();
+        this.statusCode = statusCode;
+        this.exceptionMessage = null;
+    }
+
     @Override
     public int getStatusCode() {
         return statusCode;

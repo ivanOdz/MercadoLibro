@@ -1,20 +1,16 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.exceptions.BookModelCreationException;
 import ar.edu.itba.paw.interfaces.exceptions.base.ApplicationRuntimeException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.BookModelMetadata;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
-import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 import ar.edu.itba.paw.webapp.form.BookDetailsForm;
 import ar.edu.itba.paw.webapp.form.BookForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +22,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.time.Year;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -80,8 +75,6 @@ public class BookController {
                                  @RequestParam(name = "sort-type", defaultValue = "BOOK_NAME_ASCENDING") SortType sortType) {
 
 
-        // NOTE: me parece que no hace falta excepción xq en el único caso que tiraria vendría a ser cuando no trae
-        //  nada y en ese caso muestra la página vacía
 
         ModelAndView mav = new ModelAndView("book/book_home");
         PaginatedResponse<Book, ItemFilterMetadata> books = bookService.getPaginatedBooks(search, isBookStateFilterActive,
@@ -100,8 +93,6 @@ public class BookController {
 
         ModelAndView mav = new ModelAndView("book/book_models");
 
-        // NOTE: me parece que no hace falta excepción xq en el único caso que tiraria vendría a ser cuando no trae
-
         PaginatedResponse<BookModel, BookModelMetadata> modelBooks = bookModelService.getPaginatedBookModels(search, isGenreFilterActive, genreFilter, currentPage, sortType);
 
         mav.addObject("modelBooks", modelBooks);
@@ -115,8 +106,6 @@ public class BookController {
         ModelAndView mav = new ModelAndView("/book/new_book_form");
 
         mav.addObject("bookForm", bookForm);
-
-        // ASK: genre language bookDimension bookState -> creo q no se traen de la bd
 
         mav.addObject("genres", Stream.of(Genre.values()).map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
         mav.addObject("languages", Stream.of(Language.values()).map(language -> new LanguageWrapper(language, languageService.getLanguageDisplayName(language))).collect(Collectors.toList()));
@@ -137,8 +126,6 @@ public class BookController {
         User user = loggedUserAdvice.getLoggedUser();
         Number bookId;
 
-        // ASK: no se si esta excepción es la correcta -> realizada en insersion debería ser BadRequest de mal los parametros q se pasan
-
         try {
             bookId = bookService.createBook(bookForm.getIsbn(), bookForm.getTitle(), bookForm.getAuthors(), bookForm.getEditorial(), bookForm.getDescription(), bookForm.getGenre(), bookForm.getBookState(), bookForm.getEdition(), bookForm.getRating(), bookForm.getImageFiles(), bookForm.getPublicationYear(), bookForm.isHardcover(), bookForm.isPocketEdition(), bookForm.getDimension(), bookForm.getLanguage(), bookForm.getPages(), bookForm.getWeight(), bookForm.getBookCover(), bookForm.isPublish(), user, null);
         } catch (ApplicationRuntimeException e) {
@@ -147,7 +134,7 @@ public class BookController {
         }
 
 
-        // ASK: lo mismo
+        // IMPLEMENT: create publication in service + dao
 
         publicationService.createPublicationIfNeeded(bookForm.isPublish(), bookId.longValue(), user.getUserId(), bookForm.getLocation(), PublicationState.CURRENT);
 
@@ -163,7 +150,7 @@ public class BookController {
         try {
             bm = bookModelService.getBookModelByBookModelId(bookModelId);
         } catch (ApplicationRuntimeException e) {
-            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
+            LOGGER.error(e.getExceptionMessage(), e.getStatusCode(), e.getStackTrace());
             return new ModelAndView("redirect:/404");
         }
 
@@ -171,8 +158,6 @@ public class BookController {
         mav.addObject("step", 2);
         mav.addObject("book_model", bm);
         mav.addObject("book_model_id", bookModelId);
-
-        // ASK: getBookStateDisplayName
 
         mav.addObject("bookStates", Stream.of(BookState.values()).map(bookStatus -> new BookStateWrapper(bookStatus, bookStateService.getBookStateDisplayName(bookStatus))).collect(Collectors.toList()));
 
@@ -186,9 +171,15 @@ public class BookController {
         }
         User user = loggedUserAdvice.getLoggedUser();
 
-        // ASK: insert de bookService y de publicationService
+        // ASK: para que sirve -> si es útil hacer las excepciones
 
-        Number bookId = bookService.createBook(null, null, null, null, null, null, bookDetailsForm.getBookState(), 0, bookDetailsForm.getRating(), bookDetailsForm.getImageFiles(), null, false, false, null, null, 0, 0, 0, bookDetailsForm.isPublish(), user, bookModelId);
+        Number bookId;
+        try{
+            bookId = bookService.createBook(null, null, null, null, null, null, bookDetailsForm.getBookState(), 0, bookDetailsForm.getRating(), bookDetailsForm.getImageFiles(), null, false, false, null, null, 0, 0, 0, bookDetailsForm.isPublish(), user, bookModelId);
+        } catch (ApplicationRuntimeException e) {
+            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
+            return new ModelAndView("redirect:/400");
+        }
 
         publicationService.createPublicationIfNeeded(bookDetailsForm.isPublish(), bookId.longValue(), user.getUserId(), bookDetailsForm.getLocation(), PublicationState.CURRENT);
 

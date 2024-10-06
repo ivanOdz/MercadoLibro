@@ -4,4 +4,8 @@ public class NotFoundException extends ApplicationRuntimeException {
     public NotFoundException(String message) {
         super(ExceptionErrorCode.NOT_FOUND, message);
     }
+
+    public NotFoundException() {
+        super(ExceptionErrorCode.NOT_FOUND);
+    }
 }

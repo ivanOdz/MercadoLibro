@@ -1,14 +1,17 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.exceptions.BookModelCreationException;
+import ar.edu.itba.paw.interfaces.exceptions.AuthorBadRequestException;
+import ar.edu.itba.paw.interfaces.exceptions.BookAuthorBadRequestException;
+import ar.edu.itba.paw.interfaces.exceptions.BookModelBadRequestException;
 import ar.edu.itba.paw.interfaces.exceptions.BookModelNotFoundException;
-import ar.edu.itba.paw.interfaces.exceptions.base.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.BookModelDao;
 import ar.edu.itba.paw.interfaces.services.GenreService;
 import ar.edu.itba.paw.models.BookModel;
 import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.BookModelMetadata;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -30,6 +33,9 @@ public class BookModelJdbcDao implements BookModelDao {
     private final SimpleJdbcInsert jdbcInsertBookAuthor;
 
     private final GenreService genreService;
+
+    @Autowired
+    private MessageSource messageSource;
 
     // package-private visibility
     static final RowMapper<BookModel> ROW_MAPPER_BOOK_MODEL = (rs, rowNum) -> new BookModel(
@@ -83,12 +89,14 @@ public class BookModelJdbcDao implements BookModelDao {
         md.put("ishardcover", isHardcover);
         md.put("imageid", bookCoverId);
 
+        Number bookModelId;
         try {
-            final Number bookModelId = jdbcInsertBookModel.executeAndReturnKey(md);
-            return bookModelId.longValue();
+            bookModelId = jdbcInsertBookModel.executeAndReturnKey(md);
         } catch (DataIntegrityViolationException e) {
-            throw new BookModelCreationException("Data integrity violation: One or more fields contain invalid values, or the book model already exists.");
+            String errorMessage = messageSource.getMessage("error.bookModelCreation", new Object[]{e.getStackTrace()}, Locale.getDefault());
+            throw new BookModelBadRequestException(errorMessage);
         }
+        return bookModelId.longValue();
     }
 
     public List<Long> createAuthors(List<String> authors) {
@@ -98,7 +106,13 @@ public class BookModelJdbcDao implements BookModelDao {
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("authorname", author);
 
-            Number id = jdbcInsertAuthor.executeAndReturnKey(parameters);
+            Number id;
+            try{
+                id = jdbcInsertAuthor.execute(parameters);
+            } catch (DataIntegrityViolationException e) {
+                String errorMessage = messageSource.getMessage("error.authorCreation", new Object[]{e.getStackTrace()}, Locale.getDefault());
+                throw new AuthorBadRequestException(errorMessage);
+            }
             authorsIds.add(id.longValue());
         }
         return authorsIds;
@@ -111,27 +125,36 @@ public class BookModelJdbcDao implements BookModelDao {
             parameters.put("bookmodelid", bookModelId);
             parameters.put("authorid", authorId);
 
-            jdbcInsertBookAuthor.execute(parameters);
+            try{
+                jdbcInsertBookAuthor.execute(parameters);
+            } catch (DataIntegrityViolationException e) {
+                String errorMessage = messageSource.getMessage("error.bookAuthorCreation", new Object[]{e.getStackTrace()}, Locale.getDefault());
+                throw new BookAuthorBadRequestException(errorMessage);
+            }
         }
     }
 
     @Override
     public BookModel getBookModelByBookModelId(long bookModelId) {
-        StringBuilder sqlQuery = new StringBuilder(
-                "SELECT bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
-                        "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, bm.imageId AS coverId, " +
-                        "AVG(br.rating) as rating, COUNT(br.rating) as ratingCount " +
-                        "FROM book_model bm " +
-                        "JOIN book_author ba ON ba.bookModelId = bm.bookModelId " +
-                        "JOIN author a ON a.authorId = ba.authorId " +
-                        "LEFT JOIN book_rating br ON bm.bookModelId = br.bookModelId " +
-                        "WHERE bm.bookModelId = ? " +
-                        "GROUP BY bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
-                        "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, bm.imageId"
-        );
+        String sqlQuery = "SELECT bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
+                "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, bm.imageId AS coverId, " +
+                "AVG(br.rating) as rating, COUNT(br.rating) as ratingCount " +
+                "FROM book_model bm " +
+                "JOIN book_author ba ON ba.bookModelId = bm.bookModelId " +
+                "JOIN author a ON a.authorId = ba.authorId " +
+                "LEFT JOIN book_rating br ON bm.bookModelId = br.bookModelId " +
+                "WHERE bm.bookModelId = ? " +
+                "GROUP BY bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
+                "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, bm.imageId";
 
-        return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ bookModelId }, new int[]{Types.BIGINT}, ROW_MAPPER_BOOK_MODEL)
-                .stream().findFirst().orElseThrow(BookModelNotFoundException::new);
+        Optional<BookModel> bm = jdbcTemplate.query(sqlQuery, new Object[]{ bookModelId }, new int[]{Types.BIGINT}, ROW_MAPPER_BOOK_MODEL)
+                .stream().findFirst();
+
+        if(bm.isEmpty()){
+            String errorMessage = messageSource.getMessage("error.bookModelNotFound", new Object[]{bookModelId}, Locale.getDefault());
+            throw new BookModelNotFoundException(errorMessage);
+        }
+        return bm.get();
     }
 
     @Override
@@ -184,12 +207,10 @@ public class BookModelJdbcDao implements BookModelDao {
     }
 
     private List<GenreWrapper> getGenreQtyByBook(String search) {
-        StringBuilder sqlQuery = new StringBuilder(
-                "SELECT bm.genre, COUNT(*) AS genreCount " +
-                        "FROM book_model bm " +
-                        "WHERE LOWER(bm.title) LIKE LOWER(?) ");
 
-        sqlQuery.append("GROUP BY bm.genre");
+        String sqlQuery = "SELECT bm.genre, COUNT(*) AS genreCount " +
+                "FROM book_model bm " +
+                "WHERE LOWER(bm.title) LIKE LOWER(?) " + "GROUP BY bm.genre";
 
         List<Object> params = new ArrayList<>();
         params.add("%" + search.toLowerCase() + "%");
@@ -198,7 +219,7 @@ public class BookModelJdbcDao implements BookModelDao {
         paramTypes = new int[]{Types.VARCHAR};
 
         Map<Genre, Integer> resultByGenreMap = new HashMap<>();
-        jdbcTemplate.query(sqlQuery.toString(), params.toArray(), paramTypes, (rs, rowNum) -> {
+        jdbcTemplate.query(sqlQuery, params.toArray(), paramTypes, (rs, rowNum) -> {
             int genreValue = rs.getInt("genre");
             Genre genre = Genre.fromInt(genreValue);
             resultByGenreMap.put(genre, rs.getInt("genreCount"));
