@@ -277,11 +277,29 @@ public class UserReviewJdbcDao implements UserReviewDao {
     }
 
     @Override
-    public UserReview getUserReview(long exchangeId, long userId) {
+    public UserReview getUserReviewEarned(long exchangeId, long userId) {
     	
-        return null;
+        StringBuilder sqlQuery = new StringBuilder(baseQuery);
+
+        sqlQuery.append(" AND exchange.exchangeId = ? AND subject.userId = ? LIMIT 1");
+        
+        List<UserReview> userReviewEarned = jdbcTemplate.query(sqlQuery.toString(), new Object[]{exchangeId, userId}, new int[]{Types.BIGINT, Types.BIGINT}, ROW_MAPPER_USER_REVIEW);
+        
+        return userReviewEarned.getFirst();
     }
 
+    @Override
+    public UserReview getUserReviewGiven(long exchangeId, long userId) {
+    	
+        StringBuilder sqlQuery = new StringBuilder(baseQuery);
+
+        sqlQuery.append(" AND exchange.exchangeId = ? AND reviewer.userId = ? LIMIT 1");
+        
+        List<UserReview> userReviewEarned = jdbcTemplate.query(sqlQuery.toString(), new Object[]{exchangeId, userId}, new int[]{Types.BIGINT, Types.BIGINT}, ROW_MAPPER_USER_REVIEW);
+        
+        return userReviewEarned.getFirst();
+    }
+    
     @Override
     public int getUserAverageRatingEarned(long userId) {
 
