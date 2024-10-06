@@ -4,21 +4,18 @@ CREATE TABLE IF NOT EXISTS image (
      image                      BYTEA NOT NULL
 );
 
--- ALTER TABLE users ADD COLUMN language VARCHAR(64);
-
 -- Tabla de usuarios
 CREATE TABLE IF NOT EXISTS users (
      userId                     SERIAL PRIMARY KEY,
      username                   VARCHAR(64) UNIQUE NOT NULL,
      mail                       VARCHAR(255),
-     password                   VARCHAR(255), -- NOT NULL
+     password                   VARCHAR(255) NOT NULL,
      imageId                    INTEGER REFERENCES image(imageId),
      verificationCode           INTEGER,
      isVerified                 BOOLEAN,
      language                   VARCHAR(64)
 );
 
--- ALTER TABLE book_model  ADD COLUMN imageId INTEGER REFERENCES image(imageId);
 -- Tabla de modelo de libros
 CREATE TABLE IF NOT EXISTS book_model (
       bookModelId               SERIAL PRIMARY KEY,
@@ -60,7 +57,7 @@ CREATE TABLE IF NOT EXISTS book_image (
       PRIMARY KEY(bookId, imageOrder)
 );
 
--- Nueva
+-- Tabla de ratings
 CREATE TABLE IF NOT EXISTS book_rating (
       userId                    INTEGER NOT NULL REFERENCES users(userId) ON DELETE CASCADE,
       bookModelId               INTEGER NOT NULL REFERENCES book_model(bookModelId) ON DELETE CASCADE,

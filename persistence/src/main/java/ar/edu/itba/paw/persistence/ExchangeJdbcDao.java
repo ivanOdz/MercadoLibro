@@ -97,13 +97,13 @@ public class ExchangeJdbcDao implements ExchangeDao {
             "    op.publicationId, op.publicationState, op_l.locationId, op_l.locationString, op.publicationDatetime, " +
             "    op_b.bookId, op_b.bookState, op_b.exchangesQty, " +
             "    op_bm.bookModelId, op_bm.isbn, op_bm.title, op_bm.editorial, op_bm.description, op_bm.genre, op_bm.edition, op_bm.weight, op_bm.pages, op_bm.bookLanguage, " +
-            "    op_bm.dimension, op_bm.publicationYear, op_bm.isPocketEdition, op_bm.isHardcover, op_bm.imageId, " +
+            "    op_bm.dimension, op_bm.publicationYear, op_bm.isPocketEdition, op_bm.isHardcover, coverId, " +
             "    o.userId, o.username, o.mail, o.password, o.imageId, o.verificationCode, o.isVerified, o.language, " +
             "    rp.publicationId, rp.publicationState, rp_l.locationId, rp_l.locationString, rp.publicationDatetime, " +
             "    rp_b.bookId, rp_b.bookState, rp_b.exchangesQty, " +
             "    r.userId, r.username, r.mail, r.password, r.imageId, r.verificationCode, r.isVerified, r.language, " +
             "    rp_bm.bookModelId, rp_bm.isbn, rp_bm.title, rp_bm.editorial, rp_bm.description, rp_bm.genre, rp_bm.edition, rp_bm.weight, rp_bm.pages, rp_bm.bookLanguage, " +
-            "    rp_bm.dimension, rp_bm.publicationYear, rp_bm.isPocketEdition, rp_bm.isHardcover, rp_bm.imageId " +
+            "    rp_bm.dimension, rp_bm.publicationYear, rp_bm.isPocketEdition, rp_bm.isHardcover, requester_coverId " +
             "ORDER BY e.exchangeStartDate DESC";
 
     private static final RowMapper<Publication> ROW_MAPPER_PUBLICATION_REQUEST =
