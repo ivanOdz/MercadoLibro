@@ -211,7 +211,7 @@ public class UserController {
         LOGGER.debug("Este es un mensaje de debug");
 
         mav.addObject("reviews", userReviewService.getReviewsEarnedByUserId(loggedUserAdvice.getLoggedUser().getUserId()));
-        mav.addObject("userRating", userReviewService.getUserAverageRatingEarned(loggedUserAdvice.getLoggedUser().getUserId()));
+        mav.addObject("userRating", userReviewService.getUserRatingEarned(loggedUserAdvice.getLoggedUser().getUserId()));
 
         return mav;
     }

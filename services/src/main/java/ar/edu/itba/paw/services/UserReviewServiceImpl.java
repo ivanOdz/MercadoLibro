@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.persistence.UserReviewDao;
 import ar.edu.itba.paw.interfaces.services.UserReviewService;
 import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.UserReview;
+import ar.edu.itba.paw.models.utils.Rating;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.standard.expression.Each;
@@ -21,20 +22,10 @@ public class UserReviewServiceImpl implements UserReviewService {
 	}
 
 	@Override
-	public Boolean createUserReview(long exchangeId, long userId, String description, int rating) {
-		return urDao.createUserReview(exchangeId, userId, description, rating);
-	}
-	
-	@Override
-	public UserReview getUserReview(long exchangeId, long reviewerId) {
+	public Boolean createUserReview(long exchangeId, long userId, long userSubjectId, String description, int rating) {
 		
-		return urDao.getUserReview(exchangeId, reviewerId);
-	}
-	
-	@Override
-	public int getUserAverageRatingEarned(long userId) {
-		
-		return urDao.getUserAverageRatingEarned(userId);
+		// VALIDAR!
+		return urDao.createUserReview(exchangeId, userId, userSubjectId, description, rating);
 	}
 	
 	@Override
@@ -48,16 +39,28 @@ public class UserReviewServiceImpl implements UserReviewService {
 
 		return urDao.getReviewsEarnedByUserId(userId);
 	}
-
+	
 	@Override
-	public int getUserAverageRatingGiven(long userId) {
+	public UserReview getUserReviewEarned(long exchangeId, long userId) {
 		
-		return urDao.getUserAverageRatingGiven(userId);
+		return urDao.getUserReviewEarned(exchangeId, userId);
+	}
+	
+	@Override
+	public UserReview getUserReviewGiven(long exchangeId, long userId) {
+		
+		return urDao.getUserReviewGiven(exchangeId, userId);
+	}
+	
+	@Override
+	public Rating getUserRatingEarned(long userId) {
+		
+		return urDao.getUserRatingEarned(userId);
 	}
     
 	@Override
-    public boolean isReviewable(long exchangeId, long userId) {
-    	
-    	return urDao.isReviewable(exchangeId, userId);
-    }
+	public Rating getUserRatingGiven(long userId) {
+		
+		return urDao.getUserRatingGiven(userId);
+	}
 }

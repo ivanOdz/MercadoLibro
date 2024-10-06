@@ -2,13 +2,14 @@ package ar.edu.itba.paw.interfaces.persistence;
 
 import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.UserReview;
+import ar.edu.itba.paw.models.utils.Rating;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 
 import java.util.List;
 
 public interface UserReviewDao {
 
-	Boolean createUserReview(long exchangeId, long userId, String description, int rating);
+	Boolean createUserReview(long exchangeId, long userId, long userSubjectId, String description, int rating);
 
 	PaginatedResponse<UserReview, BasicMetadata> getReviewsGivenByUserId(long userId);
 
@@ -18,9 +19,7 @@ public interface UserReviewDao {
 	
 	UserReview getUserReviewGiven(long exchangeId, long userId);
 	
-	int getUserAverageRatingEarned(long userId);
+	Rating getUserRatingEarned(long userId);
 	
-	int getUserAverageRatingGiven(long userId);
-	
-	boolean isReviewable(long exchangeId, long userId);
+	Rating getUserRatingGiven(long userId);
 }

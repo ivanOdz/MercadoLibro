@@ -205,7 +205,7 @@ public class ExchangeController {
 		BindingResult result, RedirectAttributes redirectAttributes*/) {
     
 
-        boolean success = userReviewService.createUserReview(exchangeId, reviewerId, reviewDescription, userReviewRating);
+        boolean success = userReviewService.createUserReview(exchangeId, reviewerId, subjectId, reviewDescription, userReviewRating);
 
         /*
         if (success) {
