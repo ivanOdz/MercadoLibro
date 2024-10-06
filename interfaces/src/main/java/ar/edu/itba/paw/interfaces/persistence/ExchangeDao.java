@@ -2,7 +2,6 @@ package ar.edu.itba.paw.interfaces.persistence;
 
 import ar.edu.itba.paw.models.Exchange;
 import ar.edu.itba.paw.models.utils.ExchangeState;
-import ar.edu.itba.paw.models.utils.ResponseState;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -12,7 +11,13 @@ public interface ExchangeDao {
 
     Optional<Exchange> createExchange(long offererPubId, long requesterPubId, int acceptCode, Timestamp startDate);
 
-    Optional<Exchange> exchange(int acceptCode, boolean state);
+//    Optional<Exchange> exchange(int acceptCode, boolean state);
+
+    Optional<Exchange> rejectExchange(int acceptCode);
+    void setEndDate(int acceptCode, Timestamp endDate);
+
+    Optional<Exchange> acceptExchange(int acceptCode);
+
 
     Optional<Exchange> confirmOfferer(int acceptCode);
 

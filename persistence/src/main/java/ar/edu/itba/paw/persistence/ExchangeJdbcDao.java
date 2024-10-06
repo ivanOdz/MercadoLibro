@@ -141,7 +141,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
                         new Rating(rs.getDouble("requester_rating"), rs.getInt("requester_ratingCount")));
 
                 Book book = new Book(rs.getLong("requester_bookId"), user, bookModel, BookState.fromInt(rs.getInt("requester_bookState")), rs.getInt("requester_exchangesQty"), rs.getBoolean("requester_available"), rs.getObject("requester_images") == null ? new ArrayList<>() : Arrays.asList((Integer[]) rs.getArray("requester_images").getArray()));
-                
+
                 return new Publication(id, book, publicationState, dateTime, location);
             };
 
@@ -178,25 +178,42 @@ public class ExchangeJdbcDao implements ExchangeDao {
     }
 
     @Override
-    public Optional<Exchange> exchange(int acceptCode, boolean state) {
+    public Optional<Exchange> acceptExchange(int acceptCode) {
 
         StringBuilder sqlQuery = new StringBuilder(baseQuery);
         sqlQuery.append(" WHERE acceptCode = ? ");
         sqlQuery.append(groupQuery);
-        Optional<Exchange> ex = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ acceptCode },
-                new int[]{ Types.INTEGER }, ROW_MAPPER_EXCHANGE).stream().findFirst();
+        Optional<Exchange> ex = jdbcTemplate.query(sqlQuery.toString(), new Object[]{acceptCode},
+                new int[]{Types.INTEGER}, ROW_MAPPER_EXCHANGE).stream().findFirst();
 
-        if(!state) {
-            jdbcTemplate.update("UPDATE exchange SET exchangeState = ? WHERE acceptCode = ?", ExchangeState.REJECTED.getValue(), acceptCode);
-            return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ acceptCode },
-                    new int[]{ Types.INTEGER }, ROW_MAPPER_EXCHANGE).stream().findFirst();
-        }
 
         jdbcTemplate.update("UPDATE exchange SET exchangeState = ? WHERE acceptCode = ?", ExchangeState.ACCEPTED.getValue(), acceptCode);
         jdbcTemplate.update("UPDATE exchange SET exchangeState = ? WHERE offererPubId = ? AND acceptCode <> ?", ExchangeState.REJECTED.getValue(), ex.get().getOfferer().getPublicationId(), acceptCode);
 
-        return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ acceptCode },
-                new int[]{ Types.INTEGER }, ROW_MAPPER_EXCHANGE).stream().findFirst();
+        return jdbcTemplate.query(sqlQuery.toString(), new Object[]{acceptCode},
+                new int[]{Types.INTEGER}, ROW_MAPPER_EXCHANGE).stream().findFirst();
+    }
+
+
+    @Override
+    public Optional<Exchange> rejectExchange(int acceptCode) {
+
+        StringBuilder sqlQuery = new StringBuilder(baseQuery);
+        sqlQuery.append(" WHERE acceptCode = ? ");
+        sqlQuery.append(groupQuery);
+        Optional<Exchange> ex = jdbcTemplate.query(sqlQuery.toString(), new Object[]{acceptCode},
+                new int[]{Types.INTEGER}, ROW_MAPPER_EXCHANGE).stream().findFirst();
+
+        jdbcTemplate.update("UPDATE exchange SET exchangeState = ? WHERE acceptCode = ?", ExchangeState.REJECTED.getValue(), acceptCode);
+        return jdbcTemplate.query(sqlQuery.toString(), new Object[]{acceptCode},
+                new int[]{Types.INTEGER}, ROW_MAPPER_EXCHANGE).stream().findFirst();
+
+    }
+
+    @Override
+    public void setEndDate(int acceptCode, Timestamp endDate) {
+        jdbcTemplate.update("UPDATE exchange SET exchangeenddate = ? WHERE acceptCode = ?", endDate, acceptCode);
+
     }
 
     @Override
@@ -226,12 +243,12 @@ public class ExchangeJdbcDao implements ExchangeDao {
     }
 
     @Override
-    public Optional<Exchange> getExchangeById(long exchangeId){
+    public Optional<Exchange> getExchangeById(long exchangeId) {
         StringBuilder sqlQuery = new StringBuilder(baseQuery);
         sqlQuery.append(" WHERE exchangeId = ? ");
         sqlQuery.append(groupQuery);
-        return jdbcTemplate.query(sqlQuery.toString(), new Object[]{ exchangeId },
-                new int[]{ Types.BIGINT }, ROW_MAPPER_EXCHANGE).stream().findFirst();
+        return jdbcTemplate.query(sqlQuery.toString(), new Object[]{exchangeId},
+                new int[]{Types.BIGINT}, ROW_MAPPER_EXCHANGE).stream().findFirst();
 
     }
 
