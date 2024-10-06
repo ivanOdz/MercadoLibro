@@ -40,7 +40,7 @@ public class UserReviewJdbcDao implements UserReviewDao {
 						+ ", ownerBookOfReviewer.userId AS ownerBookOfReviewerId, ownerBookOfReviewer.userName AS ownerBookOfReviewerName, ownerBookOfReviewer.mail AS ownerBookOfReviewerMail, ownerBookOfReviewer.password AS ownerBookOfReviewerPassword, ownerBookOfReviewer.imageId AS ownerBookOfReviewerImageId, ownerBookOfReviewer.verificationCode AS ownerBookOfReviewerVerificationCode, ownerBookOfReviewer.isVerified AS ownerBookOfReviewerIsVerified, ownerBookOfReviewer.language AS ownerBookOfReviewerLanguage\r\n"
 						+ ", (SELECT AVG(innerBookRating.rating) AS bookModelRatingReviewer FROM book_rating AS innerBookRating WHERE bookModelReviewer.bookModelId = innerBookRating.bookModelId)\r\n"
 						+ ", (SELECT COUNT(innerBookRating.rating) AS bookModelRatingCountReviewer FROM book_rating AS innerBookRating WHERE bookModelReviewer.bookModelId = innerBookRating.bookModelId)\r\n"
-						+ ", (SELECT STRING_AGG(authorReviewer.authorName, ', ') FROM book_author AS bookAuthorsReviewer JOIN author AS authorReviewer ON bookAuthorReviewer.authorId = authorReviewer.authorId WHERE bookModelReviewer.bookModelId = bookAuthorReviewer.bookModelId) AS bookAuthorsReviewer\r\n"
+						+ ", (SELECT STRING_AGG(authorReviewer.authorName, ', ') FROM book_author AS bookAuthorsReviewer JOIN author AS authorReviewer ON bookAuthorsReviewer.authorId = authorReviewer.authorId WHERE bookModelReviewer.bookModelId = bookAuthorsReviewer.bookModelId) AS bookAuthorsReviewer\r\n"
 						+ ", (SELECT ARRAY_AGG(bookImage.imageId ORDER BY bookImagesReviewer.imageOrder) FROM book_image AS bookImagesReviewer JOIN image AS bookImage ON bookImagesReviewer.imageId = bookImage.imageId WHERE bookImagesReviewer.bookId = bookReviewer.bookId) AS bookImagesReviewer\r\n"
 						+ ", CASE WHEN NOT EXISTS (SELECT * FROM publication AS publicationReviewerAux LEFT JOIN exchange AS exchangeReviewerAux ON (publicationReviewerAux.publicationId = exchangeReviewerAux.requesterPubId OR publicationReviewerAux.publicationId = exchangeReviewerAux.offererPubId) WHERE bookReviewer.bookId = publicationReviewerAux.bookId AND exchangeReviewerAux.exchangeState = 1) THEN TRUE\r\n"
 						+ "		ELSE FALSE\r\n"
@@ -51,10 +51,10 @@ public class UserReviewJdbcDao implements UserReviewDao {
 						+ ", locationSubject.locationId AS locationSubjectId, locationSubject.locationString AS locationSubject\r\n"
 						+ ", bookSubject.bookId AS bookSubjectId, bookSubject.bookState AS bookSubjectState, bookSubject.exchangesQty AS bookSubjectExchangesQty\r\n"
 						+ ", bookModelSubject.bookModelId AS bookModelSubjectId, bookModelSubject.isbn AS bookModelSubjectIsbn, bookModelSubject.title AS bookModelSubjectTitle, bookModelSubject.editorial AS bookModelSubjectEditorial, bookModelSubject.description AS bookModelSubjectDescription, bookModelSubject.genre AS bookModelSubjectGenre, bookModelSubject.edition AS bookModelSubjectEdition, bookModelSubject.weight AS bookModelSubjectWeight, bookModelSubject.pages AS bookModelSubjectPages, bookModelSubject.bookLanguage AS bookModelSubjectBookLanguage, bookModelSubject.dimension AS bookModelSubjectDimension, bookModelSubject.publicationYear AS bookModelSubjectPublicationYear, bookModelSubject.isPocketEdition AS bookModelSubjectIsPocketEdition, bookModelSubject.isHardCover AS bookModelSubjectIsHardCover, bookModelSubject.imageId AS bookModelSubjectImageId\r\n"
-						+ ", ownerBookOfSubject.userId AS ownerBookOfSubjectId, ownerBookOfSubject.userName AS oownerBookOfSubjectName, ownerBookOfSubject.mail AS ownerBookOfSubjectMail, ownerBookOfSubject.password AS ownerBookOfSubjectPassword, ownerBookOfSubject.imageId AS ownerBookOfSubjectImageId, ownerBookOfSubject.verificationCode AS ownerBookOfSubjectVerificationCode, ownerBookOfSubject.isVerified AS ownerBookOfSubjectIsVerified, ownerBookOfSubject.language AS ownerBookOfSubjectLanguage\r\n"
+						+ ", ownerBookOfSubject.userId AS ownerBookOfSubjectId, ownerBookOfSubject.userName AS ownerBookOfSubjectName, ownerBookOfSubject.mail AS ownerBookOfSubjectMail, ownerBookOfSubject.password AS ownerBookOfSubjectPassword, ownerBookOfSubject.imageId AS ownerBookOfSubjectImageId, ownerBookOfSubject.verificationCode AS ownerBookOfSubjectVerificationCode, ownerBookOfSubject.isVerified AS ownerBookOfSubjectIsVerified, ownerBookOfSubject.language AS ownerBookOfSubjectLanguage\r\n"
 						+ ", (SELECT AVG(innerBookRating.rating) AS bookModelRatingSubject FROM book_rating AS innerBookRating WHERE bookModelSubject.bookModelId = innerBookRating.bookModelId)\r\n"
 						+ ", (SELECT COUNT(innerBookRating.rating) AS bookModelRatingCountSubject FROM book_rating AS innerBookRating WHERE bookModelSubject.bookModelId = innerBookRating.bookModelId)\r\n"
-						+ ", (SELECT STRING_AGG(authorSubject.authorName, ', ') FROM book_author AS bookAuthorsSubject JOIN author AS authorSubject ON bookAuthorSubject.authorId = authorSubject.authorId WHERE bookModelSubject.bookModelId = bookAuthorSubject.bookModelId) AS bookAuthorsSubject\r\n"
+						+ ", (SELECT STRING_AGG(authorSubject.authorName, ', ') FROM book_author AS bookAuthorsSubject JOIN author AS authorSubject ON bookAuthorsSubject.authorId = authorSubject.authorId WHERE bookModelSubject.bookModelId = bookAuthorsSubject.bookModelId) AS bookAuthorsSubject\r\n"
 						+ ", (SELECT ARRAY_AGG(bookImage.imageId ORDER BY bookImagesSubject.imageOrder) FROM book_image AS bookImagesSubject JOIN image AS bookImage ON bookImagesSubject.imageId = bookImage.imageId WHERE bookImagesSubject.bookId = bookSubject.bookId) AS bookImagesSubject\r\n"
 						+ ", CASE WHEN NOT EXISTS (SELECT * FROM publication AS publicationSubjectAux LEFT JOIN exchange AS exchangeSubjectAux ON (publicationSubjectAux.publicationId = exchangeSubjectAux.requesterPubId OR publicationSubjectAux.publicationId = exchangeSubjectAux.offererPubId) WHERE bookReviewer.bookId = publicationSubjectAux.bookId AND exchangeSubjectAux.exchangeState = 1) THEN TRUE\r\n"
 						+ " 	ELSE FALSE\r\n"
@@ -75,7 +75,7 @@ public class UserReviewJdbcDao implements UserReviewDao {
 						+ " JOIN book_model AS bookModelSubject ON bookSubject.bookModelId = bookModelSubject.bookModelId\r\n"
 						+ " JOIN users AS ownerBookOfSubject ON bookSubject.ownerId = ownerBookOfSubject.userId\r\n"
 						// Filtrar tuplas que no corresponden con los involucrados
-						+ " WHERE (exchange.requesterPubId = publicationReviewer.publicationId AND exchange.offererPubId = publicationSubject.publicationId) OR (exchange.offererPubId = publicationReviewer.publicationId AND exchange.requesterPubId = publicationSubject.publicationId) ";
+						+ " WHERE ((exchange.requesterPubId = publicationReviewer.publicationId AND exchange.offererPubId = publicationSubject.publicationId) OR (exchange.offererPubId = publicationReviewer.publicationId AND exchange.requesterPubId = publicationSubject.publicationId))\r\n";
     
     
 	private static final RowMapper<UserReview> ROW_MAPPER_USER_REVIEW =
@@ -118,7 +118,7 @@ public class UserReviewJdbcDao implements UserReviewDao {
 														);
 		
 			User ownerBookOfReviewer = new User(	rs.getLong("ownerBookOfReviewerId"),
-													rs.getString("ownerBookOfReviewerUserName"),
+													rs.getString("ownerBookOfReviewerName"),
 													rs.getString("ownerBookOfReviewerMail"),
 													rs.getString("ownerBookOfReviewerPassword"),
 													rs.getLong("ownerBookOfReviewerImageId"),
@@ -178,7 +178,7 @@ public class UserReviewJdbcDao implements UserReviewDao {
 													);
 			
 			User ownerBookOfSubject = new User(	rs.getLong("ownerBookOfSubjectId"),
-												rs.getString("ownerBookOfSubjectUserName"),
+												rs.getString("ownerBookOfSubjectName"),
 												rs.getString("ownerBookOfSubjectMail"),
 												rs.getString("ownerBookOfSubjectPassword"),
 												rs.getLong("ownerBookOfSubjectImageId"),
@@ -277,11 +277,29 @@ public class UserReviewJdbcDao implements UserReviewDao {
     }
 
     @Override
-    public UserReview getUserReview(long exchangeId, long userId) {
+    public UserReview getUserReviewEarned(long exchangeId, long userId) {
     	
-        return null;
+        StringBuilder sqlQuery = new StringBuilder(baseQuery);
+
+        sqlQuery.append(" AND exchange.exchangeId = ? AND subject.userId = ? LIMIT 1");
+        
+        List<UserReview> userReviewEarned = jdbcTemplate.query(sqlQuery.toString(), new Object[]{exchangeId, userId}, new int[]{Types.BIGINT, Types.BIGINT}, ROW_MAPPER_USER_REVIEW);
+        
+        return userReviewEarned.getFirst();
     }
 
+    @Override
+    public UserReview getUserReviewGiven(long exchangeId, long userId) {
+    	
+        StringBuilder sqlQuery = new StringBuilder(baseQuery);
+
+        sqlQuery.append(" AND exchange.exchangeId = ? AND reviewer.userId = ? LIMIT 1");
+        
+        List<UserReview> userReviewEarned = jdbcTemplate.query(sqlQuery.toString(), new Object[]{exchangeId, userId}, new int[]{Types.BIGINT, Types.BIGINT}, ROW_MAPPER_USER_REVIEW);
+        
+        return userReviewEarned.getFirst();
+    }
+    
     @Override
     public int getUserAverageRatingEarned(long userId) {
 
