@@ -14,6 +14,6 @@ public class Location {
     }
 
     public String getLocationString() {
-        return locationString.toString();
+        return locationString;
     }
 }

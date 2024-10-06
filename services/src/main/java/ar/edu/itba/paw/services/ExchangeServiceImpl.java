@@ -65,7 +65,15 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Transactional
     @Override
     public String exchange(int acceptCode, boolean state) {
-        Optional<Exchange> ex = exchangeDao.exchange(acceptCode, state);
+        Optional<Exchange> ex = Optional.empty();
+        if(state)
+            ex = exchangeDao.acceptExchange(acceptCode);
+        else {
+            Date date = new Date();
+            Timestamp timestamp = new Timestamp(date.getTime());
+            ex = exchangeDao.rejectExchange(acceptCode);
+            exchangeDao.setEndDate(acceptCode, timestamp);
+        }
 
         if (ex.isEmpty()) {
             // TODO: EXCEPTIONS
@@ -112,7 +120,10 @@ public class ExchangeServiceImpl implements ExchangeService {
         Optional<Exchange> ex = exchangeDao.confirmOfferer(acceptCode);
 
         if (ex.get().isConfirmed()) {
+            Date date = new Date();
+            Timestamp timestamp = new Timestamp(date.getTime());
             exchangeDao.updateExchangeStatus(acceptCode, ExchangeState.TERMINATED.getValue());
+            exchangeDao.setEndDate(acceptCode, timestamp);
             bs.exchangeOwnership(ex.get().getOfferer().getBook(), ex.get().getRequester().getBook());
         }
     }
@@ -123,7 +134,10 @@ public class ExchangeServiceImpl implements ExchangeService {
         Optional<Exchange> ex = exchangeDao.confirmRequester(acceptCode);
 
         if (ex.get().isConfirmed()) {
+            Date date = new Date();
+            Timestamp timestamp = new Timestamp(date.getTime());
             exchangeDao.updateExchangeStatus(acceptCode, ExchangeState.TERMINATED.getValue());
+            exchangeDao.setEndDate(acceptCode, timestamp);
             bs.exchangeOwnership(ex.get().getOfferer().getBook(), ex.get().getRequester().getBook());
         }
     }

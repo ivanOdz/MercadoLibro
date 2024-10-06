@@ -65,7 +65,7 @@
                                          onclick="selectCard(this,
                                                  '<c:out value="${pending.offerer.book.owner.username}"/>',
                                                  '<c:out value="${pending.offerer.book.owner.mail}"/>',
-                                                 '<c:out value="${pending.offerer.location}"/>',
+                                                 '<c:out value="${pending.offerer.location.locationString}"/>',
                                                  '<c:out value="${pending.requester.book.bookModel.title}"/>',
                                                  '<c:out value="${pending.requester.book.bookModel.authors}"/>',
                                                  '<c:out value="${pending.requester.book.bookModel.edition}"/>',
@@ -85,9 +85,23 @@
                                                     <c:out value="${pending.requester.book.bookModel.title}"/>
                                                 </h3></div>
                                         </div>
-                                        <div class="arrow-icon" style="padding: 0">
-                                            <span uk-icon="icon: chevron-double-right; ratio: 2"></span>
+
+                                        <div style="width: 40%; display: grid; justify-items: center; padding-left: 0px">
+                                            <div class="arrow-icon" style="padding: 0">
+                                                <span uk-icon="icon: chevron-double-right; ratio: 2"></span>
+                                            </div>
+                                            <span style="width: 30%" class="uk-badge state-pending">
+                                                    <spring:message
+                                                            code="exchange.status.pending"/>
+                                            </span>
+                                            <div style=" font-size: 10px; padding: 5%">
+                                                <spring:message code="date.start"/>
+                                                <spring:message code="date.format" var="dateFormat"/>
+                                                <fmt:formatDate value="${pending.exchangeStartDate}"
+                                                                pattern="${dateFormat}"/>
+                                            </div>
                                         </div>
+
                                         <div style="padding: 0">
                                             <img class="book-image"
                                                  src="${pageContext.request.contextPath}/images/${pending.offerer.book.images[0]}"
@@ -97,15 +111,6 @@
                                                     <c:out value="${pending.offerer.book.bookModel.title}"/>
                                                 </h3>
                                             </div>
-                                        </div>
-
-                                        <div style="width: 40%; margin-bottom: 25px; display: grid; justify-items: center;">
-                                        <span style="width: 20%" class="uk-badge state-pending">
-                                                    <spring:message
-                                                            code="exchange.status.pending"/>
-                                                </span>
-                                            <spring:message code="date.format" var="dateFormat"/>
-                                            <fmt:formatDate value="${pending.exchangeStartDate}" pattern="${dateFormat}"/>
                                         </div>
                                     </div>
                                 </c:forEach>
@@ -121,7 +126,7 @@
                                          onclick="selectCard(this,
                                                  '<c:out value="${inProgress.offerer.book.owner.username}"/>',
                                                  '<c:out value="${inProgress.offerer.book.owner.mail}"/>',
-                                                 '<c:out value="${inProgress.offerer.location}"/>',
+                                                 '<c:out value="${inProgress.offerer.location.locationString}"/>',
                                                  '<c:out value="${inProgress.requester.book.bookModel.title}"/>',
                                                  '<c:out value="${inProgress.requester.book.bookModel.authors}"/>',
                                                  '<c:out value="${inProgress.requester.book.bookModel.edition}"/>',
@@ -142,23 +147,13 @@
                                                 </h3>
                                             </div>
                                         </div>
-                                        <div class="arrow-icon" style="padding: 0">
-                                            <span uk-icon="icon: chevron-double-right; ratio: 2"></span>
-                                        </div>
-                                        <div style="padding: 0">
-                                            <img class="book-image"
-                                                 src="${pageContext.request.contextPath}/images/${inProgress.offerer.book.images[0]}"
-                                                 alt="bookImage"/>
-                                            <div class="card-text-container">
-                                                <h3 class="card-text3">
-                                                    <c:out value="${inProgress.offerer.book.bookModel.title}"/>
-                                                </h3>
+                                        <div style="width: 40%; display: grid; justify-items: center; padding-left: 0px">
+                                            <div class="arrow-icon" style="padding: 0">
+                                                <span uk-icon="icon: chevron-double-right; ratio: 2"></span>
                                             </div>
-                                        </div>
-
-                                        <div style="width:40%; margin-bottom: 15px; display: flex; flex-direction: column; align-items: center">
                                             <c:if test="${inProgress.requesterReceivedBook}">
-                                                        <span style="margin-bottom: 25px" class="uk-badge state-awaiting">
+                                                        <span style="margin-bottom: 25px"
+                                                              class="uk-badge state-awaiting">
                                                             <spring:message code="exchange.status.awaiting"/>
 													    </span>
                                             </c:if>
@@ -172,10 +167,12 @@
                                                         <spring:message code="exchange.status.in_progress"/>
 													    </span>
                                             </c:if>
-                                            <fmt:formatDate
-                                                    value="${inProgress.exchangeStartDate}"
-                                                    pattern="dd/MM/yyyy"/>
-
+                                            <div style="font-size: 10px; padding: 5%">
+                                                <spring:message code="date.start"/>
+                                                <spring:message code="date.format" var="dateFormat"/>
+                                                <fmt:formatDate value="${inProgress.exchangeStartDate}"
+                                                                pattern="${dateFormat}"/>
+                                            </div>
 
                                             <!-- Confirm exchange modal -->
 
@@ -199,6 +196,19 @@
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <div style="padding: 0">
+                                            <img class="book-image"
+                                                 src="${pageContext.request.contextPath}/images/${inProgress.offerer.book.images[0]}"
+                                                 alt="bookImage"/>
+                                            <div class="card-text-container">
+                                                <h3 class="card-text3">
+                                                    <c:out value="${inProgress.offerer.book.bookModel.title}"/>
+                                                </h3>
+                                            </div>
+                                        </div>
+
+
                                     </div>
                                 </c:forEach>
                             </c:if>
@@ -213,7 +223,7 @@
                                          onclick="selectCard(this,
                                                  '<c:out value="${completed.offerer.book.owner.username}"/>',
                                                  '<c:out value="${completed.offerer.book.owner.mail}"/>',
-                                                 '<c:out value="${completed.offerer.location}"/>',
+                                                 '<c:out value="${completed.offerer.location.locationString}"/>',
                                                  '<c:out value="${completed.requester.book.bookModel.title}"/>',
                                                  '<c:out value="${completed.requester.book.bookModel.authors}"/>',
                                                  '<c:out value="${completed.requester.book.bookModel.edition}"/>',
@@ -233,8 +243,24 @@
                                                     <c:out value="${completed.requester.book.bookModel.title}"/>
                                                 </h3></div>
                                         </div>
-                                        <div class="arrow-icon" style="padding: 0">
-                                            <span uk-icon="icon: chevron-double-right; ratio: 2"></span>
+                                        <div style="width: 40%; display: grid; justify-items: center; padding-left: 0px">
+                                            <div class="arrow-icon" style="padding: 0">
+                                                <span uk-icon="icon: chevron-double-right; ratio: 2"></span>
+                                            </div>
+                                            <span class="uk-badge state-approved"><spring:message
+                                                    code="exchange.status.terminated"/></span>
+                                            <div style="width: 400%;font-size: 10px; padding: 5%">
+                                                <spring:message code="date.start"/>
+                                                <spring:message code="date.format" var="dateFormat"/>
+                                                <fmt:formatDate value="${completed.exchangeStartDate}"
+                                                                pattern="${dateFormat}"/>
+                                            </div>
+                                            <div style="width: 400%; margin-bottom: 25px; font-size: 10px;  padding: 0 5% 5% 5%;">
+                                                <spring:message code="date.end"/>
+                                                <spring:message code="date.format" var="dateFormat"/>
+                                                <fmt:formatDate value="${completed.exchangeEndDate}"
+                                                                pattern="${dateFormat}"/>
+                                            </div>
                                         </div>
                                         <div style="padding: 0">
                                             <img class="book-image"
@@ -245,14 +271,6 @@
                                                     <c:out value="${completed.offerer.book.bookModel.title}"/>
                                                 </h3>
                                             </div>
-                                        </div>
-
-                                        <div style="width: 40%; margin-bottom: 25px">
-                                                <span class="uk-badge state-approved"><spring:message
-                                                        code="exchange.status.terminated"/></span>
-                                            <fmt:formatDate
-                                                    value="${completed.exchangeStartDate}"
-                                                    pattern="dd/MM/yyyy"/>
                                         </div>
                                     </div>
                                 </c:forEach>
@@ -268,7 +286,7 @@
                                          onclick="selectCard(this,
                                                  '<c:out value="${rejected.offerer.book.owner.username}"/>',
                                                  '<c:out value="${rejected.offerer.book.owner.mail}"/>',
-                                                 '<c:out value="${rejected.offerer.location}"/>',
+                                                 '<c:out value="${rejected.offerer.location.locationString}"/>',
                                                  '<c:out value="${rejected.requester.book.bookModel.title}"/>',
                                                  '<c:out value="${rejected.requester.book.bookModel.authors}"/>',
                                                  '<c:out value="${rejected.requester.book.bookModel.edition}"/>',
@@ -278,7 +296,6 @@
                                                  '<c:out value="${rejected.requester.book.owner.userId}"/>',
                                                  '${rejected.isReviewable}'
                                                  )" uk-grid>
-
 
 
                                         <div style="padding: 0">
@@ -291,8 +308,26 @@
                                                 </h3>
                                             </div>
                                         </div>
-                                        <div class="arrow-icon" style="padding: 0">
-                                            <span uk-icon="icon: chevron-double-right; ratio: 2"></span>
+                                        <div style="width: 40%; display: grid; justify-items: center; padding-left: 0px">
+
+                                            <div class="arrow-icon" style="padding: 0">
+                                                <span uk-icon="icon: chevron-double-right; ratio: 2"></span>
+                                            </div>
+
+                                            <span class="uk-badge state-rejected"><spring:message
+                                                    code="exchange.status.rejected"/></span>
+                                            <div style="width: 400%; font-size: 10px; padding: 5%">
+                                                <spring:message code="date.start"/>
+                                                <spring:message code="date.format" var="dateFormat"/>
+                                                <fmt:formatDate value="${rejected.exchangeStartDate}"
+                                                                pattern="${dateFormat}"/>
+                                            </div>
+                                            <div style="width: 400%; margin-bottom: 25px; font-size: 10px; padding: 0 5% 5% 5%;">
+                                                <spring:message code="date.end"/>
+                                                <spring:message code="date.format" var="dateFormat"/>
+                                                <fmt:formatDate value="${rejected.exchangeEndDate}"
+                                                                pattern="${dateFormat}"/>
+                                            </div>
                                         </div>
                                         <div style="padding: 0">
                                             <img class="book-image"
@@ -305,11 +340,7 @@
                                             </div>
                                         </div>
 
-                                        <div style="width: 40%; margin-bottom: 25px">
-                                            <span class="uk-badge state-rejected"><spring:message
-                                                    code="exchange.status.rejected"/></span>
-                                                <fmt:formatDate value="${rejected.exchangeStartDate}" pattern="dd/MM/yyyy"/>
-                                                                               </div>
+
                                     </div>
                                 </c:forEach>
                             </c:if>
@@ -391,8 +422,8 @@
                                         </div>
 
                                         <form:hidden path="exchangeId"/>
-<%--                                        <form:hidden path="reviewerId"/>--%>
-<%--                                        <form:hidden path="subjectId"/>--%>
+                                        <%--                                        <form:hidden path="reviewerId"/>--%>
+                                        <%--                                        <form:hidden path="subjectId"/>--%>
 
                                         <p class="uk-text-right">
                                             <button class="uk-button uk-button-default uk-modal-close" type="button">
