@@ -27,7 +27,16 @@ public class UserReviewServiceImpl implements UserReviewService {
 		
 		Exchange exchange = exchangeService.getExchangeById(exchangeId).get();
 		
-		return urDao.createUserReview(exchangeId, userId, 0, description, rating);
+		if (exchange != null && exchange.getIsReviewable() == true) {
+			
+			long offererId = exchange.getOfferer().getBook().getOwner().getUserId();
+			long requesterId = exchange.getRequester().getBook().getOwner().getUserId();
+			long subjectId = offererId != userId ? offererId : requesterId;
+			
+			return urDao.createUserReview(exchangeId, userId, subjectId, description, rating);
+		}
+		
+		return false;
 	}
 	
 	@Override
