@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.exceptions.BookModelCreationException;
+import ar.edu.itba.paw.interfaces.exceptions.base.ApplicationRuntimeException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
@@ -122,8 +124,12 @@ public class BookController {
 
         User user = loggedUserAdvice.getLoggedUser();
 
-        Number bookId = bookService.createBook(bookForm.getIsbn(), bookForm.getTitle(), bookForm.getAuthors(), bookForm.getEditorial(), bookForm.getDescription(), bookForm.getGenre(), bookForm.getBookState(), bookForm.getEdition(), bookForm.getRating(), bookForm.getImageFiles(), bookForm.getPublicationYear(), bookForm.isHardcover(), bookForm.isPocketEdition(), bookForm.getDimension(), bookForm.getLanguage(), bookForm.getPages(), bookForm.getWeight(), bookForm.getBookCover(), bookForm.isPublish(), user, null);
-
+        try {
+            Number bookId = bookService.createBook(bookForm.getIsbn(), bookForm.getTitle(), bookForm.getAuthors(), bookForm.getEditorial(), bookForm.getDescription(), bookForm.getGenre(), bookForm.getBookState(), bookForm.getEdition(), bookForm.getRating(), bookForm.getImageFiles(), bookForm.getPublicationYear(), bookForm.isHardcover(), bookForm.isPocketEdition(), bookForm.getDimension(), bookForm.getLanguage(), bookForm.getPages(), bookForm.getWeight(), bookForm.getBookCover(), bookForm.isPublish(), user, null);
+        } catch(BookModelCreationException e){
+            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
+            return new ModelAndView("redirect:/400");
+        }
         publicationService.createPublicationIfNeeded(bookForm.isPublish(), bookId.longValue(), user.getUserId(), bookForm.getLocation(), PublicationState.CURRENT);
 
         return new ModelAndView("redirect:/book");
@@ -134,9 +140,18 @@ public class BookController {
 
         ModelAndView mav = new ModelAndView("/book/book_form");
 
+        Book
+        try{
+        BookModel bm = bookModelService.getBookModelByBookModelId(bookModelId);
+
+        }  catch (ApplicationRuntimeException e){
+            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
+            return new ModelAndView("redirect:/404");
+        }
+
         mav.addObject("bookDetailsForm", bookDetailsForm);
         mav.addObject("step", 2);
-        mav.addObject("book_model", bookModelService.getBookModelByBookModelId(bookModelId));
+        mav.addObject("book_model", );
         mav.addObject("book_model_id", bookModelId);
         mav.addObject("bookStates", List.of(BookState.values()).stream().map(bookStatus -> new BookStateWrapper(bookStatus, bookStateService.getBookStateDisplayName(bookStatus))).collect(Collectors.toList()));
 
