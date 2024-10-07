@@ -19,7 +19,6 @@ public interface ExchangeDao {
 
     Optional<Exchange> acceptExchange(int acceptCode);
 
-
     Optional<Exchange> confirmOfferer(int acceptCode);
 
     Optional<Exchange> confirmRequester(int acceptCode);

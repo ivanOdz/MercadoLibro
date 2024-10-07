@@ -13,12 +13,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserReviewServiceImpl implements UserReviewService {
 
-	private final UserReviewDao urDao;
+	private final UserReviewDao userReviewDao;
 	private final ExchangeService exchangeService;
 	
 	public UserReviewServiceImpl(final UserReviewDao urDao, final ExchangeService exchangeService) {
 		
-		this.urDao = urDao;
+		this.userReviewDao = urDao;
 		this.exchangeService = exchangeService;
 	}
 
@@ -27,13 +27,13 @@ public class UserReviewServiceImpl implements UserReviewService {
 		
 		Exchange exchange = exchangeService.getExchangeById(exchangeId).get();
 		
-		if (exchange != null && exchange.getIsReviewable() == true) {
+		if (exchange != null && exchange.getIsReviewable() == true && getUserReviewGiven(exchangeId, userId) == null) {
 			
 			long offererId = exchange.getOfferer().getBook().getOwner().getUserId();
 			long requesterId = exchange.getRequester().getBook().getOwner().getUserId();
 			long subjectId = offererId != userId ? offererId : requesterId;
 			
-			return urDao.createUserReview(exchangeId, userId, subjectId, description, rating);
+			return userReviewDao.createUserReview(exchangeId, userId, subjectId, description, rating);
 		}
 		
 		return false;
@@ -42,36 +42,44 @@ public class UserReviewServiceImpl implements UserReviewService {
 	@Override
 	public PaginatedResponse<UserReview, BasicMetadata> getReviewsGivenByUserId(long userId) {
 
-		return urDao.getReviewsGivenByUserId(userId);
+		return userReviewDao.getReviewsGivenByUserId(userId);
 	}
 
 	@Override
 	public PaginatedResponse<UserReview, BasicMetadata> getReviewsEarnedByUserId(long userId) {
 
-		return urDao.getReviewsEarnedByUserId(userId);
+		return userReviewDao.getReviewsEarnedByUserId(userId);
 	}
 	
 	@Override
 	public UserReview getUserReviewEarned(long exchangeId, long userId) {
 		
-		return urDao.getUserReviewEarned(exchangeId, userId);
+		return userReviewDao.getUserReviewEarned(exchangeId, userId);
 	}
 	
 	@Override
 	public UserReview getUserReviewGiven(long exchangeId, long userId) {
 		
-		return urDao.getUserReviewGiven(exchangeId, userId);
+		return userReviewDao.getUserReviewGiven(exchangeId, userId);
 	}
 	
 	@Override
 	public Rating getUserRatingEarned(long userId) {
 		
-		return urDao.getUserRatingEarned(userId);
+		return userReviewDao.getUserRatingEarned(userId);
 	}
     
 	@Override
 	public Rating getUserRatingGiven(long userId) {
 		
-		return urDao.getUserRatingGiven(userId);
+		return userReviewDao.getUserRatingGiven(userId);
+	}
+	
+	@Override
+	public Boolean isReviewable(long exchangeId, long userId) {
+		
+		Exchange exchange = exchangeService.getExchangeById(exchangeId).get();
+		
+		return exchange != null && exchange.getIsReviewable() == true && getUserReviewGiven(exchangeId, userId) == null;
 	}
 }

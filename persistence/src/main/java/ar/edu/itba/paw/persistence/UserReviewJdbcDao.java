@@ -304,8 +304,8 @@ public class UserReviewJdbcDao implements UserReviewDao {
         sqlQuery.append(" AND exchange.exchangeId = ? AND subject.userId = ? LIMIT 1");
         
         List<UserReview> userReviewEarned = jdbcTemplate.query(sqlQuery.toString(), new Object[] { exchangeId, userId }, new int[] { Types.BIGINT, Types.BIGINT }, ROW_MAPPER_USER_REVIEW);
-        
-        return userReviewEarned.getFirst();
+
+        return userReviewEarned.isEmpty() ? null : userReviewEarned.getFirst();
     }
 
     @Override
@@ -315,9 +315,9 @@ public class UserReviewJdbcDao implements UserReviewDao {
 
         sqlQuery.append(" AND exchange.exchangeId = ? AND reviewer.userId = ? LIMIT 1");
         
-        List<UserReview> userReviewEarned = jdbcTemplate.query(sqlQuery.toString(), new Object[] { exchangeId, userId }, new int[] { Types.BIGINT, Types.BIGINT }, ROW_MAPPER_USER_REVIEW);
+        List<UserReview> userReviewGiven = jdbcTemplate.query(sqlQuery.toString(), new Object[] { exchangeId, userId }, new int[] { Types.BIGINT, Types.BIGINT }, ROW_MAPPER_USER_REVIEW);
         
-        return userReviewEarned.getFirst();
+        return userReviewGiven.isEmpty() ? null : userReviewGiven.getFirst();
     }
     
     @Override
@@ -329,7 +329,7 @@ public class UserReviewJdbcDao implements UserReviewDao {
     	
     	List<Rating> rating = jdbcTemplate.query(sqlQuery.toString(), new Object[] { userId }, new int[] { Types.BIGINT }, ROW_MAPPER_RATING);
     	
-        return rating.getFirst();
+        return rating.isEmpty() ? null : rating.getFirst();
     }
 
     @Override
@@ -341,6 +341,6 @@ public class UserReviewJdbcDao implements UserReviewDao {
     	
     	List<Rating> rating = jdbcTemplate.query(sqlQuery.toString(), new Object[] { userId }, new int[] { Types.BIGINT }, ROW_MAPPER_RATING);
     	
-        return rating.getFirst();
+        return rating.isEmpty() ? null : rating.getFirst();
     }
 }
