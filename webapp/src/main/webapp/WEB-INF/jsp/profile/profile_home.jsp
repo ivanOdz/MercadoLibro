@@ -147,7 +147,7 @@
                         <h2 class="uk-h4 subtitles-profile"><spring:message code="review.title"/></h2>
                     </div>
 
-                    <c:forEach var="review" items="${reviews.data}"> <!-- ESTO ES CULPA DE IVAN -->
+                    <c:forEach var="review" items="${reviews.data}">
 
                         <div class="uk-card uk-card-body uk-border-rounded uk-box-shadow-small uk-width-expand">
                             <div class="reviewStars">
@@ -170,6 +170,82 @@
 
                     </c:forEach>
 
+                    <hr class="uk-divider-icon">
+
+                    <nav aria-label="Pagination" class="uk-position-relative uk-margin">
+                        <ul class="uk-pagination uk-flex-center uk-position-center">
+
+                            <!-- Botón Previous -->
+                            <c:if test="${reviews.metadata.currentPage > 0}">
+                                <li>
+                                    <c:url var="prevPageUrl" value="">
+                                        <c:param name="page" value="${reviews.metadata.currentPage - 1}" />
+                                    </c:url>
+                                    <a href="${prevPageUrl}">
+                                        <span uk-pagination-previous></span>
+                                        <spring:message code="publications.pagination.previous"/>
+                                    </a>
+                                </li>
+                            </c:if>
+
+                            <!-- Botón de la primera página -->
+                            <c:if test="${reviews.metadata.currentPage > 1}">
+                                <li>
+                                    <c:url var="firstPageUrl" value="">
+                                        <c:param name="page" value="0" />
+                                    </c:url>
+                                    <a href="${firstPageUrl}">1</a>
+                                </li>
+                            </c:if>
+
+                            <c:if test="${reviews.metadata.currentPage - 2 > 0}">
+                                <li><span>...</span></li>
+                            </c:if>
+
+                            <!-- Páginas centrales -->
+                            <c:forEach var="i" begin="${reviews.metadata.currentPage > 0 ? reviews.metadata.currentPage - 1 : 0}"
+                                       end="${reviews.metadata.currentPage + 1 <= reviews.metadata.maxPage ? reviews.metadata.currentPage + 1 : reviews.metadata.maxPage}">
+                                <li class="${i == reviews.metadata.currentPage ? 'uk-active' : ''}">
+                                    <c:url var="centralPageUrl" value="">
+                                        <c:param name="page" value="${i}" />
+                                    </c:url>
+                                    <a href="${centralPageUrl}">${i + 1}</a> <!-- Mostrar i + 1 para la numeración -->
+                                </li>
+                            </c:forEach>
+
+                            <c:if test="${reviews.metadata.currentPage + 2 < reviews.metadata.maxPage}">
+                                <li><span>...</span></li>
+                            </c:if>
+
+                            <!-- Botón de la última página -->
+                            <c:if test="${reviews.metadata.currentPage + 1 < reviews.metadata.maxPage}">
+                                <li>
+                                    <c:url var="lastPageUrl" value="">
+                                        <c:param name="page" value="${reviews.metadata.maxPage}" />
+                                    </c:url>
+                                    <a href="${lastPageUrl}">${reviews.metadata.maxPage + 1}</a> <!-- Mostrar maxPage + 1 -->
+                                </li>
+                            </c:if>
+
+                            <!-- Botón Next -->
+                            <c:if test="${reviews.metadata.currentPage < reviews.metadata.maxPage}">
+                                <li>
+                                    <c:url var="nextPageUrl" value="">
+                                        <c:param name="page" value="${reviews.metadata.currentPage + 1}" />
+                                    </c:url>
+                                    <a href="${nextPageUrl}">
+                                        <spring:message code="publications.pagination.next"/>
+                                        <span uk-pagination-next></span>
+                                    </a>
+                                </li>
+                            </c:if>
+                        </ul>
+
+                        <!-- Botón "Ir al inicio" alineado a la derecha -->
+                        <a href="" uk-totop uk-scroll class="uk-position-right uk-margin-right">
+                            <spring:message code="publications.pagination.totop"/>
+                        </a>
+                    </nav>
                 </div>
             </div>
         </div>

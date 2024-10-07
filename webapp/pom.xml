@@ -43,6 +43,7 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>services</artifactId>
             <version>${project.version}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.sun.mail</groupId>
