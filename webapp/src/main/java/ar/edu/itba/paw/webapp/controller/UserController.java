@@ -266,6 +266,6 @@ public class UserController {
             }
         }
 
-        return new ModelAndView("redirect:/");
+        return new ModelAndView("redirect:/profile");
     }
 }

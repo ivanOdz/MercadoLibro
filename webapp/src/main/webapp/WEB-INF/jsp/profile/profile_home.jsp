@@ -117,7 +117,14 @@
                             </c:when>
                         </c:choose>
 
-                        <button class="uk-button uk-button-default" type="button"><spring:message code="language"/></button>
+                        <div>
+                            <h3 class="uk-h5"><c:out value="${loggedUser.mail}"/></h3>
+                            <!-- 	                	<a href="change_mail_solicited" title="Change Mail"> -->
+                            <!-- 				            <i class="material-icons edit-icon">edit</i> -->
+                            <!-- 				        </a> -->
+                        </div>
+
+                        <button style="margin: 5% 0 5% 0;" class="uk-button uk-button-default" type="button"><spring:message code="language"/></button>
                         <div uk-dropdown>
                             <ul class="uk-nav uk-dropdown-nav ">
                                 <li><a href="${pageContext.request.contextPath}/language?lang=en"><spring:message code="language.english"/></a></li>
@@ -125,12 +132,6 @@
                             </ul>
                         </div>
 
-                        <div>
-                            <h3 class="uk-h5"><c:out value="${loggedUser.mail}"/></h3>
-                            <!-- 	                	<a href="change_mail_solicited" title="Change Mail"> -->
-                            <!-- 				            <i class="material-icons edit-icon">edit</i> -->
-                            <!-- 				        </a> -->
-                        </div>
 
                         <!-- 					<div class="changePasswordButton"> -->
                         <!-- 					    <a href="change_password_solicited" class="btn-red" title="Cambiar Contraseña"> -->

@@ -3,7 +3,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ include file="/WEB-INF/jsp/components/navbar_wo_search.jsp" %>
 
-<html>
+<html class="custom-style">
 
 <%@include file="/WEB-INF/jsp/head/headers.jsp"%>
 
@@ -33,15 +33,15 @@
 
 </head>
 
-<body>
+<body >
 
 <navbar/>
 
 <c:url var="postUrl" value="/book/create_new_book"/>
 
 <div class="uk-background-muted" style="margin-bottom: 2%;">
-    <div class="uk-container uk-margin-bottom" style="margin-top: 1%">
-        <a class="uk-button uk-button-text" href="${pageContext.request.contextPath}/book">
+    <div class="uk-container uk-margin-bottom" >
+        <a style="margin-top: 4%" class="uk-button uk-button-text" href="${pageContext.request.contextPath}/book">
             <span uk-icon="icon:  chevron-left"></span>
             <spring:message code="add.book.return_home"/>
         </a>

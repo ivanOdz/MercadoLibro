@@ -265,18 +265,16 @@
                 <div>
                         <%-- if they dont have books than open the modal --%>
                     <c:if test="${empty availableBooks}">
-                        <button class="uk-button uk-button-primary" uk-toggle="target: #exchange-modal"
-                                style="margin-left: 3lh;">
+                        <a class="uk-button uk-button-primary" uk-toggle="target: #exchange-modal"
+                           style="margin-left: 3lh;">
                             <spring:message code="add.exchange.submit"/>
-                        </button>
+                        </a>
                     </c:if>
                     <c:if test="${not empty availableBooks}">
-                        <button type="submit" class="uk-button uk-button-primary" style="margin-left: 3lh;">
-                            <a class="button-text"
-                               href="${pageContext.request.contextPath}/start_exchange?publication_id=${publication.publicationId}">
-                                <spring:message code="add.exchange.submit"/>
-                            </a>
-                        </button>
+                        <a style="margin: 50%" class="uk-button uk-button-primary"
+                           href="${pageContext.request.contextPath}/start_exchange?publication_id=${publication.publicationId}">
+                            <spring:message code="add.exchange.submit"/>
+                        </a>
                     </c:if>
                 </div>
 
@@ -288,11 +286,10 @@
                             <spring:message code="book.set.book"/>
                         </label>
 
-                        <button class="uk-button uk-button-primary">
-                            <a class="button-text" href="${pageContext.request.contextPath}/book/book_models">
-                                <spring:message code="add.book.missing"/>
-                            </a>
-                        </button>
+                        <a class="uk-button uk-button-primary"
+                           href="${pageContext.request.contextPath}/book/book_models">
+                            <spring:message code="add.book.missing"/>
+                        </a>
 
                     </div>
                 </div>

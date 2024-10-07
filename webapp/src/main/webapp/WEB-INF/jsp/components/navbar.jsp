@@ -13,7 +13,7 @@
     <div class="uk-container uk-width-1-1 nav-background">
         <div class="uk-width-1-1" style="
              margin: 0;
-             padding: 0 0 0 2rem;
+             padding: 0 3rem 0 2rem;
         " uk-navbar>
             <div class="uk-navbar-left">
                 <ul class="uk-navbar-nav">
@@ -49,13 +49,13 @@
                 </ul>
             </div>
             <div class="uk-navbar-right">
-                <ul class="uk-navbar-nav">
+                <ul class="uk-navbar-nav" style="display: row">
                     <c:if test="${loggedUser != null}">
                         <li>
                             <a class="pl-1 pr-1" href="${exchangeRequestsUrl}"><spring:message
                                     code="home.exchange.view"/></a>
                             <div class="uk-navbar-dropdown">
-                                <ul class="uk-nav uk-navbar-dropdown-nav">
+                                <ul  class="uk-nav uk-navbar-dropdown-nav" >
                                     <li class="uk-active uk-margin-small-top">
                                         <a class="button-text-dropdown" href="${exchangeRequestsUrl}">
                                             <spring:message code="home.exchange.requests"/>
