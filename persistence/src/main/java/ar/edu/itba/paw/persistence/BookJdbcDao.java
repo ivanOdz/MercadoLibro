@@ -64,7 +64,7 @@ public class BookJdbcDao implements BookDao {
             this.aggregationFunctionImages = "null AS images, ";
         }
         else { // databaseProductName.equalsIgnoreCase("PostgreSQL")
-            this.aggregationFunctionAuthor = "(SELECT GROUP_CONCAT(a.authorName, ', ') FROM book_author ba JOIN author a ON a.authorId = ba.authorId WHERE ba.bookModelId = bm.bookModelId) AS authors, ";
+            this.aggregationFunctionAuthor = "(SELECT STRING_AGG(a.authorName, ', ') FROM book_author ba JOIN author a ON a.authorId = ba.authorId WHERE ba.bookModelId = bm.bookModelId) AS authors, ";
             this.aggregationFunctionImages = "ARRAY_AGG(i.imageId ORDER BY bi.imageOrder) AS images, ";
         }
         
