@@ -80,6 +80,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
             "(SELECT STRING_AGG(rp_a.authorName, ', ') FROM book_author rp_ba JOIN author rp_a ON rp_a.authorId = rp_ba.authorId WHERE rp_ba.bookModelId = rp_bm.bookModelId) AS requester_authors, " +
             "AVG(rp_br.rating) AS requester_rating, COUNT(rp_br.rating) AS requester_ratingCount " +
 
+
             "FROM exchange e " +
             // offerer_joins
             "JOIN publication op ON op.publicationId = e.offererPubId " +
