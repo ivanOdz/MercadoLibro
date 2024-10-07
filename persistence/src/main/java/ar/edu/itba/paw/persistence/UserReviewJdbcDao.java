@@ -10,6 +10,8 @@ import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.models.utils.Rating;
 
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -29,6 +31,7 @@ public class UserReviewJdbcDao implements UserReviewDao {
 	
 	private final JdbcTemplate jdbcTemplate;
 	
+	@Autowired
 	public UserReviewJdbcDao(final DataSource ds) {
 		
 	    jdbcTemplate = new JdbcTemplate(ds);

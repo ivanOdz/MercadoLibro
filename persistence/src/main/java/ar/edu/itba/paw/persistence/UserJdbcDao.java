@@ -51,6 +51,7 @@ public class UserJdbcDao implements UserDao {
     @Autowired
     private MessageSource messageSource;
 
+    @Autowired
     public UserJdbcDao(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)

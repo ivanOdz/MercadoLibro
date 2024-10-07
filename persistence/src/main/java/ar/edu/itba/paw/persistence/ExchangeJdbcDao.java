@@ -4,6 +4,8 @@ import ar.edu.itba.paw.interfaces.persistence.ExchangeDao;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -159,6 +161,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
                 return new Exchange(rs.getLong("exchangeId"), offererPub, requesterPub, exchangeState, rs.getLong("acceptCode"), rs.getBoolean("offererReceivedBook"), rs.getBoolean("requesterReceivedBook"), rs.getTimestamp("exchangeStartDate"), rs.getTimestamp("exchangeEndDate"));
             };
 
+    @Autowired
     public ExchangeJdbcDao(final DataSource ds) {
     	
         jdbcTemplate = new JdbcTemplate(ds);
