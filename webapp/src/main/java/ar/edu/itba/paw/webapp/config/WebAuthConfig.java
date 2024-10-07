@@ -57,6 +57,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/images/**, /css/**").permitAll()
                 .antMatchers("/", "/publications/*").permitAll()
                 .antMatchers("/favicon.ico").permitAll()
+                .antMatchers("/user_auth").permitAll()
                 .antMatchers("/create","/login","/mail_input", "/change_password_solicited","/change_password", "/success_registration", "/mail_input_message", "/success_password","/failed_authentication").anonymous()
                 .antMatchers("/post/edit").authenticated()
                 .antMatchers("/post/{postId}").access("@accessHelper.isOwner(#pricipal, #postId)") // para areas de acceso a un admin
