@@ -110,6 +110,7 @@ public class BookJdbcDao implements BookDao {
         }
     }
 
+
     @Override
     public Book getBookById(long bookId) {
         String sqlQuery = "SELECT  b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
@@ -118,7 +119,7 @@ public class BookJdbcDao implements BookDao {
                 "FROM book_author ba " +
                 " JOIN author a ON a.authorId = ba.authorId " +
                 " WHERE ba.bookModelId = bm.bookModelId) AS authors, "+
-                "bm.imageId AS coverId, AVG(br.rating) AS rating, COUNT(br.rating) AS ratingCount, " +
+                "bm.imageId AS coverId, AVG(br.rating) AS rating, (SELECT COUNT(*) FROM book_rating br2 WHERE br2.bookModelId = bm.bookModelId) as ratingCount, " +
                 "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language, ARRAY_AGG(i.imageId ORDER BY bi.imageOrder) AS images, " +
                 "p.publicationState, e.exchangeState, " +  // Checkear esto, no se si hace falta que este en las tuplas que devuelve
                 "CASE " +
@@ -152,7 +153,7 @@ public class BookJdbcDao implements BookDao {
     @Override
     public List<Book> getAllBooksByUser(long userId) {
         String sqlQuery = "SELECT  b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
-                "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, bm.imageId AS coverId, AVG(br.rating) AS rating, COUNT(br.rating) AS ratingCount, " +
+                "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, bm.imageId AS coverId, AVG(br.rating) AS rating, (SELECT COUNT(*) FROM book_rating br2 WHERE br2.bookModelId = bm.bookModelId) as ratingCount, " +
                 "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language, ARRAY_AGG(i.imageId ORDER BY bi.imageOrder) AS images, " +
                 "p.publicationState, e.exchangeState, " +  // Checkear esto, no se si hace falta que este en las tuplas que devuelve
                 "CASE " +
@@ -188,7 +189,7 @@ public class BookJdbcDao implements BookDao {
                         "FROM book_author ba " +
                         " JOIN author a ON a.authorId = ba.authorId " +
                         " WHERE ba.bookModelId = bm.bookModelId) AS authors, "+
-                        "bm.imageId AS coverId, AVG(br.rating) AS rating, COUNT(br.rating) AS ratingCount, " +
+                        "bm.imageId AS coverId, AVG(br.rating) AS rating, (SELECT COUNT(*) FROM book_rating br2 WHERE br2.bookModelId = bm.bookModelId) as ratingCount, " +
                         "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language , ARRAY_AGG(i.imageId ORDER BY bi.imageOrder) AS images, " +
                         "p.publicationState, e.exchangeState, " +  // Checkear esto, no se si hace falta que este en las tuplas que devuelve
                         "CASE " +
