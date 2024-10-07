@@ -34,9 +34,7 @@ public class BookJdbcDao implements BookDao {
     private final SimpleJdbcInsert jdbcInsertBookImage;
     private String aggregationFunctionAuthor;
     private String aggregationFunctionImages;
-    
-    @Autowired
-    private MessageSource messageSource;
+    private final MessageSource messageSource;
 
     static final RowMapper<Book> ROW_MAPPER_BOOK =
             (rs, rowNum) -> {
@@ -51,7 +49,7 @@ public class BookJdbcDao implements BookDao {
             };
 
     @Autowired
-    public BookJdbcDao(final DataSource ds) throws SQLException {
+    public BookJdbcDao(final DataSource ds, final MessageSource messageSource) throws SQLException {
 
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsertBook = new SimpleJdbcInsert(jdbcTemplate).usingGeneratedKeyColumns("bookid").withTableName("book");
@@ -69,6 +67,8 @@ public class BookJdbcDao implements BookDao {
             this.aggregationFunctionAuthor = "(SELECT GROUP_CONCAT(a.authorName, ', ') FROM book_author ba JOIN author a ON a.authorId = ba.authorId WHERE ba.bookModelId = bm.bookModelId) AS authors, ";
             this.aggregationFunctionImages = "ARRAY_AGG(i.imageId ORDER BY bi.imageOrder) AS images, ";
         }
+        
+        this.messageSource = messageSource;
     }
 
     @Override
