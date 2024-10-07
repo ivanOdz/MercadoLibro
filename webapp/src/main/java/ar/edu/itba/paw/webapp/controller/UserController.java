@@ -238,11 +238,11 @@ public class UserController {
 
     @RequestMapping("/profile")
     public ModelAndView profileHome(RedirectAttributes redirectAttributes,
-                                    @RequestParam(name = "current-page", defaultValue = "0") int currentPage) {
+                                    @RequestParam(name = "page", defaultValue = "0") int currentPage) {
 
         ModelAndView mav = new ModelAndView("profile/profile_home");
 
-        mav.addObject("reviews", userReviewService.getReviewsEarnedByUserId(loggedUserAdvice.getLoggedUser().getUserId()));
+        mav.addObject("reviews", userReviewService.getReviewsEarnedByUserId(loggedUserAdvice.getLoggedUser().getUserId(), currentPage));
         mav.addObject("userRating", userReviewService.getUserRatingEarned(loggedUserAdvice.getLoggedUser().getUserId()));
 
         return mav;

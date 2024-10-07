@@ -41,13 +41,13 @@ public class UserReviewServiceImpl implements UserReviewService {
 	}
 	
 	@Override
-	public PaginatedResponse<UserReview, BasicMetadata> getReviewsGivenByUserId(long userId) {
-		return userReviewDao.getReviewsGivenByUserId(userId);
+	public PaginatedResponse<UserReview, BasicMetadata> getReviewsGivenByUserId(long userId, int currentPage) {
+		return userReviewDao.getReviewsGivenByUserId(userId, currentPage);
 	}
 
 	@Override
-	public PaginatedResponse<UserReview, BasicMetadata> getReviewsEarnedByUserId(long userId) {
-		return userReviewDao.getReviewsEarnedByUserId(userId);
+	public PaginatedResponse<UserReview, BasicMetadata> getReviewsEarnedByUserId(long userId, int currentPage) {
+		return userReviewDao.getReviewsEarnedByUserId(userId, currentPage);
 	}
 	
 	@Override
