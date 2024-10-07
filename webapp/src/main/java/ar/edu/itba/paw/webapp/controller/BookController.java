@@ -88,7 +88,7 @@ public class BookController {
     public ModelAndView bookModels(@RequestParam(name = "search", defaultValue = "") String search,
                                    @RequestParam(name = "is-genre-filter-active", defaultValue = "false") boolean isGenreFilterActive,
                                    @RequestParam(name = "genre-filter", required = false) Genre genreFilter,
-                                   @RequestParam(name = "current-Page", defaultValue = "0") int currentPage,
+                                   @RequestParam(name = "page", defaultValue = "0") int currentPage,
                                    @RequestParam(name = "sort-type", defaultValue = "BOOK_NAME_ASCENDING") SortType sortType) {
 
         ModelAndView mav = new ModelAndView("book/book_models");
