@@ -46,6 +46,7 @@ public class UserController {
 
     @Autowired
     private MessageSource messageSource;
+
     @Autowired
     private LoggedUserAdvice loggedUserAdvice;
 
