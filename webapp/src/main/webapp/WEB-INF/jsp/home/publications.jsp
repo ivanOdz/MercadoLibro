@@ -125,9 +125,20 @@
                     <div><h2 class="mt-1">
                             <spring:message code="publications.list.available"/>
                     </div>
+                    <c:set var="sortKey">
+                        <c:choose>
+                            <c:when test="${publications.metadata.sortType == 'RATING_ASCENDING'}">publications.order.ratingAscending</c:when>
+                            <c:when test="${publications.metadata.sortType == 'RATING_DESCENDING'}">publications.order.ratingDescending</c:when>
+                            <c:when test="${publications.metadata.sortType == 'PUBLICATION_DATE_ASCENDING'}">publications.order.publicationDateAscending</c:when>
+                            <c:when test="${publications.metadata.sortType == 'PUBLICATION_DATE_DESCENDING'}">publications.order.publicationDateDescending</c:when>
+                            <c:when test="${publications.metadata.sortType == 'BOOK_NAME_ASCENDING'}">publications.order.bookNameAscending</c:when>
+                            <c:when test="${publications.metadata.sortType == 'BOOK_NAME_DESCENDING'}">publications.order.bookNameDescending</c:when>
+                        </c:choose>
+                    </c:set>
+
                     <div>
                         <button type="button" class="uk-button uk-button-link">
-                            <spring:message code="publications.order"/>
+                            <spring:message code="${sortKey}" />
                             <span uk-drop-parent-icon></span>
                         </button>
                         <div uk-drop="mode: click">
