@@ -31,10 +31,8 @@ public class BookModelJdbcDao implements BookModelDao {
     private final SimpleJdbcInsert jdbcInsertBookModel;
     private final SimpleJdbcInsert jdbcInsertAuthor;
     private final SimpleJdbcInsert jdbcInsertBookAuthor;
-
-    @Autowired
-    private MessageSource messageSource;
-
+    private final MessageSource messageSource;
+    
     // package-private visibility
     static final RowMapper<BookModel> ROW_MAPPER_BOOK_MODEL = (rs, rowNum) -> new BookModel(
             rs.getLong("bookModelId"),
@@ -57,7 +55,7 @@ public class BookModelJdbcDao implements BookModelDao {
     );
 
     @Autowired
-    public BookModelJdbcDao(final DataSource ds) {
+    public BookModelJdbcDao(final DataSource ds, final MessageSource messageSource) {
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsertBookModel = new SimpleJdbcInsert(jdbcTemplate)
                 .usingGeneratedKeyColumns("bookmodelid")
@@ -67,6 +65,7 @@ public class BookModelJdbcDao implements BookModelDao {
                 .withTableName("author");
         jdbcInsertBookAuthor = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("book_author").usingColumns("bookmodelid", "authorid");
+        this.messageSource = messageSource;
     }
 
     @Override
@@ -88,6 +87,9 @@ public class BookModelJdbcDao implements BookModelDao {
         md.put("imageid", bookCoverId);
 
         Number bookModelId;
+        
+        bookModelId = jdbcInsertBookModel.executeAndReturnKey(md);
+        
         try {
             bookModelId = jdbcInsertBookModel.executeAndReturnKey(md);
         } catch (DataIntegrityViolationException e) {
