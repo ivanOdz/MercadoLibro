@@ -109,6 +109,99 @@
                                     </h4>
                                 </div>
                             </c:if>
+<%--                            <div>--%>
+                            <hr class="uk-divider-icon">
+
+                            <nav aria-label="Pagination" class="uk-position-relative uk-margin">
+                                <ul class="uk-pagination uk-flex-center uk-position-center">
+
+<%--                                    <!-- Botón Previous -->--%>
+                                    <c:if test="${pending.metadata.currentPage > 0}">
+                                        <li>
+                                            <c:url var="prevPageUrl" value="">
+                                                <c:param name="pending-page" value="${pending.metadata.currentPage - 1}" />
+                                                <c:param name="in-progress-page" value="${inProgress.metadata.currentPage}" />
+                                                <c:param name="completed-page" value="${completed.metadata.currentPage}" />
+                                                <c:param name="rejected-page" value="${rejected.metadata.currentPage}" />
+                                            </c:url>
+                                            <a href="${prevPageUrl}">
+                                                <span uk-pagination-previous></span>
+                                                <spring:message code="publications.pagination.previous"/>
+                                            </a>
+                                        </li>
+                                    </c:if>
+
+                                    <!-- Botón de la primera página -->
+                                    <c:if test="${pending.metadata.currentPage > 1}">
+                                        <li>
+                                            <c:url var="firstPageUrl" value="">
+                                                <c:param name="pending-page" value="0" />
+                                                <c:param name="in-progress-page" value="${inProgress.metadata.currentPage}" />
+                                                <c:param name="completed-page" value="${completed.metadata.currentPage}" />
+                                                <c:param name="rejected-page" value="${rejected.metadata.currentPage}" />
+                                            </c:url>
+                                            <a href="${firstPageUrl}"></a>
+                                        </li>
+                                    </c:if>
+
+                                    <c:if test="${pending.metadata.currentPage - 2 > 0}">
+                                        <li><span>...</span></li>
+                                    </c:if>
+
+<%--                                    <!-- Páginas centrales -->--%>
+                                    <c:forEach var="i" begin="${pending.metadata.currentPage > 0 ? pending.metadata.currentPage - 1 : 0}"
+                                               end="${pending.metadata.currentPage + 1 <= pending.metadata.maxPage ? pending.metadata.currentPage + 1 : pending.metadata.maxPage}">
+                                        <li class="${i == pending.metadata.currentPage ? 'uk-active' : ''}">
+                                            <c:url var="centralPageUrl" value="">
+                                                <c:param name="pending-page" value="${i}" />
+                                                <c:param name="in-progress-page" value="${inProgress.metadata.currentPage}" />
+                                                <c:param name="completed-page" value="${completed.metadata.currentPage}" />
+                                                <c:param name="rejected-page" value="${rejected.metadata.currentPage}" />
+                                            </c:url>
+                                            <a href="${centralPageUrl}">${i + 1}</a> <!-- Mostrar i + 1 para la numeración -->
+                                        </li>
+                                    </c:forEach>
+
+
+                                    <c:if test="${pending.metadata.currentPage + 2 < pending.metadata.maxPage}">
+                                        <li><span>...</span></li>
+                                    </c:if>
+
+<%--                                    <!-- Botón de la última página -->--%>
+                                    <c:if test="${pending.metadata.currentPage + 1 < pending.metadata.maxPage}">
+                                        <li>
+                                            <c:url var="lastPageUrl" value="">
+                                                <c:param name="pending-page" value="${pending.metadata.maxPage}" />
+                                                <c:param name="in-progress-page" value="${inProgress.metadata.currentPage}" />
+                                                <c:param name="completed-page" value="${completed.metadata.currentPage}" />
+                                                <c:param name="rejected-page" value="${rejected.metadata.currentPage}" />
+                                            </c:url>
+                                            <a href="${lastPageUrl}">${pending.metadata.maxPage + 1}</a> <!-- Mostrar maxPage + 1 -->
+                                        </li>
+                                    </c:if>
+
+<%--                                    <!-- Botón Next -->--%>
+                                    <c:if test="${pending.metadata.currentPage < pending.metadata.maxPage}">
+                                        <li>
+                                            <c:url var="nextPageUrl" value="">
+                                                <c:param name="pending-page" value="${pending.metadata.currentPage + 1}" />
+                                                <c:param name="in-progress-page" value="${inProgress.metadata.currentPage}" />
+                                                <c:param name="completed-page" value="${completed.metadata.currentPage}" />
+                                                <c:param name="rejected-page" value="${rejected.metadata.currentPage}" />
+                                            </c:url>
+                                            <a href="${nextPageUrl}">
+                                                <spring:message code="publications.pagination.next"/>
+                                                <span uk-pagination-next></span>
+                                            </a>
+                                        </li>
+                                    </c:if>
+                                </ul>
+
+                                <!-- Botón "Ir al inicio" alineado a la derecha -->
+                                <a href="" uk-totop uk-scroll class="uk-position-right uk-margin-right">
+                                    <spring:message code="publications.pagination.totop"/>
+                                </a>
+                            </nav>
                         </li>
 
                         <!-- In Progress -->
@@ -202,7 +295,6 @@
                                             </div>
                                         </div>
 
-
                                     </div>
                                 </c:forEach>
                             </c:if>
@@ -213,6 +305,98 @@
                                     </h4>
                                 </div>
                             </c:if>
+                            <hr class="uk-divider-icon">
+
+                            <nav aria-label="Pagination" class="uk-position-relative uk-margin">
+                                <ul class="uk-pagination uk-flex-center uk-position-center">
+
+                                    <%--                                    <!-- Botón Previous -->--%>
+                                    <c:if test="${inProgress.metadata.currentPage > 0}">
+                                        <li>
+                                            <c:url var="prevPageUrl" value="">
+                                                <c:param name="in-progress-page" value="${inProgress.metadata.currentPage - 1}" />
+                                                <c:param name="pending-page" value="${pending.metadata.currentPage}" />
+                                                <c:param name="completed-page" value="${completed.metadata.currentPage}" />
+                                                <c:param name="rejected-page" value="${rejected.metadata.currentPage}" />
+                                            </c:url>
+                                            <a href="${prevPageUrl}">
+                                                <span uk-pagination-previous></span>
+                                                <spring:message code="publications.pagination.previous"/>
+                                            </a>
+                                        </li>
+                                    </c:if>
+
+                                    <!-- Botón de la primera página -->
+                                    <c:if test="${inProgress.metadata.currentPage > 1}">
+                                        <li>
+                                            <c:url var="firstPageUrl" value="">
+                                                <c:param name="in-progress-page" value="0" />
+                                                <c:param name="pending" value="${pending.metadata.currentPage}" />
+                                                <c:param name="completed-page" value="${completed.metadata.currentPage}" />
+                                                <c:param name="rejected-page" value="${rejected.metadata.currentPage}" />
+                                            </c:url>
+                                            <a href="${firstPageUrl}"></a>
+                                        </li>
+                                    </c:if>
+
+                                    <c:if test="${inProgress.metadata.currentPage - 2 > 0}">
+                                        <li><span>...</span></li>
+                                    </c:if>
+
+                                    <%--                                    <!-- Páginas centrales -->--%>
+                                    <c:forEach var="i" begin="${inProgress.metadata.currentPage > 0 ? inProgress.metadata.currentPage - 1 : 0}"
+                                               end="${inProgress.metadata.currentPage + 1 <= inProgress.metadata.maxPage ? inProgress.metadata.currentPage + 1 : inProgress.metadata.maxPage}">
+                                        <li class="${i == inProgress.metadata.currentPage ? 'uk-active' : ''}">
+                                            <c:url var="centralPageUrl" value="">
+                                                <c:param name="in-progress-page" value="${i}" />
+                                                <c:param name="pending" value="${pending.metadata.currentPage}" />
+                                                <c:param name="completed-page" value="${completed.metadata.currentPage}" />
+                                                <c:param name="rejected-page" value="${rejected.metadata.currentPage}" />
+                                            </c:url>
+                                            <a href="${centralPageUrl}">${i + 1}</a> <!-- Mostrar i + 1 para la numeración -->
+                                        </li>
+                                    </c:forEach>
+
+
+                                    <c:if test="${inProgress.metadata.currentPage + 2 < inProgress.metadata.maxPage}">
+                                        <li><span>...</span></li>
+                                    </c:if>
+
+                                    <%--                                    <!-- Botón de la última página -->--%>
+                                    <c:if test="${inProgress.metadata.currentPage + 1 < inProgress.metadata.maxPage}">
+                                        <li>
+                                            <c:url var="lastPageUrl" value="">
+                                                <c:param name="in-progress-page" value="${inProgress.metadata.maxPage}" />
+                                                <c:param name="pending-page" value="${pending.metadata.currentPage}" />
+                                                <c:param name="completed-page" value="${completed.metadata.currentPage}" />
+                                                <c:param name="rejected-page" value="${rejected.metadata.currentPage}" />
+                                            </c:url>
+                                            <a href="${lastPageUrl}">${inProgress.metadata.maxPage + 1}</a> <!-- Mostrar maxPage + 1 -->
+                                        </li>
+                                    </c:if>
+
+                                    <%--                                    <!-- Botón Next -->--%>
+                                    <c:if test="${inProgress.metadata.currentPage < inProgress.metadata.maxPage}">
+                                        <li>
+                                            <c:url var="nextPageUrl" value="">
+                                                <c:param name="in-progress-page" value="${inProgress.metadata.currentPage + 1}" />
+                                                <c:param name="pending-page" value="${pending.metadata.currentPage}" />
+                                                <c:param name="completed-page" value="${completed.metadata.currentPage}" />
+                                                <c:param name="rejected-page" value="${rejected.metadata.currentPage}" />
+                                            </c:url>
+                                            <a href="${nextPageUrl}">
+                                                <spring:message code="publications.pagination.next"/>
+                                                <span uk-pagination-next></span>
+                                            </a>
+                                        </li>
+                                    </c:if>
+                                </ul>
+
+                                <!-- Botón "Ir al inicio" alineado a la derecha -->
+                                <a href="" uk-totop uk-scroll class="uk-position-right uk-margin-right">
+                                    <spring:message code="publications.pagination.totop"/>
+                                </a>
+                            </nav>
                         </li>
 
                         <!-- Completed -->
@@ -242,7 +426,8 @@
                                             <div class="card-text-container">
                                                 <h3 class="card-text3">
                                                     <c:out value="${data.requester.book.bookModel.title}"/>
-                                                </h3></div>
+                                                </h3>
+                                            </div>
                                         </div>
                                         <div style="width: 40%; display: grid; justify-items: center; padding-left: 0px">
                                             <div class="arrow-icon" style="padding: 0">
@@ -283,6 +468,98 @@
                                     </h4>
                                 </div>
                             </c:if>
+                            <hr class="uk-divider-icon">
+
+                            <nav aria-label="Pagination" class="uk-position-relative uk-margin">
+                                <ul class="uk-pagination uk-flex-center uk-position-center">
+
+                                    <%--                                    <!-- Botón Previous -->--%>
+                                    <c:if test="${completed.metadata.currentPage > 0}">
+                                        <li>
+                                            <c:url var="prevPageUrl" value="">
+                                                <c:param name="completed-page" value="${completed.metadata.currentPage - 1}" />
+                                                <c:param name="in-progress-page" value="${inProgress.metadata.currentPage}" />
+                                                <c:param name="pending-page" value="${pending.metadata.currentPage}" />
+                                                <c:param name="rejected-page" value="${rejected.metadata.currentPage}" />
+                                            </c:url>
+                                            <a href="${prevPageUrl}">
+                                                <span uk-pagination-previous></span>
+                                                <spring:message code="publications.pagination.previous"/>
+                                            </a>
+                                        </li>
+                                    </c:if>
+
+                                    <!-- Botón de la primera página -->
+                                    <c:if test="${completed.metadata.currentPage > 1}">
+                                        <li>
+                                            <c:url var="firstPageUrl" value="">
+                                                <c:param name="completed-page" value="0" />
+                                                <c:param name="in-progress-page" value="${inProgress.metadata.currentPage}" />
+                                                <c:param name="pending-page" value="${pending.metadata.currentPage}" />
+                                                <c:param name="rejected-page" value="${rejected.metadata.currentPage}" />
+                                            </c:url>
+                                            <a href="${firstPageUrl}"></a>
+                                        </li>
+                                    </c:if>
+
+                                    <c:if test="${completed.metadata.currentPage - 2 > 0}">
+                                        <li><span>...</span></li>
+                                    </c:if>
+
+                                    <%--                                    <!-- Páginas centrales -->--%>
+                                    <c:forEach var="i" begin="${completed.metadata.currentPage > 0 ? completed.metadata.currentPage - 1 : 0}"
+                                               end="${completed.metadata.currentPage + 1 <= completed.metadata.maxPage ? completed.metadata.currentPage + 1 : completed.metadata.maxPage}">
+                                        <li class="${i == completed.metadata.currentPage ? 'uk-active' : ''}">
+                                            <c:url var="centralPageUrl" value="">
+                                                <c:param name="completed-page" value="${i}" />
+                                                <c:param name="in-progress-page" value="${inProgress.metadata.currentPage}" />
+                                                <c:param name="pending-page" value="${pending.metadata.currentPage}" />
+                                                <c:param name="rejected-page" value="${rejected.metadata.currentPage}" />
+                                            </c:url>
+                                            <a href="${centralPageUrl}">${i + 1}</a> <!-- Mostrar i + 1 para la numeración -->
+                                        </li>
+                                    </c:forEach>
+
+
+                                    <c:if test="${completed.metadata.currentPage + 2 < completed.metadata.maxPage}">
+                                        <li><span>...</span></li>
+                                    </c:if>
+
+                                    <%--                                    <!-- Botón de la última página -->--%>
+                                    <c:if test="${completed.metadata.currentPage + 1 < completed.metadata.maxPage}">
+                                        <li>
+                                            <c:url var="lastPageUrl" value="">
+                                                <c:param name="completed-page" value="${completed.metadata.maxPage}" />
+                                                <c:param name="in-progress-page" value="${inProgress.metadata.currentPage}" />
+                                                <c:param name="pending-page" value="${pending.metadata.currentPage}" />
+                                                <c:param name="rejected-page" value="${rejected.metadata.currentPage}" />
+                                            </c:url>
+                                            <a href="${lastPageUrl}">${completed.metadata.maxPage + 1}</a> <!-- Mostrar maxPage + 1 -->
+                                        </li>
+                                    </c:if>
+
+                                    <%--                                    <!-- Botón Next -->--%>
+                                    <c:if test="${completed.metadata.currentPage < completed.metadata.maxPage}">
+                                        <li>
+                                            <c:url var="nextPageUrl" value="">
+                                                <c:param name="completed-page" value="${completed.metadata.currentPage + 1}" />
+                                                <c:param name="in-progress-page" value="${inProgress.metadata.currentPage}" />
+                                                <c:param name="pending-page" value="${pending.metadata.currentPage}" />
+                                                <c:param name="rejected-page" value="${rejected.metadata.currentPage}" />
+                                            </c:url>
+                                            <a href="${nextPageUrl}">
+                                                <spring:message code="publications.pagination.next"/>
+                                                <span uk-pagination-next></span>
+                                            </a>
+                                        </li>
+                                    </c:if>
+                                </ul>
+
+                                <!-- Botón "Ir al inicio" alineado a la derecha -->
+                                <a href="" uk-totop uk-scroll class="uk-position-right uk-margin-right">
+                                    <spring:message code="publications.pagination.totop"/>
+                                </a>
+                            </nav>
                         </li>
 
                         <!-- Rejected -->
@@ -359,6 +636,99 @@
                                     </h4>
                                 </div>
                             </c:if>
+                            <hr class="uk-divider-icon">
+
+                            <nav aria-label="Pagination" class="uk-position-relative uk-margin">
+                                <ul class="uk-pagination uk-flex-center uk-position-center">
+
+                                    <%--                                    <!-- Botón Previous -->--%>
+                                    <c:if test="${rejected.metadata.currentPage > 0}">
+                                        <li>
+                                            <c:url var="prevPageUrl" value="">
+                                                <c:param name="rejected-page" value="${rejected.metadata.currentPage - 1}" />
+                                                <c:param name="in-progress-page" value="${inProgress.metadata.currentPage}" />
+                                                <c:param name="completed-page" value="${completed.metadata.currentPage}" />
+                                                <c:param name="pending-page" value="${pending.metadata.currentPage}" />
+                                            </c:url>
+                                            <a href="${prevPageUrl}">
+                                                <span uk-pagination-previous></span>
+                                                <spring:message code="publications.pagination.previous"/>
+                                            </a>
+                                        </li>
+                                    </c:if>
+
+                                    <!-- Botón de la primera página -->
+                                    <c:if test="${rejected.metadata.currentPage > 1}">
+                                        <li>
+                                            <c:url var="firstPageUrl" value="">
+                                                <c:param name="rejected-page" value="0" />
+                                                <c:param name="in-progress-page" value="${inProgress.metadata.currentPage}" />
+                                                <c:param name="completed-page" value="${completed.metadata.currentPage}" />
+                                                <c:param name="pending-page" value="${pending.metadata.currentPage}" />
+                                            </c:url>
+                                            <a href="${firstPageUrl}"></a>
+                                        </li>
+                                    </c:if>
+
+                                    <c:if test="${rejected.metadata.currentPage - 2 > 0}">
+                                        <li><span>...</span></li>
+                                    </c:if>
+
+                                    <%--                                    <!-- Páginas centrales -->--%>
+                                    <c:forEach var="i" begin="${rejected.metadata.currentPage > 0 ? rejected.metadata.currentPage - 1 : 0}"
+                                               end="${rejected.metadata.currentPage + 1 <= rejected.metadata.maxPage ? rejected.metadata.currentPage + 1 : rejected.metadata.maxPage}">
+                                        <li class="${i == rejected.metadata.currentPage ? 'uk-active' : ''}">
+                                            <c:url var="centralPageUrl" value="">
+                                                <c:param name="rejected-page" value="${i}" />
+                                                <c:param name="in-progress-page" value="${inProgress.metadata.currentPage}" />
+                                                <c:param name="completed-page" value="${completed.metadata.currentPage}" />
+                                                <c:param name="pending-page" value="${pending.metadata.currentPage}" />
+                                            </c:url>
+                                            <a href="${centralPageUrl}">${i + 1}</a> <!-- Mostrar i + 1 para la numeración -->
+                                        </li>
+                                    </c:forEach>
+
+
+                                    <c:if test="${rejected.metadata.currentPage + 2 < rejected.metadata.maxPage}">
+                                        <li><span>...</span></li>
+                                    </c:if>
+
+                                    <%--                                    <!-- Botón de la última página -->--%>
+                                    <c:if test="${rejected.metadata.currentPage + 1 < rejected.metadata.maxPage}">
+                                        <li>
+                                            <c:url var="lastPageUrl" value="">
+                                                <c:param name="rejected-page" value="${rejected.metadata.maxPage}" />
+                                                <c:param name="in-progress-page" value="${inProgress.metadata.currentPage}" />
+                                                <c:param name="completed-page" value="${completed.metadata.currentPage}" />
+                                                <c:param name="pending-page" value="${pending.metadata.currentPage}" />
+                                            </c:url>
+                                            <a href="${lastPageUrl}">${rejected.metadata.maxPage + 1}</a> <!-- Mostrar maxPage + 1 -->
+                                        </li>
+                                    </c:if>
+
+                                    <%--                                    <!-- Botón Next -->--%>
+                                    <c:if test="${rejected.metadata.currentPage < rejected.metadata.maxPage}">
+                                        <li>
+                                            <c:url var="nextPageUrl" value="">
+                                                <c:param name="rejected-page" value="${rejected.metadata.currentPage + 1}" />
+                                                <c:param name="in-progress-page" value="${inProgress.metadata.currentPage}" />
+                                                <c:param name="completed-page" value="${completed.metadata.currentPage}" />
+                                                <c:param name="pending-page" value="${pending.metadata.currentPage}" />
+                                            </c:url>
+                                            <a href="${nextPageUrl}">
+                                                <spring:message code="publications.pagination.next"/>
+                                                <span uk-pagination-next></span>
+                                            </a>
+                                        </li>
+                                    </c:if>
+                                </ul>
+
+                                <!-- Botón "Ir al inicio" alineado a la derecha -->
+                                <a href="" uk-totop uk-scroll class="uk-position-right uk-margin-right">
+                                    <spring:message code="publications.pagination.totop"/>
+                                </a>
+                            </nav>
+
                         </li>
                     </ul>
                 </div>
