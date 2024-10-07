@@ -3,7 +3,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ include file="/WEB-INF/jsp/components/navbar_wo_search.jsp" %>
 
-<html>
+<html class="custom-style">
 
 <%@include file="/WEB-INF/jsp/head/headers.jsp" %>
 

@@ -90,13 +90,16 @@
 }
 
 .exchange-info-container {
-    height: 500px;
     overflow: auto;
     text-align: center;
-    justify-content: center;
-    display: flex;
     max-height: 100%; /* Asegura que la columna sticky ocupe toda la pantalla */
     flex-direction: column;
+    margin-bottom: 0;
+    padding: 5%;
+    height: auto;
+    min-height: 500px;
+    align-content: center;
+    justify-content: center;
 }
 
 

@@ -214,7 +214,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
             throw new ExchangeBadRequestException(errorMessage);
         }
 
-        return ex;
+        return findByAcceptCode(acceptCode);
     }
 
 
@@ -229,7 +229,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
             throw new ExchangeBadRequestException(errorMessage);
         }
 
-        return ex;
+        return findByAcceptCode(acceptCode);
 
     }
 

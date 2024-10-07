@@ -307,7 +307,8 @@ public class UserReviewJdbcDao implements UserReviewDao {
         Optional<UserReview> userReviewGiven = jdbcTemplate.query(baseQueryReview + " AND exchange.exchangeId = ? AND reviewer.userId = ? LIMIT 1", new Object[] { exchangeId, userId }, new int[] { Types.BIGINT, Types.BIGINT }, ROW_MAPPER_USER_REVIEW).stream().findFirst();
 
 		// intended to return null if no element is present
-        return userReviewGiven.get();
+
+        return userReviewGiven.orElse(null);
     }
     
     @Override

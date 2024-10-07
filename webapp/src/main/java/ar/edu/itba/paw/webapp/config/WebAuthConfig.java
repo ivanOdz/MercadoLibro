@@ -26,6 +26,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Value("classpath:rememberme.key")
     private Resource rememberMeKey;
 
+    @Value("#{environment.webappUrl}")
+    private String webappUrl;
+
     @Autowired
     private PawUserDetailsService userDetails;
 
@@ -57,7 +60,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/images/**, /css/**").permitAll()
                 .antMatchers("/", "/publications/*").permitAll()
                 .antMatchers("/favicon.ico").permitAll()
-                .antMatchers("/user_auth").permitAll()
+                .antMatchers("/user_auth").anonymous()
                 .antMatchers("/create","/login","/mail_input", "/change_password_solicited","/change_password", "/success_registration", "/mail_input_message", "/success_password","/failed_authentication").anonymous()
                 .antMatchers("/post/edit").authenticated()
                 .antMatchers("/post/{postId}").access("@accessHelper.isOwner(#pricipal, #postId)") // para areas de acceso a un admin
@@ -81,7 +84,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/login")
                 .and().exceptionHandling()
                 .accessDeniedPage("/403")
-                .authenticationEntryPoint((request, response, authException) -> response.sendRedirect("/user_auth"))
+                .authenticationEntryPoint((request, response, authException) -> response.sendRedirect(webappUrl + "/user_auth"))
                 .and().csrf().disable();
 
     }

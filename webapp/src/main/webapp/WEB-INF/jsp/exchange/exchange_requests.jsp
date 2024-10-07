@@ -67,7 +67,7 @@
 
                                         <div style="padding: 0">
                                             <img class="book-image"
-                                                 src="${pageContext.request.contextPath}/images/${v.offerer.book.images[0]}"
+                                                 src="${pageContext.request.contextPath}/images/${data.offerer.book.images[0]}"
                                                  alt="bookImage"/>
                                             <div class="card-text-container">
                                                 <h3 class="card-text3">
@@ -152,17 +152,15 @@
                                                     <button class="uk-button uk-button-default uk-modal-close"
                                                             type="button"><spring:message
                                                             code="button.cancel"/></button>
-                                                    <button class="uk-button uk-button-primary"
-                                                            type="button">
-                                                        <a class="button-text-accept custom-link"
+                                                    <a class="uk-button uk-button-primary"
+                                                            type="button"
                                                            href="<c:url value='/createexchange'>
                                                                    <c:param name='accept_code' value='${data.acceptCode}'/>
                                                                     <c:param name='state' value='true'/>
                                                                          </c:url>">
                                                             <spring:message
                                                                     code="button.confirm"/>
-                                                        </a>
-                                                    </button>
+                                                    </a>
                                                 </p>
                                             </div>
                                         </div>
@@ -813,14 +811,14 @@
             <!-- contenedor derecho donde se ve la info del exchange -->
             <div class="uk-width-2-5" uk-sticky>
                 <div class="uk-container">
-                    <div class="uk-card uk-card-default uk-card-body exchange-info-container">
-                        <div id="no-selection-message" class="uk-h6">
+                    <div class="uk-grid uk-card uk-card-default uk-card-body exchange-info-container">
+                        <div style="padding-left: 0" id="no-selection-message" class="uk-h6">
                             <h4 class="uk-h6">
                                 <spring:message code="exchange.choose.message"/>
                             </h4>
                         </div>
 
-                        <div id="exchange-details" style="display: none;">
+                        <div id="exchange-details" style="display: none; padding: 5%;">
                             <h3 id="info-requester-username"><spring:message code="exchange.with"/></h3>
                             <p id="info-requester-mail"><spring:message code="exchange.with_email"/></p>
                             <p id="info-requester-location"><spring:message code="exchange.location"/></p>
@@ -832,10 +830,12 @@
 
                             <div id="info-offered-book-images" uk-grid></div>
 
-                            <button id="add-review-button" class="uk-button uk-button-primary"
-                                    uk-toggle="target: #modal-add-review">
-                                <spring:message code="exchange.button.add_review"/>
-                            </button>
+                            <div>
+                                <button style="width: 100%" id="add-review-button" class="uk-button uk-button-primary"
+                                        uk-toggle="target: #modal-add-review">
+                                    <spring:message code="exchange.button.add_review"/>
+                                </button>
+                            </div>
 
                             <div id="modal-add-review" uk-modal>
                                 <div class="uk-modal-dialog uk-modal-body">
