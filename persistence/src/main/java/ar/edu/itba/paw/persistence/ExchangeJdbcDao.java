@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataIntegrityViolationException;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -166,6 +168,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
                 return new Exchange(rs.getLong("exchangeId"), offererPub, requesterPub, exchangeState, rs.getLong("acceptCode"), rs.getBoolean("offererReceivedBook"), rs.getBoolean("requesterReceivedBook"), rs.getTimestamp("exchangeStartDate"), rs.getTimestamp("exchangeEndDate"));
             };
 
+    @Autowired
     public ExchangeJdbcDao(final DataSource ds) {
     	
         jdbcTemplate = new JdbcTemplate(ds);
@@ -217,7 +220,6 @@ public class ExchangeJdbcDao implements ExchangeDao {
 
     @Override
     public Exchange rejectExchange(int acceptCode) {
-        // NOTE: this throws an ExchangeNotFoundException if the exchange is not found
         Exchange ex = findByAcceptCode(acceptCode);
 
         try {

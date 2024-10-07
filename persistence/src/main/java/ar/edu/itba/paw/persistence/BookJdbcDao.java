@@ -36,7 +36,6 @@ public class BookJdbcDao implements BookDao {
     private final SimpleJdbcInsert jdbcInsertBookRating;
     private final SimpleJdbcInsert jdbcInsertBookImage;
 
-
     private final GenreService genreService;
     private final BookStateService bookStateService;
 
@@ -55,6 +54,7 @@ public class BookJdbcDao implements BookDao {
                 return new Book(rs.getLong("bookId"), owner, bookModel, bookState, exchangesQty, rs.getBoolean("available"), images);
             };
 
+    @Autowired
     public BookJdbcDao(final DataSource ds, GenreService genreService, BookStateService bookStateService) {
 
         jdbcTemplate = new JdbcTemplate(ds);

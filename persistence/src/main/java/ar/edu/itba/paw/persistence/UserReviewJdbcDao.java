@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataIntegrityViolationException;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -31,13 +33,14 @@ public class UserReviewJdbcDao implements UserReviewDao {
 	
 	private final JdbcTemplate jdbcTemplate;
 	
+	@Autowired
 	public UserReviewJdbcDao(final DataSource ds) {
 	    jdbcTemplate = new JdbcTemplate(ds);
 	}
 
 	@Autowired
 	private MessageSource messageSource;
-	
+
 	String baseQueryReview = "SELECT userReview.userReviewId AS userReviewId, userReview.reviewDescription AS userReviewDescription, userReview.reviewDate AS userReviewDate, userReview.userReviewRating AS userReviewRating\r\n"
 							+ ", exchange.exchangeId AS exchangeId, exchange.exchangeStartDate, exchange.exchangeEndDate, exchange.offererPubId AS exchangeOffererPubId, exchange.exchangeState AS exchangeState, exchange.acceptCode AS exchangeAcceptCode, exchange.offererReceivedBook AS exchangeOffererReceivedBook, exchange.requesterReceivedBook AS exchangeRequesterReceivedBook\r\n"
 							// -- Información del lado del que dejó la reseña
@@ -312,7 +315,7 @@ public class UserReviewJdbcDao implements UserReviewDao {
     public Rating getUserRatingEarned(long userId) {
 
         List<Rating> rating = jdbcTemplate.query(baseQueryRating + " WHERE subjectId = ?", new Object[] { userId }, new int[] { Types.BIGINT }, ROW_MAPPER_RATING);
-    	
+
         return rating.isEmpty() ? null : rating.getFirst();
     }
 

@@ -59,6 +59,7 @@ public class BookModelJdbcDao implements BookModelDao {
             new Rating(rs.getDouble("rating"), rs.getInt("ratingCount"))
     );
 
+    @Autowired
     public BookModelJdbcDao(final DataSource ds, GenreService genreService) {
         jdbcTemplate = new JdbcTemplate(ds);
         this.genreService = genreService;

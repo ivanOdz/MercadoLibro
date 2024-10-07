@@ -48,6 +48,7 @@ public class PublicationJdbcDao implements PublicationDao {
                 return new Publication(id, book, publicationState, dateTime, location);
             };
 
+    @Autowired
     public PublicationJdbcDao(final DataSource ds, GenreService genreService, BookStateService bookStateService) {
         jdbcTemplate = new JdbcTemplate(ds);
         this.genreService = genreService;

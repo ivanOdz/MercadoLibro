@@ -4,6 +4,8 @@ import ar.edu.itba.paw.interfaces.persistence.LocationDao;
 import ar.edu.itba.paw.models.Location;
 import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.models.utils.PublicationState;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -27,6 +29,7 @@ public class LocationJdbcDao implements LocationDao {
             );
 
 
+    @Autowired
     public LocationJdbcDao(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("location").usingGeneratedKeyColumns("locationid");
