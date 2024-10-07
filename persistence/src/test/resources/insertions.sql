@@ -284,4 +284,89 @@
 			JOIN location ON locationString LIKE 'Zona Sur'
 			WHERE book.bookModelId = (SELECT bookModelId FROM book_model WHERE isbn = '9788423353248')
 			AND NOT EXISTS (SELECT 1 FROM publication publication WHERE publication.bookId = book.bookId AND publication.userId = owner.userId);
+
+-- 3° -- Los detectives salvajes
+        
+	INSERT INTO publication (bookId, userId, publicationState, publicationDatetime, locationId)
+		SELECT book.bookId, owner.userId, 1, '2024-09-15 14:30:00', locationId
+		FROM book AS book JOIN users AS owner ON mail LIKE 'modzomek@itba.edu.ar'
+			JOIN location ON locationString LIKE 'Zona Sur'
+			WHERE book.bookModelId = (SELECT bookModelId FROM book_model WHERE isbn = '9788497594319')
+			AND NOT EXISTS (SELECT 1 FROM publication publication WHERE publication.bookId = book.bookId AND publication.userId = owner.userId);
+
+-- 4° -- Crónica de una muerte anunciada
+			
+	INSERT INTO publication (bookId, userId, publicationState, publicationDatetime, locationId)
+		SELECT book.bookId, owner.userId, 1, '2024-09-15 16:40:05', locationId
+		FROM book AS book JOIN users AS owner ON mail LIKE 'modzomek@itba.edu.ar'
+			JOIN location ON locationString LIKE 'Zona Sur'
+			WHERE book.bookModelId = (SELECT bookModelId FROM book_model WHERE isbn = '9788420471839')
+			AND NOT EXISTS (SELECT 1 FROM publication publication WHERE publication.bookId = book.bookId AND publication.userId = owner.userId);
+
+-- De juli --
+			
+-- 1° -- La casa de los espíritus
+        
+	INSERT INTO publication (bookId, userId, publicationState, publicationDatetime, locationId)
+		SELECT book.bookId, owner.userId, 1, '2024-09-12 18:30:00', locationId
+		FROM book AS book JOIN users AS owner ON mail LIKE 'jtechenski@itba.edu.ar'
+			JOIN location ON locationString LIKE 'Zona Norte'
+			WHERE book.bookModelId = (SELECT bookModelId FROM book_model WHERE isbn = '9788437604947')
+			AND NOT EXISTS (SELECT 1 FROM publication publication WHERE publication.bookId = book.bookId AND publication.userId = owner.userId);
+
+-- 2° -- El alquimista
+			
+	INSERT INTO publication (bookId, userId, publicationState, publicationDatetime, locationId)
+		SELECT book.bookId, owner.userId, 1, '2024-09-13 09:00:00', locationId
+		FROM book AS book JOIN users AS owner ON mail LIKE 'jtechenski@itba.edu.ar'
+			JOIN location ON locationString LIKE 'Zona Norte'
+			WHERE book.bookModelId = (SELECT bookModelId FROM book_model WHERE isbn = '9780062315007')
+			AND NOT EXISTS (SELECT 1 FROM publication publication WHERE publication.bookId = book.bookId AND publication.userId = owner.userId);
+
+-- De maggie --
+
+-- 1° -- El amor en los tiempos del cólera
+			 
+	INSERT INTO publication (bookId, userId, publicationState, publicationDatetime, locationId)
+		SELECT book.bookId, owner.userId, 1, '2024-09-11 14:45:00', locationId
+		FROM book AS book JOIN users AS owner ON mail LIKE 'mtaurian@itba.edu.ar'
+			JOIN location ON locationString LIKE 'Zona Norte'
+			WHERE book.bookModelId = (SELECT bookModelId FROM book_model WHERE isbn = '9788497592451')
+			AND NOT EXISTS (SELECT 1 FROM publication publication WHERE publication.bookId = book.bookId AND publication.userId = owner.userId);
+			
+-- De tomi --
+
+-- 1° -- Don Quijote de la Mancha
+			
+	INSERT INTO publication (bookId, userId, publicationState, publicationDatetime, locationId)
+		SELECT book.bookId, owner.userId, 1, '2024-09-13 12:15:00', locationId
+		FROM book AS book JOIN users AS owner ON mail LIKE 'tscheffer@itba.edu.ar'
+			JOIN location ON locationString LIKE 'Zona Norte'
+			WHERE book.bookModelId = (SELECT bookModelId FROM book_model WHERE isbn = '9788491050568')
+			AND NOT EXISTS (SELECT 1 FROM publication publication WHERE publication.bookId = book.bookId AND publication.userId = owner.userId);
+			
+-- INTERCAMBIOS + REVIEW ----------------------------------------------------------------------------------------------------
+
+/*
+-- 1: Ivan con Juli
+
+INSERT INTO exchange (offererPubId, requesterPubId, exchangeState, acceptCode, offererReceivedBook, requesterReceivedBook, exchangeStartDate, exchangeEndDate)
+	SELECT
+	    publicationOfferer.publicationId,
+	    publicationRequester.publicationId,
+	    1,						-- exchangeState
+	    123456789,				-- acceptCode
+	    TRUE,					-- offererReceivedBook
+	    TRUE,					-- requesterReceivedBook
+	    '2024-09-15 00:00:00',	-- exchangeStartDate
+	    '2024-09-15 01:00:00'	-- exchangeEndDate
+	FROM publication AS publicationOfferer JOIN book AS bookOfferer ON publicationOfferer.bookId = bookOfferer.bookId
+		JOIN book_model bookModelOfferer ON bookOfferer.bookModelId = bookModelOfferer.bookModelId
+		JOIN users AS offerer ON bookOfferer.ownerId = offerer.userId
+		JOIN publication AS publicationRequester ON publicationRequester.bookId = ( SELECT bookRequester.bookId FROM book AS bookRequester JOIN book_model AS bookModelRequester ON bookRequester.bookModelId = bookModelRequester.bookModelId
+													JOIN users AS requester ON bookRequester.ownerId = requester.userId WHERE requester.mail LIKE 'jtechenski@itba.edu.ar' AND bookModelRequester.isbn = '9788437604947' LIMIT 1 )
+	WHERE
+	    offerer.mail LIKE 'modzomek@itba.edu.ar'
+	    AND bookModelOfferer.isbn = '9788445002132'
+	    AND publicationOfferer.publicationState = 1;*/
         
