@@ -1,29 +1,24 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-
-<html>
-<%@include file="/WEB-INF/jsp/head/headers.jsp" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
+<html lang="es">
 <head>
-    <link href="${pageContext.request.contextPath}/css/background.css" rel="stylesheet"/>
-
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error 400 - Solicitud Incorrecta</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.6.16/css/uikit.min.css" />
 </head>
 <body>
-<c:url var="okUrl" value="/"/>
-
-<div class="uk-background-center-center uk-margin-right uk-margin-left">
-    <div class="uk-position-center uk-card uk-card-default uk-card-body uk-width-1-3">
-        <h3 class="uk-card-title">
-            <spring:message code="error.badRequest"/>
-        </h3>
-        <a href="${okUrl}">
-            <button class="uk-button uk-button-primary uk-align-center">
-                <spring:message code="hwc.registration.ok"/>
-            </button>
-        </a>
+<div class="uk-section uk-section-danger">
+    <div class="uk-container">
+        <h1 class="uk-heading-large">Error 400</h1>
+        <p class="uk-text-lead">¡Lo sentimos! Ha ocurrido un error en tu solicitud.</p>
+        <p>Esto puede deberse a que la solicitud no se ha formado correctamente.</p>
+        <p>Por favor, verifica la información que has ingresado y vuelve a intentarlo.</p>
+        <a class="uk-button uk-button-default" href="/">Volver al inicio</a>
     </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.6.16/js/uikit.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.6.16/js/uikit-icons.min.js"></script>
 </body>
 </html>
