@@ -6,7 +6,10 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +26,9 @@ public class ExchangeServiceImpl implements ExchangeService {
 
     @Value("#{environment.webappUrl}")
     private String webappUrl;
+
+    @Autowired
+    private MessageSource messageSource;
 
     public ExchangeServiceImpl(final ExchangeDao exchangeDao, final BookService bs, final PublicationService ps, final EmailService emailService) {
     	
@@ -60,7 +66,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         variables.put("rejectionUrl", webappUrl + "/createexchange?accept_code=" + ex.getAcceptCode() + "&state=false");
         variables.put("exchangeUrl", webappUrl + "/offers"); //TODO: verificar el funcionamiento de esto
 
-        emailService.sendEmail(offerer.getMail(), variables, "exchangeRequest", "Requesting", offerer.getLanguage());
+        emailService.sendEmail(offerer.getMail(), variables, "exchangeRequest", messageSource.getMessage("email.subject.request", null, Locale.forLanguageTag(offerer.getLanguage())), offerer.getLanguage());
     }
 
     @Transactional

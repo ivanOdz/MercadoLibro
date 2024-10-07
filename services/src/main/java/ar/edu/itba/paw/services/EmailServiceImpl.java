@@ -3,6 +3,9 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.services.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -23,6 +26,9 @@ public class EmailServiceImpl implements EmailService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EmailServiceImpl.class);
 
+    @Autowired
+    private MessageSource messageSource;
+
     public EmailServiceImpl(final JavaMailSender javaMailSender, final SpringTemplateEngine templateResolver) {
         this.mailSender = javaMailSender;
         this.templateEngine = templateResolver;
@@ -32,7 +38,7 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void sendEmail(final String receiver, Map<String, Object> variables, String templatePath, String subject, String locale) {
             MimeMessage message = mailSender.createMimeMessage();
-            Locale l = Locale.forLanguageTag(locale); // TODO: asegurarse q esto funcione cuando se configure el locale
+            Locale l = Locale.forLanguageTag(locale);
 
             Context context = new Context(l);
             context.setVariables(variables);
@@ -57,8 +63,8 @@ public class EmailServiceImpl implements EmailService {
     @Override
         public void sendExchangeEmail(final String receiver, Map<String, Object> variables, boolean state, String locale) {
          if(!state) {
-            sendEmail(receiver, variables, "exchangeRejected", "Book Exchange Rejected", locale);
+            sendEmail(receiver, variables, "exchangeRejected", messageSource.getMessage("email.subject.rejected", null, Locale.forLanguageTag(locale)),locale);
         }
-        else sendEmail(receiver, variables, "exchangeAccepted", "Book Exchange Accepted", locale);
+        else sendEmail(receiver, variables, "exchangeAccepted", messageSource.getMessage("email.subject.accepted", null, Locale.forLanguageTag(locale)), locale);
     }
 }
