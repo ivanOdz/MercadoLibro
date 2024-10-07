@@ -14,7 +14,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import ar.edu.itba.paw.interfaces.services.BookImageService;
 import ar.edu.itba.paw.interfaces.services.BookModelService;
 import ar.edu.itba.paw.interfaces.services.BookService;
 import ar.edu.itba.paw.interfaces.services.PublicationService;
@@ -22,7 +21,6 @@ import ar.edu.itba.paw.models.Book;
 import ar.edu.itba.paw.models.BookImage;
 import ar.edu.itba.paw.models.BookModel;
 import ar.edu.itba.paw.models.Publication;
-import ar.edu.itba.paw.models.PublicationDetail;
 import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.models.utils.Genre;
 import ar.edu.itba.paw.models.utils.Language;

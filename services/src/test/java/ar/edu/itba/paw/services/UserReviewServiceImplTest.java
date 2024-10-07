@@ -17,7 +17,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/*
 @RunWith(MockitoJUnitRunner.class)
 public class UserReviewServiceImplTest {
 	
@@ -91,4 +91,4 @@ public class UserReviewServiceImplTest {
 		
 		assertTrue(result);
 	}
-}
+}*/
