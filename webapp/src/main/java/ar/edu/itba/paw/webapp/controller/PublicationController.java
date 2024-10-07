@@ -83,6 +83,7 @@ public class PublicationController {
 
         List<Book> availableBooks;
         User user = loggedUserAdvice.getLoggedUser();
+        mav.addObject("user", user);
         if (user != null) {
             // IMPLEMENT: excepción no implementada, si queda páginada no hace falta una excepción, únicamente un checkeo en el jsp
             availableBooks = bs.getAvailableBooksByUser(user);

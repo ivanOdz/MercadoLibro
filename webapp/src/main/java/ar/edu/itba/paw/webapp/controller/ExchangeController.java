@@ -181,12 +181,12 @@ public class ExchangeController {
     }
 
     @PostMapping(path = "/exchange/initializeexchange")
-    public ModelAndView initializeExchange(@NotEmpty @Valid @ModelAttribute("exchangeForm") ExchangeForm exchangeInput, BindingResult errors) {
+    public ModelAndView initializeExchange(@Valid @ModelAttribute("exchangeForm") ExchangeForm exchangeForm, BindingResult errors) {
         if(errors.hasErrors()){
-            startExchange(exchangeInput, errors, exchangeInput.getPublicationId());
+            startExchange(exchangeForm, errors, exchangeForm.getPublicationId());
         }
         // Insertar tupla de requester en publicacion con fecha actual y publicationState = 2 (OFFERER)
-        exchangeService.initializeExchange(exchangeInput.getBookId(), exchangeInput.getLocation(), exchangeInput.getPublicationId(), loggedUserAdvice.getLoggedUser());
+        exchangeService.initializeExchange(exchangeForm.getBookId(), exchangeForm.getLocation(), exchangeForm.getPublicationId());
         return new ModelAndView("redirect:/requests");  // TOOD: se podría redirigir a una página de éxito
     }
 

@@ -38,7 +38,8 @@
         <div class="uk-container">
             <div class="row-container">
                 <h3 style="margin-right: 10%;"><spring:message code="exchange.book"/></h3>
-                <img src="images/${publication.book.images[0]}" alt="Book Image" style="margin-right: 3%; width:13%; height:5%;"/>
+                <img src="images/${publication.book.images[0]}" alt="Book Image"
+                     style="margin-right: 3%; width:13%; height:5%;"/>
                 <div class="column-container">
                     <p><spring:message code="exchange.book.title"/> ${publication.book.bookModel.title} </p>
                     <p><spring:message code="exchange.book.authors"/> ${publication.book.bookModel.authors} </p>
@@ -54,17 +55,33 @@
         </div>
 
         <div class="uk-margin">
+            <spring:message code="exchange.book.yours"/>
             <div class="uk-form-controls">
-                <spring:message code="exchange.book.yours"/>
-                <form:select path="bookId" cssClass="uk-select">
+                <ul class="uk-list uk-list-divider custom-select">
                     <c:forEach var="availableBook" items="${availableBooks}">
-                        <form:option value="${availableBook.bookId}">
-                            <c:out value='${availableBook.bookModel.title}'/>
-                        </form:option>
+                        <li>
+                            <label>
+                                <div class="uk-grid-small uk-flex-middle" uk-grid>
+                                    <div>
+                                        <form:radiobutton path="bookId" value="${availableBook.bookId}" />
+                                    </div>
+                                    <div class="uk-width-auto">
+                                        <img src="${pageContext.request.contextPath}/images/${availableBook.images[0]}"
+                                             alt="Book Image" class="uk-border-circle" width="40" height="40">
+                                    </div>
+                                    <div class="uk-width-expand">
+                                        <div class="uk-text-bold">${availableBook.bookModel.title}</div>
+                                        <div class="uk-text-small">${availableBook.bookModel.authors}</div>
+                                    </div>
+                                </div>
+                            </label>
+                        </li>
                     </c:forEach>
-                </form:select>
+                </ul>
             </div>
+            <form:errors path="bookId" element="p" cssStyle="color: red;"/>
         </div>
+
         <div class="uk-inline">
             <label class="form-group">
                 <spring:message code="book.set.location"/>
@@ -72,7 +89,8 @@
             </label>
             <form:errors path="location" element="p" cssStyle="color: red;"/>
         </div>
-        <div class="form-container" style="margin-top: 5%; margin-left: 35%;">
+
+        <div class="form-container" style="margin-top: 5%; margin-left: 35%; margin-bottom: 2%;">
             <form:input path="publicationId" type="hidden" value="${publication.publicationId}"/>
             <button type="submit" class="uk-button uk-button-primary">
                 <spring:message code="add.exchange.submit"/>
@@ -80,3 +98,4 @@
         </div>
     </form:form>
 </div>
+</html>
