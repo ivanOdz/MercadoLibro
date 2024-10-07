@@ -346,11 +346,16 @@
                     </label>
                 </div>
 
+                <!-- Location -->
+                <input type="hidden" id="location-error-message" value="<spring:message code='NotBlank.bookForm.location'/>" />
+
                 <div id="location-q" class="uk-inline" style="display: none;">
                     <label class="form-group">
                         <spring:message code="book.set.location"/>
-                        <form:input path="location" type="text" class="uk-input"/>
+                        <form:input path="location" type="text" class="uk-input" />
                     </label>
+                    <form:errors path="location" element="p" cssStyle="color: red;" />
+                    <p id="location-error" style="color: red;"></p>
                 </div>
 
                 <div style="margin-top: 2%; align-self: auto;">
@@ -467,6 +472,36 @@
         toggleLocation();
     });
 
+    document.addEventListener('DOMContentLoaded', function () {
+        const yesRadio = document.querySelector('input[name="publish"][value="true"]');
+        const noRadio = document.querySelector('input[name="publish"][value="false"]');
+        const locationInputDiv = document.getElementById('location-q');
+        const locationField = document.querySelector('input[name="location"]');
+        const locationError = document.getElementById('location-error');
+
+        yesRadio.addEventListener('change', function () {
+            if (this.checked) {
+                locationInputDiv.style.display = 'block';
+            }
+        });
+
+        noRadio.addEventListener('change', function () {
+            if (this.checked) {
+                locationInputDiv.style.display = 'none';
+                locationField.value = '';
+                locationError.innerText = '';
+            }
+        });
+
+        document.querySelector('form').addEventListener('submit', function (e) {
+            if (yesRadio.checked && !locationField.value.trim()) {
+                e.preventDefault();
+                locationError.innerText = 'Location is required when publishing.';
+            } else {
+                locationError.innerText = '';
+            }
+        });
+    });
 
 
 </script>

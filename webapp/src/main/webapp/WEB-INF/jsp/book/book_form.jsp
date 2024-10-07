@@ -1,11 +1,11 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ include file="/WEB-INF/jsp/components/navbar_wo_search.jsp" %>
 
 <html>
 
-<%@include file="/WEB-INF/jsp/head/headers.jsp"%>
+<%@include file="/WEB-INF/jsp/head/headers.jsp" %>
 
 <head>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
@@ -19,10 +19,10 @@
     <title><spring:message code="add.book"/></title>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             var step = ${step};
             var tabs = UIkit.tab('.uk-tab');
-            tabs.show(step-1);
+            tabs.show(step - 1);
         });
 
         function nextSection(index) {
@@ -84,7 +84,8 @@
                         </form:label>
                         <form:select path="bookState" class="uk-input">
                             <c:forEach var="bookStateWrapper" items="${bookStates}">
-                                <form:option value="${bookStateWrapper.bookState}" label="${bookStateWrapper.displayName}" />
+                                <form:option value="${bookStateWrapper.bookState}"
+                                             label="${bookStateWrapper.displayName}"/>
                             </c:forEach>
                         </form:select>
                     </div>
@@ -97,27 +98,27 @@
                         </label>
 
                         <div class="star-rating">
-                            <form:radiobutton path="rating" value="5" id="star5" />
+                            <form:radiobutton path="rating" value="5" id="star5"/>
                             <label for="star5" title="5 stars">
                                 <span uk-icon="icon: star; ratio: 1.5"></span>
                             </label>
 
-                            <form:radiobutton path="rating" value="4" id="star4" />
+                            <form:radiobutton path="rating" value="4" id="star4"/>
                             <label for="star4" title="4 stars">
                                 <span uk-icon="icon: star; ratio: 1.5"></span>
                             </label>
 
-                            <form:radiobutton path="rating" value="3" id="star3" />
+                            <form:radiobutton path="rating" value="3" id="star3"/>
                             <label for="star3" title="3 stars">
                                 <span uk-icon="icon: star; ratio: 1.5"></span>
                             </label>
 
-                            <form:radiobutton path="rating" value="2" id="star2" />
+                            <form:radiobutton path="rating" value="2" id="star2"/>
                             <label for="star2" title="2 stars">
                                 <span uk-icon="icon: star; ratio: 1.5"></span>
                             </label>
 
-                            <form:radiobutton path="rating" value="1" id="star1" />
+                            <form:radiobutton path="rating" value="1" id="star1"/>
                             <label for="star1" title="1 star">
                                 <span uk-icon="icon: star; ratio: 1.5"></span>
                             </label>
@@ -158,16 +159,24 @@
                         </label>
                     </div>
 
+                    <!-- Location -->
+                    <input type="hidden" id="location-error-message" value="<spring:message code='NotBlank.bookForm.location'/>" />
+
                     <div id="location-q" class="uk-inline" style="display: none;">
                         <label class="form-group">
                             <spring:message code="book.set.location"/>
-                            <form:input path="location" type="text" class="uk-input"/>
+                            <form:input path="location" type="text" class="uk-input" />
                         </label>
+                        <form:errors path="location" element="p" cssStyle="color: red;" />
+                        <p id="location-error" style="color: red;"></p>
                     </div>
+
+
 
                     <div style="margin-top: 2%; align-self: auto;">
                         <input type="hidden" name="book_model_id" value="${book_model_id}">
-                        <button class="uk-button uk-button-primary" type="submit"><spring:message code="add.publication.upload"/></button>
+                        <button class="uk-button uk-button-primary" type="submit"><spring:message
+                                code="add.publication.upload"/></button>
                     </div>
                 </div>
                     <%---------------------------------------------------------------- END STEP 2 ----------------------------------------------------------------%>
@@ -178,19 +187,19 @@
 
 <script type="text/javascript">
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         var previewContainer = document.getElementById('image-preview-container');
         var fileInput = document.getElementById('file-input');
         var coverInput = document.getElementById('cover-input');
 
-        fileInput.addEventListener('change', function(event) {
+        fileInput.addEventListener('change', function (event) {
             const files = event.target.files;
 
             previewContainer.innerHTML = '';
 
             for (const file of files) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     const imgWrapper = document.createElement('div');
                     imgWrapper.classList.add('image-wrapper');
 
@@ -205,7 +214,7 @@
                     deleteButton.innerHTML = '<span uk-icon="icon: trash"></span>';
                     deleteButton.classList.add('delete-button');
 
-                    deleteButton.addEventListener('click', function() {
+                    deleteButton.addEventListener('click', function () {
                         imgWrapper.remove();
                     });
 
@@ -214,7 +223,7 @@
                     selectCoverButton.innerText = 'Select as cover';
                     selectCoverButton.type = 'button';
 
-                    selectCoverButton.addEventListener('click', function() {
+                    selectCoverButton.addEventListener('click', function () {
                         document.querySelectorAll('.image-wrapper').forEach(wrapper => {
                             wrapper.style.border = 'none';
                         });
@@ -233,25 +242,52 @@
         });
     });
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const publishRadioButtons = document.getElementsByName('publish');
         const locationQuestion = document.getElementById('location-q');
 
-        // Función para mostrar u ocultar el campo "Location"
         function toggleLocation() {
             const isChecked = document.querySelector('input[name="publish"]:checked').value === 'true';
             locationQuestion.style.display = isChecked ? 'block' : 'none';
         }
 
-        // Añade listeners a los radiobuttons
-        publishRadioButtons.forEach(function(radio) {
+        publishRadioButtons.forEach(function (radio) {
             radio.addEventListener('change', toggleLocation);
         });
 
-        // Llama a la función una vez al cargar la página
         toggleLocation();
     });
 
+    document.addEventListener('DOMContentLoaded', function () {
+        const yesRadio = document.querySelector('input[name="publish"][value="true"]');
+        const noRadio = document.querySelector('input[name="publish"][value="false"]');
+        const locationInputDiv = document.getElementById('location-q');
+        const locationField = document.querySelector('input[name="location"]');
+        const locationError = document.getElementById('location-error');
+
+        yesRadio.addEventListener('change', function () {
+            if (this.checked) {
+                locationInputDiv.style.display = 'block';
+            }
+        });
+
+        noRadio.addEventListener('change', function () {
+            if (this.checked) {
+                locationInputDiv.style.display = 'none';
+                locationField.value = '';
+                locationError.innerText = '';
+            }
+        });
+
+        document.querySelector('form').addEventListener('submit', function (e) {
+            if (yesRadio.checked && !locationField.value.trim()) {
+                e.preventDefault();
+                locationError.innerText = 'Location is required when publishing.';
+            } else {
+                locationError.innerText = '';
+            }
+        });
+    });
 
 
 </script>
