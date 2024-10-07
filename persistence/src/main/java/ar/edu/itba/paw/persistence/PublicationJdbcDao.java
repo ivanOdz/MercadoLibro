@@ -3,8 +3,6 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.exceptions.PublicationBadRequestException;
 import ar.edu.itba.paw.interfaces.exceptions.PublicationNotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.PublicationDao;
-import ar.edu.itba.paw.interfaces.services.BookStateService;
-import ar.edu.itba.paw.interfaces.services.GenreService;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
@@ -21,7 +19,6 @@ import javax.sql.DataSource;
 import java.util.*;
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.models.utils.Constants.PUBLICATIONS_PAGE_SIZE;
 import static ar.edu.itba.paw.persistence.BookJdbcDao.ROW_MAPPER_BOOK;
@@ -31,9 +28,6 @@ public class PublicationJdbcDao implements PublicationDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
-
-    private final GenreService genreService;
-    private final BookStateService bookStateService;
 
     @Autowired
     private MessageSource messageSource;
@@ -49,10 +43,8 @@ public class PublicationJdbcDao implements PublicationDao {
             };
 
     @Autowired
-    public PublicationJdbcDao(final DataSource ds, GenreService genreService, BookStateService bookStateService) {
+    public PublicationJdbcDao(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
-        this.genreService = genreService;
-        this.bookStateService = bookStateService;
         jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .usingGeneratedKeyColumns("publicationid")
                 .withTableName("publication");
@@ -215,11 +207,9 @@ public class PublicationJdbcDao implements PublicationDao {
         } else
             data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", PUBLICATIONS_PAGE_SIZE, offset}, new int[]{Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_PUBLICATION);
 
-        List<GenreWrapper> genreWrapperList = getGenreQtyByBook(search, isBookStateFilterActive, bookStateFilter);
-        List<BookStateWrapper> bookStateWrapperList = getBookStateQtyByBook(search, isGenreFilterActive, genreFilter);
-
         int totalResults = getTotalResultsByBook(search, isGenreFilterActive, genreFilter, isBookStateFilterActive, bookStateFilter);
-        return new PaginatedResponse<>(data, new ItemFilterMetadata(currentPage, PUBLICATIONS_PAGE_SIZE, totalResults, search, isGenreFilterActive, genreFilter, sortType, genreWrapperList, isBookStateFilterActive, bookStateFilter, bookStateWrapperList));
+
+        return new PaginatedResponse<>(data, new ItemFilterMetadata(currentPage, PUBLICATIONS_PAGE_SIZE, totalResults, search, isGenreFilterActive, genreFilter, sortType, null, isBookStateFilterActive, bookStateFilter, null));
     }
 
     @Override
@@ -228,52 +218,8 @@ public class PublicationJdbcDao implements PublicationDao {
         return jdbcTemplate.queryForObject(sql, new Object[]{userId}, Integer.class);
     }
 
-    private List<GenreWrapper> getGenreQtyByBook(String search, boolean isBookStateFilterActive, BookState bookStateFilter) {
-        StringBuilder sqlQuery = new StringBuilder(
-                "SELECT bm.genre, COUNT(*) AS genreCount " +
-                        "FROM publication p " +
-                        "JOIN book b ON p.bookId = b.bookId " +
-                        "JOIN book_model bm ON b.bookModelId = bm.bookModelId " +
-                        "WHERE p.publicationState = ? AND LOWER(bm.title) LIKE LOWER(?) ");
-
-        if (isBookStateFilterActive) {
-            sqlQuery.append("AND b.bookState = ? ");
-        }
-
-        sqlQuery.append("GROUP BY bm.genre");
-
-        List<Object> params = new ArrayList<>();
-        params.add(PublicationState.CURRENT.getValue());
-        params.add("%" + search.toLowerCase() + "%");
-
-        if (isBookStateFilterActive) {
-            params.add(bookStateFilter.getValue());
-        }
-
-        int[] paramTypes;
-        if (isBookStateFilterActive) {
-            paramTypes = new int[]{Types.INTEGER, Types.VARCHAR, Types.INTEGER};
-        } else {
-            paramTypes = new int[]{Types.INTEGER, Types.VARCHAR};
-        }
-
-        Map<Genre, Integer> resultByGenreMap = new HashMap<>();
-        jdbcTemplate.query(sqlQuery.toString(), params.toArray(), paramTypes, (rs, rowNum) -> {
-            int genreValue = rs.getInt("genre");
-            Genre genre = Genre.fromInt(genreValue);
-            resultByGenreMap.put(genre, rs.getInt("genreCount"));
-            return null;
-        });
-
-        List<GenreWrapper> genreWrappers = new ArrayList<>();
-        for (Genre genre : Genre.values()) {
-            genreWrappers.add(new GenreWrapper(genre, genreService.getGenreDisplayName(genre), resultByGenreMap.getOrDefault(genre, 0)));
-        }
-
-        return genreWrappers;
-    }
-
-    private List<BookStateWrapper> getBookStateQtyByBook(String search, boolean isGenreFilterActive, Genre genreFilter) {
+    @Override
+    public List<BookStateWrapper> getBookStateQtyByPublication(String search, boolean isGenreFilterActive, Genre genreFilter) {
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT b.bookState, COUNT(*) AS stateCount " +
                         "FROM publication p " +
@@ -302,23 +248,49 @@ public class PublicationJdbcDao implements PublicationDao {
             paramTypes = new int[]{Types.INTEGER, Types.VARCHAR};
         }
 
-        List<BookStateWrapper> results = jdbcTemplate.query(sqlQuery.toString(), params.toArray(), paramTypes, (rs, rowNum) -> {
+        return jdbcTemplate.query(sqlQuery.toString(), params.toArray(), paramTypes, (rs, rowNum) -> {
             int stateValue = rs.getInt("bookState");
             BookState bookState = BookState.fromInt(stateValue);
-            return new BookStateWrapper(bookState, bookState.toString(), rs.getInt("stateCount"));
+            return new BookStateWrapper(bookState, rs.getInt("stateCount"));
         });
-
-        Map<BookState, Integer> resultByStateMap = results.stream()
-                .collect(Collectors.toMap(BookStateWrapper::getBookState, BookStateWrapper::getResultByState));
-
-        List<BookStateWrapper> toReturn = new ArrayList<>();
-        for (BookState state : BookState.values()) {
-            toReturn.add(new BookStateWrapper(state, bookStateService.getBookStateDisplayName(state), resultByStateMap.getOrDefault(state, 0)));
-        }
-
-        return toReturn;
     }
 
+    @Override
+    public List<GenreWrapper> getGenreQtyByPublication(String search, boolean isBookStateFilterActive, BookState bookStateFilter) {
+        StringBuilder sqlQuery = new StringBuilder(
+                "SELECT bm.genre, COUNT(*) AS genreCount " +
+                        "FROM publication p " +
+                        "JOIN book b ON p.bookId = b.bookId " +
+                        "JOIN book_model bm ON b.bookModelId = bm.bookModelId " +
+                        "WHERE p.publicationState = ? AND LOWER(bm.title) LIKE LOWER(?) ");
+
+        if (isBookStateFilterActive) {
+            sqlQuery.append("AND b.bookState = ? ");
+        }
+
+        sqlQuery.append("GROUP BY bm.genre");
+
+        List<Object> params = new ArrayList<>();
+        params.add(PublicationState.CURRENT.getValue());
+        params.add("%" + search.toLowerCase() + "%");
+
+        if (isBookStateFilterActive) {
+            params.add(bookStateFilter.getValue());
+        }
+
+        int[] paramTypes;
+        if (isBookStateFilterActive) {
+            paramTypes = new int[]{Types.INTEGER, Types.VARCHAR, Types.INTEGER};
+        } else {
+            paramTypes = new int[]{Types.INTEGER, Types.VARCHAR};
+        }
+
+        return jdbcTemplate.query(sqlQuery.toString(), params.toArray(), paramTypes, (rs, rowNum) -> {
+            int genreValue = rs.getInt("genre");
+            Genre genre = Genre.fromInt(genreValue);
+            return new GenreWrapper(genre, rs.getInt("genreCount"));
+        });
+    }
 
     private int getTotalResultsByBook(String search, boolean isGenreFilterActive, Genre genreFilter,
                                       boolean isBookStateFilterActive, BookState bookStateFilter) {

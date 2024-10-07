@@ -5,9 +5,7 @@ import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
-import org.springframework.stereotype.Service;
 
-@Service
 public interface ExchangeService {
 
     void initializeExchange(long bookId, String location, long offererPubId);
