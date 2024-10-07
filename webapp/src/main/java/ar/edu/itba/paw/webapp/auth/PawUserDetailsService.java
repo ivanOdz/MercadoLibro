@@ -34,8 +34,6 @@ public class PawUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        Optional<User> u = us.findByUsername(s);
-        String h = "hola";
         String errorMessage = messageSource.getMessage("error.userNotFound", new Object[]{s}, LocaleContextHolder.getLocale());
         User user = us.findByUsername(s).orElseThrow(() -> new UsernameNotFoundException(errorMessage));
         Collection<SimpleGrantedAuthority> authorities;
