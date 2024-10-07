@@ -17,7 +17,7 @@ import javax.sql.DataSource;
 
 @ComponentScan({"ar.edu.itba.paw.persistence", "ar.edu.itba.paw.interfaces.services", "ar.edu.itba.paw.services"})
 @Configuration
-//@EnableTransactionManagement
+@EnableTransactionManagement
 public class TestConfig {
 	
 	@Value("classpath:pgsql.sql")
