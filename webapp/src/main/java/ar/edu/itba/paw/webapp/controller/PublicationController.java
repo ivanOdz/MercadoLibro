@@ -10,6 +10,9 @@ import ar.edu.itba.paw.webapp.form.ExchangeForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -31,6 +34,9 @@ public class PublicationController {
     private LoggedUserAdvice loggedUserAdvice;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+    @Qualifier("messageSource")
+    @Autowired
+    private MessageSource messageSource;
 
     public PublicationController(PublicationService ps, BookService bs) {
         this.ps = ps;
@@ -65,6 +71,8 @@ public class PublicationController {
             LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
             return new ModelAndView("redirect:/400");
         }
+
+        LOGGER.info(messageSource.getMessage("info.publication.created", null, LocaleContextHolder.getLocale()));
 
         return new ModelAndView("redirect:/book");
     }

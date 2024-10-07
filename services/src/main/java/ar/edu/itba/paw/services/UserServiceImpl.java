@@ -4,7 +4,9 @@ import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,9 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
     //private final UserReviewService userReviewsService;
+
+    @Autowired
+    private MessageSource messageSource;
 
     @Value("#{environment.webappUrl}")
     private String webappUrl;
@@ -49,7 +54,7 @@ public class UserServiceImpl implements UserService {
         Map<String, Object> variables = new HashMap<>();
         variables.put("username", user.getUsername());
         variables.put("validationUrl", webappUrl + "/verification?verification_code=" + user.getVerificationCode());
-        emailService.sendEmail(user.getMail(), variables, "verification", "User verification", Locale.getDefault().getLanguage());
+        emailService.sendEmail(user.getMail(), variables, "verification", messageSource.getMessage("email.subject.verification", null, Locale.forLanguageTag(user.getLanguage())), user.getLanguage());
 
         return user;
     }
@@ -72,7 +77,7 @@ public class UserServiceImpl implements UserService {
 
         String locale = u.getLanguage() != null ? u.getLanguage() : Locale.getDefault().getLanguage();
 
-        emailService.sendEmail(email, variables, "changePassword", "Password change", locale);
+        emailService.sendEmail(email, variables, "changePassword", messageSource.getMessage("email.subject.passwordChange", null, Locale.forLanguageTag(locale)), locale);
     }
 
     @Override

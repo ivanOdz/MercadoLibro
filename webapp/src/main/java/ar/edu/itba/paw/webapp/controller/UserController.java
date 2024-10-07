@@ -49,14 +49,10 @@ public class UserController {
     @Autowired
     private LoggedUserAdvice loggedUserAdvice;
 
-
-    private AuthenticationManager auth;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
-    public UserController(final UserService us, AuthenticationManager auth) {
+    public UserController(final UserService us) {
         this.us = us;
-        this.auth = auth;
     }
 
 
@@ -101,7 +97,7 @@ public class UserController {
         final Authentication authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
-        LOGGER.info("User {} has been verified", user.getUsername());
+        LOGGER.info(messageSource.getMessage("info.user.verified", null, LocaleContextHolder.getLocale()), user.getUsername());
 
         return new ModelAndView("redirect:/success_verification");
     }
@@ -158,6 +154,8 @@ public class UserController {
             LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
             return new ModelAndView("redirect:/400");
         }
+
+        LOGGER.info(messageSource.getMessage("info.password.changed", null, LocaleContextHolder.getLocale()));
 
         return new ModelAndView("redirect:/success_password");
     }

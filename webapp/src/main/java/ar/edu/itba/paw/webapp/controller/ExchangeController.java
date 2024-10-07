@@ -13,6 +13,9 @@ import ar.edu.itba.paw.webapp.form.UserReviewForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +40,9 @@ public class ExchangeController {
     private LoggedUserAdvice loggedUserAdvice;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExchangeController.class);
+    @Qualifier("messageSource")
+    @Autowired
+    private MessageSource messageSource;
 
 
     public ExchangeController(final ExchangeService exchangeService, PublicationService publicationService, BookService bookService, UserReviewService userReviewService) {
@@ -98,11 +104,13 @@ public class ExchangeController {
 
     @RequestMapping("/exchange/accepted")
     public ModelAndView exchangeAccepted() {
+        LOGGER.info(messageSource.getMessage("info.exchange.accepted", null, LocaleContextHolder.getLocale()));
         return new ModelAndView("exchange/accepted");
     }
 
     @RequestMapping("/exchange/invalid")
     public ModelAndView exchangeRejected() {
+        LOGGER.info(messageSource.getMessage("info.exchange.rejected", null, LocaleContextHolder.getLocale()));
         return new ModelAndView("/exchange/invalid");
     }
 
@@ -132,6 +140,8 @@ public class ExchangeController {
             }
             mav = new ModelAndView(exchangeView);
         }
+
+        LOGGER.info(messageSource.getMessage("info.exchange.creation", null, LocaleContextHolder.getLocale()));
         return mav;
     }
 
