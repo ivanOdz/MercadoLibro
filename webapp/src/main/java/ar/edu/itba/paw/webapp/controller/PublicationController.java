@@ -100,6 +100,7 @@ public class PublicationController {
 
         mav.addObject("exchangeForm", new ExchangeForm());
         mav.addObject("publication", publication);
+        mav.addObject("imgCount", publication.getBook().getImages().size());
         mav.addObject("genres", Stream.of(Genre.values()).map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
         return mav;
     }

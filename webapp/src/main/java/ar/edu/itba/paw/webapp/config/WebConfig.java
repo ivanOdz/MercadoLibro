@@ -30,7 +30,7 @@ import java.util.Arrays;
 import java.util.Locale;
 
 @EnableTransactionManagement
-@PropertySource("classpath:application${spring.profiles.active}.properties")
+@PropertySource("classpath:application.properties")
 @EnableWebMvc
 @ComponentScan({
         "ar.edu.itba.paw.webapp.controller",
@@ -70,7 +70,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         ms.setDefaultEncoding(StandardCharsets.UTF_8.displayName());
         ms.setBasename("classpath:i18n/messages");
         ms.setFallbackToSystemLocale(false);
-        ms.setCacheSeconds(5);
         return ms;
     }
 
