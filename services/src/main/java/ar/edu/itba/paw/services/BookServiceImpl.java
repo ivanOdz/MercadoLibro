@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.services.BookModelService;
-import ar.edu.itba.paw.interfaces.services.BookService;
-import ar.edu.itba.paw.interfaces.services.ImageService;
+import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Book;
 import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.PaginatedResponse;
@@ -16,17 +14,23 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class BookServiceImpl implements BookService {
 
     private final BookDao bookDao;
 
+    private final BookStateService bookStateService;
+    private final GenreService genreService;
     private final BookModelService bookModelService;
     private final ImageService imageService;
 
-    public BookServiceImpl(final BookDao bookDao, final BookModelService bookModelService, final ImageService imageService) {
+    public BookServiceImpl(final BookDao bookDao, BookStateService bookStateService, GenreService genreService, final BookModelService bookModelService, final ImageService imageService) {
         this.bookDao = bookDao;
+        this.bookStateService = bookStateService;
+        this.genreService = genreService;
         this.bookModelService = bookModelService;
         this.imageService = imageService;
     }
@@ -70,7 +74,32 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public PaginatedResponse<Book, ItemFilterMetadata> getPaginatedBooks(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, int currentPage, long userId, SortType sortType) {
-        return bookDao.getPaginatedBooks(search, isBookStateFilterActive, bookStateFilter, isGenreFilterActive, genreFilter, currentPage, userId, sortType);
+        PaginatedResponse<Book, ItemFilterMetadata> response = bookDao.getPaginatedBooks(search, isBookStateFilterActive, bookStateFilter, isGenreFilterActive, genreFilter, currentPage, userId, sortType);
+
+        List<BookStateWrapper> bookStateWrapperList = bookDao.getBookStateQtyByBook(search, isGenreFilterActive, genreFilter, userId);
+        List<GenreWrapper> genreWrapperList = bookDao.getGenreQtyByBook(search, isBookStateFilterActive, bookStateFilter, userId);
+
+
+        Map<BookState, Integer> resultByStateMap = bookStateWrapperList.stream()
+                .collect(Collectors.toMap(BookStateWrapper::getBookState, BookStateWrapper::getResultByState));
+
+        List<BookStateWrapper> bookStates = new ArrayList<>();
+        for (BookState state : BookState.values()) {
+            bookStates.add(new BookStateWrapper(state, bookStateService.getBookStateDisplayName(state), resultByStateMap.getOrDefault(state, 0)));
+        }
+
+        Map<Genre, Integer> genreByStateMap = genreWrapperList.stream()
+                .collect(Collectors.toMap(GenreWrapper::getGenre, GenreWrapper::getResultByGenre));
+
+        List<GenreWrapper> genres = new ArrayList<>();
+        for (Genre genre : Genre.values()) {
+            genres.add(new GenreWrapper(genre, genreService.getGenreDisplayName(genre), genreByStateMap.getOrDefault(genre, 0)));
+        }
+
+        response.getMetadata().setBookStateWrapperList(bookStates);
+        response.getMetadata().setGenreWrapperList(genres);
+
+        return response;
     }
 
     public List<MultipartFile> arrangeImages(List<MultipartFile> images, int bookCoverIndex) {

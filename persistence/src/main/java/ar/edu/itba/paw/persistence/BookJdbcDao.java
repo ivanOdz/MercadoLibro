@@ -21,7 +21,6 @@ import javax.sql.DataSource;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.sql.Types;
-import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.models.utils.Constants.BOOKS_PAGE_SIZE;
 import static ar.edu.itba.paw.persistence.BookModelJdbcDao.ROW_MAPPER_BOOK_MODEL;
@@ -35,9 +34,6 @@ public class BookJdbcDao implements BookDao {
     private final SimpleJdbcInsert jdbcInsertBook;
     private final SimpleJdbcInsert jdbcInsertBookRating;
     private final SimpleJdbcInsert jdbcInsertBookImage;
-
-    private final GenreService genreService;
-    private final BookStateService bookStateService;
 
     @Autowired
     private MessageSource messageSource;
@@ -55,11 +51,15 @@ public class BookJdbcDao implements BookDao {
             };
 
     @Autowired
-    public BookJdbcDao(final DataSource ds, GenreService genreService, BookStateService bookStateService) {
+    private GenreService genreService;
+
+    @Autowired
+    private BookStateService bookStateService;
+
+    @Autowired
+    public BookJdbcDao(final DataSource ds) {
 
         jdbcTemplate = new JdbcTemplate(ds);
-        this.genreService = genreService;
-        this.bookStateService = bookStateService;
         jdbcInsertBook = new SimpleJdbcInsert(jdbcTemplate).usingGeneratedKeyColumns("bookid").withTableName("book");
         jdbcInsertBookRating = new SimpleJdbcInsert(jdbcTemplate).withTableName("book_rating").usingGeneratedKeyColumns("ratingid");
         jdbcInsertBookImage = new SimpleJdbcInsert(jdbcTemplate).withTableName("book_image");
@@ -257,15 +257,12 @@ public class BookJdbcDao implements BookDao {
         }
         else data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), userId, "%" + search.toLowerCase() + "%", BOOKS_PAGE_SIZE, offset}, new int[]{Types.INTEGER, Types.BIGINT, Types.VARCHAR, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_BOOK);
 
-        List<GenreWrapper> genreWrapperList = getGenreQtyByBook(search, isBookStateFilterActive, bookStateFilter, userId);
-        List<BookStateWrapper> bookStateWrapperList = getBookStateQtyByBook(search, isGenreFilterActive, genreFilter, userId);
-
         int totalResults = getTotalResultsByBook(search, isGenreFilterActive, genreFilter, isBookStateFilterActive, bookStateFilter, userId);
 
-        return new PaginatedResponse<>(data, new ItemFilterMetadata(currentPage, BOOKS_PAGE_SIZE, totalResults, search, isGenreFilterActive, genreFilter, sortType, genreWrapperList, isBookStateFilterActive, bookStateFilter, bookStateWrapperList));
+        return new PaginatedResponse<>(data, new ItemFilterMetadata(currentPage, BOOKS_PAGE_SIZE, totalResults, search, isGenreFilterActive, genreFilter, sortType, null, isBookStateFilterActive, bookStateFilter, null));
     }
 
-    private List<GenreWrapper> getGenreQtyByBook(String search, boolean isBookStateFilterActive, BookState bookStateFilter, long userId) {
+    public List<GenreWrapper> getGenreQtyByBook(String search, boolean isBookStateFilterActive, BookState bookStateFilter, long userId) {
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT bm.genre, COUNT(*) AS genreCount " +
                         "FROM book b " +
@@ -293,23 +290,14 @@ public class BookJdbcDao implements BookDao {
             paramTypes = new int[]{ Types.BIGINT, Types.VARCHAR};
         }
 
-        Map<Genre, Integer> resultByGenreMap = new HashMap<>();
-        jdbcTemplate.query(sqlQuery.toString(), params.toArray(), paramTypes, (rs, rowNum) -> {
+        return jdbcTemplate.query(sqlQuery.toString(), params.toArray(), paramTypes, (rs, rowNum) -> {
             int genreValue = rs.getInt("genre");
             Genre genre = Genre.fromInt(genreValue);
-            resultByGenreMap.put(genre, rs.getInt("genreCount"));
-            return null;
+            return new GenreWrapper(genre, rs.getInt("genreCount"));
         });
-
-        List<GenreWrapper> genreWrappers = new ArrayList<>();
-        for (Genre genre : Genre.values()) {
-            genreWrappers.add(new GenreWrapper(genre, genreService.getGenreDisplayName(genre), resultByGenreMap.getOrDefault(genre, 0)));
-        }
-
-        return genreWrappers;
     }
 
-    private List<BookStateWrapper> getBookStateQtyByBook(String search, boolean isGenreFilterActive, Genre genreFilter, long userId) {
+    public List<BookStateWrapper> getBookStateQtyByBook(String search, boolean isGenreFilterActive, Genre genreFilter, long userId) {
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT b.bookState, COUNT(*) AS stateCount " +
                         "FROM book b " +
@@ -337,21 +325,11 @@ public class BookJdbcDao implements BookDao {
             paramTypes = new int[]{Types.BIGINT, Types.VARCHAR};
         }
 
-        List<BookStateWrapper> results = jdbcTemplate.query(sqlQuery.toString(), params.toArray(), paramTypes, (rs, rowNum) -> {
+        return jdbcTemplate.query(sqlQuery.toString(), params.toArray(), paramTypes, (rs, rowNum) -> {
             int stateValue = rs.getInt("bookState");
             BookState bookState = BookState.fromInt(stateValue);
-            return new BookStateWrapper(bookState, bookState.toString(), rs.getInt("stateCount"));
+            return new BookStateWrapper(bookState, rs.getInt("stateCount"));
         });
-
-        Map<BookState, Integer> resultByStateMap = results.stream()
-                .collect(Collectors.toMap(BookStateWrapper::getBookState, BookStateWrapper::getResultByState));
-
-        List<BookStateWrapper> toReturn = new ArrayList<>();
-        for (BookState state : BookState.values()) {
-            toReturn.add(new BookStateWrapper(state, bookStateService.getBookStateDisplayName(state), resultByStateMap.getOrDefault(state, 0)));
-        }
-
-        return toReturn;
     }
 
 

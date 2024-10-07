@@ -8,7 +8,7 @@ public class ItemFilterMetadata extends GenreFilterMetadata{
 
     private final boolean isBookStateFilterActive;
     private final BookState bookStateFilter;
-    private final List<BookStateWrapper> bookStateWrapperList;
+    private List<BookStateWrapper> bookStateWrapperList;
 
     public ItemFilterMetadata(int currentPage, int pageSize, int totalResults, String search, boolean isGenreFilterActive, Genre genreFilter, SortType sortType, List<GenreWrapper> genreWrapperList, boolean isBookStateFilterActive, BookState bookStateFilter, List<BookStateWrapper> bookStateWrapperList) {
         super(currentPage, pageSize, totalResults, search, isGenreFilterActive, genreFilter, sortType, genreWrapperList);
@@ -27,5 +27,9 @@ public class ItemFilterMetadata extends GenreFilterMetadata{
 
     public List<BookStateWrapper> getBookStateWrapperList() {
         return bookStateWrapperList;
+    }
+
+    public void setBookStateWrapperList(List<BookStateWrapper> bookStateWrapperList) {
+        this.bookStateWrapperList = bookStateWrapperList;
     }
 }
