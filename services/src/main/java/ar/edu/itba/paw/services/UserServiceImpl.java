@@ -4,7 +4,6 @@ import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
-import ar.edu.itba.paw.models.UserReview;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -100,11 +99,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public void verifyUser(int verificationCode) {
         userDao.verifyUser(verificationCode);
-    }
-
-    @Override
-    public User getUserByPubId(long pubId) {
-        return userDao.getUserByPubId(pubId);
     }
 
     @Override

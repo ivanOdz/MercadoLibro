@@ -7,7 +7,6 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
-import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 
 import ar.edu.itba.paw.webapp.form.ExchangeForm;
 import ar.edu.itba.paw.webapp.form.UserReviewForm;
@@ -100,7 +99,7 @@ public class ExchangeController {
 
 
     @RequestMapping("/exchange/accepted")
-    public ModelAndView exchangeAccepted(@RequestParam long acceptCode) {
+    public ModelAndView exchangeAccepted() {
         return new ModelAndView("exchange/accepted");
     }
 
@@ -112,7 +111,6 @@ public class ExchangeController {
     @RequestMapping("/createexchange")
     public ModelAndView exchange(@RequestParam(name = "accept_code") int acceptCode, @RequestParam(name = "state") boolean state) {
         ModelAndView mav = new ModelAndView("error/failed_authentication");
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         Exchange ex;
         try {

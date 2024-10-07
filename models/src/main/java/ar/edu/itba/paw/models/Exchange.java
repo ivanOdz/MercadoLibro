@@ -3,7 +3,6 @@ package ar.edu.itba.paw.models;
 import ar.edu.itba.paw.models.utils.ExchangeState;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 public class Exchange {
     private final long exchangeId;
@@ -13,9 +12,9 @@ public class Exchange {
     private final long acceptCode;
     private final boolean offererReceivedBook;
     private final boolean requesterReceivedBook;
-    private Timestamp exchangeStartDate;
+    private final Timestamp exchangeStartDate;
+    private final Timestamp exchangeEndDate;
 
-    private Timestamp exchangeEndDate;
 
     private final boolean isReviewable;
 

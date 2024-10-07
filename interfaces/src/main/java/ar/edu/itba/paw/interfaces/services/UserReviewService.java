@@ -6,8 +6,6 @@ import ar.edu.itba.paw.models.utils.Rating;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public interface UserReviewService {
 

@@ -29,8 +29,6 @@ public interface UserService {
 
     //List<UserReview> getReviewsByUserId(long userId, int pageIndex);
 
-    User getUserByPubId(long pubId);
-
     boolean userExists(String mail);
     
     boolean changeUserName(long userId, String newName);

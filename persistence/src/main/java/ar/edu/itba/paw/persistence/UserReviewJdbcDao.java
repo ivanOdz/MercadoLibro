@@ -11,7 +11,6 @@ import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.models.utils.Rating;
 
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
-import org.springframework.beans.PropertyBatchUpdateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -73,7 +72,7 @@ public class UserReviewJdbcDao implements UserReviewDao {
 							+ " FROM user_review AS userReview\r\n"
 							+ " JOIN users AS reviewer ON userReview.reviewerId = reviewer.userId\r\n"
 							+ " JOIN users AS subject ON userReview.subjectId = subject.userId\r\n"
-							+ " JOIN exchange AS exchange ON userReview.exchangeId = exchange.exchangeId\r\n"
+							+ " JOIN exchange ON userReview.exchangeId = exchange.exchangeId\r\n"
 							+ " JOIN publication AS publicationReviewer ON userReview.reviewerId = publicationReviewer.userId\r\n"
 							+ " JOIN location AS locationReviewer ON publicationReviewer.locationId = locationReviewer.locationId\r\n"
 							+ " JOIN book AS bookReviewer ON publicationReviewer.bookId = bookReviewer.bookId\r\n"
@@ -214,8 +213,8 @@ public class UserReviewJdbcDao implements UserReviewDao {
 		
 // ----------------------------------------- EXCHANGE AND REVIEW ------------------------------------------------------------------------------------
 			
-			Publication offererPublication = null;
-			Publication requesterPublication = null;
+			Publication offererPublication;
+			Publication requesterPublication;
 			
 			if (rs.getLong("exchangeOffererPubId") == rs.getLong("publicationReviewerId")) {
 				
@@ -238,36 +237,27 @@ public class UserReviewJdbcDao implements UserReviewDao {
 												rs.getTimestamp("exchangeStartDate"),
 												rs.getTimestamp("exchangeEndDate")
 											);
-			
-			UserReview userReview = new UserReview(	rs.getLong("userReviewId"),
-													reviewer,
-													subject,
-													exchange,
-													rs.getString("userReviewDescription"),
-													rs.getTimestamp("userReviewDate"),
-													rs.getInt("userReviewRating")
-												);
-			
-			return userReview;
+
+            return new UserReview(	rs.getLong("userReviewId"),
+                                                    reviewer,
+                                                    subject,
+                                                    exchange,
+                                                    rs.getString("userReviewDescription"),
+                                                    rs.getTimestamp("userReviewDate"),
+                                                    rs.getInt("userReviewRating")
+                                                );
 	};
 	
 	String baseQueryRating = "SELECT COALESCE(AVG(userReviewRating), 5.00) AS averageRating, COUNT(userReviewRating) AS countRating FROM user_review\r\n";
 	
 	private static final RowMapper<Rating> ROW_MAPPER_RATING =
 			
-		(rs, rowNum) -> {
-			
-			return new Rating(rs.getDouble("averageRating"), rs.getInt("countRating"));
-		};
+		(rs, rowNum) -> new Rating(rs.getDouble("averageRating"), rs.getInt("countRating"));
 
     @Override
     public PaginatedResponse<UserReview, BasicMetadata> getReviewsGivenByUserId(long userId) {
 
-        StringBuilder sqlQuery = new StringBuilder(baseQueryReview);
-
-        sqlQuery.append(" AND reviewer.userId = ?");
-
-        List<UserReview> data = jdbcTemplate.query(sqlQuery.toString(), new Object[] { userId }, new int[] { Types.BIGINT }, ROW_MAPPER_USER_REVIEW);
+        List<UserReview> data = jdbcTemplate.query(baseQueryReview + " AND reviewer.userId = ? ", new Object[] { userId }, new int[] { Types.BIGINT }, ROW_MAPPER_USER_REVIEW);
 
         return new PaginatedResponse<>(data, new BasicMetadata(0, 0, 0));
     }
@@ -275,11 +265,7 @@ public class UserReviewJdbcDao implements UserReviewDao {
     @Override
     public PaginatedResponse<UserReview, BasicMetadata> getReviewsEarnedByUserId(long userId) {
 
-        StringBuilder sqlQuery = new StringBuilder(baseQueryReview);
-
-        sqlQuery.append(" AND subject.userId = ?");
-
-        List<UserReview> data = jdbcTemplate.query(sqlQuery.toString(), new Object[] { userId }, new int[] { Types.BIGINT }, ROW_MAPPER_USER_REVIEW);
+        List<UserReview> data = jdbcTemplate.query(baseQueryReview + " AND subject.userId = ?", new Object[] { userId }, new int[] { Types.BIGINT }, ROW_MAPPER_USER_REVIEW);
 
         return new PaginatedResponse<>(data, new BasicMetadata(0, 0, 0));
     }
@@ -307,12 +293,8 @@ public class UserReviewJdbcDao implements UserReviewDao {
 
     @Override
     public UserReview getUserReviewEarned(long exchangeId, long userId) {
-    	
-        StringBuilder sqlQuery = new StringBuilder(baseQueryReview);
 
-        sqlQuery.append(" AND exchange.exchangeId = ? AND subject.userId = ? LIMIT 1");
-        
-        List<UserReview> userReviewEarned = jdbcTemplate.query(sqlQuery.toString(), new Object[] { exchangeId, userId }, new int[] { Types.BIGINT, Types.BIGINT }, ROW_MAPPER_USER_REVIEW);
+        List<UserReview> userReviewEarned = jdbcTemplate.query(baseQueryReview + " AND exchange.exchangeId = ? AND subject.userId = ? LIMIT 1", new Object[] { exchangeId, userId }, new int[] { Types.BIGINT, Types.BIGINT }, ROW_MAPPER_USER_REVIEW);
 
         return userReviewEarned.isEmpty() ? null : userReviewEarned.getFirst();
     }
@@ -320,11 +302,7 @@ public class UserReviewJdbcDao implements UserReviewDao {
     @Override
     public UserReview getUserReviewGiven(long exchangeId, long userId) {
 
-        StringBuilder sqlQuery = new StringBuilder(baseQueryReview);
-
-        sqlQuery.append(" AND exchange.exchangeId = ? AND reviewer.userId = ? LIMIT 1");
-
-        Optional<UserReview> userReviewGiven = jdbcTemplate.query(sqlQuery.toString(), new Object[] { exchangeId, userId }, new int[] { Types.BIGINT, Types.BIGINT }, ROW_MAPPER_USER_REVIEW).stream().findFirst();
+        Optional<UserReview> userReviewGiven = jdbcTemplate.query(baseQueryReview + " AND exchange.exchangeId = ? AND reviewer.userId = ? LIMIT 1", new Object[] { exchangeId, userId }, new int[] { Types.BIGINT, Types.BIGINT }, ROW_MAPPER_USER_REVIEW).stream().findFirst();
 
 		// intended to return null if no element is present
         return userReviewGiven.get();
@@ -332,12 +310,8 @@ public class UserReviewJdbcDao implements UserReviewDao {
     
     @Override
     public Rating getUserRatingEarned(long userId) {
-    	
-    	StringBuilder sqlQuery = new StringBuilder(baseQueryRating);
 
-    	sqlQuery.append(" WHERE subjectId = ?");
-    	
-    	List<Rating> rating = jdbcTemplate.query(sqlQuery.toString(), new Object[] { userId }, new int[] { Types.BIGINT }, ROW_MAPPER_RATING);
+        List<Rating> rating = jdbcTemplate.query(baseQueryRating + " WHERE subjectId = ?", new Object[] { userId }, new int[] { Types.BIGINT }, ROW_MAPPER_RATING);
     	
         return rating.isEmpty() ? null : rating.getFirst();
     }
@@ -345,11 +319,7 @@ public class UserReviewJdbcDao implements UserReviewDao {
     @Override
     public Rating getUserRatingGiven(long userId) {
 
-    	StringBuilder sqlQuery = new StringBuilder(baseQueryRating);
-
-    	sqlQuery.append(" WHERE ReviewerId = ?");
-    	
-    	List<Rating> rating = jdbcTemplate.query(sqlQuery.toString(), new Object[] { userId }, new int[] { Types.BIGINT }, ROW_MAPPER_RATING);
+        List<Rating> rating = jdbcTemplate.query(baseQueryRating + " WHERE ReviewerId = ?", new Object[] { userId }, new int[] { Types.BIGINT }, ROW_MAPPER_RATING);
     	
         return rating.isEmpty() ? null : rating.getFirst();
     }

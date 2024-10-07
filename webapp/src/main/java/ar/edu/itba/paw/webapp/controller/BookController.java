@@ -32,9 +32,6 @@ public class BookController {
 
     private final BookService bookService;
 
-    @Autowired
-    private final UserService userService;
-
     private final BookModelService bookModelService;
 
     private final PublicationService publicationService;
@@ -57,9 +54,8 @@ public class BookController {
     private static final Logger LOGGER = LoggerFactory.getLogger(BookController.class);
 
 
-    public BookController(BookService bookService, UserService userService, BookModelService bookModelService, PublicationService publicationService) {
+    public BookController(BookService bookService, BookModelService bookModelService, PublicationService publicationService) {
         this.bookService = bookService;
-        this.userService = userService;
         this.bookModelService = bookModelService;
         this.publicationService = publicationService;
     }

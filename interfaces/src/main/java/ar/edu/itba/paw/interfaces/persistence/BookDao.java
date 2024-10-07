@@ -7,7 +7,6 @@ import ar.edu.itba.paw.models.utils.SortType;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface BookDao {
 

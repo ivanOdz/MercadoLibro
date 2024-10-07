@@ -16,13 +16,11 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import javax.swing.plaf.basic.BasicArrowButton;
 
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.*;
 
-import static ar.edu.itba.paw.models.utils.Constants.BOOKS_PAGE_SIZE;
 import static ar.edu.itba.paw.models.utils.Constants.EXCHANGES_PAGE_SIZE;
 import static ar.edu.itba.paw.persistence.PublicationJdbcDao.ROW_MAPPER_PUBLICATION;
 
@@ -219,11 +217,6 @@ public class ExchangeJdbcDao implements ExchangeDao {
 
     @Override
     public Exchange rejectExchange(int acceptCode) {
-
-        StringBuilder sqlQuery = new StringBuilder(baseQuery);
-        sqlQuery.append(" WHERE acceptCode = ? ");
-        sqlQuery.append(groupQuery);
-
         // NOTE: this throws an ExchangeNotFoundException if the exchange is not found
         Exchange ex = findByAcceptCode(acceptCode);
 
@@ -283,11 +276,10 @@ public class ExchangeJdbcDao implements ExchangeDao {
 
     @Override
     public Exchange findByAcceptCode(int acceptCode) throws ExchangeNotFoundException {
-        StringBuilder sqlQuery = new StringBuilder(baseQuery);
-        sqlQuery.append(" WHERE acceptCode = ? ");
-        sqlQuery.append(groupQuery);
+        String sqlQuery = baseQuery + " WHERE acceptCode = ? " +
+                groupQuery;
 
-        Optional<Exchange> ex = jdbcTemplate.query(sqlQuery.toString(), new Object[]{acceptCode}, new int[]{Types.INTEGER}, ROW_MAPPER_EXCHANGE).stream().findFirst();
+        Optional<Exchange> ex = jdbcTemplate.query(sqlQuery, new Object[]{acceptCode}, new int[]{Types.INTEGER}, ROW_MAPPER_EXCHANGE).stream().findFirst();
         if (ex.isEmpty()) {
             String errorMessage = messageSource.getMessage("error.exchangeNotFound", new Object[]{acceptCode}, LocaleContextHolder.getLocale());
             throw new ExchangeNotFoundException(errorMessage);
@@ -297,11 +289,10 @@ public class ExchangeJdbcDao implements ExchangeDao {
 
     @Override
     public Exchange getExchangeById(long exchangeId) {
-        StringBuilder sqlQuery = new StringBuilder(baseQuery);
-        sqlQuery.append(" WHERE exchangeId = ? ");
-        sqlQuery.append(groupQuery);
+        String sqlQuery = baseQuery + " WHERE exchangeId = ? " +
+                groupQuery;
 
-        Optional<Exchange> ex = jdbcTemplate.query(sqlQuery.toString(), new Object[]{exchangeId},
+        Optional<Exchange> ex = jdbcTemplate.query(sqlQuery, new Object[]{exchangeId},
                 new int[]{Types.BIGINT}, ROW_MAPPER_EXCHANGE).stream().findFirst();
         if(ex.isEmpty()) {
             String errorMessage = messageSource.getMessage("error.exchangeNotFoundId", new Object[]{exchangeId}, LocaleContextHolder.getLocale());

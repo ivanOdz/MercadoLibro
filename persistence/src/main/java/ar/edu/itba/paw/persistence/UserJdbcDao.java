@@ -46,8 +46,6 @@ public class UserJdbcDao implements UserDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    private final static int PAGE_SIZE = 21;
-
     @Autowired
     private MessageSource messageSource;
 
@@ -183,11 +181,5 @@ public class UserJdbcDao implements UserDao {
             String errorMessage = messageSource.getMessage("error.changePassword", new Object[]{e.getStackTrace()}, LocaleContextHolder.getLocale());
             throw new PasswordChangeBadRequestException(errorMessage);
         }
-    }
-
-    @Override
-    public User getUserByPubId(long pubId) {
-        return jdbcTemplate.query("SELECT * FROM users u JOIN publication p ON u.userId = p.userId WHERE p.publicationId = ?", new Object[]{pubId},
-                new int[]{Types.BIGINT}, ROW_MAPPER_USER).stream().findFirst().get();
     }
 }

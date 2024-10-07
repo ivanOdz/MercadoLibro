@@ -7,8 +7,6 @@ import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 
 import java.sql.Timestamp;
-import java.util.List;
-import java.util.Optional;
 
 public interface ExchangeDao {
 
