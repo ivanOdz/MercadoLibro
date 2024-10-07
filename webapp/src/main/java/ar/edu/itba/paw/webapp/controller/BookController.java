@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.exceptions.UserNotUnauthorizedException;
 import ar.edu.itba.paw.interfaces.exceptions.base.ApplicationRuntimeException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
@@ -11,6 +12,9 @@ import ar.edu.itba.paw.webapp.form.BookForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,6 +56,9 @@ public class BookController {
     private LoggedUserAdvice loggedUserAdvice;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BookController.class);
+    @Qualifier("messageSource")
+    @Autowired
+    private MessageSource messageSource;
 
 
     public BookController(BookService bookService, BookModelService bookModelService, PublicationService publicationService) {
@@ -71,6 +78,11 @@ public class BookController {
                                  @RequestParam(name = "sort-type", defaultValue = "BOOK_NAME_ASCENDING") SortType sortType) {
 
 
+        User loggeduser = loggedUserAdvice.getLoggedUser();
+        if(loggeduser == null) {
+            String message = messageSource.getMessage("error.unauthorized", null, LocaleContextHolder.getLocale());
+            throw new UserNotUnauthorizedException(message);
+        }
 
         ModelAndView mav = new ModelAndView("book/book_home");
         PaginatedResponse<Book, ItemFilterMetadata> books = bookService.getPaginatedBooks(search, isBookStateFilterActive,
@@ -88,7 +100,6 @@ public class BookController {
                                    @RequestParam(name = "sort-type", defaultValue = "BOOK_NAME_ASCENDING") SortType sortType) {
 
         ModelAndView mav = new ModelAndView("book/book_models");
-
         PaginatedResponse<BookModel, BookModelMetadata> modelBooks = bookModelService.getPaginatedBookModels(search, isGenreFilterActive, genreFilter, currentPage, sortType);
 
         mav.addObject("modelBooks", modelBooks);

@@ -43,7 +43,7 @@
             </form>
         </div>
 
-        <div class="uk-grid ml-1" uk-grid>
+        <div class="uk-grid ml-1" uk-grid style="margin-bottom: 64px;>
 
 
             <div class="uk-width-1-4@s filter-section uk-border-rounded uk-box-shadow-small mt-1 mb-1">
