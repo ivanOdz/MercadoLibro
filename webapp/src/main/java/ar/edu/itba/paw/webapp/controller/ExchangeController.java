@@ -1,5 +1,8 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.exceptions.base.ApplicationRuntimeException;
+import ar.edu.itba.paw.interfaces.exceptions.base.BadRequestException;
+import ar.edu.itba.paw.interfaces.exceptions.base.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.ExchangeState;
@@ -50,9 +53,9 @@ public class ExchangeController {
     // Paso el ID, y quiero aquellas exchanges en las que soy offerer
     @RequestMapping("/offers")
     public ModelAndView exchangeRequests(@RequestParam(name = "pending-page", defaultValue = "0") int pendingPage,
-                                        @RequestParam(name = "in-progress-page", defaultValue = "0") int inProgressPage,
-                                        @RequestParam(name = "completed-page", defaultValue = "0") int completedPage,
-                                        @RequestParam(name = "rejected-page", defaultValue = "0") int rejectedPage) {
+                                         @RequestParam(name = "in-progress-page", defaultValue = "0") int inProgressPage,
+                                         @RequestParam(name = "completed-page", defaultValue = "0") int completedPage,
+                                         @RequestParam(name = "rejected-page", defaultValue = "0") int rejectedPage) {
         final ModelAndView mav = new ModelAndView("exchange/exchange_requests");
 
         User user = loggedUserAdvice.getLoggedUser();
@@ -83,7 +86,7 @@ public class ExchangeController {
         User user = loggedUserAdvice.getLoggedUser();
         PaginatedResponse<Exchange, BasicMetadata> pendingExchanges = exchangeService.getExchangeRequesterListByUserId(user.getUserId(), pendingPage, ExchangeState.PENDING);
         PaginatedResponse<Exchange, BasicMetadata> inProcessExchanges = exchangeService.getExchangeRequesterListByUserId(user.getUserId(), inProgressPage, ExchangeState.ACCEPTED);
-        PaginatedResponse<Exchange, BasicMetadata> completedExchanges = exchangeService.getExchangeRequesterListByUserId(user.getUserId(), completedPage,ExchangeState.TERMINATED);
+        PaginatedResponse<Exchange, BasicMetadata> completedExchanges = exchangeService.getExchangeRequesterListByUserId(user.getUserId(), completedPage, ExchangeState.TERMINATED);
         PaginatedResponse<Exchange, BasicMetadata> rejectedExchanges = exchangeService.getExchangeRequesterListByUserId(user.getUserId(), rejectedPage, ExchangeState.REJECTED);
 
         mav.addObject("pending", pendingExchanges);
@@ -98,8 +101,7 @@ public class ExchangeController {
 
     @RequestMapping("/exchange/accepted")
     public ModelAndView exchangeAccepted(@RequestParam long acceptCode) {
-        final ModelAndView mav = new ModelAndView("exchange/exchange_accepted");
-        return mav;
+        return new ModelAndView("exchange/accepted");
     }
 
     @RequestMapping("/exchange/invalid")
@@ -112,32 +114,55 @@ public class ExchangeController {
         ModelAndView mav = new ModelAndView("error/failed_authentication");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        Optional<Exchange> ex = exchangeService.getExchangeByAcceptCode(acceptCode);
-
-        // if the user that is accepting/rejecting the exchange is the one that should
-        if (authentication.getPrincipal() instanceof PawUserDetails pud &&
-                ex.get().getOfferer().getBook().getOwner().getUserId() == pud.getUser().getUserId()) {
-            mav = new ModelAndView(exchangeService.exchange(acceptCode, state));
+        Exchange ex;
+        try {
+            ex = exchangeService.getExchangeByAcceptCode(acceptCode);
+        } catch (ApplicationRuntimeException e) {
+            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
+            return new ModelAndView("redirect:/404");
         }
 
+        // if the user that is accepting/rejecting the exchange is the one that should
+        if (ex.getOfferer().getBook().getOwner().getUserId() == loggedUserAdvice.getLoggedUser().getUserId()) {
+            String exchangeView;
+            try {
+                exchangeView = exchangeService.exchange(acceptCode, state);
+            } catch (BadRequestException e) {
+                LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
+                return new ModelAndView("redirect:/400");
+            } catch (NotFoundException e) {
+                LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
+                return new ModelAndView("redirect:/404");
+            }
+            mav = new ModelAndView(exchangeView);
+        }
         return mav;
     }
 
 
     @RequestMapping("/confirm_offerer")
     public ModelAndView confirmExchangeOffer(@RequestParam(name = "accept_code") int accept_code) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        // TODO: error management of whether its null
-        Exchange exchange = exchangeService.getExchangeByAcceptCode(accept_code).get();
-
-        // if the user that is accepting/rejecting the exchange is the one that should
-        if (authentication.getPrincipal() instanceof PawUserDetails pud
-                && exchange.getOfferer().getBook().getOwner().getUserId() == pud.getUser().getUserId()) {
-            exchangeService.cofirmOfferer(accept_code);
-            return new ModelAndView("redirect:/offers");
+        Exchange exchange;
+        try {
+            exchange = exchangeService.getExchangeByAcceptCode(accept_code);
+        } catch (ApplicationRuntimeException e) {
+            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
+            return new ModelAndView("redirect:/404");
         }
 
+        // if the user that is accepting/rejecting the exchange is the one that should
+        if (exchange.getOfferer().getBook().getOwner().getUserId() == loggedUserAdvice.getLoggedUser().getUserId()) {
+            try {
+                exchangeService.cofirmOfferer(accept_code);
+            } catch (BadRequestException e) {
+                LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
+                return new ModelAndView("redirect:/400");
+            } catch (NotFoundException e) {
+                LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
+                return new ModelAndView("redirect:/404");
+            }
+            return new ModelAndView("redirect:/offers");
+        }
         return new ModelAndView("redirect:/failed_authentication");
     }
 
@@ -149,45 +174,69 @@ public class ExchangeController {
 
     @RequestMapping("/confirm_requester")
     public ModelAndView confirmExchangeRequest(@RequestParam(name = "accept_code") int accept_code) {
-        ModelAndView mav = new ModelAndView("error/failed_authentication");
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        // TODO: error management of whether its null
-        Exchange exchange = exchangeService.getExchangeByAcceptCode(accept_code).get();
-
-        // if the user that is accepting/rejecting the exchange is the one that should
-        if (authentication.getPrincipal() instanceof PawUserDetails pud
-                && exchange.getRequester().getBook().getOwner().getUserId() == pud.getUser().getUserId()) {
-            exchangeService.cofirmRequester(accept_code);
-            return new ModelAndView("redirect:/requests");
+        Exchange exchange;
+        try {
+            exchange = exchangeService.getExchangeByAcceptCode(accept_code);
+        } catch (ApplicationRuntimeException e) {
+            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
+            return new ModelAndView("redirect:/404");
         }
 
-        return mav;
+        // if the user that is accepting/rejecting the exchange is the one that should
+        if (exchange.getRequester().getBook().getOwner().getUserId() == loggedUserAdvice.getLoggedUser().getUserId()) {
+            try {
+                exchangeService.cofirmRequester(accept_code);
+            } catch (BadRequestException e) {
+                LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
+                return new ModelAndView("redirect:/400");
+            } catch (NotFoundException e) {
+                LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
+                return new ModelAndView("redirect:/404");
+            }
+        }
+        return new ModelAndView("redirect:/requests");
     }
 
     @GetMapping("/start_exchange")
     public ModelAndView startExchange(@ModelAttribute("exchangeForm") ExchangeForm exchangeForm, BindingResult errors, @RequestParam(name = "publication_id") long publicationId) {
         final ModelAndView mav = new ModelAndView("/exchange/solicit_exchange");
-        Publication publication = publicationService.getPublicationByPublicationId(publicationId);
+        Publication publication;
+        try {
+            publication = publicationService.getPublicationByPublicationId(publicationId);
+        } catch (ApplicationRuntimeException e) {
+            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
+            return new ModelAndView("redirect:/404");
+        }
+
         List<Book> availableBooks;
 
+        // NOTE: en el caso de que se haga una paginación de esta sección
+        //  no hace falta realizar una excepción sino HAY QUE HACER UNA EXCEPCIÓN
         availableBooks = bookService.getAvailableBooksByUser(loggedUserAdvice.getLoggedUser());
-        mav.addObject("availableBooks", availableBooks);
 
+        mav.addObject("availableBooks", availableBooks);
         mav.addObject("exchangeForm", exchangeForm);
         mav.addObject("publication", publication);
-
         return mav;
     }
 
     @PostMapping(path = "/exchange/initializeexchange")
     public ModelAndView initializeExchange(@NotEmpty @Valid @ModelAttribute("exchangeForm") ExchangeForm exchangeInput, BindingResult errors) {
-        if(errors.hasErrors()){
+        if (errors.hasErrors()) {
             startExchange(exchangeInput, errors, exchangeInput.getPublicationId());
         }
-        // Insertar tupla de requester en publicacion con fecha actual y publicationState = 2 (OFFERER)
-        exchangeService.initializeExchange(exchangeInput.getBookId(), exchangeInput.getLocation(), exchangeInput.getPublicationId(), loggedUserAdvice.getLoggedUser());
-        return new ModelAndView("redirect:/requests");  // TOOD: se podría redirigir a una página de éxito
+
+        try {
+            exchangeService.initializeExchange(exchangeInput.getBookId(), exchangeInput.getLocation(), exchangeInput.getPublicationId(), loggedUserAdvice.getLoggedUser());
+        } catch (BadRequestException e) {
+            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
+            return new ModelAndView("redirect:/400");
+        } catch (NotFoundException e) {
+            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
+            return new ModelAndView("redirect:/404");
+        }
+
+        return new ModelAndView("redirect:/requests");
     }
 
     @RequestMapping(path = "/submitReview", method = RequestMethod.POST)
@@ -196,8 +245,17 @@ public class ExchangeController {
             @RequestParam("reviewDescription") String reviewDescription,
             @RequestParam("userReviewRating") int userReviewRating/*,
 		BindingResult result, RedirectAttributes redirectAttributes*/) {
-    
-        boolean success = userReviewService.createUserReview(exchangeId, loggedUserAdvice.getLoggedUser().getUserId(), reviewDescription, userReviewRating);
+
+        boolean success;
+        try {
+            success = userReviewService.createUserReview(exchangeId, loggedUserAdvice.getLoggedUser().getUserId(), reviewDescription, userReviewRating);
+        } catch (BadRequestException e) {
+            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
+            return new ModelAndView("redirect:/400");
+        } catch (NotFoundException e) {
+            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
+            return new ModelAndView("redirect:/404");
+        }
 
         /*
         if (success) {

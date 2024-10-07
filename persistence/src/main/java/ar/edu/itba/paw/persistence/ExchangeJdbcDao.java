@@ -1,9 +1,15 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.exceptions.ExchangeBadRequestException;
+import ar.edu.itba.paw.interfaces.exceptions.ExchangeNotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.ExchangeDao;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -25,6 +31,9 @@ public class ExchangeJdbcDao implements ExchangeDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
+
+    @Autowired
+    private MessageSource messageSource;
 
     String baseQuery = "SELECT e.exchangeId, e.exchangeState, e.acceptCode, e.offererReceivedBook, e.requesterReceivedBook, e.exchangeEndDate, e.exchangeStartDate, " +
 
@@ -168,7 +177,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
     }
 
     @Override
-    public Optional<Exchange> createExchange(long offererPubId, long requesterPubId, int acceptCode, Timestamp startDate) {
+    public Exchange createExchange(long offererPubId, long requesterPubId, int acceptCode, Timestamp startDate) {
     	
         final Map<String, Object> exchangeData = new HashMap<>();
         exchangeData.put("offererPubId", offererPubId);
@@ -180,89 +189,126 @@ public class ExchangeJdbcDao implements ExchangeDao {
         exchangeData.put("exchangeStartDate", startDate);
         exchangeData.put("exchangeEndDate", null);
 
-        Number id = jdbcInsert.executeAndReturnKey(exchangeData);
+        Number id;
+        try {
+            id = jdbcInsert.executeAndReturnKey(exchangeData);
+        } catch (DataIntegrityViolationException e) {
+            String errorMessage = messageSource.getMessage("error.createExchangeBadRequest", new Object[]{e.getStackTrace()}, LocaleContextHolder.getLocale());
+            throw new ExchangeBadRequestException(errorMessage);
+        }
 
         return getExchangeById(id.longValue());
     }
 
     @Override
-    public Optional<Exchange> acceptExchange(int acceptCode) {
+    public Exchange acceptExchange(int acceptCode) {
 
-        StringBuilder sqlQuery = new StringBuilder(baseQuery);
-        sqlQuery.append(" WHERE acceptCode = ? ");
-        sqlQuery.append(groupQuery);
-        Optional<Exchange> ex = jdbcTemplate.query(sqlQuery.toString(), new Object[]{acceptCode},
-                new int[]{Types.INTEGER}, ROW_MAPPER_EXCHANGE).stream().findFirst();
+        Exchange ex = findByAcceptCode(acceptCode);
 
-        jdbcTemplate.update("UPDATE exchange SET exchangeState = ? WHERE acceptCode = ?", ExchangeState.ACCEPTED.getValue(), acceptCode);
-        jdbcTemplate.update("UPDATE exchange SET exchangeState = ? WHERE offererPubId = ? AND acceptCode <> ?", ExchangeState.REJECTED.getValue(), ex.get().getOfferer().getPublicationId(), acceptCode);
+        try {
+            jdbcTemplate.update("UPDATE exchange SET exchangeState = ? WHERE acceptCode = ?", ExchangeState.ACCEPTED.getValue(), acceptCode);
+            jdbcTemplate.update("UPDATE exchange SET exchangeState = ? WHERE offererPubId = ? AND acceptCode <> ?", ExchangeState.REJECTED.getValue(), ex.getOfferer().getPublicationId(), acceptCode);
+        } catch (DataIntegrityViolationException e) {
+            String errorMessage = messageSource.getMessage("error.acceptExchangeBadRequest", new Object[]{e.getStackTrace()}, LocaleContextHolder.getLocale());
+            throw new ExchangeBadRequestException(errorMessage);
+        }
 
-        return jdbcTemplate.query(sqlQuery.toString(), new Object[]{acceptCode},
-                new int[]{Types.INTEGER}, ROW_MAPPER_EXCHANGE).stream().findFirst();
+        return ex;
     }
 
 
     @Override
-    public Optional<Exchange> rejectExchange(int acceptCode) {
+    public Exchange rejectExchange(int acceptCode) {
 
         StringBuilder sqlQuery = new StringBuilder(baseQuery);
         sqlQuery.append(" WHERE acceptCode = ? ");
         sqlQuery.append(groupQuery);
-        Optional<Exchange> ex = jdbcTemplate.query(sqlQuery.toString(), new Object[]{acceptCode},
-                new int[]{Types.INTEGER}, ROW_MAPPER_EXCHANGE).stream().findFirst();
 
-        jdbcTemplate.update("UPDATE exchange SET exchangeState = ? WHERE acceptCode = ?", ExchangeState.REJECTED.getValue(), acceptCode);
-        return jdbcTemplate.query(sqlQuery.toString(), new Object[]{acceptCode},
-                new int[]{Types.INTEGER}, ROW_MAPPER_EXCHANGE).stream().findFirst();
+        // NOTE: this throws an ExchangeNotFoundException if the exchange is not found
+        Exchange ex = findByAcceptCode(acceptCode);
+
+        try {
+            jdbcTemplate.update("UPDATE exchange SET exchangeState = ? WHERE acceptCode = ?", ExchangeState.REJECTED.getValue(), acceptCode);
+        } catch (DataIntegrityViolationException e) {
+            String errorMessage = messageSource.getMessage("error.rejectExchangeBadRequest", new Object[]{e.getStackTrace()}, LocaleContextHolder.getLocale());
+            throw new ExchangeBadRequestException(errorMessage);
+        }
+
+        return ex;
 
     }
 
     @Override
     public void setEndDate(int acceptCode, Timestamp endDate) {
-    	
-        jdbcTemplate.update("UPDATE exchange SET exchangeenddate = ? WHERE acceptCode = ?", endDate, acceptCode);
-
+    	try {
+            jdbcTemplate.update("UPDATE exchange SET exchangeenddate = ? WHERE acceptCode = ?", endDate, acceptCode);
+        } catch (DataIntegrityViolationException e) {
+            String errorMessage = messageSource.getMessage("error.setEndDateBadRequest", new Object[]{e.getStackTrace()}, LocaleContextHolder.getLocale());
+            throw new ExchangeBadRequestException(errorMessage);
+        }
     }
 
     @Override
-    public Optional<Exchange> confirmOfferer(int acceptCode) {
-    	
-        jdbcTemplate.update("UPDATE exchange SET offererReceivedBook = ? WHERE acceptcode = ?", true, acceptCode);
+    public Exchange confirmOfferer(int acceptCode) {
+    	try {
+            jdbcTemplate.update("UPDATE exchange SET offererReceivedBook = ? WHERE acceptcode = ?", true, acceptCode);
+        } catch (DataIntegrityViolationException e) {
+            String errorMessage = messageSource.getMessage("error.confirmOffererBadRequest", new Object[]{e.getStackTrace()}, LocaleContextHolder.getLocale());
+            throw new ExchangeBadRequestException(errorMessage);
+        }
         return findByAcceptCode(acceptCode);
     }
 
     @Override
-    public Optional<Exchange> confirmRequester(int acceptCode) {
-    	
-        jdbcTemplate.update("UPDATE exchange SET requesterReceivedBook = ? WHERE acceptcode = ?", true, acceptCode);
+    public Exchange confirmRequester(int acceptCode) {
+        try {
+            jdbcTemplate.update("UPDATE exchange SET requesterReceivedBook = ? WHERE acceptcode = ?", true, acceptCode);
+        } catch (DataIntegrityViolationException e) {
+            String errorMessage = messageSource.getMessage("error.confirmRequesterBadRequest", new Object[]{e.getStackTrace()}, LocaleContextHolder.getLocale());
+            throw new ExchangeBadRequestException(errorMessage);
+        }
         return findByAcceptCode(acceptCode);
     }
 
     @Override
     public void updateExchangeStatus(int acceptCode, int newStatus) {
-    	
         String sql = "UPDATE exchange SET exchangeState = ? WHERE acceptCode = ?";
-        jdbcTemplate.update(sql, newStatus, acceptCode);
+        try {
+            jdbcTemplate.update(sql, newStatus, acceptCode);
+        } catch (DataIntegrityViolationException e) {
+            String errorMessage = messageSource.getMessage("error.updateExchangeStatusBadRequest", new Object[]{e.getStackTrace()}, LocaleContextHolder.getLocale());
+            throw new ExchangeBadRequestException(errorMessage);
+        }
     }
 
     @Override
-    public Optional<Exchange> findByAcceptCode(int acceptCode) {
-    	
+    public Exchange findByAcceptCode(int acceptCode) throws ExchangeNotFoundException {
         StringBuilder sqlQuery = new StringBuilder(baseQuery);
         sqlQuery.append(" WHERE acceptCode = ? ");
         sqlQuery.append(groupQuery);
-        return jdbcTemplate.query(sqlQuery.toString(), new Object[]{acceptCode}, new int[]{Types.INTEGER}, ROW_MAPPER_EXCHANGE).stream().findFirst();
+
+        Optional<Exchange> ex = jdbcTemplate.query(sqlQuery.toString(), new Object[]{acceptCode}, new int[]{Types.INTEGER}, ROW_MAPPER_EXCHANGE).stream().findFirst();
+        if (ex.isEmpty()) {
+            String errorMessage = messageSource.getMessage("error.exchangeNotFound", new Object[]{acceptCode}, LocaleContextHolder.getLocale());
+            throw new ExchangeNotFoundException(errorMessage);
+        }
+        return ex.get();
     }
 
     @Override
-    public Optional<Exchange> getExchangeById(long exchangeId) {
-    	
+    public Exchange getExchangeById(long exchangeId) {
         StringBuilder sqlQuery = new StringBuilder(baseQuery);
         sqlQuery.append(" WHERE exchangeId = ? ");
         sqlQuery.append(groupQuery);
-        return jdbcTemplate.query(sqlQuery.toString(), new Object[]{exchangeId},
-                new int[]{Types.BIGINT}, ROW_MAPPER_EXCHANGE).stream().findFirst();
 
+        Optional<Exchange> ex = jdbcTemplate.query(sqlQuery.toString(), new Object[]{exchangeId},
+                new int[]{Types.BIGINT}, ROW_MAPPER_EXCHANGE).stream().findFirst();
+        if(ex.isEmpty()) {
+            String errorMessage = messageSource.getMessage("error.exchangeNotFoundId", new Object[]{exchangeId}, LocaleContextHolder.getLocale());
+            throw new ExchangeNotFoundException(errorMessage);
+        }
+
+        return ex.get();
     }
 
     @Override

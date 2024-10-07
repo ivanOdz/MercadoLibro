@@ -180,7 +180,7 @@ public class UserJdbcDao implements UserDao {
             jdbcTemplate.update("UPDATE users SET password = ? WHERE verificationCode = ?", new Object[]{newPassword, verificationCode},
                     new int[]{Types.VARCHAR, Types.INTEGER});
         } catch (DataIntegrityViolationException e) {
-            String errorMessage = messageSource.getMessage("error.changePassword", new Object[]{e.getStackTrace()}, Locale.getDefault());
+            String errorMessage = messageSource.getMessage("error.changePassword", new Object[]{e.getStackTrace()}, LocaleContextHolder.getLocale());
             throw new PasswordChangeBadRequestException(errorMessage);
         }
     }

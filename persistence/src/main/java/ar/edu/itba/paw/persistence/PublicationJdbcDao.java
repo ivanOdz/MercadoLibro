@@ -78,7 +78,12 @@ public class PublicationJdbcDao implements PublicationDao {
 
     @Override
     public void terminatePublication(long pubId) {
-        jdbcTemplate.update("UPDATE publication SET publicationState = ? WHERE publicationId = ?", PublicationState.TERMINATED.getValue(), pubId);
+        try {
+            jdbcTemplate.update("UPDATE publication SET publicationState = ? WHERE publicationId = ?", PublicationState.TERMINATED.getValue(), pubId);
+        } catch (DataIntegrityViolationException e) {
+            String message = messageSource.getMessage("error.terminatePublicationBadRequest", new Object[]{e.getStackTrace()}, LocaleContextHolder.getLocale());
+            throw new PublicationBadRequestException(message);
+        }
     }
 
     @Override

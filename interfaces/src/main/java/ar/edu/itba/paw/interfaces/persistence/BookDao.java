@@ -19,7 +19,7 @@ public interface BookDao {
 
     void setOwner(long bookId, long userId);
 
-    Optional<Book> getBookById(long bookId);
+    Book getBookById(long bookId);
 
     List<Book> getAllBooksByUser(long userId);
 

@@ -19,7 +19,7 @@ public interface BookService {
 
     void exchangeOwnership(Book b1, Book b2);
 
-    Optional<Book> getBookById(long bookId);
+    Book getBookById(long bookId);
 
     PaginatedResponse<Book, ItemFilterMetadata> getPaginatedBooks(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, int currentPage, long userId, SortType sortType);
 

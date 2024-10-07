@@ -65,7 +65,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Optional<Book> getBookById(long bookId) {
+    public Book getBookById(long bookId) {
         return bookDao.getBookById(bookId);
     }
 

@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.exceptions.BookBadRequestException;
+import ar.edu.itba.paw.interfaces.exceptions.BookNotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.BookDao;
 import ar.edu.itba.paw.interfaces.services.BookStateService;
 import ar.edu.itba.paw.interfaces.services.GenreService;
@@ -8,6 +10,8 @@ import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.core.RowMapper;
@@ -107,11 +111,15 @@ public class BookJdbcDao implements BookDao {
 
     @Override
     public void setOwner(long bookId, long userId) {
-        jdbcTemplate.update("UPDATE book SET ownerId = ? WHERE bookId = ?", userId, bookId);
+        try{
+            jdbcTemplate.update("UPDATE book SET ownerId = ? WHERE bookId = ?", userId, bookId);
+        } catch (DataIntegrityViolationException e) {
+            throw new BookBadRequestException(messageSource.getMessage("error.settingNewOwner", new Object[]{userId, bookId, e.getStackTrace()}, LocaleContextHolder.getLocale()));
+        }
     }
 
     @Override
-    public Optional<Book> getBookById(long bookId) {
+    public Book getBookById(long bookId) {
         String sqlQuery = "SELECT  b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
                 "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, "+
                 "(SELECT STRING_AGG(a.authorName, ', ') " +
@@ -140,8 +148,13 @@ public class BookJdbcDao implements BookDao {
                 "GROUP BY available, b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, bm.dimension, bm.publicationYear, " +
                 "bm.isPocketEdition, bm.isHardcover, p.publicationState, coverId, u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language, e.exchangeState";
 
-        return jdbcTemplate.query(sqlQuery, new Object[]{ ExchangeState.ACCEPTED.getValue(), bookId },
+        Optional<Book> book = jdbcTemplate.query(sqlQuery, new Object[]{ ExchangeState.ACCEPTED.getValue(), bookId },
                 new int[]{ Types.INTEGER, Types.BIGINT }, ROW_MAPPER_BOOK).stream().findFirst();
+
+        if(book.isEmpty()) {
+            throw new BookNotFoundException(messageSource.getMessage("error.bookNotFound", new Object[]{bookId}, LocaleContextHolder.getLocale()));
+        }
+        return book.get();
     }
 
     @Override

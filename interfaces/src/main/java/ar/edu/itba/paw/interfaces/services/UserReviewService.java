@@ -25,5 +25,5 @@ public interface UserReviewService {
 	
 	Rating getUserRatingGiven(long userId);
 	
-	public Boolean isReviewable(long exchangeId, long userId);
+//	public Boolean isReviewable(long exchangeId, long userId);
 }

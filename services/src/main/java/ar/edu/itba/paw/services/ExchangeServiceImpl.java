@@ -35,36 +35,42 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Transactional
     @Override
     public void initializeExchange(long bookId, String location, long offererPubId, User currentUser) {
-    	
-        long userId = bs.getBookById(bookId).get().getOwner().getUserId();
-        
-        if (userId == currentUser.getUserId()) {
-            return;
-        }
-        
+
+        // IMPLEMENT: in bookService
+        // NOTE: this throws a NF exception
+        long userId = bs.getBookById(bookId).getOwner().getUserId();
+
+        // FIXME: user should not be able to exchange with himself by default
+//        if (userId == currentUser.getUserId()) {
+//            return;
+//        }
+
+
+        // NOTE: throws a BR exception
         long requesterPubId = ps.createPublication(bookId, userId, location, PublicationState.OFFERED);
+
         Random random = new Random();
         int acceptCode = Math.abs(random.nextInt());
 
         Date date = new Date();
         Timestamp timestamp = new Timestamp(date.getTime());
-        Optional<Exchange> ex = exchangeDao.createExchange(offererPubId, requesterPubId, acceptCode, timestamp);
+
+        // NOTE: throws a BR exception and a NF exception
+        Exchange ex = exchangeDao.createExchange(offererPubId, requesterPubId, acceptCode, timestamp);
 
         // mail variables setup
         Map<String, Object> variables = new HashMap<>();
-
-        User offerer = ex.get().getOfferer().getBook().getOwner();
-        User requester = ex.get().getRequester().getBook().getOwner();
-
-        Book bookOffered = ex.get().getOfferer().getBook();
-        Book bookRequested = ex.get().getRequester().getBook();
+        User offerer = ex.getOfferer().getBook().getOwner();
+        User requester = ex.getRequester().getBook().getOwner();
+        Book bookOffered = ex.getOfferer().getBook();
+        Book bookRequested = ex.getRequester().getBook();
 
         variables.put("requesterEmail", requester.getMail());
         variables.put("requesterName", requester.getUsername());
         variables.put("requestedPublication", bookRequested.getBookModel().getTitle());
         variables.put("offeredPublication", bookOffered.getBookModel().getTitle());
-        variables.put("validationUrl", webappUrl + "/createexchange?accept_code=" + ex.get().getAcceptCode() + "&state=true");
-        variables.put("rejectionUrl", webappUrl + "/createexchange?accept_code=" + ex.get().getAcceptCode() + "&state=false");
+        variables.put("validationUrl", webappUrl + "/createexchange?accept_code=" + ex.getAcceptCode() + "&state=true");
+        variables.put("rejectionUrl", webappUrl + "/createexchange?accept_code=" + ex.getAcceptCode() + "&state=false");
         variables.put("exchangeUrl", webappUrl + "/offers"); //TODO: verificar el funcionamiento de esto
 
         emailService.sendEmail(offerer.getMail(), variables, "exchangeRequest", "Requesting", offerer.getLanguage());
@@ -74,25 +80,23 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Override
     public String exchange(int acceptCode, boolean state) {
     	
-        Optional<Exchange> ex = Optional.empty();
+        Exchange ex;
         
         if (state)
             ex = exchangeDao.acceptExchange(acceptCode);
         else {
+            ex = exchangeDao.rejectExchange(acceptCode);
+
             Date date = new Date();
             Timestamp timestamp = new Timestamp(date.getTime());
-            ex = exchangeDao.rejectExchange(acceptCode);
             exchangeDao.setEndDate(acceptCode, timestamp);
         }
 
-        if (ex.isEmpty()) {
-            // TODO: EXCEPTIONS
-        }
 
         // --- email variables
         Map<String, Object> variables = new HashMap<>();
-        Book bookOffered = ex.get().getOfferer().getBook();
-        Book bookRequested = ex.get().getRequester().getBook();
+        Book bookOffered = ex.getOfferer().getBook();
+        Book bookRequested = ex.getRequester().getBook();
         User requester = bookRequested.getOwner();
         User offerer = bookOffered.getOwner();
 
@@ -104,66 +108,51 @@ public class ExchangeServiceImpl implements ExchangeService {
         variables.put("offererEmail", offerer.getMail());
         variables.put("exchangeUrl", webappUrl + "/requests");
         variables.put("publicationsUrl", webappUrl);
-        // link para redirigir a la página de exchanges que corresponda para el call-to-action de marcar como confirmado
 
         emailService.sendExchangeEmail(requester.getMail(), variables, state, requester.getLanguage());
 
-        ps.terminatePublication(ex.get().getOfferer());
-        ps.terminatePublication(ex.get().getRequester());
+        ps.terminatePublication(ex.getOfferer());
+        ps.terminatePublication(ex.getRequester());
 
-
-        switch (ex.get().getExchangeState()) {
-            case ExchangeState.ACCEPTED: {
-                return "exchange/accepted";
-            }
-            case ExchangeState.REJECTED: {
-                return "exchange/rejected";
-            }
-            default:
-                return "exchange/invalid";
-        }
+        return switch (ex.getExchangeState()) {
+            case ExchangeState.ACCEPTED -> "exchange/accepted";
+            case ExchangeState.REJECTED -> "exchange/rejected";
+            default -> "exchange/invalid";
+        };
     }
 
     @Transactional
     @Override
     public void cofirmOfferer(int acceptCode) {
-    	
-        Optional<Exchange> ex = exchangeDao.confirmOfferer(acceptCode);
-
-        if (ex.get().isConfirmed()) {
-            Date date = new Date();
-            Timestamp timestamp = new Timestamp(date.getTime());
-            exchangeDao.updateExchangeStatus(acceptCode, ExchangeState.TERMINATED.getValue());
-            exchangeDao.setEndDate(acceptCode, timestamp);
-            bs.exchangeOwnership(ex.get().getOfferer().getBook(), ex.get().getRequester().getBook());
-        }
+        Exchange ex = exchangeDao.confirmOfferer(acceptCode);
+        exchangeCompleted(acceptCode, ex);
     }
 
     @Transactional
     @Override
     public void cofirmRequester(int acceptCode) {
-    	
-        Optional<Exchange> ex = exchangeDao.confirmRequester(acceptCode);
+        Exchange ex = exchangeDao.confirmRequester(acceptCode);
+        exchangeCompleted(acceptCode, ex);
+    }
 
-        if (ex.get().isConfirmed()) {
-        	
+    private void exchangeCompleted(int acceptCode, Exchange ex) {
+        if (ex.isConfirmed()) {
+            exchangeDao.updateExchangeStatus(acceptCode, ExchangeState.TERMINATED.getValue());
+            bs.exchangeOwnership(ex.getOfferer().getBook(), ex.getRequester().getBook());
+
             Date date = new Date();
             Timestamp timestamp = new Timestamp(date.getTime());
-            exchangeDao.updateExchangeStatus(acceptCode, ExchangeState.TERMINATED.getValue());
             exchangeDao.setEndDate(acceptCode, timestamp);
-            bs.exchangeOwnership(ex.get().getOfferer().getBook(), ex.get().getRequester().getBook());
         }
     }
 
     @Override
-    public Optional<Exchange> getExchangeByAcceptCode(int acceptCode) {
-    	
+    public Exchange getExchangeByAcceptCode(int acceptCode) {
         return exchangeDao.findByAcceptCode(acceptCode);
     }
     
     @Override
-    public Optional<Exchange> getExchangeById(long exchangeId) {
-    	
+    public Exchange getExchangeById(long exchangeId) {
     	return exchangeDao.getExchangeById(exchangeId);
     }
 

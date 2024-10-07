@@ -36,10 +36,6 @@ public class Exchange {
         return state;
     }
 
-    public boolean isReviewable() {
-        return isReviewable;
-    }
-
     public boolean getIsReviewable() {
         return isReviewable;
     }

@@ -133,10 +133,12 @@ public class BookController {
             return new ModelAndView("redirect:/400");
         }
 
-
-        // IMPLEMENT: create publication in service + dao
-
-        publicationService.createPublicationIfNeeded(bookForm.isPublish(), bookId.longValue(), user.getUserId(), bookForm.getLocation(), PublicationState.CURRENT);
+        try {
+            publicationService.createPublicationIfNeeded(bookForm.isPublish(), bookId.longValue(), user.getUserId(), bookForm.getLocation(), PublicationState.CURRENT);
+        } catch (ApplicationRuntimeException e) {
+            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
+            return new ModelAndView("redirect:/400");
+        }
 
         return new ModelAndView("redirect:/book");
     }
@@ -171,7 +173,7 @@ public class BookController {
         }
         User user = loggedUserAdvice.getLoggedUser();
 
-        // ASK: para que sirve -> si es útil hacer las excepciones
+        // FIXME
 
         Number bookId;
         try{

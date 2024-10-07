@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.exceptions.UserReviewBadRequestException;
 import ar.edu.itba.paw.interfaces.persistence.UserReviewDao;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.BookState;
@@ -10,6 +11,11 @@ import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.models.utils.Rating;
 
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
+import org.springframework.beans.PropertyBatchUpdateException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -19,10 +25,7 @@ import javax.sql.DataSource;
 
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Repository
 public class UserReviewJdbcDao implements UserReviewDao {
@@ -30,9 +33,11 @@ public class UserReviewJdbcDao implements UserReviewDao {
 	private final JdbcTemplate jdbcTemplate;
 	
 	public UserReviewJdbcDao(final DataSource ds) {
-		
 	    jdbcTemplate = new JdbcTemplate(ds);
 	}
+
+	@Autowired
+	private MessageSource messageSource;
 	
 	String baseQueryReview = "SELECT userReview.userReviewId AS userReviewId, userReview.reviewDescription AS userReviewDescription, userReview.reviewDate AS userReviewDate, userReview.userReviewRating AS userReviewRating\r\n"
 							+ ", exchange.exchangeId AS exchangeId, exchange.exchangeStartDate, exchange.exchangeEndDate, exchange.offererPubId AS exchangeOffererPubId, exchange.exchangeState AS exchangeState, exchange.acceptCode AS exchangeAcceptCode, exchange.offererReceivedBook AS exchangeOffererReceivedBook, exchange.requesterReceivedBook AS exchangeRequesterReceivedBook\r\n"
@@ -281,18 +286,22 @@ public class UserReviewJdbcDao implements UserReviewDao {
 
     @Override
     public Boolean createUserReview(long exchangeId, long userId, long userSubjectId, String description, int rating) {
-    	
-		String sqlUpdate = "INSERT INTO user_review (exchangeId, reviewerId, subjectId, reviewDescription, reviewDate, userReviewRating) VALUES (?, ?, ?, ?, ?, ?)";
+		int rowsAffected;
+		try {
+			String sqlUpdate = "INSERT INTO user_review (exchangeId, reviewerId, subjectId, reviewDescription, reviewDate, userReviewRating) VALUES (?, ?, ?, ?, ?, ?)";
 
-		int rowsAffected = jdbcTemplate.update(	sqlUpdate, 
-												exchangeId,
-												userId,
-												userSubjectId,
-												description,
-												new Timestamp(new Date().getTime()),
-												rating
-											);
-	
+			rowsAffected = jdbcTemplate.update(	sqlUpdate,
+					exchangeId,
+					userId,
+					userSubjectId,
+					description,
+					new Timestamp(new Date().getTime()),
+					rating
+			);
+		} catch (DataIntegrityViolationException e) {
+			throw new UserReviewBadRequestException(messageSource.getMessage("error.createUserReview", new Object[]{e.getStackTrace()}, LocaleContextHolder.getLocale()));
+		}
+
 		return rowsAffected > 0;
     }
 
@@ -310,14 +319,15 @@ public class UserReviewJdbcDao implements UserReviewDao {
 
     @Override
     public UserReview getUserReviewGiven(long exchangeId, long userId) {
-    	
+
         StringBuilder sqlQuery = new StringBuilder(baseQueryReview);
 
         sqlQuery.append(" AND exchange.exchangeId = ? AND reviewer.userId = ? LIMIT 1");
-        
-        List<UserReview> userReviewGiven = jdbcTemplate.query(sqlQuery.toString(), new Object[] { exchangeId, userId }, new int[] { Types.BIGINT, Types.BIGINT }, ROW_MAPPER_USER_REVIEW);
-        
-        return userReviewGiven.isEmpty() ? null : userReviewGiven.getFirst();
+
+        Optional<UserReview> userReviewGiven = jdbcTemplate.query(sqlQuery.toString(), new Object[] { exchangeId, userId }, new int[] { Types.BIGINT, Types.BIGINT }, ROW_MAPPER_USER_REVIEW).stream().findFirst();
+
+		// intended to return null if no element is present
+        return userReviewGiven.get();
     }
     
     @Override
