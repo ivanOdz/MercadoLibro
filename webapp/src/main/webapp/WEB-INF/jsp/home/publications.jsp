@@ -141,7 +141,7 @@
                             <spring:message code="${sortKey}" />
                             <span uk-drop-parent-icon></span>
                         </button>
-                        <div uk-drop="mode: click">
+                        <div class="uk-navbar-dropdown uk-drop" uk-drop="mode: click">
                             <ul class="uk-nav uk-dropdown-nav">
                                 <li>
                                     <form action="<c:url value='' />" method="get">
