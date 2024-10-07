@@ -199,23 +199,25 @@
                                 </div>
 
                                 <div class="row-container" style="width:15rem; padding-left:10rem;">
-                                    <div class="star-rating">
-                                        <p class="small-gray-text custom-link" style="display: inline;">
+                                    <div class="star-rating uk-flex uk-flex-middle">
+                                        <p class="small-gray-text custom-link" style="display: inline; margin-bottom: 0; margin-right:1rem;">
                                             <c:out value="${card.book.bookModel.rating.rating}"/>
                                         </p>
-                                        <c:forEach var="i" begin="1" end="5">
+                                                               <c:forEach var="i" begin="1" end="5">
                                             <c:choose>
                                                 <c:when test="${i <= card.book.bookModel.rating.rating}">
-                                                    <!-- Estrella llena -->
-                                                    <span uk-icon="icon: star; ratio: 1.5" style="color: gold; display: inline;"></span>
+                                                    <i class="material-icons yellow-text">star</i>
+                                                </c:when>
+                                                <c:when test="${i - 0.5 <= card.book.bookModel.rating.rating && card.book.bookModel.rating.rating < i}">
+                                                    <i class="material-icons yellow-text">star_half</i>
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <!-- Estrella vacía -->
-                                                    <span uk-icon="icon: star; ratio: 1.5" style="color: lightgray; display: inline;"></span>
+                                                    <i class="material-icons grey-text">star_border</i>
                                                 </c:otherwise>
                                             </c:choose>
                                         </c:forEach>
-                                        <p class="small-gray-text custom-link" style="display: inline;">(<c:out
+
+                                        <p class="small-gray-text custom-link" style="display: inline; margin-left:1rem;">(<c:out
                                                 value="${card.book.bookModel.rating.ratingCount}"/>)
                                         </p>
                                     </div>
