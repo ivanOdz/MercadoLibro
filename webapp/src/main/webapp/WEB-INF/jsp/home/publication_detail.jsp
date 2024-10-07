@@ -49,44 +49,39 @@
 
 
 <div class="uk-background-muted">
-    <div class="uk-container" style="margin-top: 1%">
-        <a class="uk-button uk-button-text" href="${pageContext.request.contextPath}/">
-            <span uk-icon="icon:  chevron-left"></span>
-            <spring:message code="add.book.return_home"/>
-        </a>
-    </div>
-    <div class="uk-containter" style="margin-bottom: 2%;">
-        <div class="row-container">
-
-            <!-- Images -->
-            <div class="column-container" style="margin-left: 2%; margin-top: 2%; max-width: 20%;">
-                <c:choose>
-                    <c:when test="${not empty publication.book.images}">
-                        <div class="column-container">
+    <div class="uk-container" style="max-width: 90%">
+        <div class="uk-container uk-card uk-card-default"
+             style="align-content: center; border-radius: 1%; padding: 5%; justify-content: center; margin-top:5%; margin-bottom:5%; max-width:125%">
+            <div style="margin-bottom: 5%">
+                <a class="uk-button uk-button-text" href="${pageContext.request.contextPath}/">
+                    <span uk-icon="icon:  chevron-left"></span>
+                    <spring:message code="add.book.return_home"/>
+                </a>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr);">
+                <div style="grid-column: 1 / 2; display: grid;justify-content: center">
+                    <c:choose>
+                        <c:when test="${not empty publication.book.images}">
                             <img id="currentImage"
                                  src="<c:url value='${pageContext.request.contextPath}/images/${publication.book.images[0]}'/>"
                                  alt="Book Image"/>
-                            <div class="row-container">
-                                <button id="prevBtn" class="slider-button" style="margin-left: 30%; margin-right: 5%;">
+                            <div class="uk-button-group" style="justify-content:center">
+                                <button id="prevBtn" class="slider-button">
                                     <span uk-icon="icon: chevron-left"></span>
                                 </button>
                                 <button id="nextBtn" class="slider-button">
                                     <span uk-icon="icon: chevron-right"></span>
                                 </button>
                             </div>
-                        </div>
-                    </c:when>
-                    <c:otherwise>
-                        <img class="book-image" src="${pageContext.request.contextPath}/images/book.jpg" width="300"
-                             height="400" alt="book"/>
-                    </c:otherwise>
-                </c:choose>
-            </div>
-
-
-            <div class="column-container" style="margin-top: 2%; margin-left: 7%;">
-                <div class="row-container">
-                    <div class="column-container">
+                        </c:when>
+                        <c:otherwise>
+                            <img class="book-image" src="${pageContext.request.contextPath}/images/book.jpg" width="300"
+                                 height="400" alt="book"/>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+                <div>
+                    <div>
                         <!-- Title -->
                         <div>
                             <h1 class="uk-text-large uk-text-bold" style="font-size: 36px;">
@@ -103,7 +98,7 @@
                     </div>
 
 
-                    <div class="column-container" style="margin-top: 2%; margin-left: 35%;">
+                    <div style="margin-top: 2%;">
                         <!-- Genre -->
                         <div>
                             <p class="small-gray-text custom-link">
@@ -116,7 +111,7 @@
                         </div>
 
                         <!-- Ranking -->
-                        <div class="row-container">
+                        <div>
                             <div style="margin-right: 5px;">
                                 <p class="small-gray-text custom-link">
                                     <c:out value="${publication.book.bookModel.rating.rating}"/>
@@ -143,158 +138,158 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
+            <div style="display: grid; justify-content: center; grid-template-columns: repeat(4, 1fr);">
+                <hr style="grid-column: 2 / 4; margin: 5%"/>
+            </div>
 
-                <!-- Line -->
-                <hr style="width: 55lh;"/>
+            <div style="display: grid; justify-content: center; grid-template-columns: repeat(7, 1fr);">
 
-                <!-- Description -->
-                <div style="max-width: 55lh; text-align: justify;">
+                <div style="grid-column: 2 / 5">
                     <p>
                         <c:out value="${publication.book.bookModel.description}"/>
                     </p>
                 </div>
-
-                <!-- Line -->
-                <hr style="width: 55lh;"/>
+            </div>
 
 
-                <div>
-                    <div class="row-container"
-                         style="margin-left: 50px; align-items: center; justify-content: space-between;">
-
-                        <!-- Book State -->
-                        <div class="column-container" style="place-items: center; display: flex;">
-                            <div>
-                                <p style="text-align: center"><spring:message code="publication.details.bookState"/></p>
-                                <i class="material-icons" style="margin-left: 40px;">book</i>
-                                <div>
-                                    <c:choose>
-                                        <c:when test="${publication.book.bookState == 'NEW'}">
-                                            <div style="margin-left: 20px;">
-                                                <strong><spring:message code="bookState.new"/></strong>
-                                            </div>
-                                        </c:when>
-                                        <c:when test="${publication.book.bookState == 'LIKE_NEW'}">
-                                            <div style="margin-left: 20px;">
-                                                <strong><spring:message code="bookState.like.new"/></strong>
-                                            </div>
-                                        </c:when>
-                                        <c:when test="${publication.book.bookState == 'VERY_GOOD'}">
-                                            <div style="margin-left: 20px;">
-                                                <strong><spring:message code="bookState.very.good"/></strong>
-                                            </div>
-                                        </c:when>
-                                        <c:when test="${publication.book.bookState == 'GOOD'}">
-                                            <div style="margin-left: 20px;">
-                                                <strong><spring:message code="bookState.good"/></strong>
-                                            </div>
-                                        </c:when>
-                                        <c:when test="${publication.book.bookState == 'ACCEPTABLE'}">
-                                            <div style="margin-left: 20px;">
-                                                <strong><spring:message code="bookState.acceptable"/></strong>
-                                            </div>
-                                        </c:when>
-                                        <c:when test="${publication.book.bookState == 'WORN'}">
-                                            <div style="margin-left: 20px;">
-                                                <strong><spring:message code="bookState.worn"/></strong>
-                                            </div>
-                                        </c:when>
-                                    </c:choose>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Location -->
-                        <div class="column-container" style="place-items: center; display: flex;">
-                            <div>
-                                <p style="text-align: center"><spring:message code="publication.details.location"/></p>
-                                <span uk-icon="icon: location" style="margin-left: 30px;"></span>
-                                <p style="text-align: center">
-                                    <strong>
-                                        <c:out value="${publication.location.locationString}"/>
-                                    </strong>
-                                </p>
-                            </div>
-                        </div>
-
-                        <!-- Publication date -->
-                        <div class="column-container" style="place-items: center; display: flex;">
-                            <div>
-                                <p style="text-align: center"><spring:message code="publication.details.date"/></p>
-                                <i class="material-icons" style="margin-left: 65px;">history</i>
-                                <p style="text-align: center">
-                                    <strong>${publication.publicationDatetime}</strong></p>
-                            </div>
-                        </div>
-
-                        <!-- Editorial -->
-                        <div class="column-container" style="place-items: center; display: flex;">
-                            <div>
-                                <p style="text-align: center"><spring:message code="publication.details.editorial"/></p>
-                                <i class="material-icons" style="margin-right: 90px;">file-edit</i>
-                                <p style="text-align: center"><strong>
-                                    <c:out value="${publication.book.bookModel.editorial}"/></strong></p>
-                            </div>
+            <div style="display: grid; justify-content: center; grid-template-columns: repeat(4, 1fr);">
+                <hr style="grid-column: 2 / 4; margin: 5%"/>
+            </div>
 
 
+            <div style="display: grid; justify-content: center; grid-template-columns: repeat(4, 1fr);">
+                <!-- Book State -->
+                <div class="column-container" style="place-items: center; display: flex;">
+                    <div>
+                        <p style="text-align: center"><spring:message code="publication.details.bookState"/></p>
+                        <i class="material-icons" style="margin-left: 40px;">book</i>
+                        <div>
+                            <c:choose>
+                                <c:when test="${publication.book.bookState == 'NEW'}">
+                                    <div style="margin-left: 20px;">
+                                        <strong><spring:message code="bookState.new"/></strong>
+                                    </div>
+                                </c:when>
+                                <c:when test="${publication.book.bookState == 'LIKE_NEW'}">
+                                    <div style="margin-left: 20px;">
+                                        <strong><spring:message code="bookState.like.new"/></strong>
+                                    </div>
+                                </c:when>
+                                <c:when test="${publication.book.bookState == 'VERY_GOOD'}">
+                                    <div style="margin-left: 20px;">
+                                        <strong><spring:message code="bookState.very.good"/></strong>
+                                    </div>
+                                </c:when>
+                                <c:when test="${publication.book.bookState == 'GOOD'}">
+                                    <div style="margin-left: 20px;">
+                                        <strong><spring:message code="bookState.good"/></strong>
+                                    </div>
+                                </c:when>
+                                <c:when test="${publication.book.bookState == 'ACCEPTABLE'}">
+                                    <div style="margin-left: 20px;">
+                                        <strong><spring:message code="bookState.acceptable"/></strong>
+                                    </div>
+                                </c:when>
+                                <c:when test="${publication.book.bookState == 'WORN'}">
+                                    <div style="margin-left: 20px;">
+                                        <strong><spring:message code="bookState.worn"/></strong>
+                                    </div>
+                                </c:when>
+                            </c:choose>
                         </div>
                     </div>
                 </div>
+
+                <!-- Location -->
+                <div class="column-container" style="place-items: center; display: flex;">
+                    <div>
+                        <p style="text-align: center"><spring:message code="publication.details.location"/></p>
+                        <span uk-icon="icon: location" style="margin-left: 30px;"></span>
+                        <p style="text-align: center">
+                            <strong>
+                                <c:out value="${publication.location.locationString}"/>
+                            </strong>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Publication date -->
+                <div class="column-container" style="place-items: center; display: flex;">
+                    <div>
+                        <p style="text-align: center"><spring:message code="publication.details.date"/></p>
+                        <i class="material-icons" style="margin-left: 65px;">history</i>
+                        <p style="text-align: center">
+                            <strong>${publication.publicationDatetime}</strong></p>
+                    </div>
+                </div>
+
+                <!-- Editorial -->
+                <div class="column-container" style="place-items: center; display: flex;">
+                    <div>
+                        <p style="text-align: center"><spring:message code="publication.details.editorial"/></p>
+                        <i class="material-icons" style="margin-right: 90px;">file-edit</i>
+                        <p style="text-align: center"><strong>
+                            <c:out value="${publication.book.bookModel.editorial}"/></strong></p>
+                    </div>
+
+
+                </div>
+            </div>
+
+
+            <div style="display: grid; justify-content: center; grid-template-columns: repeat(4, 1fr);">
+                <hr style="grid-column: 2 / 4; margin: 5%"/>
+            </div>
+
+            <div style="display: grid; justify-content: center; grid-template-columns: repeat(3, 1fr);">
+
+                <c:if test="${user.userId != publication.book.owner.userId}">
+                        <div style="grid-column: span 1">
+                            <p class="uk-text-medium"
+                               style="font-size: 25px; text-align: center; max-width: 9lh; margin-left: 1lh;">
+                                <spring:message code="exchange.description"/></p>
+                        </div>
+                        <div style="grid-column: span 1">
+                            <p class="uk-text-medium"
+                               style="font-size: 25px; max-width: 9lh; text-align: center; margin-left: 2lh;">
+                                <spring:message code="exchange.description2"/></p>
+                        </div>
+                        <div style="grid-column: span 1">
+                                <%-- if they dont have books than open the modal --%>
+                            <c:if test="${empty availableBooks}">
+                                <a class="uk-button uk-button-primary" uk-toggle="target: #exchange-modal"
+                                   style="margin-left: 3lh;">
+                                    <spring:message code="add.exchange.submit"/>
+                                </a>
+                            </c:if>
+                            <c:if test="${not empty availableBooks}">
+                                <a style="margin: 50%" class="uk-button uk-button-primary"
+                                   href="${pageContext.request.contextPath}/start_exchange?publication_id=${publication.publicationId}">
+                                    <spring:message code="add.exchange.submit"/>
+                                </a>
+                            </c:if>
+                        </div>
+
+                        <div id="exchange-modal" uk-modal>
+                            <div class="uk-modal-dialog uk-modal-body">
+                                <button class="uk-modal-close-default" type="button" uk-close></button>
+
+                                <label class="form-group" style="margin-bottom: 2%;">
+                                    <spring:message code="book.set.book"/>
+                                </label>
+                                <a class="uk-button uk-button-primary"
+                                   href="${pageContext.request.contextPath}/book/book_models">
+                                    <spring:message code="add.book.missing"/>
+                                </a>
+                            </div>
+                        </div>
+                </c:if>
             </div>
 
         </div>
-
-        <c:if test="${user.userId != publication.book.owner.userId}">
-            <!-- Line -->
-            <div style="margin-top: 2%; margin-left: 10%;">
-                <hr style="width: 50lh;"/>
-            </div>
-
-            <div class="row-container" style="margin-left: 2lh; place-items: center; display: flex;">
-                <div>
-                    <p class="uk-text-medium"
-                       style="font-size: 25px; text-align: center; max-width: 9lh; margin-left: 1lh;">
-                        <spring:message code="exchange.description"/></p>
-                </div>
-                <div>
-                    <p class="uk-text-medium"
-                       style="font-size: 25px; max-width: 9lh; text-align: center; margin-left: 2lh;">
-                        <spring:message code="exchange.description2"/></p>
-                </div>
-                <div>
-                        <%-- if they dont have books than open the modal --%>
-                    <c:if test="${empty availableBooks}">
-                        <a class="uk-button uk-button-primary" uk-toggle="target: #exchange-modal"
-                           style="margin-left: 3lh;">
-                            <spring:message code="add.exchange.submit"/>
-                        </a>
-                    </c:if>
-                    <c:if test="${not empty availableBooks}">
-                        <a style="margin: 50%" class="uk-button uk-button-primary"
-                           href="${pageContext.request.contextPath}/start_exchange?publication_id=${publication.publicationId}">
-                            <spring:message code="add.exchange.submit"/>
-                        </a>
-                    </c:if>
-                </div>
-
-                <div id="exchange-modal" uk-modal>
-                    <div class="uk-modal-dialog uk-modal-body">
-                        <button class="uk-modal-close-default" type="button" uk-close></button>
-
-                        <label class="form-group" style="margin-bottom: 2%;">
-                            <spring:message code="book.set.book"/>
-                        </label>
-                        <a class="uk-button uk-button-primary"
-                           href="${pageContext.request.contextPath}/book/book_models">
-                            <spring:message code="add.book.missing"/>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </c:if>
     </div>
-</div>
 </div>
 
 <script>
