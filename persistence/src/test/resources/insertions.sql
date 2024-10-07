@@ -262,4 +262,26 @@
 		FROM book_model AS bookModel
 		JOIN users ON mail = 'tscheffer@itba.edu.ar'
 		WHERE isbn = '9788491050568' AND EXISTS (SELECT 1 FROM book WHERE bookModelId = bookModel.bookModelId);
+
+-- PUBLICACIONES -------------------------------------------------------------------------------------------------------------
+
+-- De ivan --
+
+-- 1° -- La ciudad y los perros
+        
+	INSERT INTO publication (bookId, userId, publicationState, publicationDatetime, locationId)
+		SELECT book.bookId, owner.userId, 1, '2024-09-15 10:00:00', locationId
+		FROM book AS book JOIN users AS owner ON mail LIKE 'modzomek@itba.edu.ar'
+			JOIN location ON locationString LIKE 'Zona Sur'
+			WHERE book.bookModelId = (SELECT bookModelId FROM book_model WHERE isbn = '9788445002132')
+			AND NOT EXISTS (SELECT 1 FROM publication publication WHERE publication.bookId = book.bookId AND publication.userId = owner.userId);
+
+-- 2° -- Patria
+			
+	INSERT INTO publication (bookId, userId, publicationState, publicationDatetime, locationId)
+		SELECT book.bookId, owner.userId, 1, '2024-09-15 12:05:00', locationId
+		FROM book AS book JOIN users AS owner ON mail LIKE 'modzomek@itba.edu.ar'
+			JOIN location ON locationString LIKE 'Zona Sur'
+			WHERE book.bookModelId = (SELECT bookModelId FROM book_model WHERE isbn = '9788423353248')
+			AND NOT EXISTS (SELECT 1 FROM publication publication WHERE publication.bookId = book.bookId AND publication.userId = owner.userId);
         
