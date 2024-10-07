@@ -20,4 +20,4 @@ public interface BookModelDao {
     PaginatedResponse<BookModel, BookModelMetadata> getPaginatedBookModels(String search, boolean isGenreFilterActive, Genre genreFilter, int currentPage, SortType sortType);
 
     List<GenreWrapper> getGenreQtyByBookModel(String search);
-    }
+}

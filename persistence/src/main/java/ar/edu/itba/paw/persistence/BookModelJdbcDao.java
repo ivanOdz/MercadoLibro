@@ -5,7 +5,6 @@ import ar.edu.itba.paw.interfaces.exceptions.BookAuthorBadRequestException;
 import ar.edu.itba.paw.interfaces.exceptions.BookModelBadRequestException;
 import ar.edu.itba.paw.interfaces.exceptions.BookModelNotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.BookModelDao;
-import ar.edu.itba.paw.interfaces.services.GenreService;
 import ar.edu.itba.paw.models.BookModel;
 import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.utils.*;
@@ -33,8 +32,6 @@ public class BookModelJdbcDao implements BookModelDao {
     private final SimpleJdbcInsert jdbcInsertAuthor;
     private final SimpleJdbcInsert jdbcInsertBookAuthor;
 
-    private final GenreService genreService;
-
     @Autowired
     private MessageSource messageSource;
 
@@ -60,9 +57,8 @@ public class BookModelJdbcDao implements BookModelDao {
     );
 
     @Autowired
-    public BookModelJdbcDao(final DataSource ds, GenreService genreService) {
+    public BookModelJdbcDao(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
-        this.genreService = genreService;
         jdbcInsertBookModel = new SimpleJdbcInsert(jdbcTemplate)
                 .usingGeneratedKeyColumns("bookmodelid")
                 .withTableName("book_model");

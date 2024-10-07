@@ -3,8 +3,6 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.exceptions.PublicationBadRequestException;
 import ar.edu.itba.paw.interfaces.exceptions.PublicationNotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.PublicationDao;
-import ar.edu.itba.paw.interfaces.services.BookStateService;
-import ar.edu.itba.paw.interfaces.services.GenreService;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
@@ -31,9 +29,6 @@ public class PublicationJdbcDao implements PublicationDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    private final GenreService genreService;
-    private final BookStateService bookStateService;
-
     @Autowired
     private MessageSource messageSource;
 
@@ -48,10 +43,8 @@ public class PublicationJdbcDao implements PublicationDao {
             };
 
     @Autowired
-    public PublicationJdbcDao(final DataSource ds, GenreService genreService, BookStateService bookStateService) {
+    public PublicationJdbcDao(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
-        this.genreService = genreService;
-        this.bookStateService = bookStateService;
         jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .usingGeneratedKeyColumns("publicationid")
                 .withTableName("publication");
