@@ -25,7 +25,10 @@ public class TestConfig {
 	
 	@Value("classpath:schema.sql")
 	private Resource schemaSql;
-
+	
+	@Value("classpath:insertions.sql")
+	private Resource insertionsSql;
+    
 	@Bean
 	public DataSource dataSource() {
 
@@ -56,6 +59,7 @@ public class TestConfig {
 		
 		dbp.addScript(pgSql);
 		dbp.addScript(schemaSql);
+		dbp.addScript(insertionsSql);
 		
 		return dbp;
 	}
