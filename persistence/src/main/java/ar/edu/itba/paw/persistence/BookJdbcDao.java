@@ -18,6 +18,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.sql.SQLException;
 import java.sql.Types;
 
 import static ar.edu.itba.paw.models.utils.Constants.BOOKS_PAGE_SIZE;
@@ -32,6 +33,8 @@ public class BookJdbcDao implements BookDao {
     private final SimpleJdbcInsert jdbcInsertBook;
     private final SimpleJdbcInsert jdbcInsertBookRating;
     private final SimpleJdbcInsert jdbcInsertBookImage;
+    private String aggregationFunctionAuthor = "STRING_AGG";
+    private String aggregationFunctionImages = "ARRAY_AGG";
 
     @Autowired
     private MessageSource messageSource;
@@ -49,12 +52,23 @@ public class BookJdbcDao implements BookDao {
             };
 
     @Autowired
-    public BookJdbcDao(final DataSource ds) {
+    public BookJdbcDao(final DataSource ds) throws SQLException {
 
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsertBook = new SimpleJdbcInsert(jdbcTemplate).usingGeneratedKeyColumns("bookid").withTableName("book");
         jdbcInsertBookRating = new SimpleJdbcInsert(jdbcTemplate).withTableName("book_rating").usingGeneratedKeyColumns("ratingid");
         jdbcInsertBookImage = new SimpleJdbcInsert(jdbcTemplate).withTableName("book_image");
+
+        String databaseProductName = ds.getConnection().getMetaData().getDatabaseProductName();
+
+        if (databaseProductName.equalsIgnoreCase("HSQL Database Engine")) {
+            this.aggregationFunctionAuthor = "GROUP_CONCAT";
+            this.aggregationFunctionImages = "GROUP_CONCAT";
+        }
+        else { // databaseProductName.equalsIgnoreCase("PostgreSQL")
+            this.aggregationFunctionAuthor = "STRING_AGG";
+            this.aggregationFunctionImages = "ARRAY_AGG";
+        }
     }
 
     @Override
@@ -110,17 +124,16 @@ public class BookJdbcDao implements BookDao {
         }
     }
 
-
     @Override
     public Book getBookById(long bookId) {
-        String sqlQuery = "SELECT  b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
+        String sqlQuery = "SELECT b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
                 "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, "+
-                "(SELECT STRING_AGG(a.authorName, ', ') " +
+                "(SELECT " + aggregationFunctionAuthor + "(a.authorName, ', ') " +
                 "FROM book_author ba " +
                 " JOIN author a ON a.authorId = ba.authorId " +
                 " WHERE ba.bookModelId = bm.bookModelId) AS authors, "+
                 "bm.imageId AS coverId, AVG(br.rating) AS rating, (SELECT COUNT(*) FROM book_rating br2 WHERE br2.bookModelId = bm.bookModelId) as ratingCount, " +
-                "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language, ARRAY_AGG(i.imageId ORDER BY bi.imageOrder) AS images, " +
+                "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language, " + aggregationFunctionImages + "(i.imageId ORDER BY bi.imageOrder) AS images, " +
                 "p.publicationState, e.exchangeState, " +  // Checkear esto, no se si hace falta que este en las tuplas que devuelve
                 "CASE " +
                 "WHEN NOT EXISTS (SELECT 1 FROM publication p2 WHERE p2.bookId = b.bookId) THEN TRUE " +
@@ -152,9 +165,9 @@ public class BookJdbcDao implements BookDao {
 
     @Override
     public List<Book> getAllBooksByUser(long userId) {
-        String sqlQuery = "SELECT  b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
+        String sqlQuery = "SELECT b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
                 "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, bm.imageId AS coverId, AVG(br.rating) AS rating, (SELECT COUNT(*) FROM book_rating br2 WHERE br2.bookModelId = bm.bookModelId) as ratingCount, " +
-                "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language, ARRAY_AGG(i.imageId ORDER BY bi.imageOrder) AS images, " +
+                "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language, " + aggregationFunctionImages + "(i.imageId ORDER BY bi.imageOrder) AS images, " +
                 "p.publicationState, e.exchangeState, " +  // Checkear esto, no se si hace falta que este en las tuplas que devuelve
                 "CASE " +
                 "WHEN NOT EXISTS (SELECT 1 FROM publication p2 WHERE p2.bookId = b.bookId) THEN TRUE " +
@@ -185,12 +198,12 @@ public class BookJdbcDao implements BookDao {
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT  b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
                         "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, "+
-                        "(SELECT STRING_AGG(a.authorName, ', ') " +
+                        "(SELECT " + aggregationFunctionAuthor + " (a.authorName, ', ') " +
                         "FROM book_author ba " +
                         " JOIN author a ON a.authorId = ba.authorId " +
                         " WHERE ba.bookModelId = bm.bookModelId) AS authors, "+
                         "bm.imageId AS coverId, AVG(br.rating) AS rating, (SELECT COUNT(*) FROM book_rating br2 WHERE br2.bookModelId = bm.bookModelId) as ratingCount, " +
-                        "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language , ARRAY_AGG(i.imageId ORDER BY bi.imageOrder) AS images, " +
+                        "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language ," + aggregationFunctionImages + "(i.imageId ORDER BY bi.imageOrder) AS images, " +
                         "p.publicationState, e.exchangeState, " +  // Checkear esto, no se si hace falta que este en las tuplas que devuelve
                         "CASE " +
                         "WHEN NOT EXISTS (SELECT 1 FROM publication p2 WHERE p2.bookId = b.bookId) THEN TRUE " +
