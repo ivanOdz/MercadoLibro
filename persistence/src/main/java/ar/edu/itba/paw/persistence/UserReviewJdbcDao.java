@@ -3,12 +3,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.exceptions.UserReviewBadRequestException;
 import ar.edu.itba.paw.interfaces.persistence.UserReviewDao;
 import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.models.utils.BookState;
-import ar.edu.itba.paw.models.utils.ExchangeState;
-import ar.edu.itba.paw.models.utils.Genre;
-import ar.edu.itba.paw.models.utils.Language;
-import ar.edu.itba.paw.models.utils.PublicationState;
-import ar.edu.itba.paw.models.utils.Rating;
+import ar.edu.itba.paw.models.utils.*;
 
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +22,8 @@ import javax.sql.DataSource;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.*;
+
+import static ar.edu.itba.paw.models.utils.Constants.PROFILE_PAGE_SIZE;
 
 @Repository
 public class UserReviewJdbcDao implements UserReviewDao {
@@ -258,19 +255,21 @@ public class UserReviewJdbcDao implements UserReviewDao {
 		(rs, rowNum) -> new Rating(rs.getDouble("averageRating"), rs.getInt("countRating"));
 
     @Override
-    public PaginatedResponse<UserReview, BasicMetadata> getReviewsGivenByUserId(long userId) {
+    public PaginatedResponse<UserReview, BasicMetadata> getReviewsGivenByUserId(long userId, int currentPage) {
 
-        List<UserReview> data = jdbcTemplate.query(baseQueryReview + " AND reviewer.userId = ? ", new Object[] { userId }, new int[] { Types.BIGINT }, ROW_MAPPER_USER_REVIEW);
+		int offset = currentPage * PROFILE_PAGE_SIZE;
+        List<UserReview> data = jdbcTemplate.query(baseQueryReview + " AND reviewer.userId = ? ORDER BY userReviewDate DESC LIMIT ? OFFSET ?", new Object[] { userId, PROFILE_PAGE_SIZE, offset }, new int[] { Types.BIGINT, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_USER_REVIEW);
 
-        return new PaginatedResponse<>(data, new BasicMetadata(0, 0, 0));
+        return new PaginatedResponse<>(data, new BasicMetadata(currentPage, data.size(), PROFILE_PAGE_SIZE));
     }
 
     @Override
-    public PaginatedResponse<UserReview, BasicMetadata> getReviewsEarnedByUserId(long userId) {
+    public PaginatedResponse<UserReview, BasicMetadata> getReviewsEarnedByUserId(long userId, int currentPage) {
 
-        List<UserReview> data = jdbcTemplate.query(baseQueryReview + " AND subject.userId = ?", new Object[] { userId }, new int[] { Types.BIGINT }, ROW_MAPPER_USER_REVIEW);
+		int offset = currentPage * PROFILE_PAGE_SIZE;
+		List<UserReview> data = jdbcTemplate.query(baseQueryReview + " AND subject.userId = ? ORDER BY userReviewDate DESC LIMIT ? OFFSET ?", new Object[] { userId,PROFILE_PAGE_SIZE, offset }, new int[] { Types.BIGINT, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_USER_REVIEW);
 
-        return new PaginatedResponse<>(data, new BasicMetadata(0, 0, 0));
+        return new PaginatedResponse<>(data, new BasicMetadata(currentPage, data.size(), PROFILE_PAGE_SIZE));
     }
 
     @Override
