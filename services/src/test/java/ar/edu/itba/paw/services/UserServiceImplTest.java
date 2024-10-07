@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.UserReviewService;
 
+import org.hamcrest.core.IsNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +18,8 @@ import org.springframework.context.MessageSource;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import static org.hamcrest.CoreMatchers.any;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
@@ -24,7 +27,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.Locale;
 import java.util.Optional;
-
 /*
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceImplTest {	// Falla en el userService.createUser ya que devuelve null, passwordEncoder.encode(PASSWORD) dentro de la implementacion devuelve null
@@ -69,7 +71,8 @@ public class UserServiceImplTest {	// Falla en el userService.createUser ya que 
 		when (passwordEncoder.encode(PASSWORD)).thenReturn(ENCODED_PASS);
 		when (userDao.find(MAIL)).thenReturn(Optional.empty());
 		when (messageSource.getMessage(eq("email.subject.verification"), eq(null), eq(Locale.forLanguageTag(mockUser.getLanguage())))).thenReturn("Mensaje_internacionalizado");
-		when (userDao.createUser(eq(USER_NAME), eq(MAIL), eq(PASSWORD), eq(LANGUAGE), anyInt())).thenReturn(mockUser);
+		when (userDao.createUser(eq(USER_NAME), eq(MAIL), eq(null), eq(LANGUAGE), anyInt())).thenReturn(mockUser);
+		when (userDao.createUser(eq(USER_NAME), eq(MAIL), eq(ENCODED_PASS), eq(LANGUAGE), anyInt())).thenReturn(mockUser);
 		
 		// 2. Ejercita la clase bajo prueba
 		User user = userService.createUser(USER_NAME, MAIL, PASSWORD, LANGUAGE);
@@ -81,7 +84,7 @@ public class UserServiceImplTest {	// Falla en el userService.createUser ya que 
 		assertEquals(ENCODED_PASS, user.getPassword());
 		assertEquals(LANGUAGE, user.getLanguage());
 	}
-	
+
 	@Test(expected = DuplicateKeyException.class)
 	public void testCreateDuplicate() {
 		

@@ -189,7 +189,7 @@ public class ExchangeJdbcDao implements ExchangeDao {
         exchangeData.put("requesterReceivedBook", false);
         exchangeData.put("exchangeStartDate", startDate);
         exchangeData.put("exchangeEndDate", null);
-
+        
         Number id;
         try {
             id = jdbcInsert.executeAndReturnKey(exchangeData);
