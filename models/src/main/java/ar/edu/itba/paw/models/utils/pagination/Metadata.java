@@ -10,7 +10,7 @@ public abstract class Metadata {
     protected Metadata(int currentPage, int totalResults, int pageSize) {
         this.currentPage = currentPage;
         this.totalResults = totalResults;
-        this.maxPage = (int) Math.ceil((double) totalResults/ pageSize) - 1;
+        this.maxPage = Math.max((int) Math.ceil((double) totalResults / pageSize) - 1, 0);
     }
 
     public int getCurrentPage() {

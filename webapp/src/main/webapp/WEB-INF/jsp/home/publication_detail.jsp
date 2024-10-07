@@ -245,57 +245,59 @@
 
         </div>
 
-
-        <!-- Line -->
-        <div style="margin-top: 2%; margin-left: 10%;">
-            <hr style="width: 50lh;"/>
-        </div>
-
-        <div class="row-container" style="margin-left: 2lh; place-items: center; display: flex;">
-            <div>
-                <p class="uk-text-medium"
-                   style="font-size: 25px; text-align: center; max-width: 9lh; margin-left: 1lh;">
-                    <spring:message code="exchange.description"/></p>
+        <c:if test="${user.userId != publication.book.owner.userId}">
+            <!-- Line -->
+            <div style="margin-top: 2%; margin-left: 10%;">
+                <hr style="width: 50lh;"/>
             </div>
-            <div>
-                <p class="uk-text-medium"
-                   style="font-size: 25px; max-width: 9lh; text-align: center; margin-left: 2lh;">
-                    <spring:message code="exchange.description2"/></p>
-            </div>
-            <div>
-                <%-- if they dont have books than open the modal --%>
-                <c:if test="${empty availableBooks}">
-                    <button class="uk-button uk-button-primary" uk-toggle="target: #exchange-modal"
-                            style="margin-left: 3lh;">
-                        <spring:message code="add.exchange.submit"/>
-                    </button>
-                </c:if>
-                <c:if test="${not empty availableBooks}">
-                    <button type="submit" class="uk-button uk-button-primary" style="margin-left: 3lh;">
-                        <a class="button-text" href="${pageContext.request.contextPath}/start_exchange?publication_id=${publication.publicationId}">
+
+            <div class="row-container" style="margin-left: 2lh; place-items: center; display: flex;">
+                <div>
+                    <p class="uk-text-medium"
+                       style="font-size: 25px; text-align: center; max-width: 9lh; margin-left: 1lh;">
+                        <spring:message code="exchange.description"/></p>
+                </div>
+                <div>
+                    <p class="uk-text-medium"
+                       style="font-size: 25px; max-width: 9lh; text-align: center; margin-left: 2lh;">
+                        <spring:message code="exchange.description2"/></p>
+                </div>
+                <div>
+                        <%-- if they dont have books than open the modal --%>
+                    <c:if test="${empty availableBooks}">
+                        <button class="uk-button uk-button-primary" uk-toggle="target: #exchange-modal"
+                                style="margin-left: 3lh;">
                             <spring:message code="add.exchange.submit"/>
-                        </a>
-                    </button>
-                </c:if>
-            </div>
+                        </button>
+                    </c:if>
+                    <c:if test="${not empty availableBooks}">
+                        <button type="submit" class="uk-button uk-button-primary" style="margin-left: 3lh;">
+                            <a class="button-text"
+                               href="${pageContext.request.contextPath}/start_exchange?publication_id=${publication.publicationId}">
+                                <spring:message code="add.exchange.submit"/>
+                            </a>
+                        </button>
+                    </c:if>
+                </div>
 
-            <div id="exchange-modal" uk-modal>
-                <div class="uk-modal-dialog uk-modal-body">
-                    <button class="uk-modal-close-default" type="button" uk-close></button>
+                <div id="exchange-modal" uk-modal>
+                    <div class="uk-modal-dialog uk-modal-body">
+                        <button class="uk-modal-close-default" type="button" uk-close></button>
 
-                    <label class="form-group" style="margin-bottom: 2%;">
-                        <spring:message code="book.set.book"/>
-                    </label>
+                        <label class="form-group" style="margin-bottom: 2%;">
+                            <spring:message code="book.set.book"/>
+                        </label>
 
-                    <button class="uk-button uk-button-primary">
-                        <a class="button-text" href="${pageContext.request.contextPath}/book/book_models">
-                            <spring:message code="add.book.missing"/>
-                        </a>
-                    </button>
+                        <button class="uk-button uk-button-primary">
+                            <a class="button-text" href="${pageContext.request.contextPath}/book/book_models">
+                                <spring:message code="add.book.missing"/>
+                            </a>
+                        </button>
 
+                    </div>
                 </div>
             </div>
-        </div>
+        </c:if>
     </div>
 </div>
 </div>

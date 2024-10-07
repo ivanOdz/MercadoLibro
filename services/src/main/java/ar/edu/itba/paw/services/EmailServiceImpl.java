@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.services.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -18,6 +20,8 @@ public class EmailServiceImpl implements EmailService {
 
     private final JavaMailSender mailSender;
     private final SpringTemplateEngine templateEngine;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmailServiceImpl.class);
 
     public EmailServiceImpl(final JavaMailSender javaMailSender, final SpringTemplateEngine templateResolver) {
         this.mailSender = javaMailSender;
@@ -43,7 +47,7 @@ public class EmailServiceImpl implements EmailService {
                 helper.setText(html, true);
                 helper.setFrom("mercado.libro.staff@gmail.com");
             } catch (MessagingException e) {
-                e.printStackTrace();
+                LOGGER.error("Error sending email to {}. Stack strace: {} ",receiver, e.getStackTrace());
             }
             mailSender.send(message);
     }

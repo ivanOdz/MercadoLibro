@@ -34,20 +34,8 @@ public class ExchangeServiceImpl implements ExchangeService {
 
     @Transactional
     @Override
-    public void initializeExchange(long bookId, String location, long offererPubId, User currentUser) {
-
-        // IMPLEMENT: in bookService
-        // NOTE: this throws a NF exception
-        long userId = bs.getBookById(bookId).getOwner().getUserId();
-
-        // FIXME: user should not be able to exchange with himself by default
-//        if (userId == currentUser.getUserId()) {
-//            return;
-//        }
-
-
-        // NOTE: throws a BR exception
-        long requesterPubId = ps.createPublication(bookId, userId, location, PublicationState.OFFERED);
+    public void initializeExchange(long bookId, String location, long offererPubId) {
+        long requesterPubId = ps.createPublication(bookId,  bs.getBookById(bookId).getOwner().getUserId(), location, PublicationState.OFFERED);
 
         Random random = new Random();
         int acceptCode = Math.abs(random.nextInt());
@@ -55,7 +43,6 @@ public class ExchangeServiceImpl implements ExchangeService {
         Date date = new Date();
         Timestamp timestamp = new Timestamp(date.getTime());
 
-        // NOTE: throws a BR exception and a NF exception
         Exchange ex = exchangeDao.createExchange(offererPubId, requesterPubId, acceptCode, timestamp);
 
         // mail variables setup

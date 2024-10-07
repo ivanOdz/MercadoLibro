@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface ExchangeService {
 
-    void initializeExchange(long bookId, String location, long offererPubId, User currentUser);
+    void initializeExchange(long bookId, String location, long offererPubId);
 
     String exchange(int acceptCode, boolean state);
 

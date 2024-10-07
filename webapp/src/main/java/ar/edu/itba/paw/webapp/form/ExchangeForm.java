@@ -5,20 +5,23 @@ import ar.edu.itba.paw.models.Book;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 public class ExchangeForm {
+    @NotNull
     long bookId;
 
-    @NotBlank
+    @Size(min = 1, max = 255)
     String location;
 
     long publicationId;
 
+    @NotNull
     public long getBookId() {
         return bookId;
     }
 
-    public @NotBlank String getLocation() {
+    public @Size(min = 1, max = 255) String getLocation() {
         return location;
     }
 
@@ -26,11 +29,11 @@ public class ExchangeForm {
         return publicationId;
     }
 
-    public void setBookId(long bookId) {
+    public void setBookId(@NotNull long bookId) {
         this.bookId = bookId;
     }
 
-    public void setLocation(@NotBlank String location) {
+    public void setLocation(@Size(min = 1, max = 255) String location) {
         this.location = location;
     }
 

@@ -23,3 +23,31 @@
     width: 100%;
     margin: 5% 0 2% 2%;
 }
+
+.custom-select label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.custom-select label img {
+    margin-right: 10px;
+}
+
+.custom-select label div {
+    flex-grow: 1;
+}
+
+.custom-select label input {
+    margin-right: 10px;
+}
+
+.uk-draggable {
+    cursor: move;
+    position: relative;
+}
+
+.uk-draggable:active {
+    cursor: grabbing;
+}
+
