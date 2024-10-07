@@ -201,15 +201,13 @@ public class BookModelJdbcDao implements BookModelDao {
         }
         else data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ "%" + search.toLowerCase() + "%", BOOKS_PAGE_SIZE, offset }, new int[]{ Types.VARCHAR, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_BOOK_MODEL);
 
-        List<GenreWrapper> genreWrapperList = getGenreQtyByBook(search);
-
         int totalResults = getTotalResultsByBook(search, isGenreFilterActive, genreFilter);
 
-        return new PaginatedResponse<>(data, new BookModelMetadata(currentPage, BOOKS_PAGE_SIZE, totalResults, search, isGenreFilterActive, genreFilter, sortType, genreWrapperList));
+        return new PaginatedResponse<>(data, new BookModelMetadata(currentPage, BOOKS_PAGE_SIZE, totalResults, search, isGenreFilterActive, genreFilter, sortType, null));
 
     }
 
-    private List<GenreWrapper> getGenreQtyByBook(String search) {
+    public List<GenreWrapper> getGenreQtyByBookModel(String search) {
 
         String sqlQuery = "SELECT bm.genre, COUNT(*) AS genreCount " +
                 "FROM book_model bm " +
@@ -218,23 +216,13 @@ public class BookModelJdbcDao implements BookModelDao {
         List<Object> params = new ArrayList<>();
         params.add("%" + search.toLowerCase() + "%");
 
-        int[] paramTypes;
-        paramTypes = new int[]{Types.VARCHAR};
+        int[] paramTypes = new int[]{Types.VARCHAR};
 
-        Map<Genre, Integer> resultByGenreMap = new HashMap<>();
-        jdbcTemplate.query(sqlQuery, params.toArray(), paramTypes, (rs, rowNum) -> {
+        return jdbcTemplate.query(sqlQuery, params.toArray(), paramTypes, (rs, rowNum) -> {
             int genreValue = rs.getInt("genre");
             Genre genre = Genre.fromInt(genreValue);
-            resultByGenreMap.put(genre, rs.getInt("genreCount"));
-            return null;
+            return new GenreWrapper(genre, rs.getInt("genreCount"));
         });
-
-        List<GenreWrapper> genreWrappers = new ArrayList<>();
-        for (Genre genre : Genre.values()) {
-            genreWrappers.add(new GenreWrapper(genre, genreService.getGenreDisplayName(genre), resultByGenreMap.getOrDefault(genre, 0)));
-        }
-
-        return genreWrappers;
     }
 
     private int getTotalResultsByBook(String search, boolean isGenreFilterActive, Genre genreFilter) {
