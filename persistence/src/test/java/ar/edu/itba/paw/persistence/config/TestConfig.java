@@ -15,8 +15,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
-@ComponentScan({"ar.edu.itba.paw.persistence", "ar.edu.itba.paw.interfaces.services", "ar.edu.itba.paw.services"})
 @Configuration
+@ComponentScan({"ar.edu.itba.paw.persistence", "ar.edu.itba.paw.interfaces.services", "ar.edu.itba.paw.services"})
 @EnableTransactionManagement
 public class TestConfig {
 	
@@ -65,4 +65,5 @@ public class TestConfig {
 		
 		return new JdbcTransactionManager(ds);
 	}
+	
 }

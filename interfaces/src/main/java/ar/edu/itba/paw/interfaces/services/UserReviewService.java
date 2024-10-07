@@ -4,9 +4,7 @@ import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.UserReview;
 import ar.edu.itba.paw.models.utils.Rating;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
-import org.springframework.stereotype.Service;
 
-@Service
 public interface UserReviewService {
 
 	Boolean createUserReview(long exchangeId, long userId, String description, int rating);
