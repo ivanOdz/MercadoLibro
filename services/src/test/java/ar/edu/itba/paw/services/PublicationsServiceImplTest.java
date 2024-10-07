@@ -85,5 +85,4 @@ public class PublicationsServiceImplTest {
 		
 		assertEquals(1, publicationId);
 	}
-}
-*/
+}*/

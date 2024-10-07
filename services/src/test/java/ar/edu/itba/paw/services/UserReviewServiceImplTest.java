@@ -1,13 +1,20 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.models.Book;
+import ar.edu.itba.paw.models.BookModel;
 import ar.edu.itba.paw.models.Exchange;
 import ar.edu.itba.paw.models.Location;
+import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserReview;
+import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.models.utils.ExchangeState;
+import ar.edu.itba.paw.models.utils.Genre;
+import ar.edu.itba.paw.models.utils.Language;
 import ar.edu.itba.paw.models.utils.PublicationState;
+import ar.edu.itba.paw.models.utils.Rating;
+import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import ar.edu.itba.paw.interfaces.persistence.UserReviewDao;
 
 import org.junit.Test;
@@ -17,102 +24,73 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-/*
+
 @RunWith(MockitoJUnitRunner.class)
 public class UserReviewServiceImplTest {
-
-    @Mock
-    private UserReviewDao userReviewDao;
-
-    @InjectMocks
-    private UserReviewServiceImpl userReviewService;
-
+	
+	@Mock
+	private UserReviewDao userReviewDao;
+	
+	@InjectMocks
+	private UserReviewServiceImpl userReviewService;
+	
+	User user1 = new User(1L, "Usuario1", "usuario1@example.com", "encodedPassword", 1L, 1234, true, "es-AR");
+	User user2 = new User(2L, "Usuario2", "usuario2@example.com", "encodedPassword", 2L, 4321, true, "es-AR");
+	User user3 = new User(3L, "Usuario3", "usuario3@example.com", "encodedPassword", 3L, 0123, true, "es-AR");
+	User user4 = new User(4L, "Usuario4", "usuario4@example.com", "encodedPassword", 4L, 3210, true, "es-AR");
+	
+	Genre genre1 = Genre.FICTION;
+	Genre genre2 = Genre.NON_FICTION;
+	Language language = Language.ENGLISH;
+	Rating rating = new Rating(4.5, 8);
+	
+	BookModel bookModel1 = new BookModel(1, "978-3-16-148410-0", "Título1", "Editorial1", "Descripción1", genre1, 1, 300, 350, language, 20, (short) 2021, false, true, "Autor1", null, rating);
+	BookModel bookModel2 = new BookModel(2, "978-1-61-729054-8", "Título2", "Editorial2", "Descripción2", genre2, 2, 250, 250, language, 15, (short) 2020, true, false, "Autor2", null, rating);
+	BookModel bookModel3 = new BookModel(3, "978-0-12-374857-0", "Título3", "Editorial3", "Descripción3", genre1, 1, 400, 400, language, 22, (short) 2019, false, true, "Autor3", null, rating);
+	BookModel bookModel4 = new BookModel(4, "978-0-07-042853-9", "Título4", "Editorial4", "Descripción4", genre2, 3, 350, 300, language, 25, (short) 2022, true, true, "Autor4", null, rating);
+	
+	Book book1 = new Book(1, user1, bookModel1, BookState.NEW, 3, true, List.of(1, 2));
+	Book book2 = new Book(2, user2, bookModel2, BookState.LIKE_NEW, 5, true, List.of(3, 4));
+	Book book3 = new Book(3, user3, bookModel3, BookState.VERY_GOOD, 2, false, List.of(5, 6));
+	Book book4 = new Book(4, user4, bookModel4, BookState.GOOD, 4, true, List.of(7, 8));
+	
+	Location location1 = new Location(1, "Buenos Aires, Argentina");
+	Location location2 = new Location(2, "Córdoba, Argentina");
+	Location location3 = new Location(3, "Mendoza, Argentina");
+	Location location4 = new Location(4, "Rosario, Argentina");
+	
     @Test
     public void testGetReviewsByUserId() {
 
-        long userId = 1;
         long exchangeId = 100;
-        long reviewerId = 2;
-        long subjectId = 200;
+        int userReviewRating = 5;
+        int currentPage = 1;
+        int pageSize = 1;
+        
+        Timestamp reviewDate = new Timestamp(System.currentTimeMillis());
         String reviewDescription = "Buen libro :)";
 
-        Timestamp reviewDate = new Timestamp(System.currentTimeMillis());
-        int userReviewRating = 5;
+        Publication offererPub = new Publication(1, book1, PublicationState.CURRENT, reviewDate, location1);
+        Publication requesterPub = new Publication(2, book2, PublicationState.CURRENT, reviewDate, location2);
+        Exchange exchange = new Exchange(exchangeId, offererPub, requesterPub, ExchangeState.ACCEPTED, 123456, true, true, reviewDate, reviewDate);
 
-        Publication offerer = new Publication(1, new Book(), PublicationState.CURRENT, reviewDate, new Location(subjectId, reviewDescription));
-        Publication requester = new Publication(2, new Book(), PublicationState.CURRENT, reviewDate, new Location(subjectId, reviewDescription));
+        UserReview mockReview1 = new UserReview(1L, user1, user2, exchange, reviewDescription, reviewDate, userReviewRating);
+        
+        List<UserReview> mockReviews = Arrays.asList(mockReview1);
+        BasicMetadata metadata = new BasicMetadata(currentPage, mockReviews.size(), pageSize);
+        PaginatedResponse<UserReview, BasicMetadata> mockResponse = new PaginatedResponse<>(mockReviews, metadata);
 
-        Exchange exchange = new Exchange(exchangeId, offerer, requester, ExchangeState.ACCEPTED, 123456, true, true, reviewDate, reviewDate);
+        when(userReviewDao.getReviewsGivenByUserId(user1.getUserId(), 1)).thenReturn(mockResponse);
 
-        List<UserReview> mockReviews = new ArrayList<>();
+        PaginatedResponse<UserReview, BasicMetadata> response  = userReviewService.getReviewsGivenByUserId(user1.getUserId(), currentPage);
 
-        UserReview mockReview = new UserReview(1, offerer, requester, exchange, reviewDescription, reviewDate, userReviewRating);
-        mockReviews.add(mockReview);
-
-        when(userReviewDao.getReviewsGivenByUserId(userId)).thenReturn(mockReviews);
-
-        List<UserReview> reviews = userReviewService.getReviewsGivenByUserId(userId);
-
-        assertNotNull(reviews);
-        assertEquals(1, reviews.size());
-        assertEquals(reviewDescription, reviews.get(0).getReviewDescription());
-        assertEquals(userReviewRating, reviews.get(0).getReviewRating());
-    }
-
-    @Test
-    public void testGetUserReview() {
-
-        long exchangeId = 1;
-        long reviewerId = 2;
-        long subjectId = 3;
-        String reviewDescription = "Esta bien";
-        Timestamp reviewDate = new Timestamp(System.currentTimeMillis());
-        int userReviewRating = 4;
-
-        Publication offerer = new Publication(1, new Book(), PublicationState.CURRENT, reviewDate, new Location(subjectId, reviewDescription));
-        Publication requester = new Publication(2, new Book(), PublicationState.CURRENT, reviewDate, new Location(subjectId, reviewDescription));
-
-        Exchange exchange = new Exchange(exchangeId, offerer, requester, ExchangeState.ACCEPTED, 123456, true, true, reviewDate, reviewDate);
-        UserReview mockReview = new UserReview(1, offerer, requester, exchange, reviewDescription, reviewDate, userReviewRating);
-
-        when(userReviewDao.getUserReview(exchangeId, reviewerId)).thenReturn(mockReview);
-
-        UserReview review = userReviewService.getUserReview(exchangeId, reviewerId);
-
-        assertNotNull(review);
-        assertEquals(reviewDescription, review.getReviewDescription());
-        assertEquals(userReviewRating, review.getReviewRating());
-    }
-
-    @Test
-    public void testCreateUserReview() {
-
-        long userReviewId = 1;
-        long exchangeId = 2;
-        long reviewerId = 3;
-        long subjectId = 4;
-        String reviewDescription = "Esta muy bien creo";
-        Timestamp reviewDate = new Timestamp(System.currentTimeMillis());
-        int userReviewRating = 5;
-
-        Publication offerer = new Publication(1, new Book(), PublicationState.CURRENT, reviewDate, new Location());
-        Publication requester = new Publication(2, new Book(), PublicationState.CURRENT, reviewDate, new Location());
-
-        Exchange exchange = new Exchange(exchangeId, offerer, requester, ExchangeState.ACCEPTED, 123456, true, true, reviewDate, reviewDate);
-
-        UserReview userReview = new UserReview(userReviewId, offerer, requester, exchange, reviewDescription, reviewDate, userReviewRating);
-
-        when(userReviewDao.createUserReview(any(UserReview.class))).thenReturn(true);
-
-        Boolean result = userReviewService.createUserReview(userReview);
-
-        assertTrue(result);
+        assertNotNull(response);
+        assertEquals(mockReviews.size(), response.getMetadata().getTotalResults());
+        assertEquals(currentPage, response.getMetadata().getCurrentPage());
     }
 }
-*/

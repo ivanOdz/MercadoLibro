@@ -43,14 +43,14 @@ public class UserServiceImpl implements UserService {
         // 3. generar un Token de validacion y guardarlo en la base de datos
         // 4. enviar el token de validacion en un correo de bienvenida
         // 5. agregar al usuario a una cola de verificacion manual
-
         Optional<User> u = userDao.find(mail);
+        
         if(u.isPresent()) {
             return u.get();
         }
-
+        
         User user = userDao.createUser(username, mail, passwordEncoder.encode(password), language, generateVerificationCode());
-
+        
         Map<String, Object> variables = new HashMap<>();
         variables.put("username", user.getUsername());
         variables.put("validationUrl", webappUrl + "/verification?verification_code=" + user.getVerificationCode());
