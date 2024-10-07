@@ -78,12 +78,12 @@
                         <input type="hidden" name="genre-filter" value=${books.metadata.genreFilter}>
                         <input type="hidden" name="search" value="<c:out value='${books.metadata.search}'/>"/>
 
-                        <button type="submit" class="ui-search-button uk-button uk-button-default uk-button-small"
-                                title="BookStateRemove" uk-close-icon>
+                        <button type="submit" class="uk-button uk-button-danger uk-button-small delete-button"
+                                title="BookStateRemove">
 							<span class="ui-search-filter-name">
 								<spring:message code="delete.bookstate.filter"/>
 							</span>
-                            <span uk-icon="close"></span>
+                            <span uk-icon="trash"></span>
                         </button>
                     </form>
                 </c:if>
@@ -97,13 +97,12 @@
                         <input type="hidden" name="book-state-filter" value=${books.metadata.bookStateFilter}>
                         <input type="hidden" name="search" value="<c:out value='${books.metadata.search}'/>">
 
-                        <button type="submit"
-                                class="uk-inline uk-search-button uk-button uk-button-default uk-button-small"
+                        <button type="submit" class="uk-button uk-button-danger uk-button-small delete-button"
                                 title="GenreFilterRemove">
 							<span class="ui-search-filter-name">
 								<spring:message code="delete.genre.filter"/>
 							</span>
-                            <span uk-icon="close"></span>
+                            <span uk-icon="trash"></span>
                         </button>
                     </form>
                 </c:if>
