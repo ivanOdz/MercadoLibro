@@ -219,7 +219,7 @@ public class ExchangeController {
     @PostMapping(path = "/exchange/initializeexchange")
     public ModelAndView initializeExchange(@NotEmpty @Valid @ModelAttribute("exchangeForm") ExchangeForm exchangeInput, BindingResult errors) {
         if (errors.hasErrors()) {
-            startExchange(exchangeInput, errors, exchangeInput.getPublicationId());
+            return startExchange(exchangeInput, errors, exchangeInput.getPublicationId());
         }
 
         try {

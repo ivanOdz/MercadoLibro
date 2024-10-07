@@ -285,12 +285,10 @@
                         <label class="form-group" style="margin-bottom: 2%;">
                             <spring:message code="book.set.book"/>
                         </label>
-
                         <a class="uk-button uk-button-primary"
                            href="${pageContext.request.contextPath}/book/book_models">
                             <spring:message code="add.book.missing"/>
                         </a>
-
                     </div>
                 </div>
             </div>

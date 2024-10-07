@@ -1,9 +1,7 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.models.Book;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -21,7 +19,9 @@ public class ExchangeForm {
         return bookId;
     }
 
-    public @Size(min = 1, max = 255) String getLocation() {
+    @NotBlank
+    @Size(min = 1, max = 255)
+    public String getLocation() {
         return location;
     }
 
