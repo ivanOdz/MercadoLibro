@@ -35,7 +35,7 @@ public class TestConfig {
 		final SimpleDriverDataSource ds = new SimpleDriverDataSource();
 		
 		ds.setDriverClass(org.hsqldb.jdbc.JDBCDriver.class);
-		ds.setUrl("jdbc:hsqldb:mem:paw;MODE=PostgreSQL;");
+		ds.setUrl("jdbc:hsqldb:mem:paw");
 		ds.setUsername("ha");
 		ds.setPassword("");
 		

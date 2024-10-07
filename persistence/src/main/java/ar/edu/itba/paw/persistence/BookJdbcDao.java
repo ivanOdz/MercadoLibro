@@ -33,8 +33,8 @@ public class BookJdbcDao implements BookDao {
     private final SimpleJdbcInsert jdbcInsertBook;
     private final SimpleJdbcInsert jdbcInsertBookRating;
     private final SimpleJdbcInsert jdbcInsertBookImage;
-    private String aggregationFunctionAuthor = "STRING_AGG";
-    private String aggregationFunctionImages = "ARRAY_AGG";
+    private String aggregationFunctionAuthor;
+    private String aggregationFunctionImages;
     
     @Autowired
     private MessageSource messageSource;
@@ -62,12 +62,13 @@ public class BookJdbcDao implements BookDao {
         String databaseProductName = ds.getConnection().getMetaData().getDatabaseProductName();
         
         if (databaseProductName.equalsIgnoreCase("HSQL Database Engine")) {
-            this.aggregationFunctionAuthor = "GROUP_CONCAT";
-            this.aggregationFunctionImages = "GROUP_CONCAT";
+        	
+            this.aggregationFunctionAuthor = "'author' AS authors, ";
+            this.aggregationFunctionImages = "null AS images, ";
         }
         else { // databaseProductName.equalsIgnoreCase("PostgreSQL")
-            this.aggregationFunctionAuthor = "STRING_AGG";
-            this.aggregationFunctionImages = "ARRAY_AGG";
+            this.aggregationFunctionAuthor = "(SELECT GROUP_CONCAT(a.authorName, ', ') FROM book_author ba JOIN author a ON a.authorId = ba.authorId WHERE ba.bookModelId = bm.bookModelId) AS authors, ";
+            this.aggregationFunctionImages = "ARRAY_AGG(i.imageId ORDER BY bi.imageOrder) AS images, ";
         }
     }
 
@@ -127,14 +128,11 @@ public class BookJdbcDao implements BookDao {
     @Override
     public Book getBookById(long bookId) {
         String sqlQuery = "SELECT b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
-                "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, "+
-                "(SELECT " + aggregationFunctionAuthor + "(a.authorName, ', ') " +
-                "FROM book_author ba " +
-                " JOIN author a ON a.authorId = ba.authorId " +
-                " WHERE ba.bookModelId = bm.bookModelId) AS authors, "+
+                "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, " +
+                aggregationFunctionAuthor +  // Verifica que esta variable esté correctamente definida y sea válida en SQL
                 "bm.imageId AS coverId, AVG(br.rating) AS rating, COUNT(br.rating) AS ratingCount, " +
-                "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language, " + aggregationFunctionImages + "(i.imageId ORDER BY bi.imageOrder) AS images, " +
-                "p.publicationState, e.exchangeState, " +  // Checkear esto, no se si hace falta que este en las tuplas que devuelve
+                "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language, " + aggregationFunctionImages +  // Verifica que esta variable esté correctamente definida y sea válida en SQL
+                "p.publicationState, e.exchangeState, " +
                 "CASE " +
                 "WHEN NOT EXISTS (SELECT 1 FROM publication p2 WHERE p2.bookId = b.bookId) THEN TRUE " +
                 "WHEN NOT EXISTS (SELECT 1 FROM exchange e2 JOIN publication p2 ON e2.offererPubId = p2.publicationId OR e2.requesterPubId = p2.publicationId WHERE p2.bookId = b.bookId AND e2.exchangeState = ?) THEN TRUE " +
@@ -145,7 +143,7 @@ public class BookJdbcDao implements BookDao {
                 "JOIN book_model AS bm ON bm.bookModelId = b.bookModelId " +
                 "JOIN book_author AS ba ON ba.bookModelId = bm.bookModelId " +
                 "JOIN author AS a ON a.authorId = ba.authorId " +
-                "LEFT JOIN (SELECT DISTINCT ON (bookId) * FROM publication ORDER BY bookId, publicationDatetime DESC) AS p ON p.bookId = b.bookId " +
+                "LEFT JOIN (SELECT p1.bookId, p1.publicationId, p1.publicationState FROM publication p1 WHERE p1.publicationDatetime = (SELECT MAX(p2.publicationDatetime) FROM publication p2 WHERE p2.bookId = p1.bookId)) AS p ON p.bookId = b.bookId " + 
                 "LEFT JOIN exchange AS e ON e.offererPubId = p.publicationId OR e.requesterPubId = p.publicationId " +
                 "LEFT JOIN book_image AS bi ON bi.bookId = b.bookId " +
                 "LEFT JOIN book_rating AS br ON bm.bookModelId = br.bookModelId " +
@@ -157,17 +155,19 @@ public class BookJdbcDao implements BookDao {
         Optional<Book> book = jdbcTemplate.query(sqlQuery, new Object[]{ ExchangeState.ACCEPTED.getValue(), bookId },
                 new int[]{ Types.INTEGER, Types.BIGINT }, ROW_MAPPER_BOOK).stream().findFirst();
 
-        if(book.isEmpty()) {
-            throw new BookNotFoundException(messageSource.getMessage("error.bookNotFound", new Object[]{bookId}, LocaleContextHolder.getLocale()));
+        if (book.isEmpty()) {
+            throw new BookNotFoundException(messageSource.getMessage("error.bookNotFound", new Object[]{ bookId }, LocaleContextHolder.getLocale()));
         }
         return book.get();
     }
+
 
     @Override
     public List<Book> getAllBooksByUser(long userId) {
         String sqlQuery = "SELECT b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
                 "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, bm.imageId AS coverId, AVG(br.rating) AS rating, COUNT(br.rating) AS ratingCount, " +
-                "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language, " + aggregationFunctionImages + "(i.imageId ORDER BY bi.imageOrder) AS images, " +
+                "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language, " +
+                aggregationFunctionImages +
                 "p.publicationState, e.exchangeState, " +  // Checkear esto, no se si hace falta que este en las tuplas que devuelve
                 "CASE " +
                 "WHEN NOT EXISTS (SELECT 1 FROM publication p2 WHERE p2.bookId = b.bookId) THEN TRUE " +
@@ -179,7 +179,7 @@ public class BookJdbcDao implements BookDao {
                 "JOIN book_model AS bm ON bm.bookModelId = b.bookModelId " +
                 "JOIN book_author AS ba ON ba.bookModelId = bm.bookModelId " +
                 "JOIN author AS a ON a.authorId = ba.authorId " +
-                "LEFT JOIN (SELECT DISTINCT ON (bookId) * FROM publication ORDER BY bookId, publicationDatetime DESC) AS p ON p.bookId = b.bookId " +
+                "LEFT JOIN (SELECT p1.bookId, p1.publicationId, p1.publicationState FROM publication p1 WHERE p1.publicationDatetime = (SELECT MAX(p2.publicationDatetime) FROM publication p2 WHERE p2.bookId = p1.bookId)) AS p ON p.bookId = b.bookId " + 
                 "LEFT JOIN exchange AS e ON e.offererPubId = p.publicationId OR e.requesterPubId = p.publicationId " +
                 "LEFT JOIN book_image AS bi ON bi.bookId = b.bookId " +
                 "LEFT JOIN book_rating AS br ON bm.bookModelId = br.bookModelId " +
@@ -197,13 +197,10 @@ public class BookJdbcDao implements BookDao {
 
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT  b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
-                        "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, "+
-                        "(SELECT " + aggregationFunctionAuthor + " (a.authorName, ', ') " +
-                        "FROM book_author ba " +
-                        " JOIN author a ON a.authorId = ba.authorId " +
-                        " WHERE ba.bookModelId = bm.bookModelId) AS authors, "+
+                        "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, " +
+                        aggregationFunctionAuthor +
                         "bm.imageId AS coverId, AVG(br.rating) AS rating, COUNT(br.rating) AS ratingCount, " +
-                        "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language ," + aggregationFunctionImages + "(i.imageId ORDER BY bi.imageOrder) AS images, " +
+                        "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language ," + aggregationFunctionImages +
                         "p.publicationState, e.exchangeState, " +  // Checkear esto, no se si hace falta que este en las tuplas que devuelve
                         "CASE " +
                         "WHEN NOT EXISTS (SELECT 1 FROM publication p2 WHERE p2.bookId = b.bookId) THEN TRUE " +
@@ -215,7 +212,7 @@ public class BookJdbcDao implements BookDao {
                         "JOIN book_model AS bm ON bm.bookModelId = b.bookModelId " +
                         "JOIN book_author AS ba ON ba.bookModelId = bm.bookModelId " +
                         "JOIN author AS a ON a.authorId = ba.authorId " +
-                        "LEFT JOIN (SELECT DISTINCT ON (bookId) * FROM publication ORDER BY bookId, publicationDatetime DESC) AS p ON p.bookId = b.bookId " +
+                        "LEFT JOIN (SELECT p1.bookId, p1.publicationId, p1.publicationState FROM publication p1 WHERE p1.publicationDatetime = (SELECT MAX(p2.publicationDatetime) FROM publication p2 WHERE p2.bookId = p1.bookId)) AS p ON p.bookId = b.bookId " + 
                         "LEFT JOIN exchange AS e ON e.offererPubId = p.publicationId OR e.requesterPubId = p.publicationId " +
                         "LEFT JOIN book_image AS bi ON bi.bookId = b.bookId " +
                         "LEFT JOIN book_rating AS br ON bm.bookModelId = br.bookModelId " +
