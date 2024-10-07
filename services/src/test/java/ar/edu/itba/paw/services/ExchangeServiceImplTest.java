@@ -5,13 +5,19 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.models.utils.ExchangeState;
+import ar.edu.itba.paw.models.utils.Genre;
+import ar.edu.itba.paw.models.utils.Language;
 import ar.edu.itba.paw.models.utils.PublicationState;
+import ar.edu.itba.paw.models.utils.Rating;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.context.MessageSource;
 
 import java.sql.Timestamp;
 import java.util.*;
@@ -21,99 +27,90 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
-/*
+
 public class ExchangeServiceImplTest {
 
-	private static final long BOOK_OWNER_ID = 25L;
-	private static final long BOOK_MODEL_ID = 50L;
-	private static final long BOOK_ID = 100L;
-	private static final long EXCHANGE_ID = 1L;
-	private static final long OFFERER_PUB_ID = 100L;
-	private static final long REQUESTER_PUB_ID = 200L;
-	private static final int ACCEPT_CODE = 12345;
-	private static final Timestamp START_DATE = new Timestamp(System.currentTimeMillis() - 86400000L); // = -1 día
-	private static final Timestamp END_DATE = new Timestamp(System.currentTimeMillis());
-	private static final ExchangeState EXCHANGE_STATE = ExchangeState.PENDING;
-	private static final Exchange TEST_EXCHANGE = new Exchange(EXCHANGE_ID, OFFERER_PUB_ID, REQUESTER_PUB_ID, EXCHANGE_STATE, ACCEPT_CODE, false, false, START_DATE, END_DATE);
-	
-	@Mock
-	private ExchangeDao exchangeDao;
-	@Mock
-	private BookService bookService;
-	@Mock
-	private BookModelService bookModelService;
-	@Mock
-	private ImageService imageService;
-	@Mock
-	private PublicationService publicationService;
-	@Mock
-	private BookAuthorService bookAuthorService;
-	@Mock
-	private BookImageService bookImageService;
-	@Mock
-	private LocationService locationService;
-	@Mock
-	private UserService userService;
-	@Mock
-	private EmailService emailService;
-	@Mock
-	private UserReviewService userReviewService;
-	@InjectMocks
-	private ExchangeServiceImpl exchangeService;
-	
-	@Test
-	public void testGetExchangeById() {
-		
-		when (exchangeDao.findById(EXCHANGE_ID)).thenReturn(Optional.of(TEST_EXCHANGE));
-		
-		Optional<Exchange> result = exchangeService.getExchangeById(EXCHANGE_ID);
-		
-		assertTrue(result.isPresent());
-		assertEquals(TEST_EXCHANGE, result.get());
-	}
-	
-	@Before
+    @Mock
+    private ExchangeDao exchangeDao;
+    @Mock
+    private BookService bookService;
+    @Mock
+    private PublicationService publicationService;
+    @Mock
+    private EmailService emailService;
+    @Mock
+    private MessageSource messageSource;
+
+    @InjectMocks
+    private ExchangeServiceImpl exchangeService;
+
+    private static final long BOOK_ID = 1L;
+    private static final String LOCATION = "Buenos Aires, Argentina";
+    private static final long OFFERER_PUB_ID = 2L;
+    private static final long REQUESTER_USER_ID = 3L;
+
+    @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
     }
+    
+	User user1 = new User(1L, "Usuario1", "usuario1@example.com", "encodedPassword", 1L, 1234, true, "es-AR");
+	User user2 = new User(2L, "Usuario2", "usuario2@example.com", "encodedPassword", 2L, 4321, true, "es-AR");
+	User user3 = new User(3L, "Usuario3", "usuario3@example.com", "encodedPassword", 3L, 0123, true, "es-AR");
+	User user4 = new User(4L, "Usuario4", "usuario4@example.com", "encodedPassword", 4L, 3210, true, "es-AR");
 	
-	//@Test
-	public void testInitializeExchange() {
-		
-		final String location = "Zona sur";
-		final long locationId = 1L;
-		final int exchangesQty = 2;
-		final int rating = 5;
-		final long publicationId = 200L;
-		
-		CompleteBook requesterComplete = mock(CompleteBook.class);
-		Book book = new Book(BOOK_ID, BOOK_MODEL_ID, BOOK_OWNER_ID, BookState.GOOD, exchangesQty, rating);
-		
-		when (requesterComplete.getLocation()).thenReturn(location);
-		when (requesterComplete.getSelectedBookId()).thenReturn(BOOK_ID);
-		when (bookService.getBookById(BOOK_ID)).thenReturn(Optional.of(book));
-		when (locationService.newLocation(location)).thenReturn(locationId);
-		when (publicationService.createPublication(BOOK_ID, BOOK_OWNER_ID, locationId, PublicationState.OFFERED)).thenReturn(publicationId);
-		
-		exchangeService.initializeExchange(requesterComplete, OFFERER_PUB_ID);
-		
-		assertNotNull(requesterComplete.getBook());
-		assertEquals(location, requesterComplete.getLocation());
-		assertTrue(bookService.getBookById(BOOK_ID).isPresent());
-		
-		Book fetchedBook = bookService.getBookById(BOOK_ID).get();
-		
-		assertEquals(BOOK_ID, fetchedBook.getBookId());
-		assertEquals(BOOK_MODEL_ID, fetchedBook.getBookModelId());
-		assertEquals(BOOK_OWNER_ID, fetchedBook.getOwnerId());
-		assertEquals(BookState.GOOD, fetchedBook.getBookState());
-		assertEquals(exchangesQty, fetchedBook.getExchangesQty());
-		assertEquals(rating, fetchedBook.getRating());
-		
-		long newLocationId = locationService.newLocation(location);
-		assertEquals(locationId, newLocationId);
-		
-		long newPublicationId = publicationService.createPublication(BOOK_ID, BOOK_MODEL_ID, locationId, PublicationState.OFFERED);
-		assertEquals(publicationId, newPublicationId);
-	}
-}*/
+	Genre genre1 = Genre.FICTION;
+	Genre genre2 = Genre.NON_FICTION;
+	Language language = Language.ENGLISH;
+	Rating rating = new Rating(4.5, 8);
+	
+	BookModel bookModel1 = new BookModel(1, "978-3-16-148410-0", "Título1", "Editorial1", "Descripción1", genre1, 1, 300, 350, language, 20, (short) 2021, false, true, "Autor1", null, rating);
+	BookModel bookModel2 = new BookModel(2, "978-1-61-729054-8", "Título2", "Editorial2", "Descripción2", genre2, 2, 250, 250, language, 15, (short) 2020, true, false, "Autor2", null, rating);
+	BookModel bookModel3 = new BookModel(3, "978-0-12-374857-0", "Título3", "Editorial3", "Descripción3", genre1, 1, 400, 400, language, 22, (short) 2019, false, true, "Autor3", null, rating);
+	BookModel bookModel4 = new BookModel(4, "978-0-07-042853-9", "Título4", "Editorial4", "Descripción4", genre2, 3, 350, 300, language, 25, (short) 2022, true, true, "Autor4", null, rating);
+	
+	Book book1 = new Book(1, user1, bookModel1, BookState.NEW, 3, true, List.of(1, 2));
+	Book book2 = new Book(2, user2, bookModel2, BookState.LIKE_NEW, 5, true, List.of(3, 4));
+	Book book3 = new Book(3, user3, bookModel3, BookState.VERY_GOOD, 2, false, List.of(5, 6));
+	Book book4 = new Book(4, user4, bookModel4, BookState.GOOD, 4, true, List.of(7, 8));
+	
+	Location location1 = new Location(1, "Buenos Aires, Argentina");
+	Location location2 = new Location(2, "Córdoba, Argentina");
+	Location location3 = new Location(3, "Mendoza, Argentina");
+	Location location4 = new Location(4, "Rosario, Argentina");
+	
+    Timestamp reviewDate = new Timestamp(System.currentTimeMillis());
+    Publication offererPub = new Publication(1, book1, PublicationState.CURRENT, reviewDate, location1);
+    Publication requesterPub = new Publication(2, book2, PublicationState.CURRENT, reviewDate, location2);
+    
+    @Test
+    public void testInitializeExchange() {
+    	
+        Book mockBook = book1;
+        User mockOfferer = user1;
+        User mockRequester = user2;
+        Publication mockPublication = offererPub;
+        Exchange mockExchange = new Exchange(1L, offererPub, requesterPub, ExchangeState.ACCEPTED, 123456, true, true, reviewDate, reviewDate);
+
+        when(bookService.getBookById(BOOK_ID)).thenReturn(book1);
+        when(publicationService.createPublication(eq(BOOK_ID), eq(mockOfferer.getUserId()), eq(LOCATION), eq(PublicationState.OFFERED)))
+            .thenReturn(OFFERER_PUB_ID);
+        when(exchangeDao.createExchange(eq(OFFERER_PUB_ID), eq(REQUESTER_USER_ID), anyInt(), any())).thenReturn(mockExchange);
+        when(messageSource.getMessage(eq("email.subject.request"), isNull(), any(Locale.class))).thenReturn("Test Subject");
+
+        exchangeService.initializeExchange(BOOK_ID, LOCATION, OFFERER_PUB_ID);
+
+        assertNotNull(mockBook);
+        assertEquals(OFFERER_PUB_ID, publicationService.createPublication(BOOK_ID, mockOfferer.getUserId(), LOCATION, PublicationState.OFFERED));
+        assertNotNull(mockExchange);
+        
+        Map<String, Object> emailVariables = new HashMap<>();
+        emailVariables.put("requesterEmail", mockRequester.getMail());
+        emailVariables.put("requesterName", mockRequester.getUsername());
+        emailVariables.put("requestedPublication", mockBook.getBookModel().getTitle());
+
+        assertEquals("Test Subject", messageSource.getMessage("email.subject.request", null, Locale.forLanguageTag(mockOfferer.getLanguage())));
+        //assertEquals(mockOfferer.getMail(), emailService.sendEmail(anyString(), emailVariables, eq("exchangeRequest"), eq("Test Subject"), anyString()));
+    }
+}
+
