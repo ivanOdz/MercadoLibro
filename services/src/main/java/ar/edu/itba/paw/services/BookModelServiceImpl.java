@@ -2,22 +2,30 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.BookModelDao;
 import ar.edu.itba.paw.interfaces.services.BookModelService;
+import ar.edu.itba.paw.interfaces.services.GenreService;
+import ar.edu.itba.paw.models.Book;
 import ar.edu.itba.paw.models.BookModel;
 import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.BookModelMetadata;
+import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class BookModelServiceImpl implements BookModelService {
 
     private final BookModelDao bookModelDao;
+    private final GenreService genreService;
 
-    public BookModelServiceImpl(final BookModelDao bookModelDao) {
+    public BookModelServiceImpl(final BookModelDao bookModelDao, GenreService genreService) {
         this.bookModelDao = bookModelDao;
+        this.genreService = genreService;
     }
 
     @Transactional
@@ -42,6 +50,20 @@ public class BookModelServiceImpl implements BookModelService {
 
     @Override
     public PaginatedResponse<BookModel, BookModelMetadata> getPaginatedBookModels(String search, boolean isGenreFilterActive, Genre genreFilter, int currentPage, SortType sortType) {
-        return bookModelDao.getPaginatedBookModels(search, isGenreFilterActive, genreFilter, currentPage, sortType);
+        PaginatedResponse<BookModel, BookModelMetadata> response = bookModelDao.getPaginatedBookModels(search, isGenreFilterActive, genreFilter, currentPage, sortType);
+
+        List<GenreWrapper> genreWrapperList = bookModelDao.getGenreQtyByBookModel(search);
+
+        Map<Genre, Integer> genreByStateMap = genreWrapperList.stream()
+                .collect(Collectors.toMap(GenreWrapper::getGenre, GenreWrapper::getResultByGenre));
+
+        List<GenreWrapper> genres = new ArrayList<>();
+        for (Genre genre : Genre.values()) {
+            genres.add(new GenreWrapper(genre, genreService.getGenreDisplayName(genre), genreByStateMap.getOrDefault(genre, 0)));
+        }
+
+        response.getMetadata().setGenreWrapperList(genres);
+
+        return response;
     }
 }

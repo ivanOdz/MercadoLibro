@@ -3,8 +3,6 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.exceptions.BookBadRequestException;
 import ar.edu.itba.paw.interfaces.exceptions.BookNotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.BookDao;
-import ar.edu.itba.paw.interfaces.services.BookStateService;
-import ar.edu.itba.paw.interfaces.services.GenreService;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
@@ -49,12 +47,6 @@ public class BookJdbcDao implements BookDao {
 
                 return new Book(rs.getLong("bookId"), owner, bookModel, bookState, exchangesQty, rs.getBoolean("available"), images);
             };
-
-    @Autowired
-    private GenreService genreService;
-
-    @Autowired
-    private BookStateService bookStateService;
 
     @Autowired
     public BookJdbcDao(final DataSource ds) {
