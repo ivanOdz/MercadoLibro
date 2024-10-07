@@ -79,7 +79,7 @@ public class BookController {
 
 
         User loggeduser = loggedUserAdvice.getLoggedUser();
-        if(loggeduser == null) {
+        if (loggeduser == null) {
             String message = messageSource.getMessage("error.unauthorized", null, LocaleContextHolder.getLocale());
             throw new UserNotUnauthorizedException(message);
         }
@@ -180,17 +180,20 @@ public class BookController {
         }
         User user = loggedUserAdvice.getLoggedUser();
 
-        // FIXME
-
         Number bookId;
-        try{
+        try {
             bookId = bookService.createBook(bookModelId, bookDetailsForm.getBookState(), bookDetailsForm.getRating(), bookDetailsForm.getImageFiles(), bookDetailsForm.getBookCover(), null, user, false);
         } catch (ApplicationRuntimeException e) {
             LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
             return new ModelAndView("redirect:/400");
         }
 
-        publicationService.createPublicationIfNeeded(bookDetailsForm.isPublish(), bookId.longValue(), user.getUserId(), bookDetailsForm.getLocation(), PublicationState.CURRENT);
+        try {
+            publicationService.createPublicationIfNeeded(bookDetailsForm.isPublish(), bookId.longValue(), user.getUserId(), bookDetailsForm.getLocation(), PublicationState.CURRENT);
+        } catch (ApplicationRuntimeException e) {
+            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
+            return new ModelAndView("redirect:/400");
+        }
 
         return new ModelAndView("redirect:/book");
     }
