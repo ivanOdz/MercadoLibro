@@ -21,18 +21,17 @@ public class UserServiceImpl implements UserService {
     private final UserDao userDao;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
+    private final MessageSource messageSource;
     //private final UserReviewService userReviewsService;
-
-    @Autowired
-    private MessageSource messageSource;
 
     @Value("#{environment.webappUrl}")
     private String webappUrl;
 
-    public UserServiceImpl(final UserDao userDao, final PasswordEncoder passwordEncoder, final EmailService emailService) {
+    public UserServiceImpl(final UserDao userDao, final PasswordEncoder passwordEncoder, final EmailService emailService, final MessageSource messageSource) {
         this.userDao = userDao;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
+        this.messageSource = messageSource;
     }
 
     @Transactional

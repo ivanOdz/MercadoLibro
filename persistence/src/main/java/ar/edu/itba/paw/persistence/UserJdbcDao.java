@@ -45,16 +45,15 @@ public class UserJdbcDao implements UserDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
+    private final MessageSource messageSource;
 
     @Autowired
-    private MessageSource messageSource;
-
-    @Autowired
-    public UserJdbcDao(final DataSource ds) {
+    public UserJdbcDao(final DataSource ds, MessageSource messageSource) {
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .usingGeneratedKeyColumns("userid")
                 .withTableName("users");
+        this.messageSource = messageSource;
     }
 
     @Override

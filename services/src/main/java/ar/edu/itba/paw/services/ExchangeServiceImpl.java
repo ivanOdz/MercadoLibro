@@ -9,7 +9,6 @@ import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,15 +26,15 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Value("#{environment.webappUrl}")
     private String webappUrl;
 
-    @Autowired
-    private MessageSource messageSource;
+    private final MessageSource messageSource;
 
-    public ExchangeServiceImpl(final ExchangeDao exchangeDao, final BookService bs, final PublicationService ps, final EmailService emailService) {
+    public ExchangeServiceImpl(final ExchangeDao exchangeDao, final BookService bs, final PublicationService ps, final EmailService emailService, final MessageSource messageSource) {
     	
         this.exchangeDao = exchangeDao;
         this.bs = bs;
         this.ps = ps;
         this.emailService = emailService;
+        this.messageSource = messageSource;
     }
 
     @Transactional
@@ -51,6 +50,12 @@ public class ExchangeServiceImpl implements ExchangeService {
 
         Exchange ex = exchangeDao.createExchange(offererPubId, requesterPubId, acceptCode, timestamp);
 
+        System.out.println("CREATE EXCHANGE " + ex);
+        
+        System.out.println(requesterPubId);
+        System.out.println(acceptCode);
+        System.out.println(timestamp);
+        
         // mail variables setup
         Map<String, Object> variables = new HashMap<>();
         User offerer = ex.getOfferer().getBook().getOwner();
@@ -64,7 +69,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         variables.put("offeredPublication", bookOffered.getBookModel().getTitle());
         variables.put("validationUrl", webappUrl + "/createexchange?accept_code=" + ex.getAcceptCode() + "&state=true");
         variables.put("rejectionUrl", webappUrl + "/createexchange?accept_code=" + ex.getAcceptCode() + "&state=false");
-        variables.put("exchangeUrl", webappUrl + "/offers"); //TODO: verificar el funcionamiento de esto
+        variables.put("exchangeUrl", webappUrl + "/offers"); // TODO: verificar el funcionamiento de esto
 
         emailService.sendEmail(offerer.getMail(), variables, "exchangeRequest", messageSource.getMessage("email.subject.request", null, Locale.forLanguageTag(offerer.getLanguage())), offerer.getLanguage());
     }
