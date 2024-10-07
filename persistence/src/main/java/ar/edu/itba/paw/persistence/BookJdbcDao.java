@@ -25,7 +25,6 @@ import static ar.edu.itba.paw.models.utils.Constants.BOOKS_PAGE_SIZE;
 import static ar.edu.itba.paw.persistence.BookModelJdbcDao.ROW_MAPPER_BOOK_MODEL;
 import static ar.edu.itba.paw.persistence.UserJdbcDao.ROW_MAPPER_USER;
 
-
 @Repository
 public class BookJdbcDao implements BookDao {
 
@@ -370,13 +369,4 @@ public class BookJdbcDao implements BookDao {
         return totalResults != null ? totalResults : 0;
     }
 }
-
-
-
-
-
-
-
-
-
 
