@@ -53,7 +53,7 @@ public class EmailServiceImpl implements EmailService {
                 helper.setText(html, true);
                 helper.setFrom("mercado.libro.staff@gmail.com");
             } catch (MessagingException e) {
-                LOGGER.error("Error sending email to {}. Stack strace: {} ",receiver, e.getStackTrace());
+                LOGGER.error(messageSource.getMessage("error.email.sending", null, l),receiver, e.getStackTrace());
             }
             mailSender.send(message);
     }
