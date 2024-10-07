@@ -12,7 +12,7 @@ public final class Constants {
 
     public static final int EXCHANGES_PAGE_SIZE = 5;
 
-    public static final int PROFILE_PAGE_SIZE = 5;
+    public static final int PROFILE_PAGE_SIZE = 6;
 
     public static final int INITIAL_EXCHANGE_VALUE = 0;
 
