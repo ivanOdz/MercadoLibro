@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
@@ -21,8 +22,8 @@ import java.util.Optional;
 
 import static org.junit.Assert.*;
 
-@Transactional
-@Rollback
+//@Transactional
+//@Rollback
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 @Sql(scripts = "classpath:users.sql")
@@ -38,11 +39,11 @@ public class UserJdbcDaoTest {
     private static final String NEW_LANGUAGE = "es";
     
     @Autowired
-    private UserJdbcDao userDao;
-    
-    @Autowired
     private DataSource ds;
     
+    @Autowired
+    private UserJdbcDao userDao;
+
     private JdbcTemplate jdbcTemplate;
     
     @Before

@@ -34,9 +34,9 @@ public class BookJdbcDao implements BookDao {
 
     private final GenreService genreService;
     private final BookStateService bookStateService;
-
+/*
     @Autowired
-    private MessageSource messageSource;
+    private MessageSource messageSource;*/
 
     static final RowMapper<Book> ROW_MAPPER_BOOK =
             (rs, rowNum) -> {
