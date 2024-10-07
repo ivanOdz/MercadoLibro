@@ -347,8 +347,6 @@
 			
 -- INTERCAMBIOS + REVIEW ----------------------------------------------------------------------------------------------------
 
-
-/*
 -- 1: Ivan con Juli
 
 INSERT INTO exchange (offererPubId, requesterPubId, exchangeState, acceptCode, offererReceivedBook, requesterReceivedBook, exchangeStartDate, exchangeEndDate)
@@ -369,5 +367,5 @@ INSERT INTO exchange (offererPubId, requesterPubId, exchangeState, acceptCode, o
 	WHERE
 	    offerer.mail LIKE 'modzomek@itba.edu.ar'
 	    AND bookModelOfferer.isbn = '9788445002132'
-	    AND publicationOfferer.publicationState = 1;*/
+	    AND publicationOfferer.publicationState = 1;
         
