@@ -37,27 +37,34 @@ public class BookServiceImpl implements BookService {
 
     @Transactional
     @Override
-    public Number createBook(String isbn, String title, List<String> authors, String publisher, String description, Genre genre, BookState bookState, int edition,
-                             int rating, List<MultipartFile> imageFiles, Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension,
-                             Language language, int pages, int weight, int bookCoverIndex, boolean publish, User user, Long bookModelId) {
+    public Number createBook(Long bookModelId, BookState bookState, int rating, List<MultipartFile> imageFiles, int bookCoverIndex, List<Integer> imagesId, User user, boolean newBook) {
 
-        List<Integer> imagesId = imageService.saveImage(arrangeImages(imageFiles, bookCoverIndex)).stream().map(Image::getImageId).toList();
-
-        Long bmId = bookModelId;
-
-        // CHECK: implementation
-
-        if(bmId == null) {
-            bmId = bookModelService.createBookModel(isbn, title, authors, publisher, description, genre, edition,
-                    publicationYear, isHardcover, isPocketEdition, dimension, language, pages, weight, imagesId.get(bookCoverIndex));
+        if(!newBook){
+            imagesId = imageService.saveImage(arrangeImages(imageFiles, bookCoverIndex)).stream().map(Image::getImageId).toList();
         }
-        bookDao.createBookRating(user, bmId, rating);
 
-        Number toReturn = bookDao.createBook(bmId, user, bookState, imagesId);
+
+        bookDao.createBookRating(user, bookModelId, rating);
+
+        Number toReturn = bookDao.createBook(bookModelId, user, bookState, imagesId);
 
         bookDao.createBookImage(toReturn.longValue(), imagesId);
 
         return toReturn;
+    }
+
+    @Transactional
+    @Override
+    public Number createNewBook(String isbn, String title, List<String> authors, String publisher, String description, Genre genre, int edition,
+                                  Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension,
+                                  Language language, int pages, int weight, BookState bookState, int rating, List<MultipartFile> imageFiles, int bookCoverIndex, User user){
+
+        List<Integer> imagesId = imageService.saveImage(arrangeImages(imageFiles, bookCoverIndex)).stream().map(Image::getImageId).toList();
+
+        Number bookModelId = bookModelService.createBookModel(isbn, title, authors, publisher, description, genre, edition,
+                publicationYear, isHardcover, isPocketEdition, dimension, language, pages, weight, imagesId.get(bookCoverIndex));
+
+        return createBook(bookModelId.longValue(), bookState, rating, imageFiles, bookCoverIndex, imagesId, user, true);
     }
 
     @Transactional

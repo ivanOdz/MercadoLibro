@@ -7,9 +7,7 @@ import ar.edu.itba.paw.models.utils.Genre;
 import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.models.utils.SortType;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
-import org.springframework.stereotype.Service;
 
-@Service
 public interface PublicationService {
 
     long createPublication(long bookId, long userId, String location, PublicationState publicationState);
