@@ -12,9 +12,12 @@ import java.util.List;
 @Service
 public interface BookService {
 
-    Number createBook(String isbn, String title, List<String> authors, String publisher, String description, Genre genre, BookState bookState,
-                      int edition, int rating, List<MultipartFile> imageFiles, Short publicationYear, boolean isHardcover, boolean isPocketEdition,
-                      BookDimension dimension, Language language, int pages, int weight, int bookCoverIndex, boolean publish, User user, Long bookModelId);
+    Number createBook(Long bookModelId, BookState bookState, int rating, List<MultipartFile> imageFiles, int bookCoverIndex, List<Integer> imagesId, User user, boolean newBook);
+
+
+    Number createNewBook(String isbn, String title, List<String> authors, String publisher, String description, Genre genre, int edition,
+                         Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension,
+                         Language language, int pages, int weight, BookState bookState, int rating, List<MultipartFile> imageFiles, int bookCoverIndex, User user);
 
     void exchangeOwnership(Book b1, Book b2);
 
