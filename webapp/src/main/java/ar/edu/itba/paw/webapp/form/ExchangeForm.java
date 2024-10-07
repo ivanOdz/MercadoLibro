@@ -9,7 +9,7 @@ public class ExchangeForm {
     @NotNull
     long bookId;
 
-    @Size(min = 1, max = 255)
+    @NotBlank(message = "{NotBlank.exchangeForm.location}")
     String location;
 
     long publicationId;
@@ -19,8 +19,6 @@ public class ExchangeForm {
         return bookId;
     }
 
-    @NotBlank
-    @Size(min = 1, max = 255)
     public String getLocation() {
         return location;
     }
