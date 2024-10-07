@@ -49,7 +49,7 @@ public class PublicationController {
                               @RequestParam(name = "book-state-filter", required = false) BookState bookStateFilter,
                               @RequestParam(name = "is-genre-filter-active", defaultValue = "false") boolean isGenreFilterActive,
                               @RequestParam(name = "genre-filter", required = false) Genre genreFilter,
-                              @RequestParam(name = "sort-type", defaultValue = "PUBLICATION_DATE_ASCENDING") SortType sortType,
+                              @RequestParam(name = "order", defaultValue = "PUBLICATION_DATE_ASCENDING") SortType sortType,
                               @RequestParam(name = "page", defaultValue = "0") int currentPage) {
 
         final ModelAndView mav = new ModelAndView("home/publications");

@@ -121,7 +121,100 @@
             </div>
 
             <div class="uk-width-3-4 col-content mb-1">
-                <h2 class="mt-1"><spring:message code="publications.list.available"/></h2>
+                <div  style="display:flex; justify-content: space-between; align-items: center;">
+                    <div><h2 class="mt-1">
+                            <spring:message code="publications.list.available"/>
+                    </div>
+                    <div>
+                        <button type="button" class="uk-button uk-button-link">
+                            <spring:message code="publications.order"/>
+                            <span uk-drop-parent-icon></span>
+                        </button>
+                        <div uk-drop="mode: click">
+                            <ul class="uk-nav uk-dropdown-nav">
+                                <li>
+                                    <form action="<c:url value='' />" method="get">
+                                        <input type="hidden" name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}">
+                                        <input type="hidden" name="is-genre-filter-active" value="${publications.metadata.isGenreFilterActive}">
+                                        <input type="hidden" name="genre-filter" value="${publications.metadata.genreFilter}">
+                                        <input type="hidden" name="book-state-filter" value="${publications.metadata.bookStateFilter}">
+                                        <input type="hidden" name="search" value="${publications.metadata.search}"/>
+                                        <input type="hidden" name="order" value="RATING_ASCENDING" />
+                                        <button type="submit" class="uk-button uk-button-link uk-width-1-1 uk-text-left">
+                                            <spring:message code="publications.order.ratingAscending"/>
+                                        </button>
+                                    </form>
+                                </li>
+                                <li>
+                                    <form action="<c:url value='' />" method="get">
+                                        <input type="hidden" name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}">
+                                        <input type="hidden" name="is-genre-filter-active" value="${publications.metadata.isGenreFilterActive}">
+                                        <input type="hidden" name="genre-filter" value="${publications.metadata.genreFilter}">
+                                        <input type="hidden" name="book-state-filter" value="${publications.metadata.bookStateFilter}">
+                                        <input type="hidden" name="search" value="${publications.metadata.search}"/>
+                                        <input type="hidden" name="order" value="RATING_DESCENDING" />
+                                        <button type="submit" class="uk-button uk-button-link uk-width-1-1 uk-text-left">
+                                            <spring:message code="publications.order.ratingDescending"/>
+                                        </button>
+                                    </form>
+                                </li>
+                                <li>
+                                    <form action="<c:url value='' />" method="get">
+                                        <input type="hidden" name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}">
+                                        <input type="hidden" name="is-genre-filter-active" value="${publications.metadata.isGenreFilterActive}">
+                                        <input type="hidden" name="genre-filter" value="${publications.metadata.genreFilter}">
+                                        <input type="hidden" name="book-state-filter" value="${publications.metadata.bookStateFilter}">
+                                        <input type="hidden" name="search" value="${publications.metadata.search}"/>
+                                        <input type="hidden" name="order" value="PUBLICATION_DATE_ASCENDING" />
+                                        <button type="submit" class="uk-button uk-button-link uk-width-1-1 uk-text-left">
+                                            <spring:message code="publications.order.publicationDateAscending"/>
+                                        </button>
+                                    </form>
+                                </li>
+                                <li>
+                                    <form action="<c:url value='' />" method="get">
+                                        <input type="hidden" name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}">
+                                        <input type="hidden" name="is-genre-filter-active" value="${publications.metadata.isGenreFilterActive}">
+                                        <input type="hidden" name="genre-filter" value="${publications.metadata.genreFilter}">
+                                        <input type="hidden" name="book-state-filter" value="${publications.metadata.bookStateFilter}">
+                                        <input type="hidden" name="search" value="${publications.metadata.search}"/>
+                                        <input type="hidden" name="order" value="PUBLICATION_DATE_DESCENDING" />
+                                        <button type="submit" class="uk-button uk-button-link uk-width-1-1 uk-text-left">
+                                            <spring:message code="publications.order.publicationDateDescending"/>
+                                        </button>
+                                    </form>
+                                </li>
+                                <li>
+                                    <form action="<c:url value='' />" method="get">
+                                        <input type="hidden" name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}">
+                                        <input type="hidden" name="is-genre-filter-active" value="${publications.metadata.isGenreFilterActive}">
+                                        <input type="hidden" name="genre-filter" value="${publications.metadata.genreFilter}">
+                                        <input type="hidden" name="book-state-filter" value="${publications.metadata.bookStateFilter}">
+                                        <input type="hidden" name="search" value="${publications.metadata.search}"/>
+                                        <input type="hidden" name="order" value="BOOK_NAME_ASCENDING" />
+                                        <button type="submit" class="uk-button uk-button-link uk-width-1-1 uk-text-left">
+                                            <spring:message code="publications.order.bookNameAscending"/>
+                                        </button>
+                                    </form>
+                                </li>
+                                <li>
+                                    <form action="<c:url value='' />" method="get">
+                                        <input type="hidden" name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}">
+                                        <input type="hidden" name="is-genre-filter-active" value="${publications.metadata.isGenreFilterActive}">
+                                        <input type="hidden" name="genre-filter" value="${publications.metadata.genreFilter}">
+                                        <input type="hidden" name="book-state-filter" value="${publications.metadata.bookStateFilter}">
+                                        <input type="hidden" name="search" value="${publications.metadata.search}"/>
+                                        <input type="hidden" name="order" value="BOOK_NAME_DESCENDING" />
+                                        <button type="submit" class="uk-button uk-button-link uk-width-1-1 uk-text-left">
+                                            <spring:message code="publications.order.bookNameDescending"/>
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
                 <div class="uk-card uk-card-default uk-card-body uk-margin-bottom uk-border-rounded uk-border-rounded-medium" style="display: flex; align-items: center">
                     <h4 style="margin:0;">
                         <spring:message code="publications.totalresults">
