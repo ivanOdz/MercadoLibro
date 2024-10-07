@@ -186,7 +186,7 @@ public class ExchangeController {
             startExchange(exchangeForm, errors, exchangeForm.getPublicationId());
         }
         // Insertar tupla de requester en publicacion con fecha actual y publicationState = 2 (OFFERER)
-        exchangeService.initializeExchange(exchangeForm.getBookId(), exchangeForm.getLocation(), exchangeForm.getPublicationId(), loggedUserAdvice.getLoggedUser());
+        exchangeService.initializeExchange(exchangeForm.getBookId(), exchangeForm.getLocation(), exchangeForm.getPublicationId());
         return new ModelAndView("redirect:/requests");  // TOOD: se podría redirigir a una página de éxito
     }
 
