@@ -25,31 +25,6 @@
     <div class="uk-container">
         <div class="uk-grid ml-1 uk-margin-top mb-2" uk-grid>
             <div class="uk-width-1-4@s filter-section uk-border-rounded uk-box-shadow-small mt-1 mb-1">
-                <h2>
-                    <c:out value='${publications.metadata.search}'/>
-                </h2><h2>
-                    <c:out value='${publications.metadata.totalResults}'/>
-                </h2>
-
-                <!-- Esto tiene que aparecer solo si hay algo buscado -->
-                <c:if test="${not empty publications.metadata.search}">
-                    <form action="<c:url value='' />" method="get">
-                        <input type="hidden" name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}">
-                        <input type="hidden" name="is-genre-filter-active" value=${publications.metadata.isGenreFilterActive}>
-                        <input type="hidden" name="genre-filter" value=${publications.metadata.genreFilter}>
-                        <input type="hidden" name="book-state-filter" value=${publications.metadata.bookStateFilter}>
-                        <input type="hidden" name="search" value=""/>
-
-                        <button type="submit" class="ui-search-button uk-button uk-button-default uk-button-small"
-                                title="BookStateRemove" uk-close-icon>
-							<span class="ui-search-filter-name">
-								<spring:message code="delete.search"/>
-							</span>
-                            <span uk-icon="close"></span>
-                        </button>
-                    </form>
-                </c:if>
-
                 <!-- Esto tiene que aparecer solo si hay un filtro de BookState -->
                 <c:if test="${publications.metadata.isBookStateFilterActive}">
                     <form action="<c:url value='' />" method="get">
@@ -58,14 +33,15 @@
                         <input type="hidden" name="genre-filter" value=${publications.metadata.genreFilter}>
                         <input type="hidden" name="search" value="<c:out value='${publications.metadata.search}'/>"/>
 
-                        <button type="submit" class="ui-search-button uk-button uk-button-default uk-button-small"
-                                title="BookStateRemove" uk-close-icon>
+                        <button type="submit" class="uk-button uk-button-danger uk-button-small delete-button"
+                                title="BookStateRemove">
 							<span class="ui-search-filter-name">
 								<spring:message code="delete.bookstate.filter"/>
 							</span>
-                            <span uk-icon="close"></span>
+                            <span uk-icon="trash"></span>
                         </button>
                     </form>
+
                 </c:if>
 
                 <!-- Esto tiene que aparecer solo si hay un filtro de Genero -->
@@ -77,12 +53,12 @@
                         <input type="hidden" name="search" value="<c:out value='${publications.metadata.search}'/>">
 
                         <button type="submit"
-                                class="uk-inline uk-search-button uk-button uk-button-default uk-button-small"
+                                class="uk-button uk-button-danger uk-button-small delete-button"
                                 title="GenreFilterRemove">
 							<span class="ui-search-filter-name">
 								<spring:message code="delete.genre.filter"/>
 							</span>
-                            <span uk-icon="close"></span>
+                            <span uk-icon="trash"></span>
                         </button>
                     </form>
                 </c:if>
@@ -129,14 +105,8 @@
                                     <input type="hidden" name="is-genre-filter-active" value="true">
                                     <input type="hidden" name="book-state-filter" value="${publications.metadata.bookStateFilter}">
                                     <input type="hidden" name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}">
-                                    <input type="hidden" name="search" value="<c:out value='${param.search}'/>"/>
+                                    <input type="hidden" name="search" value="<c:out value='${publications.metadata.search}'/>"/>
 
-<%--                                    <button type="submit"--%>
-<%--                                            class="ui-search-button uk-button uk-button-default uk-button-small"--%>
-<%--                                            title="${genreWrapper.displayName}">--%>
-<%--                                        <span class="ui-search-filter-name">${genreWrapper.displayName}</span>--%>
-<%--                                        <span class="ui-search-filter-name">(${genreWrapper.resultByGenre})</span>--%>
-<%--                                    </button>--%>
                                     <a href="#" class="uk-inline uk-search-button uk-button-link" title="GenreFilterRemove" onclick="this.closest('form').submit(); return false;">
                                         <span class="ui-search-filter-name">
                                                 ${genreWrapper.displayName} (${genreWrapper.resultByGenre})
@@ -151,8 +121,33 @@
             </div>
 
             <div class="uk-width-3-4 col-content mb-1">
-                <h5 class="uk-text-large mt-1"><spring:message code="publications.list.available"/></h5>
-                <div class="uk-card uk-card-default uk-card-body uk-margin-bottom uk-border-rounded uk-border-rounded-medium">
+                <h2 class="mt-1"><spring:message code="publications.list.available"/></h2>
+                <div class="uk-card uk-card-default uk-card-body uk-margin-bottom uk-border-rounded uk-border-rounded-medium" style="display: flex; align-items: center">
+                    <h4 style="margin:0;">
+                        <spring:message code="publications.totalresults">
+                            <spring:argument value="${publications.metadata.totalResults}"/>
+                        </spring:message>
+                    </h4>
+                    <c:if test="${not empty publications.metadata.search}">
+                        <hr class="uk-divider-vertical" style="height: 30px; margin: 0 1rem;">
+                        <h4 style="margin:0;">
+                            <spring:message code="publications.search" />
+                            '<c:out value='${publications.metadata.search}'/>'
+                        </h4>
+                        <c:if test="${not empty publications.metadata.search}">
+                            <form action="<c:url value='' />" method="get">
+                                <input type="hidden" name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}">
+                                <input type="hidden" name="is-genre-filter-active" value=${publications.metadata.isGenreFilterActive}>
+                                <input type="hidden" name="genre-filter" value=${publications.metadata.genreFilter}>
+                                <input type="hidden" name="book-state-filter" value=${publications.metadata.bookStateFilter}>
+                                <input type="hidden" name="search" value=""/>
+
+                                <button type="submit" class="uk-button uk-button-danger uk-button-small delete-button" style="margin-left: 1rem;">
+                                    <span uk-icon="trash"></span>
+                                </button>
+                            </form>
+                        </c:if>
+                    </c:if>
                 </div>
 
                 <c:if test="${not empty publications.data}">
