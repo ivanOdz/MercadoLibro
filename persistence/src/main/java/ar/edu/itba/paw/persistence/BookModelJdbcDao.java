@@ -160,6 +160,10 @@ public class BookModelJdbcDao implements BookModelDao {
 
     @Override
     public PaginatedResponse<BookModel, BookModelMetadata> getPaginatedBookModels(String search, boolean isGenreFilterActive, Genre genreFilter, int currentPage, SortType sortType) {
+        if(currentPage < 0){
+            currentPage = 0;
+        }
+
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
                         "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, (SELECT STRING_AGG(a.authorName, ', ') FROM book_author ba JOIN author a ON a.authorId = ba.authorId WHERE ba.bookModelId = bm.bookModelId) AS authors, bm.imageId AS coverId, AVG(br.rating) as rating, (SELECT COUNT(*) FROM book_rating br2 WHERE br2.bookModelId = bm.bookModelId) as ratingCount " +

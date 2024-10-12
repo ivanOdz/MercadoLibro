@@ -256,6 +256,9 @@ public class UserReviewJdbcDao implements UserReviewDao {
 
     @Override
     public PaginatedResponse<UserReview, BasicMetadata> getReviewsGivenByUserId(long userId, int currentPage) {
+		if(currentPage < 0){
+			currentPage = 0;
+		}
 
 		int offset = currentPage * PROFILE_PAGE_SIZE;
         List<UserReview> data = jdbcTemplate.query(baseQueryReview + " AND reviewer.userId = ? ORDER BY userReviewDate DESC LIMIT ? OFFSET ?", new Object[] { userId, PROFILE_PAGE_SIZE, offset }, new int[] { Types.BIGINT, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_USER_REVIEW);
@@ -265,6 +268,9 @@ public class UserReviewJdbcDao implements UserReviewDao {
 
     @Override
     public PaginatedResponse<UserReview, BasicMetadata> getReviewsEarnedByUserId(long userId, int currentPage) {
+		if(currentPage < 0){
+			currentPage = 0;
+		}
 
 		int offset = currentPage * PROFILE_PAGE_SIZE;
 		List<UserReview> data = jdbcTemplate.query(baseQueryReview + " AND subject.userId = ? ORDER BY userReviewDate DESC LIMIT ? OFFSET ?", new Object[] { userId,PROFILE_PAGE_SIZE, offset }, new int[] { Types.BIGINT, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_USER_REVIEW);

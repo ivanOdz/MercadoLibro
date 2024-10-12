@@ -130,6 +130,9 @@ public class PublicationJdbcDao implements PublicationDao {
 
     @Override
     public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, SortType sortType, int currentPage) {
+        if(currentPage < 0){
+            currentPage = 0;
+        }
 
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT p.publicationId, " +
