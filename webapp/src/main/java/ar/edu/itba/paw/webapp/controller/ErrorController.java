@@ -10,7 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class ErrorController {
-
+/*
     @Autowired
     private final MessageSource messageSource;
 
@@ -41,5 +41,5 @@ public class ErrorController {
     @RequestMapping("/**")
     public ModelAndView handleAll() {
         return new ModelAndView("error/notFound");
-    }
+    }*/
 }
