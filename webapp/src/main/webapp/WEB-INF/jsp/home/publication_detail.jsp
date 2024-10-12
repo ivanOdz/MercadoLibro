@@ -63,7 +63,7 @@
                     <c:choose>
                         <c:when test="${not empty publication.book.images}">
                             <img id="currentImage"
-                                 src="<c:url value='${pageContext.request.contextPath}/images/${publication.book.images[0]}'/>"
+                                 src="<c:url value='/images/${publication.book.images[0]}'/>"
                                  alt="Book Image"/>
                             <div class="uk-button-group" style="justify-content:center">
                                 <button id="prevBtn" class="slider-button">
