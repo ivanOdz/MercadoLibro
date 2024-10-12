@@ -31,7 +31,7 @@ import java.util.Arrays;
 import java.util.Locale;
 
 @EnableTransactionManagement
-@PropertySource("classpath:application.properties")
+@PropertySource("classpath:application${spring.profiles.active}.properties")
 @EnableWebMvc
 @ComponentScan({
         "ar.edu.itba.paw.webapp.controller",

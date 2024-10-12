@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 @ControllerAdvice
 public class LoggedUserAdvice {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoggedUserAdvice.class);
 
     // Binding false because it is a read-onlu attribute
     @ModelAttribute(name = "loggedUser", binding = false)

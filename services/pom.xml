@@ -22,12 +22,12 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>interfaces</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>persistence</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
 <!--            <scope>runtime</scope>-->
         </dependency>
         <dependency>
@@ -57,10 +57,6 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
