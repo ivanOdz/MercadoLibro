@@ -4,7 +4,6 @@ import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Primary;
@@ -42,7 +41,7 @@ public class UserServiceImpl implements UserService {
         // 3. generar un Token de validacion y guardarlo en la base de datos
         // 4. enviar el token de validacion en un correo de bienvenida
         // 5. agregar al usuario a una cola de verificacion manual
-        Optional<User> u = userDao.find(mail);
+        Optional<User> u = userDao.findByMail(mail);
         
         if(u.isPresent()) {
             return u.get();
@@ -86,7 +85,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> findUserByEmail(String mail) {
-        return userDao.find(mail);
+        return userDao.findByMail(mail);
     }
 
     @Override
@@ -107,7 +106,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean userExists(String mail) {
-        return userDao.find(mail).isPresent();
+        return userDao.findByMail(mail).isPresent();
     }
 
 

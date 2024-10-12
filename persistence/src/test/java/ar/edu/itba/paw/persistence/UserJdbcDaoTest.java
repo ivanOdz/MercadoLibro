@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,7 +57,7 @@ public class UserJdbcDaoTest {
     }
 
     @Test
-    public void testFindById() throws SQLException {
+    public void testFindByMailById() throws SQLException {
     	
         User user = userDao.createUser(USERNAME, MAIL, PASSWORD, LANGUAGE, VERIFICATIONCODE);
         long userId = user.getUserId();
@@ -68,16 +67,16 @@ public class UserJdbcDaoTest {
     }
 
     @Test
-    public void testFindByMail() throws SQLException {
+    public void testFindByMailByMail() throws SQLException {
     	
         userDao.createUser(USERNAME, MAIL, PASSWORD, LANGUAGE, VERIFICATIONCODE);
-        Optional<User> maybeUser = userDao.find(MAIL);
+        Optional<User> maybeUser = userDao.findByMail(MAIL);
         assertTrue(maybeUser.isPresent());
         assertEquals(MAIL, maybeUser.get().getMail());
     }
 
     @Test
-    public void testFindByUsername() throws SQLException {
+    public void testFindByMailByUsername() throws SQLException {
     	
         userDao.createUser(USERNAME, MAIL, PASSWORD, LANGUAGE, VERIFICATIONCODE);
         Optional<User> maybeUser = userDao.findByUsername(USERNAME);

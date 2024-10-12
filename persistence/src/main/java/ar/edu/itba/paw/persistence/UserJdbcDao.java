@@ -63,7 +63,7 @@ public class UserJdbcDao implements UserDao {
     }
 
     @Override
-    public Optional<User> find(String mail) {
+    public Optional<User> findByMail(String mail) {
         return jdbcTemplate.query("SELECT * FROM users WHERE mail = ?", new Object[]{mail},
                 new int[]{Types.VARCHAR}, ROW_MAPPER_USER).stream().findFirst();
     }

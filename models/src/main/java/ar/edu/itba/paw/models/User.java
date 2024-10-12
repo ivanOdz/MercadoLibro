@@ -1,17 +1,43 @@
 package ar.edu.itba.paw.models;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "users")
 public class User {
 
-    private final long userId;
-    private final String username;
-    private final String mail;
-    private final String password;
-    private final Long imageId;
-    private final Integer verificationCode;
-    private final boolean isVerified;
-    private final String language;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "users_userid_seq")
+    @SequenceGenerator(sequenceName = "users_userid_seq", name = "users_userid_seq", allocationSize = 1)
+    @Column(name = "userid")
+    private Long userId;
 
-    public User(long userId, String username, String mail, String password, Long imageId, Integer verificationCode, boolean isVerified, String language) {
+    @Column(length = 64, nullable = false, unique = true)
+    private String username;
+
+    @Column(length = 255, nullable = false, insertable = true, updatable = true)
+    private String password;
+
+    @Column(name = "imageid")
+    private Long imageId;
+
+    @Column(name = "verificationcode")
+    private Integer verificationCode;
+
+    @Column(name = "isverified")
+    private boolean isVerified;
+
+    @Column(length = 64, nullable = false)
+    private String language;
+
+    private String mail;
+
+
+    /* package */User(){
+        // only for JPA
+    }
+
+    public User(Long userId, String username, String mail, String password, Long imageId, Integer verificationCode, boolean isVerified, String language) {
         this.userId = userId;
         this.username = username;
         this.mail = mail;

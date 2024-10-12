@@ -8,7 +8,7 @@ public interface UserDao {
 
     User createUser(String username, String mail, String password, String language, int verificationCode);
     
-    Optional<User> find(String mail);
+    Optional<User> findByMail(String mail);
 
     Optional<User> findByUsername(String username);
 
