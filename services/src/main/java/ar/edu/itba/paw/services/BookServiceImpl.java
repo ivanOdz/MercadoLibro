@@ -86,27 +86,21 @@ public class BookServiceImpl implements BookService {
         List<BookStateWrapper> bookStateWrapperList = bookDao.getBookStateQtyByBook(search, isGenreFilterActive, genreFilter, userId);
         List<GenreWrapper> genreWrapperList = bookDao.getGenreQtyByBook(search, isBookStateFilterActive, bookStateFilter, userId);
 
-
-        Map<BookState, Integer> resultByStateMap = bookStateWrapperList.stream()
-                .collect(Collectors.toMap(BookStateWrapper::getBookState, BookStateWrapper::getResultByState));
-
         List<BookStateWrapper> bookStates = new ArrayList<>();
-        for (BookState state : BookState.values()) {
-            bookStates.add(new BookStateWrapper(state, bookStateService.getBookStateDisplayName(state), resultByStateMap.getOrDefault(state, 0)));
+        for (BookStateWrapper state : bookStateWrapperList) {
+            bookStates.add(new BookStateWrapper(state.getBookState(), bookStateService.getBookStateDisplayName(state.getBookState()), state.getResultByState()));
         }
 
-        Map<Genre, Integer> genreByStateMap = genreWrapperList.stream()
-                .collect(Collectors.toMap(GenreWrapper::getGenre, GenreWrapper::getResultByGenre));
-
         List<GenreWrapper> genres = new ArrayList<>();
-        for (Genre genre : Genre.values()) {
-            genres.add(new GenreWrapper(genre, genreService.getGenreDisplayName(genre), genreByStateMap.getOrDefault(genre, 0)));
+        for (GenreWrapper genre : genreWrapperList) {
+            genres.add(new GenreWrapper(genre.getGenre(), genreService.getGenreDisplayName(genre.getGenre()), genre.getResultByGenre()));
         }
 
         response.getMetadata().setBookStateWrapperList(bookStates);
         response.getMetadata().setGenreWrapperList(genres);
 
         return response;
+
     }
 
     public List<MultipartFile> arrangeImages(List<MultipartFile> images, int bookCoverIndex) {

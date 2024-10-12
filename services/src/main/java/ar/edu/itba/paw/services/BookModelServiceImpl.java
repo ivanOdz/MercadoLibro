@@ -54,16 +54,14 @@ public class BookModelServiceImpl implements BookModelService {
 
         List<GenreWrapper> genreWrapperList = bookModelDao.getGenreQtyByBookModel(search);
 
-        Map<Genre, Integer> genreByStateMap = genreWrapperList.stream()
-                .collect(Collectors.toMap(GenreWrapper::getGenre, GenreWrapper::getResultByGenre));
-
         List<GenreWrapper> genres = new ArrayList<>();
-        for (Genre genre : Genre.values()) {
-            genres.add(new GenreWrapper(genre, genreService.getGenreDisplayName(genre), genreByStateMap.getOrDefault(genre, 0)));
+        for (GenreWrapper genre : genreWrapperList) {
+            genres.add(new GenreWrapper(genre.getGenre(), genreService.getGenreDisplayName(genre.getGenre()), genre.getResultByGenre()));
         }
 
         response.getMetadata().setGenreWrapperList(genres);
 
         return response;
+
     }
 }
