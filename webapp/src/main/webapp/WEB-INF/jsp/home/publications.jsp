@@ -293,7 +293,9 @@
                                     <div>
                                         <span class="uk-margin-small-right" uk-icon="location">
                                         </span>
-                                        <span>${card.location.locationString}</span>
+                                        <span>
+                                            <c:out value="${card.location.locationString}"/>
+                                        </span>
                                     </div>
                                 </div>
 
