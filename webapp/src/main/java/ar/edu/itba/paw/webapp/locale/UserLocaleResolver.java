@@ -13,7 +13,7 @@ public class UserLocaleResolver extends SessionLocaleResolver {
     @Override
     public Locale resolveLocale(HttpServletRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.getPrincipal() instanceof PawUserDetails pud){
+        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
             String userLanguage = pud.getUser().getLanguage();
             if(userLanguage != null){
                 return Locale.forLanguageTag(userLanguage);
