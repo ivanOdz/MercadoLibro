@@ -8,7 +8,7 @@
 
 <html lang="es" class="custom-style">
 <%@include file="/WEB-INF/jsp/head/headers.jsp" %>
-<%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
+<%@ include file="/WEB-INF/jsp/components/navbar_wo_search.jsp" %>
 <head>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
 
@@ -24,7 +24,7 @@
 </head>
 
 <body>
-<navbar></navbar>
+<navbar_wo_search/>
 
 <div class="uk-grid">
     <div class="uk-width-5-6 uk-align-center main-section">
