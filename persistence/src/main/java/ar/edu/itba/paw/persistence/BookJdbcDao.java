@@ -219,7 +219,7 @@ public class BookJdbcDao implements BookDao {
                         "LEFT JOIN book_image AS bi ON bi.bookId = b.bookId " +
                         "LEFT JOIN book_rating AS br ON bm.bookModelId = br.bookModelId " +
                         "LEFT JOIN image AS i ON bi.imageId = i.imageId " +
-                        "WHERE u.userid = ? AND LOWER(bm.title) LIKE LOWER(?)  ");
+                        "WHERE u.userid = ? AND LOWER(bm.title) LIKE LOWER(?) ESCAPE '\\' ");
 
         if (isGenreFilterActive) {
             sqlQuery.append("AND bm.genre = ? ");
@@ -246,23 +246,25 @@ public class BookJdbcDao implements BookDao {
                 sqlQuery.append(" ORDER BY title DESC");
         }
 
+
         int offset = currentPage * BOOKS_PAGE_SIZE;
         sqlQuery.append(" LIMIT ? OFFSET ?");
 
-        List<Book> data;
+        String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
 
+        List<Book> data;
         if (isGenreFilterActive && isBookStateFilterActive) {
-            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), userId, "%" + search.toLowerCase() + "%", genreFilter.getValue(), bookStateFilter.getValue(), BOOKS_PAGE_SIZE, offset}, new int[]{Types.INTEGER, Types.BIGINT, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_BOOK);
+            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), userId, "%" + safeSearch.toLowerCase() + "%", genreFilter.getValue(), bookStateFilter.getValue(), BOOKS_PAGE_SIZE, offset}, new int[]{Types.INTEGER, Types.BIGINT, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_BOOK);
         }
         else if (isGenreFilterActive) {
-            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), userId, "%" + search.toLowerCase() + "%", genreFilter.getValue(), BOOKS_PAGE_SIZE, offset}, new int[]{Types.INTEGER, Types.BIGINT, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_BOOK);
+            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), userId, "%" + safeSearch.toLowerCase() + "%", genreFilter.getValue(), BOOKS_PAGE_SIZE, offset}, new int[]{Types.INTEGER, Types.BIGINT, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_BOOK);
         }
         else if (isBookStateFilterActive) {
-            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), userId, "%" + search.toLowerCase() + "%", bookStateFilter.getValue(), BOOKS_PAGE_SIZE, offset}, new int[]{Types.INTEGER, Types.BIGINT, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_BOOK);
+            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), userId, "%" + safeSearch.toLowerCase() + "%", bookStateFilter.getValue(), BOOKS_PAGE_SIZE, offset}, new int[]{Types.INTEGER, Types.BIGINT, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_BOOK);
         }
-        else data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), userId, "%" + search.toLowerCase() + "%", BOOKS_PAGE_SIZE, offset}, new int[]{Types.INTEGER, Types.BIGINT, Types.VARCHAR, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_BOOK);
+        else data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), userId, "%" + safeSearch.toLowerCase() + "%", BOOKS_PAGE_SIZE, offset}, new int[]{Types.INTEGER, Types.BIGINT, Types.VARCHAR, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_BOOK);
 
-        int totalResults = getTotalResultsByBook(search, isGenreFilterActive, genreFilter, isBookStateFilterActive, bookStateFilter, userId);
+        int totalResults = getTotalResultsByBook(safeSearch, isGenreFilterActive, genreFilter, isBookStateFilterActive, bookStateFilter, userId);
 
         return new PaginatedResponse<>(data, new ItemFilterMetadata(currentPage, BOOKS_PAGE_SIZE, totalResults, search, isGenreFilterActive, genreFilter, sortType, null, isBookStateFilterActive, bookStateFilter, null));
     }
@@ -272,7 +274,7 @@ public class BookJdbcDao implements BookDao {
                 "SELECT bm.genre, COUNT(*) AS genreCount " +
                         "FROM book b " +
                         "JOIN book_model bm ON b.bookModelId = bm.bookModelId " +
-                        "WHERE b.ownerId = ? AND LOWER(bm.title) LIKE LOWER(?) ");
+                        "WHERE b.ownerId = ? AND LOWER(bm.title) LIKE LOWER(?) ESCAPE '\\' ");
 
         if (isBookStateFilterActive) {
             sqlQuery.append("AND b.bookState = ? ");
@@ -307,7 +309,7 @@ public class BookJdbcDao implements BookDao {
                 "SELECT b.bookState, COUNT(*) AS stateCount " +
                         "FROM book b " +
                         "JOIN book_model bm ON b.bookModelId = bm.bookModelId " +
-                        "WHERE b.ownerId = ? AND LOWER(bm.title) LIKE LOWER(?) ");
+                        "WHERE b.ownerId = ? AND LOWER(bm.title) LIKE LOWER(?) ESCAPE '\\' ");
 
         if (isGenreFilterActive) {
             sqlQuery.append("AND bm.genre = ? ");
@@ -345,7 +347,7 @@ public class BookJdbcDao implements BookDao {
                         "FROM publication p " +
                         "JOIN book b ON p.bookId = b.bookId " +
                         "JOIN book_model bm ON b.bookModelId = bm.bookModelId " +
-                        "WHERE b.ownerId = ? AND LOWER(bm.title) LIKE LOWER(?) ");
+                        "WHERE b.ownerId = ? AND LOWER(bm.title) LIKE LOWER(?) ESCAPE '\\' ");
 
         if (isBookStateFilterActive) {
             sqlQuery.append("AND b.bookState = ? ");

@@ -240,9 +240,6 @@ public class PublicationJdbcDao implements PublicationDao {
 
         List<Object> params = new ArrayList<>();
         params.add(PublicationState.CURRENT.getValue());
-
-        search = search.replace("%", "\\%").replace("_", "\\_");
-
         params.add("%" + search.toLowerCase() + "%");
 
         if (isGenreFilterActive) {
@@ -280,9 +277,6 @@ public class PublicationJdbcDao implements PublicationDao {
 
         List<Object> params = new ArrayList<>();
         params.add(PublicationState.CURRENT.getValue());
-
-        search = search.replace("%", "\\%").replace("_", "\\_");
-
         params.add("%" + search.toLowerCase() + "%");
 
         if (isBookStateFilterActive) {

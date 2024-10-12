@@ -172,7 +172,7 @@ public class BookModelJdbcDao implements BookModelDao {
                         "JOIN book_author ba ON ba.bookModelId = bm.bookModelId " +
                         "JOIN author a ON a.authorId = ba.authorId " +
                         "LEFT JOIN book_rating br ON bm.bookModelId = br.bookModelId " +
-                        "WHERE LOWER(bm.title) LIKE LOWER(?) ");
+                        "WHERE LOWER(bm.title) LIKE LOWER(?) ESCAPE '\\' ");
 
         if (isGenreFilterActive) {
             sqlQuery.append("AND bm.genre = ? ");
@@ -197,13 +197,15 @@ public class BookModelJdbcDao implements BookModelDao {
         int offset = currentPage * BOOKS_PAGE_SIZE;
         sqlQuery.append(" LIMIT ? OFFSET ?");
 
+        String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
+
         List<BookModel> data;
         if(isGenreFilterActive) {
-            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ "%" + search.toLowerCase() + "%", genreFilter.getValue(), BOOKS_PAGE_SIZE, offset }, new int[]{ Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_BOOK_MODEL);
+            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ "%" + safeSearch.toLowerCase() + "%", genreFilter.getValue(), BOOKS_PAGE_SIZE, offset }, new int[]{ Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_BOOK_MODEL);
         }
-        else data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ "%" + search.toLowerCase() + "%", BOOKS_PAGE_SIZE, offset }, new int[]{ Types.VARCHAR, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_BOOK_MODEL);
+        else data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ "%" + safeSearch.toLowerCase() + "%", BOOKS_PAGE_SIZE, offset }, new int[]{ Types.VARCHAR, Types.INTEGER, Types.INTEGER }, ROW_MAPPER_BOOK_MODEL);
 
-        int totalResults = getTotalResultsByBook(search, isGenreFilterActive, genreFilter);
+        int totalResults = getTotalResultsByBook(safeSearch, isGenreFilterActive, genreFilter);
 
         return new PaginatedResponse<>(data, new BookModelMetadata(currentPage, BOOKS_PAGE_SIZE, totalResults, search, isGenreFilterActive, genreFilter, sortType, null));
 
@@ -213,7 +215,7 @@ public class BookModelJdbcDao implements BookModelDao {
 
         String sqlQuery = "SELECT bm.genre, COUNT(*) AS genreCount " +
                 "FROM book_model bm " +
-                "WHERE LOWER(bm.title) LIKE LOWER(?) " + "GROUP BY bm.genre";
+                "WHERE LOWER(bm.title) LIKE LOWER(?) ESCAPE '\\' " + "GROUP BY bm.genre";
 
         List<Object> params = new ArrayList<>();
         params.add("%" + search.toLowerCase() + "%");
@@ -231,7 +233,7 @@ public class BookModelJdbcDao implements BookModelDao {
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT COUNT(*) " +
                         "FROM book_model bm " +
-                        "WHERE LOWER(bm.title) LIKE LOWER(?) ");
+                        "WHERE LOWER(bm.title) LIKE LOWER(?) ESCAPE '\\' ");
 
         if (isGenreFilterActive) {
             sqlQuery.append("AND bm.genre = ? ");
