@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -31,6 +32,9 @@ public class User {
     private String language;
 
     private String mail;
+
+    @OneToMany(mappedBy = "owner")
+    private List<Book> books;
 
 
     /* package */User(){
