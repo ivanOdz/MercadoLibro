@@ -4,7 +4,7 @@
 <html>
 <%@include file="/WEB-INF/jsp/head/headers.jsp"%>
 <head>
-    <link href="${pageContext.request.contextPath}/css/background.css" rel="stylesheet"/>
+    <link href="<c:url value='/css/background.css' />" rel="stylesheet"/>
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>

@@ -5,8 +5,8 @@
 <html>
 <%@include file="/WEB-INF/jsp/head/headers.jsp" %>
 <head>
-    <link href="${pageContext.request.contextPath}/css/login.css" rel="stylesheet"/>
-    <link href="${pageContext.request.contextPath}/css/background.css" rel="stylesheet"/>
+    <link href="<c:url value='/css/login.css'/>" rel="stylesheet"/>
+    <link href="<c:url value='/css/background.css' />" rel="stylesheet"/>
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
@@ -22,8 +22,8 @@
 <div style="display: flex; place-items: center; height: 100%;">
     <div class="uk-container container uk-align-center">
         <div class="mini_container uk-align-center" style="max-width: 30%;">
-            <a href="${pageContext.request.contextPath}/">
-                <img src="${pageContext.request.contextPath}/images/logo_w_name.png" alt="Logo Icon"
+            <a href="<c:url value='/' />">
+                <img src="<c:url value='/images/logo_w_name.png' />" alt="Logo Icon"
                      class="icon-style">
             </a>
         </div>

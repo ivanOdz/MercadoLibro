@@ -12,9 +12,9 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
-    <link href="${pageContext.request.contextPath}/css/navbar.css?v=1.0" rel="stylesheet"/>
-    <link href="${pageContext.request.contextPath}/css/login.css" rel="stylesheet"/>
-    <link href="${pageContext.request.contextPath}/css/background.css" rel="stylesheet"/>
+    <link href="<c:url value='/css/navbar.css?v=1.0' />" rel="stylesheet"/>
+    <link href="<c:url value='/css/login.css'/>" rel="stylesheet"/>
+    <link href="<c:url value='/css/background.css' />" rel="stylesheet"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
     <title><spring:message code="publication.details.title"/></title>
@@ -28,7 +28,7 @@
 
 <div>
     <div style="margin-top: 1%; margin-left: 1%;">
-        <a class="uk-button uk-button-text" href="${pageContext.request.contextPath}/">
+        <a class="uk-button uk-button-text" href="<c:url value='/' />">
             <span uk-icon="icon:  chevron-left"></span>
             <spring:message code="add.book.return_home"/>
         </a>
