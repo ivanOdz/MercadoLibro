@@ -12,8 +12,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
-    <link href="${pageContext.request.contextPath}/css/navbar.css?v=1.0" rel="stylesheet"/>
-    <link href="${pageContext.request.contextPath}/css/publications.css?v=1.0" rel="stylesheet"/>
+    <link href="<c:url value='/css/navbar.css?v=1.0' />" rel="stylesheet"/>
+    <link href="<c:url value='/css/publications.css?v=1.0' />" rel="stylesheet"/>
 
     <title><spring:message code="publications.list.brand.logo"/></title>
 
@@ -268,12 +268,12 @@
                                         <c:choose>
                                             <c:when test="${card.book.images[0] != null}">
                                                 <img class="book-image uk-border-rounded"
-                                                     src="${pageContext.request.contextPath}/images/${card.book.images[0]}"
+                                                     src="<c:url value='/images/${card.book.images[0]}' />"
                                                      alt="bookImage"/>
                                             </c:when>
                                             <c:otherwise>
                                                 <img class="book-image uk-border-rounded"
-                                                     src="${pageContext.request.contextPath}/images/book.jpg" alt="book"/>
+                                                     src="<c:url value='/images/book.jpg' />" alt="book"/>
                                             </c:otherwise>
                                         </c:choose>
                                     </figure>

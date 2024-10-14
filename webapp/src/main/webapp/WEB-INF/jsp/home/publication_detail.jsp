@@ -12,8 +12,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
-    <link href="${pageContext.request.contextPath}/css/navbar.css?v=1.0" rel="stylesheet"/>
-    <link href="${pageContext.request.contextPath}/css/publicationDetail.css?v=1.0" rel="stylesheet"/>
+    <link href="<c:url value='/css/navbar.css?v=1.0' />" rel="stylesheet"/>
+    <link href="<c:url value='/css/publications.css?v=1.0' />" rel="stylesheet"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
     <title><spring:message code="publication.details.title"/></title>
@@ -53,7 +53,7 @@
         <div class="uk-container uk-card uk-card-default"
              style="align-content: center; border-radius: 1%; padding: 5%; justify-content: center; margin-top:5%; margin-bottom:5%; max-width:125%">
             <div style="margin-bottom: 5%">
-                <a class="uk-button uk-button-text" href="${pageContext.request.contextPath}/">
+                <a class="uk-button uk-button-text" href="<c:url value='/' />">
                     <span uk-icon="icon:  chevron-left"></span>
                     <spring:message code="add.book.return_home"/>
                 </a>
@@ -75,7 +75,7 @@
                             </div>
                         </c:when>
                         <c:otherwise>
-                            <img class="book-image" src="${pageContext.request.contextPath}/images/book.jpg" width="300"
+                            <img class="book-image" src="<c:url value='/images/book.jpg' />" width="300"
                                  height="400" alt="book"/>
                         </c:otherwise>
                     </c:choose>
@@ -266,7 +266,7 @@
                             </c:if>
                             <c:if test="${not empty availableBooks}">
                                 <a style="margin: 50%" class="uk-button uk-button-primary"
-                                   href="${pageContext.request.contextPath}/start_exchange?publication_id=${publication.publicationId}">
+                                   href="<c:url value='/start_exchange?publication_id=${publication.publicationId}' />">
                                     <spring:message code="add.exchange.submit"/>
                                 </a>
                             </c:if>
@@ -280,7 +280,7 @@
                                     <spring:message code="book.set.book"/>
                                 </label>
                                 <a class="uk-button uk-button-primary"
-                                   href="${pageContext.request.contextPath}/book/book_models">
+                                   href="<c:url value='/book/book_models' />">
                                     <spring:message code="add.book.missing"/>
                                 </a>
                             </div>
@@ -295,7 +295,7 @@
 <script>
     const images = [
         <c:forEach var="image" items="${publication.book.images}" varStatus="loop">
-        '<c:url value="${pageContext.request.contextPath}/images/${image}"/>'<c:if test="${!loop.last}">, </c:if>
+        '<c:url value="/images/${image}"/>'<c:if test="${!loop.last}">, </c:if>
         </c:forEach>
     ];
 
