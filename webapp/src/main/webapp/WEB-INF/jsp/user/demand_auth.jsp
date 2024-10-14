@@ -27,13 +27,13 @@
 <c:url var="signInUrl" value="/login"/>
 
 <div>
-    <div style="margin-top: 1%; margin-left: 1%;">
-        <a class="uk-button uk-button-text" href="<c:url value='/' />">
-            <span uk-icon="icon:  chevron-left"></span>
-            <spring:message code="add.book.return_home"/>
-        </a>
-    </div>
     <div class="uk-container container uk-align-center" style="max-width: 25%;">
+        <div style="margin-top: 1%; align-self: start;">
+            <a class="uk-button uk-button-text" href="<c:url value='/' />">
+                <span uk-icon="icon:  chevron-left"></span>
+                <spring:message code="add.book.return_home"/>
+            </a>
+        </div>
         <h2 style="text-align: center; margin-bottom: 10%;"><spring:message code="must.login.title"/></h2>
 
         <form action="${registerUrl}" method="post">
