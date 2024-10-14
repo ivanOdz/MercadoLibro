@@ -9,11 +9,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><spring:message code="confirmation.page.title"/></title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
     <link href="<c:url value='/css/navbar.css?v=1.0' />" rel="stylesheet"/>
+
+    <title><spring:message code="confirmation.page.title"/></title>
 </head>
 <body>
 <c:url var="booksUrl" value="/book"/>

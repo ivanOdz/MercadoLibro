@@ -17,7 +17,7 @@
     <link href="<c:url value='/css/background.css' />" rel="stylesheet"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
-    <title><spring:message code="publication.details.title"/></title>
+    <title><spring:message code="auth.required"/></title>
 </head>
 
 <body>

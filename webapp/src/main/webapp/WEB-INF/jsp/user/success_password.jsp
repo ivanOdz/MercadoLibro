@@ -9,6 +9,8 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
     <meta charset="UTF-8">
+
+    <title><spring:message code="success"/></title>
 </head>
 <body>
 <c:url var="okUrl" value="/login"/>
