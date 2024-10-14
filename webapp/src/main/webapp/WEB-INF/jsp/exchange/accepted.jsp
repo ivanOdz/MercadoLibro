@@ -13,7 +13,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
-    <link href="${pageContext.request.contextPath}/css/navbar.css?v=1.0" rel="stylesheet"/>
+    <link href="<c:url value='/css/navbar.css?v=1.0' />" rel="stylesheet"/>
 </head>
 <body>
 
@@ -25,7 +25,7 @@
         <p class="uk-text-lead"><spring:message code="accepted.message"/></p>
 
         <p>
-            <a class="uk-button uk-button-primary" href="${pageContext.request.contextPath}/">
+            <a class="uk-button uk-button-primary" href="<c:url value='/' />">
                 <spring:message code="confirmation.home.button"/>
             </a>
         </p>

@@ -14,8 +14,9 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
-    <link href="${pageContext.request.contextPath}/css/navbar.css" rel="stylesheet"/>
-    <link href="${pageContext.request.contextPath}/css/exchange.css" rel="stylesheet"/>
+
+    <link href="<c:url value='/css/navbar.css' />" rel="stylesheet"/>
+    <link href="<c:url value='/css/exchange.css' />" rel="stylesheet"/>
 
     <title><spring:message code="publications.list.brand.logo"/></title>
 
@@ -65,7 +66,7 @@
 
                                         <div style="padding: 0">
                                             <img class="book-image"
-                                                 src="${pageContext.request.contextPath}/images/${data.requester.book.images[0]}"
+                                                 src="<c:url value='/images/${data.requester.book.images[0]}' />"
                                                  alt="bookImage"/>
                                             <div class="card-text-container">
                                                 <h3 class="card-text3">
@@ -91,7 +92,7 @@
 
                                         <div style="padding: 0">
                                             <img class="book-image"
-                                                 src="${pageContext.request.contextPath}/images/${data.offerer.book.images[0]}"
+                                                 src="<c:url value='/images/${data.offerer.book.images[0]}' />"
                                                  alt="bookImage"/>
                                             <div class="card-text-container">
                                                 <h3 class="card-text3">
@@ -226,7 +227,7 @@
 
                                         <div style="padding: 0">
                                             <img class="book-image"
-                                                 src="${pageContext.request.contextPath}/images/${data.requester.book.images[0]}"
+                                                 src="/images/${data.requester.book.images[0]}"
                                                  alt="bookImage"/>
                                             <div class="card-text-container">
                                                 <h3 class="card-text3">
@@ -284,7 +285,7 @@
 
                                         <div style="padding: 0">
                                             <img class="book-image"
-                                                 src="${pageContext.request.contextPath}/images/${data.offerer.book.images[0]}"
+                                                 src="<c:url value='/images/${data.offerer.book.images[0]}' />"
                                                  alt="bookImage"/>
                                             <div class="card-text-container">
                                                 <h3 class="card-text3">
@@ -419,7 +420,7 @@
 
                                         <div style="padding: 0">
                                             <img class="book-image"
-                                                 src="${pageContext.request.contextPath}/images/${data.requester.book.images[0]}"
+                                                 src="<c:url value='/images/${data.requester.book.images[0]}' />"
                                                  alt="bookImage"/>
                                             <div class="card-text-container">
                                                 <h3 class="card-text3">
@@ -448,7 +449,7 @@
                                         </div>
                                         <div style="padding: 0">
                                             <img class="book-image"
-                                                 src="${pageContext.request.contextPath}/images/${data.offerer.book.images[0]}"
+                                                 src="<c:url value='/images/${data.offerer.book.images[0]}' />"
                                                  alt="bookImage"/>
                                             <div class="card-text-container">
                                                 <h3 class="card-text3">
@@ -583,7 +584,7 @@
 
                                         <div style="padding: 0">
                                             <img class="book-image"
-                                                 src="${pageContext.request.contextPath}/images/${data.requester.book.images[0]}"
+                                                 src="<c:url value='/images/${data.requester.book.images[0]}' />"
                                                  alt="bookImage"/>
                                             <div class="card-text-container">
                                                 <h3 class="card-text3">
@@ -614,7 +615,7 @@
                                         </div>
                                         <div style="padding: 0">
                                             <img class="book-image"
-                                                 src="${pageContext.request.contextPath}/images/${data.offerer.book.images[0]}"
+                                                 src="<c:url value='/images/${data.offerer.book.images[0]}' />"
                                                  alt="bookImage"/>
                                             <div class="card-text-container">
                                                 <h3 class="card-text3">
