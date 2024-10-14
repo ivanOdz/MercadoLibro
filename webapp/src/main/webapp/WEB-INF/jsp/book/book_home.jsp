@@ -11,17 +11,13 @@
 
 <html lang="es" class="custom-style">
 <head>
-
-
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
-    <link rel="icon" href="${pageContext.request.contextPath}/images/favicon.ico" type="image/x-icon"/>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
-    <link href="${pageContext.request.contextPath}/css/navbar.css?v=1.0" rel="stylesheet"/>
-    <link href="${pageContext.request.contextPath}/css/book_home.css?v=1.0" rel="stylesheet"/>
 
+    <link href="<c:url value='/css/navbar.css' />" rel="stylesheet"/>
+    <link href="<c:url value='/css/book_home.css' />" rel="stylesheet"/>
 
     <title><spring:message code="book.view.title"/></title>
 </head>
@@ -195,12 +191,12 @@
                                         <c:choose>
                                             <c:when test="${card.images[0] != null}">
                                                 <img class="book-image"
-                                                     src="${pageContext.request.contextPath}/images/${card.images[0]}"
+                                                     src="<c:url value='/images/${card.images[0]}' />"
                                                      alt="bookImage"/>
                                             </c:when>
                                             <c:otherwise>
                                                 <img class="book-image"
-                                                     src="${pageContext.request.contextPath}/images/book.jpg"
+                                                     src="<c:url value='/images/book.jpg' />"
                                                      alt="book"/>
                                             </c:otherwise>
                                         </c:choose>
@@ -232,7 +228,7 @@
                                     <div class="uk-modal-dialog">
                                         <button class="uk-modal-close-default" type="button" uk-close></button>
                                         <div class="uk-modal-header">
-                                            <form action="${pageContext.request.contextPath}/createpublication"
+                                            <form action="<c:url value='/createpublication' />"
                                                   method="post" class="uk-grid-large uk-grid"
                                                   style="justify-content: center;">
                                                 <div class="uk-margin" style="justify-content: center">
@@ -275,11 +271,11 @@
                             <spring:message code="books.empty"/>
                         </div>
                         <a style="margin:2%" class="uk-button uk-button-primary"
-                           href="${pageContext.request.contextPath}/book/new_book">
+                           href="<c:url value='/book/new_book' />">
                             <spring:message code="books.empty.upload"/>
                         </a>
                         <a style="margin:2%" class="uk-button uk-button-primary"
-                           href="${pageContext.request.contextPath}/book/book_models">
+                           href="<c:url value='/book/book_models' />">
                             <spring:message code="books.empty.preloaded"/>
                         </a>
 

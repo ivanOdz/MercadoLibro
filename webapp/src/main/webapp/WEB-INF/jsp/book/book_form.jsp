@@ -10,11 +10,11 @@
 <head>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
-    <link href="${pageContext.request.contextPath}/css/navbar.css" rel="stylesheet"/>
-    <link href="${pageContext.request.contextPath}/css/book_form.css" rel="stylesheet"/>
+
+    <link href="<c:url value='/css/navbar.css' />" rel="stylesheet"/>
+    <link href="<c:url value='/css/book_form.css' />" rel="stylesheet"/>
 
     <title><spring:message code="add.book"/></title>
 
@@ -41,7 +41,7 @@
 
 <div class="uk-background-muted" style="margin-bottom: 2%;">
     <div class="uk-container uk-margin-bottom" style="margin-top: 1%">
-        <a class="uk-button uk-button-text" href="${pageContext.request.contextPath}/book/book_models">
+        <a class="uk-button uk-button-text" href="<c:url value='/book/book_models' />">
             <span uk-icon="icon:  chevron-left"></span>
             <spring:message code="add.book.return_home"/>
         </a>

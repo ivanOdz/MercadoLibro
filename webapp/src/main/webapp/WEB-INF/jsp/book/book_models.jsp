@@ -7,15 +7,13 @@
 
 <html class="custom-style">
 <head>
-    <link href="${pageContext.request.contextPath}/css/navbar.css?v=1.0" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
-    <link rel="icon" href="${pageContext.request.contextPath}/images/favicon.ico" type="image/x-icon"/>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
-    <link href="${pageContext.request.contextPath}/css/book_home.css?v=1.0" rel="stylesheet"/>
 
+    <link href="<c:url value='/css/navbar.css' />" rel="stylesheet"/>
+    <link href="<c:url value='/css/book_home.css' />" rel="stylesheet"/>
 
     <title><spring:message code="library.title"/></title>
 </head>
@@ -119,12 +117,12 @@
                                     <c:choose>
                                         <c:when test="${card.imageId != null}">
                                             <img class="book-image"
-                                                 src="${pageContext.request.contextPath}/images/${card.imageId}"
+                                                 src="<c:url value='/images/${card.imageId}'/>"
                                                  alt="bookImage"/>
                                         </c:when>
                                         <c:otherwise>
                                             <img class="book-image"
-                                                 src="${pageContext.request.contextPath}/images/book.jpg" alt="book"/>
+                                                 src="<c:url value='/images/book.jpg' />" alt="book"/>
                                         </c:otherwise>
                                     </c:choose>
                                 </figure>
@@ -163,7 +161,7 @@
                                                 <div class="uk-width-1-1">
                                                     <div class="uk-margin-top uk-button-group"
                                                          style="margin-left: 50px;">
-                                                        <a href="${pageContext.request.contextPath}/book/new_book_model?book_model_id=${card.bookModelId}"
+                                                        <a href="<c:url value='/book/new_book_model?book_model_id=${card.bookModelId}' />"
                                                            type="submit" class="uk-button uk-button-primary">
                                                             <spring:message code="book.model.view.button"/></a>
                                                     </div>
