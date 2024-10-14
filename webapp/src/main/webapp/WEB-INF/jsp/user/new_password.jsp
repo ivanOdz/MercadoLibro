@@ -16,8 +16,8 @@
 <body>
 <c:url var="changePasswordUrl" value="/change_password"/>
 <div style="display: flex; place-items: center; height: 100%;">
-    <div class="uk-container container">
-        <h2 style="justify-content: center; margin-left: 70px;"><spring:message code="new.password.title2"/></h2>
+    <div class="uk-container container uk-align-center" style="text-align: center;">
+        <h2><spring:message code="new.password.title2"/></h2>
         <h4><spring:message code="new.password.description2"/></h4>
         <div style="justify-content: center;">
         <form action="${changePasswordUrl}" modelAttribute="passwordForm" method="post" class="uk-grid-large uk-grid" style="justify-content: center;">
@@ -52,7 +52,7 @@
                 </div>
 
 
-                <div class="uk-margin-top uk-button-group" style="margin-left: 50px;">
+                <div class="uk-margin-top uk-button-group">
                     <input type="hidden" name="verification_code" value="${verification_code}">
                     <button class="uk-button uk-button-primary"> <spring:message code="hwc.change_password.confirm"/> </button>
                 </div>
