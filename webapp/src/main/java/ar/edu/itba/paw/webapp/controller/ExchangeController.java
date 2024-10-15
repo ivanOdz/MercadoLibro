@@ -263,13 +263,6 @@ public class ExchangeController {
             return new ModelAndView("redirect:/404");
         }
 
-        /*
-        if (success) {
-            return new ModelAndView("redirect:/successPage");
-        } else {
-            return new ModelAndView("redirect:/errorPage");
-        }*/
-
         return new ModelAndView("redirect:/requests");
     }
 
