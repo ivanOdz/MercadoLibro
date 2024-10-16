@@ -219,10 +219,11 @@ public class ExchangeController {
         // NOTE: en el caso de que se haga una paginación de esta sección
         //  no hace falta realizar una excepción sino HAY QUE HACER UNA EXCEPCIÓN
         availableBooks = bookService.getAvailableBooksByUser(loggedUserAdvice.getLoggedUser());
-
+        
         mav.addObject("availableBooks", availableBooks);
         mav.addObject("exchangeForm", exchangeForm);
         mav.addObject("publication", publication);
+        
         return mav;
     }
 

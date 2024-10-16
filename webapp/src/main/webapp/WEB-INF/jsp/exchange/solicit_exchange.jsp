@@ -62,7 +62,7 @@
                         <li>
                             <label>
                                 <div class="uk-grid-small uk-flex-middle" uk-grid>
-                                    <div>
+                                    <div><!-- ? -->
                                         <form:radiobutton path="bookId" value="${availableBook.bookId}" />
                                     </div>
                                     <div class="uk-width-auto">
@@ -79,14 +79,16 @@
                     </c:forEach>
                 </ul>
             </div>
-            <form:errors path="bookId" element="p" cssStyle="color: red;"/>
+
         </div>
 
         <div class="uk-inline">
             <label class="form-group">
                 <spring:message code="book.set.location"/>
+                <form:input type="hidden" path="bookId" value="${availableBook.bookId}" class="uk-input"/>
                 <form:input path="location" type="text" class="uk-input"/>
             </label>
+            <form:errors path="bookId" element="p" cssStyle="color: red;"/>
             <form:errors path="location" element="p" cssStyle="color: red;"/>
         </div>
 
