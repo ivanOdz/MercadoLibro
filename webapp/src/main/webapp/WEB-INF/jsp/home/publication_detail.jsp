@@ -161,7 +161,7 @@
 
             <div style="display: grid; justify-content: center; grid-template-columns: repeat(4, 1fr);">
                 <!-- Book State -->
-                <div class="column-container" style="place-items: center; display: flex;">
+                <div class="column-container" style="place-items: center; display: flex; margin-right: 15%">
                     <div>
                         <p style="text-align: center"><spring:message code="publication.details.bookState"/></p>
                         <i class="material-icons" style="margin-left: 40px;">book</i>
