@@ -50,11 +50,11 @@ public class ExchangeServiceImpl implements ExchangeService {
 
         Exchange ex = exchangeDao.createExchange(offererPubId, requesterPubId, acceptCode, timestamp);
 
-        System.out.println("CREATE EXCHANGE " + ex);
-        
-        System.out.println(requesterPubId);
-        System.out.println(acceptCode);
-        System.out.println(timestamp);
+//        System.out.println("CREATE EXCHANGE " + ex);
+//        
+//        System.out.println(requesterPubId);
+//        System.out.println(acceptCode);
+//        System.out.println(timestamp);
         
         // mail variables setup
         Map<String, Object> variables = new HashMap<>();
