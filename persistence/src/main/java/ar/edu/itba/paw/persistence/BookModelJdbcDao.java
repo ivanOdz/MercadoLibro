@@ -108,7 +108,7 @@ public class BookModelJdbcDao implements BookModelDao {
 
             Number id;
             try{
-                id = jdbcInsertAuthor.execute(parameters);
+                id = jdbcInsertAuthor.executeAndReturnKey(parameters);
             } catch (DataIntegrityViolationException e) {
                 String errorMessage = messageSource.getMessage("error.authorCreation", new Object[]{e.getStackTrace()}, LocaleContextHolder.getLocale());
                 throw new AuthorBadRequestException(errorMessage);
