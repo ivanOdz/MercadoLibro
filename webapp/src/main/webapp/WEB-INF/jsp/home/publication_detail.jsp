@@ -146,7 +146,7 @@
 
             <div style="display: grid; justify-content: center; grid-template-columns: repeat(7, 1fr);">
 
-                <div style="grid-column: 2 / 5">
+                <div style="grid-column: 1 / 7">
                     <p>
                         <c:out value="${publication.book.bookModel.description}"/>
                     </p>
@@ -155,7 +155,7 @@
 
 
             <div style="display: grid; justify-content: center; grid-template-columns: repeat(4, 1fr);">
-                <hr style="grid-column: 2 / 4; margin: 5%"/>
+                <hr style="grid-column: 1 / 5; margin: 5%"/>
             </div>
 
 
@@ -240,32 +240,29 @@
 
 
             <div style="display: grid; justify-content: center; grid-template-columns: repeat(4, 1fr);">
-                <hr style="grid-column: 2 / 4; margin: 5%"/>
+                <hr style="grid-column: 1 / 5; margin: 5%"/>
             </div>
 
-            <div style="display: grid; justify-content: center; grid-template-columns: repeat(3, 1fr);">
+            <div style="display: grid; justify-content: center; grid-template-columns: repeat(2, 1fr);">
 
                 <c:if test="${user.userId != publication.book.owner.userId}">
                         <div style="grid-column: span 1">
                             <p class="uk-text-medium"
-                               style="font-size: 25px; text-align: center; max-width: 9lh; margin-left: 1lh;">
+                               style="font-size: 25px; text-align: center;">
                                 <spring:message code="exchange.description"/></p>
                         </div>
-                        <div style="grid-column: span 1">
+                        <div style="grid-column: span 1; align-content: center">
                             <p class="uk-text-medium"
                                style="font-size: 25px; max-width: 9lh; text-align: center; margin-left: 2lh;">
                                 <spring:message code="exchange.description2"/></p>
-                        </div>
-                        <div style="grid-column: span 1">
                                 <%-- if they dont have books than open the modal --%>
                             <c:if test="${empty availableBooks}">
-                                <a class="uk-button uk-button-primary" uk-toggle="target: #exchange-modal"
-                                   style="margin-left: 3lh;">
+                                <a class="uk-button uk-button-primary" uk-toggle="target: #exchange-modal">
                                     <spring:message code="add.exchange.submit"/>
                                 </a>
                             </c:if>
                             <c:if test="${not empty availableBooks}">
-                                <a style="margin: 50%" class="uk-button uk-button-primary"
+                                <a class="uk-button uk-button-primary"
                                    href="<c:url value='/start_exchange?publication_id=${publication.publicationId}' />">
                                     <spring:message code="add.exchange.submit"/>
                                 </a>
