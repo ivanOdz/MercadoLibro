@@ -38,10 +38,10 @@ public class GlobalExceptionHandlerAdvice {
         return new ModelAndView("redirect:/404");
     }
 
-    @ExceptionHandler(ApplicationRuntimeException.class)
+    @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ModelAndView handleGenericException(ApplicationRuntimeException ex) {
-        LOGGER.error(ex.getExceptionMessage(), ex.getStatusCode());
+    public ModelAndView handleGenericException(Exception ex) {
+        LOGGER.error(ex.getMessage());
         return new ModelAndView("redirect:/500");
     }
 }
