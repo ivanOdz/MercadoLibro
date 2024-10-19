@@ -13,8 +13,8 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
-    <link href="${pageContext.request.contextPath}/css/navbar.css" rel="stylesheet"/>
-    <link href="${pageContext.request.contextPath}/css/publicationDetail.css?v=1.0" rel="stylesheet"/>
+    <link href="<c:url value='/css/navbar.css' />" rel="stylesheet"/>
+    <link href="<c:url value='/css/publicationDetail.css?v=1.0' />" rel="stylesheet"/>
 
     <title><spring:message code="solicit.exchange"/></title>
 </head>
@@ -62,11 +62,11 @@
                         <li>
                             <label>
                                 <div class="uk-grid-small uk-flex-middle" uk-grid>
-                                    <div>
+                                    <div><!-- ? -->
                                         <form:radiobutton path="bookId" value="${availableBook.bookId}" />
                                     </div>
                                     <div class="uk-width-auto">
-                                        <img src="${pageContext.request.contextPath}/images/${availableBook.images[0]}"
+                                        <img src="<c:url value='/images/${availableBook.images[0]}' />"
                                              alt="Book Image" class="uk-border-circle" width="40" height="40">
                                     </div>
                                     <div class="uk-width-expand">
@@ -79,14 +79,16 @@
                     </c:forEach>
                 </ul>
             </div>
-            <form:errors path="bookId" element="p" cssStyle="color: red;"/>
+
         </div>
 
         <div class="uk-inline">
             <label class="form-group">
                 <spring:message code="book.set.location"/>
+                <form:input type="hidden" path="bookId" value="${availableBook.bookId}" class="uk-input"/>
                 <form:input path="location" type="text" class="uk-input"/>
             </label>
+            <form:errors path="bookId" element="p" cssStyle="color: red;"/>
             <form:errors path="location" element="p" cssStyle="color: red;"/>
         </div>
 

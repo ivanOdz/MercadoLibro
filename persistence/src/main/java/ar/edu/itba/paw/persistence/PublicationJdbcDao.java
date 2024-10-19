@@ -130,6 +130,9 @@ public class PublicationJdbcDao implements PublicationDao {
 
     @Override
     public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, SortType sortType, int currentPage) {
+        if(currentPage < 0){
+            currentPage = 0;
+        }
 
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT p.publicationId, " +
@@ -161,7 +164,7 @@ public class PublicationJdbcDao implements PublicationDao {
                         "LEFT JOIN book_image bi ON bi.bookId = b.bookId " +
                         "LEFT JOIN image i ON bm.imageId = i.imageId " +
                         "JOIN location l ON p.locationId = l.locationId " +
-                        "WHERE p.publicationState = ? AND LOWER(bm.title) LIKE LOWER(?) "
+                        "WHERE p.publicationState = ? AND LOWER(bm.title) LIKE LOWER(?) ESCAPE '\\' "
         );
 
         if (isGenreFilterActive) {
@@ -197,17 +200,19 @@ public class PublicationJdbcDao implements PublicationDao {
         int offset = currentPage * PUBLICATIONS_PAGE_SIZE;
         sqlQuery.append(" LIMIT ? OFFSET ?");
 
+        String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
+
         List<Publication> data;
         if (isGenreFilterActive && isBookStateFilterActive) {
-            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", genreFilter.getValue(), bookStateFilter.getValue(), PUBLICATIONS_PAGE_SIZE, offset}, new int[]{Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_PUBLICATION);
+            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), PublicationState.CURRENT.getValue(), "%" + safeSearch.toLowerCase() + "%", genreFilter.getValue(), bookStateFilter.getValue(), PUBLICATIONS_PAGE_SIZE, offset}, new int[]{Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_PUBLICATION);
         } else if (isGenreFilterActive) {
-            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", genreFilter.getValue(), PUBLICATIONS_PAGE_SIZE, offset}, new int[]{Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_PUBLICATION);
+            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), PublicationState.CURRENT.getValue(), "%" + safeSearch.toLowerCase() + "%", genreFilter.getValue(), PUBLICATIONS_PAGE_SIZE, offset}, new int[]{Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_PUBLICATION);
         } else if (isBookStateFilterActive) {
-            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", bookStateFilter.getValue(), PUBLICATIONS_PAGE_SIZE, offset}, new int[]{Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_PUBLICATION);
+            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), PublicationState.CURRENT.getValue(), "%" + safeSearch.toLowerCase() + "%", bookStateFilter.getValue(), PUBLICATIONS_PAGE_SIZE, offset}, new int[]{Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_PUBLICATION);
         } else
-            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), PublicationState.CURRENT.getValue(), "%" + search.toLowerCase() + "%", PUBLICATIONS_PAGE_SIZE, offset}, new int[]{Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_PUBLICATION);
+            data = jdbcTemplate.query(sqlQuery.toString(), new Object[]{ExchangeState.ACCEPTED.getValue(), PublicationState.CURRENT.getValue(), "%" + safeSearch.toLowerCase() + "%", PUBLICATIONS_PAGE_SIZE, offset}, new int[]{Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.INTEGER, Types.INTEGER}, ROW_MAPPER_PUBLICATION);
 
-        int totalResults = getTotalResultsByBook(search, isGenreFilterActive, genreFilter, isBookStateFilterActive, bookStateFilter);
+        int totalResults = getTotalResultsByBook(safeSearch, isGenreFilterActive, genreFilter, isBookStateFilterActive, bookStateFilter);
 
         return new PaginatedResponse<>(data, new ItemFilterMetadata(currentPage, PUBLICATIONS_PAGE_SIZE, totalResults, search, isGenreFilterActive, genreFilter, sortType, null, isBookStateFilterActive, bookStateFilter, null));
     }
@@ -225,7 +230,7 @@ public class PublicationJdbcDao implements PublicationDao {
                         "FROM publication p " +
                         "JOIN book b ON p.bookId = b.bookId " +
                         "JOIN book_model bm ON b.bookModelId = bm.bookModelId " +
-                        "WHERE p.publicationState = ? AND LOWER(bm.title) LIKE LOWER(?) ");
+                        "WHERE p.publicationState = ? AND LOWER(bm.title) LIKE LOWER(?) ESCAPE '\\' ");
 
         if (isGenreFilterActive) {
             sqlQuery.append("AND bm.genre = ? ");
@@ -262,7 +267,7 @@ public class PublicationJdbcDao implements PublicationDao {
                         "FROM publication p " +
                         "JOIN book b ON p.bookId = b.bookId " +
                         "JOIN book_model bm ON b.bookModelId = bm.bookModelId " +
-                        "WHERE p.publicationState = ? AND LOWER(bm.title) LIKE LOWER(?) ");
+                        "WHERE p.publicationState = ? AND LOWER(bm.title) LIKE LOWER(?) ESCAPE '\\' ");
 
         if (isBookStateFilterActive) {
             sqlQuery.append("AND b.bookState = ? ");
@@ -299,37 +304,29 @@ public class PublicationJdbcDao implements PublicationDao {
                         "FROM publication p " +
                         "JOIN book b ON p.bookId = b.bookId " +
                         "JOIN book_model bm ON b.bookModelId = bm.bookModelId " +
-                        "WHERE p.publicationState = ? AND LOWER(bm.title) LIKE LOWER(?) ");
+                        "WHERE p.publicationState = ? AND LOWER(bm.title) LIKE LOWER(?) ESCAPE '\\' ");
 
-        // Agregar el filtro de estado del libro si está activo
         if (isBookStateFilterActive) {
             sqlQuery.append("AND b.bookState = ? ");
         }
 
-        // Agregar el filtro por género si está activo
         if (isGenreFilterActive) {
             sqlQuery.append("AND bm.genre = ? ");
         }
 
-        // Parámetros para la consulta
         List<Object> params = new ArrayList<>();
-        params.add(PublicationState.CURRENT.getValue());  // Estado de publicación actual
-        params.add("%" + search.toLowerCase() + "%");     // Filtro de búsqueda (coincidencia parcial)
+        params.add(PublicationState.CURRENT.getValue());
+        params.add("%" + search.toLowerCase() + "%");
 
-        // Añadir el filtro del estado del libro si está activo
         if (isBookStateFilterActive) {
             params.add(bookStateFilter.getValue());
         }
 
-        // Añadir el filtro de género si está activo
         if (isGenreFilterActive) {
             params.add(genreFilter.getValue());
         }
-
-        // Ejecutar la consulta y obtener el total de resultados
         Integer totalResults = jdbcTemplate.queryForObject(sqlQuery.toString(), params.toArray(), Integer.class);
 
-        // Devolver 0 si totalResults es null
         return totalResults != null ? totalResults : 0;
     }
 

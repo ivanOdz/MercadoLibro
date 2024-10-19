@@ -13,13 +13,13 @@
             <div class="uk-navbar-left">
                 <ul class="uk-navbar-nav">
                     <li>
-                        <a class="image-hover" href="${pageContext.request.contextPath}/">
-                            <img src="${pageContext.request.contextPath}/images/mercado_libro.webp" alt="Logo Icon"
+                        <a class="image-hover" href="<c:url value='/' /> ">
+                            <img src="<c:url value='/images/mercado_libro.webp' />" alt="Logo Icon"
                                  class="icon-style">
                         </a>
                     </li>
                     <li>
-                        <a class="uk-navbar-item uk-logo" href="${pageContext.request.contextPath}/">
+                        <a class="uk-navbar-item uk-logo" href="<c:url value='/' /> ">
                             <strong class="button-text-wo">
                                 <spring:message code="publications.list.brand.logo"/>
                             </strong>

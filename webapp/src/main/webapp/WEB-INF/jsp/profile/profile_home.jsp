@@ -14,8 +14,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
-	<link href="${pageContext.request.contextPath}/css/navbar.css?v=1.0" rel="stylesheet"/>
-    <link href="${pageContext.request.contextPath}/css/profile.css?v=1.0" rel="stylesheet"/>
+	<link href="<c:url value='/css/navbar.css?v=1.0' />" rel="stylesheet"/>
+    <link href="<c:url value='/css/profile.css?v=1.0' />" rel="stylesheet"/>
 
     <title><spring:message code="profile.view.title"/></title>
 
@@ -36,12 +36,12 @@
                             <c:choose>
                                 <c:when test="${loggedUser.imageId != 0}">
                                     <img class="profile-pic"
-                                         src="${pageContext.request.contextPath}/images/${loggedUser.imageId}"
+                                         src="<c:url value='/images/${loggedUser.imageId}' />"
                                          alt="profileImage"/>
                                 </c:when>
                                 <c:otherwise>
                                     <img class="profile-pic"
-                                         src="${pageContext.request.contextPath}/images/profile-default.jpg"
+                                         src="<c:url value='/images/profile-default.jpg' />"
                                          alt="defaultImage"/>
                                 </c:otherwise>
                             </c:choose>
@@ -72,12 +72,12 @@
                                 <i class="material-icons edit-icon">edit</i>
                             </button>
 
-                            <form id="change-username-form" action="/changeUsername" method="post"
+                            <form id="change-username-form" action="<c:url value='/changeUsername' />" method="post"
                                   style="display:none;">
-                                <input type="text" name="newUsername" id="new-username" value="${loggedUser.username}"
+                                <input type="text" name="newUsername" id="new_username" value="${loggedUser.username}"
                                        required>
                                 <input type="hidden" name="loggedUserId" value="${loggedUser.userId}">
-                                <button type="submit" class="btn-confirm">Confirm</button>
+                                <button type="submit" class="btn-confirm"><spring:message code="hwc.change_password.confirm"/></button>
                                 <button type="button" onclick="cancelEdit()" class="btn-cancel">X</button>
                             </form>
 
@@ -86,10 +86,10 @@
                         <div id="username-input-section" style="display: none;">
                             <div class="input-field">
                                 <input id="new-username" type="text" placeholder="Nuevo nombre de usuario"/>
-                                <label for="new-username">New</label>
+                                <label for="new-username"><spring:message code="profile.new"/></label>
                             </div>
 
-                            <button id="confirm-username-btn" class="btn green">Confirm</button>
+                            <button id="confirm-username-btn" class="btn green"><spring:message code="hwc.change_password.confirm"/></button>
                             <button id="cancel-username-btn" class="btn red">X</button>
                         </div>
 
@@ -122,8 +122,8 @@
                         <button style="margin: 5% 0 5% 0;" class="uk-button uk-button-default" type="button"><spring:message code="language"/></button>
                         <div uk-dropdown>
                             <ul class="uk-nav uk-dropdown-nav ">
-                                <li><a href="${pageContext.request.contextPath}/language?lang=en"><spring:message code="language.english"/></a></li>
-                                <li><a href="${pageContext.request.contextPath}/language?lang=es"><spring:message code="language.spanish"/></a></li>
+                                <li><a href="<c:url value='/language?lang=en' />"><spring:message code="language.english"/></a></li>
+                                <li><a href="<c:url value='/language?lang=es' />"><spring:message code="language.spanish"/></a></li>
                             </ul>
                         </div>
 

@@ -219,10 +219,11 @@ public class ExchangeController {
         // NOTE: en el caso de que se haga una paginación de esta sección
         //  no hace falta realizar una excepción sino HAY QUE HACER UNA EXCEPCIÓN
         availableBooks = bookService.getAvailableBooksByUser(loggedUserAdvice.getLoggedUser());
-
+        
         mav.addObject("availableBooks", availableBooks);
         mav.addObject("exchangeForm", exchangeForm);
         mav.addObject("publication", publication);
+        
         return mav;
     }
 
@@ -262,13 +263,6 @@ public class ExchangeController {
             LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
             return new ModelAndView("redirect:/404");
         }
-
-        /*
-        if (success) {
-            return new ModelAndView("redirect:/successPage");
-        } else {
-            return new ModelAndView("redirect:/errorPage");
-        }*/
 
         return new ModelAndView("redirect:/requests");
     }

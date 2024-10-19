@@ -2,28 +2,41 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
+<%@ include file="/WEB-INF/jsp/components/navbar_wo_search.jsp" %>
 <%@include file="/WEB-INF/jsp/head/headers.jsp" %>
 
 <html class="custom-style">
 <head>
-    <link href="${pageContext.request.contextPath}/css/navbar.css?v=1.0" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
-    <link rel="icon" href="${pageContext.request.contextPath}/images/favicon.ico" type="image/x-icon"/>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
+
+    <link href="<c:url value='/css/navbar.css' />" rel="stylesheet"/>
+    <link href="<c:url value='/css/book_home.css' />" rel="stylesheet"/>
 
     <title><spring:message code="library.title"/></title>
 </head>
 <body>
-<navbar/>
+<navbar_wo_search></navbar_wo_search>
+
 
 
 <div class="uk-background-muted">
-    <div class="uk-container">
-        <div class="uk-grid ml-1 uk-margin-top" uk-grid>
+    <div class="uk-container main-content">
+        <div class="uk-container book-search-section">
+            <form class="uk-search uk-search-default custom-search-form book-search" method="get" action="">
+                <input class="uk-search-input button-text " type="search"
+                       placeholder="<spring:message code='home.search.text'/>"
+                       aria-label="Search"
+                       name="search"
+                       id="search"
+                       value="<c:out value='${books.metadata.search}'/>">
+                <button class="uk-search-icon-flip" uk-search-icon></button>
+            </form>
+        </div>
+
+        <div class="uk-grid ml-1 uk-margin-top" uk-grid style="margin-bottom: 64px;">
             <div class="uk-width-1-4@s filter-section uk-border-rounded uk-box-shadow-small mt-1 mb-1">
                 <h2>
                     <c:out value="${modelBooks.metadata.search}"/>
@@ -104,12 +117,12 @@
                                     <c:choose>
                                         <c:when test="${card.imageId != null}">
                                             <img class="book-image"
-                                                 src="${pageContext.request.contextPath}/images/${card.imageId}"
+                                                 src="<c:url value='/images/${card.imageId}'/>"
                                                  alt="bookImage"/>
                                         </c:when>
                                         <c:otherwise>
                                             <img class="book-image"
-                                                 src="${pageContext.request.contextPath}/images/book.jpg" alt="book"/>
+                                                 src="<c:url value='/images/book.jpg' />" alt="book"/>
                                         </c:otherwise>
                                     </c:choose>
                                 </figure>
@@ -148,7 +161,7 @@
                                                 <div class="uk-width-1-1">
                                                     <div class="uk-margin-top uk-button-group"
                                                          style="margin-left: 50px;">
-                                                        <a href="${pageContext.request.contextPath}/book/new_book_model?book_model_id=${card.bookModelId}"
+                                                        <a href="<c:url value='/book/new_book_model?book_model_id=${card.bookModelId}' />"
                                                            type="submit" class="uk-button uk-button-primary">
                                                             <spring:message code="book.model.view.button"/></a>
                                                     </div>

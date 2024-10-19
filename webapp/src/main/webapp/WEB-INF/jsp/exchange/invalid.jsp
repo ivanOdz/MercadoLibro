@@ -9,17 +9,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><spring:message code="confirmation.page.title"/></title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
-    <link href="${pageContext.request.contextPath}/css/navbar.css?v=1.0" rel="stylesheet"/>
+    <link href="<c:url value='/css/navbar.css?v=1.0' />" rel="stylesheet"/>
+
+    <title><spring:message code="confirmation.page.title"/></title>
 </head>
 <body>
-<c:url var="exchangeUrl" value="/exchange"/>
 <c:url var="booksUrl" value="/book"/>
 <c:url var="profileUrl" value="/profile"/>
-<c:url var="newBookFromScratch" value="/book/book_form"/>
+<c:url var="newBookFromScratch" value="/book/new_book_model"/>
 <c:url var="logout" value="/logout"/>
 
 <navbar/>
@@ -30,7 +30,7 @@
         <p class="uk-text-lead"><spring:message code="invalid.message"/></p>
 
         <p>
-            <a class="uk-button uk-button-primary" href="${pageContext.request.contextPath}/">
+            <a class="uk-button uk-button-primary" href="<c:url value='/' />">
                 <spring:message code="confirmation.home.button"/>
             </a>
         </p>

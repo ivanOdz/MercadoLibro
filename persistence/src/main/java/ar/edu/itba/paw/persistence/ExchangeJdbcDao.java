@@ -307,7 +307,10 @@ public class ExchangeJdbcDao implements ExchangeDao {
 
     @Override
     public PaginatedResponse<Exchange, BasicMetadata> getAllExchangesByUserId(long anUserId, ExchangeState exchangeState, int currentPage, boolean isOfferer) {
-    	
+        if(currentPage < 0){
+            currentPage = 0;
+        }
+
         StringBuilder sqlQuery = new StringBuilder(baseQuery);
 
         if (isOfferer) {

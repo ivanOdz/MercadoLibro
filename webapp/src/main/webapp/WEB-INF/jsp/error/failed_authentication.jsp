@@ -4,17 +4,19 @@
 <html>
 <%@include file="/WEB-INF/jsp/head/headers.jsp"%>
 <head>
-    <link href="${pageContext.request.contextPath}/css/background.css" rel="stylesheet"/>
+    <link href="<c:url value='/css/background.css' />" rel="stylesheet"/>
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
     <meta charset="UTF-8">
+
+    <title><spring:message code="auth.failed"/></title>
 </head>
 <body>
 <c:url var="okUrl" value="/login"/>
 
 <div class="uk-background-center-center uk-margin-right uk-margin-left">
-    <div class="uk-position-center uk-card uk-card-default uk-card-body uk-width-1-3>
+    <div class="uk-position-center uk-card uk-card-default uk-card-body uk-width-1-3">
         <h3 class="uk-card-title">
             <spring:message code="exchange.failed.authentication"/>
         </h3>

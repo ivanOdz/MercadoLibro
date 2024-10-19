@@ -18,13 +18,13 @@
             <div class="uk-navbar-left">
                 <ul class="uk-navbar-nav">
                     <li>
-                        <a href="${pageContext.request.contextPath}/">
-                            <img src="${pageContext.request.contextPath}/images/mercado_libro.webp" alt="Logo Icon"
+                        <a href="<c:url value='/' /> ">
+                            <img src="<c:url value='/images/mercado_libro.webp' />" alt="Logo Icon"
                                  class="icon-style">
                         </a>
                     </li>
                     <li>
-                        <a class="uk-navbar-item uk-logo" href="${pageContext.request.contextPath}/">
+                        <a class="uk-navbar-item uk-logo" href="<c:url value='/' /> ">
                             <strong class="button-text">
                                 <spring:message code="publications.list.brand.logo"/>
                             </strong>
@@ -49,7 +49,7 @@
                 </ul>
             </div>
             <div class="uk-navbar-right">
-                <ul class="uk-navbar-nav" style="display: row">
+                <ul class="uk-navbar-nav" style="display: flex; flex-direction: row;">
                     <c:if test="${loggedUser != null}">
                         <li>
                             <a class="pl-1 pr-1" href="${exchangeRequestsUrl}"><spring:message

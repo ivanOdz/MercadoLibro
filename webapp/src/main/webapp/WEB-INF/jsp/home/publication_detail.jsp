@@ -12,8 +12,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
-    <link href="${pageContext.request.contextPath}/css/navbar.css?v=1.0" rel="stylesheet"/>
-    <link href="${pageContext.request.contextPath}/css/publicationDetail.css?v=1.0" rel="stylesheet"/>
+    <link href="<c:url value='/css/navbar.css?v=1.0' />" rel="stylesheet"/>
+    <link href="<c:url value='/css/publications.css?v=1.0' />" rel="stylesheet"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
     <title><spring:message code="publication.details.title"/></title>
@@ -53,7 +53,7 @@
         <div class="uk-container uk-card uk-card-default"
              style="align-content: center; border-radius: 1%; padding: 5%; justify-content: center; margin-top:5%; margin-bottom:5%; max-width:125%">
             <div style="margin-bottom: 5%">
-                <a class="uk-button uk-button-text" href="${pageContext.request.contextPath}/">
+                <a class="uk-button uk-button-text" href="<c:url value='/' />">
                     <span uk-icon="icon:  chevron-left"></span>
                     <spring:message code="add.book.return_home"/>
                 </a>
@@ -75,7 +75,7 @@
                             </div>
                         </c:when>
                         <c:otherwise>
-                            <img class="book-image" src="${pageContext.request.contextPath}/images/book.jpg" width="300"
+                            <img class="book-image" src="<c:url value='/images/book.jpg' />" width="300"
                                  height="400" alt="book"/>
                         </c:otherwise>
                     </c:choose>
@@ -146,7 +146,7 @@
 
             <div style="display: grid; justify-content: center; grid-template-columns: repeat(7, 1fr);">
 
-                <div style="grid-column: 2 / 5">
+                <div style="grid-column: 1 / 7">
                     <p>
                         <c:out value="${publication.book.bookModel.description}"/>
                     </p>
@@ -155,13 +155,13 @@
 
 
             <div style="display: grid; justify-content: center; grid-template-columns: repeat(4, 1fr);">
-                <hr style="grid-column: 2 / 4; margin: 5%"/>
+                <hr style="grid-column: 1 / 5; margin: 5%"/>
             </div>
 
 
             <div style="display: grid; justify-content: center; grid-template-columns: repeat(4, 1fr);">
                 <!-- Book State -->
-                <div class="column-container" style="place-items: center; display: flex;">
+                <div class="column-container" style="place-items: center; display: flex; margin-right: 15%">
                     <div>
                         <p style="text-align: center"><spring:message code="publication.details.bookState"/></p>
                         <i class="material-icons" style="margin-left: 40px;">book</i>
@@ -240,33 +240,30 @@
 
 
             <div style="display: grid; justify-content: center; grid-template-columns: repeat(4, 1fr);">
-                <hr style="grid-column: 2 / 4; margin: 5%"/>
+                <hr style="grid-column: 1 / 5; margin: 5%"/>
             </div>
 
-            <div style="display: grid; justify-content: center; grid-template-columns: repeat(3, 1fr);">
+            <div style="display: grid; justify-content: center; grid-template-columns: repeat(2, 1fr);">
 
                 <c:if test="${user.userId != publication.book.owner.userId}">
                         <div style="grid-column: span 1">
                             <p class="uk-text-medium"
-                               style="font-size: 25px; text-align: center; max-width: 9lh; margin-left: 1lh;">
+                               style="font-size: 25px; text-align: center;">
                                 <spring:message code="exchange.description"/></p>
                         </div>
-                        <div style="grid-column: span 1">
+                        <div style="grid-column: span 1; align-content: center">
                             <p class="uk-text-medium"
                                style="font-size: 25px; max-width: 9lh; text-align: center; margin-left: 2lh;">
                                 <spring:message code="exchange.description2"/></p>
-                        </div>
-                        <div style="grid-column: span 1">
                                 <%-- if they dont have books than open the modal --%>
                             <c:if test="${empty availableBooks}">
-                                <a class="uk-button uk-button-primary" uk-toggle="target: #exchange-modal"
-                                   style="margin-left: 3lh;">
+                                <a class="uk-button uk-button-primary" uk-toggle="target: #exchange-modal">
                                     <spring:message code="add.exchange.submit"/>
                                 </a>
                             </c:if>
                             <c:if test="${not empty availableBooks}">
-                                <a style="margin: 50%" class="uk-button uk-button-primary"
-                                   href="${pageContext.request.contextPath}/start_exchange?publication_id=${publication.publicationId}">
+                                <a class="uk-button uk-button-primary"
+                                   href="<c:url value='/start_exchange?publication_id=${publication.publicationId}' />">
                                     <spring:message code="add.exchange.submit"/>
                                 </a>
                             </c:if>
@@ -280,7 +277,7 @@
                                     <spring:message code="book.set.book"/>
                                 </label>
                                 <a class="uk-button uk-button-primary"
-                                   href="${pageContext.request.contextPath}/book/book_models">
+                                   href="<c:url value='/book/book_models' />">
                                     <spring:message code="add.book.missing"/>
                                 </a>
                             </div>
@@ -295,7 +292,7 @@
 <script>
     const images = [
         <c:forEach var="image" items="${publication.book.images}" varStatus="loop">
-        '<c:url value="${pageContext.request.contextPath}/images/${image}"/>'<c:if test="${!loop.last}">, </c:if>
+        '<c:url value="/images/${image}"/>'<c:if test="${!loop.last}">, </c:if>
         </c:forEach>
     ];
 
