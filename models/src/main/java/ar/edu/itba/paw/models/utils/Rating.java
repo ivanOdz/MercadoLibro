@@ -1,5 +1,8 @@
 package ar.edu.itba.paw.models.utils;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 public class Rating {
     private double rating;
     private int ratingCount;
