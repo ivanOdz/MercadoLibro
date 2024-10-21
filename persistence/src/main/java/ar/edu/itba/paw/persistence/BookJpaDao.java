@@ -38,6 +38,32 @@ public class BookJpaDao implements BookDao {
     @PersistenceContext
     private EntityManager em;
 
+    @Autowired
+    private final JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private final SimpleJdbcInsert jdbcInsertBookRating;
+
+    public BookJpaDao(final DataSource ds) throws SQLException {
+
+            jdbcTemplate = new JdbcTemplate(ds);
+//            jdbcInsertBook = new SimpleJdbcInsert(jdbcTemplate).usingGeneratedKeyColumns("bookid").withTableName("book");
+            jdbcInsertBookRating = new SimpleJdbcInsert(jdbcTemplate).withTableName("book_rating").usingGeneratedKeyColumns("ratingid");
+//            jdbcInsertBookImage = new SimpleJdbcInsert(jdbcTemplate).withTableName("book_image");
+
+            String databaseProductName = ds.getConnection().getMetaData().getDatabaseProductName();
+
+//            if (databaseProductName.equalsIgnoreCase("HSQL Database Engine")) {
+//
+//                this.aggregationFunctionAuthor = "'author' AS authors, ";
+//                this.aggregationFunctionImages = "null AS images, ";
+//            }
+//            else { // databaseProductName.equalsIgnoreCase("PostgreSQL")
+//                this.aggregationFunctionAuthor = "(SELECT GROUP_CONCAT(a.authorName, ', ') FROM book_author ba JOIN author a ON a.authorId = ba.authorId WHERE ba.bookModelId = bm.bookModelId) AS authors, ";
+//                this.aggregationFunctionImages = "ARRAY_AGG(i.imageId ORDER BY bi.imageOrder) AS images, ";
+//            }
+    }
+
     @Override
     public Number createBook(long bookModelId, User owner, BookState bookState, List<Integer> images) {
         final Book book = new Book(null, owner, null, bookState, 0, true, images);
@@ -48,6 +74,7 @@ public class BookJpaDao implements BookDao {
     @Override
     public void createBookRating(User user, long bookModelId, int rating) {
 
+        // esto creo q lo tenemos q conservar como jdbcTemplate
         String checkQuery = "SELECT COUNT(*) FROM book_rating WHERE userId = ? AND bookModelId = ?";
         int count = jdbcTemplate.queryForObject(checkQuery, new Object[]{user.getUserId(), bookModelId}, Integer.class);
 

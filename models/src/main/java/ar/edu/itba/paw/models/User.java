@@ -38,9 +38,9 @@ public class User {
 
 
     /* package */User(){
+
         // only for JPA
     }
-
     public User(Long userId, String username, String mail, String password, Long imageId, Integer verificationCode, boolean isVerified, String language) {
         this.userId = userId;
         this.username = username;
@@ -83,5 +83,37 @@ public class User {
 
     public boolean isVerified() {
         return isVerified;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setImageId(Long imageId) {
+        this.imageId = imageId;
+    }
+
+    public void setVerificationCode(Integer verificationCode) {
+        this.verificationCode = verificationCode;
+    }
+
+    public void setVerified(boolean verified) {
+        isVerified = verified;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
     }
 }
