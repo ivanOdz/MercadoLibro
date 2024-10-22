@@ -168,7 +168,9 @@ public class UserJpaDao implements UserDao {
     @Override
     public boolean updateUsername(long userId, String newUsername) {
         Optional<User> maybeUser = findById(userId); // NOTE: agregado, verificar catch de excepciones
-
+        if (maybeUser.isEmpty()) {
+            return false;
+        }
         maybeUser.ifPresent(user -> {
             user.setUsername(newUsername);
         });
