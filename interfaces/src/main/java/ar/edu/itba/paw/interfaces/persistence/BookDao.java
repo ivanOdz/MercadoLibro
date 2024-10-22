@@ -10,11 +10,11 @@ public interface BookDao {
 
     Number createBook(long bookModelId, User owner, BookState bookState, List<Integer> images);
 
-    void createBookRating(User user, long bookModelId, int rating);
+    void createBookRating(User user, BookModel bookModel, int rating);
 
     void createBookImage(long bookId, List<Integer> images);
 
-    void setOwner(long bookId, long userId);
+    void setOwner(Book book, User user);
 
     Book getBookById(long bookId);
 
@@ -25,5 +25,6 @@ public interface BookDao {
     List<BookStateWrapper> getBookStateQtyByBook(String search, boolean isGenreFilterActive, Genre genreFilter, long userId);
 
     List<GenreWrapper> getGenreQtyByBook(String search, boolean isBookStateFilterActive, BookState bookStateFilter, long userId);
+
 
 }

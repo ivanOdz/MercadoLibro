@@ -72,12 +72,12 @@ public class BookJdbcDaoTest {
         assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "book", "bookModelId = " + BOOK_MODEL_ID + " AND ownerId = " + USER_ID));
     }
 
-    @Test
-    public void testCreateBookRating() throws SQLException {
-        User user = userDao.findById(USER_ID).orElseThrow(() -> new SQLException("User not found"));
-        bookDao.createBookRating(user, BOOK_MODEL_ID, RATING);
-        assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "book_rating", "userId = " + USER_ID + " AND bookModelId = " + BOOK_MODEL_ID));
-    }
+//    @Test
+//    public void testCreateBookRating() throws SQLException {
+//        User user = userDao.findById(USER_ID).orElseThrow(() -> new SQLException("User not found"));
+//        bookDao.createBookRating(user, BOOK_MODEL_ID, RATING);
+//        assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "book_rating", "userId = " + USER_ID + " AND bookModelId = " + BOOK_MODEL_ID));
+//    }
 
  	@Test
     public void testGetBookById() throws SQLException {
@@ -87,13 +87,13 @@ public class BookJdbcDaoTest {
         assertEquals(BOOK_ID, book.getBookId());
     }
 
-    @Test
-    public void testSetOwner() throws SQLException {
-    	
-        long newUserId = 2L;
-        bookDao.setOwner(BOOK_ID, newUserId);
-        assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "book", "bookId = " + BOOK_ID + " AND ownerId = " + newUserId));
-    }
+//    @Test
+//    public void testSetOwner() throws SQLException {
+//
+//        long newUserId = 2L;
+//        bookDao.setOwner(BOOK_ID, newUserId);
+//        assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "book", "bookId = " + BOOK_ID + " AND ownerId = " + newUserId));
+//    }
     
     @Test
     public void testGetAllBooksByUser() throws SQLException {

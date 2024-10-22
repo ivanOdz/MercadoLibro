@@ -1,10 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.Book;
-import ar.edu.itba.paw.models.Image;
-import ar.edu.itba.paw.models.PaginatedResponse;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.interfaces.persistence.BookDao;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
@@ -44,7 +41,7 @@ public class BookServiceImpl implements BookService {
         }
 
 
-        bookDao.createBookRating(user, bookModelId, rating);
+        bookDao.createBookRating(user, bookModelService.getBookModelByBookModelId(bookModelId), rating);
 
         Number toReturn = bookDao.createBook(bookModelId, user, bookState, imagesId);
 
@@ -70,8 +67,8 @@ public class BookServiceImpl implements BookService {
     @Transactional
     @Override
     public void exchangeOwnership(Book b1, Book b2) {
-        bookDao.setOwner(b1.getBookId(), b2.getOwner().getUserId());
-        bookDao.setOwner(b2.getBookId(), b1.getOwner().getUserId());
+        bookDao.setOwner(b1, b2.getOwner());
+        bookDao.setOwner(b2, b1.getOwner());
     }
 
     @Override

@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -89,66 +90,97 @@ public class UserJpaDao implements UserDao {
     }
 
 
-    // ------- sin implementar con hibernate
 
 
-    @Override
-    public boolean updateUsername(long userId, String newUsername) {
-
-        int rowsAffected;
-        try {
-            rowsAffected = jdbcTemplate.update("UPDATE users SET userName = ? WHERE userId = ? AND NOT EXISTS (SELECT * FROM users WHERE userName = ?)", new Object[]{newUsername, userId, newUsername}, new int[]{Types.VARCHAR, Types.BIGINT, Types.VARCHAR});
-        } catch (DataIntegrityViolationException e) {
-            String errorMessage = messageSource.getMessage("error.changeUserName", new Object[]{e.getStackTrace()}, LocaleContextHolder.getLocale());
-            throw new UserModifyBadRequestException(errorMessage);
-        }
-        return rowsAffected >= 1;
-    }
-
+    @Transactional
     @Override
     public void setUserLanguage(long userId, String language) {
-        try{
-            jdbcTemplate.update("UPDATE users SET language = ? WHERE userId = ?", new Object[]{language, userId},
-                    new int[]{Types.VARCHAR, Types.BIGINT});
-        }catch (DataIntegrityViolationException e){
-            String errorMessage = messageSource.getMessage("error.setUserLanguage", new Object[]{e.getStackTrace()}, LocaleContextHolder.getLocale());
-            throw new UserModifyBadRequestException(errorMessage);
-        }
+        Optional<User> maybeUser = findById(userId); // NOTE: agregado, verificar catch de excepciones
+
+        maybeUser.ifPresent(user -> {
+            user.setLanguage(language);
+        });
+//        try{
+//            jdbcTemplate.update("UPDATE users SET language = ? WHERE userId = ?", new Object[]{language, userId},
+//                    new int[]{Types.VARCHAR, Types.BIGINT});
+//        }catch (DataIntegrityViolationException e){
+//            String errorMessage = messageSource.getMessage("error.setUserLanguage", new Object[]{e.getStackTrace()}, LocaleContextHolder.getLocale());
+//            throw new UserModifyBadRequestException(errorMessage);
+//        }
     }
 
+    @Transactional
     @Override
     public void verifyUser(int verificationCode) {
-        try {
-            jdbcTemplate.update("UPDATE users SET isVerified = ? WHERE verificationCode = ?", new Object[]{true, verificationCode},
-                    new int[]{Types.BOOLEAN, Types.INTEGER});
-            jdbcTemplate.update("UPDATE users SET verificationCode = ? WHERE verificationCode = ?", new Object[]{null, verificationCode},
-                    new int[]{Types.NULL, Types.INTEGER});
+        User user = getUserToVerify(verificationCode);  // NOTE: agregado, verificar catch de excepciones
 
-        } catch (DataIntegrityViolationException e) {
-            String errorMessage = messageSource.getMessage("error.verifyUser", new Object[]{e.getStackTrace()}, LocaleContextHolder.getLocale());
-            throw new UserVerificationBadRequestException(errorMessage);
-        }
+        user.setVerified(true);
+        user.setVerificationCode(null);
+
+//        try {
+//            jdbcTemplate.update("UPDATE users SET isVerified = ? WHERE verificationCode = ?", new Object[]{true, verificationCode},
+//                    new int[]{Types.BOOLEAN, Types.INTEGER});
+//            jdbcTemplate.update("UPDATE users SET verificationCode = ? WHERE verificationCode = ?", new Object[]{null, verificationCode},
+//                    new int[]{Types.NULL, Types.INTEGER});
+//
+//        } catch (DataIntegrityViolationException e) {
+//            String errorMessage = messageSource.getMessage("error.verifyUser", new Object[]{e.getStackTrace()}, LocaleContextHolder.getLocale());
+//            throw new UserVerificationBadRequestException(errorMessage);
+//        }
     }
 
+
+    @Transactional
     @Override
     public void changePasswordSolicited(String email, int verificationCode) {
-        try {
-            jdbcTemplate.update("UPDATE users SET verificationCode = ? WHERE mail = ?", new Object[]{verificationCode, email},
-                    new int[]{Types.INTEGER, Types.VARCHAR});
-        } catch (DataIntegrityViolationException e) {
-            String errorMessage = messageSource.getMessage("error.changePasswordSolicited", new Object[]{e.getStackTrace()}, LocaleContextHolder.getLocale());
-            throw new PasswordChangeBadRequestException(errorMessage);
-        }
+
+        Optional<User> maybeUser = findByMail(email); // NOTE: agregado, verificar catch de excepciones
+
+        maybeUser.ifPresent(user -> {
+            user.setVerificationCode(verificationCode);
+        });
+
+//        try {
+//            jdbcTemplate.update("UPDATE users SET verificationCode = ? WHERE mail = ?", new Object[]{verificationCode, email},
+//                    new int[]{Types.INTEGER, Types.VARCHAR});
+//        } catch (DataIntegrityViolationException e) {
+//            String errorMessage = messageSource.getMessage("error.changePasswordSolicited", new Object[]{e.getStackTrace()}, LocaleContextHolder.getLocale());
+//            throw new PasswordChangeBadRequestException(errorMessage);
+//        }
     }
 
+    @Transactional
     @Override
     public void changePassword(int verificationCode, String newPassword) {
-        try {
-            jdbcTemplate.update("UPDATE users SET password = ? WHERE verificationCode = ?", new Object[]{newPassword, verificationCode},
-                    new int[]{Types.VARCHAR, Types.INTEGER});
-        } catch (DataIntegrityViolationException e) {
-            String errorMessage = messageSource.getMessage("error.changePassword", new Object[]{e.getStackTrace()}, LocaleContextHolder.getLocale());
-            throw new PasswordChangeBadRequestException(errorMessage);
-        }
+        User user = getUserToVerify(verificationCode);  // NOTE: agregado, verificar catch de excepciones
+        user.setPassword(newPassword);
+
+//        try {
+//            jdbcTemplate.update("UPDATE users SET password = ? WHERE verificationCode = ?", new Object[]{newPassword, verificationCode},
+//                    new int[]{Types.VARCHAR, Types.INTEGER});
+//        } catch (DataIntegrityViolationException e) {
+//            String errorMessage = messageSource.getMessage("error.changePassword", new Object[]{e.getStackTrace()}, LocaleContextHolder.getLocale());
+//            throw new PasswordChangeBadRequestException(errorMessage);
+//        }
+    }
+
+    @Transactional
+    @Override
+    public boolean updateUsername(long userId, String newUsername) {
+        Optional<User> maybeUser = findById(userId); // NOTE: agregado, verificar catch de excepciones
+
+        maybeUser.ifPresent(user -> {
+            user.setUsername(newUsername);
+        });
+
+//        int rowsAffected;
+//        try {
+//            rowsAffected = jdbcTemplate.update("UPDATE users SET userName = ? WHERE userId = ? AND NOT EXISTS (SELECT * FROM users WHERE userName = ?)", new Object[]{newUsername, userId, newUsername}, new int[]{Types.VARCHAR, Types.BIGINT, Types.VARCHAR});
+//        } catch (DataIntegrityViolationException e) {
+//            String errorMessage = messageSource.getMessage("error.changeUserName", new Object[]{e.getStackTrace()}, LocaleContextHolder.getLocale());
+//            throw new UserModifyBadRequestException(errorMessage);
+//        }
+//        return rowsAffected >= 1;
+        return true;   // revisar esto, no se que validacion queremos hacer aca para hibernate
     }
 }

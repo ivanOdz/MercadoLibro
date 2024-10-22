@@ -4,28 +4,48 @@ import ar.edu.itba.paw.models.utils.Genre;
 import ar.edu.itba.paw.models.utils.Language;
 import ar.edu.itba.paw.models.utils.Rating;
 
+import javax.persistence.*;
+import java.util.List;
+
+@Entity
+@Table(name = "bookModel")
 public class BookModel {
 
-    private final long bookModelId;
-    private final String isbn;
-    private final String title;
-    private final String editorial;
-    private final String description;
-    private final Genre genre;
-    private final int edition;
-    private final int weight;
-    private final int pages;
-    private final Language bookLanguage;
-    private final int dimension;
-    private final short publicationYear;
-    private final boolean isPocketEdition;
-    private final boolean isHardcover;
-    private final String authors;
-    private final Long imageId;
-    private final Rating rating;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "book_bookmodelid_seq")
+    @SequenceGenerator(sequenceName = "book_bookmodelid_seq", name = "book_bookmodelid_seq", allocationSize = 1)
+    @Column(name = "bookmodelid")
+    private Long bookModelId;
 
+    private String isbn;
+    private String title;
+    private String editorial;
+    private String description;
+    private Genre genre;
+    private int edition;
+    private int weight;
+    private int pages;
 
-    public BookModel(long bookModelId, String isbn, String title, String editorial, String description, Genre genre, int edition, int weight, int pages, Language bookLanguage, int dimension, short publicationYear, boolean isPocketEdition, boolean isHardcover, String authors, Long imageId,  Rating rating) {
+    @Enumerated(EnumType.STRING)
+    private Language bookLanguage;
+
+    private int dimension;
+    private short publicationYear;
+    private boolean isPocketEdition;
+    private boolean isHardcover;
+    private Long imageId;
+
+    @ManyToMany
+    @JoinTable(
+            name = "book_author",
+            joinColumns = @JoinColumn(name = "bookmodelid"),
+            inverseJoinColumns = @JoinColumn(name = "authorid"))
+    private List<Author> authors;
+
+    // ASK: lo sacamos de la tabla book_rating pero no es una relacion many to many
+    private Rating rating;
+
+    public BookModel(long bookModelId, String isbn, String title, String editorial, String description, Genre genre, int edition, int weight, int pages, Language bookLanguage, int dimension, short publicationYear, boolean isPocketEdition, boolean isHardcover, List<Author> authors, Long imageId,  Rating rating) {
         this.bookModelId = bookModelId;
         this.isbn = isbn;
         this.title = title;
@@ -49,7 +69,7 @@ public class BookModel {
         return rating;
     }
 
-    public String getAuthors() {
+    public List<Author> getAuthors() {
         return authors;
     }
 
@@ -113,5 +133,71 @@ public class BookModel {
         return isHardcover;
     }
 
+    public void setBookModelId(Long bookModelId) {
+        this.bookModelId = bookModelId;
+    }
 
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setEditorial(String editorial) {
+        this.editorial = editorial;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setGenre(Genre genre) {
+        this.genre = genre;
+    }
+
+    public void setEdition(int edition) {
+        this.edition = edition;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
+    }
+
+    public void setPages(int pages) {
+        this.pages = pages;
+    }
+
+    public void setBookLanguage(Language bookLanguage) {
+        this.bookLanguage = bookLanguage;
+    }
+
+    public void setDimension(int dimension) {
+        this.dimension = dimension;
+    }
+
+    public void setPublicationYear(short publicationYear) {
+        this.publicationYear = publicationYear;
+    }
+
+    public void setPocketEdition(boolean pocketEdition) {
+        isPocketEdition = pocketEdition;
+    }
+
+    public void setHardcover(boolean hardcover) {
+        isHardcover = hardcover;
+    }
+
+    public void setImageId(Long imageId) {
+        this.imageId = imageId;
+    }
+
+    public void setAuthors(List<Author> authors) {
+        this.authors = authors;
+    }
+
+    public void setRating(Rating rating) {
+        this.rating = rating;
+    }
 }
