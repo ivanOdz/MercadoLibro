@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.models;
 
+import ar.edu.itba.paw.models.utils.BookDimension;
 import ar.edu.itba.paw.models.utils.Genre;
 import ar.edu.itba.paw.models.utils.Language;
 import ar.edu.itba.paw.models.utils.Rating;
@@ -21,7 +22,10 @@ public class BookModel {
     private String title;
     private String editorial;
     private String description;
+
+    @Enumerated(EnumType.STRING)
     private Genre genre;
+
     private int edition;
     private int weight;
     private int pages;
@@ -29,10 +33,19 @@ public class BookModel {
     @Enumerated(EnumType.STRING)
     private Language bookLanguage;
 
-    private int dimension;
+    @Enumerated(EnumType.STRING)
+    private BookDimension dimension;
+
+    @Column(name = "publicationyear")
     private short publicationYear;
+
+    @Column(name = "ispocketedition")
     private boolean isPocketEdition;
+
+    @Column(name = "ishardcover")
     private boolean isHardcover;
+
+    @Column(name = "imageid")
     private Long imageId;
 
     @ManyToMany
@@ -45,7 +58,12 @@ public class BookModel {
     // ASK: lo sacamos de la tabla book_rating pero no es una relacion many to many
     private Rating rating;
 
-    public BookModel(long bookModelId, String isbn, String title, String editorial, String description, Genre genre, int edition, int weight, int pages, Language bookLanguage, int dimension, short publicationYear, boolean isPocketEdition, boolean isHardcover, List<Author> authors, Long imageId,  Rating rating) {
+    BookModel(){
+        // only for JPA
+    }
+
+    public BookModel(Long bookModelId, String isbn, String title, String editorial, String description, Genre genre, int edition, int weight, int pages, Language bookLanguage,
+                     BookDimension dimension, short publicationYear, boolean isPocketEdition, boolean isHardcover, List<Author> authors, Long imageId, Rating rating) {
         this.bookModelId = bookModelId;
         this.isbn = isbn;
         this.title = title;

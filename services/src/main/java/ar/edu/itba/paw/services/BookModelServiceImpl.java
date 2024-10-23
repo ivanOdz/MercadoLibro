@@ -45,7 +45,7 @@ public class BookModelServiceImpl implements BookModelService {
     @Override
     public BookModel getBookModelByBookModelId(long bookModelId) {
         // CHECK: if missing controller catch blocks
-        return bookModelDao.getBookModelByBookModelId(bookModelId);
+        return bookModelDao.getBookModelByBookModelId(bookModelId).orElse(null);
     }
 
     @Override
