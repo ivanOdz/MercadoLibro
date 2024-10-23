@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.persistence.BookModelDao;
 import ar.edu.itba.paw.interfaces.services.BookModelService;
 import ar.edu.itba.paw.interfaces.services.GenreService;
+import ar.edu.itba.paw.models.Author;
 import ar.edu.itba.paw.models.Book;
 import ar.edu.itba.paw.models.BookModel;
 import ar.edu.itba.paw.models.PaginatedResponse;
@@ -30,16 +31,15 @@ public class BookModelServiceImpl implements BookModelService {
 
     @Transactional
     @Override
-    public long createBookModel(String isbn, String title, List<String> authors, String publisher, String description, Genre genre, int edition, Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight, Integer imageId) {
+    public BookModel createBookModel(String isbn, String title, List<String> authors, String publisher, String description, Genre genre, int edition, Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight, Integer imageId) {
         // CHECK: if missing controller catch blocks
-        List<Long> authorsIds = bookModelDao.createAuthors(authors);
+        List<Author> newauthors = bookModelDao.createAuthors(authors);
 
         // CHECK: if missing controller catch blocks
-        long bookModelId = bookModelDao.createBookModel(isbn, title, publisher, description, genre, edition, publicationYear, isHardcover, isPocketEdition, dimension, language, pages, weight, imageId);
+        BookModel bookModel = bookModelDao.createBookModel(isbn, title, publisher, description, genre, edition, publicationYear, isHardcover, isPocketEdition, dimension, language, pages, weight, imageId);
 
-        // CHECK: if missing controller catch blocks
-        bookModelDao.createBookAuthors(authorsIds, bookModelId);
-        return bookModelId;
+        bookModel.getAuthors().addAll(newauthors);
+        return bookModel;
     }
 
     @Override

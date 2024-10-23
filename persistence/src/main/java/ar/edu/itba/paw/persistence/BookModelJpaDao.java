@@ -103,7 +103,9 @@ public class BookModelJpaDao implements BookModelDao {
 
         String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
         nativeQuery.setParameter("search", safeSearch);
-        nativeQuery.setParameter("genreFilter", genreFilter.getKey());
+        if (isGenreFilterActive) {
+            nativeQuery.setParameter("genreFilter", genreFilter.getKey());
+        }
         nativeQuery.setMaxResults(BOOKS_PAGE_SIZE);
         nativeQuery.setFirstResult(currentPage * BOOKS_PAGE_SIZE);
 

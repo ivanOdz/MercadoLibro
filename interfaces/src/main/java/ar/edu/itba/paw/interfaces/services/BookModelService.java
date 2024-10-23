@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface BookModelService {
 
-    long createBookModel(String isbn, String title, List<String> authors, String publisher, String description, Genre genre, int edition,
+    BookModel createBookModel(String isbn, String title, List<String> authors, String publisher, String description, Genre genre, int edition,
                          Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight, Integer imageId);
 
     BookModel getBookModelByBookModelId(long bookModelId);
