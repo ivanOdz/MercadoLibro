@@ -55,6 +55,9 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Value("#{environment.dataBasePassword}")
     private String dataBasePassword;
 
+    @Value("#{environment.inProduction}")
+    private boolean inProduction;
+
     @Bean
     public ViewResolver viewResolver() {
         final InternalResourceViewResolver vr = new InternalResourceViewResolver();
@@ -130,9 +133,10 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         jpaProperties.setProperty("hibernate.hbm2ddl.auto", "update");
         jpaProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQL92Dialect");
 
-        // TODO: solo para debug, no poner en producción
-        jpaProperties.setProperty("hibernate.show_sql", "true");
-        jpaProperties.setProperty("hibernate.format_sql", "true");
+        if(!inProduction) {
+            jpaProperties.setProperty("hibernate.show_sql", "true");
+            jpaProperties.setProperty("hibernate.format_sql", "true");
+        }
 
         factoryBean.setJpaProperties(jpaProperties);
         return factoryBean;
