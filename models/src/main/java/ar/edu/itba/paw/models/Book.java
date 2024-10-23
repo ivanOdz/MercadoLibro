@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models;
 
 import ar.edu.itba.paw.models.utils.BookState;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.util.List;
@@ -25,28 +26,31 @@ public class Book {
 	@ManyToOne(optional = false)
 	private BookModel bookModel;
 
-	// ASK: deberíamos hacerlo ORDINAL x como tenemos definidas las tablas o podemos hacerlo STRING?
 	@Enumerated(EnumType.STRING)
 	private BookState bookState;
 
 	private int exchangesQty;
 
-	//ASK : esto no es una columna, lo obtenemos de queries
-	private boolean available;
+	@Formula("CASE " +
+			"WHEN NOT EXISTS (SELECT 1 FROM publication p2 WHERE p2.bookId = bookId) THEN TRUE " +
+			"WHEN NOT EXISTS (SELECT 1 FROM exchange e2 JOIN publication p2 ON e2.offererPubId = p2.publicationId OR e2.requesterPubId = p2.publicationId WHERE p2.bookId = bookId AND e2.exchangeState = 'ACCEPTED') THEN TRUE " +
+			"ELSE FALSE " +
+			"END")
+	private Boolean available;
 
 	@ManyToMany
 	@JoinTable(
 			name = "book_image",
 			joinColumns = @JoinColumn(name = "bookid"),
 			inverseJoinColumns = @JoinColumn(name = "imageid"))
-	private List<Integer> images;
+	private List<BookImage> images;
 
 
-	/* package */Book(){
+	public Book(){
 		// only for JPA
 	}
 
-    public Book(Long bookId, User owner, BookModel bookModel, BookState bookState, int exchangesQty, boolean available, List<Integer> images) {
+    public Book(Long bookId, User owner, BookModel bookModel, BookState bookState, int exchangesQty, boolean available, List<BookImage> images) {
         this.bookId = bookId;
         this.owner = owner;
         this.bookModel = bookModel;
@@ -80,7 +84,7 @@ public class Book {
 		return available;
 	}
 
-	public List<Integer> getImages() {
+	public List<BookImage> getImages() {
 		return images;
 	}
 
@@ -108,7 +112,7 @@ public class Book {
 		this.available = available;
 	}
 
-	public void setImages(List<Integer> images) {
+	public void setImages(List<BookImage> images) {
 		this.images = images;
 	}
 }
