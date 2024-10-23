@@ -42,7 +42,8 @@ public class ExchangeJpaDao implements ExchangeDao {
 
     @Override
     public void setEndDate(int acceptCode, Timestamp endDate) {
-
+        Exchange exchange = findByAcceptCode(acceptCode);
+        exchange.setExchangeEndDate(endDate);
     }
 
     @Override
