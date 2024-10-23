@@ -5,6 +5,9 @@ import ar.edu.itba.paw.models.utils.PublicationState;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "publication")
@@ -27,15 +30,22 @@ public class Publication {
     private Timestamp publicationDatetime;
 
     // No me acuerdo si se podian elegir las location o no. Segun eso poner el OneToMany o OneToOne.
-    private Location location;
+
+    @ManyToMany
+    @JoinTable(
+            name = "publication_location",
+            joinColumns = @JoinColumn(name = "publicationid"),
+            inverseJoinColumns = @JoinColumn(name = "locationid")
+    )
+    private Set<Location> locations;
 
 
-    public Publication(long publicationId, Book book, PublicationState publicationState, Timestamp publicationDatetime, Location location) {
+    public Publication(long publicationId, Book book, PublicationState publicationState, Timestamp publicationDatetime, Set<Location> locations) {
         this.publicationId = publicationId;
         this.book = book;
         this.publicationState = publicationState;
         this.publicationDatetime = publicationDatetime;
-        this.location = location;
+        this.locations = locations;
     }
 
     public long getPublicationId() {
@@ -70,11 +80,15 @@ public class Publication {
         this.publicationDatetime = publicationDatetime;
     }
 
-    public Location getLocation() {
-        return location;
+    Set<Location> getLocation() {
+        return locations;
     }
 
-    public void setLocation(Location location) {
-        this.location = location;
+    public void setLocations(Set<Location> locations) {
+        this.locations = locations;
+    }
+
+    public void addLocation(Location location) {
+        locations.add(location);
     }
 }
