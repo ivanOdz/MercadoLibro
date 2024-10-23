@@ -62,7 +62,9 @@ public class ExchangeJpaDao implements ExchangeDao {
 
     @Override
     public Exchange confirmRequester(int acceptCode) {
-        return null;
+        Exchange exchange = findByAcceptCode(acceptCode);
+        exchange.setRequesterReceivedBook(true);
+        return exchange;
     }
 
     @Override
