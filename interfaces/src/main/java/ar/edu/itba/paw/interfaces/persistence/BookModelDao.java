@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.BookModelMetadata;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BookModelDao {
 
@@ -15,7 +16,7 @@ public interface BookModelDao {
 
     void createBookAuthors(List<Long> authorsIds, long bookModelId);
 
-    BookModel getBookModelByBookModelId(long bookModelId);
+    Optional<BookModel> getBookModelByBookModelId(long bookModelId);
 
     PaginatedResponse<BookModel, BookModelMetadata> getPaginatedBookModels(String search, boolean isGenreFilterActive, Genre genreFilter, int currentPage, SortType sortType);
 

@@ -135,8 +135,8 @@ public class BookModelJdbcDao implements BookModelDao {
     }
 
     @Override
-    public BookModel getBookModelByBookModelId(long bookModelId) {
-        String  sqlQuery =
+    public Optional<BookModel> getBookModelByBookModelId(long bookModelId) {
+        String sqlQuery =
                 "SELECT bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
                         "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, (SELECT STRING_AGG(a.authorName, ', ') FROM book_author ba JOIN author a ON a.authorId = ba.authorId WHERE ba.bookModelId = bm.bookModelId) AS authors, bm.imageId AS coverId, " +
                         "AVG(br.rating) as rating, COUNT(br.rating) as ratingCount " +
@@ -155,7 +155,7 @@ public class BookModelJdbcDao implements BookModelDao {
             String errorMessage = messageSource.getMessage("error.bookModelNotFound", new Object[]{bookModelId}, LocaleContextHolder.getLocale());
             throw new BookModelNotFoundException(errorMessage);
         }
-        return bm.get();
+        return bm;
     }
 
     @Override
