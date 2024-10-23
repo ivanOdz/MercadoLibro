@@ -348,16 +348,25 @@ public class BookJpaDao implements BookDao {
 
         sqlQuery.append("GROUP BY bm.genre");
 
-        Query query = em.createNativeQuery(sqlQuery.toString());
-
-        query.setParameter("userId", userId);
-        query.setParameter("search", "%" + search.toLowerCase() + "%");
+       Query query = em.createNativeQuery(sqlQuery.toString())
+                .setParameter("userId", userId)
+                .setParameter("search", "%" + search.toLowerCase() + "%");
 
         if (isBookStateFilterActive) {
             query.setParameter("bookState", bookStateFilter.getValue());
         }
 
-        return query.getResultList();
+        List<Object[]> results = query.getResultList();
+
+        List<GenreWrapper> genreWrappers = new ArrayList<>();
+        for (Object[] result : results) {
+            String genreValue = result[0].toString();  // bm.genre (STRING)
+            Genre genre = Genre.valueOf(genreValue);
+            int genreCount = ((Number) result[1]).intValue();  // genreCount
+            genreWrappers.add(new GenreWrapper(genre, genreCount));
+        }
+
+        return genreWrappers;
     }
 
     public List<BookStateWrapper> getBookStateQtyByBook(String search, boolean isGenreFilterActive, Genre genreFilter, long userId) {
@@ -380,6 +389,16 @@ public class BookJpaDao implements BookDao {
 
         if (isGenreFilterActive) {
             query.setParameter("genre", genreFilter.getValue());
+        }
+
+        List<Object[]> results = query.getResultList();
+
+        List<BookStateWrapper> bookStateWrappers = new ArrayList<>();
+        for (Object[] result : results) {
+            String bookStateValue = result[0].toString();
+            BookState bookState = BookState.valueOf(bookStateValue);
+            int stateCount = ((Number) result[1]).intValue();
+            bookStateWrappers.add(new BookStateWrapper(bookState, stateCount));
         }
 
         return query.getResultList();
