@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.persistence.BookDao;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
+import org.hibernate.annotations.common.util.impl.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Primary;
@@ -17,16 +18,14 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.Entity;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.logging.Logger;
 
 import static ar.edu.itba.paw.models.utils.Constants.BOOKS_PAGE_SIZE;
 import static ar.edu.itba.paw.persistence.BookModelJdbcDao.ROW_MAPPER_BOOK_MODEL;
@@ -44,9 +43,6 @@ public class BookJpaDao implements BookDao {
 
     @Autowired
     private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    private final SimpleJdbcInsert jdbcInsertBookRating;
 
     private final String aggregationFunctionAuthor;
     private final String aggregationFunctionImages;
@@ -68,7 +64,7 @@ public class BookJpaDao implements BookDao {
 
             jdbcTemplate = new JdbcTemplate(ds);
 //            jdbcInsertBook = new SimpleJdbcInsert(jdbcTemplate).usingGeneratedKeyColumns("bookid").withTableName("book");
-            jdbcInsertBookRating = new SimpleJdbcInsert(jdbcTemplate).withTableName("book_rating").usingGeneratedKeyColumns("ratingid");
+//            jdbcInsertBookRating = new SimpleJdbcInsert(jdbcTemplate).withTableName("book_rating").usingGeneratedKeyColumns("ratingid");
 //            jdbcInsertBookImage = new SimpleJdbcInsert(jdbcTemplate).withTableName("book_image");
 
             String databaseProductName = ds.getConnection().getMetaData().getDatabaseProductName();
@@ -94,22 +90,20 @@ public class BookJpaDao implements BookDao {
     @Transactional
     @Override
     public void createBookRating(User user, BookModel bookModel, int rating) {
-        // esto creo q lo tenemos q conservar como jdbcTemplate
-        String checkQuery = "SELECT COUNT(*) FROM book_rating WHERE userId = ? AND bookModelId = ?";
-        int count = jdbcTemplate.queryForObject(checkQuery, new Object[]{user.getUserId(), bookModel.getBookModelId()}, Integer.class);
-
-        if (count > 0) {
-            bookModel.setRating(new Rating(rating, bookModel.getRating().getRatingCount() + 1));
-
-//            String updateQuery = "UPDATE book_rating SET rating = ? WHERE userId = ? AND bookModelId = ?";
-//            jdbcTemplate.update(updateQuery, rating, user.getUserId(), bookModelId);
+        TypedQuery<BookRating> query = em.createQuery("from BookRating as br where br.userId = :userId and br.bookModelId = :bookModelId", BookRating.class);
+        query.setParameter("userId", user.getUserId());
+        query.setParameter("bookModelId", bookModel.getBookModelId());
+        //try {
+            Optional<BookRating> br = Optional.ofNullable(query.getSingleResult());
+        //} catch ()
+        if (br.isEmpty()) {
+            BookRating bookRating = new BookRating(user.getUserId(), bookModel.getBookModelId(), rating);
+            em.persist(bookRating);
         } else {
-            final HashMap<String, Object> params = new HashMap<>();
-            params.put("userid", user.getUserId());
-            params.put("bookModelId", bookModel.getBookModelId());
-            params.put("rating", rating);
-
-            jdbcInsertBookRating.execute(params);
+        //    try {
+                br.get().setRating(rating);
+        //        em.flush();
+        //    }
         }
     }
 
@@ -364,26 +358,16 @@ public class BookJpaDao implements BookDao {
 
         sqlQuery.append("GROUP BY bm.genre");
 
-        List<Object> params = new ArrayList<>();
-        params.add(userId);
-        params.add("%" + search.toLowerCase() + "%");
+        Query query = em.createNativeQuery(sqlQuery.toString());
+
+        query.setParameter("userId", userId);
+        query.setParameter("search", "%" + search.toLowerCase() + "%");
 
         if (isBookStateFilterActive) {
-            params.add(bookStateFilter.getValue());
+            query.setParameter("bookState", bookStateFilter.getValue());
         }
 
-        int[] paramTypes;
-        if (isBookStateFilterActive) {
-            paramTypes = new int[]{Types.BIGINT, Types.VARCHAR, Types.INTEGER};
-        } else {
-            paramTypes = new int[]{ Types.BIGINT, Types.VARCHAR};
-        }
-
-        return jdbcTemplate.query(sqlQuery.toString(), params.toArray(), paramTypes, (rs, rowNum) -> {
-            int genreValue = rs.getInt("genre");
-            Genre genre = Genre.fromInt(genreValue);
-            return new GenreWrapper(genre, rs.getInt("genreCount"));
-        });
+        return query.getResultList();
     }
 
     public List<BookStateWrapper> getBookStateQtyByBook(String search, boolean isGenreFilterActive, Genre genreFilter, long userId) {
