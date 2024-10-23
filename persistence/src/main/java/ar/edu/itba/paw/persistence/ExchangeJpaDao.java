@@ -9,11 +9,15 @@ import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.sql.Timestamp;
 
+@Primary
+@Repository
 public class ExchangeJpaDao implements ExchangeDao {
 
     @PersistenceContext
@@ -75,7 +79,8 @@ public class ExchangeJpaDao implements ExchangeDao {
 
     @Override
     public Exchange findByAcceptCode(int acceptCode) throws ExchangeNotFoundException {
-        return null;
+        Exchange exchange = em.find(Exchange.class, acceptCode);
+        return exchange;
     }
 
     @Override
