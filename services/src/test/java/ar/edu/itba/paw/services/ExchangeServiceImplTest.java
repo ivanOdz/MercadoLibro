@@ -69,15 +69,15 @@ public class ExchangeServiceImplTest {
 	BookModel bookModel3 = new BookModel(3, "9780123748570", "Título3", "Editorial3", "Descripción3", genre1, 1, 400, 400, language, 22, (short) 2019, false, true, "Autor3", null, rating);
 	BookModel bookModel4 = new BookModel(4, "9780070428539", "Título4", "Editorial4", "Descripción4", genre2, 3, 350, 300, language, 25, (short) 2022, true, true, "Autor4", null, rating);
 	
-	Book book1 = new Book(1, user1, bookModel1, BookState.NEW, 3, true, List.of(1, 2));
-	Book book2 = new Book(2, user2, bookModel2, BookState.LIKE_NEW, 5, true, List.of(3, 4));
-	Book book3 = new Book(3, user3, bookModel3, BookState.VERY_GOOD, 2, false, List.of(5, 6));
-	Book book4 = new Book(4, user4, bookModel4, BookState.GOOD, 4, true, List.of(7, 8));
+	Book book1 = new Book(Long.valueOf(1), user1, bookModel1, BookState.NEW, 3, true, List.of(1, 2));
+	Book book2 = new Book(Long.valueOf(2), user2, bookModel2, BookState.LIKE_NEW, 5, true, List.of(3, 4));
+	Book book3 = new Book(Long.valueOf(3), user3, bookModel3, BookState.VERY_GOOD, 2, false, List.of(5, 6));
+	Book book4 = new Book(Long.valueOf(4), user4, bookModel4, BookState.GOOD, 4, true, List.of(7, 8));
 	
-	Location location1 = new Location(1, "Buenos Aires, Argentina");
-	Location location2 = new Location(2, "Córdoba, Argentina");
-	Location location3 = new Location(3, "Mendoza, Argentina");
-	Location location4 = new Location(4, "Rosario, Argentina");
+	Location location1 = new Location(Long.valueOf(1), "Buenos Aires, Argentina");
+	Location location2 = new Location(Long.valueOf(2), "Córdoba, Argentina");
+	Location location3 = new Location(Long.valueOf(3), "Mendoza, Argentina");
+	Location location4 = new Location(Long.valueOf(4), "Rosario, Argentina");
 	
     Timestamp reviewDate = new Timestamp(System.currentTimeMillis());
     Publication offererPub = new Publication(1, book1, PublicationState.CURRENT, reviewDate, location1);

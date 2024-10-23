@@ -135,7 +135,7 @@ public class BookModel {
         return bookLanguage;
     }
 
-    public int getDimension() {
+    public BookDimension getDimension() {
         return dimension;
     }
 
@@ -191,7 +191,7 @@ public class BookModel {
         this.bookLanguage = bookLanguage;
     }
 
-    public void setDimension(int dimension) {
+    public void setDimension(BookDimension dimension) {
         this.dimension = dimension;
     }
 

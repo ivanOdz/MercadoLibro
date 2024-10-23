@@ -1,13 +1,6 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.models.Book;
-import ar.edu.itba.paw.models.BookModel;
-import ar.edu.itba.paw.models.Exchange;
-import ar.edu.itba.paw.models.Location;
-import ar.edu.itba.paw.models.PaginatedResponse;
-import ar.edu.itba.paw.models.Publication;
-import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.models.UserReview;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.models.utils.Genre;
@@ -27,6 +20,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -48,21 +42,22 @@ public class UserReviewServiceImplTest {
 	Genre genre2 = Genre.NON_FICTION;
 	Language language = Language.ENGLISH;
 	Rating rating = new Rating(4.5, 8);
-	
-	BookModel bookModel1 = new BookModel(1, "9783161484100", "Título1", "Editorial1", "Descripción1", genre1, 1, 300, 350, language, 20, (short) 2021, false, true, "Autor1", null, rating);
-	BookModel bookModel2 = new BookModel(2, "9781617290548", "Título2", "Editorial2", "Descripción2", genre2, 2, 250, 250, language, 15, (short) 2020, true, false, "Autor2", null, rating);
-	BookModel bookModel3 = new BookModel(3, "9780123748570", "Título3", "Editorial3", "Descripción3", genre1, 1, 400, 400, language, 22, (short) 2019, false, true, "Autor3", null, rating);
-	BookModel bookModel4 = new BookModel(4, "9780070428539", "Título4", "Editorial4", "Descripción4", genre2, 3, 350, 300, language, 25, (short) 2022, true, true, "Autor4", null, rating);
+	List<Author> authors = new ArrayList<>();
+
+	BookModel bookModel1 = new BookModel(Long.valueOf(1), "9783161484100", "Título1", "Editorial1", "Descripción1", genre1, 1, 300, 350, language, 20, (short) 2021, false, true, "Autor2", null, rating);
+	BookModel bookModel2 = new BookModel(Long.valueOf(2), "9781617290548", "Título2", "Editorial2", "Descripción2", genre2, 2, 250, 250, language, 15, (short) 2020, true, false, "Autor2", null, rating);
+	BookModel bookModel3 = new BookModel(Long.valueOf(3), "9780123748570", "Título3", "Editorial3", "Descripción3", genre1, 1, 400, 400, language, 22, (short) 2019, false, true, "Autor3", null, rating);
+	BookModel bookModel4 = new BookModel(Long.valueOf(4), "9780070428539", "Título4", "Editorial4", "Descripción4", genre2, 3, 350, 300, language, 25, (short) 2022, true, true, "Autor4", null, rating);
 	
 	Book book1 = new Book(1, user1, bookModel1, BookState.NEW, 3, true, List.of(1, 2));
 	Book book2 = new Book(2, user2, bookModel2, BookState.LIKE_NEW, 5, true, List.of(3, 4));
 	Book book3 = new Book(3, user3, bookModel3, BookState.VERY_GOOD, 2, false, List.of(5, 6));
 	Book book4 = new Book(4, user4, bookModel4, BookState.GOOD, 4, true, List.of(7, 8));
 	
-	Location location1 = new Location(1, "Buenos Aires, Argentina");
-	Location location2 = new Location(2, "Córdoba, Argentina");
-	Location location3 = new Location(3, "Mendoza, Argentina");
-	Location location4 = new Location(4, "Rosario, Argentina");
+	Location location1 = new Location(Long.valueOf(1), "Buenos Aires, Argentina");
+	Location location2 = new Location(Long.valueOf(2), "Córdoba, Argentina");
+	Location location3 = new Location(Long.valueOf(3), "Mendoza, Argentina");
+	Location location4 = new Location(Long.valueOf(4), "Rosario, Argentina");
 	
     @Test
     public void testGetReviewsByUserId() {
