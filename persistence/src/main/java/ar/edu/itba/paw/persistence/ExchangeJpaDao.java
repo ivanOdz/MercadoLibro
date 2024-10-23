@@ -80,7 +80,9 @@ public class ExchangeJpaDao implements ExchangeDao {
 
     @Override
     public Exchange getExchangeById(long exchangeId) {
-        return null;
+        Exchange exchange = em.find(Exchange.class, exchangeId);
+        // exception if exchange is null
+        return exchange;
     }
 
     @Override
