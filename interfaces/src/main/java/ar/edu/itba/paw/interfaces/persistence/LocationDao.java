@@ -1,8 +1,12 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
+import ar.edu.itba.paw.models.Location;
+
+import java.util.Set;
+
 public interface LocationDao {
 
-    String getLocationByPublicationId(long pubId);
+    Set<Location> getLocationByPublicationId(long pubId);
 
-    long newLocation(String location);
+    Location newLocation(String location);
 }
