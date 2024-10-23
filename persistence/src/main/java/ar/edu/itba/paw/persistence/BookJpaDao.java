@@ -276,39 +276,19 @@ public class BookJpaDao implements BookDao {
         return new PaginatedResponse<>(books, new ItemFilterMetadata());
         */
         StringBuilder sqlQuery = new StringBuilder(
-                "SELECT  b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
-                        "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, " +
-                        aggregationFunctionAuthor +
-                        "bm.imageId AS coverId, AVG(br.rating) AS rating, COUNT(br.rating) AS ratingCount, " +
-                        "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language ," + aggregationFunctionImages +
-                        "p.publicationState, e.exchangeState, " +  // Checkear esto, no se si hace falta que este en las tuplas que devuelve
-                        "CASE " +
-                        "WHEN NOT EXISTS (SELECT 1 FROM publication p2 WHERE p2.bookId = b.bookId) THEN TRUE " +
-                        "WHEN NOT EXISTS (SELECT 1 FROM exchange e2 JOIN publication p2 ON e2.offererPubId = p2.publicationId OR e2.requesterPubId = p2.publicationId WHERE p2.bookId = b.bookId AND e2.exchangeState = ?) THEN TRUE " +
-                        "ELSE FALSE " +
-                        "END AS available " +
+                "SELECT  b.bookId" +
                         "FROM book AS b " +
                         "JOIN users AS u ON b.ownerId = u.userId " +
                         "JOIN book_model AS bm ON bm.bookModelId = b.bookModelId " +
-                        "JOIN book_author AS ba ON ba.bookModelId = bm.bookModelId " +
-                        "JOIN author AS a ON a.authorId = ba.authorId " +
-                        "LEFT JOIN (SELECT p1.bookId, p1.publicationId, p1.publicationState FROM publication p1 WHERE p1.publicationDatetime = (SELECT MAX(p2.publicationDatetime) FROM publication p2 WHERE p2.bookId = p1.bookId)) AS p ON p.bookId = b.bookId " +
-                        "LEFT JOIN exchange AS e ON e.offererPubId = p.publicationId OR e.requesterPubId = p.publicationId " +
-                        "LEFT JOIN book_image AS bi ON bi.bookId = b.bookId " +
-                        "LEFT JOIN book_rating AS br ON bm.bookModelId = br.bookModelId " +
-                        "LEFT JOIN image AS i ON bi.imageId = i.imageId " +
                         "WHERE u.userid = ? AND LOWER(bm.title) LIKE LOWER(?)  ");
 
         if (isGenreFilterActive) {
-            sqlQuery.append("AND bm.genre = ? ");
+            sqlQuery.append("AND bm.genre = :genreFilter ");
         }
 
         if (isBookStateFilterActive) {
-            sqlQuery.append("AND b.bookState = ? ");
+            sqlQuery.append("AND b.bookState = :bookStateFilter ");
         }
-
-        sqlQuery.append("GROUP BY available, b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, bm.dimension, bm.publicationYear, " +
-                "bm.isPocketEdition, bm.isHardcover, p.publicationState, bm.imageId, u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language, e.exchangeState");
 
         switch (sortType) {
             case RATING_ASCENDING:
@@ -323,16 +303,31 @@ public class BookJpaDao implements BookDao {
             default:
                 sqlQuery.append(" ORDER BY title DESC");
         }
-        Query query = em.createNativeQuery(sqlQuery.toString(), Book.class);
 
-        query.setFirstResult((currentPage - 1) * BOOKS_PAGE_SIZE);
-        query.setMaxResults(BOOKS_PAGE_SIZE);
+        Query nativeQuery = em.createNativeQuery(sqlQuery.toString(), Book.class);
 
-        List<Book> data = query.getResultList();
+        String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
+        nativeQuery.setParameter("search", safeSearch);
 
-        int totalResults = getTotalResultsByBook(search, isGenreFilterActive, genreFilter, isBookStateFilterActive, bookStateFilter, userId);
+        if (isGenreFilterActive) {
+            nativeQuery.setParameter("genreFilter", genreFilter);
+        }
 
-        return new PaginatedResponse<>(data, new ItemFilterMetadata(currentPage, BOOKS_PAGE_SIZE, totalResults, search, isGenreFilterActive, genreFilter, sortType, null, isBookStateFilterActive, bookStateFilter, null));
+        if (isBookStateFilterActive) {
+            nativeQuery.setParameter("bookStateFilter", bookStateFilter);
+        }
+
+        nativeQuery.setFirstResult(currentPage * BOOKS_PAGE_SIZE);
+        nativeQuery.setMaxResults(BOOKS_PAGE_SIZE);
+
+        List<Long> bookIds = nativeQuery.getResultList();
+
+        TypedQuery<Book> query = em.createQuery("FROM Book b WHERE b.bookId IN (:ids)", Book.class);
+        query.setParameter("ids", bookIds);
+
+        int totalResults = getTotalResultsByBook(safeSearch, isGenreFilterActive, genreFilter, isBookStateFilterActive, bookStateFilter, userId);
+
+        return new PaginatedResponse<>(query.getResultList(), new ItemFilterMetadata(currentPage, BOOKS_PAGE_SIZE, totalResults, search, isGenreFilterActive, genreFilter, sortType, null, isBookStateFilterActive, bookStateFilter, null));
     }
 
     public List<GenreWrapper> getGenreQtyByBook(String search, boolean isBookStateFilterActive, BookState bookStateFilter, long userId) {
