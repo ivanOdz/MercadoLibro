@@ -69,7 +69,8 @@ public class ExchangeJpaDao implements ExchangeDao {
 
     @Override
     public void updateExchangeStatus(int acceptCode, int newStatus) {
-
+        Exchange exchange = findByAcceptCode(acceptCode);
+        exchange.setExchangeState(ExchangeState.fromInt(newStatus));
     }
 
     @Override
