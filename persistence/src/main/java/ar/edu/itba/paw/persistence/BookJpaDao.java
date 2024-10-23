@@ -383,26 +383,16 @@ public class BookJpaDao implements BookDao {
 
         sqlQuery.append("GROUP BY b.bookState");
 
-        List<Object> params = new ArrayList<>();
-        params.add(userId);
-        params.add("%" + search.toLowerCase() + "%");
+        Query query = em.createNativeQuery(sqlQuery.toString());
+
+        query.setParameter("userId", userId);
+        query.setParameter("search", "%" + search.toLowerCase() + "%");
 
         if (isGenreFilterActive) {
-            params.add(genreFilter.getValue());
+            query.setParameter("genre", genreFilter.getValue());
         }
 
-        int[] paramTypes;
-        if (isGenreFilterActive) {
-            paramTypes = new int[]{Types.BIGINT, Types.VARCHAR, Types.INTEGER};
-        } else {
-            paramTypes = new int[]{Types.BIGINT, Types.VARCHAR};
-        }
-
-        return jdbcTemplate.query(sqlQuery.toString(), params.toArray(), paramTypes, (rs, rowNum) -> {
-            int stateValue = rs.getInt("bookState");
-            BookState bookState = BookState.fromInt(stateValue);
-            return new BookStateWrapper(bookState, rs.getInt("stateCount"));
-        });
+        return query.getResultList();
     }
 
 
@@ -423,19 +413,21 @@ public class BookJpaDao implements BookDao {
             sqlQuery.append("AND bm.genre = ? ");
         }
 
-        List<Object> params = new ArrayList<>();
-        params.add(userId);
-        params.add("%" + search.toLowerCase() + "%");
+        Query query = em.createNativeQuery(sqlQuery.toString());
+
+        query.setParameter("userId", userId);
+        query.setParameter("search", "%" + search.toLowerCase() + "%");
 
         if (isBookStateFilterActive) {
-            params.add(bookStateFilter.getValue());
+            query.setParameter("bookState", bookStateFilter.getValue());
         }
 
         if (isGenreFilterActive) {
-            params.add(genreFilter.getValue());
+            query.setParameter("genre", genreFilter.getValue());
         }
 
-        Integer totalResults = jdbcTemplate.queryForObject(sqlQuery.toString(), params.toArray(), Integer.class);
+        List queryList = query.getResultList();
+        Integer totalResults = queryList.isEmpty() ? null : queryList.size();
 
         return totalResults != null ? totalResults : 0;
     }
