@@ -4,6 +4,7 @@ import ar.edu.itba.paw.models.utils.BookDimension;
 import ar.edu.itba.paw.models.utils.Genre;
 import ar.edu.itba.paw.models.utils.Language;
 import ar.edu.itba.paw.models.utils.Rating;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.util.List;
@@ -55,10 +56,13 @@ public class BookModel {
             inverseJoinColumns = @JoinColumn(name = "authorid"))
     private List<Author> authors;
 
-    // ASK: lo sacamos de la tabla book_rating pero no es una relacion many to many
-    private Rating rating;
+    @Formula("(SELECT AVG(rating) FROM book_rating WHERE bookmodelid = bookmodelid)")
+    private Double averageRating;
 
-    BookModel(){
+    @Formula("(SELECT COUNT(rating) FROM book_rating WHERE bookmodelid = bookmodelid)")
+    private Integer ratingCount;
+
+    public BookModel(){
         // only for JPA
     }
 
@@ -80,11 +84,8 @@ public class BookModel {
         this.isHardcover = isHardcover;
         this.authors = authors;
         this.imageId = imageId;
-        this.rating = rating;
-    }
-
-    public Rating getRating() {
-        return rating;
+        this.averageRating = rating.getRating();
+        this.ratingCount = rating.getRatingCount();
     }
 
     public List<Author> getAuthors() {
@@ -216,6 +217,11 @@ public class BookModel {
     }
 
     public void setRating(Rating rating) {
-        this.rating = rating;
+        this.averageRating = rating.getRating();
+        this.ratingCount = rating.getRatingCount();
+    }
+
+    public Rating getRating() {
+        return new Rating(averageRating != null ? averageRating : 0.0, ratingCount != null ? ratingCount : 0);
     }
 }

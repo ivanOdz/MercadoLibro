@@ -107,110 +107,37 @@ public class BookJpaDao implements BookDao {
         }
     }
 
-
-
     @Override
     public void createBookImage(long bookId, List<Integer> images) {
-
-
         int i = 0;
         for (Integer imageId : images) {
             final BookImage image = new BookImage(null, i++, imageId , Timestamp.valueOf(LocalDateTime.now()));
-
             em.persist(image);
-
-//            HashMap<String, Object> params = new HashMap<>();
-//            params.put("bookId", bookId);
-//            params.put("imageId", imageId);
-//            params.put("imageOrder", i++);
-//            params.put("imageDatetime", LocalDateTime.now());
-//            jdbcInsertBookImage.execute(params);
         }
     }
 
     @Transactional
     @Override
     public void setOwner(Book book, User user) {
-        Book b = em.find(Book.class, book.getBookId());  // NOTE: agregado, verificar catch de excepciones
-
+        Book b = em.find(Book.class, book.getBookId());
         b.setOwner(user);
-
-//        try{
-//            jdbcTemplate.update("UPDATE book SET ownerId = ? WHERE bookId = ?", userId, bookId);
-//        } catch (DataIntegrityViolationException e) {
-//            throw new BookBadRequestException(messageSource.getMessage("error.settingNewOwner", new Object[]{userId, bookId, e.getStackTrace()}, LocaleContextHolder.getLocale()));
-//        }
     }
 
     @Override
     public Book getBookById(long bookId) {
-        return em.find(Book.class, bookId);
-//        String sqlQuery = "SELECT b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
-//                "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, " +
-//                aggregationFunctionAuthor +  // Verifica que esta variable esté correctamente definida y sea válida en SQL
-//                "bm.imageId AS coverId, AVG(br.rating) AS rating, COUNT(br.rating) AS ratingCount, " +
-//                "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language, " + aggregationFunctionImages +  // Verifica que esta variable esté correctamente definida y sea válida en SQL
-//                "p.publicationState, e.exchangeState, " +
-//                "CASE " +
-//                "WHEN NOT EXISTS (SELECT 1 FROM publication p2 WHERE p2.bookId = b.bookId) THEN TRUE " +
-//                "WHEN NOT EXISTS (SELECT 1 FROM exchange e2 JOIN publication p2 ON e2.offererPubId = p2.publicationId OR e2.requesterPubId = p2.publicationId WHERE p2.bookId = b.bookId AND e2.exchangeState = ?) THEN TRUE " +
-//                "ELSE FALSE " +
-//                "END AS available " +
-//                "FROM book AS b " +
-//                "JOIN users AS u ON b.ownerId = u.userId " +
-//                "JOIN book_model AS bm ON bm.bookModelId = b.bookModelId " +
-//                "JOIN book_author AS ba ON ba.bookModelId = bm.bookModelId " +
-//                "JOIN author AS a ON a.authorId = ba.authorId " +
-//                "LEFT JOIN (SELECT p1.bookId, p1.publicationId, p1.publicationState FROM publication p1 WHERE p1.publicationDatetime = (SELECT MAX(p2.publicationDatetime) FROM publication p2 WHERE p2.bookId = p1.bookId)) AS p ON p.bookId = b.bookId " +
-//                "LEFT JOIN exchange AS e ON e.offererPubId = p.publicationId OR e.requesterPubId = p.publicationId " +
-//                "LEFT JOIN book_image AS bi ON bi.bookId = b.bookId " +
-//                "LEFT JOIN book_rating AS br ON bm.bookModelId = br.bookModelId " +
-//                "LEFT JOIN image AS i ON bi.imageId = i.imageId " +
-//                "WHERE b.bookId = ? " +
-//                "GROUP BY available, b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, bm.dimension, bm.publicationYear, " +
-//                "bm.isPocketEdition, bm.isHardcover, p.publicationState, coverId, u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language, e.exchangeState";
-//
-//        Optional<Book> book = jdbcTemplate.query(sqlQuery, new Object[]{ ExchangeState.ACCEPTED.getValue(), bookId },
-//                new int[]{ Types.INTEGER, Types.BIGINT }, ROW_MAPPER_BOOK).stream().findFirst();
-//
-//        if (book.isEmpty()) {
-//            throw new BookNotFoundException(messageSource.getMessage("error.bookNotFound", new Object[]{ bookId }, LocaleContextHolder.getLocale()));
-//        }
-//        return book.get();
+        Book book =  em.find(Book.class, bookId);  // devuelve null si no existe
+        if (book == null) {
+            throw new BookNotFoundException(messageSource.getMessage("error.bookNotFound", new Object[]{ bookId }, LocaleContextHolder.getLocale()));
+        }
+        return book;
     }
 
 
     @Override
     public List<Book> getAllBooksByUser(long userId) {
-        return em.createQuery("from Book as b where b.owner.userId = :userId", Book.class)
+        return em.createQuery("from Book as b where b.owner.userid = :userId", Book.class)
                 .setParameter("userId", userId)
                 .getResultList();
-//        String sqlQuery = "SELECT b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, " +
-//                "bm.dimension, bm.publicationYear, bm.isPocketEdition, bm.isHardcover, STRING_AGG(a.authorName, ', ') AS authors, bm.imageId AS coverId, AVG(br.rating) AS rating, COUNT(br.rating) AS ratingCount, " +
-//                "u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language, " +
-//                aggregationFunctionImages +
-//                "p.publicationState, e.exchangeState, " +  // Checkear esto, no se si hace falta que este en las tuplas que devuelve
-//                "CASE " +
-//                "WHEN NOT EXISTS (SELECT 1 FROM publication p2 WHERE p2.bookId = b.bookId) THEN TRUE " +
-//                "WHEN NOT EXISTS (SELECT 1 FROM exchange e2 JOIN publication p2 ON e2.offererPubId = p2.publicationId OR e2.requesterPubId = p2.publicationId WHERE p2.bookId = b.bookId AND e2.exchangeState = ?) THEN TRUE " +
-//                "ELSE FALSE " +
-//                "END AS available " +
-//                "FROM book AS b " +
-//                "JOIN users AS u ON b.ownerId = u.userId " +
-//                "JOIN book_model AS bm ON bm.bookModelId = b.bookModelId " +
-//                "JOIN book_author AS ba ON ba.bookModelId = bm.bookModelId " +
-//                "JOIN author AS a ON a.authorId = ba.authorId " +
-//                "LEFT JOIN (SELECT p1.bookId, p1.publicationId, p1.publicationState FROM publication p1 WHERE p1.publicationDatetime = (SELECT MAX(p2.publicationDatetime) FROM publication p2 WHERE p2.bookId = p1.bookId)) AS p ON p.bookId = b.bookId " +
-//                "LEFT JOIN exchange AS e ON e.offererPubId = p.publicationId OR e.requesterPubId = p.publicationId " +
-//                "LEFT JOIN book_image AS bi ON bi.bookId = b.bookId " +
-//                "LEFT JOIN book_rating AS br ON bm.bookModelId = br.bookModelId " +
-//                "LEFT JOIN image AS i ON bi.imageId = i.imageId " +
-//                "WHERE u.userid = ? " +
-//                "GROUP BY available, b.bookId, b.exchangesQty, b.bookState, bm.bookModelId, bm.isbn, bm.title, bm.editorial, bm.description, bm.genre, bm.edition, bm.weight, bm.pages, bm.bookLanguage, bm.dimension, bm.publicationYear, " +
-//                "bm.isPocketEdition, bm.isHardcover, p.publicationState, coverId, u.userId, u.username, u.mail, u.password, u.imageId, u.verificationCode, u.isVerified, u.language, e.exchangeState";
-//
-//        return jdbcTemplate.query(sqlQuery, new Object[]{ExchangeState.ACCEPTED.getValue(),userId}, new int[]{Types.INTEGER,Types.BIGINT}, ROW_MAPPER_BOOK);
-
     }
 
     @Override
