@@ -81,10 +81,10 @@ public class BookJpaDao implements BookDao {
     }
 
     @Override
-    public Number createBook(long bookModelId, User owner, BookState bookState, List<Integer> images) {
+    public Book createBook(long bookModelId, User owner, BookState bookState, List<Integer> images) {
         final Book book = new Book(null, owner, null, bookState, 0, true, images);
         em.persist(book);
-        return book.getBookId();
+        return book;
     }
 
     @Transactional
