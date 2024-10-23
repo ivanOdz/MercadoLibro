@@ -35,7 +35,9 @@ public class ExchangeJpaDao implements ExchangeDao {
 
     @Override
     public Exchange rejectExchange(int acceptCode) {
-        return null;
+        Exchange exchange = findByAcceptCode(acceptCode);
+        exchange.setExchangeState(ExchangeState.REJECTED);
+        return exchange;
     }
 
     @Override
