@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -17,7 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-
+@Primary
 @Repository
 public class PublicationJpaDao implements PublicationDao {
 
@@ -28,11 +29,11 @@ public class PublicationJpaDao implements PublicationDao {
     private EntityManager em;
 
     // TODO: Manejo de excepciones.
-    public Long createPublication(long bookId, PublicationState publicationState, Timestamp publicationDatetime, Location location) {
+    public Long createPublication(long bookId, PublicationState publicationState, Timestamp publicationDatetime, Set<Location> locations) {
         try {
             // ASK: esta bien hacer esto directamente en vez de llamar al getBookById del BookJpaDao?
             Book book = em.find(Book.class, bookId);
-            final Publication publication = new Publication(null, book, publicationState, publicationDatetime, location);
+            final Publication publication = new Publication(null, book, publicationState, publicationDatetime, locations);
             em.persist(publication);
             return publication.getPublicationId();
         } catch (BookNotFoundException e) {

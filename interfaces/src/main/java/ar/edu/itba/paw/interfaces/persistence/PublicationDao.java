@@ -12,7 +12,7 @@ import java.util.Set;
 
 public interface PublicationDao {
 
-    Long createPublication(long bookId, long userId, Set<Location> location, PublicationState publicationState);
+    Long createPublication(long bookId, long userId, Set<Location> locations, PublicationState publicationState);
 
     void terminatePublication(long pubId);
 
