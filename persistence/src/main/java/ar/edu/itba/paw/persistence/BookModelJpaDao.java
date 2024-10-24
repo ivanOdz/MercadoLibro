@@ -1,14 +1,12 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.BookModelDao;
-import ar.edu.itba.paw.models.Author;
-import ar.edu.itba.paw.models.BookModel;
-import ar.edu.itba.paw.models.PaginatedResponse;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.BookModelMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.*;
@@ -18,6 +16,7 @@ import java.util.Optional;
 
 import static ar.edu.itba.paw.models.utils.Constants.BOOKS_PAGE_SIZE;
 
+@Primary
 @Repository
 public class BookModelJpaDao implements BookModelDao {
 
@@ -28,7 +27,7 @@ public class BookModelJpaDao implements BookModelDao {
     private EntityManager em;
 
     @Override
-    public long createBookModel(String isbn, String title, String publisher, String description, Genre genre, int edition, Short publicationYear, boolean isHardcover,
+    public BookModel createBookModel(String isbn, String title, String publisher, String description, Genre genre, int edition, Short publicationYear, boolean isHardcover,
                                 boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight, long bookCoverId) {
 
         //TODO: Completar como corresponde campo authors y chequear el rating.
@@ -36,21 +35,21 @@ public class BookModelJpaDao implements BookModelDao {
                   pages, language, dimension, publicationYear, isPocketEdition, isHardcover, null, bookCoverId, new Rating(0, 0));
 
             em.persist(bookModel);
-            return bookModel.getBookModelId();
+            return bookModel;
     }
 
     @Override
-    public List<Long> createAuthors(List<String> authors) {
-        List<Long> authorIds = new ArrayList<>();
+    public List<Author> createAuthors(List<String> authors) {
+        List<Author> authorsRta = new ArrayList<>();
 
         for(String author : authors) {
             Author newAuthor = new Author(null, author);
             em.persist(newAuthor);
             em.flush(); // Esto asegura que se genere el ID antes de continuar
-            authorIds.add(newAuthor.getAuthorid()); // Recupera el ID generado
+            authorsRta.add(newAuthor); // Recupera el ID generado
         }
 
-        return authorIds;
+        return authorsRta;
     }
 
     // ASK: Preguntar si se puede hacer esto para evitar tener que hacer el modelo BookAuthor que unicamente tiene un insert.

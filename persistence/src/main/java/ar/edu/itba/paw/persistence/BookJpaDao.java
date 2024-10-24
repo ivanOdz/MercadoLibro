@@ -28,7 +28,6 @@ import java.util.*;
 import java.util.logging.Logger;
 
 import static ar.edu.itba.paw.models.utils.Constants.BOOKS_PAGE_SIZE;
-import static ar.edu.itba.paw.persistence.BookModelJdbcDao.ROW_MAPPER_BOOK_MODEL;
 import static ar.edu.itba.paw.persistence.UserJdbcDao.ROW_MAPPER_USER;
 
 @Repository
@@ -47,17 +46,17 @@ public class BookJpaDao implements BookDao {
     private final String aggregationFunctionAuthor;
     private final String aggregationFunctionImages;
 
-    static final RowMapper<Book> ROW_MAPPER_BOOK =
-            (rs, rowNum) -> {
-                User owner = ROW_MAPPER_USER.mapRow(rs, rowNum);
-                BookModel bookModel = ROW_MAPPER_BOOK_MODEL.mapRow(rs, rowNum);
-                BookState bookState = BookState.fromInt(rs.getInt("bookState"));
-                int exchangesQty = rs.getInt("exchangesQty");
-
-                List<Integer> images = rs.getObject("images") == null ? new ArrayList<>() : Arrays.asList((Integer[]) rs.getArray("images").getArray());
-
-                return new Book(rs.getLong("bookId"), owner, bookModel, bookState, exchangesQty, rs.getBoolean("available"), images);
-            };
+//    static final RowMapper<Book> ROW_MAPPER_BOOK =
+//            (rs, rowNum) -> {
+//                User owner = ROW_MAPPER_USER.mapRow(rs, rowNum);
+//                BookModel bookModel = ROW_MAPPER_BOOK_MODEL.mapRow(rs, rowNum);
+//                BookState bookState = BookState.fromInt(rs.getInt("bookState"));
+//                int exchangesQty = rs.getInt("exchangesQty");
+//
+//                List<Integer> images = rs.getObject("images") == null ? new ArrayList<>() : Arrays.asList((Integer[]) rs.getArray("images").getArray());
+//
+//                return new Book(rs.getLong("bookId"), owner, bookModel, bookState, exchangesQty, rs.getBoolean("available"), images);
+//            };
 
 
     public BookJpaDao(final DataSource ds) throws SQLException {
@@ -81,9 +80,12 @@ public class BookJpaDao implements BookDao {
     }
 
     @Override
-    public Book createBook(long bookModelId, User owner, BookState bookState, List<Integer> images) {
+    public Book createBook(long bookModelId, User owner, BookState bookState, List<Image> images) {
         final Book book = new Book(null, owner, null, bookState, 0, true, images);
         em.persist(book);
+        if (book == null){
+            throw new BookBadRequestException(messageSource.getMessage("error.bookCreation", null, LocaleContextHolder.getLocale()));
+        }
         return book;
     }
 

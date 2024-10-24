@@ -22,7 +22,6 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 import static ar.edu.itba.paw.models.utils.Constants.BOOKS_PAGE_SIZE;
-import static ar.edu.itba.paw.persistence.BookModelJdbcDao.ROW_MAPPER_BOOK_MODEL;
 import static ar.edu.itba.paw.persistence.UserJdbcDao.ROW_MAPPER_USER;
 //
 //@Repository

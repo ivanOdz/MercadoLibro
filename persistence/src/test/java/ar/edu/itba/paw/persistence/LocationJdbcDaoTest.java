@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.persistence.LocationDao;
+import ar.edu.itba.paw.models.Location;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +29,7 @@ public class LocationJdbcDaoTest {
     private static final String LOCATION = "Almagro";
 
     @Autowired
-    private LocationJdbcDao locationDao;
+    private LocationDao locationDao;
 
     @Autowired
     private DataSource ds;
@@ -42,7 +44,7 @@ public class LocationJdbcDaoTest {
     @Test
     public void testNewLocation() throws SQLException {
 
-        long locationid = locationDao.newLocation(LOCATION);
+        Location location = locationDao.newLocation(LOCATION);
         assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "location", "locationstring = '" + LOCATION + "'"));
 
     }

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,6 +11,7 @@ import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+@Primary
 @Repository
 public class ImageJpaDao implements ImageDao {
 	

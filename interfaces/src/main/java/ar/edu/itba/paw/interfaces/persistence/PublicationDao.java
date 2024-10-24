@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
+import ar.edu.itba.paw.models.Location;
 import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.models.utils.*;
@@ -10,7 +11,7 @@ import java.util.List;
 
 public interface PublicationDao {
 
-    long createPublication(long bookId, long userId, long locationId, PublicationState publicationState);
+    long createPublication(long bookId, long userId, Location location, PublicationState publicationState);
 
     void terminatePublication(long pubId);
 
