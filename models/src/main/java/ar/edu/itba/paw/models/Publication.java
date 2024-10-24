@@ -48,6 +48,10 @@ public class Publication {
         this.locations = locations;
     }
 
+    public Publication() {
+
+    }
+
     public Long getPublicationId() {
         return publicationId;
     }

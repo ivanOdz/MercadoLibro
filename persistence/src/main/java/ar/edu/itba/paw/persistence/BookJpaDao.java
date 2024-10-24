@@ -92,7 +92,7 @@ public class BookJpaDao implements BookDao {
     @Transactional
     @Override
     public void createBookRating(User user, BookModel bookModel, int rating) {
-        TypedQuery<BookRating> query = em.createQuery("from BookRating as br where br.userId = :userId and br.bookModelId = :bookModelId", BookRating.class);
+        /*TypedQuery<BookRating> query = em.createQuery("from BookRating as br where br.userId = :userId and br.bookModelId = :bookModelId", BookRating.class);
         query.setParameter("userId", user.getUserId());
         query.setParameter("bookModelId", bookModel.getBookModelId());
         //try {
@@ -106,7 +106,7 @@ public class BookJpaDao implements BookDao {
                 br.get().setRating(rating);
         //        em.flush();
         //    }
-        }
+        }*/
     }
 
     @Override

@@ -37,7 +37,7 @@ public class User {
     private List<Book> books;
 
 
-    /* package */User(){
+    public User(){
 
         // only for JPA
     }
@@ -51,6 +51,7 @@ public class User {
         this.isVerified = isVerified;
         this.language = language;
     }
+
 
     public long getUserId() {
         return userId;

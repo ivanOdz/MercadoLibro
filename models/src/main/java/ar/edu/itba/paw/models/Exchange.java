@@ -43,7 +43,7 @@ public class Exchange {
 
     private boolean isReviewable;
 
-    /* package */Exchange() {
+    public Exchange() {
         // only for JPA
     }
 
