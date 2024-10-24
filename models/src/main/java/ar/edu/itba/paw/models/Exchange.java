@@ -13,7 +13,7 @@ public class Exchange {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "exchanges_exchangeid_seq")
     @SequenceGenerator(sequenceName = "exchanges_exchangeid_seq", name = "exchanges_exchangeid_seq", allocationSize = 1)
     @Column(name = "exchangeid")
-    private long exchangeId;
+    private Long exchangeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "offererPubId", nullable = false)
@@ -47,7 +47,7 @@ public class Exchange {
         // only for JPA
     }
 
-    public Exchange(long exchangeId, Publication offerer, Publication requester, ExchangeState state, long acceptCode, boolean offererReceivedBook, boolean requesterReceivedBook, Timestamp exchangeStartDate, Timestamp exchangeEndDate) {
+    public Exchange(Long exchangeId, Publication offerer, Publication requester, ExchangeState state, long acceptCode, boolean offererReceivedBook, boolean requesterReceivedBook, Timestamp exchangeStartDate, Timestamp exchangeEndDate) {
         this.exchangeId = exchangeId;
         this.offerer = offerer;
         this.requester = requester;

@@ -37,7 +37,7 @@ public class ExchangeJpaDao implements ExchangeDao {
 
         //TODO: Chequear que las publicaciones existan y que no sean del mismo usuario.
 
-        final Exchange exchange = new Exchange(0, offerer, requester, ExchangeState.PENDING, acceptCode, false, false, startDate, null);
+        final Exchange exchange = new Exchange(null, offerer, requester, ExchangeState.PENDING, acceptCode, false, false, startDate, null);
         em.persist(exchange);
 
         return exchange;
