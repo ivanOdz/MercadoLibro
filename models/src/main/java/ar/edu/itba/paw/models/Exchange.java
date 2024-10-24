@@ -96,7 +96,7 @@ public class Exchange {
         return offerer;
     }
 
-    public long getExchangeId() {
+    public Long getExchangeId() {
         return exchangeId;
     }
 
