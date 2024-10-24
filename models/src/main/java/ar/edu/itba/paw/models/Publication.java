@@ -17,7 +17,7 @@ public class Publication {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "publication_publicationid_seq")
     @SequenceGenerator(sequenceName = "publication_publicationid_seq", name = "publication_publicationid_seq", allocationSize = 1)
     @Column(name = "publicationid")
-    private long publicationId;
+    private Long publicationId;
 
     @ManyToOne
     @JoinColumn(name = "bookid", nullable = false)
@@ -40,7 +40,7 @@ public class Publication {
     private Set<Location> locations;
 
 
-    public Publication(long publicationId, Book book, PublicationState publicationState, Timestamp publicationDatetime, Set<Location> locations) {
+    public Publication(Long publicationId, Book book, PublicationState publicationState, Timestamp publicationDatetime, Set<Location> locations) {
         this.publicationId = publicationId;
         this.book = book;
         this.publicationState = publicationState;
@@ -48,7 +48,7 @@ public class Publication {
         this.locations = locations;
     }
 
-    public long getPublicationId() {
+    public Long getPublicationId() {
         return publicationId;
     }
 

@@ -8,10 +8,11 @@ import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 import ar.edu.itba.paw.models.utils.pagination.Metadata;
 
 import java.util.List;
+import java.util.Set;
 
 public interface PublicationDao {
 
-    long createPublication(long bookId, long userId, Location location, PublicationState publicationState);
+    Long createPublication(long bookId, long userId, Set<Location> location, PublicationState publicationState);
 
     void terminatePublication(long pubId);
 

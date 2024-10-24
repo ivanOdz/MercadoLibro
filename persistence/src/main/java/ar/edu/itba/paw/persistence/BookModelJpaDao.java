@@ -32,10 +32,11 @@ public class BookModelJpaDao implements BookModelDao {
 
         //TODO: Completar como corresponde campo authors y chequear el rating.
         final BookModel bookModel = new BookModel(null, isbn, title, publisher, description, genre, edition, weight,
-                  pages, language, dimension, publicationYear, isPocketEdition, isHardcover, null, bookCoverId, new Rating(0, 0));
+              pages, language, dimension, publicationYear, isPocketEdition, isHardcover, null, bookCoverId, new Rating(0, 0));
 
-            em.persist(bookModel);
-            return bookModel;
+        em.persist(bookModel);
+        return bookModel;
+
     }
 
     @Override
