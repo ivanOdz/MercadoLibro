@@ -40,8 +40,6 @@ public class BookJpaDao implements BookDao {
     @PersistenceContext
     private EntityManager em;
 
-    @Autowired
-    private final JdbcTemplate jdbcTemplate;
 
     private final String aggregationFunctionAuthor;
     private final String aggregationFunctionImages;
@@ -58,7 +56,9 @@ public class BookJpaDao implements BookDao {
 //                return new Book(rs.getLong("bookId"), owner, bookModel, bookState, exchangesQty, rs.getBoolean("available"), images);
 //            };
 
+    private final JdbcTemplate jdbcTemplate;
 
+    @Autowired
     public BookJpaDao(final DataSource ds) throws SQLException {
 
             jdbcTemplate = new JdbcTemplate(ds);
