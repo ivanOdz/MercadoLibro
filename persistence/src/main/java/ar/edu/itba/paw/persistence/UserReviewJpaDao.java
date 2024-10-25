@@ -75,6 +75,11 @@ public class UserReviewJpaDao implements UserReviewDao {
 
     @Override
     public UserReview getUserReviewGiven(long exchangeId, long userId) {
+        String stringQuery = "SELECT ur FROM UserReview ur WHERE ur.exchange.exchangeId = :exchangeId AND ur.reviewer.userId = :userId";
+
+        TypedQuery<UserReview> query = em.createQuery(stringQuery, UserReview.class);
+        query.setParameter("exchangeId", exchangeId);
+        query.setParameter("userId", userId);
         return null;
     }
 
