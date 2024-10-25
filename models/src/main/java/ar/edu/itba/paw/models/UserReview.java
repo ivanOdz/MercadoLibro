@@ -11,7 +11,7 @@ public class UserReview {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_review_userreviewid_seq")
 	@SequenceGenerator(sequenceName = "user_review_userreviewid_seq", name = "user_review_userreviewid_seq", allocationSize = 1)
 	@Column(name = "userReviewId")
-	private long userReviewId;
+	private Long userReviewId;
 
 	@ManyToOne
 	@JoinColumn(name = "reviewerId", referencedColumnName = "userId")
@@ -38,7 +38,7 @@ public class UserReview {
 		// Only for JPA
 	}
 
-	public UserReview(long userReviewId, User reviewer, User subject, Exchange exchange, String reviewDescription, Timestamp reviewDate, int reviewRating) {
+	public UserReview(Long userReviewId, User reviewer, User subject, Exchange exchange, String reviewDescription, Timestamp reviewDate, int reviewRating) {
 		
 		this.userReviewId = userReviewId;
 		this.reviewer = reviewer;
@@ -49,7 +49,7 @@ public class UserReview {
 		this.reviewRating = reviewRating;
     }
 	
-	public long getUserReviewId() {
+	public Long getUserReviewId() {
 		
 		return userReviewId;
 	}
