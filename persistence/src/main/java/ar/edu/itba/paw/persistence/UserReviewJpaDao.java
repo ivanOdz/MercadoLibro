@@ -46,7 +46,7 @@ public class UserReviewJpaDao implements UserReviewDao {
             currentPage = 0;
         }
 
-        String stringQuery = "SELECT ur.id FROM UserReview ur WHERE ur.reviewer.userId = :userId ORDER BY ur.reviewDate DESC";
+        String stringQuery = "SELECT ur.id FROM user_review ur WHERE ur.reviewer.userId = :userId ORDER BY ur.reviewDate DESC";
 
         Query nativeQuery = em.createNativeQuery(stringQuery, Long.class);
         nativeQuery.setParameter("userId", userId);
@@ -80,7 +80,7 @@ public class UserReviewJpaDao implements UserReviewDao {
         TypedQuery<UserReview> query = em.createQuery(stringQuery, UserReview.class);
         query.setParameter("exchangeId", exchangeId);
         query.setParameter("userId", userId);
-        return null;
+        return query.getSingleResult();
     }
 
     @Override
