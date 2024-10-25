@@ -34,7 +34,7 @@ public class UserReviewServiceImpl implements UserReviewService {
 
 			// IMPLEMENT: exception
 			// NOTE: throws a BR exception
-			return userReviewDao.createUserReview(exchangeId, userId, subjectId, description, rating);
+			return userReviewDao.createUserReview(exchangeId, userId, subjectId, description, rating) != null;
 		}
 		
 		return false;

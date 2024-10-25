@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface UserReviewDao {
 
-	Boolean createUserReview(long exchangeId, long userId, long userSubjectId, String description, int rating);
+	UserReview createUserReview(long exchangeId, long userId, long userSubjectId, String description, int rating);
 
 	PaginatedResponse<UserReview, BasicMetadata> getReviewsGivenByUserId(long userId, int currentPage);
 
