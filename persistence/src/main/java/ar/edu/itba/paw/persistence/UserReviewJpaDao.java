@@ -46,10 +46,10 @@ public class UserReviewJpaDao implements UserReviewDao {
             currentPage = 0;
         }
 
-        String stringQuery = "SELECT ur.id FROM user_review ur WHERE ur.reviewer.userId = :userId ORDER BY ur.reviewDate DESC";
+        String stringQuery = "SELECT ur.id FROM user_review ur WHERE ur.reviewerId = ?1 ORDER BY ur.reviewDate DESC";
 
         Query nativeQuery = em.createNativeQuery(stringQuery, Long.class);
-        nativeQuery.setParameter("userId", userId);
+        nativeQuery.setParameter(1, userId);
         nativeQuery.setMaxResults(PROFILE_PAGE_SIZE);
         nativeQuery.setFirstResult(currentPage * PROFILE_PAGE_SIZE);
 
