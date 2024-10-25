@@ -137,7 +137,7 @@ public class BookJpaDao implements BookDao {
 
     @Override
     public List<Book> getAllBooksByUser(long userId) {
-        return em.createQuery("from Book as b where b.owner.userid = :userId", Book.class)
+        return em.createQuery("from Book as b where b.owner.userId = :userId", Book.class)
                 .setParameter("userId", userId)
                 .getResultList();
     }
