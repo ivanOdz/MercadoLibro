@@ -85,7 +85,16 @@ public class UserReviewJpaDao implements UserReviewDao {
 
     @Override
     public Rating getUserRatingEarned(long userId) {
-        return null;
+        String stringQuery = "SELECT COALESCE(AVG(ur.userReviewRating), 5.0), COUNT(ur.userReviewRating) FROM UserReview ur WHERE ur.subjectId = :userId";
+        Query query = em.createQuery(stringQuery);
+        query.setParameter("userId", userId);
+
+        Object[] result = (Object[]) query.getSingleResult();
+
+        double averageRating = (Double) result[0];
+        int countRating = (Integer) result[1];
+
+        return new Rating(averageRating, countRating);
     }
 
     @Override
