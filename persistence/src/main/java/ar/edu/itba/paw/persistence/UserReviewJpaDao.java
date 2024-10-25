@@ -12,8 +12,13 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import java.sql.Timestamp;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
+
+import static ar.edu.itba.paw.models.utils.Constants.PROFILE_PAGE_SIZE;
 
 @Primary
 @Repository
@@ -36,7 +41,25 @@ public class UserReviewJpaDao implements UserReviewDao {
 
     @Override
     public PaginatedResponse<UserReview, BasicMetadata> getReviewsEarnedByUserId(long userId, int currentPage) {
-        return null;
+        if(currentPage < 0){
+            currentPage = 0;
+        }
+
+        String stringQuery = "SELECT ur.id FROM UserReview ur WHERE ur.reviewer.userId = :userId ORDER BY ur.reviewDate DESC";
+
+        TypedQuery<Long> nativeQuery = em.createQuery(stringQuery, Long.class);
+        nativeQuery.setParameter("userId", userId);
+        nativeQuery.setMaxResults(PROFILE_PAGE_SIZE);
+        nativeQuery.setFirstResult(currentPage * PROFILE_PAGE_SIZE);
+
+        List<Long> reviewIds = nativeQuery.getResultList();
+
+        TypedQuery<UserReview> query = em.createQuery("SELECT ur FROM UserReview ur WHERE ur.id IN :reviewIds ORDER BY ur.reviewDate DESC", UserReview.class);
+        query.setParameter("reviewIds", reviewIds);
+
+        List<UserReview> reviews = query.getResultList();
+
+        return new PaginatedResponse<>(reviews, new BasicMetadata(currentPage, reviews.size(), PROFILE_PAGE_SIZE));
     }
 
     @Override
