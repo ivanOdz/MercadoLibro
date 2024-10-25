@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.sql.Timestamp;
 import java.util.Collections;
@@ -47,7 +48,7 @@ public class UserReviewJpaDao implements UserReviewDao {
 
         String stringQuery = "SELECT ur.id FROM UserReview ur WHERE ur.reviewer.userId = :userId ORDER BY ur.reviewDate DESC";
 
-        TypedQuery<Long> nativeQuery = em.createQuery(stringQuery, Long.class);
+        Query nativeQuery = em.createNativeQuery(stringQuery, Long.class);
         nativeQuery.setParameter("userId", userId);
         nativeQuery.setMaxResults(PROFILE_PAGE_SIZE);
         nativeQuery.setFirstResult(currentPage * PROFILE_PAGE_SIZE);
