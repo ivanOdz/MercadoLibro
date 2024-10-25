@@ -8,16 +8,16 @@ import java.sql.Timestamp;
 public class BookImage {
 
     @Id
-    @ManyToOne
-    @JoinColumn(name = "bookid", nullable = false)
-    private final Long bookId;
+   // @ManyToOne
+   // @JoinColumn(name = "bookid", nullable = false)
+    private Long bookId;
 
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "imageid", nullable = false)
-    private final Integer imageId;
+    //@Id
+  //  @ManyToOne
+    //@JoinColumn(name = "imageid", nullable = false)
+    private Integer imageId;
 
-    private final Timestamp imageDatetime;
+    private Timestamp imageDatetime;
 
     public BookImage(Long bookId, int imageOrder, Integer imageId, Timestamp imageDatetime) {
         this.bookId = bookId;
@@ -26,7 +26,11 @@ public class BookImage {
         this.imageDatetime = imageDatetime;
     }
 
-    private final int imageOrder;
+    private int imageOrder;
+
+    public BookImage() {
+
+    }
 
     public long getBookId() {
         return bookId;

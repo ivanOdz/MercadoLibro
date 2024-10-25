@@ -43,14 +43,14 @@ public class Book {
 			name = "book_image",
 			joinColumns = @JoinColumn(name = "bookid"),
 			inverseJoinColumns = @JoinColumn(name = "imageid"))
-	private List<BookImage> images;
+	private List<Image> images;
 
 
 	public Book(){
 		// only for JPA
 	}
 
-    public Book(Long bookId, User owner, BookModel bookModel, BookState bookState, int exchangesQty, boolean available, List<BookImage> images) {
+    public Book(Long bookId, User owner, BookModel bookModel, BookState bookState, int exchangesQty, boolean available, List<Image> images) {
         this.bookId = bookId;
         this.owner = owner;
         this.bookModel = bookModel;
@@ -84,7 +84,7 @@ public class Book {
 		return available;
 	}
 
-	public List<BookImage> getImages() {
+	public List<Image> getImages() {
 		return images;
 	}
 
@@ -112,7 +112,7 @@ public class Book {
 		this.available = available;
 	}
 
-	public void setImages(List<BookImage> images) {
+	public void setImages(List<Image> images) {
 		this.images = images;
 	}
 }

@@ -19,6 +19,10 @@ public class Author {
         this.authorName = authorName;
     }
 
+    public Author() {
+
+    }
+
     public Long getAuthorid() {
         return authorid;
     }

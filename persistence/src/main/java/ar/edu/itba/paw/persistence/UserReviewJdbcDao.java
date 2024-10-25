@@ -27,9 +27,9 @@ import static ar.edu.itba.paw.models.utils.Constants.PROFILE_PAGE_SIZE;
 
 @Repository
 public class UserReviewJdbcDao implements UserReviewDao {
-	
+
 	private final JdbcTemplate jdbcTemplate;
-	
+
 	@Autowired
 	public UserReviewJdbcDao(final DataSource ds) {
 	    jdbcTemplate = new JdbcTemplate(ds);
@@ -85,14 +85,14 @@ public class UserReviewJdbcDao implements UserReviewDao {
 							+ " JOIN users AS ownerBookOfSubject ON bookSubject.ownerId = ownerBookOfSubject.userId\r\n"
 							// Filtrar tuplas que no corresponden con los involucrados
 							+ " WHERE ((exchange.requesterPubId = publicationReviewer.publicationId AND exchange.offererPubId = publicationSubject.publicationId) OR (exchange.offererPubId = publicationReviewer.publicationId AND exchange.requesterPubId = publicationSubject.publicationId))\r\n";
-    
-    
+
+
 	private static final RowMapper<UserReview> ROW_MAPPER_USER_REVIEW =
-			
+
 		(rs, rowNum) -> {
-			
+
 // ----------------------------------------- REVIWER ------------------------------------------------------------------------------------------------
-			
+
 			User reviewer = new User(	rs.getLong("reviewerUserId"),
 										rs.getString("reviewerUserName"),
 										rs.getString("reviewerMail"),
@@ -102,11 +102,12 @@ public class UserReviewJdbcDao implements UserReviewDao {
 										rs.getBoolean("reviewerIsVerified"),
 										rs.getString("reviewerLanguage")
 									);
-			
+
 			Rating bookModelRatingReviewer = new Rating(rs.getDouble("bookModelRatingReviewer"), rs.getInt("bookModelRatingCountReviewer"));
-			Location locationReviewer = new Location(rs.getLong("locationReviewerId"), rs.getString("locationReviewer"));
-			List<Integer> bookImagesReviewer = rs.getObject("bookImagesReviewer") == null ? new ArrayList<>() : Arrays.asList((Integer[]) rs.getArray("bookImagesReviewer").getArray());
-		
+			Set<Location> locationsReviewer = new HashSet<>();
+            locationsReviewer.add(new Location(rs.getLong("locationReviewerId"), rs.getString("locationReviewer")));
+            List<Image> bookImagesReviewer = rs.getObject("bookImagesReviewer") == null ? new ArrayList<>() : Arrays.asList((Image[]) rs.getArray("bookImagesReviewer").getArray());
+
 			BookModel bookModelReviewer = new BookModel(	rs.getLong("bookModelReviewerId"),
 															rs.getString("bookModelReviewerIsbn"),
 															rs.getString("bookModelReviewerTitle"),
@@ -117,15 +118,15 @@ public class UserReviewJdbcDao implements UserReviewDao {
 															rs.getInt("bookModelReviewerWeight"),
 															rs.getInt("bookModelReviewerPages"),
 															Language.fromInt(rs.getString("bookModelReviewerBookLanguage").equals("es-AR") ? Language.SPANISH.getValue() : Language.ENGLISH.getValue()),
-															rs.getInt("bookModelReviewerDimension"),
+															BookDimension.fromInt(rs.getInt("bookModelReviewerDimension")),
 															rs.getShort("bookModelReviewerPublicationYear"),
 															rs.getBoolean("bookModelReviewerIsPocketEdition"),
 															rs.getBoolean("bookModelReviewerIsHardCover"),
-															rs.getString("bookAuthorsReviewer"),
+                                                            Arrays.asList((Author[]) rs.getArray("bookAuthorsReviewer").getArray()),
 															rs.getLong("bookModelReviewerImageId"),
 															bookModelRatingReviewer
 														);
-		
+
 			User ownerBookOfReviewer = new User(	rs.getLong("ownerBookOfReviewerId"),
 													rs.getString("ownerBookOfReviewerName"),
 													rs.getString("ownerBookOfReviewerMail"),
@@ -135,7 +136,7 @@ public class UserReviewJdbcDao implements UserReviewDao {
 													rs.getBoolean("ownerBookOfReviewerIsVerified"),
 													rs.getString("ownerBookOfReviewerLanguage")
 												);
-			
+
 			Book bookEarnedReviewer = new Book(	rs.getLong("bookReviewerId"),
 												ownerBookOfReviewer,
 												bookModelReviewer,
@@ -144,15 +145,15 @@ public class UserReviewJdbcDao implements UserReviewDao {
 												rs.getBoolean("bookReviewerAvailable"),
 												bookImagesReviewer
 											);
-			
+
 			Publication publicationReviewer = new Publication(	rs.getLong("publicationReviewerId"),
 																bookEarnedReviewer, PublicationState.fromInt(rs.getInt("publicationReviewerState")),
 																rs.getTimestamp("publicationReviewerDatetime"),
-																locationReviewer
+                    											locationsReviewer
 															);
 
 // ----------------------------------------- SUBJECT ------------------------------------------------------------------------------------------------
-			
+
 			User subject = new User(	rs.getLong("subjectUserId"),
 										rs.getString("subjectUserName"),
 										rs.getString("subjectMail"),
@@ -162,11 +163,12 @@ public class UserReviewJdbcDao implements UserReviewDao {
 										rs.getBoolean("subjectIsVerified"),
 										rs.getString("subjectLanguage")
 									);
-			
+
 			Rating bookModelRatingSubject = new Rating(rs.getDouble("bookModelRatingSubject"), rs.getInt("bookModelRatingCountSubject"));
-			Location locationSubject = new Location(rs.getLong("locationSubjectId"), rs.getString("locationSubject"));
-			List<Integer> bookImagesSubject = rs.getObject("bookImagesSubject") == null ? new ArrayList<>() : Arrays.asList((Integer[]) rs.getArray("bookImagesSubject").getArray());
-		
+            Set<Location> locationSubject = new HashSet<>();
+            locationSubject.add(new Location(rs.getLong("locationSubjectId"), rs.getString("locationSubject")));
+            List<Image> bookImagesSubject = rs.getObject("bookImagesSubject") == null ? new ArrayList<>() : Arrays.asList((Image[]) rs.getArray("bookImagesSubject").getArray());
+
 			BookModel bookModelSubject = new BookModel(	rs.getLong("bookModelSubjectId"),
 														rs.getString("bookModelSubjectIsbn"),
 														rs.getString("bookModelSubjectTitle"),
@@ -177,15 +179,15 @@ public class UserReviewJdbcDao implements UserReviewDao {
 														rs.getInt("bookModelSubjectWeight"),
 														rs.getInt("bookModelSubjectPages"),
 														Language.fromInt(rs.getString("bookModelSubjectBookLanguage").equals("es-AR") ? Language.SPANISH.getValue() : Language.ENGLISH.getValue()),
-														rs.getInt("bookModelSubjectDimension"),
+														BookDimension.fromInt(rs.getInt("bookModelSubjectDimension")),
 														rs.getShort("bookModelSubjectPublicationYear"),
 														rs.getBoolean("bookModelSubjectIsPocketEdition"),
 														rs.getBoolean("bookModelSubjectIsHardCover"),
-														rs.getString("bookAuthorsSubject"),
+                    									Arrays.asList((Author[]) rs.getArray("bookAuthorsSubject").getArray()),
 														rs.getLong("bookModelSubjectImageId"),
 														bookModelRatingSubject
 													);
-			
+
 			User ownerBookOfSubject = new User(	rs.getLong("ownerBookOfSubjectId"),
 												rs.getString("ownerBookOfSubjectName"),
 												rs.getString("ownerBookOfSubjectMail"),
@@ -195,7 +197,7 @@ public class UserReviewJdbcDao implements UserReviewDao {
 												rs.getBoolean("ownerBookOfSubjectIsVerified"),
 												rs.getString("ownerBookOfSubjectLanguage")
 											);
-			
+
 			Book bookEarnedSubject = new Book(	rs.getLong("bookSubjectId"),
 												ownerBookOfSubject,
 												bookModelSubject,
@@ -204,29 +206,29 @@ public class UserReviewJdbcDao implements UserReviewDao {
 												rs.getBoolean("bookSubjectAvailable"),
 												bookImagesSubject
 											);
-			
+
 			Publication publicationSubject = new Publication(	rs.getLong("publicationSubjectId"),
 																bookEarnedSubject, PublicationState.fromInt(rs.getInt("publicationSubjectState")),
 																rs.getTimestamp("publicationSubjectDatetime"),
 																locationSubject
 															);
-		
+
 // ----------------------------------------- EXCHANGE AND REVIEW ------------------------------------------------------------------------------------
-			
+
 			Publication offererPublication;
 			Publication requesterPublication;
-			
+
 			if (rs.getLong("exchangeOffererPubId") == rs.getLong("publicationReviewerId")) {
-				
+
 				offererPublication = publicationReviewer;
 				requesterPublication = publicationSubject;
-				
+
 			} else {
-			
+
 				offererPublication = publicationSubject;
 				requesterPublication = publicationReviewer;
 			}
-			
+
 			Exchange exchange = new Exchange(	rs.getLong("exchangeId"),
 												offererPublication,
 												requesterPublication,
@@ -247,11 +249,11 @@ public class UserReviewJdbcDao implements UserReviewDao {
                                                     rs.getInt("userReviewRating")
                                                 );
 	};
-	
+
 	String baseQueryRating = "SELECT COALESCE(AVG(userReviewRating), 5.00) AS averageRating, COUNT(userReviewRating) AS countRating FROM user_review\r\n";
-	
+
 	private static final RowMapper<Rating> ROW_MAPPER_RATING =
-			
+
 		(rs, rowNum) -> new Rating(rs.getDouble("averageRating"), rs.getInt("countRating"));
 
     @Override
@@ -316,7 +318,7 @@ public class UserReviewJdbcDao implements UserReviewDao {
 
         return userReviewGiven.orElse(null);
     }
-    
+
     @Override
     public Rating getUserRatingEarned(long userId) {
 
@@ -329,7 +331,7 @@ public class UserReviewJdbcDao implements UserReviewDao {
     public Rating getUserRatingGiven(long userId) {
 
         List<Rating> rating = jdbcTemplate.query(baseQueryRating + " WHERE ReviewerId = ?", new Object[] { userId }, new int[] { Types.BIGINT }, ROW_MAPPER_RATING);
-    	
+
         return rating.isEmpty() ? null : rating.getFirst();
     }
 }

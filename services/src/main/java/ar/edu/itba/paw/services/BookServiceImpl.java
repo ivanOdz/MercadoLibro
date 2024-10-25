@@ -36,18 +36,19 @@ public class BookServiceImpl implements BookService {
     @Override
     public Book createBook(Long bookModelId, BookState bookState, int rating, List<MultipartFile> imageFiles, int bookCoverIndex, List<Integer> imagesId, User user, boolean newBook) {
 
+        List<Image> images = new ArrayList<>();
         if(!newBook){
-            imagesId = imageService.saveImage(arrangeImages(imageFiles, bookCoverIndex)).stream().map(Image::getImageId).toList();
+            images = imageService.saveImage(arrangeImages(imageFiles, bookCoverIndex));
         }
 
 
         bookDao.createBookRating(user, bookModelService.getBookModelByBookModelId(bookModelId), rating);
 
-        Book toReturn = bookDao.createBook(bookModelId, user, bookState, imagesId);
+        Book book = bookDao.createBook(bookModelId, user, bookState, images);
 
-        bookDao.createBookImage(toReturn.getBookId(), imagesId);
+        bookDao.createBookImage(book.getBookId(), imagesId);
 
-        return toReturn;
+        return book;
     }
 
     @Transactional

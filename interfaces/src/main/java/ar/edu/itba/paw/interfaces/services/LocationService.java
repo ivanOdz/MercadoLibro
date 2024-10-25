@@ -1,8 +1,12 @@
 package ar.edu.itba.paw.interfaces.services;
 
-public interface LocationService {
-    String getLocationByPublicationId(long pubId);
+import ar.edu.itba.paw.models.Location;
 
-    long newLocation(String location);
+import java.util.Set;
+
+public interface LocationService {
+    Set<Location> getLocationsByPublicationId(long pubId);
+
+    Location newLocation(String location);
 
 }

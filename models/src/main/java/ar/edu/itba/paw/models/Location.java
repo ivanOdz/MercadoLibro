@@ -19,7 +19,7 @@ public class Location {
     @ManyToMany(mappedBy = "locations")
     private Set<Publication> publications = new HashSet<>();
 
-    Location() {
+    public Location() {
         // Hibernate
     }
 

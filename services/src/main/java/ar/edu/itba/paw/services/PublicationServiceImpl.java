@@ -10,9 +10,7 @@ import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,7 +30,9 @@ public class PublicationServiceImpl implements PublicationService {
 
     @Override
     public long createPublication(long bookId, long userId, String location, PublicationState publicationState) {
-        return pubDao.createPublication(bookId, userId, locationService.newLocation(location), publicationState);
+        Set<Location> locations = new HashSet<>();
+        locations.add(locationService.newLocation(location));
+        return pubDao.createPublication(bookId, userId, locations, publicationState);
     }
 
     @Override
