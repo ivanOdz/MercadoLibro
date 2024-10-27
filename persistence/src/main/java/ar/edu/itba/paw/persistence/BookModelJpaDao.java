@@ -114,10 +114,10 @@ public class BookModelJpaDao implements BookModelDao {
         nativeQuery.setMaxResults(BOOKS_PAGE_SIZE);
         nativeQuery.setFirstResult(currentPage * BOOKS_PAGE_SIZE);
 
-        List<Integer> bookModelIds = nativeQuery.getResultList();
+        @SuppressWarnings("unchecked")
+        List<Long> bookModelIds = nativeQuery.getResultList().stream().mapToLong(n -> ((Number) n).longValue()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
         // Segunda consulta recuperar los libros mediante una query JPA pasandole los ids recuperados en la primera consulta
         TypedQuery<BookModel> query = em.createQuery("FROM BookModel bm WHERE bm.bookModelId IN (:ids)", BookModel.class);
-
 
 
         try {
