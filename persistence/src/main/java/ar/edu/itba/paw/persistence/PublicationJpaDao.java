@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.exceptions.BookNotFoundException;
-import ar.edu.itba.paw.interfaces.exceptions.PublicationBadRequestException;
 import ar.edu.itba.paw.interfaces.exceptions.PublicationNotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.PublicationDao;
 import ar.edu.itba.paw.models.*;
@@ -18,10 +16,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static ar.edu.itba.paw.models.utils.Constants.PUBLICATIONS_PAGE_SIZE;
 
@@ -158,14 +153,80 @@ public class PublicationJpaDao implements PublicationDao {
     }
 
     @Override
-    public List<BookStateWrapper> getBookStateQtyByPublication(String search, boolean isGenreFilterActive, Genre genreFilter) {
-        return List.of();
+    public List<GenreWrapper> getGenreQtyByPublication(String search, boolean isBookStateFilterActive, BookState bookStateFilter) {
+        StringBuilder sqlQuery =  new StringBuilder("SELECT bm.genre, COUNT(*) AS genreCount " +
+                        "FROM publication p " +
+                        "JOIN book b ON p.bookId = b.bookId " +
+                        "JOIN book_model bm ON b.bookModelId = bm.bookModelId " +
+                        "WHERE p.publicationState = :publicationState AND LOWER(bm.title) LIKE LOWER(:safeSearch) ESCAPE '\\' ");
+
+        if(isBookStateFilterActive){
+            sqlQuery.append("AND b.bookState = :bookState ");
+        }
+
+        sqlQuery.append("GROUP BY bm.genre");
+
+        Query query = em.createNativeQuery(sqlQuery.toString());
+
+        query.setParameter("publicationState", PublicationState.CURRENT);
+        String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
+        query.setParameter("safeSearch", safeSearch);
+
+        if(isBookStateFilterActive){
+            query.setParameter("bookState", bookStateFilter.getKey());
+        }
+
+        List<Object[]> results = query.getResultList();
+
+        List<GenreWrapper> genreWrappers = new ArrayList<>();
+        for (Object[] result : results) {
+            String genreValue = result[0].toString();  // bm.genre (STRING)
+            Genre genre = Genre.valueOf(genreValue);
+            int genreCount = ((Number) result[1]).intValue();  // genreCount
+            genreWrappers.add(new GenreWrapper(genre, genreCount));
+        }
+
+        return genreWrappers;
     }
 
+
     @Override
-    public List<GenreWrapper> getGenreQtyByPublication(String search, boolean isBookStateFilterActive, BookState bookStateFilter) {
-        return List.of();
+    public List<BookStateWrapper> getBookStateQtyByPublication(String search, boolean isGenreFilterActive, Genre genreFilter) {
+        StringBuilder sqlQuery =  new StringBuilder("SELECT b.bookState, COUNT(*) AS stateCount " +
+                "FROM publication p " +
+                "JOIN book b ON p.bookId = b.bookId " +
+                "JOIN book_model bm ON b.bookModelId = bm.bookModelId " +
+                "WHERE p.publicationState = :publicationState AND LOWER(bm.title) LIKE LOWER(:safeSearch) ESCAPE '\\' ");
+
+        if(isGenreFilterActive){
+            sqlQuery.append("AND bm.genre = :genre ");
+        }
+
+        sqlQuery.append("GROUP BY b.bookState");
+
+        Query query = em.createNativeQuery(sqlQuery.toString());
+
+        query.setParameter("publicationState", PublicationState.CURRENT);
+        String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
+        query.setParameter("safeSearch", safeSearch);
+
+        if(isGenreFilterActive){
+            query.setParameter("genre", genreFilter.getKey());
+        }
+
+        List<Object[]> results = query.getResultList();
+
+        List<BookStateWrapper> bookStateWrappers = new ArrayList<>();
+        for (Object[] result : results) {
+            String bookStateValue = result[0].toString();
+            BookState bookState = BookState.valueOf(bookStateValue);
+            int bookStateCount = ((Number) result[1]).intValue();
+            bookStateWrappers.add(new BookStateWrapper(bookState, bookStateCount));
+        }
+
+        return bookStateWrappers;
     }
+
 
     private int getTotalResultsByBook(String search, boolean isGenreFilterActive, Genre genreFilter, boolean isBookStateFilterActive, BookState bookStateFilter){
         StringBuilder nativeQueryString = new StringBuilder(
