@@ -29,7 +29,7 @@ public class PublicationJpaDao implements PublicationDao {
     private EntityManager em;
 
     // TODO: Manejo de excepciones.
-    public Long createPublication(long bookId, PublicationState publicationState, Timestamp publicationDatetime, Set<Location> locations) {
+    /*public Long createPublication(long bookId, PublicationState publicationState, Timestamp publicationDatetime, Set<Location> locations) {
         try {
             // ASK: esta bien hacer esto directamente en vez de llamar al getBookById del BookJpaDao?
             Book book = em.find(Book.class, bookId);
@@ -41,15 +41,15 @@ public class PublicationJpaDao implements PublicationDao {
         } catch (PublicationBadRequestException e) {
             throw new IllegalArgumentException(messageSource.getMessage("publication.creation.error", null, null));
         }
-    }
+    }*/
 
     @Override
-    public Long createPublication(long bookId, long userId, Set<Location> location, PublicationState publicationState) {
+    public Publication createPublication(long bookId, long userId, Set<Location> locations, PublicationState publicationState) {
         // ASK: esta bien hacer esto directamente en vez de llamar al getBookById del BookJpaDao?
         Book book = em.find(Book.class, bookId);
-        final Publication publication = new Publication(null, book, publicationState, new Timestamp(new Date().getTime()), location);
+        final Publication publication = new Publication(null, book, publicationState, new Timestamp(new Date().getTime()), locations);
         em.persist(publication);
-        return publication.getPublicationId();
+        return publication;
     }
 
 

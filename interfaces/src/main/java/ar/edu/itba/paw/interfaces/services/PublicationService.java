@@ -10,7 +10,7 @@ import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 
 public interface PublicationService {
 
-    long createPublication(long bookId, long userId, String location, PublicationState publicationState);
+    Publication createPublication(long bookId, long userId, String location, PublicationState publicationState);
 
     void createPublicationIfNeeded(boolean publish, long bookId, long userId, String location, PublicationState publicationState);
 

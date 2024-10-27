@@ -29,8 +29,6 @@ public class Publication {
     @Column(name = "publicationdatetime")
     private Timestamp publicationDatetime;
 
-    // No me acuerdo si se podian elegir las location o no. Segun eso poner el OneToMany o OneToOne.
-
     @ManyToMany
     @JoinTable(
             name = "publication_location",
