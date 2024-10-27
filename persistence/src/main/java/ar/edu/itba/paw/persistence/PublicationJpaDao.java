@@ -149,7 +149,12 @@ public class PublicationJpaDao implements PublicationDao {
 
     @Override
     public int getPublicationCountByUserId(long userId) {
-        return 0;
+        String query = "SELECT COUNT(*) FROM publication p WHERE p.userId = :userId";
+
+        Query nativeQuery = em.createNativeQuery(query);
+        nativeQuery.setParameter("userId", userId);
+
+        return ((Number) nativeQuery.getSingleResult()).intValue();
     }
 
     @Override
