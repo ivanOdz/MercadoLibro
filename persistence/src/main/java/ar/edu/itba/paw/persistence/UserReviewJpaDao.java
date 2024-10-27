@@ -37,7 +37,20 @@ public class UserReviewJpaDao implements UserReviewDao {
 
     @Override
     public PaginatedResponse<UserReview, BasicMetadata> getReviewsGivenByUserId(long userId, int currentPage) {
-        return null;
+        if(currentPage < 0){
+            currentPage = 0;
+        }
+        int offset = currentPage * PROFILE_PAGE_SIZE;
+
+        TypedQuery<UserReview> query = em.createQuery("SELECT ur FROM UserReview ur WHERE ur.reviewer.userId = :userId ORDER BY ur.reviewDate DESC", UserReview.class);
+
+        query.setParameter("userId", userId);
+        query.setMaxResults(PROFILE_PAGE_SIZE);
+        query.setFirstResult(offset);
+
+        List<UserReview> data = query.getResultList();
+
+        return new PaginatedResponse<>(data, new BasicMetadata(currentPage, data.size(), PROFILE_PAGE_SIZE));
     }
 
     @Override
