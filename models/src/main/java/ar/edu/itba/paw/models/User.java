@@ -37,7 +37,7 @@ public class User {
     private List<Book> books;
 
 
-    public User(){
+    /* package */ public User(){
 
         // only for JPA
     }
