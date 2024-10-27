@@ -41,6 +41,7 @@ public class Exchange {
     @Column(name = "exchangeEndDate")
     private Timestamp exchangeEndDate;
 
+    @Transient
     private boolean isReviewable;
 
     public Exchange() {
