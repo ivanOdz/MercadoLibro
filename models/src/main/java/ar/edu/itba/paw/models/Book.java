@@ -24,6 +24,7 @@ public class Book {
 	private User owner;
 
 	@ManyToOne(optional = false)
+	@JoinColumn(name = "bookmodelid")
 	private BookModel bookModel;
 
 	@Enumerated(EnumType.STRING)
