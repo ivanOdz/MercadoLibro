@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.exceptions.BookNotFoundException;
 import ar.edu.itba.paw.interfaces.exceptions.PublicationBadRequestException;
+import ar.edu.itba.paw.interfaces.exceptions.PublicationNotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.PublicationDao;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
@@ -9,6 +10,7 @@ import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -16,6 +18,7 @@ import javax.persistence.PersistenceContext;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Primary
@@ -62,7 +65,15 @@ public class PublicationJpaDao implements PublicationDao {
 
     @Override
     public Publication getPublicationByPublicationId(long publicationId) {
-        return null;
+
+        Optional<Publication> maybePublication = Optional.ofNullable(em.find(Publication.class, publicationId));
+
+        if(maybePublication.isEmpty()){
+            String message = messageSource.getMessage("error.publicationNotFound", new Object[]{publicationId}, LocaleContextHolder.getLocale());
+            throw new PublicationNotFoundException(message);
+        }
+
+        return maybePublication.get();
     }
 
     @Override
