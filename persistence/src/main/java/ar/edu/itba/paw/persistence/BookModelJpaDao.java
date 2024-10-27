@@ -164,8 +164,6 @@ public class BookModelJpaDao implements BookModelDao {
         if (isGenreFilterActive) {
             query.setParameter("genreFilter", genreFilter.getValue());
         }
-
-        Number totalResults = (Number) query.getSingleResult();
-        return totalResults != null ? totalResults.intValue() : 0;
+        return ((Number) query.getSingleResult()).intValue();
     }
 }

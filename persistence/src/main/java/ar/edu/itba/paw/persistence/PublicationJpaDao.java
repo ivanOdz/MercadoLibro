@@ -15,11 +15,15 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
+import static ar.edu.itba.paw.models.utils.Constants.PUBLICATIONS_PAGE_SIZE;
 
 @Primary
 @Repository
@@ -48,13 +52,11 @@ public class PublicationJpaDao implements PublicationDao {
 
     @Override
     public Publication createPublication(long bookId, long userId, Set<Location> locations, PublicationState publicationState) {
-        // ASK: esta bien hacer esto directamente en vez de llamar al getBookById del BookJpaDao?
         Book book = em.find(Book.class, bookId);
         final Publication publication = new Publication(null, book, publicationState, new Timestamp(new Date().getTime()), locations);
         em.persist(publication);
         return publication;
     }
-
 
     @Override
     public void terminatePublication(long pubId) {
@@ -65,7 +67,6 @@ public class PublicationJpaDao implements PublicationDao {
 
     @Override
     public Publication getPublicationByPublicationId(long publicationId) {
-
         Optional<Publication> maybePublication = Optional.ofNullable(em.find(Publication.class, publicationId));
 
         if(maybePublication.isEmpty()){
@@ -78,7 +79,72 @@ public class PublicationJpaDao implements PublicationDao {
 
     @Override
     public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, SortType sortType, int currentPage) {
-        return null;
+        if(currentPage < 0){
+            currentPage = 0;
+        }
+
+        StringBuilder nativeQueryString = new StringBuilder(
+                "SELECT p.publicationid " +
+                        "FROM publication p " +
+                        "JOIN book b ON p.bookId = b.bookId " +
+                        "JOIN book_model bm ON bm.bookModelId = b.bookModelId " +
+                        "WHERE p.publicationState = :publicationState AND LOWER(bm.title) LIKE LOWER(:safeSearch) ESCAPE '\\' "
+        );
+
+        if (isGenreFilterActive) {
+            nativeQueryString.append("AND bm.genre = :genre ");
+        }
+
+        if (isBookStateFilterActive) {
+            nativeQueryString.append("AND b.bookState = :bookState ");
+        }
+
+        switch (sortType) {
+            case RATING_ASCENDING:
+                nativeQueryString.append(" ORDER BY rating ASC");
+                break;
+            case RATING_DESCENDING:
+                nativeQueryString.append(" ORDER BY rating DESC");
+                break;
+            case BOOK_NAME_ASCENDING:
+                nativeQueryString.append(" ORDER BY title ASC");
+                break;
+            case BOOK_NAME_DESCENDING:
+                nativeQueryString.append(" ORDER BY title DESC");
+                break;
+            case PUBLICATION_DATE_DESCENDING:
+                nativeQueryString.append(" ORDER BY publicationDatetime DESC");
+                break;
+            default:
+                nativeQueryString.append(" ORDER BY publicationDatetime ASC");
+        }
+
+        Query nativeQuery = em.createNativeQuery(nativeQueryString.toString(), Long.class);
+
+        nativeQuery.setParameter("publicationState", PublicationState.CURRENT);
+
+        String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
+        nativeQuery.setParameter("safeSearch", safeSearch);
+
+        if(isGenreFilterActive){
+            nativeQuery.setParameter("genre", genreFilter.getKey());
+        }
+
+        if(isBookStateFilterActive){
+            nativeQuery.setParameter("bookState", bookStateFilter.getKey());
+        }
+
+        nativeQuery.setMaxResults(PUBLICATIONS_PAGE_SIZE);
+        nativeQuery.setFirstResult(currentPage * PUBLICATIONS_PAGE_SIZE);
+
+        List<Long> publicationIds = nativeQuery.getResultList();
+
+        TypedQuery<Publication> query = em.createQuery("FROM Publication p WHERE p.publicationId IN (:ids)", Publication.class);
+        query.setParameter("ids",publicationIds);
+
+        int totalResults = getTotalResultsByBook(safeSearch, isGenreFilterActive, genreFilter, isBookStateFilterActive, bookStateFilter);
+
+        return new PaginatedResponse<>(query.getResultList(), new ItemFilterMetadata(currentPage, PUBLICATIONS_PAGE_SIZE, totalResults, search, isGenreFilterActive, genreFilter, sortType, null, isBookStateFilterActive, bookStateFilter, null));
     }
 
     @Override
@@ -94,5 +160,40 @@ public class PublicationJpaDao implements PublicationDao {
     @Override
     public List<GenreWrapper> getGenreQtyByPublication(String search, boolean isBookStateFilterActive, BookState bookStateFilter) {
         return List.of();
+    }
+
+    private int getTotalResultsByBook(String search, boolean isGenreFilterActive, Genre genreFilter, boolean isBookStateFilterActive, BookState bookStateFilter){
+        StringBuilder nativeQueryString = new StringBuilder(
+                "SELECT COUNT(*) " +
+                        "FROM publication p " +
+                        "JOIN book b ON p.bookId = b.bookId " +
+                        "JOIN book_model bm ON bm.bookModelId = b.bookModelId " +
+                        "WHERE p.publicationState = :publicationState AND LOWER(bm.title) LIKE LOWER(:safeSearch) ESCAPE '\\' "
+        );
+
+        if (isGenreFilterActive) {
+            nativeQueryString.append("AND bm.genre = :genre ");
+        }
+
+        if (isBookStateFilterActive) {
+            nativeQueryString.append("AND b.bookState = :bookState ");
+        }
+
+        Query query = em.createNativeQuery(nativeQueryString.toString());
+
+        query.setParameter("publicationState", PublicationState.CURRENT);
+
+        String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
+        query.setParameter("safeSearch", safeSearch);
+
+        if(isGenreFilterActive){
+            query.setParameter("genre", genreFilter.getKey());
+        }
+
+        if(isBookStateFilterActive){
+            query.setParameter("bookState", bookStateFilter.getKey());
+        }
+
+        return ((Number) query.getSingleResult()).intValue();
     }
 }
