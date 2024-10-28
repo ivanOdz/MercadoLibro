@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 public interface BookService {
 
-    Book createBook(Long bookModelId, BookState bookState, int rating, List<MultipartFile> imageFiles, int bookCoverIndex, List<Integer> imagesId, User user, boolean newBook);
+    Book createBook(Long bookModelId, BookState bookState, int rating, List<MultipartFile> imageFiles, int bookCoverIndex, List<Long> imagesId, User user, boolean newBook);
 
 
     Book createNewBook(String isbn, String title, List<String> authors, String publisher, String description, Genre genre, int edition,

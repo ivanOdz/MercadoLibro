@@ -5,9 +5,10 @@ import ar.edu.itba.paw.models.Image;
 import java.util.Optional;
 
 public interface ImageDao {
+	
     Image createImage(byte[] image);
 
-    Optional<Image> getImageById(long imageId);
+    Optional<Image> getImageById(Long imageId);
 
-    Image getFirstImageByBookId(long bookId);
+    Image getFirstImageByBookId(Long bookId);
 }

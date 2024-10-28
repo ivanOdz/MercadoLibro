@@ -34,10 +34,11 @@ public class BookServiceImpl implements BookService {
 
     @Transactional
     @Override
-    public Book createBook(Long bookModelId, BookState bookState, int rating, List<MultipartFile> imageFiles, int bookCoverIndex, List<Integer> imagesId, User user, boolean newBook) {
+    public Book createBook(Long bookModelId, BookState bookState, int rating, List<MultipartFile> imageFiles, int bookCoverIndex, List<Long> imagesId, User user, boolean newBook) {
 
         List<Image> images = new ArrayList<>();
-        if(!newBook){
+        
+        if (!newBook){
             images = imageService.saveImage(arrangeImages(imageFiles, bookCoverIndex));
         }
 
@@ -57,7 +58,7 @@ public class BookServiceImpl implements BookService {
                                   Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension,
                                   Language language, int pages, int weight, BookState bookState, int rating, List<MultipartFile> imageFiles, int bookCoverIndex, User user){
 
-        List<Integer> imagesId = imageService.saveImage(arrangeImages(imageFiles, bookCoverIndex)).stream().map(Image::getImageId).toList();
+        List<Long> imagesId = imageService.saveImage(arrangeImages(imageFiles, bookCoverIndex)).stream().map(Image::getImageId).toList();
 
         BookModel bookModel = bookModelService.createBookModel(isbn, title, authors, publisher, description, genre, edition,
                 publicationYear, isHardcover, isPocketEdition, dimension, language, pages, weight, imagesId.get(bookCoverIndex));

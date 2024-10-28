@@ -23,12 +23,13 @@ public class ImageJdbcDao implements ImageDao {
 
     private static final RowMapper<Image> ROWMAPPERIMAGE = (rs, rowNum) -> new Image(
 
-            rs.getInt("imageId"),
+            rs.getLong("imageId"),
             rs.getBytes("image")
     );
 
     @Autowired
     public ImageJdbcDao(final DataSource ds) {
+    	
         jdbcTemplate = new JdbcTemplate(ds);
         jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .usingGeneratedKeyColumns("imageid")
@@ -37,13 +38,15 @@ public class ImageJdbcDao implements ImageDao {
 
     @Override
     public Image createImage(byte[] image) {
+    	
         final Map<String, byte[]> imageData = Map.of("image", image);
         final Number generatedId = jdbcInsert.executeAndReturnKey(imageData);
-        return new Image(generatedId.intValue(), image);
+        return new Image(generatedId.longValue(), image);
     }
 
     @Override
-    public Optional<Image> getImageById(long imageId) {
+    public Optional<Image> getImageById(Long imageId) {
+    	
         String sql = "SELECT * FROM image WHERE imageId = ?";
 
         List<Image> images = jdbcTemplate.query(
@@ -56,7 +59,8 @@ public class ImageJdbcDao implements ImageDao {
     }
 
     @Override
-    public Image getFirstImageByBookId(long bookId) {
+    public Image getFirstImageByBookId(Long bookId) {
+    	
         return jdbcTemplate.query("SELECT i.imageId, i.image FROM image i JOIN book_image b ON i.imageId = b.imageId WHERE b.bookId = ? AND imageOrder = ?",
                 new Object[]{ bookId, 0 }, new int[] { Types.BIGINT, Types.INTEGER }, ROWMAPPERIMAGE).stream().findFirst().orElse(null);
     }

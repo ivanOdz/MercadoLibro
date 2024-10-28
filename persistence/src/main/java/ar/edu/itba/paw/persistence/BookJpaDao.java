@@ -28,7 +28,6 @@ import java.util.*;
 import java.util.logging.Logger;
 
 import static ar.edu.itba.paw.models.utils.Constants.BOOKS_PAGE_SIZE;
-import static ar.edu.itba.paw.persistence.UserJdbcDao.ROW_MAPPER_USER;
 
 @Repository
 @Primary
@@ -80,10 +79,12 @@ public class BookJpaDao implements BookDao {
     }
 
     @Override
-    public Book createBook(long bookModelId, User owner, BookState bookState, List<Image> images) {
+    public Book createBook(Long bookModelId, User owner, BookState bookState, List<Image> images) {
+    	
         final Book book = new Book(null, owner, null, bookState, 0, true, images);
         em.persist(book);
-        if (book == null){
+        
+        if (book == null) {
             throw new BookBadRequestException(messageSource.getMessage("error.bookCreation", null, LocaleContextHolder.getLocale()));
         }
         return book;
@@ -110,9 +111,10 @@ public class BookJpaDao implements BookDao {
     }
 
     @Override
-    public void createBookImage(long bookId, List<Integer> images) {
+    public void createBookImage(Long bookId, List<Long> images) {
+    	
         int i = 0;
-        for (Integer imageId : images) {
+        for (Long imageId : images) {
             final BookImage image = new BookImage(null, i++, imageId , Timestamp.valueOf(LocalDateTime.now()));
             em.persist(image);
         }
@@ -121,12 +123,14 @@ public class BookJpaDao implements BookDao {
     @Transactional
     @Override
     public void setOwner(Book book, User user) {
+    	
         Book b = em.find(Book.class, book.getBookId());
         b.setOwner(user);
     }
 
     @Override
-    public Book getBookById(long bookId) {
+    public Book getBookById(Long bookId) {
+    	
         Book book =  em.find(Book.class, bookId);  // devuelve null si no existe
         if (book == null) {
             throw new BookNotFoundException(messageSource.getMessage("error.bookNotFound", new Object[]{ bookId }, LocaleContextHolder.getLocale()));
@@ -136,7 +140,8 @@ public class BookJpaDao implements BookDao {
 
 
     @Override
-    public List<Book> getAllBooksByUser(long userId) {
+    public List<Book> getAllBooksByUser(Long userId) {
+    	
         return em.createQuery("from Book as b where b.owner.userId = :userId", Book.class)
                 .setParameter("userId", userId)
                 .getResultList();
@@ -259,7 +264,8 @@ public class BookJpaDao implements BookDao {
         return new PaginatedResponse<>(query.getResultList(), new ItemFilterMetadata(currentPage, BOOKS_PAGE_SIZE, totalResults, search, isGenreFilterActive, genreFilter, sortType, null, isBookStateFilterActive, bookStateFilter, null));
     }
 
-    public List<GenreWrapper> getGenreQtyByBook(String search, boolean isBookStateFilterActive, BookState bookStateFilter, long userId) {
+    public List<GenreWrapper> getGenreQtyByBook(String search, boolean isBookStateFilterActive, BookState bookStateFilter, Long userId) {
+    	
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT bm.genre, COUNT(*) AS genreCount " +
                         "FROM book b " +
@@ -283,6 +289,7 @@ public class BookJpaDao implements BookDao {
         List<Object[]> results = query.getResultList();
 
         List<GenreWrapper> genreWrappers = new ArrayList<>();
+        
         for (Object[] result : results) {
             String genreValue = result[0].toString();  // bm.genre (STRING)
             Genre genre = Genre.valueOf(genreValue);
@@ -293,7 +300,8 @@ public class BookJpaDao implements BookDao {
         return genreWrappers;
     }
 
-    public List<BookStateWrapper> getBookStateQtyByBook(String search, boolean isGenreFilterActive, Genre genreFilter, long userId) {
+    public List<BookStateWrapper> getBookStateQtyByBook(String search, boolean isGenreFilterActive, Genre genreFilter, Long userId) {
+    	
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT b.bookState, COUNT(*) AS stateCount " +
                         "FROM book b " +
@@ -318,6 +326,7 @@ public class BookJpaDao implements BookDao {
         List<Object[]> results = query.getResultList();
 
         List<BookStateWrapper> bookStateWrappers = new ArrayList<>();
+        
         for (Object[] result : results) {
             String bookStateValue = result[0].toString();
             BookState bookState = BookState.valueOf(bookStateValue);
@@ -330,7 +339,7 @@ public class BookJpaDao implements BookDao {
 
 
     private int getTotalResultsByBook(String search, boolean isGenreFilterActive, Genre genreFilter,
-                                      boolean isBookStateFilterActive, BookState bookStateFilter, long userId) {
+                                      boolean isBookStateFilterActive, BookState bookStateFilter, Long userId) {
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT COUNT(*) " +
                         "FROM publication p " +

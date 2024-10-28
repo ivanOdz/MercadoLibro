@@ -13,6 +13,7 @@ import java.util.Optional;
 
 @Service
 public class ImageServiceImpl implements ImageService {
+	
     private final ImageDao imageDao;
 
     public ImageServiceImpl(final ImageDao imageDao) {
@@ -21,6 +22,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public List<Image> saveImage(List<MultipartFile> image) {
+    	
         List<Image> images = new ArrayList<>();
 
         for(MultipartFile file : image) {
@@ -38,19 +40,21 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public Optional<Image> getImageById(long imageId) {
+    public Optional<Image> getImageById(Long imageId) {
         return imageDao.getImageById(imageId);
     }
 
     @Override
-    public Image getFirstImageByBookId(long bookId) {
+    public Image getFirstImageByBookId(Long bookId) {
         return imageDao.getFirstImageByBookId(bookId);
     }
 
     @Override
     public List<Image> getImagesByBookImageList(List<BookImage> bookImages) {
+    	
         List<Image> images = new ArrayList<>();
-        if(bookImages.isEmpty()){
+        
+        if (bookImages.isEmpty()){
             return null;
         }
         for (BookImage bookImage : bookImages) {

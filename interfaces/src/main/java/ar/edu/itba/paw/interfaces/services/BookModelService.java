@@ -10,7 +10,7 @@ import java.util.List;
 public interface BookModelService {
 
     BookModel createBookModel(String isbn, String title, List<String> authors, String publisher, String description, Genre genre, int edition,
-                         Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight, Integer imageId);
+                         Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight, Long imageId);
 
     BookModel getBookModelByBookModelId(long bookModelId);
 
