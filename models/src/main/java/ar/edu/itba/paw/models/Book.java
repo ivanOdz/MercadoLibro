@@ -32,12 +32,7 @@ public class Book {
 
 	private int exchangesQty;
 
-	@Formula("CASE " +
-			"WHEN NOT EXISTS (SELECT 1 FROM publication p2 WHERE p2.bookId = bookId) THEN TRUE " +
-			"WHEN NOT EXISTS (SELECT 1 FROM exchange e2 JOIN publication p2 ON e2.offererPubId = p2.publicationId OR e2.requesterPubId = p2.publicationId WHERE p2.bookId = bookId AND e2.exchangeState = 'ACCEPTED') THEN TRUE " +
-			"ELSE FALSE " +
-			"END")
-	@Transient
+	@Column(name = "available")
 	private Boolean available;
 
 	@ManyToMany

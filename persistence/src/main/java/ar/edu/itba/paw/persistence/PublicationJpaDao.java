@@ -114,9 +114,9 @@ public class PublicationJpaDao implements PublicationDao {
                 nativeQueryString.append(" ORDER BY publicationDatetime ASC");
         }
 
-        Query nativeQuery = em.createNativeQuery(nativeQueryString.toString(), Long.class);
+        Query nativeQuery = em.createNativeQuery(nativeQueryString.toString());
 
-        nativeQuery.setParameter("publicationState", PublicationState.CURRENT);
+        nativeQuery.setParameter("publicationState", PublicationState.CURRENT.toString());
 
         String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
         nativeQuery.setParameter("safeSearch", safeSearch);
@@ -132,8 +132,12 @@ public class PublicationJpaDao implements PublicationDao {
         nativeQuery.setMaxResults(PUBLICATIONS_PAGE_SIZE);
         nativeQuery.setFirstResult(currentPage * PUBLICATIONS_PAGE_SIZE);
 
-        @SuppressWarnings("unchecked")
-        List<Long> publicationIds = nativeQuery.getResultList().stream().mapToLong(n -> ((Number) n).longValue()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+        List<Long> publicationIds = new ArrayList<>();
+        try{
+            publicationIds = nativeQuery.getResultList().stream().mapToLong(n -> ((Number) n).longValue()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
 
         TypedQuery<Publication> query = em.createQuery("FROM Publication p WHERE p.publicationId IN (:ids)", Publication.class);
         query.setParameter("ids",publicationIds);
@@ -145,9 +149,9 @@ public class PublicationJpaDao implements PublicationDao {
 
     @Override
     public int getPublicationCountByUserId(long userId) {
-        String query = "SELECT COUNT(*) FROM publication p WHERE p.userId = :userId";
+        StringBuilder query = new StringBuilder("SELECT COUNT(*) FROM publication p WHERE p.userId = :userId");
 
-        Query nativeQuery = em.createNativeQuery(query);
+        Query nativeQuery = em.createNativeQuery(query.toString());
         nativeQuery.setParameter("userId", userId);
 
         return ((Number) nativeQuery.getSingleResult()).intValue();
@@ -248,7 +252,7 @@ public class PublicationJpaDao implements PublicationDao {
 
         Query query = em.createNativeQuery(nativeQueryString.toString());
 
-        query.setParameter("publicationState", PublicationState.CURRENT);
+        query.setParameter("publicationState", PublicationState.CURRENT.toString());
 
         String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
         query.setParameter("safeSearch", safeSearch);
