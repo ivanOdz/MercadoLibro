@@ -34,4 +34,9 @@ public class ImageServiceImpl implements ImageService {
 
         return images;
     }
+
+    @Override
+    public Optional<Image> getImageById(Long imageId) {
+        return imageDao.getImageById(imageId);
+    }
 }

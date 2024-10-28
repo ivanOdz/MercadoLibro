@@ -27,4 +27,10 @@ public class ImageJpaDao implements ImageDao {
 		entityManager.persist(img);
 		return img;
 	}
+
+	@Override
+	public Optional<Image> getImageById(Long imageId) {
+		Image image = entityManager.find(Image.class, imageId);
+		return Optional.ofNullable(image);
+	}
 }

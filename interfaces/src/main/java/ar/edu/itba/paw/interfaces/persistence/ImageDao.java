@@ -8,4 +8,5 @@ public interface ImageDao {
 	
     Image createImage(byte[] image);
 
+    Optional<Image> getImageById(Long imageId);
 }
