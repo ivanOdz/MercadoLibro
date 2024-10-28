@@ -341,7 +341,7 @@ public class BookJpaDao implements BookDao {
             bookStateWrappers.add(new BookStateWrapper(bookState, stateCount));
         }
 
-        return query.getResultList();
+        return bookStateWrappers;
     }
 
 

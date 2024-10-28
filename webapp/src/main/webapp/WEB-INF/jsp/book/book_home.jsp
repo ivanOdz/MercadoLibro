@@ -3,8 +3,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ include file="/WEB-INF/jsp/components/navbar_wo_search.jsp" %>
-<%@ page import="ar.edu.itba.paw.models.utils.PublicationState" %>
-
+<%-- <%@ page import="ar.edu.itba.paw.models.utils.PublicationState" %> --%>
 
 <!DOCTYPE html>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -205,7 +204,7 @@
                                     <div class="uk-flex uk-flex-column uk-flex-column uk-margin-bottom">
                                         <div class="">
                                             <h5 class="uk-card-title custom-link">${card.bookModel.title}</h5>
-                                            <p class="small-gray-text custom-link">${card.bookModel.authors}</p>
+                                            <p class="small-gray-text custom-link">${card.bookModel.authors[0].authorName}</p>
                                         </div>
                                         <c:choose>
                                             <c:when test="${card.available}">
