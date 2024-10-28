@@ -850,9 +850,9 @@
         // Actualizar la información en la columna izquierda
         document.getElementById('info-requester-username').textContent = "<spring:message code="exchange.with"/>" + " " + offererUsername;
         document.getElementById('info-requester-mail').textContent = "<spring:message code="exchange.with_email"/>" + " " + offererMail;
-        document.getElementById('info-requester-location').textContent = "<spring:message code="exchange.location"/>" + " " + String.join(", ", offererLocations);
+        document.getElementById('info-requester-location').textContent = "<spring:message code="exchange.location"/>" + " " + offererLocations;
         document.getElementById('info-offered-book-title').textContent = "<spring:message code="exchange.book.title"/>" + " " + requestedBookTitle;
-        document.getElementById('info-offered-book-authors').textContent = "<spring:message code="exchange.book.authors"/>" + " " + String.join(", ", requestedBookAuthors);
+        document.getElementById('info-offered-book-authors').textContent = "<spring:message code="exchange.book.authors"/>" + " " + requestedBookAuthors;
         document.getElementById('info-offered-book-edition').textContent = "<spring:message code="exchange.book.edition"/>" + " " + requestedBookEdition;
 
         if (isReviewable === 'true') {
