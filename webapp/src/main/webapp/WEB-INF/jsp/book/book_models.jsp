@@ -130,7 +130,7 @@
                                     <c:out value="${card.title}"/>
                                 </h5>
                                 <p class="small-gray-text custom-link">
-                                    <c:out value="${card.authors}"/>
+                                    <c:out value="${card.authors[0].authorName}"/>
                                 </p>
 
                                 <a class="uk-button uk-button-default uk-button-primary uk-width-1-1"
