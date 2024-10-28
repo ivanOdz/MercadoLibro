@@ -202,7 +202,7 @@ public class BookJpaDao implements BookDao {
         return new PaginatedResponse<>(books, new ItemFilterMetadata());
         */
         StringBuilder sqlQuery = new StringBuilder(
-                "SELECT  b.bookId" +
+                "SELECT  b.bookId " +
                         "FROM book AS b " +
                         "JOIN users AS u ON b.ownerId = u.userId " +
                         "JOIN book_model AS bm ON bm.bookModelId = b.bookModelId " +
