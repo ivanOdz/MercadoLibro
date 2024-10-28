@@ -63,7 +63,7 @@
                     <c:choose>
                         <c:when test="${not empty publication.book.images}">
                             <img id="currentImage"
-                                 src="<c:url value='/images/${publication.book.images[0]}'/>"
+                                 src="<c:url value='/images/${publication.book.images[0].imageId}'/>"
                                  alt="Book Image"/>
                             <div class="uk-button-group" style="justify-content:center">
                                 <button id="prevBtn" class="slider-button">
@@ -80,7 +80,7 @@
                         </c:otherwise>
                     </c:choose>
                 </div>
-                <div>
+                <div style="grid-column: 2 / 4; display: grid;justify-content: left">
                     <div>
                         <!-- Title -->
                         <div>
@@ -91,9 +91,11 @@
 
                         <!-- Author -->
                         <div>
-                            <p class="small-gray-text custom-link">
-                                <c:out value="${publication.book.bookModel.authors}"/>
-                            </p>
+                            <c:forEach var="author" items="${publication.book.bookModel.authors}">
+                                <p class="small-gray-text custom-link">
+                                    <c:out value="${author.authorName}"/>
+                                </p>
+                            </c:forEach>
                         </div>
                     </div>
 
@@ -110,48 +112,50 @@
                             </p>
                         </div>
 
-                        <!-- Ranking -->
-                        <div>
-                            <div style="margin-right: 5px;">
-                                <p class="small-gray-text custom-link">
-                                    <c:out value="${publication.book.bookModel.rating.rating}"/>
+                        <div style="display: grid; justify-content: center; grid-template-columns: repeat(4, 1fr);">
+                            <hr style="grid-column: 1 / 5; margin: 5%"/>
+                        </div>
+
+                        <div style="display: grid; justify-content: center; grid-template-columns: repeat(7, 1fr);">
+
+                            <div style="grid-column: 1 / 7">
+                                <p>
+                                    <c:out value="${publication.book.bookModel.description}"/>
                                 </p>
                             </div>
-                            <div class="star-rating">
-                                <c:forEach var="i" begin="1" end="5">
-                                    <c:choose>
-                                        <c:when test="${i <= publication.book.bookModel.rating.rating}">
-                                            <!-- Estrella llena -->
-                                            <span uk-icon="icon: star; ratio: 1.5" style="color: gold;"></span>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <!-- Estrella vacía -->
-                                            <span uk-icon="icon: star; ratio: 1.5" style="color: lightgray;"></span>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </c:forEach>
-                            </div>
-                            <div style="margin-left: 5px;">
-                                <p class="small-gray-text custom-link">(<c:out
-                                        value="${publication.book.bookModel.rating.ratingCount}"/>)</p>
-                            </div>
                         </div>
+
+<%--                        <!-- Ranking -->--%>
+<%--                        <div>--%>
+<%--                            <div style="margin-right: 5px;">--%>
+<%--                                <p class="small-gray-text custom-link">--%>
+<%--                                    <c:out value="${publication.book.bookModel.rating.rating}"/>--%>
+<%--                                </p>--%>
+<%--                            </div>--%>
+<%--                            <div class="star-rating">--%>
+<%--                                <c:forEach var="i" begin="1" end="5">--%>
+<%--                                    <c:choose>--%>
+<%--                                        <c:when test="${i <= publication.book.bookModel.rating.rating}">--%>
+<%--                                            <!-- Estrella llena -->--%>
+<%--                                            <span uk-icon="icon: star; ratio: 1.5" style="color: gold;"></span>--%>
+<%--                                        </c:when>--%>
+<%--                                        <c:otherwise>--%>
+<%--                                            <!-- Estrella vacía -->--%>
+<%--                                            <span uk-icon="icon: star; ratio: 1.5" style="color: lightgray;"></span>--%>
+<%--                                        </c:otherwise>--%>
+<%--                                    </c:choose>--%>
+<%--                                </c:forEach>--%>
+<%--                            </div>--%>
+<%--                            <div style="margin-left: 5px;">--%>
+<%--                                <p class="small-gray-text custom-link">(<c:out--%>
+<%--                                        value="${publication.book.bookModel.rating.ratingCount}"/>)</p>--%>
+<%--                            </div>--%>
+<%--                        </div>--%>
                     </div>
                 </div>
             </div>
 
-            <div style="display: grid; justify-content: center; grid-template-columns: repeat(4, 1fr);">
-                <hr style="grid-column: 2 / 4; margin: 5%"/>
-            </div>
 
-            <div style="display: grid; justify-content: center; grid-template-columns: repeat(7, 1fr);">
-
-                <div style="grid-column: 1 / 7">
-                    <p>
-                        <c:out value="${publication.book.bookModel.description}"/>
-                    </p>
-                </div>
-            </div>
 
 
             <div style="display: grid; justify-content: center; grid-template-columns: repeat(4, 1fr);">
@@ -208,9 +212,11 @@
                         <p style="text-align: center"><spring:message code="publication.details.location"/></p>
                         <span uk-icon="icon: location" style="margin-left: 30px;"></span>
                         <p style="text-align: center">
-                            <strong>
-                                <c:out value="${publication.location.locationString}"/>
-                            </strong>
+                            <c:forEach var="location" items="${publication.locations}">
+                                <strong>
+                                    <c:out value="${location.locationString}"/>
+                                </strong>
+                            </c:forEach>
                         </p>
                     </div>
                 </div>
@@ -292,7 +298,7 @@
 <script>
     const images = [
         <c:forEach var="image" items="${publication.book.images}" varStatus="loop">
-        '<c:url value="/images/${image}"/>'<c:if test="${!loop.last}">, </c:if>
+        '<c:url value="/images/${image.imageId}"/>'<c:if test="${!loop.last}">, </c:if>
         </c:forEach>
     ];
 
