@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -40,10 +41,10 @@ public class ExchangeJpaDao implements ExchangeDao {
 
         final Exchange exchange = new Exchange(null, offerer, requester, ExchangeState.PENDING, acceptCode, false, false, startDate, null);
         em.persist(exchange);
-
         return exchange;
     }
 
+    @Transactional
     @Override
     public Exchange rejectExchange(int acceptCode) {
         Exchange exchange = findByAcceptCode(acceptCode);
@@ -51,12 +52,14 @@ public class ExchangeJpaDao implements ExchangeDao {
         return exchange;
     }
 
+    @Transactional
     @Override
     public void setEndDate(int acceptCode, Timestamp endDate) {
         Exchange exchange = findByAcceptCode(acceptCode);
         exchange.setExchangeEndDate(endDate);
     }
 
+    @Transactional
     @Override
     public Exchange acceptExchange(int acceptCode) {
         Exchange exchange = findByAcceptCode(acceptCode);
@@ -64,6 +67,7 @@ public class ExchangeJpaDao implements ExchangeDao {
         return exchange;
     }
 
+    @Transactional
     @Override
     public Exchange confirmOfferer(int acceptCode) {
         Exchange exchange = findByAcceptCode(acceptCode);
@@ -71,6 +75,7 @@ public class ExchangeJpaDao implements ExchangeDao {
         return exchange;
     }
 
+    @Transactional
     @Override
     public Exchange confirmRequester(int acceptCode) {
         Exchange exchange = findByAcceptCode(acceptCode);
@@ -78,6 +83,7 @@ public class ExchangeJpaDao implements ExchangeDao {
         return exchange;
     }
 
+    @Transactional
     @Override
     public void updateExchangeStatus(int acceptCode, int newStatus) {
         Exchange exchange = findByAcceptCode(acceptCode);
@@ -86,15 +92,20 @@ public class ExchangeJpaDao implements ExchangeDao {
 
     @Override
     public Exchange findByAcceptCode(int acceptCode) throws ExchangeNotFoundException {
-        Exchange exchange = em.find(Exchange.class, acceptCode);
-        return exchange;
+        TypedQuery<Exchange> exchange = em.createQuery("FROM Exchange e WHERE e.acceptCode = :acceptCode", Exchange.class);
+        exchange.setParameter("acceptCode", acceptCode);
+
+        Exchange result = exchange.getSingleResult();
+        if (result == null) {
+            throw new ExchangeNotFoundException("Exchange not found");
+        }
+        return result;
     }
 
     @Override
     public Exchange getExchangeById(long exchangeId) {
-        Exchange exchange = em.find(Exchange.class, exchangeId);
+        return em.find(Exchange.class, exchangeId);
         // exception if exchange is null
-        return exchange;
     }
 
     @Override
@@ -103,24 +114,31 @@ public class ExchangeJpaDao implements ExchangeDao {
             currentPage = 0;
         }
 
-        StringBuilder queryString = new StringBuilder("SELECT e.exchangeId FROM Exchange e WHERE ");
+        StringBuilder queryString = new StringBuilder("SELECT e.exchangeId FROM exchange e WHERE ");
 
         if (isOfferer) {
-            queryString.append("e.offerer.userId = :userId");
+            queryString.append("e.offererpubId = :userId");
         } else {
-            queryString.append("e.requester.userId = :userId");
+            queryString.append("e.requesterpubId = :userId");
         }
 
-        Query nativeQuery = em.createQuery(queryString.toString());
+        Query nativeQuery = em.createNativeQuery(queryString.toString());
+        nativeQuery.setParameter("userId", anUserId);
+
         nativeQuery.setMaxResults(EXCHANGES_PAGE_SIZE);
         nativeQuery.setFirstResult(currentPage * EXCHANGES_PAGE_SIZE);
+
 
         @SuppressWarnings("unchecked")
         List<Long> exchangeIds = nativeQuery.getResultList().stream().mapToLong(n -> ((Number) n).longValue()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
 
+
         TypedQuery<Exchange> query = em.createQuery("FROM Exchange e WHERE e.exchangeId IN (:ids) AND e.state = :state", Exchange.class);
         query.setParameter("ids", exchangeIds);
+        query.setParameter("state", exchangeState);
 
-        return new PaginatedResponse<>(query.getResultList(), new BasicMetadata(currentPage, EXCHANGES_PAGE_SIZE, exchangeIds.size()));
+        List<Exchange> exchanges = query.getResultList();
+
+        return new PaginatedResponse<>(exchanges, new BasicMetadata(currentPage, EXCHANGES_PAGE_SIZE, exchangeIds.size()));
     }
 }

@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models;
 
 import ar.edu.itba.paw.models.utils.ExchangeState;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -24,6 +25,7 @@ public class Exchange {
     private Publication requester;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "exchangeState", nullable = false)
     private ExchangeState state;
 
     @Column(name = "acceptCode", nullable = false)
@@ -41,9 +43,6 @@ public class Exchange {
     @Column(name = "exchangeEndDate")
     private Timestamp exchangeEndDate;
 
-    @Transient
-    private boolean isReviewable;
-
     public Exchange() {
         // only for JPA
     }
@@ -56,17 +55,12 @@ public class Exchange {
         this.acceptCode = acceptCode;
         this.offererReceivedBook = offererReceivedBook;
         this.requesterReceivedBook = requesterReceivedBook;
-        this.isReviewable = state.getValue() != ExchangeState.REJECTED.getValue() && state.getValue() != ExchangeState.PENDING.getValue();
         this.exchangeStartDate = exchangeStartDate;
         this.exchangeEndDate = exchangeEndDate;
     }
 
     public ExchangeState getState() {
         return state;
-    }
-
-    public boolean getIsReviewable() {
-        return isReviewable;
     }
 
     public boolean isOffererReceivedBook() {
@@ -124,6 +118,15 @@ public class Exchange {
     public void setRequesterReceivedBook(boolean requesterReceivedBook) {
         this.requesterReceivedBook = requesterReceivedBook;
     }
+
+    public boolean isReviewable() {
+        return (state != ExchangeState.REJECTED && state != ExchangeState.PENDING);
+    }
+
+    public boolean getIsReviewable() {
+        return isReviewable();
+    }
+
 }
 
 
