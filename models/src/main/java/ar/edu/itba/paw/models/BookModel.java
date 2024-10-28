@@ -19,16 +19,28 @@ public class BookModel {
     @Column(name = "bookmodelid")
     private Long bookModelId;
 
+    @Column(name = "isbn")
     private String isbn;
+
+    @Column(name = "title")
     private String title;
+
+    @Column(name = "editorial")
     private String editorial;
+
+    @Column(name = "description")
     private String description;
 
     @Enumerated(EnumType.STRING)
     private Genre genre;
 
+    @Column(name = "edition")
     private int edition;
+
+    @Column(name = "weight")
     private int weight;
+
+    @Column(name = "pages")
     private int pages;
 
     @Enumerated(EnumType.STRING)
