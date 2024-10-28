@@ -2,7 +2,7 @@ package ar.edu.itba.paw.models.utils;
 
 public enum ExchangeState {
     PENDING(0),
-    ACCEPTED(1), // TODO: EL ACCEPTED FUNCIONA COMO TERMINATED (darlo vuelta)
+    ACCEPTED(1),
     REJECTED(2),
     TERMINATED(3);
 

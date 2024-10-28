@@ -26,5 +26,6 @@ public interface BookDao {
 
     List<GenreWrapper> getGenreQtyByBook(String search, boolean isBookStateFilterActive, BookState bookStateFilter, long userId);
 
+    void setAvailable(Book book, boolean available);
 
 }

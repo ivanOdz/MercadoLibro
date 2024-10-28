@@ -115,7 +115,6 @@ public class BookJpaDao implements BookDao {
     @Transactional
     @Override
     public void setOwner(Book book, User user) {
-
         Book b = em.find(Book.class, book.getBookId());
         b.setOwner(user);
     }
@@ -291,6 +290,13 @@ public class BookJpaDao implements BookDao {
         }
 
         return genreWrappers;
+    }
+
+    @Transactional
+    @Override
+    public void setAvailable(Book book, boolean available) {
+        Book b = em.find(Book.class, book.getBookId());
+        b.setAvailable(available);
     }
 
     public List<BookStateWrapper> getBookStateQtyByBook(String search, boolean isGenreFilterActive, Genre genreFilter, long userId) {

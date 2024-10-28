@@ -80,9 +80,11 @@ public class ExchangeServiceImpl implements ExchangeService {
     	
         Exchange ex;
         
-        if (state)
+        if (state) {
             ex = exchangeDao.acceptExchange(acceptCode);
-        else {
+            bs.setAvailable(ex.getOfferer().getBook(), false);
+            bs.setAvailable(ex.getRequester().getBook(), false);
+        } else {
             ex = exchangeDao.rejectExchange(acceptCode);
 
             Date date = new Date();

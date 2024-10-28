@@ -26,4 +26,6 @@ public interface BookService {
     PaginatedResponse<Book, ItemFilterMetadata> getPaginatedBooks(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, int currentPage, long userId, SortType sortType);
 
     List<Book> getAvailableBooksByUser(User user);
+
+    void setAvailable(Book book, boolean available);
 }

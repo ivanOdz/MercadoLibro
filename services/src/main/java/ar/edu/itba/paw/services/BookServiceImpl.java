@@ -68,7 +68,9 @@ public class BookServiceImpl implements BookService {
     @Override
     public void exchangeOwnership(Book b1, Book b2) {
         bookDao.setOwner(b1, b2.getOwner());
+        setAvailable(b1, true);
         bookDao.setOwner(b2, b1.getOwner());
+        setAvailable(b2, true);
     }
 
     @Override
@@ -116,6 +118,11 @@ public class BookServiceImpl implements BookService {
 
     public List<Book> getAvailableBooksByUser(User user){
         return bookDao.getAllBooksByUser(user.getUserId()).stream().filter(Book::isAvailable).toList();
+    }
+
+    @Override
+    public void setAvailable(Book book, boolean available) {
+        bookDao.setAvailable(book, available);
     }
 }
 
