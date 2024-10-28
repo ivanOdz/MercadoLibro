@@ -17,6 +17,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import static ar.edu.itba.paw.models.utils.Constants.BOOKS_PAGE_SIZE;
@@ -114,7 +115,8 @@ public class ExchangeJpaDao implements ExchangeDao {
         nativeQuery.setMaxResults(EXCHANGES_PAGE_SIZE);
         nativeQuery.setFirstResult(currentPage * EXCHANGES_PAGE_SIZE);
 
-        List<Long> exchangeIds = nativeQuery.getResultList();
+        @SuppressWarnings("unchecked")
+        List<Long> exchangeIds = nativeQuery.getResultList().stream().mapToLong(n -> ((Number) n).longValue()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
 
         TypedQuery<Exchange> query = em.createQuery("FROM Exchange e WHERE e.exchangeId IN (:ids) AND e.state = :state", Exchange.class);
         query.setParameter("ids", exchangeIds);

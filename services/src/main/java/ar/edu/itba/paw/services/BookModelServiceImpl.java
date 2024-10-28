@@ -27,7 +27,7 @@ public class BookModelServiceImpl implements BookModelService {
 
     @Transactional
     @Override
-    public BookModel createBookModel(String isbn, String title, List<String> authors, String publisher, String description, Genre genre, int edition, Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight, Integer imageId) {
+    public BookModel createBookModel(String isbn, String title, List<String> authors, String publisher, String description, Genre genre, int edition, Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight, Long imageId) {
         // CHECK: if missing controller catch blocks
         List<Author> newauthors = bookModelDao.createAuthors(authors);
 

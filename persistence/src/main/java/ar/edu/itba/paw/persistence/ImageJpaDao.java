@@ -29,14 +29,14 @@ public class ImageJpaDao implements ImageDao {
 	}
 	
 	@Override
-	public Optional<Image> getImageById(long imageId) {
+	public Optional<Image> getImageById(Long imageId) {
 	
 	Image image = entityManager.find(Image.class, imageId);
 		return Optional.ofNullable(image);
 	}
 	
 	@Override
-	public Image getFirstImageByBookId(long bookId) {
+	public Image getFirstImageByBookId(Long bookId) {
 		
 		String query = "SELECT i FROM Image i JOIN BookImage b ON i.imageId = b.image.imageId " +
 		   "WHERE b.book.bookId = :bookId AND b.imageOrder = 0";
