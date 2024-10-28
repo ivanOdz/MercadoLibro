@@ -38,11 +38,13 @@
         <div class="uk-container">
             <div class="row-container">
                 <h3 style="margin-right: 10%;"><spring:message code="exchange.book"/></h3>
-                <img src="images/${publication.book.images[0]}" alt="Book Image"
+                <img src="images/${publication.book.images[0].imageId}" alt="Book Image"
                      style="margin-right: 3%; width:13%; height:5%;"/>
                 <div class="column-container">
                     <p><spring:message code="exchange.book.title"/> ${publication.book.bookModel.title} </p>
-                    <p><spring:message code="exchange.book.authors"/> ${publication.book.bookModel.authors} </p>
+                    <c:forEach var="author" items="${publication.book.bookModel.authors}">
+                        <p><spring:message code="exchange.book.authors"/> ${author.authorName} </p>
+                    </c:forEach>
                     <p><spring:message code="exchange.book.editorial"/> ${publication.book.bookModel.editorial} </p>
                     <p><spring:message code="exchange.book.edition"/> ${publication.book.bookModel.edition} </p>
                 </div>
@@ -66,12 +68,14 @@
                                         <form:radiobutton path="bookId" value="${availableBook.bookId}" />
                                     </div>
                                     <div class="uk-width-auto">
-                                        <img src="<c:url value='/images/${availableBook.images[0]}' />"
+                                        <img src="<c:url value='/images/${availableBook.images[0].imageId}' />"
                                              alt="Book Image" class="uk-border-circle" width="40" height="40">
                                     </div>
                                     <div class="uk-width-expand">
                                         <div class="uk-text-bold">${availableBook.bookModel.title}</div>
-                                        <div class="uk-text-small">${availableBook.bookModel.authors}</div>
+                                        <c:forEach var="author" items="${availableBook.bookModel.authors}">
+                                        <div class="uk-text-small">${author.authorName}</div>
+                                        </c:forEach>
                                     </div>
                                 </div>
                             </label>
