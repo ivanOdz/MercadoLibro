@@ -173,9 +173,9 @@ public class PublicationJpaDao implements PublicationDao {
 
         Query query = em.createNativeQuery(sqlQuery.toString());
 
-        query.setParameter("publicationState", PublicationState.CURRENT);
+        query.setParameter("publicationState", PublicationState.CURRENT.toString());
         String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
-        query.setParameter("safeSearch", safeSearch);
+        query.setParameter("safeSearch", "%" + safeSearch.toLowerCase() + "%");
 
         if(isBookStateFilterActive){
             query.setParameter("bookState", bookStateFilter.getKey());
@@ -211,9 +211,9 @@ public class PublicationJpaDao implements PublicationDao {
 
         Query query = em.createNativeQuery(sqlQuery.toString());
 
-        query.setParameter("publicationState", PublicationState.CURRENT);
+        query.setParameter("publicationState", PublicationState.CURRENT.toString());
         String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
-        query.setParameter("safeSearch", safeSearch);
+        query.setParameter("safeSearch", "%" + safeSearch.toLowerCase() + "%");
 
         if(isGenreFilterActive){
             query.setParameter("genre", genreFilter.getKey());
