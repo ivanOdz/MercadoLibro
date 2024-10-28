@@ -53,7 +53,7 @@
                                          onclick="selectCard(this,
                                                  '<c:out value="${data.requester.book.owner.username}"/>',
                                                  '<c:out value="${data.requester.book.owner.mail}"/>',
-                                                 '<c:out value="${data.requester.location}"/>',
+                                                 '<c:out value="${data.requester.locations}"/>',
                                                  '<c:out value="${data.offerer.book.bookModel.title}"/>',
                                                  '<c:out value="${data.offerer.book.bookModel.authors}"/>',
                                                  '<c:out value="${data.offerer.book.bookModel.title}"/>',
@@ -67,7 +67,7 @@
 
                                         <div style="padding: 0">
                                             <img class="book-image"
-                                                 src="<c:url value='/images/${data.offerer.book.images[0]}' />"
+                                                 src="<c:url value='/images/${data.offerer.book.images[0].imageId}' />"
                                                  alt="bookImage"/>
                                             <div class="card-text-container">
                                                 <h3 class="card-text3">
@@ -106,7 +106,7 @@
 
                                         <div style="padding: 0">
                                             <img class="book-image"
-                                                 src="<c:url value='/images/${data.requester.book.images[0]}' />"
+                                                 src="<c:url value='/images/${data.requester.book.images[0].imageId}' />"
                                                  alt="bookImage"/>
                                             <div class="card-text-container">
                                                 <h3 class="card-text3">
@@ -278,7 +278,7 @@
                                          onclick="selectCard(this,
                                                  '<c:out value="${data.requester.book.owner.username}"/>',
                                                  '<c:out value="${data.requester.book.owner.mail}"/>',
-                                                 '<c:out value="${data.requester.location.locationString}"/>',
+                                                 '<c:out value="${data.requester.locations}"/>',
                                                  '<c:out value="${data.offerer.book.bookModel.title}"/>',
                                                  '<c:out value="${data.offerer.book.bookModel.authors}"/>',
                                                  '<c:out value="${data.offerer.book.bookModel.title}"/>',
@@ -292,7 +292,7 @@
 
                                         <div style="padding: 0">
                                             <img class="book-image"
-                                                 src="<c:url value='/images/${data.offerer.book.images[0]}' />"
+                                                 src="<c:url value='/images/${data.offerer.book.images[0].imageId}' />"
                                                  alt="bookImage"/>
                                             <div class="card-text-container">
                                                 <h3 class="card-text3">
@@ -353,7 +353,7 @@
 
                                         <div style="padding: 0">
                                             <img class="book-image"
-                                                 src="<c:url value='/images/${data.requester.book.images[0]}' />"
+                                                 src="<c:url value='/images/${data.requester.book.images[0].imageId}' />"
                                                  alt="bookImage"/>
                                             <div class="card-text-container">
                                                 <h3 class="card-text3">
@@ -477,7 +477,7 @@
                                          onclick="selectCard(this,
                                                  '<c:out value="${data.requester.book.owner.username}"/>',
                                                  '<c:out value="${data.requester.book.owner.mail}"/>',
-                                                 '<c:out value="${data.requester.location.locationString}"/>',
+                                                 '<c:out value="${data.requester.locations}"/>',
                                                  '<c:out value="${data.offerer.book.bookModel.title}"/>',
                                                  '<c:out value="${data.offerer.book.bookModel.authors}"/>',
                                                  '<c:out value="${data.offerer.book.bookModel.title}"/>',
@@ -490,7 +490,7 @@
 
                                         <div style="padding: 0">
                                             <img class="book-image"
-                                                 src="<c:url value='/images/${data.offerer.book.images[0]}' />"
+                                                 src="<c:url value='/images/${data.offerer.book.images[0].imageId}' />"
                                                  alt="bookImage"/>
                                             <div class="card-text-container">
                                                 <h3 class="card-text3">
@@ -522,7 +522,7 @@
 
                                         <div style="padding: 0">
                                             <img class="book-image"
-                                                 src="<c:url value='/images/${data.requester.book.images[0]}' />"
+                                                 src="<c:url value='/images/${data.requester.book.images[0].imageId}' />"
                                                  alt="bookImage"/>
                                             <div class="card-text-container">
                                                 <h3 class="card-text3">
@@ -646,7 +646,7 @@
                                          onclick="selectCard(this,
                                                  '<c:out value="${data.requester.book.owner.username}"/>',
                                                  '<c:out value="${data.requester.book.owner.mail}"/>',
-                                                 '<c:out value="${data.requester.location.locationString}"/>',
+                                                 '<c:out value="${data.requester.locations}"/>',
                                                  '<c:out value="${data.offerer.book.bookModel.title}"/>',
                                                  '<c:out value="${data.offerer.book.bookModel.authors}"/>',
                                                  '<c:out value="${data.offerer.book.bookModel.title}"/>',
@@ -660,7 +660,7 @@
 
                                         <div style="padding: 0">
                                             <img class="book-image"
-                                                 src="<c:url value='/images/${data.offerer.book.images[0]}' />"
+                                                 src="<c:url value='/images/${data.offerer.book.images[0].imageId}' />"
                                                  alt="bookImage"/>
                                             <div class="card-text-container">
                                                 <h3 class="card-text3">
@@ -691,7 +691,7 @@
                                         </div>
                                         <div style="padding: 0">
                                             <img class="book-image"
-                                                 src="<c:url value='/images/${data.requester.book.images[0]}' />"
+                                                 src="<c:url value='/images/${data.requester.book.images[0].imageId}' />"
                                                  alt="bookImage"/>
                                             <div class="card-text-container">
                                                 <h3 class="card-text3">
@@ -926,9 +926,9 @@
         // Actualizar la información en la columna izquierda
         document.getElementById('info-requester-username').textContent = "<spring:message code="exchange.with"/>" + " " + requesterUsername;
         document.getElementById('info-requester-mail').textContent = "<spring:message code="exchange.with_email"/>" + " " + requesterMail;
-        document.getElementById('info-requester-location').textContent = "<spring:message code="exchange.location"/>" + requesterLocation;
+        document.getElementById('info-requester-location').textContent = "<spring:message code="exchange.location"/>" + String.join(', ', requesterLocation);
         document.getElementById('info-offered-book-title').textContent = "<spring:message code="exchange.book.title"/>" + " " + offeredBookTitle;
-        document.getElementById('info-offered-book-authors').textContent = "<spring:message code="exchange.book.authors"/>" + " " + offeredBookAuthors;
+        document.getElementById('info-offered-book-authors').textContent = "<spring:message code="exchange.book.authors"/>" + " " + String.join(', ', offeredBookAuthors);
         document.getElementById('info-offered-book-edition').textContent = "<spring:message code="exchange.book.edition"/>" + " " + offeredBookEdition;
 
         if (isReviewable === 'true') {
