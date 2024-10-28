@@ -114,13 +114,13 @@ public class ExchangeJpaDao implements ExchangeDao {
             currentPage = 0;
         }
 
-        StringBuilder queryString = new StringBuilder("SELECT e.exchangeId FROM exchange e WHERE ");
-
+        StringBuilder queryString = new StringBuilder("SELECT e.exchangeId FROM exchange e JOIN publication p ON p.publicationId = ");
         if (isOfferer) {
-            queryString.append("e.offererpubId = :userId");
+            queryString.append("e.offererpubId");
         } else {
-            queryString.append("e.requesterpubId = :userId");
+            queryString.append("e.requesterpubId");
         }
+        queryString.append(" WHERE p.userId = :userId");
 
         Query nativeQuery = em.createNativeQuery(queryString.toString());
         nativeQuery.setParameter("userId", anUserId);
@@ -131,7 +131,6 @@ public class ExchangeJpaDao implements ExchangeDao {
 
         @SuppressWarnings("unchecked")
         List<Long> exchangeIds = nativeQuery.getResultList().stream().mapToLong(n -> ((Number) n).longValue()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
-
 
         TypedQuery<Exchange> query = em.createQuery("FROM Exchange e WHERE e.exchangeId IN (:ids) AND e.state = :state", Exchange.class);
         query.setParameter("ids", exchangeIds);
