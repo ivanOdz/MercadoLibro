@@ -117,3 +117,16 @@ CREATE TABLE IF NOT EXISTS user_review (
        reviewDate               TIMESTAMP,
        userReviewRating         INTEGER
 );
+
+-- Tabla de ubicaciones de publicaciones
+CREATE TABLE IF NOT EXISTS publication_location (
+      publicationId INTEGER NOT NULL,
+      locationId INTEGER NOT NULL,
+      PRIMARY KEY (publicationId, locationId),
+      FOREIGN KEY (publicationId) REFERENCES publication(publicationId) ON DELETE CASCADE,
+      FOREIGN KEY (locationId) REFERENCES location(locationId) ON DELETE SET NULL
+);
+
+
+
+

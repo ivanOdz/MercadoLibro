@@ -287,42 +287,47 @@
                                     </h5>
 
                                     <!-- Autores del libro -->
-                                    <p class="small-gray-text custom-link uk-margin-remove-top">
-                                        <c:out value="${card.book.bookModel.authors}"/>
-                                    </p>
+                                    <c:forEach var="author" items="${card.book.bookModel.authors}">
+                                        <p class="small-gray-text custom-link uk-margin-remove-top">
+                                            <c:out value="${author.authorName}"/>
+                                        </p>
+                                    </c:forEach>
                                     <div>
                                         <span class="uk-margin-small-right" uk-icon="location">
                                         </span>
+
                                         <span>
-                                            <c:out value="${card.location.locationString}"/>
+                                            <c:forEach var="location" items="${card.locations}">
+                                                <c:out value="${location.locationString}"/>
+                                            </c:forEach>
                                         </span>
                                     </div>
                                 </div>
 
-                                <div class="row-container" style="width:15rem; padding-left:10rem;">
-                                    <div class="star-rating uk-flex uk-flex-middle">
-                                        <p class="small-gray-text custom-link" style="display: inline; margin-bottom: 0; margin-right:1rem;">
-                                            <c:out value="${card.book.bookModel.rating.rating}"/>
-                                        </p>
-                                                               <c:forEach var="i" begin="1" end="5">
-                                            <c:choose>
-                                                <c:when test="${i <= card.book.bookModel.rating.rating}">
-                                                    <i class="material-icons yellow-text">star</i>
-                                                </c:when>
-                                                <c:when test="${i - 0.5 <= card.book.bookModel.rating.rating && card.book.bookModel.rating.rating < i}">
-                                                    <i class="material-icons yellow-text">star_half</i>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <i class="material-icons grey-text">star_border</i>
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </c:forEach>
+<%--                                <div class="row-container" style="width:15rem; padding-left:10rem;">--%>
+<%--                                    <div class="star-rating uk-flex uk-flex-middle">--%>
+<%--                                        <p class="small-gray-text custom-link" style="display: inline; margin-bottom: 0; margin-right:1rem;">--%>
+<%--                                            <c:out value="${card.book.bookModel.rating.rating}"/>--%>
+<%--                                        </p>--%>
+<%--                                                               <c:forEach var="i" begin="1" end="5">--%>
+<%--                                            <c:choose>--%>
+<%--                                                <c:when test="${i <= card.book.bookModel.rating.rating}">--%>
+<%--                                                    <i class="material-icons yellow-text">star</i>--%>
+<%--                                                </c:when>--%>
+<%--                                                <c:when test="${i - 0.5 <= card.book.bookModel.rating.rating && card.book.bookModel.rating.rating < i}">--%>
+<%--                                                    <i class="material-icons yellow-text">star_half</i>--%>
+<%--                                                </c:when>--%>
+<%--                                                <c:otherwise>--%>
+<%--                                                    <i class="material-icons grey-text">star_border</i>--%>
+<%--                                                </c:otherwise>--%>
+<%--                                            </c:choose>--%>
+<%--                                        </c:forEach>--%>
 
-                                        <p class="small-gray-text custom-link" style="display: inline; margin-left:1rem;">(<c:out
-                                                value="${card.book.bookModel.rating.ratingCount}"/>)
-                                        </p>
-                                    </div>
-                                </div>
+<%--                                        <p class="small-gray-text custom-link" style="display: inline; margin-left:1rem;">(<c:out--%>
+<%--                                                value="${card.book.bookModel.rating.ratingCount}"/>)--%>
+<%--                                        </p>--%>
+<%--                                    </div>--%>
+<%--                                </div>--%>
                             </a>
                         </div>
                     </c:forEach>

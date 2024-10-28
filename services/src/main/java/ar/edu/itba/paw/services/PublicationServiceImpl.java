@@ -30,7 +30,7 @@ public class PublicationServiceImpl implements PublicationService {
 
     @Override
     public Publication createPublication(long bookId, long userId, String location, PublicationState publicationState) {
-        Set<Location> locations = new HashSet<>();
+        List<Location> locations = new ArrayList<>();
         locations.add(locationService.newLocation(location));
         return pubDao.createPublication(bookId, userId, locations, publicationState);
     }

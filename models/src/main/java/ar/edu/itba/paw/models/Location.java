@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -17,7 +19,7 @@ public class Location {
     private String locationString;
 
     @ManyToMany(mappedBy = "locations")
-    private Set<Publication> publications = new HashSet<>();
+    private List<Publication> publications = new ArrayList<>();
 
     public Location() {
         // Hibernate
@@ -28,7 +30,7 @@ public class Location {
         this.locationString = locationString;
     }
 
-    public void setPublications(Set<Publication> publications) {
+    public void setPublications(List<Publication> publications) {
         this.publications = publications;
     }
 
@@ -36,7 +38,7 @@ public class Location {
         return locationId;
     }
 
-    public Set<Publication> getPublications() {
+    public List<Publication> getPublications() {
         return publications;
     }
 

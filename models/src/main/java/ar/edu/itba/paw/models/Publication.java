@@ -23,6 +23,8 @@ public class Publication {
     @JoinColumn(name = "bookid", nullable = false)
     private Book book;
 
+
+
     @Enumerated(EnumType.STRING)
     private PublicationState publicationState;
 
@@ -35,10 +37,10 @@ public class Publication {
             joinColumns = @JoinColumn(name = "publicationid"),
             inverseJoinColumns = @JoinColumn(name = "locationid")
     )
-    private Set<Location> locations;
+    private List<Location> locations;
 
 
-    public Publication(Long publicationId, Book book, PublicationState publicationState, Timestamp publicationDatetime, Set<Location> locations) {
+    public Publication(Long publicationId, Book book, PublicationState publicationState, Timestamp publicationDatetime,List<Location> locations) {
         this.publicationId = publicationId;
         this.book = book;
         this.publicationState = publicationState;
@@ -66,6 +68,9 @@ public class Publication {
         this.book = book;
     }
 
+    public List<Location> getLocations() {
+        return locations;
+    }
     public PublicationState getPublicationState() {
         return publicationState;
     }
@@ -82,11 +87,8 @@ public class Publication {
         this.publicationDatetime = publicationDatetime;
     }
 
-    Set<Location> getLocation() {
-        return locations;
-    }
 
-    public void setLocations(Set<Location> locations) {
+    public void setLocations(List<Location> locations) {
         this.locations = locations;
     }
 
