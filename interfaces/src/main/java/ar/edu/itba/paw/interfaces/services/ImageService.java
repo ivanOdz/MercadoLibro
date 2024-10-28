@@ -11,11 +11,4 @@ import java.util.Optional;
 
 public interface ImageService {
     List<Image> saveImage(List<MultipartFile> image);
-
-    Optional<Image> getImageById(Long imageId);
-
-    Image getFirstImageByBookId (Long bookId);
-
-    List<Image> getImagesByBookImageList(List<BookImage> bookImages);
-
 }

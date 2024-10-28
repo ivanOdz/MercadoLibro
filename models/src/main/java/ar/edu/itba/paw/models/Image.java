@@ -10,23 +10,23 @@ public class Image {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "image_image_id_seq")
 	@SequenceGenerator(sequenceName = "image_image_id_seq", name = "image_image_id_seq", allocationSize = 1)
 	@Column(name = "imageid")
-	private Integer imageId;
+	private Long imageId;
 	
 	@Column
 	private byte[] image;
 	
 	public Image() {}
 	
-	public Image(Integer imageId, byte[] image) {
+	public Image(Long imageId, byte[] image) {
 		this.imageId = imageId;
 		this.image = image;
 	}
 	
-	public Integer getImageId() {
+	public Long getImageId() {
 		return imageId;
 	}
 	
-	public void setImageId(Integer imageId) {
+	public void setImageId(Long imageId) {
 		this.imageId = imageId;
 	}
 	
