@@ -56,11 +56,11 @@ public class BookModel {
             inverseJoinColumns = @JoinColumn(name = "authorid"))
     private List<Author> authors;
 
-    @Formula("SELECT AVG(rating) FROM book_rating WHERE bookmodelid = bookmodelid")
+    /*@Formula("SELECT AVG(rating) FROM book_rating WHERE bookmodelid = bookmodelid")
     private Double averageRating;
 
     @Formula("SELECT COUNT(rating) FROM book_rating WHERE bookmodelid = bookmodelid")
-    private Integer ratingCount;
+    private Integer ratingCount;*/
 
     public BookModel(){
         // only for JPA
@@ -84,8 +84,8 @@ public class BookModel {
         this.isHardcover = isHardcover;
         this.authors = authors;
         this.imageId = imageId;
-        this.averageRating = rating.getRating();
-        this.ratingCount = rating.getRatingCount();
+        // this.averageRating = rating.getRating();
+       // this.ratingCount = rating.getRatingCount();
     }
 
     public List<Author> getAuthors() {
@@ -215,7 +215,7 @@ public class BookModel {
     public void setAuthors(List<Author> authors) {
         this.authors = authors;
     }
-
+/*
     public void setRating(Rating rating) {
         this.averageRating = rating.getRating();
         this.ratingCount = rating.getRatingCount();
@@ -223,5 +223,5 @@ public class BookModel {
 
     public Rating getRating() {
         return new Rating(averageRating != null ? averageRating : 0.0, ratingCount != null ? ratingCount : 0);
-    }
+    }*/
 }
