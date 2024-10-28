@@ -17,7 +17,7 @@ public class Book {
 	@Column(name = "bookid")
 	private Long bookId;
 
-
+	
 	//fetch = FetchType.LAZY es para indicar cuando trae los datos -> esto esta de ejemplo nomas, LAZY es el valor default
 	@ManyToOne(optional = false,  fetch = FetchType.EAGER)
 	@JoinColumn(name = "ownerid", referencedColumnName = "userid")
@@ -29,7 +29,7 @@ public class Book {
 
 	@Enumerated(EnumType.STRING)
 	private BookState bookState;
-
+	
 	private int exchangesQty;
 
 	@Column(name = "available")
