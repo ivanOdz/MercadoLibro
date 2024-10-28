@@ -119,7 +119,7 @@ public class PublicationJpaDao implements PublicationDao {
         nativeQuery.setParameter("publicationState", PublicationState.CURRENT.toString());
 
         String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
-        nativeQuery.setParameter("safeSearch", safeSearch);
+        nativeQuery.setParameter("safeSearch", "%" + safeSearch.toLowerCase() + "%");
 
         if(isGenreFilterActive){
             nativeQuery.setParameter("genre", genreFilter.getKey());
@@ -255,7 +255,7 @@ public class PublicationJpaDao implements PublicationDao {
         query.setParameter("publicationState", PublicationState.CURRENT.toString());
 
         String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
-        query.setParameter("safeSearch", safeSearch);
+        query.setParameter("safeSearch", "%" + safeSearch.toLowerCase() + "%");
 
         if(isGenreFilterActive){
             query.setParameter("genre", genreFilter.getKey());
