@@ -15,6 +15,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -42,7 +43,7 @@ public class UserReviewJpaDao implements UserReviewDao {
         }
         int offset = currentPage * PROFILE_PAGE_SIZE;
 
-        TypedQuery<UserReview> query = em.createQuery("SELECT ur FROM UserReview ur WHERE ur.reviewer.userId = :userId ORDER BY ur.reviewDate DESC", UserReview.class);
+        TypedQuery<UserReview> query = em.createQuery("FROM UserReview ur WHERE ur.reviewer.userId = :userId ORDER BY ur.reviewDate DESC", UserReview.class);
 
         query.setParameter("userId", userId);
         query.setMaxResults(PROFILE_PAGE_SIZE);
@@ -59,16 +60,21 @@ public class UserReviewJpaDao implements UserReviewDao {
             currentPage = 0;
         }
 
-        String stringQuery = "SELECT ur.id FROM user_review ur WHERE ur.reviewerId = ?1 ORDER BY ur.reviewDate DESC";
+        StringBuilder stringQuery = new StringBuilder("SELECT ur.userreviewid FROM user_review ur WHERE ur.subjectId = (:subject) ORDER BY ur.reviewDate DESC");
 
-        Query nativeQuery = em.createNativeQuery(stringQuery, Long.class);
-        nativeQuery.setParameter(1, userId);
+        Query nativeQuery = em.createNativeQuery(stringQuery.toString());
+        nativeQuery.setParameter("subject", userId);
         nativeQuery.setMaxResults(PROFILE_PAGE_SIZE);
         nativeQuery.setFirstResult(currentPage * PROFILE_PAGE_SIZE);
 
-        List<Long> reviewIds = nativeQuery.getResultList();
+        List<Long> reviewIds = new ArrayList<>();
+        try {
+            reviewIds = nativeQuery.getResultList().stream().mapToLong(n -> ((Number) n).longValue()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        TypedQuery<UserReview> query = em.createQuery("SELECT ur FROM UserReview ur WHERE ur.id IN :reviewIds ORDER BY ur.reviewDate DESC", UserReview.class);
+        TypedQuery<UserReview> query = em.createQuery("FROM UserReview ur WHERE ur.userReviewId IN :reviewIds ORDER BY ur.reviewDate DESC", UserReview.class);
         query.setParameter("reviewIds", reviewIds);
 
         List<UserReview> reviews = query.getResultList();
