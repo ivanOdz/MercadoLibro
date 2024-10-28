@@ -57,9 +57,11 @@ public class BookModel {
     private List<Author> authors;
 
     /*@Formula("SELECT AVG(rating) FROM book_rating WHERE bookmodelid = bookmodelid")
+    @Transient
     private Double averageRating;
 
     @Formula("SELECT COUNT(rating) FROM book_rating WHERE bookmodelid = bookmodelid")
+    @Transient
     private Integer ratingCount;*/
 
     public BookModel(){
