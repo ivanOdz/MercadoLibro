@@ -254,7 +254,8 @@ public class BookJpaDao implements BookDao {
         nativeQuery.setFirstResult(currentPage * BOOKS_PAGE_SIZE);
         nativeQuery.setMaxResults(BOOKS_PAGE_SIZE);
 
-        List<Long> bookIds = nativeQuery.getResultList();
+        @SuppressWarnings("unchecked")
+        List<Long> bookIds = nativeQuery.getResultList().stream().mapToLong(n -> ((Number) n).longValue()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
 
         TypedQuery<Book> query = em.createQuery("FROM Book b WHERE b.bookId IN (:ids)", Book.class);
         query.setParameter("ids", bookIds);

@@ -132,7 +132,8 @@ public class PublicationJpaDao implements PublicationDao {
         nativeQuery.setMaxResults(PUBLICATIONS_PAGE_SIZE);
         nativeQuery.setFirstResult(currentPage * PUBLICATIONS_PAGE_SIZE);
 
-        List<Long> publicationIds = nativeQuery.getResultList();
+        @SuppressWarnings("unchecked")
+        List<Long> publicationIds = nativeQuery.getResultList().stream().mapToLong(n -> ((Number) n).longValue()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
 
         TypedQuery<Publication> query = em.createQuery("FROM Publication p WHERE p.publicationId IN (:ids)", Publication.class);
         query.setParameter("ids",publicationIds);

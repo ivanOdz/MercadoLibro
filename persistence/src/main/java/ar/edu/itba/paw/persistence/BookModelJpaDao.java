@@ -4,15 +4,20 @@ import ar.edu.itba.paw.interfaces.persistence.BookModelDao;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.BookModelMetadata;
+import org.springframework.aop.AopInvocationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.*;
+import java.lang.reflect.InvocationTargetException;
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.models.utils.Constants.BOOKS_PAGE_SIZE;
 
@@ -99,23 +104,35 @@ public class BookModelJpaDao implements BookModelDao {
             default:
                 nativeQueryString.append(" ORDER BY title DESC");
         }
-        Query nativeQuery = em.createNativeQuery(nativeQueryString.toString(), Long.class);
+        Query nativeQuery = em.createNativeQuery(nativeQueryString.toString());
 
         String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
-        nativeQuery.setParameter("search", safeSearch);
+        nativeQuery.setParameter("search", "%" + safeSearch.toLowerCase() + "%");
         if (isGenreFilterActive) {
             nativeQuery.setParameter("genreFilter", genreFilter.getKey());
         }
         nativeQuery.setMaxResults(BOOKS_PAGE_SIZE);
         nativeQuery.setFirstResult(currentPage * BOOKS_PAGE_SIZE);
 
-        List<Long> bookModelIds = nativeQuery.getResultList();
-
+        @SuppressWarnings("unchecked")
+        List<Long> bookModelIds = nativeQuery.getResultList().stream().mapToLong(n -> ((Number) n).longValue()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
         // Segunda consulta recuperar los libros mediante una query JPA pasandole los ids recuperados en la primera consulta
         TypedQuery<BookModel> query = em.createQuery("FROM BookModel bm WHERE bm.bookModelId IN (:ids)", BookModel.class);
-        query.setParameter("ids", bookModelIds);
+
+
+        try {
+            query.setParameter("ids", bookModelIds);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         int totalResults = getTotalResultsByBook(safeSearch, isGenreFilterActive, genreFilter);
+
+        List<BookModel> bookModels = new ArrayList<>();
+
+        if (bookModelIds.isEmpty()) {
+            return new PaginatedResponse<>(Collections.emptyList(), new BookModelMetadata(currentPage, BOOKS_PAGE_SIZE, totalResults, safeSearch, isGenreFilterActive, genreFilter, sortType, null));
+        }
 
         return new PaginatedResponse<>(query.getResultList(), new BookModelMetadata(currentPage, BOOKS_PAGE_SIZE, totalResults, safeSearch, isGenreFilterActive, genreFilter, sortType, null));
     }
