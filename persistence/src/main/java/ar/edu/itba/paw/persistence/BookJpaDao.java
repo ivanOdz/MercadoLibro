@@ -263,18 +263,24 @@ public class BookJpaDao implements BookDao {
                 "SELECT bm.genre, COUNT(*) AS genreCount " +
                         "FROM book b " +
                         "JOIN book_model bm ON b.bookModelId = bm.bookModelId " +
-                        "WHERE b.ownerId = ? AND LOWER(bm.title) LIKE LOWER(?) ");
+                        "WHERE b.ownerId = :userId AND LOWER(bm.title) LIKE LOWER(:title) ");
 
         if (isBookStateFilterActive) {
             sqlQuery.append("AND b.bookState = ? ");
         }
 
         sqlQuery.append("GROUP BY bm.genre");
-
+/*
        Query query = em.createNativeQuery(sqlQuery.toString())
                 .setParameter("userId", userId)
                 .setParameter("search", "%" + search.toLowerCase() + "%");
-
+*/
+        Query query = em.createNativeQuery(sqlQuery.toString());
+        String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
+        
+        query.setParameter("userId", userId);
+        query.setParameter("title", "%" + safeSearch.toLowerCase() + "%");
+        
         if (isBookStateFilterActive) {
             query.setParameter("bookState", bookStateFilter.getValue());
         }
@@ -306,7 +312,7 @@ public class BookJpaDao implements BookDao {
                 "SELECT b.bookState, COUNT(*) AS stateCount " +
                         "FROM book b " +
                         "JOIN book_model bm ON b.bookModelId = bm.bookModelId " +
-                        "WHERE b.ownerId = ? AND LOWER(bm.title) LIKE LOWER(?) ");
+                        "WHERE b.ownerId = :userId AND LOWER(bm.title) LIKE LOWER(:title) ");
 
         if (isGenreFilterActive) {
             sqlQuery.append("AND bm.genre = ? ");
@@ -315,10 +321,11 @@ public class BookJpaDao implements BookDao {
         sqlQuery.append("GROUP BY b.bookState");
 
         Query query = em.createNativeQuery(sqlQuery.toString());
-
+        String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
+        
         query.setParameter("userId", userId);
-        query.setParameter("search", "%" + search.toLowerCase() + "%");
-
+        query.setParameter("title", "%" + safeSearch.toLowerCase() + "%");
+        
         if (isGenreFilterActive) {
             query.setParameter("genre", genreFilter.getValue());
         }
