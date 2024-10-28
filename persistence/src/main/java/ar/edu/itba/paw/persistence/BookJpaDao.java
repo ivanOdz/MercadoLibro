@@ -6,15 +6,11 @@ import ar.edu.itba.paw.interfaces.persistence.BookDao;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
-import org.hibernate.annotations.common.util.impl.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,13 +18,10 @@ import javax.persistence.*;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.logging.Logger;
 
 import static ar.edu.itba.paw.models.utils.Constants.BOOKS_PAGE_SIZE;
-import static ar.edu.itba.paw.persistence.UserJdbcDao.ROW_MAPPER_USER;
 
 @Repository
 @Primary
@@ -80,7 +73,7 @@ public class BookJpaDao implements BookDao {
     }
 
     @Override
-    public Book createBook(long bookModelId, User owner, BookState bookState, List<Image> images) {
+    public Book createBook(Long bookModelId, User owner, BookState bookState, List<Image> images) {
         final Book book = new Book(null, owner, null, bookState, 0, true, images);
         em.persist(book);
         if (book == null){

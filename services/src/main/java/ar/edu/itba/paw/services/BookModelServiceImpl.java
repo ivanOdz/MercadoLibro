@@ -4,19 +4,15 @@ import ar.edu.itba.paw.interfaces.persistence.BookModelDao;
 import ar.edu.itba.paw.interfaces.services.BookModelService;
 import ar.edu.itba.paw.interfaces.services.GenreService;
 import ar.edu.itba.paw.models.Author;
-import ar.edu.itba.paw.models.Book;
 import ar.edu.itba.paw.models.BookModel;
 import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.BookModelMetadata;
-import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class BookModelServiceImpl implements BookModelService {
@@ -43,7 +39,7 @@ public class BookModelServiceImpl implements BookModelService {
     }
 
     @Override
-    public BookModel getBookModelByBookModelId(long bookModelId) {
+    public BookModel getBookModelByBookModelId(Long bookModelId) {
         // CHECK: if missing controller catch blocks
         return bookModelDao.getBookModelByBookModelId(bookModelId).orElse(null);
     }

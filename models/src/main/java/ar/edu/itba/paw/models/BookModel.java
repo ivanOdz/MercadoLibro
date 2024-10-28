@@ -56,10 +56,10 @@ public class BookModel {
             inverseJoinColumns = @JoinColumn(name = "authorid"))
     private List<Author> authors;
 
-    @Formula("(SELECT AVG(rating) FROM book_rating WHERE bookmodelid = bookmodelid)")
+    @Formula("SELECT AVG(rating) FROM book_rating WHERE bookmodelid = bookmodelid")
     private Double averageRating;
 
-    @Formula("(SELECT COUNT(rating) FROM book_rating WHERE bookmodelid = bookmodelid)")
+    @Formula("SELECT COUNT(rating) FROM book_rating WHERE bookmodelid = bookmodelid")
     private Integer ratingCount;
 
     public BookModel(){
@@ -96,7 +96,7 @@ public class BookModel {
         return imageId;
     }
 
-    public long getBookModelId() {
+    public Long getBookModelId() {
         return bookModelId;
     }
 

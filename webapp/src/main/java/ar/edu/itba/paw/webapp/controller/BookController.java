@@ -151,7 +151,7 @@ public class BookController {
     }
 
     @GetMapping("/book/new_book_model")
-    public ModelAndView bookDetailsFormNewBook(@ModelAttribute(name = "bookDetailsForm") BookDetailsForm bookDetailsForm, @RequestParam("book_model_id") long bookModelId, BindingResult errors) {
+    public ModelAndView bookDetailsFormNewBook(@ModelAttribute(name = "bookDetailsForm") BookDetailsForm bookDetailsForm, @RequestParam("book_model_id") Long bookModelId, BindingResult errors) {
 
         ModelAndView mav = new ModelAndView("/book/book_form");
 
@@ -174,7 +174,7 @@ public class BookController {
     }
 
     @PostMapping("/book/create_book")
-    public ModelAndView createBook(@Valid @ModelAttribute(name = "bookDetailsForm") BookDetailsForm bookDetailsForm, BindingResult errors, @RequestParam("book_model_id") long bookModelId) {
+    public ModelAndView createBook(@Valid @ModelAttribute(name = "bookDetailsForm") BookDetailsForm bookDetailsForm, BindingResult errors, @RequestParam("book_model_id") Long bookModelId) {
         if (errors.hasErrors()) {
             return bookDetailsFormNewBook(bookDetailsForm, bookModelId, errors);
         }

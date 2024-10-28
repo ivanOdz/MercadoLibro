@@ -72,7 +72,7 @@ public class BookModelJpaDao implements BookModelDao {
     }
 
     @Override
-    public Optional<BookModel> getBookModelByBookModelId(long bookModelId) {
+    public Optional<BookModel> getBookModelByBookModelId(Long bookModelId) {
         return Optional.ofNullable(em.find(BookModel.class, bookModelId));
     }
 
@@ -118,13 +118,7 @@ public class BookModelJpaDao implements BookModelDao {
         List<Long> bookModelIds = nativeQuery.getResultList().stream().mapToLong(n -> ((Number) n).longValue()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
         // Segunda consulta recuperar los libros mediante una query JPA pasandole los ids recuperados en la primera consulta
         TypedQuery<BookModel> query = em.createQuery("FROM BookModel bm WHERE bm.bookModelId IN (:ids)", BookModel.class);
-
-
-        try {
-            query.setParameter("ids", bookModelIds);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        query.setParameter("ids", bookModelIds);
 
         int totalResults = getTotalResultsByBook(safeSearch, isGenreFilterActive, genreFilter);
 
@@ -134,7 +128,14 @@ public class BookModelJpaDao implements BookModelDao {
             return new PaginatedResponse<>(Collections.emptyList(), new BookModelMetadata(currentPage, BOOKS_PAGE_SIZE, totalResults, safeSearch, isGenreFilterActive, genreFilter, sortType, null));
         }
 
-        return new PaginatedResponse<>(query.getResultList(), new BookModelMetadata(currentPage, BOOKS_PAGE_SIZE, totalResults, safeSearch, isGenreFilterActive, genreFilter, sortType, null));
+
+        try {
+            bookModels = query.getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new PaginatedResponse<>(bookModels, new BookModelMetadata(currentPage, BOOKS_PAGE_SIZE, totalResults, safeSearch, isGenreFilterActive, genreFilter, sortType, null));
     }
 
     @Override

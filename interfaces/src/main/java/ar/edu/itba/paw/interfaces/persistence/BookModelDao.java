@@ -17,7 +17,7 @@ public interface BookModelDao {
 
     void createBookAuthors(List<Long> authorsIds, long bookModelId);
 
-    Optional<BookModel> getBookModelByBookModelId(long bookModelId);
+    Optional<BookModel> getBookModelByBookModelId(Long bookModelId);
 
     PaginatedResponse<BookModel, BookModelMetadata> getPaginatedBookModels(String search, boolean isGenreFilterActive, Genre genreFilter, int currentPage, SortType sortType);
 

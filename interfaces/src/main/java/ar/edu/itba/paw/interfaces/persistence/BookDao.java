@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface BookDao {
 
-    Book createBook(long bookModelId, User owner, BookState bookState, List<Image> images);
+    Book createBook(Long bookModelId, User owner, BookState bookState, List<Image> images);
 
     void createBookRating(User user, BookModel bookModel, int rating);
 

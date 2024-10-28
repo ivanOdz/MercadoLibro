@@ -12,7 +12,7 @@ public interface BookModelService {
     BookModel createBookModel(String isbn, String title, List<String> authors, String publisher, String description, Genre genre, int edition,
                          Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight, Integer imageId);
 
-    BookModel getBookModelByBookModelId(long bookModelId);
+    BookModel getBookModelByBookModelId(Long bookModelId);
 
     PaginatedResponse<BookModel, BookModelMetadata> getPaginatedBookModels(String search, boolean isGenreFilterActive, Genre genreFilter, int currentPage, SortType sortType);
 }
