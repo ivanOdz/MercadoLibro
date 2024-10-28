@@ -14,6 +14,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -67,17 +69,18 @@ public class UserReviewJpaDao implements UserReviewDao {
         nativeQuery.setMaxResults(PROFILE_PAGE_SIZE);
         nativeQuery.setFirstResult(currentPage * PROFILE_PAGE_SIZE);
 
-        List<Long> reviewIds = new ArrayList<>();
-        try {
-            reviewIds = nativeQuery.getResultList().stream().mapToLong(n -> ((Number) n).longValue()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        List<Long> reviewIds = nativeQuery.getResultList().stream().mapToLong(n -> ((Number) n).longValue()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
 
         TypedQuery<UserReview> query = em.createQuery("FROM UserReview ur WHERE ur.userReviewId IN :reviewIds ORDER BY ur.reviewDate DESC", UserReview.class);
         query.setParameter("reviewIds", reviewIds);
 
-        List<UserReview> reviews = query.getResultList();
+
+        List<UserReview> reviews = new ArrayList<>();
+        try{
+            reviews = query.getResultList();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         return new PaginatedResponse<>(reviews, new BasicMetadata(currentPage, reviews.size(), PROFILE_PAGE_SIZE));
     }
@@ -103,26 +106,29 @@ public class UserReviewJpaDao implements UserReviewDao {
     }
 
     private Rating getRatingFromUserId(String stringQuery, long userId) {
-        Query query = em.createQuery(stringQuery);
+        Query query = em.createNativeQuery(stringQuery);
         query.setParameter("userId", userId);
 
         Object[] result = (Object[]) query.getSingleResult();
 
-        double averageRating = (Double) result[0];
-        int countRating = (Integer) result[1];
+        BigDecimal averageRatingBigDecimal = (BigDecimal) result[0];
+        double averageRating = averageRatingBigDecimal.doubleValue();
+
+        BigInteger countRatingBigInteger = (BigInteger) result[1];
+        int countRating = countRatingBigInteger.intValue();
 
         return new Rating(averageRating, countRating);
     }
 
     @Override
     public Rating getUserRatingEarned(long userId) {
-        String stringQuery = "SELECT COALESCE(AVG(ur.reviewRating), 5.0), COUNT(ur.reviewRating) FROM UserReview ur WHERE ur.subject.userId = :userId";
+        String stringQuery = "SELECT COALESCE(AVG(ur.reviewRating), 5.0), COUNT(ur.reviewRating) FROM user_review ur WHERE ur.subjectId = :userId";
         return getRatingFromUserId(stringQuery, userId);
     }
 
     @Override
     public Rating getUserRatingGiven(long userId) {
-        String stringQuery = "SELECT COALESCE(AVG(ur.reviewRating), 5.0) AS averageRating, COUNT(ur.reviewRating) AS countRating FROM UserReview ur WHERE ur.reviewer.userId = :userId";
+        String stringQuery = "SELECT COALESCE(AVG(ur.reviewRating), 5.0) AS averageRating, COUNT(ur.reviewRating) AS countRating FROM user_review ur WHERE ur.reviewerId = :userId";
         return getRatingFromUserId(stringQuery, userId);
     }
 }

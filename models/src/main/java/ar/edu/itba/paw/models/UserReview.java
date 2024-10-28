@@ -31,7 +31,7 @@ public class UserReview {
 	@Column(name = "reviewDate")
 	private Timestamp reviewDate;
 
-	@Column(name = "reviewRating")
+	@Column(name = "userReviewRating")
 	private int reviewRating;
 
 	public UserReview() {
@@ -50,7 +50,6 @@ public class UserReview {
     }
 	
 	public Long getUserReviewId() {
-		
 		return userReviewId;
 	}
 	

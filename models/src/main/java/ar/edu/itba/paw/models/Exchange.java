@@ -23,7 +23,7 @@ public class Exchange {
     @JoinColumn(name = "requesterPubId", nullable = false)
     private Publication requester;
 
-    @Column(name = "exchangeState", nullable = false)
+    @Enumerated(EnumType.STRING)
     private ExchangeState state;
 
     @Column(name = "acceptCode", nullable = false)
