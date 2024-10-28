@@ -235,6 +235,11 @@ public class ExchangeController {
 
         try {
             exchangeService.initializeExchange(exchangeInput.getBookId(), exchangeInput.getLocation(), exchangeInput.getPublicationId());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        try {
         } catch (BadRequestException e) {
             LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
             return new ModelAndView("redirect:/400");

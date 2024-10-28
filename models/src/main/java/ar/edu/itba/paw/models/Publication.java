@@ -23,8 +23,6 @@ public class Publication {
     @JoinColumn(name = "bookid", nullable = false)
     private Book book;
 
-
-
     @Enumerated(EnumType.STRING)
     private PublicationState publicationState;
 
@@ -39,13 +37,30 @@ public class Publication {
     )
     private List<Location> locations;
 
+    @ManyToOne
+    @JoinColumn(name = "userid", nullable = false)
+    private User user;
 
-    public Publication(Long publicationId, Book book, PublicationState publicationState, Timestamp publicationDatetime,List<Location> locations) {
+
+    public Publication(Long publicationId, Book book, User user,PublicationState publicationState, Timestamp publicationDatetime,List<Location> locations) {
         this.publicationId = publicationId;
         this.book = book;
         this.publicationState = publicationState;
         this.publicationDatetime = publicationDatetime;
         this.locations = locations;
+        this.user = user;
+    }
+
+    public void setPublicationId(Long publicationId) {
+        this.publicationId = publicationId;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     public Publication() {
