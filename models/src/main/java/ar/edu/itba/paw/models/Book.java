@@ -37,6 +37,7 @@ public class Book {
 			"WHEN NOT EXISTS (SELECT 1 FROM exchange e2 JOIN publication p2 ON e2.offererPubId = p2.publicationId OR e2.requesterPubId = p2.publicationId WHERE p2.bookId = bookId AND e2.exchangeState = 'ACCEPTED') THEN TRUE " +
 			"ELSE FALSE " +
 			"END")
+	@Transient
 	private Boolean available;
 
 	@ManyToMany

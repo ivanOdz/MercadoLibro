@@ -206,7 +206,7 @@ public class BookJpaDao implements BookDao {
                         "FROM book AS b " +
                         "JOIN users AS u ON b.ownerId = u.userId " +
                         "JOIN book_model AS bm ON bm.bookModelId = b.bookModelId " +
-                        "WHERE u.userid = ? AND LOWER(bm.title) LIKE LOWER(?)  ");
+                        "WHERE u.userid = :userId AND LOWER(bm.title) LIKE LOWER(:title)  ");
 
         if (isGenreFilterActive) {
             sqlQuery.append("AND bm.genre = :genreFilter ");
@@ -229,12 +229,13 @@ public class BookJpaDao implements BookDao {
             default:
                 sqlQuery.append(" ORDER BY title DESC");
         }
-
-        Query nativeQuery = em.createNativeQuery(sqlQuery.toString(), Book.class);
-
+        
+        Query nativeQuery = em.createNativeQuery(sqlQuery.toString());
         String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
-        nativeQuery.setParameter("search", safeSearch);
-
+        
+        nativeQuery.setParameter("userId", userId);
+        nativeQuery.setParameter("title", "%" + safeSearch.toLowerCase() + "%");
+        
         if (isGenreFilterActive) {
             nativeQuery.setParameter("genreFilter", genreFilter);
         }
@@ -338,7 +339,7 @@ public class BookJpaDao implements BookDao {
                         "FROM publication p " +
                         "JOIN book b ON p.bookId = b.bookId " +
                         "JOIN book_model bm ON b.bookModelId = bm.bookModelId " +
-                        "WHERE b.ownerId = ? AND LOWER(bm.title) LIKE LOWER(?) ");
+                        "WHERE b.ownerId = :userId AND LOWER(bm.title) LIKE LOWER(:title) ");
 
         if (isBookStateFilterActive) {
             sqlQuery.append("AND b.bookState = ? ");
@@ -349,9 +350,10 @@ public class BookJpaDao implements BookDao {
         }
 
         Query query = em.createNativeQuery(sqlQuery.toString());
-
+        String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
+        
         query.setParameter("userId", userId);
-        query.setParameter("search", "%" + search.toLowerCase() + "%");
+        query.setParameter("title", "%" + safeSearch.toLowerCase() + "%");
 
         if (isBookStateFilterActive) {
             query.setParameter("bookState", bookStateFilter.getValue());
