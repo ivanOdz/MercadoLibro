@@ -22,7 +22,7 @@ public interface ExchangeDao {
 
     Exchange confirmRequester(int acceptCode);
 
-    void updateExchangeStatus(int acceptCode, int newStatus);
+    void updateExchangeStatus(int acceptCode, ExchangeState newStatus);
 
     Exchange findByAcceptCode(int acceptCode) throws ExchangeNotFoundException;
 

@@ -9,7 +9,6 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "exchange")
 public class Exchange {
-
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "exchanges_exchangeid_seq")
     @SequenceGenerator(sequenceName = "exchanges_exchangeid_seq", name = "exchanges_exchangeid_seq", allocationSize = 1)

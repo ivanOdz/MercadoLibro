@@ -85,9 +85,9 @@ public class ExchangeJpaDao implements ExchangeDao {
 
     @Transactional
     @Override
-    public void updateExchangeStatus(int acceptCode, int newStatus) {
+    public void updateExchangeStatus(int acceptCode, ExchangeState newStatus) {
         Exchange exchange = findByAcceptCode(acceptCode);
-        exchange.setExchangeState(ExchangeState.fromInt(newStatus));
+        exchange.setExchangeState(newStatus);
     }
 
     @Override
@@ -120,10 +120,11 @@ public class ExchangeJpaDao implements ExchangeDao {
         } else {
             queryString.append("e.requesterpubId");
         }
-        queryString.append(" WHERE p.userId = :userId");
+        queryString.append(" WHERE p.userId = :userId AND e.exchangestate = :state");
 
         Query nativeQuery = em.createNativeQuery(queryString.toString());
         nativeQuery.setParameter("userId", anUserId);
+        nativeQuery.setParameter("state", exchangeState.getValue());
 
         nativeQuery.setMaxResults(EXCHANGES_PAGE_SIZE);
         nativeQuery.setFirstResult(currentPage * EXCHANGES_PAGE_SIZE);
@@ -132,12 +133,11 @@ public class ExchangeJpaDao implements ExchangeDao {
         @SuppressWarnings("unchecked")
         List<Long> exchangeIds = nativeQuery.getResultList().stream().mapToLong(n -> ((Number) n).longValue()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
 
-        TypedQuery<Exchange> query = em.createQuery("FROM Exchange e WHERE e.exchangeId IN (:ids) AND e.state = :state", Exchange.class);
+        TypedQuery<Exchange> query = em.createQuery("FROM Exchange e WHERE e.exchangeId IN (:ids)", Exchange.class);
         query.setParameter("ids", exchangeIds);
-        query.setParameter("state", exchangeState);
 
         List<Exchange> exchanges = query.getResultList();
 
-        return new PaginatedResponse<>(exchanges, new BasicMetadata(currentPage, EXCHANGES_PAGE_SIZE, exchangeIds.size()));
+        return new PaginatedResponse<>(exchanges, new BasicMetadata(currentPage, exchangeIds.size(), EXCHANGES_PAGE_SIZE));
     }
 }

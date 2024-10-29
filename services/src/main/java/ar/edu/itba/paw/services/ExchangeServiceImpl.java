@@ -138,7 +138,7 @@ public class ExchangeServiceImpl implements ExchangeService {
 
     private void exchangeCompleted(int acceptCode, Exchange ex) {
         if (ex.isConfirmed()) {
-            exchangeDao.updateExchangeStatus(acceptCode, ExchangeState.TERMINATED.getValue());
+            exchangeDao.updateExchangeStatus(acceptCode, ExchangeState.TERMINATED);
             bs.exchangeOwnership(ex.getOfferer().getBook(), ex.getRequester().getBook());
 
             Date date = new Date();

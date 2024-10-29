@@ -1,21 +1,18 @@
 package ar.edu.itba.paw.models.utils;
 
 public enum ExchangeState {
-    PENDING(0),
-    ACCEPTED(1),
-    REJECTED(2),
-    TERMINATED(3);
+    PENDING("PENDING"),
+    ACCEPTED("ACCEPTED"),
+    REJECTED("REJECTED"),
+    TERMINATED("TERMINATED");
 
-    private final int value;
+    private final String value;
 
-    ExchangeState(int value) {
+    ExchangeState(String value) {
         this.value = value;
     }
 
-    public int getValue() {
+    public String getValue() {
         return value;
-    }
-
-    public static ExchangeState fromInt(int i) {return ExchangeState.values()[i];
     }
 }
