@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 @Service
 public class PublicationServiceImpl implements PublicationService {
 
@@ -29,6 +31,7 @@ public class PublicationServiceImpl implements PublicationService {
     }
 
     @Override
+    @Transactional
     public Publication createPublication(long bookId, long userId, String location, PublicationState publicationState) {
         List<Location> locations = new ArrayList<>();
         locations.add(locationService.newLocation(location));
@@ -36,6 +39,7 @@ public class PublicationServiceImpl implements PublicationService {
     }
 
     @Override
+    @Transactional
     public void createPublicationIfNeeded(boolean publish, long bookId, long userId, String location, PublicationState publicationState) {
         if (publish) {
             createPublication(bookId, userId, location, publicationState);
