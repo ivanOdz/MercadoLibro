@@ -95,26 +95,6 @@ public class PublicationJpaDao implements PublicationDao {
             nativeQueryString.append("AND b.bookState = :bookState ");
         }
 
-        switch (sortType) {
-            case RATING_ASCENDING:
-                nativeQueryString.append(" ORDER BY rating ASC");
-                break;
-            case RATING_DESCENDING:
-                nativeQueryString.append(" ORDER BY rating DESC");
-                break;
-            case BOOK_NAME_ASCENDING:
-                nativeQueryString.append(" ORDER BY title ASC");
-                break;
-            case BOOK_NAME_DESCENDING:
-                nativeQueryString.append(" ORDER BY title DESC");
-                break;
-            case PUBLICATION_DATE_DESCENDING:
-                nativeQueryString.append(" ORDER BY publicationDatetime DESC");
-                break;
-            default:
-                nativeQueryString.append(" ORDER BY publicationDatetime ASC");
-        }
-
         Query nativeQuery = em.createNativeQuery(nativeQueryString.toString());
 
         nativeQuery.setParameter("publicationState", PublicationState.CURRENT.toString());
@@ -136,7 +116,29 @@ public class PublicationJpaDao implements PublicationDao {
         @SuppressWarnings("unchecked")
         List<Long> publicationIds = nativeQuery.getResultList().stream().mapToLong(n -> ((Number) n).longValue()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
 
-        TypedQuery<Publication> query = em.createQuery("FROM Publication p WHERE p.publicationId IN (:ids)", Publication.class);
+
+        String jpqlQuery = "FROM Publication p WHERE p.publicationId IN (:ids) ";
+        switch (sortType) {
+            case RATING_ASCENDING:
+                jpqlQuery += "ORDER BY p.book.rating ASC";
+                break;
+            case RATING_DESCENDING:
+                jpqlQuery += "ORDER BY p.book.rating DESC";
+                break;
+            case BOOK_NAME_ASCENDING:
+                jpqlQuery += "ORDER BY p.book.bookModel.title ASC";
+                break;
+            case BOOK_NAME_DESCENDING:
+                jpqlQuery += "ORDER BY p.book.bookModel.title DESC";
+                break;
+            case PUBLICATION_DATE_DESCENDING:
+                jpqlQuery += "ORDER BY p.publicationDatetime DESC";
+                break;
+            default:
+                jpqlQuery += "ORDER BY p.publicationDatetime ASC";
+        }
+
+        TypedQuery<Publication> query = em.createQuery(jpqlQuery, Publication.class);
         query.setParameter("ids",publicationIds);
 
         int totalResults = getTotalResultsByBook(safeSearch, isGenreFilterActive, genreFilter, isBookStateFilterActive, bookStateFilter);
