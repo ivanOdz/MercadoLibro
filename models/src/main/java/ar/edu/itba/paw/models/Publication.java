@@ -2,6 +2,7 @@ package ar.edu.itba.paw.models;
 
 
 import ar.edu.itba.paw.models.utils.PublicationState;
+import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -19,7 +20,7 @@ public class Publication {
     @Column(name = "publicationid")
     private Long publicationId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "bookid", nullable = false)
     private Book book;
 

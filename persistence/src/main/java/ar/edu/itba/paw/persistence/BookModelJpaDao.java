@@ -37,7 +37,7 @@ public class BookModelJpaDao implements BookModelDao {
 
         //TODO: Completar como corresponde campo authors y chequear el rating.
         final BookModel bookModel = new BookModel(null, isbn, title, publisher, description, genre, edition, weight,
-              pages, language, dimension, publicationYear, isPocketEdition, isHardcover, authors, bookCoverId, new Rating(0, 0));
+              pages, language, dimension, publicationYear, isPocketEdition, isHardcover, authors, bookCoverId);
 
         em.persist(bookModel);
         return bookModel;
@@ -104,9 +104,9 @@ public class BookModelJpaDao implements BookModelDao {
         List<Long> bookModelIds = nativeQuery.getResultList().stream().mapToLong(n -> ((Number) n).longValue()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
         // Segunda consulta recuperar los libros mediante una query JPA pasandole los ids recuperados en la primera consulta
 
-        String jpqlQuery = "FROM BookModel bm WHERE bm.bookModelId IN (:ids)";
+        String jpqlQuery = "FROM BookModel bm WHERE bm.bookModelId IN (:ids) ";
 
-        switch (sortType) {
+        /*switch (sortType) {
             case RATING_ASCENDING:
                 jpqlQuery += "ORDER BY bm.rating ASC ";
                 break;
@@ -124,7 +124,7 @@ public class BookModelJpaDao implements BookModelDao {
                 break;
             default:
                 jpqlQuery += "ORDER BY p.publicationDatetime ASC ";
-        }
+        }*/
 
         TypedQuery<BookModel> query = em.createQuery(jpqlQuery, BookModel.class);
         query.setParameter("ids", bookModelIds);
@@ -140,7 +140,7 @@ public class BookModelJpaDao implements BookModelDao {
     public List<GenreWrapper> getGenreQtyByBookModel(String search) {
         String sqlQuery = "SELECT bm.genre, COUNT(*) AS genreCount " +
                 "FROM book_model bm " +
-                "WHERE LOWER(bm.title) LIKE LOWER(?1) ESCAPE '\\' " +
+                "WHERE LOWER(bm.title) LIKE LOWER(:search) ESCAPE '\\' " +
                 "GROUP BY bm.genre";
 
         // Crear la consulta nativa
@@ -149,7 +149,7 @@ public class BookModelJpaDao implements BookModelDao {
 
         // ASK: Preguntar si esta bien hacer que createNativeQuery retorne List<Object[]>.
         List<Object[]> results = em.createNativeQuery(sqlQuery)
-                .setParameter(1, "%" + search.toLowerCase() + "%")
+                .setParameter("search", "%" + search.toLowerCase() + "%")
                 .getResultList();
 
         // Mapear los resultados a GenreWrapper

@@ -81,7 +81,7 @@ public class BookModel {
     }
 
     public BookModel(Long bookModelId, String isbn, String title, String editorial, String description, Genre genre, int edition, int weight, int pages, Language bookLanguage,
-                     BookDimension dimension, short publicationYear, boolean isPocketEdition, boolean isHardcover, List<Author> authors, Long imageId, Rating rating) {
+                     BookDimension dimension, short publicationYear, boolean isPocketEdition, boolean isHardcover, List<Author> authors, Long imageId) {
         this.bookModelId = bookModelId;
         this.isbn = isbn;
         this.title = title;

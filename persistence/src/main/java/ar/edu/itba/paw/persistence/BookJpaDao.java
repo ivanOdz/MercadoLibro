@@ -140,66 +140,10 @@ public class BookJpaDao implements BookDao {
 
     @Override
     public PaginatedResponse<Book, ItemFilterMetadata> getPaginatedBooks(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, int currentPage, long userId, SortType sortType) {
-/*
-        StringBuilder hqlQuery = new StringBuilder(
-                "SELECT b FROM Book b " +
-                        "JOIN b.owner u " +
-                        "JOIN b.bookModel bm " +
-                        "JOIN bm.authors a " +
-                        "LEFT JOIN b.publications p " +
-                        "LEFT JOIN p.exchanges e " +
-                        "LEFT JOIN b.bookImages bi " +
-                        "LEFT JOIN bi.image i " +
-                        "LEFT JOIN bm.bookRatings br " +
-                        "WHERE u.userId = :userId " +
-                        "AND LOWER(bm.title) LIKE LOWER(:search) "
-        );
-
-        if (isGenreFilterActive) {
-            hqlQuery.append("AND bm.genre = :genreFilter ");
+        if(currentPage < 0){
+            currentPage = 0;
         }
 
-        if (isBookStateFilterActive) {
-            hqlQuery.append("AND b.bookState = :bookStateFilter ");
-        }
-
-        hqlQuery.append("GROUP BY b, u, bm, p, e ");
-
-        switch (sortType) {
-            case RATING_ASCENDING:
-                hqlQuery.append("ORDER BY AVG(br.rating) ASC");
-                break;
-            case RATING_DESCENDING:
-                hqlQuery.append("ORDER BY AVG(br.rating) DESC");
-                break;
-            case BOOK_NAME_ASCENDING:
-                hqlQuery.append("ORDER BY bm.title ASC");
-                break;
-            default:
-                hqlQuery.append("ORDER BY bm.title DESC");
-        }
-
-        TypedQuery<Book> query = em.createQuery(hqlQuery.toString(), Book.class);
-        query.setParameter("userId", userId);
-        query.setParameter("search", "%" + search + "%");
-
-        if (isGenreFilterActive) {
-            query.setParameter("genreFilter", genreFilter);
-        }
-
-        if (isBookStateFilterActive) {
-            query.setParameter("bookStateFilter", bookStateFilter);
-        }
-
-        query.setFirstResult((currentPage - 1) * BOOKS_PAGE_SIZE);
-        query.setMaxResults(BOOKS_PAGE_SIZE);
-
-        List<Book> books = query.getResultList();
-
-        // Metadata can be calculated here if needed, using similar queries for aggregations (e.g., avg ratings, etc.)
-
-        return new PaginatedResponse<>(books, new ItemFilterMetadata());
-        */
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT  b.bookId " +
                         "FROM book AS b " +
@@ -215,20 +159,6 @@ public class BookJpaDao implements BookDao {
             sqlQuery.append("AND b.bookState = :bookStateFilter ");
         }
 
-        switch (sortType) {
-            case RATING_ASCENDING:
-                sqlQuery.append(" ORDER BY rating ASC");
-                break;
-            case RATING_DESCENDING:
-                sqlQuery.append(" ORDER BY rating DESC");
-                break;
-            case BOOK_NAME_ASCENDING:
-                sqlQuery.append(" ORDER BY title ASC");
-                break;
-            default:
-                sqlQuery.append(" ORDER BY title DESC");
-        }
-        
         Query nativeQuery = em.createNativeQuery(sqlQuery.toString());
         String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
         
@@ -236,11 +166,11 @@ public class BookJpaDao implements BookDao {
         nativeQuery.setParameter("title", "%" + safeSearch.toLowerCase() + "%");
         
         if (isGenreFilterActive) {
-            nativeQuery.setParameter("genreFilter", genreFilter);
+            nativeQuery.setParameter("genreFilter", genreFilter.toString());
         }
 
         if (isBookStateFilterActive) {
-            nativeQuery.setParameter("bookStateFilter", bookStateFilter);
+            nativeQuery.setParameter("bookStateFilter", bookStateFilter.toString());
         }
 
         nativeQuery.setFirstResult(currentPage * BOOKS_PAGE_SIZE);
@@ -249,7 +179,23 @@ public class BookJpaDao implements BookDao {
         @SuppressWarnings("unchecked")
         List<Long> bookIds = nativeQuery.getResultList().stream().mapToLong(n -> ((Number) n).longValue()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
 
-        TypedQuery<Book> query = em.createQuery("FROM Book b WHERE b.bookId IN (:ids)", Book.class);
+        String jpqlQuery = "FROM Book b WHERE b.bookId IN (:ids)";
+
+        /*switch (sortType) {
+            case RATING_ASCENDING:
+                jpqlQuery += " ORDER BY bm.rating ASC";
+                break;
+            case RATING_DESCENDING:
+                jpqlQuery += " ORDER BY bm.rating DESC";
+                break;
+            case BOOK_NAME_ASCENDING:
+                jpqlQuery += " ORDER BY bm.title ASC";
+                break;
+            default:
+                jpqlQuery += " ORDER BY bm.title DESC";
+        }*/
+
+        TypedQuery<Book> query = em.createQuery(jpqlQuery, Book.class);
         query.setParameter("ids", bookIds);
 
         int totalResults = getTotalResultsByBook(safeSearch, isGenreFilterActive, genreFilter, isBookStateFilterActive, bookStateFilter, userId);
@@ -266,7 +212,7 @@ public class BookJpaDao implements BookDao {
                         "WHERE b.ownerId = :userId AND LOWER(bm.title) LIKE LOWER(:title) ");
 
         if (isBookStateFilterActive) {
-            sqlQuery.append("AND b.bookState = ? ");
+            sqlQuery.append("AND b.bookState = :bookState ");
         }
 
         sqlQuery.append("GROUP BY bm.genre");
@@ -282,7 +228,7 @@ public class BookJpaDao implements BookDao {
         query.setParameter("title", "%" + safeSearch.toLowerCase() + "%");
         
         if (isBookStateFilterActive) {
-            query.setParameter("bookState", bookStateFilter.getValue());
+            query.setParameter("bookState", bookStateFilter.toString());
         }
 
         List<Object[]> results = query.getResultList();
@@ -315,7 +261,7 @@ public class BookJpaDao implements BookDao {
                         "WHERE b.ownerId = :userId AND LOWER(bm.title) LIKE LOWER(:title) ");
 
         if (isGenreFilterActive) {
-            sqlQuery.append("AND bm.genre = ? ");
+            sqlQuery.append("AND bm.genre = :genre ");
         }
 
         sqlQuery.append("GROUP BY b.bookState");
@@ -327,7 +273,7 @@ public class BookJpaDao implements BookDao {
         query.setParameter("title", "%" + safeSearch.toLowerCase() + "%");
         
         if (isGenreFilterActive) {
-            query.setParameter("genre", genreFilter.getValue());
+            query.setParameter("genre", genreFilter.toString());
         }
 
         List<Object[]> results = query.getResultList();
@@ -355,11 +301,11 @@ public class BookJpaDao implements BookDao {
                         "WHERE b.ownerId = :userId AND LOWER(bm.title) LIKE LOWER(:title) ");
 
         if (isBookStateFilterActive) {
-            sqlQuery.append("AND b.bookState = ? ");
+            sqlQuery.append("AND b.bookState = :bookState ");
         }
 
         if (isGenreFilterActive) {
-            sqlQuery.append("AND bm.genre = ? ");
+            sqlQuery.append("AND bm.genre = :genre ");
         }
 
         Query query = em.createNativeQuery(sqlQuery.toString());
@@ -368,17 +314,14 @@ public class BookJpaDao implements BookDao {
         query.setParameter("userId", userId);
         query.setParameter("title", "%" + safeSearch.toLowerCase() + "%");
 
-        if (isBookStateFilterActive) {
-            query.setParameter("bookState", bookStateFilter.getValue());
-        }
-
         if (isGenreFilterActive) {
-            query.setParameter("genre", genreFilter.getValue());
+            query.setParameter("genre", genreFilter.toString());
         }
 
-        List queryList = query.getResultList();
-        Integer totalResults = queryList.isEmpty() ? null : queryList.size();
+        if (isBookStateFilterActive) {
+            query.setParameter("bookState", bookStateFilter.toString());
+        }
 
-        return totalResults != null ? totalResults : 0;
+        return ((Number) query.getSingleResult()).intValue();
     }
 }
