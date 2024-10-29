@@ -27,17 +27,16 @@ public class UserReviewServiceImpl implements UserReviewService {
 		// NOTE: throws NF exception
 		Exchange exchange = exchangeService.getExchangeById(exchangeId);
 
-		if (exchange.getIsReviewable() && getUserReviewGiven(exchangeId, userId) == null) {
-			long offererId = exchange.getOfferer().getBook().getOwner().getUserId();
-			long requesterId = exchange.getRequester().getBook().getOwner().getUserId();
-			long subjectId = offererId != userId ? offererId : requesterId;
+		boolean nin = exchange.getIsReviewable();
+		boolean nout = getUserReviewGiven(exchangeId, userId) == null;
 
-			// IMPLEMENT: exception
-			// NOTE: throws a BR exception
-			return userReviewDao.createUserReview(exchangeId, userId, subjectId, description, rating) != null;
-		}
-		
-		return false;
+		long offererId = exchange.getOfferer().getBook().getOwner().getUserId();
+		long requesterId = exchange.getRequester().getBook().getOwner().getUserId();
+		long subjectId = offererId != userId ? offererId : requesterId;
+
+		// IMPLEMENT: exception
+		// NOTE: throws a BR exception
+		return userReviewDao.createUserReview(exchangeId, userId, subjectId, description, rating) != null;
 	}
 	
 	@Override

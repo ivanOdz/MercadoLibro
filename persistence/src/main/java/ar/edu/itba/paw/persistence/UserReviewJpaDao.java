@@ -9,6 +9,7 @@ import ar.edu.itba.paw.models.utils.Rating;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -32,9 +33,14 @@ public class UserReviewJpaDao implements UserReviewDao {
     private EntityManager em;
 
     @Override
+    @Transactional
     public UserReview createUserReview(long exchangeId, long userId, long userSubjectId, String description, int rating) {
         final UserReview userReview = new UserReview(null, em.find(User.class, userId), em.find(User.class, userSubjectId), em.find(Exchange.class, exchangeId), description, new Timestamp(new Date().getTime()), rating);
-        em.persist(userReview);
+        try {
+            em.persist(userReview);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return userReview;
     }
 
@@ -97,7 +103,7 @@ public class UserReviewJpaDao implements UserReviewDao {
 
     @Override
     public UserReview getUserReviewGiven(long exchangeId, long userId) {
-        String stringQuery = "SELECT ur FROM UserReview ur WHERE ur.exchange.exchangeId = :exchangeId AND ur.reviewer.userId = :userId";
+        String stringQuery = "FROM UserReview ur WHERE ur.exchange.exchangeId = :exchangeId AND ur.reviewer.userId = :userId";
 
         TypedQuery<UserReview> query = em.createQuery(stringQuery, UserReview.class);
         query.setParameter("exchangeId", exchangeId);
