@@ -300,7 +300,7 @@
 <script>
     const images = [
         <c:forEach var="image" items="${publication.book.images}" varStatus="loop">
-        '<c:url value="/images/${image.imageId}"/>'<c:if test="${!loop.last}">, </c:if>
+        '<c:url value="/images/${image.image.imageId}"/>'<c:if test="${!loop.last}">, </c:if>
         </c:forEach>
     ];
 
