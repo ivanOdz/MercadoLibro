@@ -183,10 +183,10 @@ public class BookJpaDao implements BookDao {
 
         /*switch (sortType) {
             case RATING_ASCENDING:
-                jpqlQuery += " ORDER BY bm.rating ASC";
+                jpqlQuery += " ORDER BY bm.averageRating ASC";
                 break;
             case RATING_DESCENDING:
-                jpqlQuery += " ORDER BY bm.rating DESC";
+                jpqlQuery += " ORDER BY bm.averageRating DESC";
                 break;
             case BOOK_NAME_ASCENDING:
                 jpqlQuery += " ORDER BY bm.title ASC";
