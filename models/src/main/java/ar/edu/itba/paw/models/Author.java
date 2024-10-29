@@ -10,12 +10,13 @@ public class Author {
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "authorid_seq")
     @SequenceGenerator(sequenceName = "authorid_seq", name = "authorid_seq", allocationSize = 1)
     @Column(name = "authorid")
-    private Long authorid;
+    private Long authorId;
 
+    @Column(name = "authorname")
     private String authorName;
 
-    public Author(Long authorid, String authorName) {
-        this.authorid = authorid;
+    public Author(Long authorId, String authorName) {
+        this.authorId = authorId;
         this.authorName = authorName;
     }
 
@@ -24,11 +25,11 @@ public class Author {
     }
 
     public Long getAuthorid() {
-        return authorid;
+        return authorId;
     }
 
-    public void setAuthorid(Long authorid) {
-        this.authorid = authorid;
+    public void setAuthorid(Long authorId) {
+        this.authorId = authorId;
     }
 
     public String getAuthorName() {

@@ -33,17 +33,15 @@ public class BookServiceImpl implements BookService {
     @Transactional
     @Override
     public Book createBook(Long bookModelId, BookState bookState, int rating, List<MultipartFile> imageFiles, int bookCoverIndex, List<Long> imagesId, User user, boolean newBook) {
-
         List<Image> images = new ArrayList<>();
         
         if (!newBook){
             images = imageService.saveImage(arrangeImages(imageFiles, bookCoverIndex));
         }
 
-
         bookDao.createBookRating(user, bookModelService.getBookModelByBookModelId(bookModelId), rating);
 
-        Book book = bookDao.createBook(bookModelId, user, bookState, images);
+        Book book = bookDao.createBook(bookModelService.getBookModelByBookModelId(bookModelId), user, bookState, images);
 
         bookDao.createBookImage(book.getBookId(), imagesId);
 
@@ -55,7 +53,6 @@ public class BookServiceImpl implements BookService {
     public Book createNewBook(String isbn, String title, List<String> authors, String publisher, String description, Genre genre, int edition,
                                   Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension,
                                   Language language, int pages, int weight, BookState bookState, int rating, List<MultipartFile> imageFiles, int bookCoverIndex, User user){
-
         List<Long> imagesId = imageService.saveImage(arrangeImages(imageFiles, bookCoverIndex)).stream().map(Image::getImageId).toList();
 
         BookModel bookModel = bookModelService.createBookModel(isbn, title, authors, publisher, description, genre, edition,

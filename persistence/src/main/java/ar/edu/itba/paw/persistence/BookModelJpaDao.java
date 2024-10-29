@@ -33,11 +33,11 @@ public class BookModelJpaDao implements BookModelDao {
 
     @Override
     public BookModel createBookModel(String isbn, String title, String publisher, String description, Genre genre, int edition, Short publicationYear, boolean isHardcover,
-                                boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight, long bookCoverId) {
+                                boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight, long bookCoverId, List<Author> authors) {
 
         //TODO: Completar como corresponde campo authors y chequear el rating.
         final BookModel bookModel = new BookModel(null, isbn, title, publisher, description, genre, edition, weight,
-              pages, language, dimension, publicationYear, isPocketEdition, isHardcover, null, bookCoverId, new Rating(0, 0));
+              pages, language, dimension, publicationYear, isPocketEdition, isHardcover, authors, bookCoverId, new Rating(0, 0));
 
         em.persist(bookModel);
         return bookModel;
@@ -51,8 +51,7 @@ public class BookModelJpaDao implements BookModelDao {
         for(String author : authors) {
             Author newAuthor = new Author(null, author);
             em.persist(newAuthor);
-            em.flush(); // Esto asegura que se genere el ID antes de continuar
-            authorsRta.add(newAuthor); // Recupera el ID generado
+            authorsRta.add(newAuthor);
         }
 
         return authorsRta;
@@ -63,10 +62,10 @@ public class BookModelJpaDao implements BookModelDao {
     @Override
     public void createBookAuthors(List<Long> authorsIds, long bookModelId) {
         for (Long authorId : authorsIds) {
-            String query = "INSERT INTO book_author (bookModelId, authorId) VALUES (:bookModelId, :authorId)";
+            String query = "INSERT INTO book_author (bookModelId, authorId) VALUES (?1, ?2)";
             em.createNativeQuery(query)
-                    .setParameter("bookModelId", bookModelId)
-                    .setParameter("authorId", authorId)
+                    .setParameter(1, bookModelId)
+                    .setParameter(2, authorId)
                     .executeUpdate();
         }
     }
@@ -142,7 +141,7 @@ public class BookModelJpaDao implements BookModelDao {
     public List<GenreWrapper> getGenreQtyByBookModel(String search) {
         String sqlQuery = "SELECT bm.genre, COUNT(*) AS genreCount " +
                 "FROM book_model bm " +
-                "WHERE LOWER(bm.title) LIKE LOWER(:search) ESCAPE '\\' " +
+                "WHERE LOWER(bm.title) LIKE LOWER(?1) ESCAPE '\\' " +
                 "GROUP BY bm.genre";
 
         // Crear la consulta nativa
@@ -151,7 +150,7 @@ public class BookModelJpaDao implements BookModelDao {
 
         // ASK: Preguntar si esta bien hacer que createNativeQuery retorne List<Object[]>.
         List<Object[]> results = em.createNativeQuery(sqlQuery)
-                .setParameter("search", "%" + search.toLowerCase() + "%")
+                .setParameter(1, "%" + search.toLowerCase() + "%")
                 .getResultList();
 
         // Mapear los resultados a GenreWrapper

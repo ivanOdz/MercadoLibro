@@ -29,12 +29,12 @@ public class BookModelServiceImpl implements BookModelService {
     @Override
     public BookModel createBookModel(String isbn, String title, List<String> authors, String publisher, String description, Genre genre, int edition, Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight, Long imageId) {
         // CHECK: if missing controller catch blocks
+
         List<Author> newauthors = bookModelDao.createAuthors(authors);
 
         // CHECK: if missing controller catch blocks
-        BookModel bookModel = bookModelDao.createBookModel(isbn, title, publisher, description, genre, edition, publicationYear, isHardcover, isPocketEdition, dimension, language, pages, weight, imageId);
+        BookModel bookModel = bookModelDao.createBookModel(isbn, title, publisher, description, genre, edition, publicationYear, isHardcover, isPocketEdition, dimension, language, pages, weight, imageId, newauthors);
 
-        bookModel.getAuthors().addAll(newauthors);
         return bookModel;
     }
 

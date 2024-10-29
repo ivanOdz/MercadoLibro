@@ -16,21 +16,22 @@ import javax.persistence.PersistenceContext;
 public class ImageJpaDao implements ImageDao {
 	
 	@PersistenceContext
-	private EntityManager entityManager;
+	private EntityManager em;
 	
 	@Override
 	@Transactional
 	public Image createImage(byte[] image) {
-		
-		Image img = new Image();
-		img.setImage(image);
-		entityManager.persist(img);
+		System.out.println("in ImageJpaDao");
+		Image img = new Image(null, image);
+		System.out.println("created image");
+		em.persist(img);
+		System.out.println("persisted image");
 		return img;
 	}
 
 	@Override
 	public Optional<Image> getImageById(Long imageId) {
-		Image image = entityManager.find(Image.class, imageId);
+		Image image = em.find(Image.class, imageId);
 		return Optional.ofNullable(image);
 	}
 }

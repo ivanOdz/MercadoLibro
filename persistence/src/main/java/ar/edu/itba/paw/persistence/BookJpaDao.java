@@ -73,8 +73,8 @@ public class BookJpaDao implements BookDao {
     }
 
     @Override
-    public Book createBook(Long bookModelId, User owner, BookState bookState, List<Image> images) {
-        final Book book = new Book(null, owner, null, bookState, 0, true, images);
+    public Book createBook(BookModel bookModel, User owner, BookState bookState, List<Image> images) {
+        final Book book = new Book(null, owner, bookModel, bookState, 0, true, images);
         em.persist(book);
         if (book == null){
             throw new BookBadRequestException(messageSource.getMessage("error.bookCreation", null, LocaleContextHolder.getLocale()));
@@ -107,7 +107,7 @@ public class BookJpaDao implements BookDao {
 
         int i = 0;
         for (Long imageId : images) {
-            final BookImage image = new BookImage(null, i++, imageId , Timestamp.valueOf(LocalDateTime.now()));
+            final BookImage image = new BookImage(bookId, i++, imageId , Timestamp.valueOf(LocalDateTime.now()));
             em.persist(image);
         }
     }

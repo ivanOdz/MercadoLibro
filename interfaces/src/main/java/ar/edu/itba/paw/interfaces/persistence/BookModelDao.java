@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface BookModelDao {
 
-    BookModel createBookModel(String isbn, String title, String publisher, String description, Genre genre, int edition, Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight, long bookCoverId);
+    BookModel createBookModel(String isbn, String title, String publisher, String description, Genre genre, int edition, Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight, long bookCoverId, List<Author> authors);
 
     List<Author> createAuthors(List<String> authors);
 

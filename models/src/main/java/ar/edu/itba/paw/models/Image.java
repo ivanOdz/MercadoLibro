@@ -9,7 +9,7 @@ public class Image {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "image_image_id_seq")
 	@SequenceGenerator(sequenceName = "image_image_id_seq", name = "image_image_id_seq", allocationSize = 1)
-	@Column(name = "imageid")
+	@Column(name = "imageid", nullable = false)
 	private Long imageId;
 	
 	@Column
