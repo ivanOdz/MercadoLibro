@@ -65,7 +65,7 @@
                     <c:choose>
                         <c:when test="${not empty publication.book.images}">
                             <img id="currentImage"
-                                 src="<c:url value='/images/${publication.book.images[0].imageId}'/>"
+                                 src="<c:url value='/images/${publication.book.images[0].image.imageId}'/>"
                                  alt="Book Image"/>
                             <div class="uk-button-group" style="justify-content:center">
                                 <button id="prevBtn" class="slider-button">
@@ -300,7 +300,7 @@
 <script>
     const images = [
         <c:forEach var="image" items="${publication.book.images}" varStatus="loop">
-        '<c:url value="/images/${image.imageId}"/>'<c:if test="${!loop.last}">, </c:if>
+        '<c:url value="/images/${image.image.imageId}"/>'<c:if test="${!loop.last}">, </c:if>
         </c:forEach>
     ];
 

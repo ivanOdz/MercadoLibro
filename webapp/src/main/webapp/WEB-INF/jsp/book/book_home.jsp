@@ -190,7 +190,7 @@
                                         <c:choose>
                                             <c:when test="${card.images[0] != null}">
                                                 <img class="book-image"
-                                                     src="<c:url value='/images/${card.images[0].imageId}' />"
+                                                     src="<c:url value='/images/${card.images[0].image.imageId}' />"
                                                      alt="bookImage"/>
                                             </c:when>
                                             <c:otherwise>

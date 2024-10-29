@@ -73,9 +73,11 @@ public class BookJpaDao implements BookDao {
     }
 
     @Override
-    public Book createBook(BookModel bookModel, User owner, BookState bookState, List<Image> images) {
-        final Book book = new Book(null, owner, bookModel, bookState, 0, true, images);
+    @Transactional
+    public Book createBook(BookModel bookModel, User owner, BookState bookState, List<BookImage> images) {
+        final Book book = new Book(null, owner, bookModel, bookState, 0, true, new ArrayList<>());
         em.persist(book);
+        em.flush();
         if (book == null){
             throw new BookBadRequestException(messageSource.getMessage("error.bookCreation", null, LocaleContextHolder.getLocale()));
         }
@@ -103,19 +105,10 @@ public class BookJpaDao implements BookDao {
     }
 
     @Override
-    public void createBookImage(long bookId, List<Long> images) {
-        System.out.println("inside BookJpaDao.createBookImage");
-        System.out.println("images: ");
-        if(images == null){
-            System.out.println("images is null");
-        }
+    @Transactional
+    public void createBookImage(Book book, List<Image> images) {
         for (int i = 0; i < images.size(); i++) {
-            System.out.println("bookId: " + bookId);
-            System.out.println("imageId: " + i);
-            final BookImage image = new BookImage(bookId, i, images.get(i) , Timestamp.valueOf(LocalDateTime.now()));
-            System.out.println("imageOrder post book: " + image.getImageOrder());
-            System.out.println("imageId post book: " + image.getImageId());
-            System.out.println("imagedate post book: " + image.getImageDatetime());
+            final BookImage image = new BookImage(book, i, images.get(i) , Timestamp.valueOf(LocalDateTime.now()));
             em.persist(image);
         }
     }
@@ -258,6 +251,14 @@ public class BookJpaDao implements BookDao {
     public void setAvailable(Book book, boolean available) {
         Book b = em.find(Book.class, book.getBookId());
         b.setAvailable(available);
+    }
+
+    @Override
+    @Transactional
+    public void saveBookImages(List<BookImage> bookImages) {
+        for (BookImage bookImage : bookImages) {
+            em.persist(bookImage);
+        }
     }
 
     public List<BookStateWrapper> getBookStateQtyByBook(String search, boolean isGenreFilterActive, Genre genreFilter, long userId) {

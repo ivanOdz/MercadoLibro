@@ -266,9 +266,9 @@
                                 <div class="uk-width-1-4 uk-flex uk-flex-center">
                                     <figure class="uk-margin-remove">
                                         <c:choose>
-                                            <c:when test="${card.book.images[0] != null}">
+                                            <c:when test="${card.book.images[0].image.imageId != null}">
                                                 <img class="book-image uk-border-rounded"
-                                                     src="<c:url value='/images/${card.book.images[0].imageId}' />"
+                                                     src="<c:url value='/images/${card.book.images[0].image.imageId}' />"
                                                      alt="bookImage"/>
                                             </c:when>
                                             <c:otherwise>
