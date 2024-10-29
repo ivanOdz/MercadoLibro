@@ -125,32 +125,32 @@
                             </div>
                         </div>
 
-<%--                        <!-- Ranking -->--%>
-<%--                        <div>--%>
-<%--                            <div style="margin-right: 5px;">--%>
-<%--                                <p class="small-gray-text custom-link">--%>
-<%--                                    <c:out value="${publication.book.bookModel.rating.rating}"/>--%>
-<%--                                </p>--%>
-<%--                            </div>--%>
-<%--                            <div class="star-rating">--%>
-<%--                                <c:forEach var="i" begin="1" end="5">--%>
-<%--                                    <c:choose>--%>
-<%--                                        <c:when test="${i <= publication.book.bookModel.rating.rating}">--%>
-<%--                                            <!-- Estrella llena -->--%>
-<%--                                            <span uk-icon="icon: star; ratio: 1.5" style="color: gold;"></span>--%>
-<%--                                        </c:when>--%>
-<%--                                        <c:otherwise>--%>
-<%--                                            <!-- Estrella vacía -->--%>
-<%--                                            <span uk-icon="icon: star; ratio: 1.5" style="color: lightgray;"></span>--%>
-<%--                                        </c:otherwise>--%>
-<%--                                    </c:choose>--%>
-<%--                                </c:forEach>--%>
-<%--                            </div>--%>
-<%--                            <div style="margin-left: 5px;">--%>
-<%--                                <p class="small-gray-text custom-link">(<c:out--%>
-<%--                                        value="${publication.book.bookModel.rating.ratingCount}"/>)</p>--%>
-<%--                            </div>--%>
-<%--                        </div>--%>
+                        <!-- Ranking -->
+                        <div>
+                            <div style="margin-right: 5px;">
+                                <p class="small-gray-text custom-link">
+                                    <c:out value="${publication.book.bookModel.averageRating}"/>
+                                </p>
+                            </div>
+                            <div class="star-rating">
+                                <c:forEach var="i" begin="1" end="5">
+                                    <c:choose>
+                                        <c:when test="${i <= publication.book.bookModel.averageRating}">
+                                            <!-- Estrella llena -->
+                                            <span uk-icon="icon: star; ratio: 1.5" style="color: gold;"></span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <!-- Estrella vacía -->
+                                            <span uk-icon="icon: star; ratio: 1.5" style="color: lightgray;"></span>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </c:forEach>
+                            </div>
+                            <div style="margin-left: 5px;">
+                                <p class="small-gray-text custom-link">(<c:out
+                                        value="${publication.book.bookModel.ratingCount}"/>)</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

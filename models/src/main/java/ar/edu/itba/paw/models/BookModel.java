@@ -3,7 +3,6 @@ package ar.edu.itba.paw.models;
 import ar.edu.itba.paw.models.utils.BookDimension;
 import ar.edu.itba.paw.models.utils.Genre;
 import ar.edu.itba.paw.models.utils.Language;
-import ar.edu.itba.paw.models.utils.Rating;
 import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
@@ -68,13 +67,11 @@ public class BookModel {
             inverseJoinColumns = @JoinColumn(name = "authorid"))
     private List<Author> authors;
 
-    /*@Formula("SELECT AVG(rating) FROM book_rating WHERE bookmodelid = bookmodelid")
-    @Transient
+    @Formula("(SELECT AVG(br.rating) FROM book_rating br WHERE br.bookmodelid = bookmodelid)")
     private Double averageRating;
 
-    @Formula("SELECT COUNT(rating) FROM book_rating WHERE bookmodelid = bookmodelid")
-    @Transient
-    private Integer ratingCount;*/
+    @Formula("(SELECT COUNT(br.rating) FROM book_rating br WHERE br.bookmodelid = bookmodelid)")
+    private Integer ratingCount;
 
     public BookModel(){
         // only for JPA
@@ -98,8 +95,6 @@ public class BookModel {
         this.isHardcover = isHardcover;
         this.authors = authors;
         this.imageId = imageId;
-        // this.averageRating = rating.getRating();
-       // this.ratingCount = rating.getRatingCount();
     }
 
     public List<Author> getAuthors() {
@@ -229,13 +224,11 @@ public class BookModel {
     public void setAuthors(List<Author> authors) {
         this.authors = authors;
     }
-/*
-    public void setRating(Rating rating) {
-        this.averageRating = rating.getRating();
-        this.ratingCount = rating.getRatingCount();
+    public Double getAverageRating() {
+        return averageRating;
     }
 
-    public Rating getRating() {
-        return new Rating(averageRating != null ? averageRating : 0.0, ratingCount != null ? ratingCount : 0);
-    }*/
+    public Integer getRatingCount() {
+        return ratingCount;
+    }
 }
