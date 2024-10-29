@@ -5,11 +5,13 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-
 <html lang="es" class="custom-style">
-<%@include file="/WEB-INF/jsp/head/headers.jsp" %>
+
+<%@ include file="/WEB-INF/jsp/head/headers.jsp" %>
 <%@ include file="/WEB-INF/jsp/components/navbar_wo_search.jsp" %>
+
 <head>
+
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
@@ -24,15 +26,17 @@
 </head>
 
 <body>
+
 <navbar_wo_search/>
 
 <div class="uk-grid">
-    <div class="uk-width-5-6 uk-align-center main-section">
-        <div>
-            <h2 class="uk-h2 title"><spring:message code="exchange.requests.title"/></h2>
-            <h3 class="uk-h5"><spring:message code="exchange.requests.subtitle"/></h3>
-        </div>
 
+    <div class="uk-width-5-6 uk-align-center main-section" style="margin-top: 0; padding-top: 0.5rem;">
+        <div>
+            <h2 class="uk-h2 title" style="margin: 0; padding: 0;"><spring:message code="exchange.requests.title"/></h2>
+            <h3 class="uk-h5" style="margin: 0; padding: 1rem;"><spring:message code="exchange.requests.subtitle"/></h3>
+        </div>
+        
         <div class="main-content">
 
             <!-- columna de exchanges -->

@@ -5,9 +5,10 @@
 
 <html class="custom-style">
 
-<%@include file="/WEB-INF/jsp/head/headers.jsp" %>
+<%@ include file="/WEB-INF/jsp/head/headers.jsp" %>
 
 <head>
+
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
@@ -17,20 +18,7 @@
     <link href="<c:url value='/css/book_form.css' />" rel="stylesheet"/>
 
     <title><spring:message code="add.book"/></title>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var step = ${step};
-            var tabs = UIkit.tab('.uk-tab');
-            tabs.show(step - 1);
-        });
-
-        function nextSection(index) {
-            var tabs = UIkit.tab('.uk-tab');
-            tabs.show(index);
-        }
-    </script>
-
+    
 </head>
 
 <body>
@@ -187,6 +175,17 @@
 
 <script type="text/javascript">
 
+	document.addEventListener("DOMContentLoaded", function () {
+	    var step = ${step};
+	    var tabs = UIkit.tab('.uk-tab');
+	    tabs.show(step - 1);
+	});
+	
+	function nextSection(index) {
+	    var tabs = UIkit.tab('.uk-tab');
+	    tabs.show(index);
+	}
+
     document.addEventListener('DOMContentLoaded', function () {
         var previewContainer = document.getElementById('image-preview-container');
         var fileInput = document.getElementById('file-input');
@@ -292,6 +291,6 @@
 
 </script>
 
-
 </body>
+
 </html>
