@@ -123,22 +123,18 @@ public class PublicationJpaDao implements PublicationDao {
         nativeQuery.setParameter("safeSearch", "%" + safeSearch.toLowerCase() + "%");
 
         if(isGenreFilterActive){
-            nativeQuery.setParameter("genre", genreFilter.getKey());
+            nativeQuery.setParameter("genre", genreFilter.toString());
         }
 
         if(isBookStateFilterActive){
-            nativeQuery.setParameter("bookState", bookStateFilter.getKey());
+            nativeQuery.setParameter("bookState", bookStateFilter.toString());
         }
 
         nativeQuery.setMaxResults(PUBLICATIONS_PAGE_SIZE);
         nativeQuery.setFirstResult(currentPage * PUBLICATIONS_PAGE_SIZE);
 
-        List<Long> publicationIds = new ArrayList<>();
-        try{
-            publicationIds = nativeQuery.getResultList().stream().mapToLong(n -> ((Number) n).longValue()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+        @SuppressWarnings("unchecked")
+        List<Long> publicationIds = nativeQuery.getResultList().stream().mapToLong(n -> ((Number) n).longValue()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
 
         TypedQuery<Publication> query = em.createQuery("FROM Publication p WHERE p.publicationId IN (:ids)", Publication.class);
         query.setParameter("ids",publicationIds);
@@ -179,7 +175,7 @@ public class PublicationJpaDao implements PublicationDao {
         query.setParameter("safeSearch", "%" + safeSearch.toLowerCase() + "%");
 
         if(isBookStateFilterActive){
-            query.setParameter("bookState", bookStateFilter.getKey());
+            query.setParameter("bookState", bookStateFilter.toString());
         }
 
         List<Object[]> results = query.getResultList();
@@ -217,7 +213,7 @@ public class PublicationJpaDao implements PublicationDao {
         query.setParameter("safeSearch", "%" + safeSearch.toLowerCase() + "%");
 
         if(isGenreFilterActive){
-            query.setParameter("genre", genreFilter.getKey());
+            query.setParameter("genre", genreFilter.toString());
         }
 
         List<Object[]> results = query.getResultList();
@@ -259,11 +255,11 @@ public class PublicationJpaDao implements PublicationDao {
         query.setParameter("safeSearch", "%" + safeSearch.toLowerCase() + "%");
 
         if(isGenreFilterActive){
-            query.setParameter("genre", genreFilter.getKey());
+            query.setParameter("genre", genreFilter.toString());
         }
 
         if(isBookStateFilterActive){
-            query.setParameter("bookState", bookStateFilter.getKey());
+            query.setParameter("bookState", bookStateFilter.toString());
         }
 
         return ((Number) query.getSingleResult()).intValue();
