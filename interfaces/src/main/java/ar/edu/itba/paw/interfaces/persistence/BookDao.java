@@ -8,11 +8,11 @@ import java.util.List;
 
 public interface BookDao {
 
-    Book createBook(BookModel bookModel, User owner, BookState bookState, List<Image> images);
+    Book createBook(BookModel bookModel, User owner, BookState bookState, List<BookImage> images);
 
     void createBookRating(User user, BookModel bookModel, int rating);
 
-    void createBookImage(long bookId, List<Long> images);
+    void createBookImage(Book book, List<Image> images);
 
     void setOwner(Book book, User user);
 
@@ -27,5 +27,7 @@ public interface BookDao {
     List<GenreWrapper> getGenreQtyByBook(String search, boolean isBookStateFilterActive, BookState bookStateFilter, long userId);
 
     void setAvailable(Book book, boolean available);
+
+    void saveBookImages(List<BookImage> bookImages);
 
 }

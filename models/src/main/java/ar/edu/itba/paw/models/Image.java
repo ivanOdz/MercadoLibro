@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "image")
@@ -14,7 +15,7 @@ public class Image {
 	
 	@Column
 	private byte[] image;
-	
+
 	public Image() {}
 	
 	public Image(Long imageId, byte[] image) {

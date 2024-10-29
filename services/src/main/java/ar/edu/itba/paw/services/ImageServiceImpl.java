@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.models.BookImage;
 import ar.edu.itba.paw.models.Image;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
+    @Transactional
     public List<Image> saveImage(List<MultipartFile> image) {
         List<Image> images = new ArrayList<>();
         for(MultipartFile file : image) {

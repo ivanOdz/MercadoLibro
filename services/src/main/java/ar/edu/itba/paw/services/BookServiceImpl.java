@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,41 +32,67 @@ public class BookServiceImpl implements BookService {
         this.imageService = imageService;
     }
 
-    @Transactional
     @Override
+    @Transactional
     public Book createBook(Long bookModelId, BookState bookState, int rating, List<MultipartFile> imageFiles, int bookCoverIndex, List<Long> imagesId, User user, boolean newBook) {
-        System.out.println("inside BookServiceImpl.createBook");
-        if (imageFiles == null) {
-            System.out.println("imageFiles is null");
-        } else {
-            System.out.println("imageFiles is not null");
-        }
-        List<Image> images = new ArrayList<>();
-        System.out.println("newBook: " + newBook);
-        if (!newBook){
-            images = imageService.saveImage(arrangeImages(imageFiles, bookCoverIndex));
-            System.out.println("SAVE IMAGES DONE in BookServiceImpl.createBook");
-        }
+        List<BookImage> bookImages = new ArrayList<>();
 
-        List<Long> imgId = new ArrayList<>();
-        for (Image img : images) {
-            imgId.add(img.getImageId());
-        }
-        if(imgId == null){
-            System.out.println("imgId (service) is null");
+        if (!newBook) {
+            List<Image> images = imageService.saveImage(arrangeImages(imageFiles, bookCoverIndex));
+
+            int order = 0;
+            for (Image img : images) {
+                BookImage bookImage = new BookImage();
+                bookImage.setImage(img);
+                bookImage.setImageOrder(order++);
+                bookImage.setImageDatetime(Timestamp.valueOf(LocalDateTime.now()));
+                bookImages.add(bookImage);
+            }
         }
 
         bookDao.createBookRating(user, bookModelService.getBookModelByBookModelId(bookModelId), rating);
-        System.out.println("BOOK_RATING DONE in BookServiceImpl.createBook");
+        Book book = null;
 
-        Book book = bookDao.createBook(bookModelService.getBookModelByBookModelId(bookModelId), user, bookState, images);
-        System.out.println("CREATE BOOK DONE in BookServiceImpl.createBook");
+        try {
+            book = bookDao.createBook(bookModelService.getBookModelByBookModelId(bookModelId), user, bookState, bookImages);
 
-        bookDao.createBookImage(book.getBookId(), imgId);
-
-        System.out.println("IMAGES DONE in BookServiceImpl.createBook");
+            for (BookImage bookImage : bookImages) {
+                bookImage.setBook(book);
+                book.getImages().add(bookImage);
+            }
+            bookDao.saveBookImages(bookImages);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return book;
+
+
+
+        ////////////////////
+
+//
+//
+//        List<Image> images = new ArrayList<>();
+//        if (!newBook){
+//            images = imageService.saveImage(arrangeImages(imageFiles, bookCoverIndex));
+//        }
+//
+//        List<Long> imgId = new ArrayList<>();
+//        for (Image img : images) {
+//            imgId.add(img.getImageId());
+//        }
+//
+//        bookDao.createBookRating(user, bookModelService.getBookModelByBookModelId(bookModelId), rating);
+//        Book book = null;
+//        try {
+//            book = bookDao.createBook(bookModelService.getBookModelByBookModelId(bookModelId), user, bookState, images);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//        bookDao.createBookImage(book.getBookId(), imgId);
+//
+//        return book;
     }
 
     @Transactional

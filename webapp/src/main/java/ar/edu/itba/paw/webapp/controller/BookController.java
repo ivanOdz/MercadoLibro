@@ -133,6 +133,7 @@ public class BookController {
         User user = loggedUserAdvice.getLoggedUser();
         Book book;
 
+
         //try {
             book = bookService.createNewBook(bookForm.getIsbn(), bookForm.getTitle(), bookForm.getAuthors(), bookForm.getEditorial(), bookForm.getDescription(), bookForm.getGenre(), bookForm.getEdition(), bookForm.getPublicationYear(), bookForm.isHardcover(), bookForm.isPocketEdition(), bookForm.getDimension(), bookForm.getLanguage(), bookForm.getPages(), bookForm.getWeight(), bookForm.getBookState(), bookForm.getRating(), bookForm.getImageFiles(), bookForm.getBookCover(), user);
         /*} catch (ApplicationRuntimeException e) {
@@ -181,8 +182,14 @@ public class BookController {
         User user = loggedUserAdvice.getLoggedUser();
 
         Book book;
+
         try {
             book = bookService.createBook(bookModelId, bookDetailsForm.getBookState(), bookDetailsForm.getRating(), bookDetailsForm.getImageFiles(), bookDetailsForm.getBookCover(), null, user, false);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+            return new ModelAndView("redirect:/400");
+        }
+        try {
         } catch (ApplicationRuntimeException e) {
             LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
             return new ModelAndView("redirect:/400");
