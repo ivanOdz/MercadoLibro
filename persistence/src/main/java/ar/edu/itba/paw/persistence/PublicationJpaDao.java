@@ -120,10 +120,10 @@ public class PublicationJpaDao implements PublicationDao {
         String jpqlQuery = "FROM Publication p WHERE p.publicationId IN (:ids) ";
         switch (sortType) {
             case RATING_ASCENDING:
-                jpqlQuery += "ORDER BY p.book.rating ASC";
+                jpqlQuery += "ORDER BY p.book.bookModel.averageRating ASC";
                 break;
             case RATING_DESCENDING:
-                jpqlQuery += "ORDER BY p.book.rating DESC";
+                jpqlQuery += "ORDER BY p.book.bookModel.averageRating DESC";
                 break;
             case BOOK_NAME_ASCENDING:
                 jpqlQuery += "ORDER BY p.book.bookModel.title ASC";
