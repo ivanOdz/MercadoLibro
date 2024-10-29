@@ -6,9 +6,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <html lang="es" class="custom-style">
-<%@include file="/WEB-INF/jsp/head/headers.jsp" %>
+
+<%@ include file="/WEB-INF/jsp/head/headers.jsp" %>
 <%@ include file="/WEB-INF/jsp/components/navbar_wo_search.jsp" %>
+
 <head>
+
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
@@ -21,15 +24,18 @@
     <title><spring:message code="publications.list.brand.logo"/></title>
 
 </head>
+
 <body class="main">
+
 <navbar_wo_search/>
 
-
 <div class="uk-grid">
-    <div class="uk-width-5-6 uk-align-center main-section">
+
+    <div class="uk-width-5-6 uk-align-center main-section" style="margin-top: 0; padding-top: 0.5rem;">
+    
         <div>
-            <h2 class="uk-h2 title"><spring:message code="exchange.offers.title"/></h2>
-            <h3 class="uk-h5"><spring:message code="exchange.offers.subtitle"/></h3>
+            <h2 class="uk-h2 title" style="margin: 0; padding: 0;"><spring:message code="exchange.offers.title"/></h2>
+            <h3 class="uk-h5" style="margin: 0; padding: 1rem;"><spring:message code="exchange.offers.subtitle"/></h3>
         </div>
 
         <div class="main-content">
@@ -45,7 +51,6 @@
                     <ul class="uk-switcher uk-margin">
 
                         <!-- Pending -->
-
                         <li style="min-height: 40%; align-content: center" class="uk-container uk-align-center">
                             <c:if test="${!empty pending.data}">
                                 <c:forEach var="data" items="${pending.data}">
@@ -833,6 +838,7 @@
 </body>
 
 <script>
+
     function selectCard(card, offererUsername, offererMail, offererLocations, requestedBookTitle, requestedBookAuthors, requestedBookEdition, requestedBookImages, exchangeId, reviewerId, subjectId, isReviewable) {
 
         // Remover la clase 'selected-card' de todas las tarjetas
@@ -891,5 +897,7 @@
         document.getElementById('add-review-button').style.display = 'block';
         document.getElementById('add-review-button').style.display = 'none';
     });
+    
 </script>
+
 </html>

@@ -1,12 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ include file="/WEB-INF/jsp/components/navbar_wo_search.jsp" %>
-
+<%@ include file="/WEB-INF/jsp/head/headers.jsp" %>
 
 <html class="custom-style">
-<%@include file="/WEB-INF/jsp/head/headers.jsp" %>
+
 <head>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
@@ -18,6 +19,7 @@
 
     <title><spring:message code="publication.details.title"/></title>
 </head>
+
 <style>
     .slider-button {
         background: none;
@@ -45,8 +47,8 @@
 </style>
 
 <body>
-<navbar/>
 
+<navbar/>
 
 <div class="uk-background-muted">
     <div class="uk-container" style="max-width: 90%">
@@ -325,4 +327,5 @@
 </script>
 
 </body>
+
 </html>
