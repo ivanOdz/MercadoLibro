@@ -101,19 +101,6 @@ public class ExchangeController {
         return mav;
     }
 
-
-    @RequestMapping("/exchange/accepted")
-    public ModelAndView exchangeAccepted() {
-        LOGGER.info(messageSource.getMessage("info.exchange.accepted", null, LocaleContextHolder.getLocale()));
-        return new ModelAndView("exchange/accepted");
-    }
-
-    @RequestMapping("/exchange/invalid")
-    public ModelAndView exchangeRejected() {
-        LOGGER.info(messageSource.getMessage("info.exchange.rejected", null, LocaleContextHolder.getLocale()));
-        return new ModelAndView("/exchange/invalid");
-    }
-
     @RequestMapping("/createexchange")
     public ModelAndView exchange(@RequestParam(name = "accept_code") int acceptCode, @RequestParam(name = "state") boolean state) {
         ModelAndView mav = new ModelAndView("error/failed_authentication");
@@ -145,6 +132,69 @@ public class ExchangeController {
         return mav;
     }
 
+
+    @RequestMapping("/exchange/accepted")
+    public ModelAndView exchangeAccepted() {
+        LOGGER.info(messageSource.getMessage("info.exchange.accepted", null, LocaleContextHolder.getLocale()));
+        return new ModelAndView("exchange/accepted");
+    }
+
+    @RequestMapping("/exchange/invalid")
+    public ModelAndView exchangeRejected() {
+        LOGGER.info(messageSource.getMessage("info.exchange.rejected", null, LocaleContextHolder.getLocale()));
+        return new ModelAndView("/exchange/invalid");
+    }
+
+
+    @GetMapping("/start_exchange")
+    public ModelAndView startExchange(@ModelAttribute("exchangeForm") ExchangeForm exchangeForm, BindingResult errors, @RequestParam(name = "publication_id") long publicationId) {
+        final ModelAndView mav = new ModelAndView("/exchange/solicit_exchange");
+        Publication publication;
+        try {
+            publication = publicationService.getPublicationByPublicationId(publicationId);
+        } catch (ApplicationRuntimeException e) {
+            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
+            return new ModelAndView("redirect:/404");
+        }
+
+        List<Book> availableBooks;
+
+        // NOTE: en el caso de que se haga una paginación de esta sección
+        //  no hace falta realizar una excepción sino HAY QUE HACER UNA EXCEPCIÓN
+        availableBooks = bookService.getAvailableBooksByUser(loggedUserAdvice.getLoggedUser());
+
+        mav.addObject("availableBooks", availableBooks);
+        mav.addObject("exchangeForm", exchangeForm);
+        mav.addObject("publication", publication);
+
+        return mav;
+    }
+
+    @PostMapping(path = "/exchange/initializeexchange")
+    public ModelAndView initializeExchange(@NotEmpty @Valid @ModelAttribute("exchangeForm") ExchangeForm exchangeInput, BindingResult errors) {
+        if (errors.hasErrors()) {
+            return startExchange(exchangeInput, errors, exchangeInput.getPublicationId());
+        }
+
+        try {
+            exchangeService.initializeExchange(exchangeInput.getBookId(), exchangeInput.getLocation(), exchangeInput.getPublicationId());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        try {
+        } catch (BadRequestException e) {
+            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
+            return new ModelAndView("redirect:/400");
+        } catch (NotFoundException e) {
+            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
+            return new ModelAndView("redirect:/404");
+        }
+
+        return new ModelAndView("redirect:/requests");
+    }
+
+    ////////////////////////////////////
 
     @RequestMapping("/confirm_offerer")
     public ModelAndView confirmExchangeOffer(@RequestParam(name = "accept_code") int accept_code) {
@@ -203,53 +253,7 @@ public class ExchangeController {
         return new ModelAndView("redirect:/requests");
     }
 
-    @GetMapping("/start_exchange")
-    public ModelAndView startExchange(@ModelAttribute("exchangeForm") ExchangeForm exchangeForm, BindingResult errors, @RequestParam(name = "publication_id") long publicationId) {
-        final ModelAndView mav = new ModelAndView("/exchange/solicit_exchange");
-        Publication publication;
-        try {
-            publication = publicationService.getPublicationByPublicationId(publicationId);
-        } catch (ApplicationRuntimeException e) {
-            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
-            return new ModelAndView("redirect:/404");
-        }
 
-        List<Book> availableBooks;
-
-        // NOTE: en el caso de que se haga una paginación de esta sección
-        //  no hace falta realizar una excepción sino HAY QUE HACER UNA EXCEPCIÓN
-        availableBooks = bookService.getAvailableBooksByUser(loggedUserAdvice.getLoggedUser());
-        
-        mav.addObject("availableBooks", availableBooks);
-        mav.addObject("exchangeForm", exchangeForm);
-        mav.addObject("publication", publication);
-        
-        return mav;
-    }
-
-    @PostMapping(path = "/exchange/initializeexchange")
-    public ModelAndView initializeExchange(@NotEmpty @Valid @ModelAttribute("exchangeForm") ExchangeForm exchangeInput, BindingResult errors) {
-        if (errors.hasErrors()) {
-            return startExchange(exchangeInput, errors, exchangeInput.getPublicationId());
-        }
-
-        try {
-            exchangeService.initializeExchange(exchangeInput.getBookId(), exchangeInput.getLocation(), exchangeInput.getPublicationId());
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        try {
-        } catch (BadRequestException e) {
-            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
-            return new ModelAndView("redirect:/400");
-        } catch (NotFoundException e) {
-            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
-            return new ModelAndView("redirect:/404");
-        }
-
-        return new ModelAndView("redirect:/requests");
-    }
 
     @RequestMapping(path = "/submitReview", method = RequestMethod.POST)
     public ModelAndView submitReview(

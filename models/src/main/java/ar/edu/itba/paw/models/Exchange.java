@@ -28,7 +28,7 @@ public class Exchange {
     private ExchangeState state;
 
     @Column(name = "acceptCode", nullable = false)
-    private long acceptCode;
+    private int acceptCode;
 
     @Column(name = "offererReceivedBook")
     private boolean offererReceivedBook;
@@ -46,7 +46,7 @@ public class Exchange {
         // only for JPA
     }
 
-    public Exchange(Long exchangeId, Publication offerer, Publication requester, ExchangeState state, long acceptCode, boolean offererReceivedBook, boolean requesterReceivedBook, Timestamp exchangeStartDate, Timestamp exchangeEndDate) {
+    public Exchange(Long exchangeId, Publication offerer, Publication requester, ExchangeState state, int acceptCode, boolean offererReceivedBook, boolean requesterReceivedBook, Timestamp exchangeStartDate, Timestamp exchangeEndDate) {
         this.exchangeId = exchangeId;
         this.offerer = offerer;
         this.requester = requester;
