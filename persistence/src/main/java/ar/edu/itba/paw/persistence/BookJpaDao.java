@@ -104,10 +104,18 @@ public class BookJpaDao implements BookDao {
 
     @Override
     public void createBookImage(long bookId, List<Long> images) {
-
-        int i = 0;
-        for (Long imageId : images) {
-            final BookImage image = new BookImage(bookId, i++, imageId , Timestamp.valueOf(LocalDateTime.now()));
+        System.out.println("inside BookJpaDao.createBookImage");
+        System.out.println("images: ");
+        if(images == null){
+            System.out.println("images is null");
+        }
+        for (int i = 0; i < images.size(); i++) {
+            System.out.println("bookId: " + bookId);
+            System.out.println("imageId: " + i);
+            final BookImage image = new BookImage(bookId, i, images.get(i) , Timestamp.valueOf(LocalDateTime.now()));
+            System.out.println("imageOrder post book: " + image.getImageOrder());
+            System.out.println("imageId post book: " + image.getImageId());
+            System.out.println("imagedate post book: " + image.getImageDatetime());
             em.persist(image);
         }
     }

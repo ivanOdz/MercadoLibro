@@ -21,7 +21,7 @@ public class ImageJpaDao implements ImageDao {
 	@Override
 	@Transactional
 	public Image createImage(byte[] image) {
-		System.out.println("in ImageJpaDao");
+		System.out.println("INSIDE ImageJpaDao");
 		Image img = new Image(null, image);
 		System.out.println("created image");
 		em.persist(img);

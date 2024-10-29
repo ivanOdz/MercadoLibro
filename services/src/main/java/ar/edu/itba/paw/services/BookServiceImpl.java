@@ -33,17 +33,36 @@ public class BookServiceImpl implements BookService {
     @Transactional
     @Override
     public Book createBook(Long bookModelId, BookState bookState, int rating, List<MultipartFile> imageFiles, int bookCoverIndex, List<Long> imagesId, User user, boolean newBook) {
+        System.out.println("inside BookServiceImpl.createBook");
+        if (imageFiles == null) {
+            System.out.println("imageFiles is null");
+        } else {
+            System.out.println("imageFiles is not null");
+        }
         List<Image> images = new ArrayList<>();
-        
+        System.out.println("newBook: " + newBook);
         if (!newBook){
             images = imageService.saveImage(arrangeImages(imageFiles, bookCoverIndex));
+            System.out.println("SAVE IMAGES DONE in BookServiceImpl.createBook");
+        }
+
+        List<Long> imgId = new ArrayList<>();
+        for (Image img : images) {
+            imgId.add(img.getImageId());
+        }
+        if(imgId == null){
+            System.out.println("imgId (service) is null");
         }
 
         bookDao.createBookRating(user, bookModelService.getBookModelByBookModelId(bookModelId), rating);
+        System.out.println("BOOK_RATING DONE in BookServiceImpl.createBook");
 
         Book book = bookDao.createBook(bookModelService.getBookModelByBookModelId(bookModelId), user, bookState, images);
+        System.out.println("CREATE BOOK DONE in BookServiceImpl.createBook");
 
-        bookDao.createBookImage(book.getBookId(), imagesId);
+        bookDao.createBookImage(book.getBookId(), imgId);
+
+        System.out.println("IMAGES DONE in BookServiceImpl.createBook");
 
         return book;
     }

@@ -11,14 +11,18 @@ public class BookImage implements Serializable {
 
     @Id
 //    @ManyToOne
-    @JoinColumn(name = "bookid", nullable = false)
+    @Column(name = "bookid", nullable = false)
     private Long bookId;
+
+    @Column(name = "imageorder")
+    private Integer imageOrder;
 
     @Id
 //    @ManyToOne
-    @JoinColumn(name = "imageid", nullable = false)
+    @Column(name = "imageid", nullable = false)
     private Long imageId;
 
+    @Column(name = "imagedatetime")
     private Timestamp imageDatetime;
 
     public BookImage(Long bookId, Integer imageOrder, Long imageId, Timestamp imageDatetime) {
@@ -28,7 +32,6 @@ public class BookImage implements Serializable {
         this.imageDatetime = imageDatetime;
     }
 
-    private Integer imageOrder;
 
     public BookImage() {
 
