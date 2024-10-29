@@ -91,25 +91,12 @@ public class BookModelJpaDao implements BookModelDao {
             nativeQueryString.append("AND bm.genre = :genreFilter ");
         }
 
-        switch (sortType) {
-            case RATING_ASCENDING:
-                nativeQueryString.append(" ORDER BY rating ASC");
-                break;
-            case RATING_DESCENDING:
-                nativeQueryString.append(" ORDER BY rating DESC");
-                break;
-            case BOOK_NAME_ASCENDING:
-                nativeQueryString.append(" ORDER BY title ASC");
-                break;
-            default:
-                nativeQueryString.append(" ORDER BY title DESC");
-        }
         Query nativeQuery = em.createNativeQuery(nativeQueryString.toString());
 
         String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
         nativeQuery.setParameter("search", "%" + safeSearch.toLowerCase() + "%");
         if (isGenreFilterActive) {
-            nativeQuery.setParameter("genreFilter", genreFilter.getKey());
+            nativeQuery.setParameter("genreFilter", genreFilter.toString());
         }
         nativeQuery.setMaxResults(BOOKS_PAGE_SIZE);
         nativeQuery.setFirstResult(currentPage * BOOKS_PAGE_SIZE);
@@ -117,23 +104,35 @@ public class BookModelJpaDao implements BookModelDao {
         @SuppressWarnings("unchecked")
         List<Long> bookModelIds = nativeQuery.getResultList().stream().mapToLong(n -> ((Number) n).longValue()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
         // Segunda consulta recuperar los libros mediante una query JPA pasandole los ids recuperados en la primera consulta
-        TypedQuery<BookModel> query = em.createQuery("FROM BookModel bm WHERE bm.bookModelId IN (:ids)", BookModel.class);
+
+        String jpqlQuery = "FROM BookModel bm WHERE bm.bookModelId IN (:ids)";
+
+        switch (sortType) {
+            case RATING_ASCENDING:
+                jpqlQuery += "ORDER BY bm.rating ASC ";
+                break;
+            case RATING_DESCENDING:
+                jpqlQuery += "ORDER BY bm.rating DESC ";
+                break;
+            case BOOK_NAME_ASCENDING:
+                jpqlQuery += "ORDER BY bm.title ASC ";
+                break;
+            case BOOK_NAME_DESCENDING:
+                jpqlQuery += "ORDER BY bm.title DESC ";
+                break;
+            case PUBLICATION_DATE_DESCENDING:
+                jpqlQuery += "ORDER BY p.publicationDatetime DESC ";
+                break;
+            default:
+                jpqlQuery += "ORDER BY p.publicationDatetime ASC ";
+        }
+
+        TypedQuery<BookModel> query = em.createQuery(jpqlQuery, BookModel.class);
         query.setParameter("ids", bookModelIds);
 
         int totalResults = getTotalResultsByBook(safeSearch, isGenreFilterActive, genreFilter);
 
-        List<BookModel> bookModels = new ArrayList<>();
-
-        if (bookModelIds.isEmpty()) {
-            return new PaginatedResponse<>(Collections.emptyList(), new BookModelMetadata(currentPage, BOOKS_PAGE_SIZE, totalResults, safeSearch, isGenreFilterActive, genreFilter, sortType, null));
-        }
-
-
-        try {
-            bookModels = query.getResultList();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        List<BookModel> bookModels = query.getResultList();
 
         return new PaginatedResponse<>(bookModels, new BookModelMetadata(currentPage, BOOKS_PAGE_SIZE, totalResults, safeSearch, isGenreFilterActive, genreFilter, sortType, null));
     }
@@ -180,7 +179,7 @@ public class BookModelJpaDao implements BookModelDao {
         query.setParameter("search", "%" + search.toLowerCase() + "%");
 
         if (isGenreFilterActive) {
-            query.setParameter("genreFilter", genreFilter.getValue());
+            query.setParameter("genreFilter", genreFilter.toString());
         }
         return ((Number) query.getSingleResult()).intValue();
     }
