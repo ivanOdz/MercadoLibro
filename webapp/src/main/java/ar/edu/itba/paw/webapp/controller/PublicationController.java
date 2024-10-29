@@ -110,4 +110,28 @@ public class PublicationController {
         return new ModelAndView("/user/demand_auth");
     }
 
+    @RequestMapping(path = "/my_publications")
+    public ModelAndView myPublications(@RequestParam(name = "search", defaultValue = "") String search,
+                                       @RequestParam(name = "is-book-state-filter-active", defaultValue = "false") boolean isBookStateFilterActive,
+                                       @RequestParam(name = "book-state-filter", required = false) BookState bookStateFilter,
+                                       @RequestParam(name = "is-genre-filter-active", defaultValue = "false") boolean isGenreFilterActive,
+                                       @RequestParam(name = "genre-filter", required = false) Genre genreFilter,
+                                       @RequestParam(name = "order", defaultValue = "PUBLICATION_DATE_ASCENDING") SortType sortType,
+                                       @RequestParam(name = "page", defaultValue = "0") int currentPage) {
+//        List<Publication> publications = ps.getPublicationsByUser(loggedUserAdvice.getLoggedUser());
+        PaginatedResponse<Publication, ItemFilterMetadata> publications = ps.getMyPaginatedPublications(loggedUserAdvice.getLoggedUser().getUserId(), search, isBookStateFilterActive,
+                bookStateFilter, isGenreFilterActive, genreFilter, sortType, currentPage);
+        ModelAndView mav = new ModelAndView("/home/my_publications");
+
+        mav.addObject("publications", publications);
+        return mav;
+    }
+
+    @GetMapping("/publications/{publication_id:\\d+}/delete")
+    public ModelAndView deletePublication(@PathVariable(name = "publication_id") long publicationId) {
+        ps.deletePublication(publicationId);
+        return new ModelAndView("redirect:/my_publications");
+    }
+
+
 }

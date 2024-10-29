@@ -12,6 +12,7 @@
 <c:url var="logout" value="/logout"/>
 <c:url var="loginUrl" value="/login"/>
 <c:url var="registerUrl" value="/create"/>
+<c:url var="myPublicationsUrl" value="/my_publications"/>
 
 <nav class="uk-navbar-container uk-box-shadow-small " uk-sticky>
     <div class="uk-container uk-width-1-1 nav-background">
@@ -106,6 +107,11 @@
                                     <li class="uk-active uk-margin-small-top">
                                         <a class="button-text-dropdown" href="${profileUrl}">
                                             <spring:message code="home.profile.view"/>
+                                        </a>
+                                    </li>
+                                    <li class="uk-margin-small-top">
+                                        <a class="button-text-dropdown" href="${myPublicationsUrl}">
+                                            <spring:message code="home.profile.publications"/>
                                         </a>
                                     </li>
                                     <li class="uk-margin-small-top">

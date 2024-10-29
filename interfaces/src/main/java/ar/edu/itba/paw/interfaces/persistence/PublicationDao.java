@@ -26,4 +26,9 @@ public interface PublicationDao {
 
     List<GenreWrapper> getGenreQtyByPublication(String search, boolean isBookStateFilterActive, BookState bookStateFilter);
 
+//    List<Publication> getPublicationsByUserId(long userId);
+
+    PaginatedResponse<Publication, ItemFilterMetadata> getMyPaginatedPublications(long userId,String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, SortType sortType, int currentPage);
+
+    void deletePublication(long publicationId);
 }

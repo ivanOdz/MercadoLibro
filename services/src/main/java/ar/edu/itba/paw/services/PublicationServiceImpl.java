@@ -83,4 +83,36 @@ public class PublicationServiceImpl implements PublicationService {
     public int getPublicationCountByUserId(long userId) {
         return pubDao.getPublicationCountByUserId(userId);
     }
+
+//    public List<Publication> getPublicationsByUser(User user) {
+//        return pubDao.getPublicationsByUserId(user.getUserId()) ;
+//    }
+
+    @Override
+    public PaginatedResponse<Publication, ItemFilterMetadata> getMyPaginatedPublications(long userId, String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, SortType sortType, int currentPage) {
+        PaginatedResponse<Publication, ItemFilterMetadata> response = pubDao.getPaginatedPublications(search, isBookStateFilterActive, bookStateFilter, isGenreFilterActive, genreFilter, sortType, currentPage);
+
+        List<BookStateWrapper> bookStateWrapperList = pubDao.getBookStateQtyByPublication(search, isGenreFilterActive, genreFilter);
+        List<GenreWrapper> genreWrapperList = pubDao.getGenreQtyByPublication(search, isBookStateFilterActive, bookStateFilter);
+
+        List<BookStateWrapper> bookStates = new ArrayList<>();
+        for (BookStateWrapper state : bookStateWrapperList) {
+            bookStates.add(new BookStateWrapper(state.getBookState(), bookStateService.getBookStateDisplayName(state.getBookState()), state.getResultByState()));
+        }
+
+        List<GenreWrapper> genres = new ArrayList<>();
+        for (GenreWrapper genre : genreWrapperList) {
+            genres.add(new GenreWrapper(genre.getGenre(), genreService.getGenreDisplayName(genre.getGenre()), genre.getResultByGenre()));
+        }
+
+        response.getMetadata().setBookStateWrapperList(bookStates);
+        response.getMetadata().setGenreWrapperList(genres);
+
+        return response;
+    }
+
+    @Override
+    public void deletePublication(long publicationId) {
+        pubDao.deletePublication(publicationId);
+    }
 }

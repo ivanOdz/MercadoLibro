@@ -118,7 +118,7 @@ public class Exchange {
         this.requesterReceivedBook = requesterReceivedBook;
     }
 
-    public boolean isReviewable() {
+    private boolean isReviewable() {
         return (state != ExchangeState.REJECTED && state != ExchangeState.PENDING);
     }
 
