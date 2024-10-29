@@ -194,7 +194,6 @@ public class ExchangeController {
         return new ModelAndView("redirect:/requests");
     }
 
-    ////////////////////////////////////
 
     @RequestMapping("/confirm_offerer")
     public ModelAndView confirmExchangeOffer(@RequestParam(name = "accept_code") int accept_code) {
@@ -253,7 +252,7 @@ public class ExchangeController {
         return new ModelAndView("redirect:/requests");
     }
 
-
+    ////////////////////////////////////
 
     @RequestMapping(path = "/submitReview", method = RequestMethod.POST)
     public ModelAndView submitReview(
