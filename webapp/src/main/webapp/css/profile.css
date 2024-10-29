@@ -1,6 +1,6 @@
 
 .main-margin {
-    margin-top: 8rem;
+    margin-top: 1rem !important;
 }
 
 .card-profile {
@@ -8,8 +8,11 @@
     align-items: center;
     display: grid;
     flex-direction: column;
-    margin-top: 5rem !important;
-    padding: 10%
+    margin-top: 1rem !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    padding-right: 10%;
+    padding-left: 10%;
 }
 
 .title-profile {
@@ -49,7 +52,6 @@
 .reviewStars {
     position: absolute;
     top: 10px;
-    right: 10px;
 }
 
 .date-text {

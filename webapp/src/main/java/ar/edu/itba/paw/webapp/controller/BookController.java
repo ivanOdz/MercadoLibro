@@ -174,6 +174,7 @@ public class BookController {
         return mav;
     }
 
+    // upload from preloaded book model
     @PostMapping("/book/create_book")
     public ModelAndView createBook(@Valid @ModelAttribute(name = "bookDetailsForm") BookDetailsForm bookDetailsForm, BindingResult errors, @RequestParam("book_model_id") Long bookModelId) {
         if (errors.hasErrors()) {

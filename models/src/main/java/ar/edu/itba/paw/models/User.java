@@ -35,13 +35,30 @@ public class User {
 
     @OneToMany(mappedBy = "owner")
     private List<Book> books;
-
+    
+    @OneToOne
+    @JoinTable(
+		name = "user_location",
+		joinColumns = @JoinColumn(name = "userId"),
+		inverseJoinColumns = @JoinColumn(name = "location_id")
+    )
+    private Location favoriteLocation;
+    
+    @OneToMany
+    @JoinTable(
+		name = "user_location",
+		joinColumns = @JoinColumn(name = "userId"),
+		inverseJoinColumns = @JoinColumn(name = "location_id")
+    )
+    private List<Location> locations;
 
     /* package */ public User(){
 
         // only for JPA
     }
+    
     public User(Long userId, String username, String mail, String password, Long imageId, Integer verificationCode, boolean isVerified, String language) {
+    	
         this.userId = userId;
         this.username = username;
         this.mail = mail;
@@ -85,6 +102,14 @@ public class User {
     public boolean isVerified() {
         return isVerified;
     }
+    
+    public Location getFavoriteLocation() {
+    	return favoriteLocation;
+    }
+    
+    public List<Location> getLocations() {
+    	return locations;
+    }
 
     public void setUsername(String username) {
         this.username = username;
@@ -116,5 +141,13 @@ public class User {
 
     public void setBooks(List<Book> books) {
         this.books = books;
+    }
+    
+    public void setFavoriteLocation(Location favoriteLocation) {
+    	this.favoriteLocation = favoriteLocation;
+    }
+    
+    public void setLocations(List<Location> locations) {
+    	this.locations = locations;
     }
 }

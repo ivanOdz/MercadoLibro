@@ -53,13 +53,38 @@
                         <li style="min-height: 40%; align-content: center;" class="uk-container uk-align-center">
                             <c:if test="${!empty pending.data}">
                                 <c:forEach var="data" items="${pending.data}">
+                                
+                                    <c:set var="locationsListString" value="" />
+									<c:forEach var="location" items="${data.offerer.locations}">
+										<c:choose>
+											<c:when test="${empty locationsListString}">
+												<c:set var="locationsListString" value="${location.locationString}" />
+											</c:when>
+											<c:otherwise>
+												<c:set var="locationsListString" value="${locationsListString}, ${location.locationString}" />
+											</c:otherwise>
+										</c:choose>
+									</c:forEach>
+    								
+    								<c:set var="authorsListString" value="" />
+									<c:forEach var="author" items="${data.requester.book.bookModel.authors}">
+										<c:choose>
+											<c:when test="${empty authorsListString}">
+												<c:set var="authorsListString" value="${author.authorName}" />
+											</c:when>
+											<c:otherwise>
+												<c:set var="authorsListString" value="${authorsListString}, ${author.authorName}" />
+											</c:otherwise>
+										</c:choose>
+									</c:forEach>
+									
                                     <div class="uk-card uk-card-default exchange-card"
                                          onclick="selectCard(this,
                                                  '<c:out value="${data.requester.book.owner.username}"/>',
                                                  '<c:out value="${data.requester.book.owner.mail}"/>',
-                                                 '<c:out value="${data.requester.locations}"/>',
+                                                 '<c:out value="${locationsListString}"/>',
                                                  '<c:out value="${data.offerer.book.bookModel.title}"/>',
-                                                 '<c:out value="${data.offerer.book.bookModel.authors}"/>',
+                                                 '<c:out value="${authorsListString}"/>',
                                                  '<c:out value="${data.offerer.book.bookModel.title}"/>',
                                                  '<c:out value="${data.offerer.book.images}"/>',
                                                  '<c:out value="${data.exchangeId}"/>',
@@ -278,13 +303,38 @@
                         <li style="min-height: 40%; align-content: center;" class="uk-container">
                             <c:if test="${!empty inProgress.data}">
                                 <c:forEach var="data" items="${inProgress.data}">
+                                
+                                    <c:set var="locationsListString" value="" />
+									<c:forEach var="location" items="${data.offerer.locations}">
+										<c:choose>
+											<c:when test="${empty locationsListString}">
+												<c:set var="locationsListString" value="${location.locationString}" />
+											</c:when>
+											<c:otherwise>
+												<c:set var="locationsListString" value="${locationsListString}, ${location.locationString}" />
+											</c:otherwise>
+										</c:choose>
+									</c:forEach>
+    								
+    								<c:set var="authorsListString" value="" />
+									<c:forEach var="author" items="${data.requester.book.bookModel.authors}">
+										<c:choose>
+											<c:when test="${empty authorsListString}">
+												<c:set var="authorsListString" value="${author.authorName}" />
+											</c:when>
+											<c:otherwise>
+												<c:set var="authorsListString" value="${authorsListString}, ${author.authorName}" />
+											</c:otherwise>
+										</c:choose>
+									</c:forEach>
+									
                                     <div class="uk-card uk-card-default exchange-card"
                                          onclick="selectCard(this,
                                                  '<c:out value="${data.requester.book.owner.username}"/>',
                                                  '<c:out value="${data.requester.book.owner.mail}"/>',
-                                                 '<c:out value="${data.requester.locations}"/>',
+                                                 '<c:out value="${locationsListString}"/>',
                                                  '<c:out value="${data.offerer.book.bookModel.title}"/>',
-                                                 '<c:out value="${data.offerer.book.bookModel.authors}"/>',
+                                                 '<c:out value="${authorsListString}"/>',
                                                  '<c:out value="${data.offerer.book.bookModel.title}"/>',
                                                  '<c:out value="${data.offerer.book.images}"/>',
                                                  '<c:out value="${data.exchangeId}"/>',
@@ -477,13 +527,38 @@
                         <li style="margin-top: 0;min-height: 40%; align-content: center;" class="uk-container">
                             <c:if test="${!empty completed.data}">
                                 <c:forEach var="data" items="${completed.data}">
+                                
+                                    <c:set var="locationsListString" value="" />
+									<c:forEach var="location" items="${data.offerer.locations}">
+										<c:choose>
+											<c:when test="${empty locationsListString}">
+												<c:set var="locationsListString" value="${location.locationString}" />
+											</c:when>
+											<c:otherwise>
+												<c:set var="locationsListString" value="${locationsListString}, ${location.locationString}" />
+											</c:otherwise>
+										</c:choose>
+									</c:forEach>
+    								
+    								<c:set var="authorsListString" value="" />
+									<c:forEach var="author" items="${data.requester.book.bookModel.authors}">
+										<c:choose>
+											<c:when test="${empty authorsListString}">
+												<c:set var="authorsListString" value="${author.authorName}" />
+											</c:when>
+											<c:otherwise>
+												<c:set var="authorsListString" value="${authorsListString}, ${author.authorName}" />
+											</c:otherwise>
+										</c:choose>
+									</c:forEach>
+									
                                     <div class="uk-card uk-card-default exchange-card"
                                          onclick="selectCard(this,
                                                  '<c:out value="${data.requester.book.owner.username}"/>',
                                                  '<c:out value="${data.requester.book.owner.mail}"/>',
-                                                 '<c:out value="${data.requester.locations}"/>',
+                                                 '<c:out value="${locationsListString}"/>',
                                                  '<c:out value="${data.offerer.book.bookModel.title}"/>',
-                                                 '<c:out value="${data.offerer.book.bookModel.authors}"/>',
+                                                 '<c:out value="${authorsListString}"/>',
                                                  '<c:out value="${data.offerer.book.bookModel.title}"/>',
                                                  '<c:out value="${data.offerer.book.images}"/>',
                                                  '<c:out value="${data.exchangeId}"/>',
@@ -646,13 +721,38 @@
                         <li style="min-height: 40%; align-content: center" class="uk-container">
                             <c:if test="${!empty rejected.data}">
                                 <c:forEach var="data" items="${rejected.data}">
+                                
+                                	<c:set var="locationsListString" value="" />
+									<c:forEach var="location" items="${data.offerer.locations}">
+										<c:choose>
+											<c:when test="${empty locationsListString}">
+												<c:set var="locationsListString" value="${location.locationString}" />
+											</c:when>
+											<c:otherwise>
+												<c:set var="locationsListString" value="${locationsListString}, ${location.locationString}" />
+											</c:otherwise>
+										</c:choose>
+									</c:forEach>
+    								
+    								<c:set var="authorsListString" value="" />
+									<c:forEach var="author" items="${data.requester.book.bookModel.authors}">
+										<c:choose>
+											<c:when test="${empty authorsListString}">
+												<c:set var="authorsListString" value="${author.authorName}" />
+											</c:when>
+											<c:otherwise>
+												<c:set var="authorsListString" value="${authorsListString}, ${author.authorName}" />
+											</c:otherwise>
+										</c:choose>
+									</c:forEach>
+									
                                     <div class="uk-card uk-card-default exchange-card"
                                          onclick="selectCard(this,
                                                  '<c:out value="${data.requester.book.owner.username}"/>',
                                                  '<c:out value="${data.requester.book.owner.mail}"/>',
-                                                 '<c:out value="${data.requester.locations}"/>',
+                                                 '<c:out value="${locationsListString}"/>',
                                                  '<c:out value="${data.offerer.book.bookModel.title}"/>',
-                                                 '<c:out value="${data.offerer.book.bookModel.authors}"/>',
+                                                 '<c:out value="${authorsListString}"/>',
                                                  '<c:out value="${data.offerer.book.bookModel.title}"/>',
                                                  '<c:out value="${data.offerer.book.images}"/>',
                                                  '<c:out value="${data.exchangeId}"/>',

@@ -36,34 +36,25 @@ public class BookServiceImpl implements BookService {
     @Transactional
     public Book createBook(Long bookModelId, BookState bookState, int rating, List<MultipartFile> imageFiles, int bookCoverIndex, List<Long> imagesId, User user, boolean newBook) {
         List<BookImage> bookImages = new ArrayList<>();
+        List<Image> images = imageService.saveImage(arrangeImages(imageFiles, bookCoverIndex));
 
-        if (!newBook) {
-            List<Image> images = imageService.saveImage(arrangeImages(imageFiles, bookCoverIndex));
-
-            int order = 0;
-            for (Image img : images) {
-                BookImage bookImage = new BookImage();
-                bookImage.setImage(img);
-                bookImage.setImageOrder(order++);
-                bookImage.setImageDatetime(Timestamp.valueOf(LocalDateTime.now()));
-                bookImages.add(bookImage);
-            }
+        int order = 0;
+        for (Image img : images) {
+            BookImage bookImage = new BookImage();
+            bookImage.setImage(img);
+            bookImage.setImageOrder(order++);
+            bookImage.setImageDatetime(Timestamp.valueOf(LocalDateTime.now()));
+            bookImages.add(bookImage);
         }
 
         bookDao.createBookRating(user, bookModelService.getBookModelByBookModelId(bookModelId), rating);
-        Book book = null;
+        Book book = bookDao.createBook(bookModelService.getBookModelByBookModelId(bookModelId), user, bookState, bookImages);
 
-        try {
-            book = bookDao.createBook(bookModelService.getBookModelByBookModelId(bookModelId), user, bookState, bookImages);
-
-            for (BookImage bookImage : bookImages) {
-                bookImage.setBook(book);
-                book.getImages().add(bookImage);
-            }
-            bookDao.saveBookImages(bookImages);
-        } catch (Exception e) {
-            e.printStackTrace();
+        for (BookImage bookImage : bookImages) {
+            bookImage.setBook(book);
+            book.getImages().add(bookImage);
         }
+        bookDao.saveBookImages(bookImages);
 
         return book;
 
