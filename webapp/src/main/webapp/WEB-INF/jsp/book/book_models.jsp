@@ -151,7 +151,11 @@
                                                 </c:forEach>
                                             </p>
                                             <p>
-                                                <c:out value="${card.genre}"/>
+                                                <c:forEach var="genreWrapper" items="${genres}">
+                                                    <c:if test="${genreWrapper.genre == card.genre}">
+                                                        <c:out value="${genreWrapper.displayName}"/>
+                                                    </c:if>
+                                                </c:forEach>
                                             </p>
                                             <p>
                                                 <c:out value="${card.editorial}"/>

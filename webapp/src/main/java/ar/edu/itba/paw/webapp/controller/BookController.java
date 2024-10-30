@@ -108,6 +108,7 @@ public class BookController {
         PaginatedResponse<BookModel, BookModelMetadata> modelBooks = bookModelService.getPaginatedBookModels(search, isGenreFilterActive, genreFilter, currentPage, sortType);
 
         mav.addObject("modelBooks", modelBooks);
+        mav.addObject("genres", Stream.of(Genre.values()).map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
 
         return mav;
     }
