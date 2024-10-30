@@ -198,4 +198,9 @@ public class UserJdbcDao implements UserDao {
     public void removeUserLocation(long userId, Location location) {
     	System.out.println("[!]");
     }
+    
+    @Override
+    public void update(User user) {
+    	
+    }
 }
