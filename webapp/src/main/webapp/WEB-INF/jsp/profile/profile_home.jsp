@@ -36,14 +36,14 @@
             <div class="profile-content uk-align-center" style="width: auto">
                 <h3 class="profile-pic">
                     <c:choose>
-                        <c:when test="${loggedUser.imageId != 0}">
+                        <c:when test="${loggedUser.imageId != null}">
                             <img class="profile-pic"
                                  src="<c:url value='/images/${loggedUser.imageId}' />"
                                  alt="profileImage"/>
                         </c:when>
                         <c:otherwise>
                             <img class="profile-pic"
-                                 src="<c:url value='/images/profile-default.jpg' />"
+                                 src="<c:url value='/images/profile.png' />"
                                  alt="defaultImage"/>
                         </c:otherwise>
                     </c:choose>
