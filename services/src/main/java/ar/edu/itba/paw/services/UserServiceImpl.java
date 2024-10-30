@@ -162,7 +162,7 @@ public class UserServiceImpl implements UserService {
         User user = userOptional.get();
         boolean locationExists = false;
         
-        for (Location existingLocation : user.getLocations()) {
+        for (Location existingLocation : user.getUserLocations()) {
             if (existingLocation.getLocationString().equals(locationString)) {
                 locationExists = true;
                 break;

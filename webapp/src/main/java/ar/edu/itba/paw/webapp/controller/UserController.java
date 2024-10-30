@@ -248,7 +248,7 @@ public class UserController {
         ModelAndView mav = new ModelAndView("profile/profile_home");
 
         mav.addObject("loggedUser", loggedUserAdvice.getLoggedUser());
-        mav.addObject("locationsUser", loggedUserAdvice.getLoggedUser().getLocations());
+        mav.addObject("locationsUser", loggedUserAdvice.getLoggedUser().getUserLocations());
         mav.addObject("reviews", userReviewService.getReviewsEarnedByUserId(loggedUserAdvice.getLoggedUser().getUserId(), currentPage));
         mav.addObject("userRating", userReviewService.getUserRatingEarned(loggedUserAdvice.getLoggedUser().getUserId()));
 

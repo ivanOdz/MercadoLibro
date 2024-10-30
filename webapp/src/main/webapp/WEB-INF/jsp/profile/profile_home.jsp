@@ -33,7 +33,7 @@
         
             <h1 class="uk-h1 title-profile" style="margin: 0rem !important; padding: 0rem !important;"><spring:message code="profile.title"/></h1>
             
-            <div class="profile-content uk-align-center">
+            <div class="profile-content uk-align-center" style="width: auto">
                 <h3 class="profile-pic">
                     <c:choose>
                         <c:when test="${loggedUser.imageId != 0}">
@@ -125,7 +125,7 @@
                     <h3 class="uk-h5"><c:out value="${loggedUser.favoriteLocation}"/></h3>
                 </div>
 				
-				<c:forEach var="userLocation" items="${loggedUser.locations}">
+				<c:forEach var="userLocation" items="${loggedUser.userLocations}">
 					<div class="location-item">
 					<form class="remove-location-form" action="<c:url value='/user/removeLocation' />" method="post" style="display: inline;">
 						<input type="hidden" name="userId" value="${loggedUser.userId}" />

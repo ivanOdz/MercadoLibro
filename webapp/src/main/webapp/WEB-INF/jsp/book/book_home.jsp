@@ -238,12 +238,23 @@
                                                                     <spring:message code="book.set.location"/>
                                                                 </label>
                                                             </div>
+												
                                                             <div class="uk-inline">
-                                                                <span class="uk-form-icon uk-form-icon-flip"
-                                                                      uk-icon="icon: location"></span>
-                                                                <input class="uk-input" type="text" name="location"
-                                                                       aria-label="Not clickable icon" value="${user.favoriteLocation}"/>
+	                                                            
+	                                                            <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: location"></span>
+																<select class="uk-select no-arrow-select" name="location" aria-label="Not clickable icon" style="width: 90%">
+																    <c:forEach var="userLocation" items="${user.userLocations}">
+																        <option value="${userLocation.locationId}" <c:if test="${userLocation.locationId == user.favoriteLocation.locationId}"></c:if>>
+																            ${userLocation.locationString}
+																        </option>
+																    </c:forEach>
+																</select>
+<!--                                                                 <span class="uk-form-icon uk-form-icon-flip" -->
+<!--                                                                       uk-icon="icon: location"></span> -->
+<!--                                                                 <input class="uk-input" type="text" name="location" -->
+<%--                                                                        aria-label="Not clickable icon" value="${user.favoriteLocation}"/> --%>
                                                             </div>
+                                                            
                                                             <input class="uk-input" type="hidden"
                                                                    value="${card.bookId}" name="bookId"
                                                                    aria-label="Not clickable icon"/>

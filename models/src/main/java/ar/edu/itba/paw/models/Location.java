@@ -21,7 +21,7 @@ public class Location {
     @ManyToMany(mappedBy = "locations")
     private List<Publication> publications = new ArrayList<>();
     
-    @ManyToMany(mappedBy = "userLocation")
+    @ManyToMany(mappedBy = "userLocations")
     private List<User> users = new ArrayList<>();
     
     public Location() {

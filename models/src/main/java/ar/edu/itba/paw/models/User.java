@@ -49,7 +49,7 @@ public class User {
             joinColumns = @JoinColumn(name = "userid"),
             inverseJoinColumns = @JoinColumn(name = "locationid")
     )
-    private Set<Location> userLocation = new HashSet<>();
+    private Set<Location> userLocations = new HashSet<>();
 
     /* package */ public User(){
 
@@ -109,8 +109,8 @@ public class User {
     	return null;
     }
     
-    public Set<Location> getLocations() {
-    	return userLocation;
+    public Set<Location> getUserLocations() {
+    	return userLocations;
     }
 
     public void setUsername(String username) {
@@ -150,10 +150,10 @@ public class User {
     }
 
     public void removeLocation(Location location) {
-    	userLocation.removeIf(userLocation -> userLocation.getLocationString().equals(location.getLocationString()));	// Revisar*
+    	userLocations.removeIf(userLocation -> userLocation.getLocationString().equals(location.getLocationString()));	// Revisar*
     }
     
     public void addLocation(Location location) {
-    	userLocation.add(location);
+    	userLocations.add(location);
     }
 }
