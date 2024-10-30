@@ -9,7 +9,6 @@ import java.util.Set;
 @Entity
 @Table(name = "location")
 public class Location {
-
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "location_locationid_seq")
     @SequenceGenerator(sequenceName = "location_locationid_seq", name = "location_locationid_seq", allocationSize = 1)

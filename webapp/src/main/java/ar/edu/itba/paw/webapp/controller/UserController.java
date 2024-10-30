@@ -32,6 +32,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -276,9 +278,20 @@ public class UserController {
     
     @PostMapping("/user/addLocation")
     public ModelAndView addLocation(@RequestParam Long userId, @RequestParam String locationString) {
-		
-		us.addLocation(userId, locationString);
-		
+
+        try {
+            us.addLocation(userId, locationString);
+        } catch (Exception e){
+            ModelAndView errormav = new ModelAndView("/debug");
+            StringWriter sw = new StringWriter();
+            e.printStackTrace(new PrintWriter(sw));
+            String stackTrace = sw.toString();
+
+            errormav.addObject("error", stackTrace);
+            return errormav;
+
+        }
+
 		Optional<User> updatedUser = us.findById(userId);
 		ModelAndView modelAndView = new ModelAndView("redirect:/profile");
 		updatedUser.ifPresent(user -> modelAndView.addObject("loggedUser", user));

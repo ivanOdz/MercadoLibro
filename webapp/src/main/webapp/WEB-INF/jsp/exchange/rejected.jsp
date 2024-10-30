@@ -1,10 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
 
 <!DOCTYPE html>
-<%@include file="/WEB-INF/jsp/head/headers.jsp"%>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
