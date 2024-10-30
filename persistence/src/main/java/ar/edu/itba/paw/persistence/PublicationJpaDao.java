@@ -375,4 +375,21 @@ public class PublicationJpaDao implements PublicationDao {
         em.remove(publication);
     }
 
+    @Override
+    @Transactional
+    public void likePublication(long publicationId, long userId) {
+        Publication publication = em.find(Publication.class, publicationId);
+
+        if(publication.isLikedByUser()){
+            Query query = em.createQuery("SELECT fp.favoritepublicationId FROM FavoritePublication fp WHERE fp.publicationId = :publicationId AND fp.userId = :userId");
+            query.setParameter("publicationId", publicationId);
+            query.setParameter("userId", userId);
+            FavoritePublication fp = em.find(FavoritePublication.class, query.getSingleResult());
+            em.remove(fp);
+        } else {
+            FavoritePublication fp = new FavoritePublication(publicationId, userId);
+            em.persist(fp);
+        }
+    }
+
 }

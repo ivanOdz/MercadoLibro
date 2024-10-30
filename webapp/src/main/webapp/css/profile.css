@@ -24,6 +24,9 @@
 }
 
 .profile-pic {
+	
+	align-content: center;
+	align-self: center;
     width: 150px;
     height: 150px;
     border-radius: 50%;

@@ -136,5 +136,13 @@ public class PublicationController {
         return new ModelAndView("redirect:/my_publications");
     }
 
+    @PostMapping("/like/{publicationId:\\d+}")
+    public ModelAndView likePublication(@PathVariable(name = "publicationId") long publicationId) {
+        User user = loggedUserAdvice.getLoggedUser();
+        ps.likePublication(publicationId, user.getUserId());
+        return new ModelAndView("redirect:/");
+    }
+
+
 
 }

@@ -115,4 +115,9 @@ public class PublicationServiceImpl implements PublicationService {
     public void deletePublication(long publicationId) {
         pubDao.deletePublication(publicationId);
     }
+
+    @Override
+    public void likePublication(long publicationId, long userId) {
+        pubDao.likePublication(publicationId, userId);
+    }
 }
