@@ -111,12 +111,12 @@ public class PublicationController {
 
     @RequestMapping(path = "/my_publications")
     public ModelAndView myPublications(@RequestParam(name = "search", defaultValue = "") String search,
-                                       @RequestParam(name = "is-book-state-filter-active", defaultValue = "false") boolean isBookStateFilterActive,
-                                       @RequestParam(name = "book-state-filter", required = false) BookState bookStateFilter,
-                                       @RequestParam(name = "is-genre-filter-active", defaultValue = "false") boolean isGenreFilterActive,
-                                       @RequestParam(name = "genre-filter", required = false) Genre genreFilter,
-                                       @RequestParam(name = "order", defaultValue = "PUBLICATION_DATE_ASCENDING") SortType sortType,
-                                       @RequestParam(name = "page", defaultValue = "0") int currentPage) {
+                                       @RequestParam(name = "is-book-state-filter-active", defaultValue = "false") String isBookStateFilterActive,
+                                       @RequestParam(name = "book-state-filter", required = false) String bookStateFilter,
+                                       @RequestParam(name = "is-genre-filter-active", defaultValue = "false") String isGenreFilterActive,
+                                       @RequestParam(name = "genre-filter", required = false) String genreFilter,
+                                       @RequestParam(name = "order", defaultValue = "PUBLICATION_DATE_ASCENDING") String sortType,
+                                       @RequestParam(name = "page", defaultValue = "0") String currentPage) {
 //        List<Publication> publications = ps.getPublicationsByUser(loggedUserAdvice.getLoggedUser());
         PaginatedResponse<Publication, ItemFilterMetadata> publications = ps.getMyPaginatedPublications(loggedUserAdvice.getLoggedUser().getUserId(), search, isBookStateFilterActive,
                 bookStateFilter, isGenreFilterActive, genreFilter, sortType, currentPage);
