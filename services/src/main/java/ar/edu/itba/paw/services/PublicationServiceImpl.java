@@ -19,30 +19,29 @@ import javax.transaction.Transactional;
 public class PublicationServiceImpl implements PublicationService {
 
     private final PublicationDao pubDao;
-    private final LocationService locationService;
+//    private final LocationService locationService;
     private final BookStateService bookStateService;
     private final GenreService genreService;
 
-    public PublicationServiceImpl(final PublicationDao pubDao, final LocationService locationService, BookStateService bookStateService, GenreService genreService) {
+    public PublicationServiceImpl(final PublicationDao pubDao, BookStateService bookStateService, GenreService genreService) {
         this.pubDao = pubDao;
-        this.locationService = locationService;
         this.bookStateService = bookStateService;
         this.genreService = genreService;
     }
 
     @Override
     @Transactional
-    public Publication createPublication(long bookId, long userId, String location, PublicationState publicationState) {
-        List<Location> locations = new ArrayList<>();
-        locations.add(locationService.newLocation(location));
-        return pubDao.createPublication(bookId, userId, locations, publicationState);
+    public Publication createPublication(long bookId, long userId, long locationId, PublicationState publicationState) {
+//        List<Location> locations = new ArrayList<>();
+//        locations.add(locationService.newLocation(location));
+        return pubDao.createPublication(bookId, userId, locationId, publicationState);
     }
 
     @Override
     @Transactional
-    public void createPublicationIfNeeded(boolean publish, long bookId, long userId, String location, PublicationState publicationState) {
+    public void createPublicationIfNeeded(boolean publish, long bookId, long userId, long locationId, PublicationState publicationState) {
         if (publish) {
-            createPublication(bookId, userId, location, publicationState);
+            createPublication(bookId, userId, locationId, publicationState);
         }
     }
 

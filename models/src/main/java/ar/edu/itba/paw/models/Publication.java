@@ -31,13 +31,13 @@ public class Publication {
     @Column(name = "publicationdatetime")
     private Timestamp publicationDatetime;
 
-    @ManyToMany
+    @ManyToOne
     @JoinTable(
             name = "publication_location",
             joinColumns = @JoinColumn(name = "publicationid"),
             inverseJoinColumns = @JoinColumn(name = "locationid")
     )
-    private List<Location> locations;
+    private Location location;
 
     @ManyToOne
     @JoinColumn(name = "userid", nullable = false)
@@ -49,12 +49,12 @@ public class Publication {
     @Formula("(SELECT COUNT(*) > 0 FROM favorite_publication fp WHERE fp.publicationid = publicationid AND fp.userid = userid)")
     private Boolean isLikedByUser;
 
-    public Publication(Long publicationId, Book book, User user,PublicationState publicationState, Timestamp publicationDatetime,List<Location> locations) {
+    public Publication(Long publicationId, Book book, User user,PublicationState publicationState, Timestamp publicationDatetime, Location location) {
         this.publicationId = publicationId;
         this.book = book;
         this.publicationState = publicationState;
         this.publicationDatetime = publicationDatetime;
-        this.locations = locations;
+        this.location = location;
         this.user = user;
     }
 
@@ -89,10 +89,11 @@ public class Publication {
     public void setBook(Book book) {
         this.book = book;
     }
-
-    public List<Location> getLocations() {
-        return locations;
+    
+    public void setLocation(Location location) {
+        this.location = location;
     }
+    
     public PublicationState getPublicationState() {
         return publicationState;
     }
@@ -108,14 +109,9 @@ public class Publication {
     public void setPublicationDatetime(Timestamp publicationDatetime) {
         this.publicationDatetime = publicationDatetime;
     }
-
-
-    public void setLocations(List<Location> locations) {
-        this.locations = locations;
-    }
-
-    public void addLocation(Location location) {
-        locations.add(location);
+    
+    public Location getLocation() {
+        return location;
     }
 
     public Integer getLikes() {

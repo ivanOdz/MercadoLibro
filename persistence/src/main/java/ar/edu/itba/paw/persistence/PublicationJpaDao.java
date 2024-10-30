@@ -47,10 +47,13 @@ public class PublicationJpaDao implements PublicationDao {
     }*/
 
     @Override
-    public Publication createPublication(long bookId, long userId, List<Location> locations, PublicationState publicationState) {
+    public Publication createPublication(long bookId, long userId, long locationId, PublicationState publicationState) {
+    	
         Book book = em.find(Book.class, bookId);
         User user = em.find(User.class, userId);
-        final Publication publication = new Publication(null, book, user,publicationState, new Timestamp(new Date().getTime()), locations);
+        Location location = em.find(Location.class, locationId);
+        
+        final Publication publication = new Publication(null, book, user,publicationState, new Timestamp(new Date().getTime()), location);
         em.persist(publication);
         return publication;
     }

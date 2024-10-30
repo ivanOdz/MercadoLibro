@@ -8,7 +8,7 @@ import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 
 public interface ExchangeService {
 
-    void initializeExchange(long bookId, String location, long offererPubId);
+    void initializeExchange(long bookId, long locationId, long offererPubId);
 
     String exchange(int acceptCode, boolean state);
 

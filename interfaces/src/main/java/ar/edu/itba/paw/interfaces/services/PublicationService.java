@@ -13,9 +13,9 @@ import java.util.List;
 
 public interface PublicationService {
 
-    Publication createPublication(long bookId, long userId, String location, PublicationState publicationState);
+    Publication createPublication(long bookId, long userId, long locationId, PublicationState publicationState);
 
-    void createPublicationIfNeeded(boolean publish, long bookId, long userId, String location, PublicationState publicationState);
+    void createPublicationIfNeeded(boolean publish, long bookId, long userId, long locationId, PublicationState publicationState);
 
     void terminatePublication(Publication publication);
 
