@@ -149,7 +149,7 @@ public class BookController {
         }*/
 
         try {
-            publicationService.createPublicationIfNeeded(bookForm.isPublish(), book.getBookId(), user.getUserId(), bookForm.getLocation(), PublicationState.CURRENT);
+            publicationService.createPublicationIfNeeded(bookForm.isPublish(), book.getBookId(), user.getUserId(), bookForm.getLocation().getLocationId(), PublicationState.CURRENT);
         } catch (ApplicationRuntimeException e) {
             LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
             return new ModelAndView("redirect:/400");
@@ -204,7 +204,7 @@ public class BookController {
         }
 
         try {
-            publicationService.createPublicationIfNeeded(bookDetailsForm.isPublish(), book.getBookId(), user.getUserId(), bookDetailsForm.getLocation(), PublicationState.CURRENT);
+            publicationService.createPublicationIfNeeded(bookDetailsForm.isPublish(), book.getBookId(), user.getUserId(), bookDetailsForm.getLocationId(), PublicationState.CURRENT);
         } catch (ApplicationRuntimeException e) {
             LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
             return new ModelAndView("redirect:/400");

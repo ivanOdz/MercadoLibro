@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.form;
 
 import javax.validation.constraints.*;
 
+import ar.edu.itba.paw.models.Location;
 import ar.edu.itba.paw.models.utils.BookDimension;
 import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.models.utils.Genre;
@@ -66,7 +67,7 @@ public class BookForm {
 
     private boolean publish = false;
 
-    private String location = null;
+    private Location location = null;
 
 
     // Getters
@@ -162,7 +163,7 @@ public class BookForm {
         return publish;
     }
 
-    public String getLocation() {
+    public Location getLocation() {
         return location;
     }
 
@@ -246,7 +247,7 @@ public class BookForm {
         this.publish = publish;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(Location location) {
         this.location = location;
     }
 }
