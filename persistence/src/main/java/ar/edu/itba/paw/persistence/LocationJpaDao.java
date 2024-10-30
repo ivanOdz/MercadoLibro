@@ -14,6 +14,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.sql.DataSource;
+import javax.transaction.Transactional;
+
 import java.sql.Types;
 import java.util.*;
 
@@ -55,6 +57,7 @@ public class LocationJpaDao implements LocationDao {
     }
 
     @Override
+    @Transactional
     public Location newLocation(String locationString) {
         final Location location = new Location(null, locationString);
 
