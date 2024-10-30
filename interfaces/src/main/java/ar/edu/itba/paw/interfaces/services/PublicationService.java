@@ -30,4 +30,6 @@ public interface PublicationService {
     PaginatedResponse<Publication, ItemFilterMetadata> getMyPaginatedPublications(long userId, String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, SortType sortType, int currentPage);
 
     void deletePublication(long publicationId);
+
+    void likePublication(long publicationId, long userId);
 }
