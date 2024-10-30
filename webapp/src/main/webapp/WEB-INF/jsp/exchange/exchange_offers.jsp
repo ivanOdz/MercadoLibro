@@ -27,6 +27,8 @@
 
 <body class="main">
 
+<c:url var="submitReview" value="/submitReview"/>
+
 <navbar_wo_search/>
 
 <div class="uk-grid">
@@ -887,7 +889,7 @@
                                 <div class="uk-modal-dialog uk-modal-body">
                                     <h2 class="uk-modal-title"><spring:message code="exchange.add_review.title"/></h2>
 
-                                    <form:form action="/submitReview" method="post" modelAttribute="userReviewForm">
+                                    <form:form action="${submitReview}" method="post" modelAttribute="userReviewForm">
 
                                         <div class="form-group uk-margin-top uk-margin-bottom">
                                             <label><spring:message code="review.rating.label"/></label>

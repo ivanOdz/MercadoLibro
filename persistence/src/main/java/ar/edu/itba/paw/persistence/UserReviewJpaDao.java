@@ -11,17 +11,11 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static ar.edu.itba.paw.models.utils.Constants.PROFILE_PAGE_SIZE;
 
@@ -97,8 +91,12 @@ public class UserReviewJpaDao implements UserReviewDao {
         TypedQuery<UserReview> query = em.createQuery(queryStr, UserReview.class);
         query.setParameter("exchangeId", exchangeId);
         query.setParameter("userId", userId);
+        try {
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
 
-        return query.getSingleResult();
     }
 
     @Override
@@ -108,7 +106,11 @@ public class UserReviewJpaDao implements UserReviewDao {
         TypedQuery<UserReview> query = em.createQuery(stringQuery, UserReview.class);
         query.setParameter("exchangeId", exchangeId);
         query.setParameter("userId", userId);
-        return query.getSingleResult();
+        try {
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     private Rating getRatingFromUserId(String stringQuery, long userId) {

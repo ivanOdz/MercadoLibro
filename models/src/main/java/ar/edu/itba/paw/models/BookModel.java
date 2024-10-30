@@ -57,8 +57,9 @@ public class BookModel {
     @Column(name = "ishardcover")
     private Boolean isHardcover;
 
-    @Column(name = "imageid")
-    private Long imageId;
+    @OneToOne
+    @JoinColumn(name = "imageid")
+    private Image image;
 
     @ManyToMany
     @JoinTable(
@@ -78,7 +79,7 @@ public class BookModel {
     }
 
     public BookModel(Long bookModelId, String isbn, String title, String editorial, String description, Genre genre, int edition, int weight, int pages, Language bookLanguage,
-                     BookDimension dimension, short publicationYear, boolean isPocketEdition, boolean isHardcover, List<Author> authors, Long imageId) {
+                     BookDimension dimension, short publicationYear, boolean isPocketEdition, boolean isHardcover, List<Author> authors, Image image) {
         this.bookModelId = bookModelId;
         this.isbn = isbn;
         this.title = title;
@@ -94,15 +95,15 @@ public class BookModel {
         this.isPocketEdition = isPocketEdition;
         this.isHardcover = isHardcover;
         this.authors = authors;
-        this.imageId = imageId;
+        this.image = image;
     }
 
     public List<Author> getAuthors() {
         return authors;
     }
 
-    public Long getImageId() {
-        return imageId;
+    public Image getImage() {
+        return image;
     }
 
     public Long getBookModelId() {
@@ -217,10 +218,9 @@ public class BookModel {
         isHardcover = hardcover;
     }
 
-    public void setImageId(Long imageId) {
-        this.imageId = imageId;
+    public void setImage(Image image) {
+        this.image = image;
     }
-
     public void setAuthors(List<Author> authors) {
         this.authors = authors;
     }

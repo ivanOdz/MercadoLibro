@@ -23,6 +23,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.*;
 
 @Controller
@@ -268,6 +270,16 @@ public class ExchangeController {
         boolean success;
         try {
             success = userReviewService.createUserReview(exchangeId, loggedUserAdvice.getLoggedUser().getUserId(), reviewDescription, userReviewRating);
+        }catch (Exception e){
+            ModelAndView errormav = new ModelAndView("/debug");
+            StringWriter sw = new StringWriter();
+            e.printStackTrace(new PrintWriter(sw));
+            String stackTrace = sw.toString();
+
+            errormav.addObject("error", stackTrace);
+            return errormav;
+        }
+        try {
         } catch (BadRequestException e) {
             LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
             return new ModelAndView("redirect:/400");

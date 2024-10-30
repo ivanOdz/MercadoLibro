@@ -115,9 +115,9 @@
                             <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-border-rounded custom-link">
                                 <figure class="uk-margin-bottom">
                                     <c:choose>
-                                        <c:when test="${card.imageId != null}">
+                                        <c:when test="${!card.image.isImageNull}">
                                             <img class="book-image"
-                                                 src="<c:url value='/images/${card.imageId}'/>"
+                                                 src="<c:url value='/images/${card.image.imageId}'/>"
                                                  alt="bookImage"/>
                                         </c:when>
                                         <c:otherwise>
