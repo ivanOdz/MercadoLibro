@@ -44,7 +44,6 @@ CREATE TABLE IF NOT EXISTS book (
     ownerId                     INTEGER NOT NULL REFERENCES users(userId) ON DELETE CASCADE,
     bookState                   INTEGER NOT NULL,
     exchangesQty                INTEGER NOT NULL
---    rating              INTEGER  eliminado, paso a nueva tabla rating
 );
 
 
@@ -59,11 +58,12 @@ CREATE TABLE IF NOT EXISTS book_image (
 
 -- Tabla de ratings
 CREATE TABLE IF NOT EXISTS book_rating (
-      userId                    INTEGER NOT NULL REFERENCES users(userId) ON DELETE CASCADE,
-      bookModelId               INTEGER NOT NULL REFERENCES book_model(bookModelId) ON DELETE CASCADE,
-      rating                    INTEGER,
-      PRIMARY KEY(userId, bookModelId)
+       ratingId     SERIAL PRIMARY KEY,
+       userId       INTEGER NOT NULL REFERENCES users(userId) ON DELETE CASCADE,
+       bookModelId  INTEGER NOT NULL REFERENCES book_model(bookModelId) ON DELETE CASCADE,
+       rating       INTEGER
 );
+
 
 -- Tabla de autores
 CREATE TABLE IF NOT EXISTS author (
@@ -127,6 +127,15 @@ CREATE TABLE IF NOT EXISTS publication_location (
       FOREIGN KEY (locationId) REFERENCES location(locationId) ON DELETE SET NULL
 );
 
+-- Tabla de ubicaciones de los usuarios
+
+-- Tabla de ubicaciones de los usuarios
+CREATE TABLE IF NOT EXISTS user_location (
+         userLocationId  SERIAL PRIMARY KEY,
+         userId          INTEGER NOT NULL REFERENCES users(userId) ON DELETE CASCADE,
+         locationId      INTEGER NOT NULL REFERENCES location(locationId) ON DELETE CASCADE,
+         UNIQUE (userId, locationId)
+)
 
 
 
