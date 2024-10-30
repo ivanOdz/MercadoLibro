@@ -79,6 +79,7 @@ public class BookController {
 
 
         User loggeduser = loggedUserAdvice.getLoggedUser();
+        
         if (loggeduser == null) {
             String message = messageSource.getMessage("error.unauthorized", null, LocaleContextHolder.getLocale());
             throw new UserNotUnauthorizedException(message);
@@ -87,8 +88,10 @@ public class BookController {
         ModelAndView mav = new ModelAndView("book/book_home");
         PaginatedResponse<Book, ItemFilterMetadata> books = bookService.getPaginatedBooks(search, isBookStateFilterActive,
                 bookStateFilter, isGenreFilterActive, genreFilter, currentPage, loggedUserAdvice.getLoggedUser().getUserId(), sortType);
+        
         mav.addObject("books", books);
-
+        mav.addObject("user", loggeduser);
+        
         return mav;
     }
 

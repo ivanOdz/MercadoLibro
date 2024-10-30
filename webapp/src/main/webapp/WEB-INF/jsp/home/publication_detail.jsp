@@ -61,7 +61,7 @@
                 </a>
             </div>
             <div style="display: grid; grid-template-columns: repeat(3, 1fr);">
-                <div style="grid-column: 1 / 2; display: grid;justify-content: center">
+                <div style="grid-column: 1 / 2; display: grid; justify-content: center">
                     <c:choose>
                         <c:when test="${not empty publication.book.images}">
                             <img id="currentImage"

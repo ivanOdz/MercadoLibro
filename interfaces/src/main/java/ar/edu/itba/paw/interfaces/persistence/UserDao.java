@@ -1,9 +1,11 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
+import ar.edu.itba.paw.models.Location;
 import ar.edu.itba.paw.models.User;
 import java.util.Optional;
 
 public interface UserDao {
+	
     Optional<User> findById(long id);
 
     User createUser(String username, String mail, String password, String language, int verificationCode);
@@ -28,5 +30,8 @@ public interface UserDao {
     //Double getUserRating(long userId);
 
     void setUserLanguage(long userId, String language);
-
+    
+    public void setUserFavoriteLocation(long userId, Location favoriteLocation);
+    
+    public void addUserLocation(long userId, Location location);
 }

@@ -255,15 +255,14 @@
         </div>
 
         <c:if test="${not empty publications.data}">
-          <div class="uk-grid-match" uk-grid>
+          <div>
             <c:forEach var="card" items="${publications.data}">
-              <div class="uk-width-1-1">
-                <a href="<c:url value='publications/${card.publicationId}' />"
-                   class="uk-card uk-card-default uk-card-hover uk-card-body uk-border-rounded custom-link uk-flex uk-flex-middle"
-                   style="padding: 1rem !important;">
+              <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-border-rounded custom-link"
+                   style="display: grid; grid-template-columns: repeat(4, 1fr); cursor: pointer;"
+                   onclick="window.location.href='<c:url value='publications/${card.publicationId}' />'">
 
                   <!-- Contenedor de la imagen (Columna izquierda) -->
-                  <div class="uk-width-1-4 uk-flex uk-flex-center">
+                  <div style="grid-column: 1 / 2; justify-self: self-start;">
                     <figure class="uk-margin-remove">
                       <c:choose>
                         <c:when test="${card.book.images[0] != null}">
@@ -279,9 +278,7 @@
                     </figure>
                   </div>
 
-                  <!-- Contenedor del texto (Columna derecha) -->
-                  <div class="uk-width-3-4 uk-margin-small-left" style="width:10rem;">
-                    <!-- Título del libro -->
+                  <div style="grid-column: 2 / 3; justify-self: self-start;">
                     <h5 class="uk-card-title custom-link uk-margin-remove-bottom">
                       <c:out value="${card.book.bookModel.title}"/>
                     </h5>
@@ -303,41 +300,42 @@
                                         </span>
                     </div>
                   </div>
+                <!-- Botones de acción (Fuera del enlace principal) -->
+                <div style="grid-column: 3 / 5; justify-self: center; align-self: center">
+                  <div class="star-rating uk-flex uk-flex-middle">
+                    <p class="small-gray-text custom-link" style="display: inline; margin-bottom: 0; margin-right:1rem;">
+                      <c:out value="${card.book.bookModel.averageRating}"/>
+                    </p>
+                    <c:forEach var="i" begin="1" end="5">
+                      <c:choose>
+                        <c:when test="${i <= card.book.bookModel.averageRating}">
+                          <i class="material-icons yellow-text">star</i>
+                        </c:when>
+                        <c:when test="${i - 0.5 <= card.book.bookModel.averageRating && card.book.bookModel.averageRating < i}">
+                          <i class="material-icons yellow-text">star_half</i>
+                        </c:when>
+                        <c:otherwise>
+                          <i class="material-icons grey-text">star_border</i>
+                        </c:otherwise>
+                      </c:choose>
+                    </c:forEach>
 
-                  <div class="row-container" style="width:15rem; padding-left:10rem;">
-                    <div class="star-rating uk-flex uk-flex-middle">
-                      <p class="small-gray-text custom-link" style="display: inline; margin-bottom: 0; margin-right:1rem;">
-                        <c:out value="${card.book.bookModel.averageRating}"/>
-                      </p>
-                      <c:forEach var="i" begin="1" end="5">
-                        <c:choose>
-                          <c:when test="${i <= card.book.bookModel.averageRating}">
-                            <i class="material-icons yellow-text">star</i>
-                          </c:when>
-                          <c:when test="${i - 0.5 <= card.book.bookModel.averageRating && card.book.bookModel.averageRating < i}">
-                            <i class="material-icons yellow-text">star_half</i>
-                          </c:when>
-                          <c:otherwise>
-                            <i class="material-icons grey-text">star_border</i>
-                          </c:otherwise>
-                        </c:choose>
-                      </c:forEach>
-
-                      <p class="small-gray-text custom-link" style="display: inline; margin-left:1rem;">(<c:out
-                              value="${card.book.bookModel.ratingCount}"/>)
-                      </p>
-                    </div>
+                    <p class="small-gray-text custom-link" style="display: inline; margin-left:1rem;">(<c:out
+                            value="${card.book.bookModel.ratingCount}"/>)
+                    </p>
                   </div>
-                  <a href="<c:url value='publications/${card.publicationId}/delete' />"
-                     class="uk-button uk-button-primary uk-button-small uk-margin-small-right">
-                    <spring:message code="publications.delete"/>
-                  </a>
-                  <a href="<c:url value='publications/${card.publicationId}/edit' />"
-                     class="uk-button uk-button-primary uk-button-small uk-margin-small-right">
-                    <spring:message code="publications.edit"/>
-                  </a>
-                </a>
+                  <div>
+                    <a class="uk-button uk-button-small uk-button-danger" href="<c:url value='publications/${card.publicationId}/delete' />">
+                      <spring:message code="publications.delete"/>
+                    </a>
+<%--                    <a href="<c:url value='publications/${card.publicationId}/edit' />" class="uk-button uk-button-primary uk-button-small">--%>
+<%--                      <spring:message code="publications.edit"/>--%>
+<%--                    </a>--%>
+                  </div>
+                </div>
               </div>
+
+
             </c:forEach>
           </div>
         </c:if>
