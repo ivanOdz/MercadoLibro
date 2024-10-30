@@ -160,7 +160,7 @@
 							    </c:forEach>
 							</form:select>
                         </label>
-                        
+
 <%--                         <form:errors path="locationId" element="p" cssStyle="color: red;" /> --%>
                         <p id="location-error" style="color: red;"></p>
                     </div>

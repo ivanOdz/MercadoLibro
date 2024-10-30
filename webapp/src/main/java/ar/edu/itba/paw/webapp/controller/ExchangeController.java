@@ -149,6 +149,7 @@ public class ExchangeController {
     	
         final ModelAndView mav = new ModelAndView("/exchange/solicit_exchange");
         Publication publication;
+        User user = loggedUserAdvice.getLoggedUser();
         
         try {
             publication = publicationService.getPublicationByPublicationId(publicationId);
@@ -163,6 +164,7 @@ public class ExchangeController {
         //  no hace falta realizar una excepción sino HAY QUE HACER UNA EXCEPCIÓN
         availableBooks = bookService.getAvailableBooksByUser(loggedUserAdvice.getLoggedUser());
 
+        mav.addObject("user", user);
         mav.addObject("availableBooks", availableBooks);
         mav.addObject("exchangeForm", exchangeForm);
         mav.addObject("publication", publication);

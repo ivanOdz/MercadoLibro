@@ -86,7 +86,7 @@
                                                      alt="Book Image" class="uk-border-circle" width="40" height="40">
                                             </c:when>
                                             <c:otherwise>
-                                                <img class="book-image"
+                                                <img class="uk-border-circle" width="40" height="40"
                                                      src="<c:url value='/images/book.jpg' />" alt="book"/>
                                             </c:otherwise>
                                         </c:choose>
@@ -109,12 +109,16 @@
 
         <div class="uk-inline">
             <label class="form-group">
-                <spring:message code="book.set.location"/>
                 <form:input type="hidden" path="bookId" value="${availableBook.bookId}" class="uk-input"/>
-                <form:input path="location" type="text" class="uk-input"/>
+                
+                <spring:message code="book.set.location"/>
+				<form:select path="locationId" class="uk-select no-arrow-select" aria-label="Not clickable icon" style="width: 90%">
+				    <c:forEach var="userLocation" items="${user.userLocations}">
+						<form:options items="${user.userLocations}" itemValue="locationId" itemLabel="locationString"/>
+				    </c:forEach>
+				</form:select>
             </label>
             <form:errors path="bookId" element="p" cssStyle="color: red;"/>
-            <form:errors path="location" element="p" cssStyle="color: red;"/>
         </div>
 
         <div class="form-container" style="margin-top: 5%; margin-left: 35%; margin-bottom: 2%;">
