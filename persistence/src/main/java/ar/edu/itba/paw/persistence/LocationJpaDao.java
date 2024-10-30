@@ -41,6 +41,12 @@ public class LocationJpaDao implements LocationDao {
     }
 
     @Override
+    public Optional<Location> findById(long locationId) {
+
+    	return Optional.ofNullable(em.find(Location.class, locationId));
+    }
+    
+    @Override
     public Set<Location> getLocationByPublicationId(long pubId) {
         TypedQuery<Location> query = em.createQuery(
                 "SELECT l FROM Location l JOIN l.publications p WHERE p.publicationId = :pubId", Location.class);

@@ -7,6 +7,8 @@ import ar.edu.itba.paw.models.UserReview;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.web.bind.annotation.RequestParam;
+
 public interface UserService {
 
     Optional<User> findById(long id);
@@ -36,5 +38,8 @@ public interface UserService {
     //Double getUserRating(long userId);
 
     void setUserLanguage(User user, String language);
-
+    
+    public void addLocation(Long userId, String locationString);
+    
+    public void removeLocation(Long userId, Long locationId);
 }

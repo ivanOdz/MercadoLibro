@@ -256,6 +256,7 @@ public class UserController {
 
     @RequestMapping("/language")
     public ModelAndView changeLanguage(@RequestParam(name = "lang") String lang, HttpServletRequest request) {
+    	
         Locale locale = Locale.forLanguageTag(lang);
         request.getSession().setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, locale);
 
@@ -273,31 +274,19 @@ public class UserController {
         return new ModelAndView("redirect:/profile");
     }
     
-    @PostMapping("/user/updateLocations")
-    public String updateLocations(@RequestParam("locations") List<String> locations) {
+    @PostMapping("/user/addLocation")
+    public ModelAndView addLocation(@RequestParam Long userId, @RequestParam String locationString) {
+    	
+        us.addLocation(userId, locationString);
         
-        User user = loggedUserAdvice.getLoggedUser();
-        
-        for (String locationString : locations) {		// Esto hay que meterlo en un sevice
-        	
-            boolean exists = false;
-
-            for (Location existingLocation : user.getLocations()) {
-            	
-                if (existingLocation.getLocationString().equals(locationString)) {
-                    exists = true;
-                    break;
-                }
-            }
-
-            if (!exists) {
-            	
-                Location newLocation = new Location(null, locationString);
-                user.addLocation(newLocation);
-            }
-        }
-        
-        return "redirect:/profile";
+        return new ModelAndView("redirect:/profile");
     }
 
+    @PostMapping("/user/removeLocation")
+    public ModelAndView removeLocation(@RequestParam Long userId, @RequestParam Long locationId) {
+    	
+        us.removeLocation(userId, locationId);
+        
+        return new ModelAndView("redirect:/profile");
+    }
 }

@@ -125,38 +125,24 @@
                     <h3 class="uk-h5"><c:out value="${loggedUser.favoriteLocation}"/></h3>
                 </div>
 				
-				<!-- Locations -->
-				<c:url var="locationUpdateUrl" value="/user/updateLocations"/>
-				
-				<form id="locations-form" action="${locationUpdateUrl}" method="post">
-				
-					<div id="locations-container" class="uk-container uk-margin-top uk-margin-bottom">
-						<label class="form-group">Locations</label>
-						<c:choose>
-						
-							<c:when test="${empty loggedUser.locations}">
-								<span>No locations :(</span>
-							</c:when>
-							
-							<c:otherwise>
-								<c:forEach var="userLocation" items="${loggedUser.locations}" varStatus="status">
-									<div class="location-item"><!-- le falta CSS -->>
-										<input class="uk-input" type="text" name="locations" value="${userLocation.locationString}" />
-										<button class="uk-button" type="button" onclick="removeLocationField(this)">
-											<span uk-icon="icon: close"></span>
-										</button>
-									</div>
-								</c:forEach>
-							</c:otherwise>
-							
-						</c:choose>
-						
-						<button class="uk-button uk-margin-right" type="button" onclick="addLocationField()">Add Location</button>
+				<c:forEach var="userLocation" items="${loggedUser.locations}">
+					<div class="location-item">
+					<form class="remove-location-form" action="<c:url value='/user/removeLocation' />" method="post" style="display: inline;">
+						<input type="hidden" name="userId" value="${loggedUser.userId}" />
+						<input type="hidden" name="locationId" value="${userLocation.locationId}" />
+						<input class="uk-input" type="text" name="locationString" value="${userLocation.locationString}" readonly />
+						<button type="submit" class="uk-button remove-location-btn" title="Remove Location">
+							<span uk-icon="icon: close"></span>
+						</button>
+					</form>
 					</div>
-					
-					<button class="uk-button uk-button-primary" type="submit">Save</button>
-				</form>
+				</c:forEach>
 
+				<form id="add-location-form" action="<c:url value='/user/addLocation' />" method="post">
+					<input type="hidden" name="userId" value="${loggedUser.userId}" />
+					<input id="new-location-input" type="text" name="locationString" placeholder="New Location" required />
+					<button id="add-location-btn" type="submit" class="uk-button uk-button-primary">Add Location</button>
+				</form>
 
                 <button style="margin: 5% 0 5% 0;" class="uk-button uk-button-default" type="button"><spring:message code="language"/></button>
                 <div uk-dropdown>
@@ -328,34 +314,36 @@
         document.getElementById('change-username-form').style.display = 'none';
     }
 
-	function addLocationField() {
-
-		const newLocationDiv = document.createElement('div');
+// 	document.addEventListener("DOMContentLoaded", function() {
 		
-		newLocationDiv.classList.add('location-item');
+// 		const addLocationForm = document.getElementById("add-location-form");
+// 		const newLocationInput = document.getElementById("new-location-input");
+// 		const addLocationBtn = document.getElementById("add-location-btn");
+// 		const removeLocationForms = document.querySelectorAll(".remove-location-form");
 		
-		const newLocationInput = document.createElement('input');
+// 		addLocationForm.addEventListener("submit", function() {
+			
+// 		newLocationInput.disabled = true;
+// 		addLocationBtn.disabled = true;
 		
-		newLocationInput.type = 'text';
-		newLocationInput.classList.add('uk-input');
-		newLocationInput.name = 'locations';
-		newLocationInput.placeholder = 'New Location';
-		newLocationDiv.appendChild(newLocationInput);
-		
-		const removeButton = document.createElement('button');
-		
-		removeButton.classList.add('uk-button');
-		removeButton.type = 'button';
-		removeButton.innerHTML = '<span uk-icon="icon: close"></span>';
-		removeButton.onclick = () => removeLocationField(newLocationDiv); 
-		newLocationDiv.appendChild(removeButton);
-
-		document.getElementById('locations-container').appendChild(newLocationDiv);
-	}
+// 		removeLocationForms.forEach(form => {
+// 				const removeBtn = form.querySelector(".remove-location-btn");
+// 				removeBtn.disabled = true;
+// 			});
+// 		});
 	
-	function removeLocationField(locationElement) {
-	    locationElement.remove();
-	}
+// 		removeLocationForms.forEach(form => {
+// 			form.addEventListener("submit", function() {
+// 				newLocationInput.disabled = true;
+// 				addLocationBtn.disabled = true;
+				
+// 				removeLocationForms.forEach(f => {
+// 					const removeBtn = f.querySelector(".remove-location-btn");
+// 					removeBtn.disabled = true;
+// 				});
+// 			});
+// 		});
+// 	});
     
 </script>
 
