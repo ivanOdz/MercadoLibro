@@ -35,7 +35,12 @@ CREATE TABLE IF NOT EXISTS book_model (
       imageId                   INTEGER REFERENCES image(imageId)
 );
 
-
+-- Relación publicacion y usuario que le dio <3
+CREATE TABLE IF NOT EXISTS favorite_publication (
+    publicationId          INTEGER NOT NULL REFERENCES publication(publicationId) ON DELETE CASCADE,
+    userId                 INTEGER NOT NULL REFERENCES users(userId) ON DELETE CASCADE,
+    PRIMARY KEY (publicationId, userId)
+);
 
 -- Tabla de libros
 CREATE TABLE IF NOT EXISTS book (
