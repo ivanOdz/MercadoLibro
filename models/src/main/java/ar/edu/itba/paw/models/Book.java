@@ -38,7 +38,6 @@ public class Book {
 	@OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	private List<BookImage> images;
 
-
 	public Book(){
 		// only for JPA
 	}
