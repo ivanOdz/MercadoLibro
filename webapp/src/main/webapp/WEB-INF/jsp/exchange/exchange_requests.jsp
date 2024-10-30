@@ -772,7 +772,6 @@
                                                  '${data.isReviewable}')"
                                          uk-grid>
 
-
                                         <div style="padding: 0">
                                             <c:choose>
                                                 <c:when test="${!empty data.offerer.book.images && !data.offerer.book.images[0].image.isImageNull}">
