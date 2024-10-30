@@ -42,8 +42,11 @@ public enum Genre {
     }
 	
 	public static Genre fromInt(int i) {
-		
-		return Genre.values()[i];
+		try {
+			return Genre.values()[i];
+		} catch (ArrayIndexOutOfBoundsException e) {
+			return null;
+		}
 	}
 	
 	public int getValue() {
@@ -55,4 +58,14 @@ public enum Genre {
 		
 		return "genre." + name();
 	}
+
+	public static Genre fromString(String genreFilter) {
+		try {
+			int intValue = Integer.parseInt(genreFilter);
+			return Genre.fromInt(intValue);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
 }

@@ -19,7 +19,7 @@ import javax.persistence.TypedQuery;
 import java.sql.Timestamp;
 import java.util.*;
 
-import static ar.edu.itba.paw.models.utils.Constants.PUBLICATIONS_PAGE_SIZE;
+import static ar.edu.itba.paw.models.utils.Constants.*;
 
 @Primary
 @Repository
@@ -75,10 +75,22 @@ public class PublicationJpaDao implements PublicationDao {
     }
 
     @Override
-    public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, SortType sortType, int currentPage) {
-        if(currentPage < 0){
-            currentPage = 0;
+    public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, String sortType, String currentPage) {
+        int page;
+        try {
+            page = Integer.parseInt(currentPage);
+            if (page < 0) {
+                page = 0;
+            }
+        } catch (NumberFormatException e) {
+            page = 0;
         }
+
+        SortType sort = SortType.fromString(sortType);
+        if(sort == null){
+            sort = DEFAULT_PUBLICATION_SORT_TYPE;
+        }
+
 
         StringBuilder nativeQueryString = new StringBuilder(
                 "SELECT p.publicationid " +
@@ -96,7 +108,7 @@ public class PublicationJpaDao implements PublicationDao {
             nativeQueryString.append("AND b.bookState = :bookState ");
         }
 
-        switch (sortType) {
+        switch (sort) {
             case RATING_ASCENDING:
                 nativeQueryString.append(" ORDER BY rating ASC");
                 break;
@@ -132,14 +144,14 @@ public class PublicationJpaDao implements PublicationDao {
         }
 
         nativeQuery.setMaxResults(PUBLICATIONS_PAGE_SIZE);
-        nativeQuery.setFirstResult(currentPage * PUBLICATIONS_PAGE_SIZE);
+        nativeQuery.setFirstResult(page * PUBLICATIONS_PAGE_SIZE);
 
         @SuppressWarnings("unchecked")
         List<Long> publicationIds = nativeQuery.getResultList().stream().mapToLong(n -> ((Number) n).longValue()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
 
 
         String jpqlQuery = "FROM Publication p WHERE p.publicationId IN (:ids) ";
-        switch (sortType) {
+        switch (sort) {
             case RATING_ASCENDING:
                 jpqlQuery += "ORDER BY p.book.bookModel.averageRating ASC";
                 break;
@@ -164,7 +176,7 @@ public class PublicationJpaDao implements PublicationDao {
 
         int totalResults = getTotalResultsByBook(safeSearch, isGenreFilterActive, genreFilter, isBookStateFilterActive, bookStateFilter);
 
-        return new PaginatedResponse<>(query.getResultList(), new ItemFilterMetadata(currentPage, PUBLICATIONS_PAGE_SIZE, totalResults, search, isGenreFilterActive, genreFilter, sortType, null, isBookStateFilterActive, bookStateFilter, null));
+        return new PaginatedResponse<>(query.getResultList(), new ItemFilterMetadata(page, PUBLICATIONS_PAGE_SIZE, totalResults, search, isGenreFilterActive, genreFilter, sort, null, isBookStateFilterActive, bookStateFilter, null));
     }
 
     @Override

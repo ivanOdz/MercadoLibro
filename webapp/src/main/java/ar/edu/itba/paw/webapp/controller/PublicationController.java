@@ -45,12 +45,12 @@ public class PublicationController {
 
     @RequestMapping("/")
     public ModelAndView index(@RequestParam(name = "search", defaultValue = "") String search,
-                              @RequestParam(name = "is-book-state-filter-active", defaultValue = "false") boolean isBookStateFilterActive,
-                              @RequestParam(name = "book-state-filter", required = false) BookState bookStateFilter,
-                              @RequestParam(name = "is-genre-filter-active", defaultValue = "false") boolean isGenreFilterActive,
-                              @RequestParam(name = "genre-filter", required = false) Genre genreFilter,
-                              @RequestParam(name = "order", defaultValue = "PUBLICATION_DATE_ASCENDING") SortType sortType,
-                              @RequestParam(name = "page", defaultValue = "0") int currentPage) {
+                              @RequestParam(name = "is-book-state-filter-active", defaultValue = "false") String isBookStateFilterActive,
+                              @RequestParam(name = "book-state-filter", required = false) String bookStateFilter,
+                              @RequestParam(name = "is-genre-filter-active", defaultValue = "false") String isGenreFilterActive,
+                              @RequestParam(name = "genre-filter", required = false) String genreFilter,
+                              @RequestParam(name = "order", defaultValue = "PUBLICATION_DATE_ASCENDING") String sortType,
+                              @RequestParam(name = "page", defaultValue = "0") String currentPage) {
 
         final ModelAndView mav = new ModelAndView("home/publications");
         PaginatedResponse<Publication, ItemFilterMetadata> publications = ps.getPaginatedPublications(search, isBookStateFilterActive,
