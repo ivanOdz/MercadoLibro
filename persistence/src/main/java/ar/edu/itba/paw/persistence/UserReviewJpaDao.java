@@ -128,13 +128,13 @@ public class UserReviewJpaDao implements UserReviewDao {
 
     @Override
     public Rating getUserRatingEarned(long userId) {
-        String stringQuery = "SELECT COALESCE(AVG(ur.reviewRating), 5.0), COUNT(ur.reviewRating) FROM user_review ur WHERE ur.subjectId = :userId";
+        String stringQuery = "SELECT COALESCE(AVG(ur.userreviewRating), 5.0), COUNT(ur.userreviewRating) FROM user_review ur WHERE ur.subjectId = :userId";
         return getRatingFromUserId(stringQuery, userId);
     }
 
     @Override
     public Rating getUserRatingGiven(long userId) {
-        String stringQuery = "SELECT COALESCE(AVG(ur.reviewRating), 5.0) AS averageRating, COUNT(ur.reviewRating) AS countRating FROM user_review ur WHERE ur.reviewerId = :userId";
+        String stringQuery = "SELECT COALESCE(AVG(ur.userreviewRating), 5.0) AS averageRating, COUNT(ur.userreviewRating) AS countRating FROM user_review ur WHERE ur.reviewerId = :userId";
         return getRatingFromUserId(stringQuery, userId);
     }
 }
