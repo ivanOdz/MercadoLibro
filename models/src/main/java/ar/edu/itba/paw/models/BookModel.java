@@ -34,13 +34,13 @@ public class BookModel {
     private Genre genre;
 
     @Column(name = "edition")
-    private int edition;
+    private Integer edition;
 
     @Column(name = "weight")
-    private int weight;
+    private Integer weight;
 
     @Column(name = "pages")
-    private int pages;
+    private Integer pages;
 
     @Enumerated(EnumType.STRING)
     private Language bookLanguage;
@@ -49,13 +49,13 @@ public class BookModel {
     private BookDimension dimension;
 
     @Column(name = "publicationyear")
-    private short publicationYear;
+    private Short publicationYear;
 
     @Column(name = "ispocketedition")
-    private boolean isPocketEdition;
+    private Boolean isPocketEdition;
 
     @Column(name = "ishardcover")
-    private boolean isHardcover;
+    private Boolean isHardcover;
 
     @Column(name = "imageid")
     private Long imageId;
