@@ -75,7 +75,7 @@ public class PublicationJpaDao implements PublicationDao {
     }
 
     @Override
-    public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, SortType sortType, int currentPage) {
+    public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(Long userId,String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, SortType sortType, int currentPage) {
         if(currentPage < 0){
             currentPage = 0;
         }
@@ -87,6 +87,10 @@ public class PublicationJpaDao implements PublicationDao {
                         "JOIN book_model bm ON bm.bookModelId = b.bookModelId " +
                         "WHERE p.publicationState = :publicationState AND LOWER(bm.title) LIKE LOWER(:safeSearch) ESCAPE '\\' "
         );
+
+        if(userId!=null){
+            nativeQueryString.append("AND p.userId = :userId ");
+        }
 
         if (isGenreFilterActive) {
             nativeQueryString.append("AND bm.genre = :genre ");
@@ -120,6 +124,9 @@ public class PublicationJpaDao implements PublicationDao {
 
         nativeQuery.setParameter("publicationState", PublicationState.CURRENT.toString());
 
+        if (userId != null) {
+            nativeQuery.setParameter("userId", userId);
+        }
         String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
         nativeQuery.setParameter("safeSearch", "%" + safeSearch.toLowerCase() + "%");
 
@@ -162,7 +169,7 @@ public class PublicationJpaDao implements PublicationDao {
         TypedQuery<Publication> query = em.createQuery(jpqlQuery, Publication.class);
         query.setParameter("ids",publicationIds);
 
-        int totalResults = getTotalResultsByBook(safeSearch, isGenreFilterActive, genreFilter, isBookStateFilterActive, bookStateFilter);
+        int totalResults = getTotalResultsByBook(userId, safeSearch, isGenreFilterActive, genreFilter, isBookStateFilterActive, bookStateFilter);
 
         return new PaginatedResponse<>(query.getResultList(), new ItemFilterMetadata(currentPage, PUBLICATIONS_PAGE_SIZE, totalResults, search, isGenreFilterActive, genreFilter, sortType, null, isBookStateFilterActive, bookStateFilter, null));
     }
@@ -178,12 +185,16 @@ public class PublicationJpaDao implements PublicationDao {
     }
 
     @Override
-    public List<GenreWrapper> getGenreQtyByPublication(String search, boolean isBookStateFilterActive, BookState bookStateFilter) {
+    public List<GenreWrapper> getGenreQtyByPublication(Long userId, String search, boolean isBookStateFilterActive, BookState bookStateFilter) {
         StringBuilder sqlQuery =  new StringBuilder("SELECT bm.genre, COUNT(*) AS genreCount " +
                         "FROM publication p " +
                         "JOIN book b ON p.bookId = b.bookId " +
                         "JOIN book_model bm ON b.bookModelId = bm.bookModelId " +
                         "WHERE p.publicationState = :publicationState AND LOWER(bm.title) LIKE LOWER(:safeSearch) ESCAPE '\\' ");
+
+        if(userId!=null){
+            sqlQuery.append("AND p.userId = :userId ");
+        }
 
         if(isBookStateFilterActive){
             sqlQuery.append("AND b.bookState = :bookState ");
@@ -194,6 +205,10 @@ public class PublicationJpaDao implements PublicationDao {
         Query query = em.createNativeQuery(sqlQuery.toString());
 
         query.setParameter("publicationState", PublicationState.CURRENT.toString());
+        if (userId != null) {
+            query.setParameter("userId", userId);
+        }
+
         String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
         query.setParameter("safeSearch", "%" + safeSearch.toLowerCase() + "%");
 
@@ -216,7 +231,7 @@ public class PublicationJpaDao implements PublicationDao {
 
 
     @Override
-    public List<BookStateWrapper> getBookStateQtyByPublication(String search, boolean isGenreFilterActive, Genre genreFilter) {
+    public List<BookStateWrapper> getBookStateQtyByPublication(Long userId, String search, boolean isGenreFilterActive, Genre genreFilter) {
         StringBuilder sqlQuery =  new StringBuilder("SELECT b.bookState, COUNT(*) AS stateCount " +
                 "FROM publication p " +
                 "JOIN book b ON p.bookId = b.bookId " +
@@ -227,9 +242,17 @@ public class PublicationJpaDao implements PublicationDao {
             sqlQuery.append("AND bm.genre = :genre ");
         }
 
+        if(userId!=null){
+            sqlQuery.append("AND p.userId = :userId ");
+        }
+
         sqlQuery.append("GROUP BY b.bookState");
 
         Query query = em.createNativeQuery(sqlQuery.toString());
+
+        if (userId != null) {
+            query.setParameter("userId", userId);
+        }
 
         query.setParameter("publicationState", PublicationState.CURRENT.toString());
         String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
@@ -253,7 +276,7 @@ public class PublicationJpaDao implements PublicationDao {
     }
 
 
-    private int getTotalResultsByBook(String search, boolean isGenreFilterActive, Genre genreFilter, boolean isBookStateFilterActive, BookState bookStateFilter){
+    private int getTotalResultsByBook(Long userId, String search, boolean isGenreFilterActive, Genre genreFilter, boolean isBookStateFilterActive, BookState bookStateFilter){
         StringBuilder nativeQueryString = new StringBuilder(
                 "SELECT COUNT(*) " +
                         "FROM publication p " +
@@ -262,6 +285,10 @@ public class PublicationJpaDao implements PublicationDao {
                         "WHERE p.publicationState = :publicationState AND LOWER(bm.title) LIKE LOWER(:safeSearch) ESCAPE '\\' "
         );
 
+        if(userId!=null){
+            nativeQueryString.append("AND p.userId = :userId ");
+        }
+
         if (isGenreFilterActive) {
             nativeQueryString.append("AND bm.genre = :genre ");
         }
@@ -273,6 +300,10 @@ public class PublicationJpaDao implements PublicationDao {
         Query query = em.createNativeQuery(nativeQueryString.toString());
 
         query.setParameter("publicationState", PublicationState.CURRENT.toString());
+
+        if (userId != null) {
+            query.setParameter("userId", userId);
+        }
 
         String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
         query.setParameter("safeSearch", "%" + safeSearch.toLowerCase() + "%");
@@ -288,115 +319,7 @@ public class PublicationJpaDao implements PublicationDao {
         return ((Number) query.getSingleResult()).intValue();
     }
 
-    @Override
-    public PaginatedResponse<Publication, ItemFilterMetadata> getMyPaginatedPublications(long userId,String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, SortType sortType, int currentPage) {
-        if(currentPage < 0){
-            currentPage = 0;
-        }
 
-        StringBuilder nativeQueryString = new StringBuilder(
-                "SELECT p.publicationid " +
-                        "FROM publication p " +
-                        "JOIN book b ON p.bookId = b.bookId " +
-                        "JOIN book_model bm ON bm.bookModelId = b.bookModelId " +
-                        "WHERE p.publicationState = :publicationState AND p.userid = :userId AND LOWER(bm.title) LIKE LOWER(:safeSearch) ESCAPE '\\' "
-        );
-
-        if (isGenreFilterActive) {
-            nativeQueryString.append("AND bm.genre = :genre ");
-        }
-
-        if (isBookStateFilterActive) {
-            nativeQueryString.append("AND b.bookState = :bookState ");
-        }
-
-        Query nativeQuery = em.createNativeQuery(nativeQueryString.toString());
-
-        nativeQuery.setParameter("publicationState", PublicationState.CURRENT.toString());
-        nativeQuery.setParameter("userId", userId);
-
-        String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
-        nativeQuery.setParameter("safeSearch", "%" + safeSearch.toLowerCase() + "%");
-
-        if(isGenreFilterActive){
-            nativeQuery.setParameter("genre", genreFilter.toString());
-        }
-
-        if(isBookStateFilterActive){
-            nativeQuery.setParameter("bookState", bookStateFilter.toString());
-        }
-
-        nativeQuery.setMaxResults(PUBLICATIONS_PAGE_SIZE);
-        nativeQuery.setFirstResult(currentPage * PUBLICATIONS_PAGE_SIZE);
-
-        @SuppressWarnings("unchecked")
-        List<Long> publicationIds = nativeQuery.getResultList().stream().mapToLong(n -> ((Number) n).longValue()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
-
-
-        String jpqlQuery = "FROM Publication p WHERE p.publicationId IN (:ids) ";
-        switch (sortType) {
-            case RATING_ASCENDING:
-                jpqlQuery += "ORDER BY p.book.bookModel.averageRating ASC";
-                break;
-            case RATING_DESCENDING:
-                jpqlQuery += "ORDER BY p.book.bookModel.averageRating DESC";
-                break;
-            case BOOK_NAME_ASCENDING:
-                jpqlQuery += "ORDER BY p.book.bookModel.title ASC";
-                break;
-            case BOOK_NAME_DESCENDING:
-                jpqlQuery += "ORDER BY p.book.bookModel.title DESC";
-                break;
-            case PUBLICATION_DATE_DESCENDING:
-                jpqlQuery += "ORDER BY p.publicationDatetime DESC";
-                break;
-            default:
-                jpqlQuery += "ORDER BY p.publicationDatetime ASC";
-        }
-
-        TypedQuery<Publication> query = em.createQuery(jpqlQuery, Publication.class);
-        query.setParameter("ids",publicationIds);
-
-        int totalResults = getMyTotalResultsByBook(userId,safeSearch, isGenreFilterActive, genreFilter, isBookStateFilterActive, bookStateFilter);
-
-        return new PaginatedResponse<>(query.getResultList(), new ItemFilterMetadata(currentPage, PUBLICATIONS_PAGE_SIZE, totalResults, search, isGenreFilterActive, genreFilter, sortType, null, isBookStateFilterActive, bookStateFilter, null));
-    }
-
-    private int getMyTotalResultsByBook(Long userId,String search, boolean isGenreFilterActive, Genre genreFilter, boolean isBookStateFilterActive, BookState bookStateFilter){
-        StringBuilder nativeQueryString = new StringBuilder(
-                "SELECT COUNT(*) " +
-                        "FROM publication p " +
-                        "JOIN book b ON p.bookId = b.bookId " +
-                        "JOIN book_model bm ON bm.bookModelId = b.bookModelId " +
-                        "WHERE p.publicationState = :publicationState AND p.userid = :userId AND LOWER(bm.title) LIKE LOWER(:safeSearch) ESCAPE '\\' "
-        );
-
-        if (isGenreFilterActive) {
-            nativeQueryString.append("AND bm.genre = :genre ");
-        }
-
-        if (isBookStateFilterActive) {
-            nativeQueryString.append("AND b.bookState = :bookState ");
-        }
-
-        Query query = em.createNativeQuery(nativeQueryString.toString());
-
-        query.setParameter("publicationState", PublicationState.CURRENT.toString());
-        query.setParameter("userId", userId);
-
-        String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
-        query.setParameter("safeSearch", "%" + safeSearch.toLowerCase() + "%");
-
-        if(isGenreFilterActive){
-            query.setParameter("genre", genreFilter.toString());
-        }
-
-        if(isBookStateFilterActive){
-            query.setParameter("bookState", bookStateFilter.toString());
-        }
-
-        return ((Number) query.getSingleResult()).intValue();
-    }
 
     @Override
     @Transactional

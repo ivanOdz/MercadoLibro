@@ -58,10 +58,10 @@ public class PublicationServiceImpl implements PublicationService {
 
     @Override
     public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, SortType sortType, int currentPage) {
-        PaginatedResponse<Publication, ItemFilterMetadata> response = pubDao.getPaginatedPublications(search, isBookStateFilterActive, bookStateFilter, isGenreFilterActive, genreFilter, sortType, currentPage);
+        PaginatedResponse<Publication, ItemFilterMetadata> response = pubDao.getPaginatedPublications(null,search, isBookStateFilterActive, bookStateFilter, isGenreFilterActive, genreFilter, sortType, currentPage);
 
-        List<BookStateWrapper> bookStateWrapperList = pubDao.getBookStateQtyByPublication(search, isGenreFilterActive, genreFilter);
-        List<GenreWrapper> genreWrapperList = pubDao.getGenreQtyByPublication(search, isBookStateFilterActive, bookStateFilter);
+        List<BookStateWrapper> bookStateWrapperList = pubDao.getBookStateQtyByPublication(null,search, isGenreFilterActive, genreFilter);
+        List<GenreWrapper> genreWrapperList = pubDao.getGenreQtyByPublication(null,search, isBookStateFilterActive, bookStateFilter);
 
         List<BookStateWrapper> bookStates = new ArrayList<>();
         for (BookStateWrapper state : bookStateWrapperList) {
@@ -90,10 +90,10 @@ public class PublicationServiceImpl implements PublicationService {
 
     @Override
     public PaginatedResponse<Publication, ItemFilterMetadata> getMyPaginatedPublications(long userId, String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, SortType sortType, int currentPage) {
-        PaginatedResponse<Publication, ItemFilterMetadata> response = pubDao.getMyPaginatedPublications(userId, search, isBookStateFilterActive, bookStateFilter, isGenreFilterActive, genreFilter, sortType, currentPage);
+        PaginatedResponse<Publication, ItemFilterMetadata> response = pubDao.getPaginatedPublications(userId, search, isBookStateFilterActive, bookStateFilter, isGenreFilterActive, genreFilter, sortType, currentPage);
 
-        List<BookStateWrapper> bookStateWrapperList = pubDao.getBookStateQtyByPublication(search, isGenreFilterActive, genreFilter);
-        List<GenreWrapper> genreWrapperList = pubDao.getGenreQtyByPublication(search, isBookStateFilterActive, bookStateFilter);
+        List<BookStateWrapper> bookStateWrapperList = pubDao.getBookStateQtyByPublication(userId, search, isGenreFilterActive, genreFilter);
+        List<GenreWrapper> genreWrapperList = pubDao.getGenreQtyByPublication(userId,search, isBookStateFilterActive, bookStateFilter);
 
         List<BookStateWrapper> bookStates = new ArrayList<>();
         for (BookStateWrapper state : bookStateWrapperList) {

@@ -18,19 +18,16 @@ public interface PublicationDao {
 
     Publication getPublicationByPublicationId(long publicationId);
 
-    PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, SortType sortType, int currentPage);
+    PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(Long userId,String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, SortType sortType, int currentPage);
 
     int getPublicationCountByUserId(long userId);
 
-    List<BookStateWrapper> getBookStateQtyByPublication(String search, boolean isGenreFilterActive, Genre genreFilter);
+    List<BookStateWrapper> getBookStateQtyByPublication(Long userId, String search, boolean isGenreFilterActive, Genre genreFilter);
 
-    List<GenreWrapper> getGenreQtyByPublication(String search, boolean isBookStateFilterActive, BookState bookStateFilter);
-
-//    List<Publication> getPublicationsByUserId(long userId);
-
-    PaginatedResponse<Publication, ItemFilterMetadata> getMyPaginatedPublications(long userId,String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, SortType sortType, int currentPage);
+    List<GenreWrapper> getGenreQtyByPublication(Long userId, String search, boolean isBookStateFilterActive, BookState bookStateFilter);
 
     void deletePublication(long publicationId);
 
     void likePublication(long publicationId, long userId);
+
 }
