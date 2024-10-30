@@ -173,6 +173,9 @@ public class BookController {
             return new ModelAndView("redirect:/404");
         }
 
+        User user = loggedUserAdvice.getLoggedUser();
+
+        mav.addObject("user", user);
         mav.addObject("bookDetailsForm", bookDetailsForm);
         mav.addObject("step", 2);
         mav.addObject("book_model", bm);

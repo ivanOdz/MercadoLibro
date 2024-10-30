@@ -102,9 +102,11 @@ public class BookServiceImpl implements BookService {
     @Transactional
     @Override
     public void exchangeOwnership(Book b1, Book b2) {
-        bookDao.setOwner(b1, b2.getOwner());
+        User owner1 = b1.getOwner();
+        User owner2 = b2.getOwner();
+        bookDao.setOwner(b1, owner2);
         setAvailable(b1, true);
-        bookDao.setOwner(b2, b1.getOwner());
+        bookDao.setOwner(b2, owner1);
         setAvailable(b2, true);
     }
 

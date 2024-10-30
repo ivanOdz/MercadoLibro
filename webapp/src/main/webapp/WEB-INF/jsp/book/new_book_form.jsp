@@ -350,11 +350,17 @@
                 <input type="hidden" id="location-error-message" value="<spring:message code='NotBlank.bookForm.location'/>" />
 
                 <div id="location-q" class="uk-inline" style="display: none;">
+
                     <label class="form-group">
                         <spring:message code="book.set.location"/>
-                        <form:input path="location" type="text" class="uk-input" />
+                        <form:select path="locationId" class="uk-select no-arrow-select" aria-label="Not clickable icon" style="width: 90%">
+                            <c:forEach var="userLocation" items="${user.userLocations}">
+                                <form:options items="${user.userLocations}" itemValue="locationId" itemLabel="locationString"/>
+                            </c:forEach>
+                        </form:select>
                     </label>
-                    <form:errors path="location" element="p" cssStyle="color: red;" />
+
+                        <%--                         <form:errors path="locationId" element="p" cssStyle="color: red;" /> --%>
                     <p id="location-error" style="color: red;"></p>
                 </div>
 
