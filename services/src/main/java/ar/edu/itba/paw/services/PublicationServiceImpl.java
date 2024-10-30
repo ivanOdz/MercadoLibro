@@ -90,7 +90,7 @@ public class PublicationServiceImpl implements PublicationService {
 
     @Override
     public PaginatedResponse<Publication, ItemFilterMetadata> getMyPaginatedPublications(long userId, String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, SortType sortType, int currentPage) {
-        PaginatedResponse<Publication, ItemFilterMetadata> response = pubDao.getPaginatedPublications(search, isBookStateFilterActive, bookStateFilter, isGenreFilterActive, genreFilter, sortType, currentPage);
+        PaginatedResponse<Publication, ItemFilterMetadata> response = pubDao.getMyPaginatedPublications(userId, search, isBookStateFilterActive, bookStateFilter, isGenreFilterActive, genreFilter, sortType, currentPage);
 
         List<BookStateWrapper> bookStateWrapperList = pubDao.getBookStateQtyByPublication(search, isGenreFilterActive, genreFilter);
         List<GenreWrapper> genreWrapperList = pubDao.getGenreQtyByPublication(search, isBookStateFilterActive, bookStateFilter);

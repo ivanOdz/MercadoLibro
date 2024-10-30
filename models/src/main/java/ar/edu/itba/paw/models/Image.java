@@ -38,4 +38,8 @@ public class Image {
 	public void setImage(byte[] image) {
 		this.image = image;
 	}
+
+	public boolean getIsImageNull() {
+		return image == null || image.length == 0;
+	}
 }

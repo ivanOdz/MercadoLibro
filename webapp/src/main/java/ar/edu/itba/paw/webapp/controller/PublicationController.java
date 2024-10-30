@@ -53,9 +53,9 @@ public class PublicationController {
                               @RequestParam(name = "page", defaultValue = "0") int currentPage) {
 
         final ModelAndView mav = new ModelAndView("home/publications");
-
         PaginatedResponse<Publication, ItemFilterMetadata> publications = ps.getPaginatedPublications(search, isBookStateFilterActive,
-                bookStateFilter, isGenreFilterActive, genreFilter, sortType, currentPage);
+                    bookStateFilter, isGenreFilterActive, genreFilter, sortType, currentPage);
+
 
         mav.addObject("publications", publications);
 
@@ -64,8 +64,7 @@ public class PublicationController {
 
     @PostMapping(path = "/createpublication")
     public ModelAndView createPublication(@RequestParam(name = "bookId") long bookId, @RequestParam(name = "location") String location) {
-
-        try {
+        try{
             ps.createPublication(bookId, loggedUserAdvice.getLoggedUser().getUserId(), location, PublicationState.CURRENT);
         } catch (ApplicationRuntimeException e) {
             LOGGER.error(e.getExceptionMessage(), e.getStatusCode());

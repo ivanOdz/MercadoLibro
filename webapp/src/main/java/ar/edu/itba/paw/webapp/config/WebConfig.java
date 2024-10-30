@@ -30,10 +30,11 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Properties;
 
 @EnableTransactionManagement
-@PropertySource("classpath:application.properties")
+@PropertySource("classpath:application${spring.profiles.active}.properties")
 @EnableWebMvc
 @ComponentScan({
         "ar.edu.itba.paw.webapp.controller",
@@ -56,7 +57,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     private String dataBasePassword;
 
     @Value("#{environment.inProduction}")
-    private boolean inProduction;
+    private String inProduction;
 
     @Bean
     public ViewResolver viewResolver() {
@@ -134,7 +135,8 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         jpaProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQL92Dialect");
 
 
-//        if(!inProduction) {
+        // No es un booleano, validarlo con String
+//        if(Objects.equals(inProduction, "false")) {
 //            jpaProperties.setProperty("hibernate.show_sql", "true");
 //            jpaProperties.setProperty("hibernate.format_sql", "true");
 //        }
