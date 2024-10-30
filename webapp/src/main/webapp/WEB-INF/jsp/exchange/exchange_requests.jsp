@@ -142,11 +142,17 @@
                                         </div>
 
                                         <div style="padding: 0">
-                                            <c:if test="${!empty data.requester.book.images && !data.offerer.book.images.isNotEmpty}">
-                                            <img class="book-image"
-                                                 src="<c:url value='/images/${data.requester.book.images[0].imageId}' />"
-                                                 alt="bookImage"/>
-                                            </c:if>
+                                            <c:choose>
+                                                <c:when test="${!empty data.requester.book.images && !data.requester.book.images[0].image.isImageNull}">
+                                                    <img class="book-image"
+                                                         src="<c:url value='/images/${data.requester.book.images[0].image.imageId}' />"
+                                                         alt="bookImage"/>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <img class="book-image"
+                                                         src="<c:url value='/images/book.jpg' />" alt="book"/>
+                                                </c:otherwise>
+                                            </c:choose>
                                             <div class="card-text-container">
                                                 <h3 class="card-text3">
                                                     <c:out value="${data.requester.book.bookModel.title}"/>
@@ -178,7 +184,6 @@
                                                 </p>
                                             </div>
                                         </div>
-
 
                                         <!-- Exchange Accepted modal -->
 
@@ -343,9 +348,17 @@
 
 
                                         <div style="padding: 0">
-                                            <img class="book-image"
-                                                 src="<c:url value='/images/${data.offerer.book.images[0].imageId}' />"
-                                                 alt="bookImage"/>
+                                            <c:choose>
+                                                <c:when test="${!empty data.offerer.book.images && !data.offerer.book.images[0].image.isImageNull}">
+                                                    <img class="book-image"
+                                                         src="<c:url value='/images/${data.offerer.book.images[0].image.imageId}' />"
+                                                         alt="bookImage"/>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <img class="book-image"
+                                                         src="<c:url value='/images/book.jpg' />" alt="book"/>
+                                                </c:otherwise>
+                                            </c:choose>
                                             <div class="card-text-container">
                                                 <h3 class="card-text3">
                                                     <c:out value="${data.offerer.book.bookModel.title}"/>
@@ -404,9 +417,17 @@
                                         </div>
 
                                         <div style="padding: 0">
-                                            <img class="book-image"
-                                                 src="<c:url value='/images/${data.requester.book.images[0].imageId}' />"
-                                                 alt="bookImage"/>
+                                            <c:choose>
+                                                <c:when test="${!empty data.requester.book.images && !data.requester.book.images[0].image.isImageNull}">
+                                                    <img class="book-image"
+                                                         src="<c:url value='/images/${data.requester.book.images[0].image.imageId}' />"
+                                                         alt="bookImage"/>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <img class="book-image"
+                                                         src="<c:url value='/images/book.jpg' />" alt="book"/>
+                                                </c:otherwise>
+                                            </c:choose>
                                             <div class="card-text-container">
                                                 <h3 class="card-text3">
                                                     <c:out value="${data.requester.book.bookModel.title}"/>
@@ -554,9 +575,17 @@
                                          uk-grid>
 
                                         <div style="padding: 0">
-                                            <img class="book-image"
-                                                 src="<c:url value='/images/${data.offerer.book.images[0].imageId}' />"
-                                                 alt="bookImage"/>
+                                            <c:choose>
+                                                <c:when test="${!empty data.offerer.book.images && !data.offerer.book.images[0].image.isImageNull}">
+                                                    <img class="book-image"
+                                                         src="<c:url value='/images/${data.offerer.book.images[0].image.imageId}' />"
+                                                         alt="bookImage"/>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <img class="book-image"
+                                                         src="<c:url value='/images/book.jpg' />" alt="book"/>
+                                                </c:otherwise>
+                                            </c:choose>
                                             <div class="card-text-container">
                                                 <h3 class="card-text3">
                                                     <c:out value="${data.offerer.book.bookModel.title}"/>
@@ -586,9 +615,17 @@
                                         </div>
 
                                         <div style="padding: 0">
-                                            <img class="book-image"
-                                                 src="<c:url value='/images/${data.requester.book.images[0].imageId}' />"
-                                                 alt="bookImage"/>
+                                            <c:choose>
+                                                <c:when test="${!empty data.requester.book.images && !data.requester.book.images[0].image.isImageNull}">
+                                                    <img class="book-image"
+                                                         src="<c:url value='/images/${data.requester.book.images[0].image.imageId}' />"
+                                                         alt="bookImage"/>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <img class="book-image"
+                                                         src="<c:url value='/images/book.jpg' />" alt="book"/>
+                                                </c:otherwise>
+                                            </c:choose>
                                             <div class="card-text-container">
                                                 <h3 class="card-text3">
                                                     <c:out value="${data.requester.book.bookModel.title}"/>
@@ -737,9 +774,17 @@
 
 
                                         <div style="padding: 0">
-                                            <img class="book-image"
-                                                 src="<c:url value='/images/${data.offerer.book.images[0].imageId}' />"
-                                                 alt="bookImage"/>
+                                            <c:choose>
+                                                <c:when test="${!empty data.offerer.book.images && !data.offerer.book.images[0].image.isImageNull}">
+                                                    <img class="book-image"
+                                                         src="<c:url value='/images/${data.offerer.book.images[0].image.imageId}' />"
+                                                         alt="bookImage"/>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <img class="book-image"
+                                                         src="<c:url value='/images/book.jpg' />" alt="book"/>
+                                                </c:otherwise>
+                                            </c:choose>
                                             <div class="card-text-container">
                                                 <h3 class="card-text3">
                                                     <c:out value="${data.offerer.book.bookModel.title}"/>
@@ -768,9 +813,17 @@
                                             </div>
                                         </div>
                                         <div style="padding: 0">
-                                            <img class="book-image"
-                                                 src="<c:url value='/images/${data.requester.book.images[0].imageId}' />"
-                                                 alt="bookImage"/>
+                                            <c:choose>
+                                                <c:when test="${!empty data.requester.book.images && !data.requester.book.images[0].image.isImageNull}">
+                                                    <img class="book-image"
+                                                         src="<c:url value='/images/${data.requester.book.images[0].image.imageId}' />"
+                                                         alt="bookImage"/>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <img class="book-image"
+                                                         src="<c:url value='/images/book.jpg' />" alt="book"/>
+                                                </c:otherwise>
+                                            </c:choose>
                                             <div class="card-text-container">
                                                 <h3 class="card-text3">
                                                     <c:out value="${data.requester.book.bookModel.title}"/>
