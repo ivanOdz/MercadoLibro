@@ -36,12 +36,8 @@ public class User {
     @OneToMany(mappedBy = "owner")
     private List<Book> books;
     
-    @OneToOne
-    @JoinTable(
-		name = "user_location",
-		joinColumns = @JoinColumn(name = "userId"),
-		inverseJoinColumns = @JoinColumn(name = "location_id")
-    )
+    @ManyToOne
+    @JoinColumn(name = "favoriteLocation", referencedColumnName = "locationId")
     private Location favoriteLocation;
     
     @OneToMany
@@ -103,8 +99,11 @@ public class User {
         return isVerified;
     }
     
-    public Location getFavoriteLocation() {
-    	return favoriteLocation;
+    public String getFavoriteLocation() {
+    	if (favoriteLocation != null) {
+    		return favoriteLocation.getLocationString();
+    	}
+    	return null;
     }
     
     public List<Location> getLocations() {

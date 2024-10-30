@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.exceptions.*;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
+import ar.edu.itba.paw.models.Location;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -181,5 +182,15 @@ public class UserJdbcDao implements UserDao {
             String errorMessage = messageSource.getMessage("error.changePassword", new Object[]{e.getStackTrace()}, LocaleContextHolder.getLocale());
             throw new PasswordChangeBadRequestException(errorMessage);
         }
+    }
+    
+    @Override
+    public void setUserFavoriteLocation(long userId, Location favoriteLocation) {
+    	System.out.println("[!]");
+    }
+
+    @Override
+    public void addUserLocation(long userId, Location location) {
+    	System.out.println("[!]");
     }
 }

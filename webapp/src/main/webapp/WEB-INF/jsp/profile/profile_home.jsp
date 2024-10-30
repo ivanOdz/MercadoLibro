@@ -120,7 +120,11 @@
                     <!-- 				            <i class="material-icons edit-icon">edit</i> -->
                     <!-- 				        </a> -->
                 </div>
-
+                
+                <div>
+                    <h3 class="uk-h5"><c:out value="${loggedUser.favoriteLocation}"/></h3>
+                </div>
+                
                 <button style="margin: 5% 0 5% 0;" class="uk-button uk-button-default" type="button"><spring:message code="language"/></button>
                 <div uk-dropdown>
                     <ul class="uk-nav uk-dropdown-nav ">
