@@ -294,9 +294,9 @@
                                         </span>
 
                       <span>
-                                            <c:forEach var="location" items="${card.locations}">
-                                              <c:out value="${location.locationString}"/>
-                                            </c:forEach>
+<%--                                             <c:forEach var="location" items="${card.locations}"> --%>
+                                              <c:out value="${card.location.locationString}"/>
+<%--                                             </c:forEach> --%>
                                         </span>
                     </div>
                   </div>
