@@ -261,26 +261,26 @@
                                class="uk-card uk-card-default uk-card-hover uk-card-body uk-border-rounded custom-link uk-flex uk-flex-middle"
                             style="padding: 1rem !important;">
 
-                                <div class="uk-position-top-right"
-                                     style="padding: 2rem; display: flex; align-items: center;">
-                                    <form action="<c:url value='/like/${card.publicationId}' />" method="post">
-                                        <button type="submit" class="transparent"
-                                                style="border: none; background: none;">
-                                            <c:choose>
-                                                <c:when test="${card.likedByUser}">
-                                                    <i class="material-icons red-text">favorite</i>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <i class="material-icons grey-text">favorite_border</i>
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </button>
-                                    </form>
-                                    <c:if test="${card.likes > 0}">
-                                        <p class="small-gray-text custom-link" style="margin: 0 0 0 0.5rem;">(<c:out
-                                                value="${card.likes}"/>)</p>
-                                    </c:if>
-                                </div>
+<%--                                <div class="uk-position-top-right"--%>
+<%--                                     style="padding: 2rem; display: flex; align-items: center;">--%>
+<%--                                    <form action="<c:url value='/like/${card.publicationId}' />" method="post">--%>
+<%--                                        <button type="submit" class="transparent"--%>
+<%--                                                style="border: none; background: none;">--%>
+<%--                                            <c:choose>--%>
+<%--                                                <c:when test="${card.likedByUser}">--%>
+<%--                                                    <i class="material-icons red-text">favorite</i>--%>
+<%--                                                </c:when>--%>
+<%--                                                <c:otherwise>--%>
+<%--                                                    <i class="material-icons grey-text">favorite_border</i>--%>
+<%--                                                </c:otherwise>--%>
+<%--                                            </c:choose>--%>
+<%--                                        </button>--%>
+<%--                                    </form>--%>
+<%--                                    <c:if test="${card.likes > 0}">--%>
+<%--                                        <p class="small-gray-text custom-link" style="margin: 0 0 0 0.5rem;">(<c:out--%>
+<%--                                                value="${card.likes}"/>)</p>--%>
+<%--                                    </c:if>--%>
+<%--                                </div>--%>
 
                                 <!-- Contenedor de la imagen (Columna izquierda) -->
                                 <div class="uk-width-1-4 uk-flex uk-flex-center">
