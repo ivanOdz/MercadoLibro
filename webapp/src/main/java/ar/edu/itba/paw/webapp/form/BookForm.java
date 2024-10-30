@@ -67,7 +67,7 @@ public class BookForm {
 
     private boolean publish = false;
 
-    private Location location = null;
+    private long locationId;
 
 
     // Getters
@@ -163,8 +163,8 @@ public class BookForm {
         return publish;
     }
 
-    public Location getLocation() {
-        return location;
+    public long getLocationId() {
+        return locationId;
     }
 
     // Setters
@@ -247,7 +247,7 @@ public class BookForm {
         this.publish = publish;
     }
 
-    public void setLocation(Location location) {
-        this.location = location;
+    public void setLocationId(long location) {
+        this.locationId = location;
     }
 }

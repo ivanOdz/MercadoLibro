@@ -117,7 +117,9 @@ public class BookController {
     public ModelAndView bookModelForm(@ModelAttribute("bookForm") BookForm bookForm, BindingResult errors) {
 
         ModelAndView mav = new ModelAndView("/book/new_book_form");
-
+        User user = loggedUserAdvice.getLoggedUser();
+        
+        mav.addObject("user", user);
         mav.addObject("bookForm", bookForm);
 
         mav.addObject("genres", Stream.of(Genre.values()).map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
@@ -149,7 +151,7 @@ public class BookController {
         }*/
 
         try {
-            publicationService.createPublicationIfNeeded(bookForm.isPublish(), book.getBookId(), user.getUserId(), bookForm.getLocation().getLocationId(), PublicationState.CURRENT);
+            publicationService.createPublicationIfNeeded(bookForm.isPublish(), book.getBookId(), user.getUserId(), bookForm.getLocationId(), PublicationState.CURRENT);
         } catch (ApplicationRuntimeException e) {
             LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
             return new ModelAndView("redirect:/400");
