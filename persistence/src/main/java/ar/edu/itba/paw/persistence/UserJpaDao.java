@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.sql.DataSource;
@@ -71,9 +72,13 @@ public class UserJpaDao implements UserDao {
     @Override
     public Optional<User> findByMail(String mail) {
         // consulta JQL no SQL
-        final TypedQuery<User> query = em.createQuery("FROM User as u where u.mail = :mail", User.class);
-        query.setParameter("mail", mail);
-        return Optional.ofNullable(query.getSingleResult());
+        try {
+            final TypedQuery<User> query = em.createQuery("FROM User as u where u.mail = :mail", User.class);
+            query.setParameter("mail", mail);
+            return Optional.ofNullable(query.getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 
     @Override

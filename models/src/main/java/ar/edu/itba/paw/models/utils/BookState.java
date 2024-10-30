@@ -17,12 +17,11 @@ public enum BookState {
     }
 	
 	public static BookState fromInt(int i) {
-		for (BookState state : BookState.values()) {
-			if (state.getValue() == i) {
-				return state;
-			}
+		try {
+			return BookState.values()[i];
+		} catch (ArrayIndexOutOfBoundsException e) {
+			return null;
 		}
-		return null;
 	}
 	
 	public int getValue() {
@@ -34,4 +33,14 @@ public enum BookState {
 		
 		return "genre." + name();
 	}
+
+	public static BookState fromString(String bookStateFilter) {
+		try {
+			int intValue = Integer.parseInt(bookStateFilter);
+			return BookState.fromInt(intValue);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
 }

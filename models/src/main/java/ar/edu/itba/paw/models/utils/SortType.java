@@ -6,5 +6,23 @@ public enum SortType {
     PUBLICATION_DATE_ASCENDING,
     PUBLICATION_DATE_DESCENDING,
     BOOK_NAME_ASCENDING,
-    BOOK_NAME_DESCENDING
+    BOOK_NAME_DESCENDING;
+
+
+    public static SortType fromInt(int i) {
+        try {
+            return SortType.values()[i];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return null;
+        }
+    }
+
+    public static SortType fromString(String sortTypeFilter) {
+        try {
+            int intValue = Integer.parseInt(sortTypeFilter);
+            return SortType.fromInt(intValue);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }
