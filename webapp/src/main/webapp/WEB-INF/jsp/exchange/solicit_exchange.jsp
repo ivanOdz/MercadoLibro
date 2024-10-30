@@ -38,8 +38,20 @@
         <div class="uk-container">
             <div class="row-container">
                 <h3 style="margin-right: 10%;"><spring:message code="exchange.book"/></h3>
-                <img src="images/${publication.book.images[0].imageId}" alt="Book Image"
-                     style="margin-right: 3%; width:13%; height:5%;"/>
+
+                <c:choose>
+                    <c:when test="${!empty publication.book.images && !publication.book.images[0].image.isImageNull}">
+                        <img src="images/${publication.book.images[0].image.imageId}" alt="Book Image"
+                             style="margin-right: 3%; width:13%; height:5%;"/>
+                    </c:when>
+                    <c:otherwise>
+                        <img class="book-image"
+                             style="margin-right: 3%; width:13%; height:5%;"
+                             src="<c:url value='/images/book.jpg' />" alt="book"/>
+                    </c:otherwise>
+                </c:choose>
+
+
                 <div class="column-container">
                     <p><spring:message code="exchange.book.title"/> ${publication.book.bookModel.title} </p>
                     <c:forEach var="author" items="${publication.book.bookModel.authors}">
@@ -68,8 +80,17 @@
                                         <form:radiobutton path="bookId" value="${availableBook.bookId}" />
                                     </div>
                                     <div class="uk-width-auto">
-                                        <img src="<c:url value='/images/${availableBook.images[0].imageId}' />"
-                                             alt="Book Image" class="uk-border-circle" width="40" height="40">
+                                        <c:choose>
+                                            <c:when test="${!availableBook.images[0].image.isImageNull}">
+                                                <img src="<c:url value='/images/${availableBook.images[0].image.imageId}' />"
+                                                     alt="Book Image" class="uk-border-circle" width="40" height="40">
+                                            </c:when>
+                                            <c:otherwise>
+                                                <img class="book-image"
+                                                     src="<c:url value='/images/book.jpg' />" alt="book"/>
+                                            </c:otherwise>
+                                        </c:choose>
+
                                     </div>
                                     <div class="uk-width-expand">
                                         <div class="uk-text-bold">${availableBook.bookModel.title}</div>
