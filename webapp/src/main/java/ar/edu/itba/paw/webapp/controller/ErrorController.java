@@ -10,36 +10,36 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class ErrorController {
-/*
-    @Autowired
-    private final MessageSource messageSource;
 
-    public ErrorController(MessageSource messageSource) {
-        this.messageSource = messageSource;
-    }
-
+//    @Autowired
+//    private final MessageSource messageSource;
+//
+//    public ErrorController(MessageSource messageSource) {
+//        this.messageSource = messageSource;
+//    }
+//
     @RequestMapping("/400")
     public ModelAndView badRequest() {
-        return new ModelAndView("error/badRequest");
+        return new ModelAndView("error/400");
     }
 
     @RequestMapping("/403")
     public ModelAndView forbidden() {
-        return new ModelAndView("error/forbidden");
+        return new ModelAndView("error/403");
     }
 
     @RequestMapping("/404")
     public ModelAndView notFound() {
-        return new ModelAndView("error/notFound");
+        return new ModelAndView("error/404");
     }
 
     @RequestMapping("/500")
     public ModelAndView internalServerError() {
         return new ModelAndView("error/internalservererror");
     }
-
-    @RequestMapping("/**")
-    public ModelAndView handleAll() {
-        return new ModelAndView("error/notFound");
-    }*/
+//
+//    @RequestMapping("/**")
+//    public ModelAndView handleAll() {
+//        return new ModelAndView("error/notFound");
+//    }
 }
