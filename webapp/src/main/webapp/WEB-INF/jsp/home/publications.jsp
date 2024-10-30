@@ -58,7 +58,6 @@
 							<span class="ui-search-filter-name">
 								<spring:message code="delete.genre.filter"/>
 							</span>
-                            <span uk-icon="trash"></span>
                         </button>
                     </form>
                 </c:if>
@@ -318,9 +317,7 @@
                                         </span>
 
                                         <span>
-                                            <c:forEach var="location" items="${card.locations}">
-                                                <c:out value="${location.locationString}"/>
-                                            </c:forEach>
+                                        	<c:out value="${card.location.locationString}"/>
                                         </span>
                                     </div>
                                 </div>

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.models.Location;
 import ar.edu.itba.paw.models.utils.BookDimension;
 import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.models.utils.Genre;
@@ -25,8 +26,7 @@ public class BookDetailsForm {
 
     private boolean publish = false;
 
-    private String location = null;
-
+    private long locationId;
 
     // Getters
 
@@ -53,8 +53,8 @@ public class BookDetailsForm {
         return publish;
     }
 
-    public String getLocation() {
-        return location;
+    public long getLocationId() {
+        return locationId;
     }
 
     // Setters
@@ -80,8 +80,7 @@ public class BookDetailsForm {
         this.publish = publish;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setLocationId(long locationId) {
+        this.locationId = locationId;
     }
-
 }

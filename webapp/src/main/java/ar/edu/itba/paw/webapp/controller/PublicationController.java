@@ -63,9 +63,10 @@ public class PublicationController {
     }
 
     @PostMapping(path = "/createpublication")
-    public ModelAndView createPublication(@RequestParam(name = "bookId") long bookId, @RequestParam(name = "location") String location) {
-        try{
-            ps.createPublication(bookId, loggedUserAdvice.getLoggedUser().getUserId(), location, PublicationState.CURRENT);
+    public ModelAndView createPublication(@RequestParam(name = "bookId") long bookId, @RequestParam(name = "locationId") long locationId) {
+    	
+        try {
+            ps.createPublication(bookId, loggedUserAdvice.getLoggedUser().getUserId(), locationId, PublicationState.CURRENT);
         } catch (ApplicationRuntimeException e) {
             LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
             return new ModelAndView("redirect:/400");

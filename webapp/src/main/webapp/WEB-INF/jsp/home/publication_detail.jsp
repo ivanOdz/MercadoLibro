@@ -214,11 +214,11 @@
                         <p style="text-align: center"><spring:message code="publication.details.location"/></p>
                         <span uk-icon="icon: location" style="margin-left: 30px;"></span>
                         <p style="text-align: center">
-                            <c:forEach var="location" items="${publication.locations}">
+<%--                             <c:forEach var="location" items="${publication.locations}"> --%>
                                 <strong>
-                                    <c:out value="${location.locationString}"/>
+                                    <c:out value="${publication.location.locationString}"/>
                                 </strong>
-                            </c:forEach>
+<%--                             </c:forEach> --%>
                         </p>
                     </div>
                 </div>

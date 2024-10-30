@@ -32,7 +32,6 @@ public class ExchangeController {
     private final PublicationService publicationService;
     private final BookService bookService;
 
-
     @Autowired
     private final UserReviewService userReviewService;
 
@@ -75,7 +74,6 @@ public class ExchangeController {
 
         return mav;
     }
-
 
     // Estado de mis ofertas
     // Paso el ID, y quiero aquellas exchanges en las que soy requester
@@ -148,8 +146,10 @@ public class ExchangeController {
 
     @GetMapping("/start_exchange")
     public ModelAndView startExchange(@ModelAttribute("exchangeForm") ExchangeForm exchangeForm, BindingResult errors, @RequestParam(name = "publication_id") long publicationId) {
+    	
         final ModelAndView mav = new ModelAndView("/exchange/solicit_exchange");
         Publication publication;
+        
         try {
             publication = publicationService.getPublicationByPublicationId(publicationId);
         } catch (ApplicationRuntimeException e) {
@@ -172,12 +172,13 @@ public class ExchangeController {
 
     @PostMapping(path = "/exchange/initializeexchange")
     public ModelAndView initializeExchange(@NotEmpty @Valid @ModelAttribute("exchangeForm") ExchangeForm exchangeInput, BindingResult errors) {
+    	
         if (errors.hasErrors()) {
             return startExchange(exchangeInput, errors, exchangeInput.getPublicationId());
         }
 
         try {
-            exchangeService.initializeExchange(exchangeInput.getBookId(), exchangeInput.getLocation(), exchangeInput.getPublicationId());
+            exchangeService.initializeExchange(exchangeInput.getBookId(), exchangeInput.getLocationId(), exchangeInput.getPublicationId());
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -197,6 +198,7 @@ public class ExchangeController {
 
     @RequestMapping("/confirm_offerer")
     public ModelAndView confirmExchangeOffer(@RequestParam(name = "accept_code") int accept_code) {
+    	
         Exchange exchange;
         try {
             exchange = exchangeService.getExchangeByAcceptCode(accept_code);

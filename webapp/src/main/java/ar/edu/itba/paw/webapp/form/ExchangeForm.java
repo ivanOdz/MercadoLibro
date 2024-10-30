@@ -1,16 +1,13 @@
 package ar.edu.itba.paw.webapp.form;
 
-
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 public class ExchangeForm {
     @NotNull
     long bookId;
 
-    @NotBlank(message = "{NotBlank.exchangeForm.location}")
-    String location;
+    @NotNull
+    long locationId;
 
     long publicationId;
 
@@ -19,8 +16,8 @@ public class ExchangeForm {
         return bookId;
     }
 
-    public String getLocation() {
-        return location;
+    public long getLocationId() {
+        return locationId;
     }
 
     public long getPublicationId() {
@@ -31,8 +28,8 @@ public class ExchangeForm {
         this.bookId = bookId;
     }
 
-    public void setLocation(@Size(min = 1, max = 255) String location) {
-        this.location = location;
+    public void setLocation(@NotNull long locationId) {
+        this.locationId = locationId;
     }
 
     public void setPublicationId(long publicationId) {
