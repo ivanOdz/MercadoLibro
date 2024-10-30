@@ -242,7 +242,7 @@
                                                                 <span class="uk-form-icon uk-form-icon-flip"
                                                                       uk-icon="icon: location"></span>
                                                                 <input class="uk-input" type="text" name="location"
-                                                                       aria-label="Not clickable icon"/>
+                                                                       aria-label="Not clickable icon" value="${user.favoriteLocation}"/>
                                                             </div>
                                                             <input class="uk-input" type="hidden"
                                                                    value="${card.bookId}" name="bookId"

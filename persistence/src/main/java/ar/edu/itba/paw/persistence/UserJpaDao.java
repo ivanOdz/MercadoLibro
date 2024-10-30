@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.exceptions.*;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
+import ar.edu.itba.paw.models.Location;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -89,9 +90,6 @@ public class UserJpaDao implements UserDao {
         return query.getSingleResult();
     }
 
-
-
-
     @Transactional
     @Override
     public void setUserLanguage(long userId, String language) {
@@ -109,6 +107,32 @@ public class UserJpaDao implements UserDao {
 //        }
     }
 
+    @Transactional
+    @Override
+    public void setUserFavoriteLocation(long userId, Location favoriteLocation) {
+    	
+        Optional<User> maybeUser = findById(userId); // NOTE: hacer catch de excepciones
+
+        maybeUser.ifPresent(user -> {
+            user.setFavoriteLocation(favoriteLocation);
+        });
+    }
+
+    @Transactional
+    @Override
+    public void addUserLocation(long userId, Location location) {/*
+    	
+    	Optional<User> maybeUser = findById(userId);
+    	
+        maybeUser.ifPresent(user -> {
+            user.setLocation(location);
+        });
+        
+        Location location = locationRepository.findById(locationId);
+
+        user.addLocation(location); // Agrega la Location a la lista*/
+    }
+    
     @Transactional
     @Override
     public void verifyUser(int verificationCode) {
