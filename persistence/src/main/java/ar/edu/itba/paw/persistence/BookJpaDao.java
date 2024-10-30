@@ -304,8 +304,7 @@ public class BookJpaDao implements BookDao {
                                       boolean isBookStateFilterActive, BookState bookStateFilter, long userId) {
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT COUNT(*) " +
-                        "FROM publication p " +
-                        "JOIN book b ON p.bookId = b.bookId " +
+                        "FROM book b " +
                         "JOIN book_model bm ON b.bookModelId = bm.bookModelId " +
                         "WHERE b.ownerId = :userId AND LOWER(bm.title) LIKE LOWER(:title) ");
 
