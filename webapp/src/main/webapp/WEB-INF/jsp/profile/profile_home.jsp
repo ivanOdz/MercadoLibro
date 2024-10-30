@@ -140,8 +140,8 @@
 
 				<form id="add-location-form" action="<c:url value='/user/addLocation' />" method="post">
 					<input type="hidden" name="userId" value="${loggedUser.userId}" />
-					<input id="new-location-input" type="text" name="locationString" placeholder="New Location" required />
-					<button id="add-location-btn" type="submit" class="uk-button uk-button-primary">Add Location</button>
+					<input id="new-location-input" type="text" name="locationString" placeholder="<spring:message code='user.new.location.placeholder'/>" required />
+					<button id="add-location-btn" type="submit" class="uk-button uk-button-primary"><spring:message code="user.add.location"/></button>
 				</form>
 
                 <button style="margin: 5% 0 5% 0;" class="uk-button uk-button-default" type="button"><spring:message code="language"/></button>
