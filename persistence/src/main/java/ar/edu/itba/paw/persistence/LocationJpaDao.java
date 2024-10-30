@@ -14,6 +14,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.sql.DataSource;
+import javax.transaction.Transactional;
+
 import java.sql.Types;
 import java.util.*;
 
@@ -41,6 +43,12 @@ public class LocationJpaDao implements LocationDao {
     }
 
     @Override
+    public Optional<Location> findById(long locationId) {
+
+    	return Optional.ofNullable(em.find(Location.class, locationId));
+    }
+    
+    @Override
     public Set<Location> getLocationByPublicationId(long pubId) {
         TypedQuery<Location> query = em.createQuery(
                 "SELECT l FROM Location l JOIN l.publications p WHERE p.publicationId = :pubId", Location.class);
@@ -49,6 +57,7 @@ public class LocationJpaDao implements LocationDao {
     }
 
     @Override
+    @Transactional
     public Location newLocation(String locationString) {
         final Location location = new Location(null, locationString);
 

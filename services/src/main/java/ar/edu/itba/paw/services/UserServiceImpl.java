@@ -2,7 +2,9 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.models.Location;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.interfaces.persistence.LocationDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
@@ -22,15 +24,17 @@ public class UserServiceImpl implements UserService {
     private final EmailService emailService;
     private final MessageSource messageSource;
     //private final UserReviewService userReviewsService;
-
+    private final LocationDao locationDao;
+    
     @Value("#{environment.webappUrl}")
     private String webappUrl;
 
-    public UserServiceImpl(final UserDao userDao, final PasswordEncoder passwordEncoder, final EmailService emailService, final MessageSource messageSource) {
+    public UserServiceImpl(final UserDao userDao, final PasswordEncoder passwordEncoder, final EmailService emailService, final MessageSource messageSource, final LocationDao locationDao) {
         this.userDao = userDao;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
         this.messageSource = messageSource;
+        this.locationDao = locationDao;
     }
 
     @Transactional
@@ -145,4 +149,51 @@ public class UserServiceImpl implements UserService {
     public void setUserLanguage(User user, String language) {
         userDao.setUserLanguage(user.getUserId(),language);
     }
+    
+    @Override
+    public void addLocation(Long userId, String locationString) {
+
+        Optional<User> userOptional = userDao.findById(userId);
+        
+        if (userOptional.isEmpty()) {
+            return;
+        }
+
+        User user = userOptional.get();
+        boolean locationExists = false;
+        
+        for (Location existingLocation : user.getLocations()) {
+            if (existingLocation.getLocationString().equals(locationString)) {
+                locationExists = true;
+                break;
+            }
+        }
+        
+        if (!locationExists)
+        {
+	        Location newLocation = locationDao.newLocation(locationString);
+	        userDao.addUserLocation(userId, newLocation);
+        }
+    }
+    
+    @Override
+    public void removeLocation(Long userId, Long locationId) {
+    	
+        Optional<User> userOptional = userDao.findById(userId);
+        
+        if (userOptional.isEmpty()) {
+            return;
+        }
+
+        Optional<Location> locationOptional = locationDao.findById(locationId);
+        
+        if (locationOptional.isEmpty()) {
+            return;
+        }
+
+        Location location = locationOptional.get();
+        
+        userDao.removeUserLocation(userId, location);
+    }
+
 }
