@@ -242,13 +242,16 @@
                                                             <div class="uk-inline">
 	                                                            
 	                                                            <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: location"></span>
-																<select class="uk-select no-arrow-select" name="location" aria-label="Not clickable icon" style="width: 90%">
+	                                                            <span>
+																<select class="uk-select no-arrow-select" name="locationId" aria-label="Not clickable icon" style="width: 90%">
 																    <c:forEach var="userLocation" items="${user.userLocations}">
-																        <option value="${userLocation.locationId}" <c:if test="${userLocation.locationId == user.favoriteLocation.locationId}"></c:if>>
+																        <option value="${userLocation.locationId}"
+																        	<c:if test="${userLocation.locationId == user.favoriteLocation.locationId}"/>>
 																            ${userLocation.locationString}
 																        </option>
 																    </c:forEach>
 																</select>
+																</span>
 <!--                                                                 <span class="uk-form-icon uk-form-icon-flip" -->
 <!--                                                                       uk-icon="icon: location"></span> -->
 <!--                                                                 <input class="uk-input" type="text" name="location" -->
