@@ -84,7 +84,7 @@
 
                                         <div style="padding: 0">
                                             <c:choose>
-                                                <c:when test="${!data.requester.book.images[0].image.isImageNull}">
+                                                <c:when test="${!empty data.requester.book.images && !data.requester.book.images[0].image.isImageNull}">
                                                     <img class="book-image"
                                                          src="<c:url value='/images/${data.requester.book.images[0].image.imageId}' />"
                                                          alt="bookImage"/>
@@ -117,7 +117,7 @@
                                         </div>
 
                                         <div style="padding: 0">
-                                            <c:if test="${!data.offerer.book.images.isNotEmpty}">
+                                            <c:if test="${!empty data.offerer.book.images && !data.offerer.book.images.isNotEmpty}">
                                             <img class="book-image"
                                                  src="<c:url value='/images/${data.offerer.book.images[0].image.imageId}' />"
                                                  alt="bookImage"/>
