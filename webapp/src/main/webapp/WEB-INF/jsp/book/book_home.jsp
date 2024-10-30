@@ -4,7 +4,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ include file="/WEB-INF/jsp/components/navbar_wo_search.jsp" %>
 <%-- <%@ page import="ar.edu.itba.paw.models.utils.PublicationState" %> --%>
-
 <!DOCTYPE html>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
@@ -240,18 +239,28 @@
                                                             </div>
 												
                                                             <div class="uk-inline">
+<!-- 	                                                            <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: location"></span> -->
 	                                                            
-	                                                            <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: location"></span>
-	                                                            <span>
-																<select class="uk-select no-arrow-select" name="locationId" aria-label="Not clickable icon" style="width: 90%">
-																    <c:forEach var="userLocation" items="${user.userLocations}">
-																        <option value="${userLocation.locationId}"
-																        	<c:if test="${userLocation.locationId == user.favoriteLocation.locationId}"/>>
-																            ${userLocation.locationString}
-																        </option>
-																    </c:forEach>
-																</select>
-																</span>
+	                                                            <c:choose>
+	                                                            	
+	                                                            	<c:when test="${not empty user.userLocations}">
+																		<select class="uk-select no-arrow-select" name="locationId" aria-label="Not clickable icon" style="width: 90%">
+																		    <c:forEach var="userLocation" items="${user.userLocations}">
+																		        <option value="${userLocation.locationId}"
+																		        	<c:if test="${userLocation.locationId == user.favoriteLocation.locationId}"/>>
+																		            ${userLocation.locationString}
+																		        </option>
+																		    </c:forEach>
+																		</select>
+																	</c:when>
+																	<c:otherwise>
+														            <p>
+														                <spring:message code="user.no.locations"/>
+														                <a href="<c:url value='/profile'/>"><spring:message code="user.add.location"/></a>
+														            </p>
+																	</c:otherwise>
+																</c:choose>
+																
 <!--                                                                 <span class="uk-form-icon uk-form-icon-flip" -->
 <!--                                                                       uk-icon="icon: location"></span> -->
 <!--                                                                 <input class="uk-input" type="text" name="location" -->
