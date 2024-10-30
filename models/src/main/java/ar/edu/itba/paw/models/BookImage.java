@@ -4,7 +4,6 @@ import ar.edu.itba.paw.models.utils.keys.BookImageId;
 
 import javax.persistence.*;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Entity

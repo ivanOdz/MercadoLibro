@@ -48,7 +48,7 @@ public class BookServiceImpl implements BookService {
         }
 
         bookDao.createBookRating(user, bookModelService.getBookModelByBookModelId(bookModelId), rating);
-        Book book = bookDao.createBook(bookModelService.getBookModelByBookModelId(bookModelId), user, bookState, bookImages);
+        Book book = bookDao.createBook(bookModelService.getBookModelByBookModelId(bookModelId), user, bookState);
 
         for (BookImage bookImage : bookImages) {
             bookImage.setBook(book);

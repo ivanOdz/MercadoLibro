@@ -74,7 +74,7 @@ public class BookJpaDao implements BookDao {
 
     @Override
     @Transactional
-    public Book createBook(BookModel bookModel, User owner, BookState bookState, List<BookImage> images) {
+    public Book createBook(BookModel bookModel, User owner, BookState bookState) {
         final Book book = new Book(null, owner, bookModel, bookState, 0, true, new ArrayList<>());
         em.persist(book);
         em.flush();
@@ -87,21 +87,8 @@ public class BookJpaDao implements BookDao {
     @Transactional
     @Override
     public void createBookRating(User user, BookModel bookModel, int rating) {
-        /*TypedQuery<BookRating> query = em.createQuery("from BookRating as br where br.userId = :userId and br.bookModelId = :bookModelId", BookRating.class);
-        query.setParameter("userId", user.getUserId());
-        query.setParameter("bookModelId", bookModel.getBookModelId());
-        //try {
-            Optional<BookRating> br = Optional.ofNullable(query.getSingleResult());
-        //} catch ()
-        if (br.isEmpty()) {
-            BookRating bookRating = new BookRating(user.getUserId(), bookModel.getBookModelId(), rating);
-            em.persist(bookRating);
-        } else {
-        //    try {
-                br.get().setRating(rating);
-        //        em.flush();
-        //    }
-        }*/
+        final BookRating br = new BookRating(user.getUserId(), bookModel.getBookModelId(), rating);
+        em.persist(br);
     }
 
     @Override
