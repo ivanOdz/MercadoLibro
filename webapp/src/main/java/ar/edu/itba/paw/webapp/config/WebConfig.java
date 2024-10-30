@@ -33,7 +33,7 @@ import java.util.Locale;
 import java.util.Properties;
 
 @EnableTransactionManagement
-@PropertySource("classpath:application${spring.profiles.active}.properties")
+@PropertySource("classpath:application.properties")
 @EnableWebMvc
 @ComponentScan({
         "ar.edu.itba.paw.webapp.controller",
@@ -133,10 +133,11 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         jpaProperties.setProperty("hibernate.hbm2ddl.auto", "update");
         jpaProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQL92Dialect");
 
-        if(!inProduction) {
-            jpaProperties.setProperty("hibernate.show_sql", "true");
-            jpaProperties.setProperty("hibernate.format_sql", "true");
-        }
+
+//        if(!inProduction) {
+//            jpaProperties.setProperty("hibernate.show_sql", "true");
+//            jpaProperties.setProperty("hibernate.format_sql", "true");
+//        }
 
         factoryBean.setJpaProperties(jpaProperties);
         return factoryBean;
