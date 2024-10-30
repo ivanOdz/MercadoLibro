@@ -3,6 +3,7 @@ package ar.edu.itba.paw.models;
 
 import ar.edu.itba.paw.models.utils.PublicationState;
 import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -42,6 +43,11 @@ public class Publication {
     @JoinColumn(name = "userid", nullable = false)
     private User user;
 
+    @Formula("(SELECT COUNT(fp.publicationid) FROM favorite_publication fp WHERE fp.publicationid = publicationid)")
+    private Integer likes;
+
+    @Formula("(SELECT COUNT(*) > 0 FROM favorite_publication fp WHERE fp.publicationid = publicationid AND fp.userid = userid)")
+    private Boolean isLikedByUser;
 
     public Publication(Long publicationId, Book book, User user,PublicationState publicationState, Timestamp publicationDatetime,List<Location> locations) {
         this.publicationId = publicationId;
@@ -110,5 +116,21 @@ public class Publication {
 
     public void addLocation(Location location) {
         locations.add(location);
+    }
+
+    public Integer getLikes() {
+        return likes;
+    }
+
+    public boolean isLikedByUser() {
+        return isLikedByUser;
+    }
+
+    public void setLikes(Integer likes) {
+        this.likes = likes;
+    }
+
+    public void setLikedByUser(boolean isLikedByUser) {
+        this.isLikedByUser = isLikedByUser;
     }
 }
