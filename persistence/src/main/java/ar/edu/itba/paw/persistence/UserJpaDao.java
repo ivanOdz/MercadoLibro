@@ -217,4 +217,11 @@ public class UserJpaDao implements UserDao {
 //        return rowsAffected >= 1;
         return true;   // revisar esto, no se que validacion queremos hacer aca para hibernate
     }
+    
+    @Transactional
+    @Override
+    public void update(User user) {
+    	
+    	em.merge(user);
+    }
 }

@@ -43,7 +43,7 @@ public class User {
     @JoinColumn(name = "favoriteLocation", referencedColumnName = "locationId")
     private Location favoriteLocation;
     
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_location",
             joinColumns = @JoinColumn(name = "userid"),

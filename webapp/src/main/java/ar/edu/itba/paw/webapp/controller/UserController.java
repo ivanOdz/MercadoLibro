@@ -36,6 +36,7 @@ import javax.validation.Valid;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 
 @Controller
@@ -276,10 +277,14 @@ public class UserController {
     
     @PostMapping("/user/addLocation")
     public ModelAndView addLocation(@RequestParam Long userId, @RequestParam String locationString) {
-    	
-        us.addLocation(userId, locationString);
-        
-        return new ModelAndView("redirect:/profile");
+		
+		us.addLocation(userId, locationString);
+		
+		Optional<User> updatedUser = us.findById(userId);
+		ModelAndView modelAndView = new ModelAndView("redirect:/profile");
+		updatedUser.ifPresent(user -> modelAndView.addObject("loggedUser", user));
+		
+		return modelAndView;
     }
 
     @PostMapping("/user/removeLocation")
@@ -287,6 +292,10 @@ public class UserController {
     	
         us.removeLocation(userId, locationId);
         
-        return new ModelAndView("redirect:/profile");
+		Optional<User> updatedUser = us.findById(userId);
+		ModelAndView modelAndView = new ModelAndView("redirect:/profile");
+		updatedUser.ifPresent(user -> modelAndView.addObject("loggedUser", user));
+		
+		return modelAndView;
     }
 }
