@@ -145,7 +145,10 @@
                                                 <c:out value="${card.title}"/>
                                             </h5>
                                             <p class="small-gray-text custom-link">
-                                                <c:out value="${card.authors}"/>
+                                                <c:forEach items="${card.authors}" var="author" varStatus="status">
+                                                    <c:out value="${author.authorName}"/>
+                                                    <c:if test="${!status.last}">, </c:if>
+                                                </c:forEach>
                                             </p>
                                             <p>
                                                 <c:out value="${card.genre}"/>
