@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.exceptions.base.ApplicationRuntimeException;
 import ar.edu.itba.paw.interfaces.exceptions.base.BadRequestException;
 import ar.edu.itba.paw.interfaces.exceptions.base.NotFoundException;
+import ar.edu.itba.paw.models.Location;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 import ar.edu.itba.paw.interfaces.services.UserReviewService;
@@ -32,11 +33,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+
+import java.util.List;
 import java.util.Locale;
 
 
 @Controller
 public class UserController {
+	
     private final UserService us;
 
     @Autowired
@@ -240,10 +244,10 @@ public class UserController {
     @RequestMapping("/profile")
     public ModelAndView profileHome(RedirectAttributes redirectAttributes,
                                     @RequestParam(name = "page", defaultValue = "0") int currentPage) {
-
         ModelAndView mav = new ModelAndView("profile/profile_home");
 
         mav.addObject("loggedUser", loggedUserAdvice.getLoggedUser());
+        mav.addObject("locationsUser", loggedUserAdvice.getLoggedUser().getLocations());
         mav.addObject("reviews", userReviewService.getReviewsEarnedByUserId(loggedUserAdvice.getLoggedUser().getUserId(), currentPage));
         mav.addObject("userRating", userReviewService.getUserRatingEarned(loggedUserAdvice.getLoggedUser().getUserId()));
 
@@ -268,4 +272,32 @@ public class UserController {
 
         return new ModelAndView("redirect:/profile");
     }
+    
+    @PostMapping("/user/updateLocations")
+    public String updateLocations(@RequestParam("locations") List<String> locations) {
+        
+        User user = loggedUserAdvice.getLoggedUser();
+        
+        for (String locationString : locations) {		// Esto hay que meterlo en un sevice
+        	
+            boolean exists = false;
+
+            for (Location existingLocation : user.getLocations()) {
+            	
+                if (existingLocation.getLocationString().equals(locationString)) {
+                    exists = true;
+                    break;
+                }
+            }
+
+            if (!exists) {
+            	
+                Location newLocation = new Location(null, locationString);
+                user.addLocation(newLocation);
+            }
+        }
+        
+        return "redirect:/profile";
+    }
+
 }

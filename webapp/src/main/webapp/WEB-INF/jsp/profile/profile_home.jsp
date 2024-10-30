@@ -124,7 +124,40 @@
                 <div>
                     <h3 class="uk-h5"><c:out value="${loggedUser.favoriteLocation}"/></h3>
                 </div>
-                
+				
+				<!-- Locations -->
+				<c:url var="locationUpdateUrl" value="/user/updateLocations"/>
+				
+				<form id="locations-form" action="${locationUpdateUrl}" method="post">
+				
+					<div id="locations-container" class="uk-container uk-margin-top uk-margin-bottom">
+						<label class="form-group">Locations</label>
+						<c:choose>
+						
+							<c:when test="${empty loggedUser.locations}">
+								<span>No locations :(</span>
+							</c:when>
+							
+							<c:otherwise>
+								<c:forEach var="userLocation" items="${loggedUser.locations}" varStatus="status">
+									<div class="location-item"><!-- le falta CSS -->>
+										<input class="uk-input" type="text" name="locations" value="${userLocation.locationString}" />
+										<button class="uk-button" type="button" onclick="removeLocationField(this)">
+											<span uk-icon="icon: close"></span>
+										</button>
+									</div>
+								</c:forEach>
+							</c:otherwise>
+							
+						</c:choose>
+						
+						<button class="uk-button uk-margin-right" type="button" onclick="addLocationField()">Add Location</button>
+					</div>
+					
+					<button class="uk-button uk-button-primary" type="submit">Save</button>
+				</form>
+
+
                 <button style="margin: 5% 0 5% 0;" class="uk-button uk-button-default" type="button"><spring:message code="language"/></button>
                 <div uk-dropdown>
                     <ul class="uk-nav uk-dropdown-nav ">
@@ -133,7 +166,6 @@
                     </ul>
                 </div>
 
-
                 <!-- 					<div class="changePasswordButton"> -->
                 <!-- 					    <a href="change_password_solicited" class="btn-red" title="Cambiar Contraseña"> -->
                 <!-- 					        Password change -->
@@ -141,7 +173,6 @@
                 <!-- 					</div> -->
 
                 <hr class="uk-divider-icon">
-
             </div>
 
             <div>
@@ -284,18 +315,48 @@
 <script type="text/javascript">
 
     function showEditForm() {
+    	
         document.getElementById('username-display').style.display = 'none';
         document.getElementById('change-username-btn').style.display = 'none';
         document.getElementById('change-username-form').style.display = 'block';
     }
 
     function cancelEdit() {
+    	
         document.getElementById('username-display').style.display = 'block';
         document.getElementById('change-username-btn').style.display = 'inline-block';
         document.getElementById('change-username-form').style.display = 'none';
     }
 
-</script>
+	function addLocationField() {
 
+		const newLocationDiv = document.createElement('div');
+		
+		newLocationDiv.classList.add('location-item');
+		
+		const newLocationInput = document.createElement('input');
+		
+		newLocationInput.type = 'text';
+		newLocationInput.classList.add('uk-input');
+		newLocationInput.name = 'locations';
+		newLocationInput.placeholder = 'New Location';
+		newLocationDiv.appendChild(newLocationInput);
+		
+		const removeButton = document.createElement('button');
+		
+		removeButton.classList.add('uk-button');
+		removeButton.type = 'button';
+		removeButton.innerHTML = '<span uk-icon="icon: close"></span>';
+		removeButton.onclick = () => removeLocationField(newLocationDiv); 
+		newLocationDiv.appendChild(removeButton);
+
+		document.getElementById('locations-container').appendChild(newLocationDiv);
+	}
+	
+	function removeLocationField(locationElement) {
+	    locationElement.remove();
+	}
+    
+</script>
 
 </html>

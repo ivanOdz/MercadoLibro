@@ -34,4 +34,6 @@ public interface UserDao {
     public void setUserFavoriteLocation(long userId, Location favoriteLocation);
     
     public void addUserLocation(long userId, Location location);
+    
+    public void removeUserLocation(long userId, Location location);
 }

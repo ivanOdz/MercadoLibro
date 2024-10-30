@@ -397,7 +397,6 @@
         authorIndex--;
     }
 
-
     document.addEventListener('DOMContentLoaded', function() {
         var previewContainer = document.getElementById('image-preview-container');
         var fileInput = document.getElementById('file-input');

@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-
 @Primary
 @Repository
 public class UserJpaDao implements UserDao {
@@ -117,20 +116,29 @@ public class UserJpaDao implements UserDao {
             user.setFavoriteLocation(favoriteLocation);
         });
     }
-
+    
     @Transactional
     @Override
-    public void addUserLocation(long userId, Location location) {/*
+    public void addUserLocation(long userId, Location location) {
     	
     	Optional<User> maybeUser = findById(userId);
     	
-        maybeUser.ifPresent(user -> {
-            user.setLocation(location);
+    	maybeUser.ifPresent(user -> {
+            user.addLocation(location);
+            em.merge(user);
         });
-        
-        Location location = locationRepository.findById(locationId);
+    }
 
-        user.addLocation(location); // Agrega la Location a la lista*/
+    @Transactional
+    @Override
+    public void removeUserLocation(long userId, Location location) {
+    	
+    	Optional<User> maybeUser = findById(userId);
+    	
+    	maybeUser.ifPresent(user -> {
+            user.removeLocation(location);
+            em.merge(user);
+        });
     }
     
     @Transactional

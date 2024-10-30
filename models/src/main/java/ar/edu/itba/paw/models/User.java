@@ -1,7 +1,10 @@
 package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
+
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -40,13 +43,13 @@ public class User {
     @JoinColumn(name = "favoriteLocation", referencedColumnName = "locationId")
     private Location favoriteLocation;
     
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(
-		name = "user_location",
-		joinColumns = @JoinColumn(name = "userId"),
-		inverseJoinColumns = @JoinColumn(name = "location_id")
+            name = "user_location",
+            joinColumns = @JoinColumn(name = "userid"),
+            inverseJoinColumns = @JoinColumn(name = "locationid")
     )
-    private List<Location> locations;
+    private Set<Location> locations = new HashSet<>();
 
     /* package */ public User(){
 
@@ -106,7 +109,7 @@ public class User {
     	return null;
     }
     
-    public List<Location> getLocations() {
+    public Set<Location> getLocations() {
     	return locations;
     }
 
@@ -145,8 +148,12 @@ public class User {
     public void setFavoriteLocation(Location favoriteLocation) {
     	this.favoriteLocation = favoriteLocation;
     }
+
+    public void removeLocation(Location location) {
+    	locations.removeIf(userLocation -> userLocation.getLocationString().equals(location.getLocationString()));	// Revisar*
+    }
     
-    public void setLocations(List<Location> locations) {
-    	this.locations = locations;
+    public void addLocation(Location location) {
+        locations.add(location);
     }
 }

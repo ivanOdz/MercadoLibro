@@ -20,7 +20,10 @@ public class Location {
 
     @ManyToMany(mappedBy = "locations")
     private List<Publication> publications = new ArrayList<>();
-
+    
+    @OneToMany(mappedBy = "locations")
+    private List<User> users = new ArrayList<>();
+    
     public Location() {
         // Hibernate
     }
@@ -42,6 +45,10 @@ public class Location {
         return publications;
     }
 
+    public List<User> getUsers() {
+        return users;
+    }
+    
     public String getLocationString() {
         return locationString;
     }
@@ -56,5 +63,9 @@ public class Location {
 
     public void addPublication(Publication publication) {
         publications.add(publication);
+    }
+    
+    public void addUser(User user) {
+        users.add(user);
     }
 }
