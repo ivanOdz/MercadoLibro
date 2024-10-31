@@ -106,3 +106,10 @@
     border: none;
     padding: 0;
 }
+
+.review-empty {
+    height: 25%;
+    align-content: center;
+    justify-content: center;
+    display: grid;
+}

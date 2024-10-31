@@ -165,28 +165,37 @@
                 <h2 class="uk-h4 subtitles-profile"><spring:message code="review.title"/></h2>
             </div>
 
-            <c:forEach var="review" items="${reviews.data}">
+            <c:if test="${not empty reviews.data}">
+                <c:forEach var="review" items="${reviews.data}">
 
-                <div class="uk-card uk-card-body uk-border-rounded uk-box-shadow-small uk-width-expand">
-                    <div class="reviewStars">
-                        <c:forEach var="i" begin="1" end="5">
-                            <c:choose>
-                                <c:when test="${i <= review.reviewRating}">
-                                    <i class="material-icons yellow-text">star</i>
-                                </c:when>
-                                <c:otherwise>
-                                    <i class="material-icons grey-text">star_border</i>
-                                </c:otherwise>
-                            </c:choose>
-                        </c:forEach>
+                    <div class="uk-card uk-card-body uk-border-rounded uk-box-shadow-small uk-width-expand">
+                        <div class="reviewStars">
+                            <c:forEach var="i" begin="1" end="5">
+                                <c:choose>
+                                    <c:when test="${i <= review.reviewRating}">
+                                        <i class="material-icons yellow-text">star</i>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <i class="material-icons grey-text">star_border</i>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:forEach>
+                        </div>
+
+                        <p class="date-text"><fmt:formatDate value="${review.reviewDate}" pattern="dd/MM/yyyy"/></p>
+                        <p><c:out value='${review.reviewer.username}'/>: <c:out value='${review.reviewDescription}'/></p>
+
                     </div>
 
-                    <p class="date-text"><fmt:formatDate value="${review.reviewDate}" pattern="dd/MM/yyyy"/></p>
-                    <p><c:out value='${review.reviewer.username}'/>: <c:out value='${review.reviewDescription}'/></p>
-                
+                </c:forEach>
+            </c:if>
+            <c:if test="${empty reviews.data}">
+                <div class="review-empty">
+                    <div style="margin:2%;width: max-content;">
+                        <spring:message code="reviews.empty"/>
+                    </div>
                 </div>
-
-            </c:forEach>
+            </c:if>
 
             <hr class="uk-divider-icon">
             <nav aria-label="Pagination" class="uk-position-relative uk-margin">
