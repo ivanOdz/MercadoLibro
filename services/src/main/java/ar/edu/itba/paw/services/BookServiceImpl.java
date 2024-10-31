@@ -34,9 +34,17 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public Book createBook(Long bookModelId, BookState bookState, int rating, List<MultipartFile> imageFiles, int bookCoverIndex, List<Long> imagesId, User user, boolean newBook) {
+    public Book createBook(Long bookModelId, BookState bookState, int rating, List<MultipartFile> imageFiles, int bookCoverIndex, List<Image> imageList,
+                           User user, boolean newBook) {
         List<BookImage> bookImages = new ArrayList<>();
-        List<Image> images = imageService.saveImage(arrangeImages(imageFiles, bookCoverIndex));
+
+
+        List<Image> images;
+        if (!newBook) {  // If it's a new book, the images are already saved
+            images = imageService.saveImage(arrangeImages(imageFiles, bookCoverIndex));
+        } else {
+            images = imageList;
+        }
 
         int order = 0;
         for (Image img : images) {
@@ -49,7 +57,6 @@ public class BookServiceImpl implements BookService {
 
         bookDao.createBookRating(user, bookModelService.getBookModelByBookModelId(bookModelId), rating);
         Book book = bookDao.createBook(bookModelService.getBookModelByBookModelId(bookModelId), user, bookState);
-
         for (BookImage bookImage : bookImages) {
             bookImage.setBook(book);
             book.getImages().add(bookImage);
@@ -91,12 +98,12 @@ public class BookServiceImpl implements BookService {
     public Book createNewBook(String isbn, String title, List<String> authors, String publisher, String description, Genre genre, int edition,
                                   Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension,
                                   Language language, int pages, int weight, BookState bookState, int rating, List<MultipartFile> imageFiles, int bookCoverIndex, User user){
-        List<Long> imagesId = imageService.saveImage(arrangeImages(imageFiles, bookCoverIndex)).stream().map(Image::getImageId).toList();
+        List<Image> images = imageService.saveImage(arrangeImages(imageFiles, bookCoverIndex));
 
         BookModel bookModel = bookModelService.createBookModel(isbn, title, authors, publisher, description, genre, edition,
-                publicationYear, isHardcover, isPocketEdition, dimension, language, pages, weight, imagesId.get(bookCoverIndex));
+                publicationYear, isHardcover, isPocketEdition, dimension, language, pages, weight, images.get(bookCoverIndex));
 
-        return createBook(bookModel.getBookModelId(), bookState, rating, imageFiles, bookCoverIndex, imagesId, user, true);
+        return createBook(bookModel.getBookModelId(), bookState, rating, imageFiles, bookCoverIndex, images, user, true);
     }
 
     @Transactional

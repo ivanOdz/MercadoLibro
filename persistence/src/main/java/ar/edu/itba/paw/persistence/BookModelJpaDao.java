@@ -33,11 +33,11 @@ public class BookModelJpaDao implements BookModelDao {
 
     @Override
     public BookModel createBookModel(String isbn, String title, String publisher, String description, Genre genre, int edition, Short publicationYear, boolean isHardcover,
-                                boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight, long bookCoverId, List<Author> authors) {
+                                boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight, Image bookCover, List<Author> authors) {
 
         //TODO: Completar como corresponde campo authors y chequear el rating.
         final BookModel bookModel = new BookModel(null, isbn, title, publisher, description, genre, edition, weight,
-              pages, language, dimension, publicationYear, isPocketEdition, isHardcover, authors, bookCoverId);
+              pages, language, dimension, publicationYear, isPocketEdition, isHardcover, authors, bookCover);
 
         em.persist(bookModel);
         return bookModel;
