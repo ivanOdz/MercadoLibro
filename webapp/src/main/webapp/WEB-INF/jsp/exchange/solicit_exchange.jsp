@@ -83,7 +83,7 @@
                                         <c:choose>
                                             <c:when test="${!availableBook.images[0].image.isImageNull}">
                                                 <img src="<c:url value='/images/${availableBook.images[0].image.imageId}' />"
-                                                     alt="Book Image" class="uk-border-circle" width="40" height="40">
+                                                     alt="Book Image" width="40" height="40">
                                             </c:when>
                                             <c:otherwise>
                                                 <img class="uk-border-circle" width="40" height="40"
