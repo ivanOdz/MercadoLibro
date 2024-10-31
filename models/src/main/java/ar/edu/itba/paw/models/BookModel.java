@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.utils.Language;
 import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
+import javax.validation.constraints.Digits;
 import java.util.List;
 
 @Entity
@@ -68,7 +69,7 @@ public class BookModel {
             inverseJoinColumns = @JoinColumn(name = "authorid"))
     private List<Author> authors;
 
-    @Formula("(SELECT AVG(br.rating) FROM book_rating br WHERE br.bookmodelid = bookmodelid)")
+    @Formula("(SELECT ROUND(AVG(br.rating), 1) FROM book_rating br WHERE br.bookmodelid = bookmodelid)")
     private Double averageRating;
 
     @Formula("(SELECT COUNT(br.rating) FROM book_rating br WHERE br.bookmodelid = bookmodelid)")
