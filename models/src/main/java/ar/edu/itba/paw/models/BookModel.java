@@ -231,4 +231,9 @@ public class BookModel {
     public Integer getRatingCount() {
         return ratingCount;
     }
+
+
+    public boolean getIsImageNull() {
+        return image == null;
+    }
 }

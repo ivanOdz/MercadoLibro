@@ -40,6 +40,6 @@ public class Image {
 	}
 
 	public boolean getIsImageNull() {
-		return image == null || image.length == 0;
+		return image == null || image.length == 0 || imageId == null;
 	}
 }
