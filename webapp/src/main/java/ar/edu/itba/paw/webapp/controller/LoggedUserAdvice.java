@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 import org.slf4j.Logger;
@@ -13,6 +14,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 public class LoggedUserAdvice {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoggedUserAdvice.class);
+    final UserService us;
+
+    public LoggedUserAdvice(UserService userService) {
+        this.us = userService;
+    }
 
     // Binding false because it is a read-onlu attribute
     @ModelAttribute(name = "loggedUser", binding = false)
@@ -20,7 +26,7 @@ public class LoggedUserAdvice {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.getPrincipal() instanceof PawUserDetails pud) {
             LOGGER.debug("Logged user is {}", pud.getUser());
-            return pud.getUser();
+            return us.findById(pud.getUser().getUserId()).get();
         }
         return null;
     }
