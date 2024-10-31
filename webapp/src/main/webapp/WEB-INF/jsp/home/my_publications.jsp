@@ -265,7 +265,7 @@
                   <div style="grid-column: 1 / 2; justify-self: self-start;">
                     <figure class="uk-margin-remove">
                       <c:choose>
-                        <c:when test="${card.book.images[0] != null}">
+                        <c:when test="${card.book.images[0] != null && !card.book.images[0].image.isImageNull}">
                           <img class="book-image uk-border-rounded"
                                src="<c:url value='/images/${card.book.images[0].image.imageId}' />"
                                alt="bookImage"/>
@@ -300,7 +300,6 @@
                                         </span>
                     </div>
                   </div>
-                <!-- Botones de acción (Fuera del enlace principal) -->
                 <div style="grid-column: 3 / 5; justify-self: center; align-self: center">
                   <div class="star-rating uk-flex uk-flex-middle">
                     <p class="small-gray-text custom-link" style="display: inline; margin-bottom: 0; margin-right:1rem;">
@@ -325,14 +324,34 @@
                     </p>
                   </div>
                   <div>
-                    <a class="uk-button uk-button-small uk-button-danger" href="<c:url value='publications/${card.publicationId}/delete' />">
+                    <a class="uk-button uk-button-small uk-button-danger"
+                       href="#modal-delete-${card.publicationId}"
+                       onclick="event.stopPropagation()" uk-toggle>
                       <spring:message code="publications.delete"/>
                     </a>
 <%--                    <a href="<c:url value='publications/${card.publicationId}/edit' />" class="uk-button uk-button-primary uk-button-small">--%>
 <%--                      <spring:message code="publications.edit"/>--%>
 <%--                    </a>--%>
+
+                    <div id="modal-delete-${card.publicationId}" uk-modal>
+                      <div class="uk-modal-dialog uk-modal-body">
+                        <h3 class="uk-h3"><spring:message code="publication.delete.confirmation.title"/></h3>
+                        <p class="uk-text-right">
+                          <button class="uk-button uk-button-default uk-modal-close" type="button"><spring:message
+                                  code="button.cancel"/></button>
+                          <button class="uk-button uk-button-danger" type="button">
+                            <a href="<c:url value='publications/${card.publicationId}/delete' />">
+                              <spring:message code="publication.delete"/>
+                            </a>
+                          </button>
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
+
+
+
               </div>
 
 
@@ -455,6 +474,8 @@
       </div>
     </div>
   </div>
+
+
 </div>
 </body>
 </html>
