@@ -65,7 +65,11 @@ public class UserJpaDao implements UserDao {
     public Optional<User> findByUsername(String username) {
         TypedQuery<User> query = em.createQuery("FROM User as u where u.username = :username", User.class);
         query.setParameter("username", username);
+        try{
         return Optional.ofNullable(query.getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 
 

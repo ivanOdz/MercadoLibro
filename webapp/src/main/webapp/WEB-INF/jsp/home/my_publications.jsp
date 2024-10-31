@@ -358,10 +358,16 @@
             </c:forEach>
           </div>
         </c:if>
+
         <c:if test="${empty publications.data}">
           <div class="uk-grid empty-publications">
-            <spring:message code="publications.empty"/>
+            <spring:message code="my_publications.empty"/>
+            <a style="margin:2%" class="uk-button uk-button-primary"
+               href="<c:url value='/book' />">
+              <spring:message code="publication.empty.upload"/>
+            </a>
           </div>
+
         </c:if>
 
         <hr class="uk-divider-icon">

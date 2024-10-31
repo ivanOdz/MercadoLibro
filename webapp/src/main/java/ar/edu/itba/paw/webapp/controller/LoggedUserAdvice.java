@@ -10,6 +10,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import java.util.Optional;
+
 @ControllerAdvice
 public class LoggedUserAdvice {
 
@@ -26,7 +28,8 @@ public class LoggedUserAdvice {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.getPrincipal() instanceof PawUserDetails pud) {
             LOGGER.debug("Logged user is {}", pud.getUser());
-            return us.findById(pud.getUser().getUserId()).get();
+            Optional<User> user = us.findById(pud.getUser().getUserId());
+            return user.orElse(null);
         }
         return null;
     }
