@@ -65,13 +65,14 @@
                         <input type="hidden" name="search" value="<c:out value='${modelBooks.metadata.search}'/>">
 
                         <button type="submit"
-                                class="uk-inline uk-search-button uk-button uk-button-default uk-button-small"
+                                class="uk-button uk-button-danger uk-button-small delete-button"
                                 title="GenreFilterRemove">
 							<span class="ui-search-filter-name">
 								<spring:message code="delete.genre.filter"/>
 							</span>
-                            <span uk-icon="close"></span>
+                            <span uk-icon="trash"></span>
                         </button>
+
                     </form>
                 </c:if>
 
