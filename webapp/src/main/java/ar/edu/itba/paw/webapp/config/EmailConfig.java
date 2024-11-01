@@ -6,6 +6,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.mail.MailSender;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -30,7 +31,7 @@ public class EmailConfig {
     }
 
     @Bean
-    public JavaMailSender getJavaMailSender(){
+    public MailSender getJavaMailSender(){
         JavaMailSenderImpl ms = new JavaMailSenderImpl();
         ms.setHost("smtp.gmail.com");
         ms.setPort(587);
