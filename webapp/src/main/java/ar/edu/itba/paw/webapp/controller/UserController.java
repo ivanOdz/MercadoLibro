@@ -150,7 +150,7 @@ public class UserController {
     @RequestMapping(value = "/change_password", method = RequestMethod.POST)
     public ModelAndView changePassword(@Valid @ModelAttribute("passwordForm") PasswordForm passwordForm, BindingResult errors, @RequestParam(name = "verification_code") int verificationCode) {
         if (errors.hasErrors()) {
-            LOGGER.debug("Password form has errors. Redirecting to password form");
+            LOGGER.info("Password form has errors. Redirecting to password form");
             return createPasswordForm(passwordForm, verificationCode);
         }
 
