@@ -21,7 +21,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import static ar.edu.itba.paw.models.utils.Constants.BOOKS_PAGE_SIZE;
+import static ar.edu.itba.paw.models.utils.Constants.*;
 
 @Repository
 @Primary
@@ -127,9 +127,20 @@ public class BookJpaDao implements BookDao {
     }
 
     @Override
-    public PaginatedResponse<Book, ItemFilterMetadata> getPaginatedBooks(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, int currentPage, long userId, SortType sortType) {
-        if(currentPage < 0){
-            currentPage = 0;
+    public PaginatedResponse<Book, ItemFilterMetadata> getPaginatedBooks(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, String currentPage, long userId, String sortType) {
+        int page;
+        try {
+            page = Integer.parseInt(currentPage);
+            if (page < 0) {
+                page = 0;
+            }
+        } catch (NumberFormatException e) {
+            page = 0;
+        }
+
+        SortType sort = SortType.fromString(sortType);
+        if(sort == null){
+            sort = DEFAULT_BOOK_SORT_TYPE;
         }
 
         StringBuilder sqlQuery = new StringBuilder(
@@ -161,7 +172,7 @@ public class BookJpaDao implements BookDao {
             nativeQuery.setParameter("bookStateFilter", bookStateFilter.toString());
         }
 
-        nativeQuery.setFirstResult(currentPage * BOOKS_PAGE_SIZE);
+        nativeQuery.setFirstResult(page * BOOKS_PAGE_SIZE);
         nativeQuery.setMaxResults(BOOKS_PAGE_SIZE);
 
         @SuppressWarnings("unchecked")
@@ -188,7 +199,7 @@ public class BookJpaDao implements BookDao {
 
         int totalResults = getTotalResultsByBook(safeSearch, isGenreFilterActive, genreFilter, isBookStateFilterActive, bookStateFilter, userId);
 
-        return new PaginatedResponse<>(query.getResultList(), new ItemFilterMetadata(currentPage, BOOKS_PAGE_SIZE, totalResults, search, isGenreFilterActive, genreFilter, sortType, null, isBookStateFilterActive, bookStateFilter, null));
+        return new PaginatedResponse<>(query.getResultList(), new ItemFilterMetadata(page, BOOKS_PAGE_SIZE, totalResults, search, isGenreFilterActive, genreFilter, sort, null, isBookStateFilterActive, bookStateFilter, null));
     }
 
     public List<GenreWrapper> getGenreQtyByBook(String search, boolean isBookStateFilterActive, BookState bookStateFilter, long userId) {

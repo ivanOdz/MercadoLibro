@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static ar.edu.itba.paw.models.utils.Constants.*;
+
 @Service
 public class BookServiceImpl implements BookService {
 
@@ -123,20 +125,40 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public PaginatedResponse<Book, ItemFilterMetadata> getPaginatedBooks(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, int currentPage, long userId, SortType sortType) {
-        PaginatedResponse<Book, ItemFilterMetadata> response = bookDao.getPaginatedBooks(search, isBookStateFilterActive, bookStateFilter, isGenreFilterActive, genreFilter, currentPage, userId, sortType);
+    public PaginatedResponse<Book, ItemFilterMetadata> getPaginatedBooks(String search, String isBookStateFilterActive, String bookStateFilter, String isGenreFilterActive, String genreFilter, String currentPage, long userId, String sortType) {
 
-        List<BookStateWrapper> bookStateWrapperList = bookDao.getBookStateQtyByBook(search, isGenreFilterActive, genreFilter, userId);
-        List<GenreWrapper> genreWrapperList = bookDao.getGenreQtyByBook(search, isBookStateFilterActive, bookStateFilter, userId);
+        boolean bookStateFilterActive = "true".equalsIgnoreCase(isBookStateFilterActive);
+        boolean genreFilterActive = "true".equalsIgnoreCase(isGenreFilterActive);
+
+        BookState state = DEFAULT_BOOK_STATE_FILTER;
+        if (bookStateFilterActive) {
+            state = BookState.fromString(bookStateFilter);
+            if (state == null) {
+                bookStateFilterActive = false;
+            }
+        }
+
+        Genre genre = DEFAULT_BOOK_GENRE_FILTER;
+        if(genreFilterActive){
+            genre = Genre.fromString(genreFilter);
+            if(genre == null){
+                genreFilterActive = false;
+            }
+        }
+
+        PaginatedResponse<Book, ItemFilterMetadata> response = bookDao.getPaginatedBooks(search, bookStateFilterActive, state, genreFilterActive, genre, currentPage, userId, sortType);
+
+        List<BookStateWrapper> bookStateWrapperList = bookDao.getBookStateQtyByBook(search, genreFilterActive, genre, userId);
+        List<GenreWrapper> genreWrapperList = bookDao.getGenreQtyByBook(search, bookStateFilterActive, state, userId);
 
         List<BookStateWrapper> bookStates = new ArrayList<>();
-        for (BookStateWrapper state : bookStateWrapperList) {
-            bookStates.add(new BookStateWrapper(state.getBookState(), bookStateService.getBookStateDisplayName(state.getBookState()), state.getResultByState()));
+        for (BookStateWrapper bookStateWrapper : bookStateWrapperList) {
+            bookStates.add(new BookStateWrapper(bookStateWrapper.getBookState(), bookStateService.getBookStateDisplayName(bookStateWrapper.getBookState()), bookStateWrapper.getResultByState()));
         }
 
         List<GenreWrapper> genres = new ArrayList<>();
-        for (GenreWrapper genre : genreWrapperList) {
-            genres.add(new GenreWrapper(genre.getGenre(), genreService.getGenreDisplayName(genre.getGenre()), genre.getResultByGenre()));
+        for (GenreWrapper genreWrapper : genreWrapperList) {
+            genres.add(new GenreWrapper(genreWrapper.getGenre(), genreService.getGenreDisplayName(genreWrapper.getGenre()), genreWrapper.getResultByGenre()));
         }
 
         response.getMetadata().setBookStateWrapperList(bookStates);

@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.models.utils;
 
 
+import net.bytebuddy.TypeCache;
+
 public final class Constants {
 
     private Constants() {
@@ -24,4 +26,10 @@ public final class Constants {
     public static final BookState DEFAULT_PUBLICATION_STATE_FILTER = BookState.NEW;
 
     public static final Genre DEFAULT_PUBLICATION_GENRE_FILTER = Genre.WESTERN;
+
+    public static final BookState DEFAULT_BOOK_STATE_FILTER = BookState.NEW;
+
+    public static final Genre DEFAULT_BOOK_GENRE_FILTER = Genre.WESTERN;
+
+    public static final SortType DEFAULT_BOOK_SORT_TYPE = SortType.RATING_DESCENDING;
 }
