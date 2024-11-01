@@ -99,10 +99,10 @@ public class BookController {
 
     @RequestMapping("/book/book_models")
     public ModelAndView bookModels(@RequestParam(name = "search", defaultValue = "") String search,
-                                   @RequestParam(name = "is-genre-filter-active", defaultValue = "false") boolean isGenreFilterActive,
-                                   @RequestParam(name = "genre-filter", required = false) Genre genreFilter,
-                                   @RequestParam(name = "page", defaultValue = "0") int currentPage,
-                                   @RequestParam(name = "sort-type", defaultValue = "BOOK_NAME_ASCENDING") SortType sortType) {
+                                   @RequestParam(name = "is-genre-filter-active", defaultValue = "false") String isGenreFilterActive,
+                                   @RequestParam(name = "genre-filter", required = false) String genreFilter,
+                                   @RequestParam(name = "page", defaultValue = "0") String currentPage,
+                                   @RequestParam(name = "sort-type", defaultValue = "BOOK_NAME_ASCENDING") String sortType) {
 
         ModelAndView mav = new ModelAndView("book/book_models");
         PaginatedResponse<BookModel, BookModelMetadata> modelBooks = bookModelService.getPaginatedBookModels(search, isGenreFilterActive, genreFilter, currentPage, sortType);

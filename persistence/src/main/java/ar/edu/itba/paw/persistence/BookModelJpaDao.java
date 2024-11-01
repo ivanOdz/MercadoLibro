@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.models.utils.Constants.BOOKS_PAGE_SIZE;
+import static ar.edu.itba.paw.models.utils.Constants.*;
 
 @Primary
 @Repository
@@ -76,9 +76,20 @@ public class BookModelJpaDao implements BookModelDao {
     }
 
     @Override
-    public PaginatedResponse<BookModel, BookModelMetadata> getPaginatedBookModels(String search, boolean isGenreFilterActive, Genre genreFilter, int currentPage, SortType sortType) {
-        if(currentPage < 0){
-            currentPage = 0;
+    public PaginatedResponse<BookModel, BookModelMetadata> getPaginatedBookModels(String search, boolean isGenreFilterActive, Genre genreFilter, String currentPage, String sortType) {
+        int page;
+        try {
+            page = Integer.parseInt(currentPage);
+            if (page < 0) {
+                page = 0;
+            }
+        } catch (NumberFormatException e) {
+            page = 0;
+        }
+
+        SortType sort = SortType.fromString(sortType);
+        if(sort == null){
+            sort = DEFAULT_BOOK_SORT_TYPE;
         }
 
         // Metodo de paginacion 1 + 1
@@ -98,7 +109,7 @@ public class BookModelJpaDao implements BookModelDao {
             nativeQuery.setParameter("genreFilter", genreFilter.toString());
         }
         nativeQuery.setMaxResults(BOOKS_PAGE_SIZE);
-        nativeQuery.setFirstResult(currentPage * BOOKS_PAGE_SIZE);
+        nativeQuery.setFirstResult(page * BOOKS_PAGE_SIZE);
 
         @SuppressWarnings("unchecked")
         List<Long> bookModelIds = nativeQuery.getResultList().stream().mapToLong(n -> ((Number) n).longValue()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
@@ -133,7 +144,7 @@ public class BookModelJpaDao implements BookModelDao {
 
         List<BookModel> bookModels = query.getResultList();
 
-        return new PaginatedResponse<>(bookModels, new BookModelMetadata(currentPage, BOOKS_PAGE_SIZE, totalResults, safeSearch, isGenreFilterActive, genreFilter, sortType, null));
+        return new PaginatedResponse<>(bookModels, new BookModelMetadata(page, BOOKS_PAGE_SIZE, totalResults, safeSearch, isGenreFilterActive, genreFilter, sort, null));
     }
 
     @Override

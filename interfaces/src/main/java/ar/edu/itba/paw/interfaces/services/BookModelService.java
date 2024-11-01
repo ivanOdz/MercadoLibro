@@ -15,5 +15,5 @@ public interface BookModelService {
 
     BookModel getBookModelByBookModelId(Long bookModelId);
 
-    PaginatedResponse<BookModel, BookModelMetadata> getPaginatedBookModels(String search, boolean isGenreFilterActive, Genre genreFilter, int currentPage, SortType sortType);
+    PaginatedResponse<BookModel, BookModelMetadata> getPaginatedBookModels(String search, String isGenreFilterActive, String genreFilter, String currentPage, String sortType);
 }
