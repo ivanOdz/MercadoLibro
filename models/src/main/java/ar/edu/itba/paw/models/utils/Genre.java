@@ -59,13 +59,15 @@ public enum Genre {
 		return "genre." + name();
 	}
 
+
 	public static Genre fromString(String genreFilter) {
-		try {
-			int intValue = Integer.parseInt(genreFilter);
-			return Genre.fromInt(intValue);
-		} catch (Exception e) {
-			return null;
+		for (Genre genre : Genre.values()) {
+			if (genre.name().equalsIgnoreCase(genreFilter)) {
+				return genre;
+			}
 		}
+		return null;
 	}
+
 
 }

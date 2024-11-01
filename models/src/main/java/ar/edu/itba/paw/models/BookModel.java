@@ -6,7 +6,7 @@ import ar.edu.itba.paw.models.utils.Language;
 import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
-import javax.validation.constraints.Digits;
+//import javax.validation.constraints.Digits;
 import java.util.List;
 
 @Entity

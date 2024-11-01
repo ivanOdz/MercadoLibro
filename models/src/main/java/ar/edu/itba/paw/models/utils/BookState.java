@@ -35,12 +35,13 @@ public enum BookState {
 	}
 
 	public static BookState fromString(String bookStateFilter) {
-		try {
-			int intValue = Integer.parseInt(bookStateFilter);
-			return BookState.fromInt(intValue);
-		} catch (Exception e) {
-			return null;
+		for (BookState state : BookState.values()) {
+			if (state.name().equalsIgnoreCase(bookStateFilter)) {
+				return state;
+			}
 		}
+		return null;
 	}
+
 
 }
