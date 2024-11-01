@@ -58,6 +58,7 @@
 							<span class="ui-search-filter-name">
 								<spring:message code="delete.genre.filter"/>
 							</span>
+                            <span uk-icon="trash"></span>
                         </button>
                     </form>
                 </c:if>
