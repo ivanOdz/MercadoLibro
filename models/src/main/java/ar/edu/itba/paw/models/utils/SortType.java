@@ -18,11 +18,12 @@ public enum SortType {
     }
 
     public static SortType fromString(String sortTypeFilter) {
-        try {
-            int intValue = Integer.parseInt(sortTypeFilter);
-            return SortType.fromInt(intValue);
-        } catch (Exception e) {
-            return null;
+        for (SortType sortType : SortType.values()) {
+            if (sortType.name().equalsIgnoreCase(sortTypeFilter)) {
+                return sortType;
+            }
         }
+        return null;
     }
+
 }

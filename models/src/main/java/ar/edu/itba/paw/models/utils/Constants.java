@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.models.utils;
 
 
-import net.bytebuddy.TypeCache;
-
 public final class Constants {
 
     private Constants() {

@@ -100,6 +100,7 @@ public class PublicationJpaDao implements PublicationDao {
                         "FROM publication p " +
                         "JOIN book b ON p.bookId = b.bookId " +
                         "JOIN book_model bm ON bm.bookModelId = b.bookModelId " +
+                        "LEFT JOIN book_rating br ON bm.bookModelId = br.bookModelId " +
                         "WHERE p.publicationState = :publicationState AND LOWER(bm.title) LIKE LOWER(:safeSearch) ESCAPE '\\' "
         );
 
@@ -115,12 +116,14 @@ public class PublicationJpaDao implements PublicationDao {
             nativeQueryString.append("AND b.bookState = :bookState ");
         }
 
+        nativeQueryString.append(" GROUP BY p.publicationid ");
+
         switch (sort) {
             case RATING_ASCENDING:
-                nativeQueryString.append(" ORDER BY rating ASC");
+                nativeQueryString.append(" ORDER BY AVG(br.rating) ASC");
                 break;
             case RATING_DESCENDING:
-                nativeQueryString.append(" ORDER BY rating DESC");
+                nativeQueryString.append(" ORDER BY AVG(br.rating) DESC");
                 break;
             case BOOK_NAME_ASCENDING:
                 nativeQueryString.append(" ORDER BY title ASC");
