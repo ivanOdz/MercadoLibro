@@ -9,6 +9,7 @@ import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.BookModelMetadata;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.support.SimpleTriggerContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,13 +23,11 @@ import static ar.edu.itba.paw.models.utils.Constants.DEFAULT_PUBLICATION_STATE_F
 @Service
 public class BookModelServiceImpl implements BookModelService {
 
-    private final BookModelDao bookModelDao;
-    private final GenreService genreService;
+    @Autowired
+    private BookModelDao bookModelDao;
 
-    public BookModelServiceImpl(final BookModelDao bookModelDao, GenreService genreService) {
-        this.bookModelDao = bookModelDao;
-        this.genreService = genreService;
-    }
+    @Autowired
+    private GenreService genreService;
 
     @Transactional
     @Override

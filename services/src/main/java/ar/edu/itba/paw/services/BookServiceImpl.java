@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.interfaces.persistence.BookDao;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,20 +20,20 @@ import static ar.edu.itba.paw.models.utils.Constants.*;
 @Service
 public class BookServiceImpl implements BookService {
 
-    private final BookDao bookDao;
+    @Autowired
+    private BookDao bookDao;
 
-    private final BookStateService bookStateService;
-    private final GenreService genreService;
-    private final BookModelService bookModelService;
-    private final ImageService imageService;
+    @Autowired
+    private BookStateService bookStateService;
 
-    public BookServiceImpl(final BookDao bookDao, BookStateService bookStateService, GenreService genreService, final BookModelService bookModelService, final ImageService imageService) {
-        this.bookDao = bookDao;
-        this.bookStateService = bookStateService;
-        this.genreService = genreService;
-        this.bookModelService = bookModelService;
-        this.imageService = imageService;
-    }
+    @Autowired
+    private GenreService genreService;
+
+    @Autowired
+    private BookModelService bookModelService;
+
+    @Autowired
+    private ImageService imageService;
 
     @Override
     @Transactional

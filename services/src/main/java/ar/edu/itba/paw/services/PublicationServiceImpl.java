@@ -8,6 +8,7 @@ import ar.edu.itba.paw.interfaces.persistence.PublicationDao;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -21,16 +22,15 @@ import static ar.edu.itba.paw.models.utils.Constants.DEFAULT_PUBLICATION_STATE_F
 @Service
 public class PublicationServiceImpl implements PublicationService {
 
-    private final PublicationDao pubDao;
+    @Autowired
+    private PublicationDao pubDao;
 //    private final LocationService locationService;
-    private final BookStateService bookStateService;
-    private final GenreService genreService;
 
-    public PublicationServiceImpl(final PublicationDao pubDao, BookStateService bookStateService, GenreService genreService) {
-        this.pubDao = pubDao;
-        this.bookStateService = bookStateService;
-        this.genreService = genreService;
-    }
+    @Autowired
+    private BookStateService bookStateService;
+
+    @Autowired
+    private GenreService genreService;
 
     @Override
     @Transactional

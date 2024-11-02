@@ -41,11 +41,13 @@ import java.util.Optional;
 
 @Controller
 public class UserController {
-	
-    private final UserService us;
+
+    @Autowired
+    private UserService us;
 
     @Autowired
     private PawUserDetailsService userDetailsService;
+
     @Autowired
     private UserReviewService userReviewService;
 
@@ -56,11 +58,6 @@ public class UserController {
     private LoggedUserAdvice loggedUserAdvice;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
-
-    public UserController(final UserService us) {
-        this.us = us;
-    }
-
 
     @RequestMapping("/login")
     public ModelAndView login(@RequestParam(value = "error", required = false) String error,

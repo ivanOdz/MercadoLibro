@@ -3,17 +3,17 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.persistence.LocationDao;
 import ar.edu.itba.paw.interfaces.services.LocationService;
 import ar.edu.itba.paw.models.Location;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
 @Service
 public class LocationServiceImpl implements LocationService {
-    private final LocationDao locationDao;
 
-    public LocationServiceImpl(LocationDao locationDao) {
-        this.locationDao = locationDao;
-    }
+    @Autowired
+    private LocationDao locationDao;
+
 
     @Override
     public Set<Location> getLocationsByPublicationId(long pubId) {

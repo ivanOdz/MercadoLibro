@@ -28,49 +28,10 @@ import static ar.edu.itba.paw.models.utils.Constants.*;
 public class BookJpaDao implements BookDao {
 
     @Autowired
-    MessageSource messageSource;
+    private MessageSource messageSource;
 
     @PersistenceContext
     private EntityManager em;
-
-
-    private final String aggregationFunctionAuthor;
-    private final String aggregationFunctionImages;
-
-//    static final RowMapper<Book> ROW_MAPPER_BOOK =
-//            (rs, rowNum) -> {
-//                User owner = ROW_MAPPER_USER.mapRow(rs, rowNum);
-//                BookModel bookModel = ROW_MAPPER_BOOK_MODEL.mapRow(rs, rowNum);
-//                BookState bookState = BookState.fromInt(rs.getInt("bookState"));
-//                int exchangesQty = rs.getInt("exchangesQty");
-//
-//                List<Integer> images = rs.getObject("images") == null ? new ArrayList<>() : Arrays.asList((Integer[]) rs.getArray("images").getArray());
-//
-//                return new Book(rs.getLong("bookId"), owner, bookModel, bookState, exchangesQty, rs.getBoolean("available"), images);
-//            };
-
-    private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public BookJpaDao(final DataSource ds) throws SQLException {
-
-            jdbcTemplate = new JdbcTemplate(ds);
-//            jdbcInsertBook = new SimpleJdbcInsert(jdbcTemplate).usingGeneratedKeyColumns("bookid").withTableName("book");
-//            jdbcInsertBookRating = new SimpleJdbcInsert(jdbcTemplate).withTableName("book_rating").usingGeneratedKeyColumns("ratingid");
-//            jdbcInsertBookImage = new SimpleJdbcInsert(jdbcTemplate).withTableName("book_image");
-
-            String databaseProductName = ds.getConnection().getMetaData().getDatabaseProductName();
-
-            if (databaseProductName.equalsIgnoreCase("HSQL Database Engine")) {
-
-                this.aggregationFunctionAuthor = "'author' AS authors, ";
-                this.aggregationFunctionImages = "null AS images, ";
-            }
-            else { // databaseProductName.equalsIgnoreCase("PostgreSQL")
-                this.aggregationFunctionAuthor = "(SELECT GROUP_CONCAT(a.authorName, ', ') FROM book_author ba JOIN author a ON a.authorId = ba.authorId WHERE ba.bookModelId = bm.bookModelId) AS authors, ";
-                this.aggregationFunctionImages = "ARRAY_AGG(i.imageId ORDER BY bi.imageOrder) AS images, ";
-            }
-    }
 
     @Override
     @Transactional

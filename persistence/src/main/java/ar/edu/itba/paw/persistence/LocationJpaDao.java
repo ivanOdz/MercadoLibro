@@ -23,24 +23,8 @@ import java.util.*;
 @Repository
 public class LocationJpaDao implements LocationDao {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert jdbcInsert;
-
     @PersistenceContext
     private EntityManager em;
-
-    private static final RowMapper<Location> ROWMAPPERLOCATION=
-            (rs, rowNum) -> new Location(
-                    rs.getLong("locationid"),
-                    rs.getString("locationstring")
-            );
-
-
-    @Autowired
-    public LocationJpaDao(final DataSource ds) {
-        jdbcTemplate = new JdbcTemplate(ds);
-        jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("location").usingGeneratedKeyColumns("locationid");
-    }
 
     @Override
     public Optional<Location> findById(long locationId) {

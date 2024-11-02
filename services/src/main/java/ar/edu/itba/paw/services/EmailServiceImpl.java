@@ -21,18 +21,16 @@ import java.util.Map;
 @Service
 public class EmailServiceImpl implements EmailService {
 
-    private final JavaMailSender mailSender;
-    private final SpringTemplateEngine templateEngine;
+    @Autowired
+    private JavaMailSender mailSender;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(EmailServiceImpl.class);
+    @Autowired
+    private SpringTemplateEngine templateEngine;
 
     @Autowired
     private MessageSource messageSource;
 
-    public EmailServiceImpl(final JavaMailSender javaMailSender, final SpringTemplateEngine templateResolver) {
-        this.mailSender = javaMailSender;
-        this.templateEngine = templateResolver;
-    }
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmailServiceImpl.class);
 
     @Async
     @Override

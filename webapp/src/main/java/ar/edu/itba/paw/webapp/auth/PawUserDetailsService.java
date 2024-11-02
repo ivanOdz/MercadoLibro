@@ -21,16 +21,14 @@ import java.util.Set;
 @Component
 public class PawUserDetailsService implements UserDetailsService {
 
-    private final UserService us;
-    private final PublicationService ps;
+    @Autowired
+    private UserService us;
+
+    @Autowired
+    private PublicationService ps;
 
     @Autowired
     private MessageSource messageSource;
-
-    public PawUserDetailsService(UserService us, PublicationService ps) {
-        this.us = us;
-        this.ps = ps;
-    }
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {

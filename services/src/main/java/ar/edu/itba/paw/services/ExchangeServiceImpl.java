@@ -17,25 +17,24 @@ import java.util.*;
 
 @Service
 public class ExchangeServiceImpl implements ExchangeService {
-	
-    private final ExchangeDao exchangeDao;
-    private final BookService bs;
-    private final PublicationService ps;
-    private final EmailService emailService;
+
+    @Autowired
+    private ExchangeDao exchangeDao;
+
+    @Autowired
+    private BookService bs;
+
+    @Autowired
+    private PublicationService ps;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private MessageSource messageSource;
 
     @Value("#{environment.webappUrl}")
     private String webappUrl;
-
-    private final MessageSource messageSource;
-
-    public ExchangeServiceImpl(final ExchangeDao exchangeDao, final BookService bs, final PublicationService ps, final EmailService emailService, final MessageSource messageSource) {
-    	
-        this.exchangeDao = exchangeDao;
-        this.bs = bs;
-        this.ps = ps;
-        this.emailService = emailService;
-        this.messageSource = messageSource;
-    }
 
     @Transactional
     @Override

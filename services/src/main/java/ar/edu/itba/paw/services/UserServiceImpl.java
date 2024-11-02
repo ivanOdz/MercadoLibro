@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.Location;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.interfaces.persistence.LocationDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Primary;
@@ -19,23 +20,27 @@ import java.util.*;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final UserDao userDao;
-    private final PasswordEncoder passwordEncoder;
-    private final EmailService emailService;
-    private final MessageSource messageSource;
+    @Autowired
+    private UserDao userDao;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private MessageSource messageSource;
+
+    //@Autowired
     //private final UserReviewService userReviewsService;
-    private final LocationDao locationDao;
+
+    @Autowired
+    private LocationDao locationDao;
     
     @Value("#{environment.webappUrl}")
     private String webappUrl;
 
-    public UserServiceImpl(final UserDao userDao, final PasswordEncoder passwordEncoder, final EmailService emailService, final MessageSource messageSource, final LocationDao locationDao) {
-        this.userDao = userDao;
-        this.passwordEncoder = passwordEncoder;
-        this.emailService = emailService;
-        this.messageSource = messageSource;
-        this.locationDao = locationDao;
-    }
 
     @Transactional
     @Override

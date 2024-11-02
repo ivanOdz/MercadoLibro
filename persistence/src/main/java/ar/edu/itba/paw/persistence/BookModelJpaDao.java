@@ -25,9 +25,6 @@ import static ar.edu.itba.paw.models.utils.Constants.*;
 @Repository
 public class BookModelJpaDao implements BookModelDao {
 
-    @Autowired
-    MessageSource messageSource;
-
     @PersistenceContext
     private EntityManager em;
 

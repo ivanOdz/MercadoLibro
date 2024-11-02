@@ -35,12 +35,14 @@ import java.util.stream.Stream;
 @Controller
 public class BookController {
 
+    @Autowired
+    private BookService bookService;
 
-    private final BookService bookService;
+    @Autowired
+    private BookModelService bookModelService;
 
-    private final BookModelService bookModelService;
-
-    private final PublicationService publicationService;
+    @Autowired
+    private PublicationService publicationService;
 
     @Autowired
     private GenreService genreService;
@@ -57,18 +59,11 @@ public class BookController {
     @Autowired
     private LoggedUserAdvice loggedUserAdvice;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BookController.class);
     @Qualifier("messageSource")
     @Autowired
     private MessageSource messageSource;
 
-
-    public BookController(BookService bookService, BookModelService bookModelService, PublicationService publicationService) {
-        this.bookService = bookService;
-        this.bookModelService = bookModelService;
-        this.publicationService = publicationService;
-    }
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(BookController.class);
 
     @RequestMapping("/book")
     public ModelAndView bookHome(@RequestParam(name = "search", defaultValue = "") String search,

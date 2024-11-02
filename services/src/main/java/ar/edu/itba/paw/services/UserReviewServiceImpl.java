@@ -8,19 +8,18 @@ import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.UserReview;
 import ar.edu.itba.paw.models.utils.Rating;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserReviewServiceImpl implements UserReviewService {
 
-	private final UserReviewDao userReviewDao;
-	private final ExchangeService exchangeService;
-	
-	public UserReviewServiceImpl(final UserReviewDao urDao, final ExchangeService exchangeService) {
-		
-		this.userReviewDao = urDao;
-		this.exchangeService = exchangeService;
-	}
+	@Autowired
+	private UserReviewDao userReviewDao;
+
+	@Autowired
+	private ExchangeService exchangeService;
+
 
 	@Override
 	public Boolean createUserReview(long exchangeId, long userId, String description, int rating) {

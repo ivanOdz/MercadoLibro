@@ -30,28 +30,27 @@ import java.util.*;
 @Controller
 public class ExchangeController {
 
-    private final ExchangeService exchangeService;
-    private final PublicationService publicationService;
-    private final BookService bookService;
+    @Autowired
+    private ExchangeService exchangeService;
 
     @Autowired
-    private final UserReviewService userReviewService;
+    private PublicationService publicationService;
+
+    @Autowired
+    private BookService bookService;
+
+    @Autowired
+    private UserReviewService userReviewService;
 
     @Autowired
     private LoggedUserAdvice loggedUserAdvice;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ExchangeController.class);
     @Qualifier("messageSource")
     @Autowired
     private MessageSource messageSource;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExchangeController.class);
 
-    public ExchangeController(final ExchangeService exchangeService, PublicationService publicationService, BookService bookService, UserReviewService userReviewService) {
-        this.exchangeService = exchangeService;
-        this.publicationService = publicationService;
-        this.bookService = bookService;
-        this.userReviewService = userReviewService;
-    }
 
     // Requests (osea peticiones que me hacen a mi)
     // Paso el ID, y quiero aquellas exchanges en las que soy offerer
