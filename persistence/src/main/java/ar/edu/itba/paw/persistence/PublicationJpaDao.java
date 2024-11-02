@@ -116,20 +116,21 @@ public class PublicationJpaDao implements PublicationDao {
             nativeQueryString.append("AND b.bookState = :bookState ");
         }
 
-        nativeQueryString.append(" GROUP BY p.publicationid ");
 
         switch (sort) {
             case RATING_ASCENDING:
+                nativeQueryString.append(" GROUP BY p.publicationid ");
                 nativeQueryString.append(" ORDER BY AVG(br.rating) ASC");
                 break;
             case RATING_DESCENDING:
+                nativeQueryString.append(" GROUP BY p.publicationid ");
                 nativeQueryString.append(" ORDER BY AVG(br.rating) DESC");
                 break;
             case BOOK_NAME_ASCENDING:
-                nativeQueryString.append(" ORDER BY title ASC");
+                nativeQueryString.append(" ORDER BY bm.title ASC");
                 break;
             case BOOK_NAME_DESCENDING:
-                nativeQueryString.append(" ORDER BY title DESC");
+                nativeQueryString.append(" ORDER BY bm.title DESC");
                 break;
             case PUBLICATION_DATE_DESCENDING:
                 nativeQueryString.append(" ORDER BY publicationDatetime DESC");
