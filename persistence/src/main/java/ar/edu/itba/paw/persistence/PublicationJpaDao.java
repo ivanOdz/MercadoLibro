@@ -120,11 +120,11 @@ public class PublicationJpaDao implements PublicationDao {
         switch (sort) {
             case RATING_ASCENDING:
                 nativeQueryString.append(" GROUP BY p.publicationid ");
-                nativeQueryString.append(" ORDER BY AVG(br.rating) ASC");
+                nativeQueryString.append(" ORDER BY COALESCE(AVG(br.rating), 0) ASC");
                 break;
             case RATING_DESCENDING:
                 nativeQueryString.append(" GROUP BY p.publicationid ");
-                nativeQueryString.append(" ORDER BY AVG(br.rating) DESC");
+                nativeQueryString.append(" ORDER BY COALESCE(AVG(br.rating), 0) DESC");
                 break;
             case BOOK_NAME_ASCENDING:
                 nativeQueryString.append(" ORDER BY bm.title ASC");
