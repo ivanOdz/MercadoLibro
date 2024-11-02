@@ -373,7 +373,7 @@
                                     <c:param name="genre-filter" value="${publications.metadata.genreFilter}" />
                                     <c:param name="book-state-filter" value="${publications.metadata.bookStateFilter}" />
                                     <c:param name="search" value="${publications.metadata.search}" />
-                                    <c:param name="sort-type" value="${publications.metadata.sortType}" />
+                                    <c:param name="order" value="${publications.metadata.sortType}" />
                                 </c:url>
                                 <a href="${prevPageUrl}">
                                     <span uk-pagination-previous></span>
@@ -392,7 +392,7 @@
                                     <c:param name="genre-filter" value="${publications.metadata.genreFilter}" />
                                     <c:param name="book-state-filter" value="${publications.metadata.bookStateFilter}" />
                                     <c:param name="search" value="${publications.metadata.search}" />
-                                    <c:param name="sort-type" value="${publications.metadata.sortType}" />
+                                    <c:param name="order" value="${publications.metadata.sortType}" />
                                 </c:url>
                                 <a href="${firstPageUrl}">1</a>
                             </li>
@@ -413,7 +413,7 @@
                                     <c:param name="genre-filter" value="${publications.metadata.genreFilter}" />
                                     <c:param name="book-state-filter" value="${publications.metadata.bookStateFilter}" />
                                     <c:param name="search" value="${publications.metadata.search}" />
-                                    <c:param name="sort-type" value="${publications.metadata.sortType}" />
+                                    <c:param name="order" value="${publications.metadata.sortType}" />
                                 </c:url>
                                 <a href="${centralPageUrl}">${i + 1}</a> <!-- Mostrar i + 1 para la numeración -->
                             </li>
@@ -433,7 +433,7 @@
                                     <c:param name="genre-filter" value="${publications.metadata.genreFilter}" />
                                     <c:param name="book-state-filter" value="${publications.metadata.bookStateFilter}" />
                                     <c:param name="search" value="${publications.metadata.search}" />
-                                    <c:param name="sort-type" value="${publications.metadata.sortType}" />
+                                    <c:param name="order" value="${publications.metadata.sortType}" />
                                 </c:url>
                                 <a href="${lastPageUrl}">${publications.metadata.maxPage + 1}</a> <!-- Mostrar maxPage + 1 -->
                             </li>
@@ -449,7 +449,7 @@
                                     <c:param name="genre-filter" value="${publications.metadata.genreFilter}" />
                                     <c:param name="book-state-filter" value="${publications.metadata.bookStateFilter}" />
                                     <c:param name="search" value="${publications.metadata.search}" />
-                                    <c:param name="sort-type" value="${publications.metadata.sortType}" />
+                                    <c:param name="order" value="${publications.metadata.sortType}" />
                                 </c:url>
                                 <a href="${nextPageUrl}">
                                     <spring:message code="publications.pagination.next"/>
