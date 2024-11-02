@@ -57,12 +57,8 @@ public class UserServiceImpl implements UserService {
         }
         
         User user = userDao.createUser(username, mail, passwordEncoder.encode(password), language, generateVerificationCode());
-        
-        Map<String, Object> variables = new HashMap<>();
-        variables.put("username", user.getUsername());
-        variables.put("validationUrl", webappUrl + "/verification?verification_code=" + user.getVerificationCode());
-        emailService.sendEmail(user.getMail(), variables, "verification", messageSource.getMessage("email.subject.verification", null, Locale.forLanguageTag(user.getLanguage())), user.getLanguage());
 
+        emailService.sendVerificationEmail(user);
         return user;
     }
 
@@ -79,12 +75,7 @@ public class UserServiceImpl implements UserService {
         userDao.changePasswordSolicited(email, verificationCode);
         User u = getUserToVerify(verificationCode);
 
-        Map<String, Object> variables = new HashMap<>();
-        variables.put("validationUrl", webappUrl +"/change_password?verification_code=" + verificationCode);
-
-        String locale = u.getLanguage() != null ? u.getLanguage() : Locale.getDefault().getLanguage();
-
-        emailService.sendEmail(email, variables, "changePassword", messageSource.getMessage("email.subject.passwordChange", null, Locale.forLanguageTag(locale)), locale);
+        emailService.sendPasswordChangeEmail(u);
     }
 
     @Override
@@ -137,18 +128,6 @@ public class UserServiceImpl implements UserService {
     public User getUserToVerify(int verificationCode) {
         return userDao.getUserToVerify(verificationCode);
     }
-
-/*
-    // Mudar la logica al UserReviewService.
-    @Override
-    public List<UserReview> getReviewsByUserId(long userId, int pageIndex) {
-        return userDao.getReviewsByUserId(userId, pageIndex);
-    }
-    // Mudar la logica al UserReviewService.
-    @Override
-    public Double getUserRating(long userId) {
-        return userDao.getUserRating(userId);
-    }*/
 
     @Override
     public void setUserLanguage(User user, String language) {

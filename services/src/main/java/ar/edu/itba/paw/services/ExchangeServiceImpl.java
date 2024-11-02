@@ -51,28 +51,13 @@ public class ExchangeServiceImpl implements ExchangeService {
 
         Exchange ex = exchangeDao.createExchange(offererPubId, requesterPubId, acceptCode, timestamp);
 
-//        System.out.println("CREATE EXCHANGE " + ex);
-//        
-//        System.out.println(requesterPubId);
-//        System.out.println(acceptCode);
-//        System.out.println(timestamp);
-        
         // mail variables setup
-        Map<String, Object> variables = new HashMap<>();
         User offerer = ex.getOfferer().getBook().getOwner();
         User requester = ex.getRequester().getBook().getOwner();
         Book bookOffered = ex.getOfferer().getBook();
         Book bookRequested = ex.getRequester().getBook();
 
-        variables.put("requesterEmail", requester.getMail());
-        variables.put("requesterName", requester.getUsername());
-        variables.put("requestedPublication", bookRequested.getBookModel().getTitle());
-        variables.put("offeredPublication", bookOffered.getBookModel().getTitle());
-        variables.put("validationUrl", webappUrl + "/createexchange?accept_code=" + ex.getAcceptCode() + "&state=true");
-        variables.put("rejectionUrl", webappUrl + "/createexchange?accept_code=" + ex.getAcceptCode() + "&state=false");
-        variables.put("exchangeUrl", webappUrl + "/offers"); // TODO: verificar el funcionamiento de esto
-
-        emailService.sendEmail(offerer.getMail(), variables, "exchangeRequest", messageSource.getMessage("email.subject.request", null, Locale.forLanguageTag(offerer.getLanguage())), offerer.getLanguage());
+        emailService.sendExchangeRequestEmail(requester, offerer, bookRequested, bookOffered, ex.getAcceptCode());
     }
 
     @Transactional
@@ -95,22 +80,13 @@ public class ExchangeServiceImpl implements ExchangeService {
 
 
         // --- email variables
-        Map<String, Object> variables = new HashMap<>();
+//        Map<String, Object> variables = new HashMap<>();
         Book bookOffered = ex.getOfferer().getBook();
         Book bookRequested = ex.getRequester().getBook();
         User requester = bookRequested.getOwner();
         User offerer = bookOffered.getOwner();
 
-        variables.put("requestedBook", bookRequested.getBookModel().getTitle());
-        variables.put("offeredBook", bookOffered.getBookModel().getTitle());
-        variables.put("requesterEmail", requester.getMail());
-        variables.put("requesterName", requester.getUsername());
-        variables.put("offererName", offerer.getUsername());
-        variables.put("offererEmail", offerer.getMail());
-        variables.put("exchangeUrl", webappUrl + "/requests");
-        variables.put("publicationsUrl", webappUrl);
-
-        emailService.sendExchangeEmail(requester.getMail(), variables, state, requester.getLanguage());
+        emailService.sendExchangeEmail(requester, offerer, bookRequested, bookOffered, state);
 
         ps.terminatePublication(ex.getOfferer());
         ps.terminatePublication(ex.getRequester());
