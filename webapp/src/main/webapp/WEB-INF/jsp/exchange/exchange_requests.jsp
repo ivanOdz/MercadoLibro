@@ -964,10 +964,37 @@
                             <div id="info-offered-book-images" uk-grid></div>
 
                             <div>
-                                <button style="width: 100%" id="add-review-button" class="uk-button uk-button-primary"
+                                <button style="width: 100%" id="add-review-button"
+                                        class="uk-button uk-button-primary uk-border-rounded"
                                         uk-toggle="target: #modal-add-review">
                                     <spring:message code="exchange.button.add_review"/>
                                 </button>
+                                <div style="margin: 5%; justify-content: center;display:flex">
+                                    <a class="button" type="button"  href="#modal-chat" uk-toggle>
+                                        <span uk-icon="comment" class="svgIcon" viewBox="0 0 384 512"></span>
+                                    </a>
+                                </div>
+
+                                <div id="modal-chat" uk-modal>
+                                    <div class="uk-modal-dialog">
+
+                                        <button class="uk-modal-close-default" type="button" uk-close></button>
+
+                                        <div class="uk-modal-header chat-header">
+                                            <h2 class="uk-modal-title">Chat</h2>
+                                        </div>
+
+                                        <div class="uk-modal-body" uk-overflow-auto>
+                                            <!-- Contenido -->
+                                        </div>
+
+                                        <div class="chat-input uk-modal-footer">
+                                            <input type="text" class="message-input" placeholder="Type your message here">
+                                            <button class="send-button">Send</button>
+                                        </div>
+
+                                    </div>
+                                </div>
                             </div>
 
                             <div id="modal-add-review" uk-modal>

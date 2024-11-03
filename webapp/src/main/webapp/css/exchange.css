@@ -222,3 +222,100 @@ a:hover {
     height: 50px;
     width: 50px;
 }
+
+/* From Uiverse.io by vinodjangid07 */
+.button {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(30, 135, 240);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition-duration: 0.3s;
+    overflow: hidden;
+    position: relative;
+}
+
+.svgIcon {
+    width: 12px;
+    transition-duration: 0.3s;
+}
+
+.svgIcon path {
+    fill: #1e87f0;
+}
+
+.button:hover {
+    width: 120px;
+    border-radius: 50px;
+    transition-duration: 0.3s;
+    background-color: rgb(30, 135, 240);
+    align-items: center;
+}
+
+.button:hover .svgIcon {
+    /* width: 20px; */
+    transition-duration: 0.3s;
+    transform: translateY(-200%);
+}
+
+.button::before {
+    position: absolute;
+    bottom: -20px;
+    content: "CHAT";
+    color: white;
+    font-weight: normal;
+    /* transition-duration: .3s; */
+    font-size: 0px;
+}
+
+.button:hover::before {
+    font-size: 13px;
+    opacity: 1;
+    bottom: unset;
+    /* transform: translateY(-30px); */
+    transition-duration: 0.3s;
+}
+
+.chat-header {
+    background-color: #ffffff;
+    color: #000000;
+    padding: 10px;
+    font-size: 18px;
+    border-bottom-color: #e8e8e8;
+}
+
+.chat-input {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-top: 1px solid #ccc;
+}
+
+.message-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 5px;
+    font-size: 14px;
+}
+
+.send-button {
+    border: none;
+    outline: none;
+    background-color: #333;
+    color: #fff;
+    font-size: 14px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.send-button:hover {
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+    box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.25);
+}
