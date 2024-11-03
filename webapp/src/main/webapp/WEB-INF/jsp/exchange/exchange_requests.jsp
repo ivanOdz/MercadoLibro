@@ -912,7 +912,7 @@
                                         </li>
                                     </c:if>
 
-                                    <%--                                    <!-- Botón Next -->--%>
+                                    <%--Botón Next ---%>
                                     <c:if test="${rejected.metadata.currentPage < rejected.metadata.maxPage}">
                                         <li>
                                             <c:url var="nextPageUrl" value="">
@@ -984,13 +984,20 @@
                                             <h2 class="uk-modal-title">Chat</h2>
                                         </div>
 
-                                        <div class="uk-modal-body" uk-overflow-auto>
-                                            <!-- Contenido -->
+                                        <div class="uk-modal-body chat-body" uk-overflow-auto>
+                                            <div class="message incoming">
+                                                <p>holaa, donde nos encontramos?</p>
+                                            </div>
+                                            <div class="message outgoing">
+                                                <p>buenas, todo bien? El Lunes por la tarde en la plaza?</p>
+                                            </div>
                                         </div>
 
-                                        <div class="chat-input uk-modal-footer">
-                                            <input type="text" class="message-input" placeholder="Type your message here">
-                                            <button class="send-button">Send</button>
+                                        <div class="message-input">
+                                            <form>
+                                                <textarea placeholder="<spring:message code="chat.placeholder.text"/>" class="message-send"></textarea>
+                                                <button type="submit" class="button-send"><spring:message code="chat.send"/></button>
+                                            </form>
                                         </div>
 
                                     </div>
