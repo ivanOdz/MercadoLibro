@@ -3,10 +3,7 @@ package ar.edu.itba.paw.interfaces.services;
 import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.models.utils.BookState;
-import ar.edu.itba.paw.models.utils.Genre;
-import ar.edu.itba.paw.models.utils.PublicationState;
-import ar.edu.itba.paw.models.utils.SortType;
+import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 
 import java.util.List;
@@ -32,4 +29,8 @@ public interface PublicationService {
     void deletePublication(long publicationId);
 
     void likePublication(long publicationId, long userId);
+
+    List<GenreWrapper> getGenreWrapperList(String search, String isBookStateFilterActive, String bookStateFilter);
+
+    List<BookStateWrapper> getBookStateWrapperList(String search, String isGenreFilterActive, String genreFilter);
 }

@@ -7,6 +7,8 @@ import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 
 import ar.edu.itba.paw.webapp.form.ExchangeForm;
+import ar.edu.itba.paw.webapp.utilities.EnumInternationalizationUtil;
+import ar.edu.itba.paw.webapp.utilities.LocalizedEnumWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,30 +20,25 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Controller
 public class PublicationController {
 
-    private final PublicationService ps;
-    private final BookService bs;
+    @Autowired
+    private PublicationService ps;
 
     @Autowired
-    private GenreService genreService;
+    private BookService bs;
 
     @Autowired
     private LoggedUserAdvice loggedUserAdvice;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
     @Qualifier("messageSource")
     @Autowired
     private MessageSource messageSource;
 
-    public PublicationController(PublicationService ps, BookService bs) {
-        this.ps = ps;
-        this.bs = bs;
-    }
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     @RequestMapping("/")
     public ModelAndView index(@RequestParam(name = "search", defaultValue = "") String search,
@@ -57,7 +54,15 @@ public class PublicationController {
                     bookStateFilter, isGenreFilterActive, genreFilter, sortType, currentPage);
 
 
+        List<GenreWrapper> genreWrapperList = ps.getGenreWrapperList(search, isBookStateFilterActive, bookStateFilter);
+        List<BookStateWrapper> bookStateWrapperList = ps.getBookStateWrapperList(search, isGenreFilterActive, genreFilter);
+
+        List<LocalizedEnumWrapper<GenreWrapper>> localizedGenreWrappers = EnumInternationalizationUtil.localizeGenreWrappers(genreWrapperList);
+        List<LocalizedEnumWrapper<BookStateWrapper>> localizedBookStateWrappers = EnumInternationalizationUtil.localizeBookStateWrappers(bookStateWrapperList);
+
         mav.addObject("publications", publications);
+        mav.addObject("genreWrapperList", localizedGenreWrappers);
+        mav.addObject("bookStateWrapperList", localizedBookStateWrappers);
 
         return mav;
     }
@@ -101,7 +106,8 @@ public class PublicationController {
         mav.addObject("exchangeForm", new ExchangeForm());
         mav.addObject("publication", publication);
         mav.addObject("imgCount", publication.getBook().getImages().size());
-        mav.addObject("genres", Stream.of(Genre.values()).map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
+        mav.addObject("genres", EnumInternationalizationUtil.getLocalizedGenres());
+
         return mav;
     }
 

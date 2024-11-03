@@ -146,18 +146,17 @@ public class BookModelJpaDao implements BookModelDao {
 
     @Override
     public List<GenreWrapper> getGenreQtyByBookModel(String search) {
+        String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
+
         String sqlQuery = "SELECT bm.genre, COUNT(*) AS genreCount " +
                 "FROM book_model bm " +
                 "WHERE LOWER(bm.title) LIKE LOWER(:search) ESCAPE '\\' " +
                 "GROUP BY bm.genre";
 
-        // Crear la consulta nativa
-        // Aparentemente este warning es por inconsistencias en hibernate
-        // https://stackoverflow.com/questions/54109546/entitymanager-createnativequery-does-not-return-a-typed-result
 
-        // ASK: Preguntar si esta bien hacer que createNativeQuery retorne List<Object[]>.
+        @SuppressWarnings("unchecked")
         List<Object[]> results = em.createNativeQuery(sqlQuery)
-                .setParameter("search", "%" + search.toLowerCase() + "%")
+                .setParameter("search", "%" + safeSearch.toLowerCase() + "%")
                 .getResultList();
 
         // Mapear los resultados a GenreWrapper

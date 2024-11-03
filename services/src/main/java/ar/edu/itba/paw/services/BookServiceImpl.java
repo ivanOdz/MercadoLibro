@@ -147,26 +147,7 @@ public class BookServiceImpl implements BookService {
             }
         }
 
-        PaginatedResponse<Book, ItemFilterMetadata> response = bookDao.getPaginatedBooks(search, bookStateFilterActive, state, genreFilterActive, genre, currentPage, userId, sortType);
-
-        List<BookStateWrapper> bookStateWrapperList = bookDao.getBookStateQtyByBook(search, genreFilterActive, genre, userId);
-        List<GenreWrapper> genreWrapperList = bookDao.getGenreQtyByBook(search, bookStateFilterActive, state, userId);
-
-        List<BookStateWrapper> bookStates = new ArrayList<>();
-        for (BookStateWrapper bookStateWrapper : bookStateWrapperList) {
-            bookStates.add(new BookStateWrapper(bookStateWrapper.getBookState(), bookStateService.getBookStateDisplayName(bookStateWrapper.getBookState()), bookStateWrapper.getResultByState()));
-        }
-
-        List<GenreWrapper> genres = new ArrayList<>();
-        for (GenreWrapper genreWrapper : genreWrapperList) {
-            genres.add(new GenreWrapper(genreWrapper.getGenre(), genreService.getGenreDisplayName(genreWrapper.getGenre()), genreWrapper.getResultByGenre()));
-        }
-
-        response.getMetadata().setBookStateWrapperList(bookStates);
-        response.getMetadata().setGenreWrapperList(genres);
-
-        return response;
-
+        return bookDao.getPaginatedBooks(search, bookStateFilterActive, state, genreFilterActive, genre, currentPage, userId, sortType);
     }
 
     public List<MultipartFile> arrangeImages(List<MultipartFile> images, int bookCoverIndex) {

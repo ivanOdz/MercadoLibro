@@ -60,18 +60,11 @@ public class BookModelServiceImpl implements BookModelService {
             }
         }
 
-        PaginatedResponse<BookModel, BookModelMetadata> response = bookModelDao.getPaginatedBookModels(search, genreFilterActive, genre, currentPage, sortType);
+        return bookModelDao.getPaginatedBookModels(search, genreFilterActive, genre, currentPage, sortType);
+    }
 
-        List<GenreWrapper> genreWrapperList = bookModelDao.getGenreQtyByBookModel(search);
-
-        List<GenreWrapper> genres = new ArrayList<>();
-        for (GenreWrapper genreWrapper : genreWrapperList) {
-            genres.add(new GenreWrapper(genreWrapper.getGenre(), genreService.getGenreDisplayName(genreWrapper.getGenre()), genreWrapper.getResultByGenre()));
-        }
-
-        response.getMetadata().setGenreWrapperList(genres);
-
-        return response;
-
+    @Override
+    public List<GenreWrapper> getGenreWrapperList(String search) {
+        return bookModelDao.getGenreQtyByBookModel(search);
     }
 }

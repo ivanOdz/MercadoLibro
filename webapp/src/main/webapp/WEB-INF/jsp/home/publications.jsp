@@ -66,21 +66,24 @@
                 <c:if test="${!publications.metadata.isBookStateFilterActive}">
                     <h3><spring:message code="filter.condition"/></h3>
                     <ul class="uk-list">
-                        <c:forEach var="bookStateWrapper" items="${publications.metadata.bookStateWrapperList}">
+                        <c:forEach var="bookStateWrapper" items="${bookStateWrapperList}">
                             <li class="ui-search-filter-container">
                                 <form action="<c:url value='' />" method="get">
                                     <input type="hidden" name="search" value="<c:out value='${publications.metadata.search}'/>">
                                     <input type="hidden" name="is-book-state-filter-active" value='true'>
                                     <input type="hidden" name="book-state-filter"
-                                           value="${bookStateWrapper.bookState}">
+                                           value="${bookStateWrapper.enumWrapper.bookState}">
                                     <input type="hidden" name="is-genre-filter-active" value="${publications.metadata.isGenreFilterActive}">
                                     <input type="hidden" name="genre-filter" value="${publications.metadata.genreFilter}">
 
 
                                     <a href="#" class="uk-inline uk-search-button uk-button-link" title="BookStateFilterRemove" onclick="this.closest('form').submit(); return false;">
+
+                                        <c:set var="i18nBookStateKey" value="${bookStateWrapper.i18nDisplayName}" />
                                         <span class="ui-search-filter-name">
-                                                ${bookStateWrapper.displayName} (${bookStateWrapper.resultByState})
+                                            <spring:message code="${i18nBookStateKey}"/>
                                         </span>
+                                        <span> (${bookStateWrapper.enumWrapper.resultByState})</span>
                                     </a>
 
                                 <%--                                    <button type="submit"--%>
@@ -98,21 +101,22 @@
                 <c:if test="${!publications.metadata.isGenreFilterActive}">
                     <h3><spring:message code="filter.genre"/></h3>
                     <ul class="uk-list">
-                        <c:forEach var="genreWrapper" items="${publications.metadata.genreWrapperList}">
+                        <c:forEach var="genreWrapper" items="${genreWrapperList}">
                             <li class="ui-search-filter-container">
                                 <form action="<c:url value='' />" method="get">
-                                    <input type="hidden" name="genre-filter" value="${genreWrapper.genre}">
+                                    <input type="hidden" name="genre-filter" value="${genreWrapper.enumWrapper.genre}">
                                     <input type="hidden" name="is-genre-filter-active" value="true">
                                     <input type="hidden" name="book-state-filter" value="${publications.metadata.bookStateFilter}">
                                     <input type="hidden" name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}">
                                     <input type="hidden" name="search" value="<c:out value='${publications.metadata.search}'/>"/>
 
                                     <a href="#" class="uk-inline uk-search-button uk-button-link" title="GenreFilterRemove" onclick="this.closest('form').submit(); return false;">
+                                        <c:set var="i18nKey" value="${genreWrapper.i18nDisplayName}" />
                                         <span class="ui-search-filter-name">
-                                                ${genreWrapper.displayName} (${genreWrapper.resultByGenre})
+                                            <spring:message code="${i18nKey}"/>
                                         </span>
+                                        <span> (${genreWrapper.enumWrapper.resultByGenre})</span>
                                     </a>
-
                                 </form>
                             </li>
                         </c:forEach>

@@ -112,7 +112,12 @@
                         </form:label>
                         <form:select path="genre" class="uk-input">
                             <c:forEach var="genreWrapper" items="${genres}">
-                                <form:option value="${genreWrapper.genre}" label="${genreWrapper.displayName}"/>
+                                <form:option value="${genreWrapper.enumWrapper}">
+                                    <c:set var="i18nKey" value="${genreWrapper.i18nDisplayName}" />
+                                    <span class="ui-search-filter-name">
+                                        <spring:message code="${i18nKey}"/>
+                                    </span>
+                                </form:option>
                             </c:forEach>
                         </form:select>
                     </div>

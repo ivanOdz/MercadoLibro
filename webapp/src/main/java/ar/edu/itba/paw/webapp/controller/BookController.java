@@ -9,6 +9,8 @@ import ar.edu.itba.paw.models.utils.pagination.BookModelMetadata;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 import ar.edu.itba.paw.webapp.form.BookDetailsForm;
 import ar.edu.itba.paw.webapp.form.BookForm;
+import ar.edu.itba.paw.webapp.utilities.EnumInternationalizationUtil;
+import ar.edu.itba.paw.webapp.utilities.LocalizedEnumWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,7 @@ import javax.validation.Valid;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.time.Year;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -43,9 +46,6 @@ public class BookController {
 
     @Autowired
     private PublicationService publicationService;
-
-    @Autowired
-    private GenreService genreService;
 
     @Autowired
     private BookStateService bookStateService;
@@ -102,8 +102,12 @@ public class BookController {
         ModelAndView mav = new ModelAndView("book/book_models");
         PaginatedResponse<BookModel, BookModelMetadata> modelBooks = bookModelService.getPaginatedBookModels(search, isGenreFilterActive, genreFilter, currentPage, sortType);
 
+        List<GenreWrapper> genreWrapperList = bookModelService.getGenreWrapperList(search);
+        List<LocalizedEnumWrapper<GenreWrapper>> localizedGenreWrappers = EnumInternationalizationUtil.localizeGenreWrappers(genreWrapperList);
+
+        mav.addObject("genres", localizedGenreWrappers);
         mav.addObject("modelBooks", modelBooks);
-        mav.addObject("genres", Stream.of(Genre.values()).map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
+
 
         return mav;
     }
@@ -117,11 +121,12 @@ public class BookController {
         mav.addObject("user", user);
         mav.addObject("bookForm", bookForm);
 
-        mav.addObject("genres", Stream.of(Genre.values()).map(genre -> new GenreWrapper(genre, genreService.getGenreDisplayName(genre))).collect(Collectors.toList()));
+
+        mav.addObject("genres", EnumInternationalizationUtil.getLocalizedGenres());
+        mav.addObject("bookStates", EnumInternationalizationUtil.getLocalizedBookStates());
         mav.addObject("languages", Stream.of(Language.values()).map(language -> new LanguageWrapper(language, languageService.getLanguageDisplayName(language))).collect(Collectors.toList()));
         mav.addObject("dimensions", Stream.of(BookDimension.values()).map(dimension -> new BookDimensionWrapper(dimension, bookDimensionService.getDimensionDisplayName(dimension))).collect(Collectors.toList()));
         mav.addObject("currentYear", Year.now().getValue());
-        mav.addObject("bookStates", Stream.of(BookState.values()).map(bookStatus -> new BookStateWrapper(bookStatus, bookStateService.getBookStateDisplayName(bookStatus))).collect(Collectors.toList()));
         mav.addObject("step", 1);
 
         return mav;

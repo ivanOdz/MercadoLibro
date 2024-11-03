@@ -53,12 +53,6 @@ public enum Genre {
 		
 		return value;
 	}
-	
-	public String getKey() {
-		
-		return "genre." + name();
-	}
-
 
 	public static Genre fromString(String genreFilter) {
 		for (Genre genre : Genre.values()) {

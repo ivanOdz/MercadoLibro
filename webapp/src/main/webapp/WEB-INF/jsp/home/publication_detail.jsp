@@ -107,8 +107,11 @@
                         <div>
                             <p class="small-gray-text custom-link">
                                 <c:forEach var="genreWrapper" items="${genres}">
-                                    <c:if test="${genreWrapper.genre == publication.book.bookModel.genre}">
-                                        <c:out value="${genreWrapper.displayName}"/>
+                                    <c:if test="${genreWrapper.enumWrapper == publication.book.bookModel.genre}">
+                                        <c:set var="genre" value="${genreWrapper.i18nDisplayName}" />
+                                        <span class="ui-search-filter-name">
+                                            <spring:message code="${genre}"/>
+                                        </span>
                                     </c:if>
                                 </c:forEach>
                             </p>
@@ -175,32 +178,32 @@
                             <c:choose>
                                 <c:when test="${publication.book.bookState == 'NEW'}">
                                     <div style="margin-left: 20px;">
-                                        <strong><spring:message code="bookState.new"/></strong>
+                                        <strong><spring:message code="bookstate.new"/></strong>
                                     </div>
                                 </c:when>
                                 <c:when test="${publication.book.bookState == 'LIKE_NEW'}">
                                     <div style="margin-left: 20px;">
-                                        <strong><spring:message code="bookState.like.new"/></strong>
+                                        <strong><spring:message code="bookstate.like.new"/></strong>
                                     </div>
                                 </c:when>
                                 <c:when test="${publication.book.bookState == 'VERY_GOOD'}">
                                     <div style="margin-left: 20px;">
-                                        <strong><spring:message code="bookState.very.good"/></strong>
+                                        <strong><spring:message code="bookstate.very.good"/></strong>
                                     </div>
                                 </c:when>
                                 <c:when test="${publication.book.bookState == 'GOOD'}">
                                     <div style="margin-left: 20px;">
-                                        <strong><spring:message code="bookState.good"/></strong>
+                                        <strong><spring:message code="bookstate.good"/></strong>
                                     </div>
                                 </c:when>
                                 <c:when test="${publication.book.bookState == 'ACCEPTABLE'}">
                                     <div style="margin-left: 20px;">
-                                        <strong><spring:message code="bookState.acceptable"/></strong>
+                                        <strong><spring:message code="bookstate.acceptable"/></strong>
                                     </div>
                                 </c:when>
                                 <c:when test="${publication.book.bookState == 'WORN'}">
                                     <div style="margin-left: 20px;">
-                                        <strong><spring:message code="bookState.worn"/></strong>
+                                        <strong><spring:message code="bookstate.worn"/></strong>
                                     </div>
                                 </c:when>
                             </c:choose>

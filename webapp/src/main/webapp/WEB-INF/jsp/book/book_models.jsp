@@ -31,7 +31,7 @@
                        aria-label="Search"
                        name="search"
                        id="search"
-                       value="<c:out value='${books.metadata.search}'/>">
+                       value="<c:out value='${modelBooks.metadata.search}'/>">
                 <button class="uk-search-icon-flip" uk-search-icon></button>
             </form>
         </div>
@@ -79,17 +79,19 @@
                 <c:if test="${!modelBooks.metadata.isGenreFilterActive}">
                     <h3><spring:message code="filter.genre"/></h3>
                     <ul class="uk-list">
-                        <c:forEach var="genreWrapper" items="${modelBooks.metadata.genreWrapperList}">
+                        <c:forEach var="genreWrapper" items="${genres}">
                             <li class="ui-search-filter-container">
                                 <form action="<c:url value='' />" method="get">
-                                    <input type="hidden" name="genre-filter" value="${genreWrapper.genre}">
+                                    <input type="hidden" name="genre-filter" value="${genreWrapper.enumWrapper.genre}">
                                     <input type="hidden" name="is-genre-filter-active" value="true">
                                     <input type="hidden" name="search" value="<c:out value='${modelBooks.metadata.search}'/>"/>
 
                                     <a href="#" class="uk-inline uk-search-button uk-button-link" title="GenreFilterRemove" onclick="this.closest('form').submit(); return false;">
+                                        <c:set var="i18nKey" value="${genreWrapper.i18nDisplayName}" />
                                         <span class="ui-search-filter-name">
-                                                ${genreWrapper.displayName} (${genreWrapper.resultByGenre})
+                                            <spring:message code="${i18nKey}"/>
                                         </span>
+                                        <span> (${genreWrapper.enumWrapper.resultByGenre})</span>
                                     </a>
 
 <%--                                    <button type="submit"--%>
@@ -152,9 +154,12 @@
                                                 </c:forEach>
                                             </p>
                                             <p>
-                                                <c:forEach var="genreWrapper" items="${genres}">
-                                                    <c:if test="${genreWrapper.genre == card.genre}">
-                                                        <c:out value="${genreWrapper.displayName}"/>
+                                                <c:forEach var="localizedGenreWrapper" items="${genres}">
+                                                    <c:if test="${localizedGenreWrapper.enumWrapper.genre == card.genre}">
+                                                        <c:set var="i18nKey" value="${localizedGenreWrapper.i18nDisplayName}" />
+                                                        <span class="ui-search-filter-name">
+                                                            <spring:message code="${i18nKey}"/>
+                                                        </span>
                                                     </c:if>
                                                 </c:forEach>
                                             </p>
