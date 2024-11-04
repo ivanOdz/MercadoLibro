@@ -1164,19 +1164,9 @@
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
                 }
-            })
-                .then(response => {
-                    if (response.ok) {
-                        return response.json();
-                    }
-                    console.log(response);
-                    throw new Error("Error al enviar el mensaje.");
-                })
-                .then(data => {
-                    renderNewMessage(data.message, data.userId);
-                    document.querySelector(".message-send").value = "";
-                })
-                .catch(error => console.error("Error:", error));
+            });
+            document.querySelector(".message-send").value = "";
+            renderNewMessage({message: messageText}, userId);
         });
     }
 
