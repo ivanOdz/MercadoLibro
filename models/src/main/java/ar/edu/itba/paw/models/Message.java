@@ -6,7 +6,6 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "message")
 public class Message {
-
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "message_messageid_seq")
     @SequenceGenerator(sequenceName = "message_messageid_seq", name = "message_messageid_seq", allocationSize = 1)

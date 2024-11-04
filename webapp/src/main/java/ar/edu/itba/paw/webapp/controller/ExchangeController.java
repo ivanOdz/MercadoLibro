@@ -104,6 +104,11 @@ public class ExchangeController {
         mav.addObject("rejected", rejectedExchanges);
         mav.addObject("userReviewForm", new UserReviewForm());
 
+        mav.addObject("userReviewForm", new UserReviewForm());
+
+        mav.addObject("messageForm", new MessageForm());
+        mav.addObject("messages", inProcessExchanges.getData().stream().map(Exchange::getChat).findFirst().orElse(Collections.emptyList()));
+
 
         return mav;
     }

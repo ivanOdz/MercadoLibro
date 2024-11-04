@@ -879,10 +879,45 @@
                             <div id="info-offered-book-images" uk-grid></div>
 
                             <div>
-                                <button style="width: 100%"  id="add-review-button" class="uk-button uk-button-primary"
+                                <button style="width: 100%"  id="add-review-button" class="uk-button uk-button-primary uk-border-rounded"
                                         uk-toggle="target: #modal-add-review">
                                     <spring:message code="exchange.button.add_review"/>
                                 </button>
+
+                                <!-- Chat, debería aparecer solo para el intercambio en proceso -->
+
+                                <div style="margin: 5%; justify-content: center;display:flex">
+                                    <a class="button" type="button"  href="#modal-chat" uk-toggle>
+                                        <span uk-icon="comment" class="svgIcon" viewBox="0 0 384 512"></span>
+                                    </a>
+                                </div>
+
+                                <div id="modal-chat" uk-modal>
+                                    <div class="uk-modal-dialog">
+
+                                        <button class="uk-modal-close-default" type="button" uk-close></button>
+
+                                        <div class="uk-modal-header chat-header">
+                                            <h2 class="uk-modal-title">Chat</h2>
+                                        </div>
+
+                                        <div class="uk-modal-body chat-body" uk-overflow-auto>
+                                            <!-- inserción de mensajes dinámica -->
+                                            <div id="messagesContainer"></div>
+                                        </div>
+
+                                        <div class="message-input">
+                                            <form:form id="messageForm" method="post" modelAttribute="messageForm">
+                                                <form:input type="hidden" path="userId" id="chatUserId" />
+                                                <form:input type="hidden" path="chatExchangeId" id="chatExchangeId" />
+
+                                                <textarea placeholder="<spring:message code='chat.placeholder.text'/>" class="message-send" path="message"></textarea>
+                                                <button type="submit" class="button-send"><spring:message code='chat.send'/></button>
+                                            </form:form>
+                                        </div>
+
+                                    </div>
+                                </div>
                             </div>
 
                             <div id="modal-add-review" uk-modal>
@@ -956,6 +991,18 @@
 </body>
 
 <script>
+    let chat = [];
+
+    <c:if test="${not empty messages}">
+    chat = [
+        <c:forEach var="msg" items="${messages}" varStatus="status">
+        {
+            userId: "${msg.user.userId}",
+            message: "<c:out value='${msg.message}'/>"
+        }<c:if test="${!status.last}">,</c:if>
+        </c:forEach>
+    ];
+    </c:if>
 
     function selectCard(card, offererUsername, offererMail, offererLocations, requestedBookTitle, requestedBookAuthors, requestedBookEdition, requestedBookImages, exchangeId, reviewerId, subjectId, isReviewable) {
 
@@ -987,25 +1034,95 @@
 
         // Actualizar los campos ocultos del formulario de reseña
         document.querySelector('input[name="exchangeId"]').value = exchangeId;
-        document.querySelector('input[name="reviewerId"]').value = reviewerId;
-        document.querySelector('input[name="subjectId"]').value = subjectId;
+        // document.querySelector('input[name="reviewerId"]').value = reviewerId;
+        // document.querySelector('input[name="subjectId"]').value = subjectId;
+
+        console.log('Asignando valores a los campos ocultos:', subjectId, exchangeId);
+        document.querySelector('input[id="chatExchangeId"]').value = exchangeId;
+        document.querySelector('input[id="chatUserId"]').value = subjectId;
+
+        if (chat.length > 0) {
+            renderExistingMessages(chat);
+        }
+
+        const messageForm = document.getElementById("messageForm");
+        if (messageForm) {
+            messageForm.addEventListener("submit", function (event) {
+                event.preventDefault();
+
+
+                console.log("User ID:", document.getElementById("chatUserId"));
+                console.log("Exchange ID:", document.getElementById("chatExchangeId"));
+
+
+                const userId = document.getElementById("chatUserId").value;
+                const exchangeId = document.getElementById("chatExchangeId").value;
+                const messageText = document.querySelector(".message-send").value;
+
+                console.log("User ID:", userId);
+                console.log("Exchange ID:", exchangeId);
+                console.log("Message:", messageText);
+
+                // Enviar la solicitud AJAX
+                fetch("/send_message?chatUserId=" + encodeURIComponent(userId) +
+                    "&chatExchangeId=" + encodeURIComponent(exchangeId) +
+                    "&message=" + encodeURIComponent(messageText), {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    }
+                });
+                document.querySelector(".message-send").value = "";
+                renderNewMessage({message: messageText}, userId);
+                chat.push({userId: userId, message: messageText});
+            });
+        }
+
+        function renderExistingMessages(messages) {
+            const messagesContainer = document.getElementById('messagesContainer');
+            console.log('Mensajes:', messages[0].message);
+            for(let i = 0; i < messages.length && messages[i].message != null; i++) {
+                renderNewMessage(messages[i], messages[i].userId);
+            }
+        }
+
+        function renderNewMessage(message, userId) {
+            const chatBody = document.querySelector('.chat-body');
+            const messageDiv = document.createElement('div');
+
+            // Usar 'outgoing' si el usuario es el que envía el mensaje, 'incoming' en caso contrario
+            if (userId === document.getElementById("chatUserId").value) {
+                messageDiv.classList.add('message', 'outgoing');
+            } else {
+                messageDiv.classList.add('message', 'incoming');
+            }
+
+            const messageText = document.createElement('p');
+            messageText.textContent = message.message;
+            messageDiv.appendChild(messageText);
+
+            chatBody.appendChild(messageDiv);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+
 
         // Limpiar imágenes anteriores
-        const imageContainer = document.getElementById('info-offered-book-images');
-        imageContainer.innerHTML = '';
-
-        // Añadir imágenes del libro ofertado
-        requestedBookImages.forEach(function (imageUrl) {
-            const imgElement = document.createElement('img');
-            imgElement.src = imageUrl;
-            imgElement.className = 'uk-border-rounded';
-            imgElement.alt = 'Imagen del libro';
-            imgElement.style.width = '100%'; // Asegúrate de que las imágenes se ajusten bien
-            const divElement = document.createElement('div');
-            divElement.className = 'uk-width-1-4';
-            divElement.appendChild(imgElement);
-            imageContainer.appendChild(divElement);
-        });
+        // const imageContainer = document.getElementById('info-offered-book-images');
+        // imageContainer.innerHTML = '';
+        //
+        // // Añadir imágenes del libro ofertado
+        // requestedBookImages.forEach(function (imageUrl) {
+        //     const imgElement = document.createElement('img');
+        //     imgElement.src = imageUrl;
+        //     imgElement.className = 'uk-border-rounded';
+        //     imgElement.alt = 'Imagen del libro';
+        //     imgElement.style.width = '100%'; // Asegúrate de que las imágenes se ajusten bien
+        //     const divElement = document.createElement('div');
+        //     divElement.className = 'uk-width-1-4';
+        //     divElement.appendChild(imgElement);
+        //     imageContainer.appendChild(divElement);
+        // });
     }
 
     // Inicialmente, mostrar el mensaje de selección

@@ -1079,6 +1079,18 @@
 </body>
 
 <script>
+    let chat = [];
+
+    <c:if test="${not empty messages}">
+    chat = [
+        <c:forEach var="msg" items="${messages}" varStatus="status">
+        {
+            userId: "${msg.user.userId}",
+            message: "<c:out value='${msg.message}'/>"
+        }<c:if test="${!status.last}">,</c:if>
+        </c:forEach>
+    ];
+    </c:if>
     function selectCard(card, requesterUsername, requesterMail, requesterLocation, offeredBookTitle,
                         offeredBookAuthors, offeredBookEdition, offeredBookImages, exchangeId,
                         reviewerId, subjectId, isReviewable) {
@@ -1170,16 +1182,6 @@
             chat.push({userId: userId, message: messageText});
         });
     }
-
-    const chat = [
-        <c:forEach var="msg" items="${messages}" varStatus="status">
-        {
-            userId: "${msg.user.userId}",
-            message: "<c:out value="${msg.message}"/>"
-        }<c:if test="${!status.last}">,</c:if> <!-- Coma entre objetos, excepto en el último -->
-        </c:forEach>
-    ];
-
 
     function renderExistingMessages(messages) {
         const messagesContainer = document.getElementById('messagesContainer');
