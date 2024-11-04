@@ -969,6 +969,9 @@
                                         uk-toggle="target: #modal-add-review">
                                     <spring:message code="exchange.button.add_review"/>
                                 </button>
+
+                                <!-- Chat, debería aparecer solo para el intercambio en proceso -->
+
                                 <div style="margin: 5%; justify-content: center;display:flex">
                                     <a class="button" type="button"  href="#modal-chat" uk-toggle>
                                         <span uk-icon="comment" class="svgIcon" viewBox="0 0 384 512"></span>
@@ -985,19 +988,18 @@
                                         </div>
 
                                         <div class="uk-modal-body chat-body" uk-overflow-auto>
-                                            <div class="message incoming">
-                                                <p>holaa, donde nos encontramos?</p>
-                                            </div>
-                                            <div class="message outgoing">
-                                                <p>buenas, todo bien? El Lunes por la tarde en la plaza?</p>
-                                            </div>
+                                            <!-- inserción de mensajes dinámica -->
+                                            <div id="messagesContainer"></div>
                                         </div>
 
                                         <div class="message-input">
-                                            <form>
-                                                <textarea placeholder="<spring:message code="chat.placeholder.text"/>" class="message-send"></textarea>
-                                                <button type="submit" class="button-send"><spring:message code="chat.send"/></button>
-                                            </form>
+                                            <form:form id="messageForm" method="post" modelAttribute="messageForm">
+                                                <form:input type="hidden" path="userId" id="chatUserId" />
+                                                <form:input type="hidden" path="chatExchangeId" id="chatExchangeId" />
+
+                                                <textarea placeholder="<spring:message code='chat.placeholder.text'/>" class="message-send" path="message"></textarea>
+                                                <button type="submit" class="button-send"><spring:message code='chat.send'/></button>
+                                            </form:form>
                                         </div>
 
                                     </div>
@@ -1077,7 +1079,9 @@
 </body>
 
 <script>
-    function selectCard(card, requesterUsername, requesterMail, requesterLocation, offeredBookTitle, offeredBookAuthors, offeredBookEdition, offeredBookImages, exchangeId, reviewerId, subjectId, isReviewable) {
+    function selectCard(card, requesterUsername, requesterMail, requesterLocation, offeredBookTitle,
+                        offeredBookAuthors, offeredBookEdition, offeredBookImages, exchangeId,
+                        reviewerId, subjectId, isReviewable) {
         // Remover la clase 'selected-card' de todas las tarjetas
         document.querySelectorAll('.exchange-card').forEach(function (el) {
             el.classList.remove('selected-card');
@@ -1106,25 +1110,111 @@
 
         // Actualizar los campos ocultos del formulario de reseña
         document.querySelector('input[name="exchangeId"]').value = exchangeId;
-        document.querySelector('input[name="reviewerId"]').value = reviewerId;
-        document.querySelector('input[name="subjectId"]').value = subjectId;
+        // document.querySelector('input[name="reviewerId"]').value = reviewerId;
+        // document.querySelector('input[name="subjectId"]').value = subjectId;
+
+
+        console.log('Asignando valores a los campos ocultos:', subjectId, exchangeId);
+        document.querySelector('input[id="chatExchangeId"]').value = exchangeId;
+        document.querySelector('input[id="chatUserId"]').value = subjectId;
+
+        renderExistingMessages(chat);
 
         // Limpiar imágenes anteriores
         const imageContainer = document.getElementById('info-offered-book-images');
         imageContainer.innerHTML = '';
 
         // Añadir imágenes del libro ofertado
-        offeredBookImages.forEach(function (imageUrl) {
-            const imgElement = document.createElement('img');
-            imgElement.src = imageUrl;
-            imgElement.className = 'uk-border-rounded';
-            imgElement.alt = 'Imagen del libro';
-            imgElement.style.width = '100%'; // Asegúrate de que las imágenes se ajusten bien
-            const divElement = document.createElement('div');
-            divElement.className = 'uk-width-1-4';
-            divElement.appendChild(imgElement);
-            imageContainer.appendChild(divElement);
+        // for (let i = 0; i < offeredBookImages.length; i++) {
+        //     const imgElement = document.createElement('img');
+        //     imgElement.src = '/images/' + offeredBookImages[i].image.imageId;
+        //     imgElement.className = 'uk-border-rounded';
+        //     imgElement.alt = 'Imagen del libro';
+        //     imgElement.style.width = '100%'; // Asegúrate de que las imágenes se ajusten bien
+        //     const divElement = document.createElement('div');
+        //     divElement.className = 'uk-width-1-4';
+        //     divElement.appendChild(imgElement);
+        //     imageContainer.appendChild(divElement);
+        // }
+    }
+
+    const messageForm = document.getElementById("messageForm");
+    if (messageForm) {
+        messageForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+
+            console.log("User ID:", document.getElementById("chatUserId"));
+            console.log("Exchange ID:", document.getElementById("chatExchangeId"));
+
+
+            const userId = document.getElementById("chatUserId").value;
+            const exchangeId = document.getElementById("chatExchangeId").value;
+            const messageText = document.querySelector(".message-send").value;
+
+            console.log("User ID:", userId);
+            console.log("Exchange ID:", exchangeId);
+            console.log("Message:", messageText);
+
+            // Enviar la solicitud AJAX
+            fetch("/send_message?chatUserId=" + encodeURIComponent(userId) +
+                "&chatExchangeId=" + encodeURIComponent(exchangeId) +
+                "&message=" + encodeURIComponent(messageText), {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                }
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    console.log(response);
+                    throw new Error("Error al enviar el mensaje.");
+                })
+                .then(data => {
+                    renderNewMessage(data.message, data.userId);
+                    document.querySelector(".message-send").value = "";
+                })
+                .catch(error => console.error("Error:", error));
         });
+    }
+
+    const chat = [
+        <c:forEach var="msg" items="${messages}" varStatus="status">
+        {
+            userId: "${msg.user.userId}",
+            message: "${msg.message}"
+        }<c:if test="${!status.last}">,</c:if> <!-- Coma entre objetos, excepto en el último -->
+        </c:forEach>
+    ];
+
+
+    function renderExistingMessages(messages) {
+        const messagesContainer = document.getElementById('messagesContainer');
+        console.log('Mensajes:', messages[0].message);
+        for(let i = 0; i < messages.length && messages[i].message != null; i++) {
+            renderNewMessage(messages[i], messages[i].userId);
+        }
+    }
+
+    function renderNewMessage(message, userId) {
+        const chatBody = document.querySelector('.chat-body');
+        const messageDiv = document.createElement('div');
+
+        // Usar 'outgoing' si el usuario es el que envía el mensaje, 'incoming' en caso contrario
+        if (userId === document.getElementById("chatUserId").value) {
+            messageDiv.classList.add('message', 'outgoing');
+        } else {
+            messageDiv.classList.add('message', 'incoming');
+        }
+
+        const messageText = document.createElement('p');
+        messageText.textContent = message.message;
+        messageDiv.appendChild(messageText);
+
+        chatBody.appendChild(messageDiv);
+        chatBody.scrollTop = chatBody.scrollHeight;
     }
 
     // Inicialmente, mostrar el mensaje de selección
@@ -1134,6 +1224,9 @@
         document.getElementById('add-review-button').style.display = 'block';
         document.getElementById('add-review-button').style.display = 'none';
     });
+
+
+
 </script>
 
 </html>

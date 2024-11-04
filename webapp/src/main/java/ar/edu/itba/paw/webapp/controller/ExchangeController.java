@@ -9,6 +9,7 @@ import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 
 import ar.edu.itba.paw.webapp.form.ExchangeForm;
+import ar.edu.itba.paw.webapp.form.MessageForm;
 import ar.edu.itba.paw.webapp.form.UserReviewForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -71,7 +74,11 @@ public class ExchangeController {
         mav.addObject("inProgress", inProcessExchanges);
         mav.addObject("completed", completedExchanges);
         mav.addObject("rejected", rejectedExchanges);
+
         mav.addObject("userReviewForm", new UserReviewForm());
+
+        mav.addObject("messageForm", new MessageForm());
+        mav.addObject("messages", inProcessExchanges.getData().stream().map(Exchange::getChat).findFirst().orElse(Collections.emptyList()));
 
         return mav;
     }
@@ -96,6 +103,7 @@ public class ExchangeController {
         mav.addObject("completed", completedExchanges);
         mav.addObject("rejected", rejectedExchanges);
         mav.addObject("userReviewForm", new UserReviewForm());
+
 
         return mav;
     }
@@ -290,4 +298,17 @@ public class ExchangeController {
         return new ModelAndView("redirect:/requests");
     }
 
+    @PostMapping( "/send_message")
+    public ResponseEntity<String> sendMessage(@RequestParam("chatExchangeId") long exchangeId,
+                                              @RequestParam("chatUserId") long userId,
+                                              @RequestParam("message") String message) {
+        try {
+            exchangeService.createMessage(exchangeId, userId, message);
+            return ResponseEntity.ok("Message sent successfully!");
+        } catch (Exception e) {
+            // Log the error for troubleshooting
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to send message: " + e.getMessage());
+        }
+    }
 }

@@ -29,4 +29,7 @@ public interface ExchangeDao {
     Exchange getExchangeById(long exchangeId);
 
     PaginatedResponse<Exchange, BasicMetadata> getAllExchangesByUserId(long anUserId, ExchangeState exchangeState, int currentPage, boolean isOfferer);
+
+    void createMessage(long exchangeId,long userId, String message, Timestamp time);
+
 }

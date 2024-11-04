@@ -5,6 +5,7 @@ import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
 @Table(name = "exchange")
@@ -42,11 +43,16 @@ public class Exchange {
     @Column(name = "exchangeEndDate")
     private Timestamp exchangeEndDate;
 
+
+    @OneToMany(mappedBy = "exchange", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Message> chat;
+
+
     public Exchange() {
         // only for JPA
     }
 
-    public Exchange(Long exchangeId, Publication offerer, Publication requester, ExchangeState state, int acceptCode, boolean offererReceivedBook, boolean requesterReceivedBook, Timestamp exchangeStartDate, Timestamp exchangeEndDate) {
+    public Exchange(Long exchangeId, Publication offerer, Publication requester, ExchangeState state, int acceptCode, boolean offererReceivedBook, boolean requesterReceivedBook, Timestamp exchangeStartDate, Timestamp exchangeEndDate, List<Message> chat) {
         this.exchangeId = exchangeId;
         this.offerer = offerer;
         this.requester = requester;
@@ -56,6 +62,39 @@ public class Exchange {
         this.requesterReceivedBook = requesterReceivedBook;
         this.exchangeStartDate = exchangeStartDate;
         this.exchangeEndDate = exchangeEndDate;
+        this.chat = chat;
+    }
+
+    public void setExchangeId(Long exchangeId) {
+        this.exchangeId = exchangeId;
+    }
+
+    public void setOfferer(Publication offerer) {
+        this.offerer = offerer;
+    }
+
+    public void setRequester(Publication requester) {
+        this.requester = requester;
+    }
+
+    public void setState(ExchangeState state) {
+        this.state = state;
+    }
+
+    public void setAcceptCode(int acceptCode) {
+        this.acceptCode = acceptCode;
+    }
+
+    public void setExchangeStartDate(Timestamp exchangeStartDate) {
+        this.exchangeStartDate = exchangeStartDate;
+    }
+
+    public List<Message> getChat() {
+        return chat;
+    }
+
+    public void setChat(List<Message> chat) {
+        this.chat = chat;
     }
 
     public ExchangeState getState() {

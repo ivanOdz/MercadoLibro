@@ -2,9 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.exceptions.ExchangeNotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.ExchangeDao;
-import ar.edu.itba.paw.models.Exchange;
-import ar.edu.itba.paw.models.PaginatedResponse;
-import ar.edu.itba.paw.models.Publication;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +37,7 @@ public class ExchangeJpaDao implements ExchangeDao {
 
         //TODO: Chequear que las publicaciones existan y que no sean del mismo usuario.
 
-        final Exchange exchange = new Exchange(null, offerer, requester, ExchangeState.PENDING, acceptCode, false, false, startDate, null);
+        final Exchange exchange = new Exchange(null, offerer, requester, ExchangeState.PENDING, acceptCode, false, false, startDate, null, new ArrayList<>());
         em.persist(exchange);
         return exchange;
     }
@@ -139,5 +137,16 @@ public class ExchangeJpaDao implements ExchangeDao {
         List<Exchange> exchanges = query.getResultList();
 
         return new PaginatedResponse<>(exchanges, new BasicMetadata(currentPage, exchangeIds.size(), EXCHANGES_PAGE_SIZE));
+    }
+
+    @Override
+    @Transactional
+    public void createMessage(long exchangeId, long userId, String message, Timestamp time) {
+        Exchange exchange = em.find(Exchange.class, exchangeId);
+
+        Message newMessage = new Message(null, exchange ,em.find(User.class, userId), time, message);
+        em.persist(newMessage);
+
+        exchange.getChat().add(newMessage);
     }
 }

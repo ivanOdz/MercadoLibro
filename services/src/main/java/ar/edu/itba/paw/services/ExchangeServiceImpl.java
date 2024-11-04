@@ -144,4 +144,9 @@ public class ExchangeServiceImpl implements ExchangeService {
     public PaginatedResponse<Exchange, BasicMetadata> getExchangeRequesterListByUserId(long userId, int currentPage, ExchangeState exchangeState) {
         return exchangeDao.getAllExchangesByUserId(userId, exchangeState, currentPage, false);
     }
+
+    @Override
+    public void createMessage(long exchangeId, long userId, String message) {
+        exchangeDao.createMessage(exchangeId, userId, message, new Timestamp((new Date()).getTime()));
+    }
 }
