@@ -1167,6 +1167,7 @@
             });
             document.querySelector(".message-send").value = "";
             renderNewMessage({message: messageText}, userId);
+            chat.push({userId: userId, message: messageText});
         });
     }
 
@@ -1174,7 +1175,7 @@
         <c:forEach var="msg" items="${messages}" varStatus="status">
         {
             userId: "${msg.user.userId}",
-            message: "${msg.message}"
+            message: "<c:out value="${msg.message}"/>"
         }<c:if test="${!status.last}">,</c:if> <!-- Coma entre objetos, excepto en el último -->
         </c:forEach>
     ];
