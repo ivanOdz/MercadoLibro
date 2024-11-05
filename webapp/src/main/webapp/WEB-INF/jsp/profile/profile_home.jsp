@@ -47,7 +47,8 @@
 		
 		<div class="user-data-grid-element-right">
 			
-			<h3 class="uk-h5" id="username-display" style="display: inline;"><c:out value="Your name: ${loggedUser.username}"/></h3>
+			<h4 id="username-display" style="display: inline;"><c:out value="Your name: ${loggedUser.username}"/></h4>
+			
 			<button type="button" id="change-username-btn" onclick="showEditForm()" style="display: inline;">
 				<i class="material-icons edit-icon">edit</i>
 			</button>
@@ -58,30 +59,41 @@
 				<button type="button" onclick="cancelEdit()" class="btn-cancel">Cancel</button>
 			</form>
 			
-			<h3 class="uk-h5"><c:out value="Your mail: ${loggedUser.mail}"/></h3>
+			<h4><c:out value="Your mail: ${loggedUser.mail}"/></h4>
 			
+			<button style="margin: 5% 0 5% 0;" class="uk-button uk-button-default" type="button"><spring:message code="language"/></button>
+			<div uk-dropdown>
+			<ul class="uk-nav uk-dropdown-nav ">
+			<li><a href="<c:url value='/language?lang=en' />"><spring:message code="language.english"/></a></li>
+			<li><a href="<c:url value='/language?lang=es' />"><spring:message code="language.spanish"/></a></li>
+			</ul>
+			</div>
+
 		</div>
 			
 	</div>
 
         <div class="profile-content uk-align-center" style="width: auto">
 
-            <div class="stars">
-                <c:forEach var="i" begin="1" end="5">
-                    <c:choose>
-                        <c:when test="${i <= userRating.rating}">
-                            <i class="material-icons yellow-text">star</i>
-                        </c:when>
-                        <c:when test="${i - 0.5 <= userRating.rating && userRating.rating < i}">
-                            <i class="material-icons yellow-text">star_half</i>
-                        </c:when>
-                        <c:otherwise>
-                            <i class="material-icons grey-text">star_border</i>
-                        </c:otherwise>
-                    </c:choose>
-                </c:forEach>
+			<h3><c:out value="Average rating given: ${userRating.rating}"/></h3>
+			<h3><c:out value="Average rating earned: ${userRating.rating}"/></h3>
+			
+<!--             <div class="stars"> -->
+<%--                 <c:forEach var="i" begin="1" end="5"> --%>
+<%--                     <c:choose> --%>
+<%--                         <c:when test="${i <= userRating.rating}"> --%>
+<!--                             <i class="material-icons yellow-text">star</i> -->
+<%--                         </c:when> --%>
+<%--                         <c:when test="${i - 0.5 <= userRating.rating && userRating.rating < i}"> --%>
+<!--                             <i class="material-icons yellow-text">star_half</i> -->
+<%--                         </c:when> --%>
+<%--                         <c:otherwise> --%>
+<!--                             <i class="material-icons grey-text">star_border</i> -->
+<%--                         </c:otherwise> --%>
+<%--                     </c:choose> --%>
+<%--                 </c:forEach> --%>
 
-            </div>
+<!--             </div> -->
             
  			<!-- Yo diria de hacer una barra de mensajes -->
 <%--             <c:choose> --%>
@@ -132,13 +144,6 @@
 	<button id="add-location-btn" type="submit" class="uk-button uk-button-primary"><spring:message code="user.add.location"/></button>
 </form>
 
-            <button style="margin: 5% 0 5% 0;" class="uk-button uk-button-default" type="button"><spring:message code="language"/></button>
-            <div uk-dropdown>
-                <ul class="uk-nav uk-dropdown-nav ">
-                    <li><a href="<c:url value='/language?lang=en' />"><spring:message code="language.english"/></a></li>
-                    <li><a href="<c:url value='/language?lang=es' />"><spring:message code="language.spanish"/></a></li>
-                </ul>
-            </div>
 
             <!-- 					<div class="changePasswordButton"> -->
             <!-- 					    <a href="change_password_solicited" class="btn-red" title="Cambiar Contraseña"> -->
