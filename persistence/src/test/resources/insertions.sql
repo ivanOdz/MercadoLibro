@@ -88,12 +88,33 @@
         
 -- Insertar ubicaciones ----------------------------------------------------------------------------------------------------
 
-        INSERT INTO location (locationString)
-        VALUES ('Zona Norte');
+        INSERT INTO location (locationId, locationString)
+        VALUES (1, 'Zona Norte');
 
-        INSERT INTO location (locationString)
-        VALUES ('Zona Sur');
+        INSERT INTO location (locationId, locationString)
+        VALUES (2, 'Zona Sur');
 
+        INSERT INTO location (locationId, locationString)
+        VALUES (3, 'CABA');
+        
+        INSERT INTO user_location (userLocationId, userId, locationId)
+        VALUES (1, 1, 1)
+        
+        INSERT INTO user_location (userLocationId, userId, locationId)
+        VALUES (2, 1, 2)
+        
+        INSERT INTO user_location (userLocationId, userId, locationId)
+        VALUES (3, 1, 3)
+                
+        INSERT INTO user_location (userLocationId, userId, locationId)
+        VALUES (4, 2, 1)
+        
+        INSERT INTO user_location (userLocationId, userId, locationId)
+        VALUES (5, 3, 2)
+        
+        INSERT INTO user_location (userLocationId, userId, locationId)
+        VALUES (6, 4, 3)
+        
 -- AUTORES -----------------------------------------------------------------------------------------------------------------
 
 -- 1 -- Cien años de soledad
