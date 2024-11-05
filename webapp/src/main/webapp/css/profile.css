@@ -19,7 +19,7 @@
 	
 	display: grid;
 	grid-template-columns: 30% 70%;
-	gap: 10% 30%;
+	gap: 10% 24%;
 	margin: 0% 5% 0% 5%;
 	padding: 0%;
 }

@@ -10,8 +10,12 @@ import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.jdbc.support.JdbcTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.TransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import java.util.Properties;
 
 import javax.sql.DataSource;
 
@@ -59,7 +63,7 @@ public class TestConfig {
 		
 		dbp.addScript(pgSql);
 		dbp.addScript(schemaSql);
-		dbp.addScript(insertionsSql);
+//		dbp.addScript(insertionsSql);
 		
 		return dbp;
 	}
@@ -68,6 +72,28 @@ public class TestConfig {
 	public TransactionManager transactionManager(DataSource ds) {
 		
 		return new JdbcTransactionManager(ds);
+	}
+		
+	@Bean
+	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+		
+	final LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
+	
+		factoryBean.setPackagesToScan("ar.edu.itba.paw.model");
+		factoryBean.setDataSource(dataSource());
+		
+		final HibernateJpaVendorAdapter jpaAdapter = new HibernateJpaVendorAdapter();
+		factoryBean.setJpaVendorAdapter(jpaAdapter);
+		
+		final Properties properties = new Properties();
+		
+		properties.setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
+		properties.setProperty("hibernate.hbm2ddl.auto", "none");
+		properties.setProperty("hibernate.show_sql", "true");
+		properties.setProperty("hibernate.format_sql", "true");
+		factoryBean.setJpaProperties(properties);
+		
+		return factoryBean;
 	}
 	
 }
