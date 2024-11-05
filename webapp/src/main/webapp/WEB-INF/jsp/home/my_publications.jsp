@@ -65,7 +65,9 @@
 
         <c:if test="${!publications.metadata.isBookStateFilterActive}">
           <h3><spring:message code="filter.condition"/></h3>
-
+          <c:if test="${empty bookStateWrapperList}">
+            <p><spring:message code="filter.empty.condition"/></p>
+          </c:if>
 
           <ul class="uk-list">
             <c:forEach var="bookStateWrapper" items="${bookStateWrapperList}">
@@ -102,6 +104,9 @@
 
         <c:if test="${!publications.metadata.isGenreFilterActive}">
           <h3><spring:message code="filter.genre"/></h3>
+          <c:if test="${empty genreWrapperList}">
+            <p><spring:message code="filter.empty.genres"/></p>
+          </c:if>
           <ul class="uk-list">
             <c:forEach var="genreWrapper" items="${genreWrapperList}">
               <li class="ui-search-filter-container">
@@ -476,7 +481,22 @@
             </a>
           </div>
         </c:if>
+        <c:if test="${empty publications.data and not empty publications.metadata.search}">
+          <div style="text-align: left;">
+            <h1><spring:message code="publications.filter.empty.header" /></h1>
 
+            <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+            <div style="display: flex; justify-content: center;">
+              <dotlottie-player src="https://lottie.host/122aec68-0bc1-46ed-a1bd-c82ca1f4bac6/riZdUUo3Qs.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
+            </div>
+
+            <ul>
+              <li><h5><spring:message code="recommendations.publications.verifySpelling" /></h5></li>
+              <li><h5><spring:message code="recommendations.publications.tryFullOrPartialTitle" /></h5></li>
+              <li><h5><spring:message code="recommendations.publications.checkYourFilters" /></h5></li>
+            </ul>
+          </div>
+        </c:if>
       </div>
     </div>
   </div>
