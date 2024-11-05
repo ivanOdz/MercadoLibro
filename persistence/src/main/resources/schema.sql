@@ -4,6 +4,12 @@ CREATE TABLE IF NOT EXISTS image (
      image                      BYTEA NOT NULL
 );
 
+-- Tabla de ubicaciones
+CREATE TABLE IF NOT EXISTS location (
+        locationId              SERIAL PRIMARY KEY,
+        locationString          VARCHAR(255) NOT NULL -- UNIQUE
+);
+
 -- Tabla de usuarios
 CREATE TABLE IF NOT EXISTS users (
      userId                     SERIAL PRIMARY KEY,
@@ -13,7 +19,8 @@ CREATE TABLE IF NOT EXISTS users (
      imageId                    INTEGER REFERENCES image(imageId),
      verificationCode           INTEGER,
      isVerified                 BOOLEAN,
-     language                   VARCHAR(64) -- Le agregamos el de favorite location?
+     language                   VARCHAR(64),
+     favoriteLocation			INTEGER REFERENCES location(locationId)
 );
 
 -- Tabla de modelo de libros
@@ -72,12 +79,6 @@ CREATE TABLE IF NOT EXISTS book_author (
        bookModelId              INTEGER NOT NULL REFERENCES book_model(bookModelId) ON DELETE CASCADE,
        authorId                 INTEGER NOT NULL REFERENCES author(authorId) ON DELETE CASCADE,
        PRIMARY KEY (bookModelId, authorId)
-);
-
--- Tabla de ubicaciones
-CREATE TABLE IF NOT EXISTS location (
-        locationId              SERIAL PRIMARY KEY,
-        locationString          VARCHAR(255) NOT NULL -- UNIQUE
 );
 
 -- Tabla de publicaciones

@@ -9,7 +9,7 @@ import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
-import org.springframework.jdbc.support.JdbcTransactionManager;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.TransactionManager;
@@ -17,10 +17,11 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.util.Properties;
 
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 @Configuration
-@ComponentScan({"ar.edu.itba.paw.persistence", "ar.edu.itba.paw.interfaces.services", "ar.edu.itba.paw.services"})
+@ComponentScan("ar.edu.itba.paw.persistence")
 @EnableTransactionManagement
 public class TestConfig {
 	
@@ -69,9 +70,9 @@ public class TestConfig {
 	}
 	
 	@Bean
-	public TransactionManager transactionManager(DataSource ds) {
+	public TransactionManager transactionManager(final EntityManagerFactory emf) {
 		
-		return new JdbcTransactionManager(ds);
+		return new JpaTransactionManager(emf);
 	}
 		
 	@Bean
@@ -79,7 +80,7 @@ public class TestConfig {
 		
 	final LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
 	
-		factoryBean.setPackagesToScan("ar.edu.itba.paw.model");
+		factoryBean.setPackagesToScan("ar.edu.itba.paw.models");
 		factoryBean.setDataSource(dataSource());
 		
 		final HibernateJpaVendorAdapter jpaAdapter = new HibernateJpaVendorAdapter();
