@@ -3,19 +3,19 @@
 
 -- 1 --
         INSERT INTO users (userId, userName, mail, password, imageId, verificationCode, isVerified, language, favoriteLocation)
-        VALUES (1, 'Ivan', 'modzomek@itba.edu.ar', 'password', NULL, NULL, TRUE, 'en', NULL);
+        VALUES (1, 'Ivan', 'modzomek@itba.edu.ar', 'password', NULL, 123456789, TRUE, 'en', NULL);
         
 -- 2 --
         INSERT INTO users (userId, userName, mail, password, imageId, verificationCode, isVerified, language, favoriteLocation)
-        VALUES (2, 'Juli', 'jtechenski@itba.edu.ar', 'password', NULL, NULL, TRUE, 'en', NULL);
+        VALUES (2, 'Juli', 'jtechenski@itba.edu.ar', 'password', NULL, 987654321, TRUE, 'en', NULL);
 
 -- 3 --
         INSERT INTO users (userId, userName, mail, password, imageId, verificationCode, isVerified, language, favoriteLocation)
-        VALUES (3, 'Maggie', 'mtaurian@itba.edu.ar', 'drowssap', NULL, NULL, TRUE, 'es', NULL);
+        VALUES (3, 'Maggie', 'mtaurian@itba.edu.ar', 'drowssap', NULL, 300000000, TRUE, 'es', NULL);
 
 -- 4 --
         INSERT INTO users (userId, userName, mail, password, imageId, verificationCode, isVerified, language, favoriteLocation)
-        VALUES (4, 'Tomas', 'tscheffer@itba.edu.ar', 'drowssap', NULL, NULL, TRUE, 'es', NULL);
+        VALUES (4, 'Tomas', 'tscheffer@itba.edu.ar', 'drowssap', NULL, 400000000, TRUE, 'es', NULL);
 
 -- Insertar Modelos de libros ----------------------------------------------------------------------------------------------
 
