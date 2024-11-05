@@ -356,6 +356,7 @@
                             </a>
                         </div>
                     </c:forEach>
+                </div>
                     <hr class="uk-divider-icon">
 
                     <nav aria-label="Pagination" class="uk-position-relative uk-margin">
@@ -462,7 +463,6 @@
                             <spring:message code="publications.pagination.totop"/>
                         </a>
                     </nav>
-                </div>
                 </c:if>
                 <c:if test="${empty publications.data and not empty publications.metadata.search}">
                     <div style="text-align: left;">
@@ -479,7 +479,7 @@
                             <li><h5><spring:message code="recommendations.publications.checkYourFilters" /></h5></li>
                         </ul>
                     </div>
-                        </c:if>
+                </c:if>
             </div>
         </div>
     </div>
