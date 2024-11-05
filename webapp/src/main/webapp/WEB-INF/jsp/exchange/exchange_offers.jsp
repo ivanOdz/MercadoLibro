@@ -85,8 +85,8 @@
                                                  '<c:out value="${data.exchangeId}"/>',
                                                  '<c:out value="${data.offerer.book.owner.userId}"/>',
                                                  '<c:out value="${data.requester.book.owner.userId}"/>',
-                                                 '${data.isReviewable}'
-                                                 )" uk-grid>
+                                                 '${data.isReviewable}',
+                                                 '${data.chatAvailable}')" uk-grid>
 
                                         <div style="padding: 0">
                                             <c:choose>
@@ -275,8 +275,8 @@
                                                  '<c:out value="${data.exchangeId}"/>',
                                                  '<c:out value="${data.offerer.book.owner.userId}"/>',
                                                  '<c:out value="${data.requester.book.owner.userId}"/>',
-                                                 '${data.isReviewable}'
-                                                 )" uk-grid>
+                                                 '${data.isReviewable}',
+                                                 '${data.chatAvailable}')" uk-grid>
 
                                         <div style="padding: 0">
                                             <c:choose>
@@ -497,8 +497,8 @@
                                                  '<c:out value="${data.exchangeId}"/>',
                                                  '<c:out value="${data.offerer.book.owner.userId}"/>',
                                                  '<c:out value="${data.requester.book.owner.userId}"/>',
-                                                 '${data.isReviewable}'
-                                                 )" uk-grid>
+                                                 '${data.isReviewable}',
+                                                 '${data.chatAvailable}')" uk-grid>
 
                                         <div style="padding: 0">
                                             <c:choose>
@@ -689,8 +689,8 @@
                                                  '<c:out value="${data.exchangeId}"/>',
                                                  '<c:out value="${data.offerer.book.owner.userId}"/>',
                                                  '<c:out value="${data.requester.book.owner.userId}"/>',
-                                                 '${data.isReviewable}'
-                                                 )" uk-grid>
+                                                 '${data.isReviewable}',
+                                                 '${data.chatAvailable}')" uk-grid>
 
 
                                         <div style="padding: 0">
@@ -888,10 +888,10 @@
                                     <spring:message code="exchange.button.add_review"/>
                                 </button>
 
-                                <!-- Chat, debería aparecer solo para el intercambio en proceso -->
+                                <!-- Chat -->
 
-                                <div style="margin: 5%; justify-content: center;display:flex">
-                                    <a class="button" type="button"  href="#modal-chat" uk-toggle>
+                                <div id="chat-button" style="margin: 5%; justify-content: center;">
+                                    <a id="openChatModal" class="button" type="button"  href="#modal-chat" uk-toggle>
                                         <span uk-icon="comment" class="svgIcon" viewBox="0 0 384 512"></span>
                                     </a>
                                 </div>
@@ -995,25 +995,42 @@
 </body>
 
 <script>
-    let chat = [];
-
+    let chat = new Map();
+    let exchangeId;
+    let messageObject;
     <c:if test="${not empty messages}">
-    chat = [
-        <c:forEach var="msg" items="${messages}" varStatus="status">
-        {
-            userId: "${msg.user.userId}",
-            message: "<c:out value='${msg.message}'/>"
-        }<c:if test="${!status.last}">,</c:if>
-        </c:forEach>
-    ];
+    <c:forEach var="msg" items="${messages}">
+    exchangeId = "${msg.exchange.exchangeId}";
+    messageObject = {
+        userId: "${msg.user.userId}",
+        message: "<c:out value="${msg.message}" />"
+    };
+
+    if (!chat.has(exchangeId)) {
+        chat.set(exchangeId, []);
+    }
+    chat.get(exchangeId).push(messageObject);
+    </c:forEach>
     </c:if>
 
-    function selectCard(card, offererUsername, offererMail, offererLocations, requestedBookTitle, requestedBookAuthors, requestedBookEdition, requestedBookImages, exchangeId, reviewerId, subjectId, isReviewable) {
+    let currentChat = [];
+
+
+    function selectCard(card, offererUsername, offererMail, offererLocations, requestedBookTitle, requestedBookAuthors, requestedBookEdition, requestedBookImages, exchangeId, reviewerId, subjectId, isReviewable, chatAvailable) {
 
         // Remover la clase 'selected-card' de todas las tarjetas
         document.querySelectorAll('.exchange-card').forEach(function (el) {
             el.classList.remove('selected-card');
         });
+
+
+        if(chatAvailable === 'true'){
+            document.getElementById('chat-button').classList.remove('hidden')
+            document.getElementById('chat-button').classList.add('flex');
+        } else {
+            document.getElementById('chat-button').classList.remove('flex')
+            document.getElementById('chat-button').classList.add('hidden')
+        }
 
         // Agregar la clase 'selected-card' a la tarjeta clickeada
         card.classList.add('selected-card');
@@ -1041,82 +1058,18 @@
         // document.querySelector('input[name="reviewerId"]').value = reviewerId;
         // document.querySelector('input[name="subjectId"]').value = subjectId;
 
-        console.log('Asignando valores a los campos ocultos:', subjectId, exchangeId);
-        document.querySelector('input[id="chatExchangeId"]').value = exchangeId;
-        document.querySelector('input[id="chatUserId"]').value = subjectId;
+        if(chatAvailable === 'true'){
+            document.querySelector('input[id="chatExchangeId"]').value = exchangeId;
+            document.querySelector('input[id="chatUserId"]').value = subjectId;
 
-        if (chat.length > 0) {
-            renderExistingMessages(chat);
-        }
-
-        const messageForm = document.getElementById("messageForm");
-        if (messageForm) {
-            messageForm.addEventListener("submit", function (event) {
-                event.preventDefault();
-
-
-                console.log("User ID:", document.getElementById("chatUserId"));
-                console.log("Exchange ID:", document.getElementById("chatExchangeId"));
-
-
-                const userId = document.getElementById("chatUserId").value;
-                const exchangeId = document.getElementById("chatExchangeId").value;
-                let messageText = document.querySelector(".message-send").value;
-                messageText = messageText.trim()
-
-                console.log("User ID:", userId);
-                console.log("Exchange ID:", exchangeId);
-                console.log("Message:", messageText);
-
-                let encoderUserId = encodeURIComponent(userId);
-                let encoderExchangeId = encodeURIComponent(exchangeId);
-                let encoderMessage = encodeURIComponent(messageText);
-                let url = "<c:url value='/send_message'/>?chatUserId=" + encoderUserId + "&chatExchangeId=" + encoderExchangeId + "&message=" + encoderMessage;
-
-                // Enviar la solicitud AJAX
-                fetch(url, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
-                    }
-                });
-                document.querySelector(".message-send").value = "";
-                renderNewMessage({message: messageText}, userId);
-                scrollToBottom();
-                chat.push({userId: userId, message: messageText});
-            });
-        }
-
-        function renderExistingMessages(messages) {
-            const messagesContainer = document.getElementById('messagesContainer');
-            console.log('Mensajes:', messages[0].message);
-            for(let i = 0; i < messages.length && messages[i].message != null; i++) {
-                renderNewMessage(messages[i], messages[i].userId);
-            }
-            scrollToBottom()
-        }
-
-        function renderNewMessage(message, userId) {
-            const messagesContainer = document.getElementById('messagesContainer');
-            const messageDiv = document.createElement('div');
-
-            // Usar 'outgoing' si el usuario es el que envía el mensaje, 'incoming' en caso contrario
-            if (userId === document.getElementById("chatUserId").value) {
-                messageDiv.classList.add('message', 'outgoing');
-            } else {
-                messageDiv.classList.add('message', 'incoming');
-            }
-
-            const messageText = document.createElement('p');
-            messageText.textContent = message.message;
-            messageDiv.appendChild(messageText);
-
-            messagesContainer.appendChild(messageDiv);
+            currentChat = chat.get(exchangeId);
+            removeMessages();
+            renderExistingMessages();
         }
 
         // Limpiar imágenes anteriores
-        // const imageContainer = document.getElementById('info-offered-book-images');
-        // imageContainer.innerHTML = '';
+        const imageContainer = document.getElementById('info-offered-book-images');
+        imageContainer.innerHTML = '';
         //
         // // Añadir imágenes del libro ofertado
         // requestedBookImages.forEach(function (imageUrl) {
@@ -1132,6 +1085,71 @@
         // });
     }
 
+    const messageForm = document.getElementById("messageForm");
+    if (messageForm) {
+        messageForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+
+            const userId = document.getElementById("chatUserId").value;
+            const exchangeId = document.getElementById("chatExchangeId").value;
+            let messageText = document.querySelector(".message-send").value;
+            messageText = messageText.trim()
+
+            let encoderUserId = encodeURIComponent(userId);
+            let encoderExchangeId = encodeURIComponent(exchangeId);
+            let encoderMessage = encodeURIComponent(messageText);
+            let url = "<c:url value='/send_message'/>?chatUserId=" + encoderUserId + "&chatExchangeId=" + encoderExchangeId + "&message=" + encoderMessage;
+
+            // Enviar la solicitud AJAX
+            fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                }
+            });
+            document.querySelector(".message-send").value = "";
+            renderNewMessage({message: messageText}, userId);
+
+            if (!chat.has(exchangeId)) {
+                chat.set(exchangeId, []);
+            }
+            chat.get(exchangeId).push({userId: userId, message: messageText});
+
+            scrollToBottom();
+        });
+    }
+
+    function renderExistingMessages() {
+        for(let i = 0; i < currentChat.length && currentChat[i].message != null; i++) {
+            renderNewMessage(currentChat[i], currentChat[i].userId);
+        }
+        scrollToBottom()
+    }
+
+    function removeMessages() {
+        const messagesContainer = document.getElementById('messagesContainer');
+        messagesContainer.innerHTML = '';
+    }
+
+    function renderNewMessage(message, userId) {
+        const messagesContainer = document.getElementById('messagesContainer');
+        const messageDiv = document.createElement('div');
+
+        // Usar 'outgoing' si el usuario es el que envía el mensaje, 'incoming' en caso contrario
+        if (userId === document.getElementById("chatUserId").value) {
+            messageDiv.classList.add('message', 'outgoing');
+        } else {
+            messageDiv.classList.add('message', 'incoming');
+        }
+
+        const messageText = document.createElement('p');
+        messageText.textContent = message.message;
+        messageDiv.appendChild(messageText);
+
+        messagesContainer.appendChild(messageDiv);
+    }
+
     function scrollToBottom() {
         const messagesContainer = document.querySelector('.chat-body');
         messagesContainer.scroll({ top: messagesContainer.scrollHeight, behavior: 'smooth' });
@@ -1145,6 +1163,7 @@
         document.getElementById('exchange-details').style.display = 'none';
         document.getElementById('add-review-button').style.display = 'block';
         document.getElementById('add-review-button').style.display = 'none';
+        document.getElementById('chat-button').classList.add('hidden');
 
         const messageInput = document.getElementById('messageInput');
         messageInput.addEventListener('focus', function () {

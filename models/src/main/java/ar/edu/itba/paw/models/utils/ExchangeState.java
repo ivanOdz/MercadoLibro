@@ -15,4 +15,8 @@ public enum ExchangeState {
     public String getValue() {
         return value;
     }
+
+    public static boolean equals(ExchangeState state, ExchangeState state2) {
+        return state.getValue().equals(state2.getValue());
+    }
 }
