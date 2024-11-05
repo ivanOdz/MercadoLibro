@@ -137,6 +137,22 @@ public class PublicationServiceImpl implements PublicationService {
     }
 
     @Override
+    public List<GenreWrapper> getMyGenreWrapperList(long userId, String search, String isBookStateFilterActive, String bookStateFilter) {
+        boolean bookStateFilterActive = "true".equalsIgnoreCase(isBookStateFilterActive);
+
+        BookState state = DEFAULT_PUBLICATION_STATE_FILTER;
+        if (bookStateFilterActive) {
+            state = BookState.fromString(bookStateFilter);
+            if (state == null) {
+                bookStateFilterActive = false;
+            }
+        }
+
+        return pubDao.getGenreQtyByPublication(userId, search, bookStateFilterActive, state);
+    }
+
+
+    @Override
     public List<BookStateWrapper> getBookStateWrapperList(String search, String isGenreFilterActive, String genreFilter) {
         boolean genreFilterActive = "true".equalsIgnoreCase(isGenreFilterActive);
 
@@ -149,6 +165,21 @@ public class PublicationServiceImpl implements PublicationService {
         }
 
         return pubDao.getBookStateQtyByPublication(null,search, genreFilterActive, genre);
+    }
+
+    @Override
+    public List<BookStateWrapper> getMyBookStateWrapperList(long userId, String search, String isGenreFilterActive, String genreFilter) {
+        boolean genreFilterActive = "true".equalsIgnoreCase(isGenreFilterActive);
+
+        Genre genre = DEFAULT_PUBLICATION_GENRE_FILTER;
+        if(genreFilterActive){
+            genre = Genre.fromString(genreFilter);
+            if(genre == null){
+                genreFilterActive = false;
+            }
+        }
+
+        return pubDao.getBookStateQtyByPublication(userId, search, genreFilterActive, genre);
     }
 
 

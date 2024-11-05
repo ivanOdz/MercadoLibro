@@ -129,7 +129,18 @@ public class PublicationController {
                 bookStateFilter, isGenreFilterActive, genreFilter, sortType, currentPage);
         ModelAndView mav = new ModelAndView("/home/my_publications");
 
+        User user = loggedUserAdvice.getLoggedUser();
+
+        List<GenreWrapper> genreWrapperList = ps.getMyGenreWrapperList(user.getUserId(), search, isBookStateFilterActive, bookStateFilter);
+        List<BookStateWrapper> bookStateWrapperList = ps.getMyBookStateWrapperList(user.getUserId(), search, isGenreFilterActive, genreFilter);
+
+        List<LocalizedEnumWrapper<GenreWrapper>> localizedGenreWrappers = EnumInternationalizationUtil.localizeGenreWrappers(genreWrapperList);
+        List<LocalizedEnumWrapper<BookStateWrapper>> localizedBookStateWrappers = EnumInternationalizationUtil.localizeBookStateWrappers(bookStateWrapperList);
+
         mav.addObject("publications", publications);
+        mav.addObject("genreWrapperList", localizedGenreWrappers);
+        mav.addObject("bookStateWrapperList", localizedBookStateWrappers);
+
         return mav;
     }
 

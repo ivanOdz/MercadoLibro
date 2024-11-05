@@ -65,23 +65,28 @@
 
         <c:if test="${!publications.metadata.isBookStateFilterActive}">
           <h3><spring:message code="filter.condition"/></h3>
+
+
           <ul class="uk-list">
-            <c:forEach var="bookStateWrapper" items="${publications.metadata.bookStateWrapperList}">
+            <c:forEach var="bookStateWrapper" items="${bookStateWrapperList}">
               <li class="ui-search-filter-container">
                 <form action="<c:url value='' />" method="get">
                   <input type="hidden" name="search" value="<c:out value='${publications.metadata.search}'/>">
                   <input type="hidden" name="is-book-state-filter-active" value='true'>
                   <input type="hidden" name="book-state-filter"
-                         value="${bookStateWrapper.bookState}">
+                         value="${bookStateWrapper.enumWrapper.bookState}">
                   <input type="hidden" name="is-genre-filter-active" value="${publications.metadata.isGenreFilterActive}">
                   <input type="hidden" name="genre-filter" value="${publications.metadata.genreFilter}">
 
 
                   <a href="#" class="uk-inline uk-search-button uk-button-link" title="BookStateFilterRemove" onclick="this.closest('form').submit(); return false;">
-                                        <span class="ui-search-filter-name">
-                                                ${bookStateWrapper.displayName} (${bookStateWrapper.resultByState})
+                    <c:set var="i18nBookStateKey" value="${bookStateWrapper.i18nDisplayName}" />
+                    <span class="ui-search-filter-name">
+                                            <spring:message code="${i18nBookStateKey}"/>
                                         </span>
+                    <span> (${bookStateWrapper.enumWrapper.resultByState})</span>
                   </a>
+
 
                     <%--                                    <button type="submit"--%>
                     <%--                                            class="ui-search-button uk-button uk-button-default uk-button-small"--%>
@@ -98,19 +103,21 @@
         <c:if test="${!publications.metadata.isGenreFilterActive}">
           <h3><spring:message code="filter.genre"/></h3>
           <ul class="uk-list">
-            <c:forEach var="genreWrapper" items="${publications.metadata.genreWrapperList}">
+            <c:forEach var="genreWrapper" items="${genreWrapperList}">
               <li class="ui-search-filter-container">
                 <form action="<c:url value='' />" method="get">
-                  <input type="hidden" name="genre-filter" value="${genreWrapper.genre}">
+                  <input type="hidden" name="genre-filter" value="${genreWrapper.enumWrapper.genre}">
                   <input type="hidden" name="is-genre-filter-active" value="true">
                   <input type="hidden" name="book-state-filter" value="${publications.metadata.bookStateFilter}">
                   <input type="hidden" name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}">
                   <input type="hidden" name="search" value="<c:out value='${publications.metadata.search}'/>"/>
 
                   <a href="#" class="uk-inline uk-search-button uk-button-link" title="GenreFilterRemove" onclick="this.closest('form').submit(); return false;">
-                                        <span class="ui-search-filter-name">
-                                                ${genreWrapper.displayName} (${genreWrapper.resultByGenre})
+                    <c:set var="i18nKey" value="${genreWrapper.i18nDisplayName}" />
+                    <span class="ui-search-filter-name">
+                                            <spring:message code="${i18nKey}"/>
                                         </span>
+                    <span> (${genreWrapper.enumWrapper.resultByGenre})</span>
                   </a>
 
                 </form>
@@ -352,9 +359,115 @@
               </div>
             </c:forEach>
           </div>
+            <hr class="uk-divider-icon">
+
+            <nav aria-label="Pagination" class="uk-position-relative uk-margin">
+              <ul class="uk-pagination uk-flex-center uk-position-center">
+
+                <!-- Botón Previous -->
+                <c:if test="${publications.metadata.currentPage > 0}">
+                  <li>
+                    <c:url var="prevPageUrl" value="">
+                      <c:param name="page" value="${publications.metadata.currentPage - 1}" />
+                      <c:param name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}" />
+                      <c:param name="is-genre-filter-active" value="${publications.metadata.isGenreFilterActive}" />
+                      <c:param name="genre-filter" value="${publications.metadata.genreFilter}" />
+                      <c:param name="book-state-filter" value="${publications.metadata.bookStateFilter}" />
+                      <c:param name="search" value="${publications.metadata.search}" />
+                      <c:param name="sort-type" value="${publications.metadata.sortType}" />
+                    </c:url>
+                    <a href="${prevPageUrl}">
+                      <span uk-pagination-previous></span>
+                      <spring:message code="publications.pagination.previous"/>
+                    </a>
+                  </li>
+                </c:if>
+
+                <!-- Botón de la primera página -->
+                <c:if test="${publications.metadata.currentPage > 1}">
+                  <li>
+                    <c:url var="firstPageUrl" value="">
+                      <c:param name="page" value="0" />
+                      <c:param name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}" />
+                      <c:param name="is-genre-filter-active" value="${publications.metadata.isGenreFilterActive}" />
+                      <c:param name="genre-filter" value="${publications.metadata.genreFilter}" />
+                      <c:param name="book-state-filter" value="${publications.metadata.bookStateFilter}" />
+                      <c:param name="search" value="${publications.metadata.search}" />
+                      <c:param name="sort-type" value="${publications.metadata.sortType}" />
+                    </c:url>
+                    <a href="${firstPageUrl}">1</a>
+                  </li>
+                </c:if>
+
+                <c:if test="${publications.metadata.currentPage - 2 > 0}">
+                  <li><span>...</span></li>
+                </c:if>
+
+                <!-- Páginas centrales -->
+                <c:forEach var="i" begin="${publications.metadata.currentPage > 0 ? publications.metadata.currentPage - 1 : 0}"
+                           end="${publications.metadata.currentPage + 1 <= publications.metadata.maxPage ? publications.metadata.currentPage + 1 : publications.metadata.maxPage}">
+                  <li class="${i == publications.metadata.currentPage ? 'uk-active' : ''}">
+                    <c:url var="centralPageUrl" value="">
+                      <c:param name="page" value="${i}" />
+                      <c:param name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}" />
+                      <c:param name="is-genre-filter-active" value="${publications.metadata.isGenreFilterActive}" />
+                      <c:param name="genre-filter" value="${publications.metadata.genreFilter}" />
+                      <c:param name="book-state-filter" value="${publications.metadata.bookStateFilter}" />
+                      <c:param name="search" value="${publications.metadata.search}" />
+                      <c:param name="sort-type" value="${publications.metadata.sortType}" />
+                    </c:url>
+                    <a href="${centralPageUrl}">${i + 1}</a> <!-- Mostrar i + 1 para la numeración -->
+                  </li>
+                </c:forEach>
+
+                <c:if test="${publications.metadata.currentPage + 2 < publications.metadata.maxPage}">
+                  <li><span>...</span></li>
+                </c:if>
+
+                <!-- Botón de la última página -->
+                <c:if test="${publications.metadata.currentPage + 1 < publications.metadata.maxPage}">
+                  <li>
+                    <c:url var="lastPageUrl" value="">
+                      <c:param name="page" value="${publications.metadata.maxPage}" />
+                      <c:param name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}" />
+                      <c:param name="is-genre-filter-active" value="${publications.metadata.isGenreFilterActive}" />
+                      <c:param name="genre-filter" value="${publications.metadata.genreFilter}" />
+                      <c:param name="book-state-filter" value="${publications.metadata.bookStateFilter}" />
+                      <c:param name="search" value="${publications.metadata.search}" />
+                      <c:param name="sort-type" value="${publications.metadata.sortType}" />
+                    </c:url>
+                    <a href="${lastPageUrl}">${publications.metadata.maxPage + 1}</a> <!-- Mostrar maxPage + 1 -->
+                  </li>
+                </c:if>
+
+                <!-- Botón Next -->
+                <c:if test="${publications.metadata.currentPage < publications.metadata.maxPage}">
+                  <li>
+                    <c:url var="nextPageUrl" value="">
+                      <c:param name="page" value="${publications.metadata.currentPage + 1}" />
+                      <c:param name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}" />
+                      <c:param name="is-genre-filter-active" value="${publications.metadata.isGenreFilterActive}" />
+                      <c:param name="genre-filter" value="${publications.metadata.genreFilter}" />
+                      <c:param name="book-state-filter" value="${publications.metadata.bookStateFilter}" />
+                      <c:param name="search" value="${publications.metadata.search}" />
+                      <c:param name="sort-type" value="${publications.metadata.sortType}" />
+                    </c:url>
+                    <a href="${nextPageUrl}">
+                      <spring:message code="publications.pagination.next"/>
+                      <span uk-pagination-next></span>
+                    </a>
+                  </li>
+                </c:if>
+              </ul>
+
+              <!-- Botón "Ir al inicio" alineado a la derecha -->
+              <a href="" uk-totop uk-scroll class="uk-position-right uk-margin-right">
+                <spring:message code="publications.pagination.totop"/>
+              </a>
+            </nav>
         </c:if>
 
-        <c:if test="${empty publications.data}">
+        <c:if test="${empty publications.data and empty publications.metadata.search}">
           <div class="uk-grid empty-publications">
             <spring:message code="my_publications.empty"/>
             <a style="margin:2%" class="uk-button uk-button-primary"
@@ -362,115 +475,7 @@
               <spring:message code="publication.empty.upload"/>
             </a>
           </div>
-
         </c:if>
-
-        <hr class="uk-divider-icon">
-
-        <nav aria-label="Pagination" class="uk-position-relative uk-margin">
-          <ul class="uk-pagination uk-flex-center uk-position-center">
-
-            <!-- Botón Previous -->
-            <c:if test="${publications.metadata.currentPage > 0}">
-              <li>
-                <c:url var="prevPageUrl" value="">
-                  <c:param name="page" value="${publications.metadata.currentPage - 1}" />
-                  <c:param name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}" />
-                  <c:param name="is-genre-filter-active" value="${publications.metadata.isGenreFilterActive}" />
-                  <c:param name="genre-filter" value="${publications.metadata.genreFilter}" />
-                  <c:param name="book-state-filter" value="${publications.metadata.bookStateFilter}" />
-                  <c:param name="search" value="${publications.metadata.search}" />
-                  <c:param name="sort-type" value="${publications.metadata.sortType}" />
-                </c:url>
-                <a href="${prevPageUrl}">
-                  <span uk-pagination-previous></span>
-                  <spring:message code="publications.pagination.previous"/>
-                </a>
-              </li>
-            </c:if>
-
-            <!-- Botón de la primera página -->
-            <c:if test="${publications.metadata.currentPage > 1}">
-              <li>
-                <c:url var="firstPageUrl" value="">
-                  <c:param name="page" value="0" />
-                  <c:param name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}" />
-                  <c:param name="is-genre-filter-active" value="${publications.metadata.isGenreFilterActive}" />
-                  <c:param name="genre-filter" value="${publications.metadata.genreFilter}" />
-                  <c:param name="book-state-filter" value="${publications.metadata.bookStateFilter}" />
-                  <c:param name="search" value="${publications.metadata.search}" />
-                  <c:param name="sort-type" value="${publications.metadata.sortType}" />
-                </c:url>
-                <a href="${firstPageUrl}">1</a>
-              </li>
-            </c:if>
-
-            <c:if test="${publications.metadata.currentPage - 2 > 0}">
-              <li><span>...</span></li>
-            </c:if>
-
-            <!-- Páginas centrales -->
-            <c:forEach var="i" begin="${publications.metadata.currentPage > 0 ? publications.metadata.currentPage - 1 : 0}"
-                       end="${publications.metadata.currentPage + 1 <= publications.metadata.maxPage ? publications.metadata.currentPage + 1 : publications.metadata.maxPage}">
-              <li class="${i == publications.metadata.currentPage ? 'uk-active' : ''}">
-                <c:url var="centralPageUrl" value="">
-                  <c:param name="page" value="${i}" />
-                  <c:param name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}" />
-                  <c:param name="is-genre-filter-active" value="${publications.metadata.isGenreFilterActive}" />
-                  <c:param name="genre-filter" value="${publications.metadata.genreFilter}" />
-                  <c:param name="book-state-filter" value="${publications.metadata.bookStateFilter}" />
-                  <c:param name="search" value="${publications.metadata.search}" />
-                  <c:param name="sort-type" value="${publications.metadata.sortType}" />
-                </c:url>
-                <a href="${centralPageUrl}">${i + 1}</a> <!-- Mostrar i + 1 para la numeración -->
-              </li>
-            </c:forEach>
-
-            <c:if test="${publications.metadata.currentPage + 2 < publications.metadata.maxPage}">
-              <li><span>...</span></li>
-            </c:if>
-
-            <!-- Botón de la última página -->
-            <c:if test="${publications.metadata.currentPage + 1 < publications.metadata.maxPage}">
-              <li>
-                <c:url var="lastPageUrl" value="">
-                  <c:param name="page" value="${publications.metadata.maxPage}" />
-                  <c:param name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}" />
-                  <c:param name="is-genre-filter-active" value="${publications.metadata.isGenreFilterActive}" />
-                  <c:param name="genre-filter" value="${publications.metadata.genreFilter}" />
-                  <c:param name="book-state-filter" value="${publications.metadata.bookStateFilter}" />
-                  <c:param name="search" value="${publications.metadata.search}" />
-                  <c:param name="sort-type" value="${publications.metadata.sortType}" />
-                </c:url>
-                <a href="${lastPageUrl}">${publications.metadata.maxPage + 1}</a> <!-- Mostrar maxPage + 1 -->
-              </li>
-            </c:if>
-
-            <!-- Botón Next -->
-            <c:if test="${publications.metadata.currentPage < publications.metadata.maxPage}">
-              <li>
-                <c:url var="nextPageUrl" value="">
-                  <c:param name="page" value="${publications.metadata.currentPage + 1}" />
-                  <c:param name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}" />
-                  <c:param name="is-genre-filter-active" value="${publications.metadata.isGenreFilterActive}" />
-                  <c:param name="genre-filter" value="${publications.metadata.genreFilter}" />
-                  <c:param name="book-state-filter" value="${publications.metadata.bookStateFilter}" />
-                  <c:param name="search" value="${publications.metadata.search}" />
-                  <c:param name="sort-type" value="${publications.metadata.sortType}" />
-                </c:url>
-                <a href="${nextPageUrl}">
-                  <spring:message code="publications.pagination.next"/>
-                  <span uk-pagination-next></span>
-                </a>
-              </li>
-            </c:if>
-          </ul>
-
-          <!-- Botón "Ir al inicio" alineado a la derecha -->
-          <a href="" uk-totop uk-scroll class="uk-position-right uk-margin-right">
-            <spring:message code="publications.pagination.totop"/>
-          </a>
-        </nav>
 
       </div>
     </div>

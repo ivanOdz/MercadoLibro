@@ -33,4 +33,9 @@ public interface PublicationService {
     List<GenreWrapper> getGenreWrapperList(String search, String isBookStateFilterActive, String bookStateFilter);
 
     List<BookStateWrapper> getBookStateWrapperList(String search, String isGenreFilterActive, String genreFilter);
-}
+
+    List<GenreWrapper> getMyGenreWrapperList(long userId, String search, String isBookStateFilterActive, String bookStateFilter);
+
+    List<BookStateWrapper> getMyBookStateWrapperList(long userId, String search, String isGenreFilterActive, String genreFilter);
+
+    }
