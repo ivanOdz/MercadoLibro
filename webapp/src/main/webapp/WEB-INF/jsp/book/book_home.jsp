@@ -103,61 +103,71 @@
 
                 <c:if test="${!books.metadata.isBookStateFilterActive}">
                     <h3><spring:message code="filter.condition"/></h3>
-                    <ul class="uk-list">
-                        <c:forEach var="bookStateWrapper" items="${bookStateWrapperList}">
-                            <li class="ui-search-filter-container">
-                                <form action="<c:url value='' />" method="get">
-                                    <input type="hidden" name="search"
-                                           value="<c:out value='${books.metadata.search}'/>">
-                                    <input type="hidden" name="is-book-state-filter-active" value='true'>
-                                    <input type="hidden" name="book-state-filter"
-                                           value="${bookStateWrapper.enumWrapper.bookState}">
-                                    <input type="hidden" name="is-genre-filter-active"
-                                           value="${books.metadata.isGenreFilterActive}">
-                                    <input type="hidden" name="genre-filter" value="${books.metadata.genreFilter}">
-                                    <a href="#" class="uk-inline uk-search-button uk-button-link"
-                                       title="BookStateFilterRemove"
-                                       onclick="this.closest('form').submit(); return false;">
+                    <c:if test="${empty bookStateWrapperList}">
+                        <p><spring:message code="filter.empty.condition"/></p>
+                    </c:if>
+                    <c:if test="${not empty bookStateWrapperList}">
+                        <ul class="uk-list">
+                            <c:forEach var="bookStateWrapper" items="${bookStateWrapperList}">
+                                <li class="ui-search-filter-container">
+                                    <form action="<c:url value='' />" method="get">
+                                        <input type="hidden" name="search"
+                                               value="<c:out value='${books.metadata.search}'/>">
+                                        <input type="hidden" name="is-book-state-filter-active" value='true'>
+                                        <input type="hidden" name="book-state-filter"
+                                               value="${bookStateWrapper.enumWrapper.bookState}">
+                                        <input type="hidden" name="is-genre-filter-active"
+                                               value="${books.metadata.isGenreFilterActive}">
+                                        <input type="hidden" name="genre-filter" value="${books.metadata.genreFilter}">
+                                        <a href="#" class="uk-inline uk-search-button uk-button-link"
+                                           title="BookStateFilterRemove"
+                                           onclick="this.closest('form').submit(); return false;">
 
-                                        <c:set var="i18nBookStateKey" value="${bookStateWrapper.i18nDisplayName}" />
-                                        <span class="ui-search-filter-name">
-                                            <spring:message code="${i18nBookStateKey}"/>
-                                        </span>
-                                        <span> (${bookStateWrapper.enumWrapper.resultByState})</span>
-                                    </a>
+                                            <c:set var="i18nBookStateKey" value="${bookStateWrapper.i18nDisplayName}" />
+                                            <span class="ui-search-filter-name">
+                                                <spring:message code="${i18nBookStateKey}"/>
+                                            </span>
+                                            <span> (${bookStateWrapper.enumWrapper.resultByState})</span>
+                                        </a>
 
-                                </form>
-                            </li>
-                        </c:forEach>
-                    </ul>
+                                    </form>
+                                </li>
+                            </c:forEach>
+                        </ul>
+                    </c:if>
                 </c:if>
 
                 <c:if test="${!books.metadata.isGenreFilterActive}">
                     <h3><spring:message code="filter.genre"/></h3>
-                    <ul class="uk-list">
-                        <c:forEach var="genreWrapper" items="${genreWrapperList}">
-                            <li class="ui-search-filter-container">
-                                <form action="<c:url value='' />" method="get">
-                                    <input type="hidden" name="genre-filter" value="${genreWrapper.enumWrapper.genre}">
-                                    <input type="hidden" name="is-genre-filter-active" value="true">
-                                    <input type="hidden" name="book-state-filter"
-                                           value="${books.metadata.bookStateFilter}">
-                                    <input type="hidden" name="is-book-state-filter-active"
-                                           value="${books.metadata.isBookStateFilterActive}">
-                                    <input type="hidden" name="search"
-                                           value="<c:out value='${books.metadata.search}'/>"/>
+                    <c:if test="${empty genreWrapperList}">
+                        <p><spring:message code="filter.empty.genres"/></p>
+                    </c:if>
+                    <c:if test="${not empty genreWrapperList}">
+                        <ul class="uk-list">
+                            <c:forEach var="genreWrapper" items="${genreWrapperList}">
+                                <li class="ui-search-filter-container">
+                                    <form action="<c:url value='' />" method="get">
+                                        <input type="hidden" name="genre-filter" value="${genreWrapper.enumWrapper.genre}">
+                                        <input type="hidden" name="is-genre-filter-active" value="true">
+                                        <input type="hidden" name="book-state-filter"
+                                               value="${books.metadata.bookStateFilter}">
+                                        <input type="hidden" name="is-book-state-filter-active"
+                                               value="${books.metadata.isBookStateFilterActive}">
+                                        <input type="hidden" name="search"
+                                               value="<c:out value='${books.metadata.search}'/>"/>
 
-                                    <a href="#" class="uk-inline uk-search-button uk-button-link" title="GenreFilterRemove" onclick="this.closest('form').submit(); return false;">
-                                        <c:set var="i18nKey" value="${genreWrapper.i18nDisplayName}" />
-                                        <span class="ui-search-filter-name">
-                                            <spring:message code="${i18nKey}"/>
-                                        </span>
-                                        <span> (${genreWrapper.enumWrapper.resultByGenre})</span>
-                                    </a>
-                                </form>
-                            </li>
-                        </c:forEach>
-                    </ul>
+                                        <a href="#" class="uk-inline uk-search-button uk-button-link" title="GenreFilterRemove" onclick="this.closest('form').submit(); return false;">
+                                            <c:set var="i18nKey" value="${genreWrapper.i18nDisplayName}" />
+                                            <span class="ui-search-filter-name">
+                                                <spring:message code="${i18nKey}"/>
+                                            </span>
+                                            <span> (${genreWrapper.enumWrapper.resultByGenre})</span>
+                                        </a>
+                                    </form>
+                                </li>
+                            </c:forEach>
+                        </ul>
+                    </c:if>
                 </c:if>
             </div>
 
@@ -277,11 +287,17 @@
                             </div>
                         </c:forEach>
                     </c:if>
-
-                </div
+                </div>
 
                 <c:if test="${empty books.data and not empty books.metadata.search}">
-                    <div>
+                    <div style="text-align: left;">
+                        <h1><spring:message code="filter.empty.header" /></h1>
+
+                        <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+                        <div style="display: flex; justify-content: center;">
+                            <dotlottie-player src="https://lottie.host/122aec68-0bc1-46ed-a1bd-c82ca1f4bac6/riZdUUo3Qs.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
+                        </div>
+
                         <ul>
                             <li><h5><spring:message code="recommendations.verifySpelling" /></h5></li>
                             <li><h5><spring:message code="recommendations.tryFullOrPartialTitle" /></h5></li>

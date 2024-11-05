@@ -78,40 +78,43 @@
 
                 <c:if test="${!modelBooks.metadata.isGenreFilterActive}">
                     <h3><spring:message code="filter.genre"/></h3>
-                    <ul class="uk-list">
-                        <c:forEach var="genreWrapper" items="${genres}">
-                            <li class="ui-search-filter-container">
-                                <form action="<c:url value='' />" method="get">
-                                    <input type="hidden" name="genre-filter" value="${genreWrapper.enumWrapper.genre}">
-                                    <input type="hidden" name="is-genre-filter-active" value="true">
-                                    <input type="hidden" name="search" value="<c:out value='${modelBooks.metadata.search}'/>"/>
 
-                                    <a href="#" class="uk-inline uk-search-button uk-button-link" title="GenreFilterRemove" onclick="this.closest('form').submit(); return false;">
-                                        <c:set var="i18nKey" value="${genreWrapper.i18nDisplayName}" />
-                                        <span class="ui-search-filter-name">
+                    <c:if test="${empty genres}">
+                        <p><spring:message code="filter.empty.genres"/></p>
+                    </c:if>
+                    <c:if test="${not empty genres}">
+                        <ul class="uk-list">
+                            <c:forEach var="genreWrapper" items="${genres}">
+                                <li class="ui-search-filter-container">
+                                    <form action="<c:url value='' />" method="get">
+                                        <input type="hidden" name="genre-filter" value="${genreWrapper.enumWrapper.genre}">
+                                        <input type="hidden" name="is-genre-filter-active" value="true">
+                                        <input type="hidden" name="search" value="<c:out value='${modelBooks.metadata.search}'/>"/>
+
+                                        <a href="#" class="uk-inline uk-search-button uk-button-link" title="GenreFilterRemove" onclick="this.closest('form').submit(); return false;">
+                                            <c:set var="i18nKey" value="${genreWrapper.i18nDisplayName}" />
+                                            <span class="ui-search-filter-name">
                                             <spring:message code="${i18nKey}"/>
                                         </span>
-                                        <span> (${genreWrapper.enumWrapper.resultByGenre})</span>
-                                    </a>
+                                            <span> (${genreWrapper.enumWrapper.resultByGenre})</span>
+                                        </a>
+                                    </form>
+                                </li>
+                            </c:forEach>
+                        </ul>
 
-<%--                                    <button type="submit"--%>
-<%--                                            class="ui-search-button uk-button uk-button-default uk-button-small"--%>
-<%--                                            title="${genreWrapper.displayName}">--%>
-<%--                                        <span class="ui-search-filter-name">${genreWrapper.displayName}</span>--%>
-<%--                                    </button>--%>
-                                </form>
-                            </li>
-                        </c:forEach>
-                    </ul>
+                    </c:if>
                 </c:if>
             </div>
 
-            <div class="uk-width-3-4@s col-content">
-                <div class="uk-card uk-card-default uk-card-body uk-margin-bottom mt-1 uk-border-rounded uk-border-rounded-medium">
-                    <h5 class="uk-text-large"><spring:message code="book.model.view.title"/></h5>
-                    <h6 class="uk-text-muted"><spring:message code="book.model.list.select"/></h6>
-                </div>
 
+            <div class="uk-width-3-4@s col-content">
+                <c:if test="${not empty modelBooks.data}">
+                    <div class="uk-card uk-card-default uk-card-body uk-margin-bottom mt-1 uk-border-rounded uk-border-rounded-medium">
+                        <h5 class="uk-text-large"><spring:message code="book.model.view.title"/></h5>
+                        <h6 class="uk-text-muted"><spring:message code="book.model.list.select"/></h6>
+                    </div>
+                </c:if>
                 <div class="uk-grid-match uk-child-width-1-2@s uk-child-width-1-3@m mb-1" uk-grid>
                     <c:forEach var="card" items="${modelBooks.data}">
                         <div>
@@ -188,101 +191,136 @@
                         </div>
                     </c:forEach>
                 </div>
-                <hr class="uk-divider-icon">
-                <nav aria-label="Pagination" class="uk-position-relative uk-margin">
-                    <ul class="uk-pagination uk-flex-center uk-position-center">
 
-                        <!-- Botón Previous -->
-                        <c:if test="${modelBooks.metadata.currentPage > 0}">
-                            <li>
-                                <c:url var="prevPageUrl" value="">
-                                    <c:param name="page" value="${modelBooks.metadata.currentPage - 1}" />
-                                    <c:param name="is-genre-filter-active" value="${modelBooks.metadata.isGenreFilterActive}" />
-                                    <c:param name="genre-filter" value="${modelBooks.metadata.genreFilter}" />
-                                    <c:param name="search" value="${modelBooks.metadata.search}" />
-                                    <c:param name="sort-type" value="${modelBooks.metadata.sortType}" />
-                                </c:url>
-                                <a href="${prevPageUrl}">
-                                    <span uk-pagination-previous></span>
-                                    <spring:message code="publications.pagination.previous"/>
-                                </a>
-                            </li>
-                        </c:if>
+                <c:if test="${empty modelBooks.data and empty modelBooks.metadata.search}">
+                    <div class="book-empty">
+                        <div style="margin:2%;width: max-content;">
+                            <spring:message code="books.empty"/>
+                        </div>
+                        <a style="margin:2%" class="uk-button uk-button-primary"
+                           href="<c:url value='/book/new_book' />">
+                            <spring:message code="books.empty.upload"/>
+                        </a>
+                        <a style="margin:2%" class="uk-button uk-button-primary"
+                           href="<c:url value='/book/book_models' />">
+                            <spring:message code="books.empty.preloaded"/>
+                        </a>
+                    </div>
+                </c:if>
 
-                        <!-- Botón de la primera página -->
-                        <c:if test="${modelBooks.metadata.currentPage > 1}">
-                            <li>
-                                <c:url var="firstPageUrl" value="">
-                                    <c:param name="page" value="0" />
-                                    <c:param name="is-genre-filter-active" value="${modelBooks.metadata.isGenreFilterActive}" />
-                                    <c:param name="genre-filter" value="${modelBooks.metadata.genreFilter}" />
-                                    <c:param name="search" value="${modelBooks.metadata.search}" />
-                                    <c:param name="sort-type" value="${modelBooks.metadata.sortType}" />
-                                </c:url>
-                                <a href="${firstPageUrl}">1</a>
-                            </li>
-                        </c:if>
+                <c:if test="${not empty modelBooks.data}">
+                    <hr class="uk-divider-icon">
+                    <nav aria-label="Pagination" class="uk-position-relative uk-margin">
+                        <ul class="uk-pagination uk-flex-center uk-position-center">
 
-                        <c:if test="${modelBooks.metadata.currentPage - 2 > 0}">
-                            <li><span>...</span></li>
-                        </c:if>
+                            <!-- Botón Previous -->
+                            <c:if test="${modelBooks.metadata.currentPage > 0}">
+                                <li>
+                                    <c:url var="prevPageUrl" value="">
+                                        <c:param name="page" value="${modelBooks.metadata.currentPage - 1}" />
+                                        <c:param name="is-genre-filter-active" value="${modelBooks.metadata.isGenreFilterActive}" />
+                                        <c:param name="genre-filter" value="${modelBooks.metadata.genreFilter}" />
+                                        <c:param name="search" value="${modelBooks.metadata.search}" />
+                                        <c:param name="sort-type" value="${modelBooks.metadata.sortType}" />
+                                    </c:url>
+                                    <a href="${prevPageUrl}">
+                                        <span uk-pagination-previous></span>
+                                        <spring:message code="publications.pagination.previous"/>
+                                    </a>
+                                </li>
+                            </c:if>
 
-                        <!-- Páginas centrales -->
-                        <c:forEach var="i" begin="${modelBooks.metadata.currentPage > 0 ? modelBooks.metadata.currentPage - 1 : 0}"
-                                   end="${modelBooks.metadata.currentPage + 1 <= modelBooks.metadata.maxPage ? modelBooks.metadata.currentPage + 1 : modelBooks.metadata.maxPage}">
-                            <li class="${i == modelBooks.metadata.currentPage ? 'uk-active' : ''}">
-                                <c:url var="centralPageUrl" value="">
-                                    <c:param name="page" value="${i}" />
-                                    <c:param name="is-genre-filter-active" value="${modelBooks.metadata.isGenreFilterActive}" />
-                                    <c:param name="genre-filter" value="${modelBooks.metadata.genreFilter}" />
-                                    <c:param name="search" value="${modelBooks.metadata.search}" />
-                                    <c:param name="sort-type" value="${modelBooks.metadata.sortType}" />
-                                </c:url>
-                                <a href="${centralPageUrl}">${i + 1}</a> <!-- Mostrar i + 1 para la numeración -->
-                            </li>
-                        </c:forEach>
+                            <!-- Botón de la primera página -->
+                            <c:if test="${modelBooks.metadata.currentPage > 1}">
+                                <li>
+                                    <c:url var="firstPageUrl" value="">
+                                        <c:param name="page" value="0" />
+                                        <c:param name="is-genre-filter-active" value="${modelBooks.metadata.isGenreFilterActive}" />
+                                        <c:param name="genre-filter" value="${modelBooks.metadata.genreFilter}" />
+                                        <c:param name="search" value="${modelBooks.metadata.search}" />
+                                        <c:param name="sort-type" value="${modelBooks.metadata.sortType}" />
+                                    </c:url>
+                                    <a href="${firstPageUrl}">1</a>
+                                </li>
+                            </c:if>
 
-                        <c:if test="${modelBooks.metadata.currentPage + 2 < modelBooks.metadata.maxPage}">
-                            <li><span>...</span></li>
-                        </c:if>
+                            <c:if test="${modelBooks.metadata.currentPage - 2 > 0}">
+                                <li><span>...</span></li>
+                            </c:if>
 
-                        <!-- Botón de la última página -->
-                        <c:if test="${modelBooks.metadata.currentPage + 1 < modelBooks.metadata.maxPage}">
-                            <li>
-                                <c:url var="lastPageUrl" value="">
-                                    <c:param name="page" value="${modelBooks.metadata.maxPage}" />
-                                    <c:param name="is-genre-filter-active" value="${modelBooks.metadata.isGenreFilterActive}" />
-                                    <c:param name="genre-filter" value="${modelBooks.metadata.genreFilter}" />
-                                    <c:param name="search" value="${modelBooks.metadata.search}" />
-                                    <c:param name="sort-type" value="${modelBooks.metadata.sortType}" />
-                                </c:url>
-                                <a href="${lastPageUrl}">${modelBooks.metadata.maxPage + 1}</a> <!-- Mostrar maxPage + 1 -->
-                            </li>
-                        </c:if>
+                            <!-- Páginas centrales -->
+                            <c:forEach var="i" begin="${modelBooks.metadata.currentPage > 0 ? modelBooks.metadata.currentPage - 1 : 0}"
+                                       end="${modelBooks.metadata.currentPage + 1 <= modelBooks.metadata.maxPage ? modelBooks.metadata.currentPage + 1 : modelBooks.metadata.maxPage}">
+                                <li class="${i == modelBooks.metadata.currentPage ? 'uk-active' : ''}">
+                                    <c:url var="centralPageUrl" value="">
+                                        <c:param name="page" value="${i}" />
+                                        <c:param name="is-genre-filter-active" value="${modelBooks.metadata.isGenreFilterActive}" />
+                                        <c:param name="genre-filter" value="${modelBooks.metadata.genreFilter}" />
+                                        <c:param name="search" value="${modelBooks.metadata.search}" />
+                                        <c:param name="sort-type" value="${modelBooks.metadata.sortType}" />
+                                    </c:url>
+                                    <a href="${centralPageUrl}">${i + 1}</a> <!-- Mostrar i + 1 para la numeración -->
+                                </li>
+                            </c:forEach>
 
-                        <!-- Botón Next -->
-                        <c:if test="${modelBooks.metadata.currentPage < modelBooks.metadata.maxPage}">
-                            <li>
-                                <c:url var="nextPageUrl" value="">
-                                    <c:param name="page" value="${modelBooks.metadata.currentPage + 1}" />
-                                    <c:param name="is-genre-filter-active" value="${modelBooks.metadata.isGenreFilterActive}" />
-                                    <c:param name="genre-filter" value="${modelBooks.metadata.genreFilter}" />
-                                    <c:param name="search" value="${modelBooks.metadata.search}" />
-                                    <c:param name="sort-type" value="${modelBooks.metadata.sortType}" />
-                                </c:url>
-                                <a href="${nextPageUrl}">
-                                    <spring:message code="publications.pagination.next"/>
-                                    <span uk-pagination-next></span>
-                                </a>
-                            </li>
-                        </c:if>
-                    </ul>
+                            <c:if test="${modelBooks.metadata.currentPage + 2 < modelBooks.metadata.maxPage}">
+                                <li><span>...</span></li>
+                            </c:if>
 
-                    <!-- Botón "Ir al inicio" alineado a la derecha -->
-                    <a href="" uk-totop uk-scroll class="uk-position-right uk-margin-right">
-                        <spring:message code="publications.pagination.totop"/>
-                    </a>
-                </nav>
+                            <!-- Botón de la última página -->
+                            <c:if test="${modelBooks.metadata.currentPage + 1 < modelBooks.metadata.maxPage}">
+                                <li>
+                                    <c:url var="lastPageUrl" value="">
+                                        <c:param name="page" value="${modelBooks.metadata.maxPage}" />
+                                        <c:param name="is-genre-filter-active" value="${modelBooks.metadata.isGenreFilterActive}" />
+                                        <c:param name="genre-filter" value="${modelBooks.metadata.genreFilter}" />
+                                        <c:param name="search" value="${modelBooks.metadata.search}" />
+                                        <c:param name="sort-type" value="${modelBooks.metadata.sortType}" />
+                                    </c:url>
+                                    <a href="${lastPageUrl}">${modelBooks.metadata.maxPage + 1}</a> <!-- Mostrar maxPage + 1 -->
+                                </li>
+                            </c:if>
+
+                            <!-- Botón Next -->
+                            <c:if test="${modelBooks.metadata.currentPage < modelBooks.metadata.maxPage}">
+                                <li>
+                                    <c:url var="nextPageUrl" value="">
+                                        <c:param name="page" value="${modelBooks.metadata.currentPage + 1}" />
+                                        <c:param name="is-genre-filter-active" value="${modelBooks.metadata.isGenreFilterActive}" />
+                                        <c:param name="genre-filter" value="${modelBooks.metadata.genreFilter}" />
+                                        <c:param name="search" value="${modelBooks.metadata.search}" />
+                                        <c:param name="sort-type" value="${modelBooks.metadata.sortType}" />
+                                    </c:url>
+                                    <a href="${nextPageUrl}">
+                                        <spring:message code="publications.pagination.next"/>
+                                        <span uk-pagination-next></span>
+                                    </a>
+                                </li>
+                            </c:if>
+                        </ul>
+
+                        <!-- Botón "Ir al inicio" alineado a la derecha -->
+                        <a href="" uk-totop uk-scroll class="uk-position-right uk-margin-right">
+                            <spring:message code="publications.pagination.totop"/>
+                        </a>
+                    </nav>
+                </c:if>
+                <c:if test="${empty modelBooks.data and not empty modelBooks.metadata.search}">
+                    <div style="text-align: left;">
+                        <h1><spring:message code="filter.empty.header" /></h1>
+
+                        <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+                        <div style="display: flex; justify-content: center;">
+                            <dotlottie-player src="https://lottie.host/122aec68-0bc1-46ed-a1bd-c82ca1f4bac6/riZdUUo3Qs.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
+                        </div>
+
+                        <ul>
+                            <li><h5><spring:message code="recommendations.verifySpelling" /></h5></li>
+                            <li><h5><spring:message code="recommendations.tryFullOrPartialTitle" /></h5></li>
+                            <li><h5><spring:message code="recommendations.exploreByGenreOrCategory" /></h5></li>
+                        </ul>
+                    </div>
+                </c:if>
             </div>
         </div>
     </div>
