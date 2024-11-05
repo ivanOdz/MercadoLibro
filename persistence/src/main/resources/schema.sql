@@ -10,6 +10,12 @@ CREATE TABLE IF NOT EXISTS location (
         locationString          VARCHAR(255) NOT NULL -- UNIQUE
 );
 
+-- Tabla de autores
+CREATE TABLE IF NOT EXISTS author (
+      authorId                  SERIAL PRIMARY KEY,
+      authorName                VARCHAR(255) NOT NULL -- UNIQUE
+);
+
 -- Tabla de usuarios
 CREATE TABLE IF NOT EXISTS users (
      userId                     SERIAL PRIMARY KEY,
@@ -66,12 +72,6 @@ CREATE TABLE IF NOT EXISTS book_rating (
        userId       INTEGER NOT NULL REFERENCES users(userId) ON DELETE CASCADE,
        bookModelId  INTEGER NOT NULL REFERENCES book_model(bookModelId) ON DELETE CASCADE,
        rating       INTEGER
-);
-
--- Tabla de autores
-CREATE TABLE IF NOT EXISTS author (
-      authorId                  SERIAL PRIMARY KEY,
-      authorName                VARCHAR(255) NOT NULL -- UNIQUE
 );
 
 -- Relación libro y autor
