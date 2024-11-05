@@ -180,8 +180,8 @@ public class BookController {
         mav.addObject("step", 2);
         mav.addObject("book_model", bm);
         mav.addObject("book_model_id", bookModelId);
+        mav.addObject("bookStates", EnumInternationalizationUtil.getLocalizedBookStates());
 
-        mav.addObject("bookStates", Stream.of(BookState.values()).map(bookStatus -> new BookStateWrapper(bookStatus, bookStateService.getBookStateDisplayName(bookStatus))).collect(Collectors.toList()));
 
         return mav;
     }
