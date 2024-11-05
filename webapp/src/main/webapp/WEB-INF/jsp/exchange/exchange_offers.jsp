@@ -18,6 +18,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.16.15/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.16.15/dist/js/uikit-icons.min.js"></script>
+
+
     <link href="<c:url value='/css/navbar.css' />" rel="stylesheet"/>
     <link href="<c:url value='/css/exchange.css' />" rel="stylesheet"/>
 
@@ -911,7 +915,7 @@
                                                 <form:input type="hidden" path="userId" id="chatUserId" />
                                                 <form:input type="hidden" path="chatExchangeId" id="chatExchangeId" />
 
-                                                <textarea placeholder="<spring:message code='chat.placeholder.text'/>" class="message-send" path="message"></textarea>
+                                                <textarea id=messageInput" placeholder="<spring:message code='chat.placeholder.text'/>" class="message-send" path="message"></textarea>
                                                 <button type="submit" class="button-send"><spring:message code='chat.send'/></button>
                                             </form:form>
                                         </div>
@@ -1057,16 +1061,20 @@
 
                 const userId = document.getElementById("chatUserId").value;
                 const exchangeId = document.getElementById("chatExchangeId").value;
-                const messageText = document.querySelector(".message-send").value;
+                let messageText = document.querySelector(".message-send").value;
+                messageText = messageText.trim()
 
                 console.log("User ID:", userId);
                 console.log("Exchange ID:", exchangeId);
                 console.log("Message:", messageText);
 
+                let encoderUserId = encodeURIComponent(userId);
+                let encoderExchangeId = encodeURIComponent(exchangeId);
+                let encoderMessage = encodeURIComponent(messageText);
+                let url = "<c:url value='/send_message'/>?chatUserId=" + encoderUserId + "&chatExchangeId=" + encoderExchangeId + "&message=" + encoderMessage;
+
                 // Enviar la solicitud AJAX
-                fetch("/send_message?chatUserId=" + encodeURIComponent(userId) +
-                    "&chatExchangeId=" + encodeURIComponent(exchangeId) +
-                    "&message=" + encodeURIComponent(messageText), {
+                fetch(url, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/x-www-form-urlencoded",
@@ -1074,6 +1082,7 @@
                 });
                 document.querySelector(".message-send").value = "";
                 renderNewMessage({message: messageText}, userId);
+                scrollToBottom();
                 chat.push({userId: userId, message: messageText});
             });
         }
@@ -1084,10 +1093,11 @@
             for(let i = 0; i < messages.length && messages[i].message != null; i++) {
                 renderNewMessage(messages[i], messages[i].userId);
             }
+            scrollToBottom()
         }
 
         function renderNewMessage(message, userId) {
-            const chatBody = document.querySelector('.chat-body');
+            const messagesContainer = document.getElementById('messagesContainer');
             const messageDiv = document.createElement('div');
 
             // Usar 'outgoing' si el usuario es el que envía el mensaje, 'incoming' en caso contrario
@@ -1101,11 +1111,8 @@
             messageText.textContent = message.message;
             messageDiv.appendChild(messageText);
 
-            chatBody.appendChild(messageDiv);
-            chatBody.scrollTop = chatBody.scrollHeight;
+            messagesContainer.appendChild(messageDiv);
         }
-
-
 
         // Limpiar imágenes anteriores
         // const imageContainer = document.getElementById('info-offered-book-images');
@@ -1125,12 +1132,24 @@
         // });
     }
 
+    function scrollToBottom() {
+        const messagesContainer = document.querySelector('.chat-body');
+        messagesContainer.scroll({ top: messagesContainer.scrollHeight, behavior: 'smooth' });
+    }
+
+
+
     // Inicialmente, mostrar el mensaje de selección
     document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('no-selection-message').style.display = 'block';
         document.getElementById('exchange-details').style.display = 'none';
         document.getElementById('add-review-button').style.display = 'block';
         document.getElementById('add-review-button').style.display = 'none';
+
+        const messageInput = document.getElementById('messageInput');
+        messageInput.addEventListener('focus', function () {
+            scrollToBottom()
+        });
     });
     
 </script>

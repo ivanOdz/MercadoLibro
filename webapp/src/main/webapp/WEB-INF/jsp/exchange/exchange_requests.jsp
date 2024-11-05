@@ -973,7 +973,7 @@
                                 <!-- Chat, debería aparecer solo para el intercambio en proceso -->
 
                                 <div style="margin: 5%; justify-content: center;display:flex">
-                                    <a class="button" type="button"  href="#modal-chat" uk-toggle>
+                                    <a id="openChatModal" class="button" type="button"  href="#modal-chat" uk-toggle>
                                         <span uk-icon="comment" class="svgIcon" viewBox="0 0 384 512"></span>
                                     </a>
                                 </div>
@@ -997,7 +997,7 @@
                                                 <form:input type="hidden" path="userId" id="chatUserId" />
                                                 <form:input type="hidden" path="chatExchangeId" id="chatExchangeId" />
 
-                                                <textarea placeholder="<spring:message code='chat.placeholder.text'/>" class="message-send" path="message"></textarea>
+                                                <textarea id="messageInput" placeholder="<spring:message code='chat.placeholder.text'/>" class="message-send" path="message"></textarea>
                                                 <button type="submit" class="button-send"><spring:message code='chat.send'/></button>
                                             </form:form>
                                         </div>
@@ -1162,16 +1162,21 @@
 
             const userId = document.getElementById("chatUserId").value;
             const exchangeId = document.getElementById("chatExchangeId").value;
-            const messageText = document.querySelector(".message-send").value;
+            let messageText = document.querySelector(".message-send").value;
+            messageText = messageText.trim()
 
             console.log("User ID:", userId);
             console.log("Exchange ID:", exchangeId);
             console.log("Message:", messageText);
 
+            let encoderUserId = encodeURIComponent(userId);
+            let encoderExchangeId = encodeURIComponent(exchangeId);
+            let encoderMessage = encodeURIComponent(messageText);
+            let url = "<c:url value='/send_message'/>?chatUserId=" + encoderUserId + "&chatExchangeId=" + encoderExchangeId + "&message=" + encoderMessage;
+
+
             // Enviar la solicitud AJAX
-            fetch("/send_message?chatUserId=" + encodeURIComponent(userId) +
-                "&chatExchangeId=" + encodeURIComponent(exchangeId) +
-                "&message=" + encodeURIComponent(messageText), {
+            fetch(url, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
@@ -1180,6 +1185,7 @@
             document.querySelector(".message-send").value = "";
             renderNewMessage({message: messageText}, userId);
             chat.push({userId: userId, message: messageText});
+            scrollToBottom();
         });
     }
 
@@ -1189,10 +1195,11 @@
         for(let i = 0; i < messages.length && messages[i].message != null; i++) {
             renderNewMessage(messages[i], messages[i].userId);
         }
+        scrollToBottom()
     }
 
     function renderNewMessage(message, userId) {
-        const chatBody = document.querySelector('.chat-body');
+        const messagesContainer = document.getElementById('messagesContainer');
         const messageDiv = document.createElement('div');
 
         // Usar 'outgoing' si el usuario es el que envía el mensaje, 'incoming' en caso contrario
@@ -1206,9 +1213,16 @@
         messageText.textContent = message.message;
         messageDiv.appendChild(messageText);
 
-        chatBody.appendChild(messageDiv);
-        chatBody.scrollTop = chatBody.scrollHeight;
+        messagesContainer.appendChild(messageDiv);
     }
+
+
+    function scrollToBottom() {
+        const messagesContainer = document.querySelector('.chat-body');
+        messagesContainer.scroll({ top: messagesContainer.scrollHeight, behavior: 'smooth' });
+    }
+
+
 
     // Inicialmente, mostrar el mensaje de selección
     document.addEventListener('DOMContentLoaded', function () {
@@ -1216,6 +1230,11 @@
         document.getElementById('exchange-details').style.display = 'none';
         document.getElementById('add-review-button').style.display = 'block';
         document.getElementById('add-review-button').style.display = 'none';
+
+        const messageInput = document.getElementById('messageInput');
+        messageInput.addEventListener('focus', function () {
+            scrollToBottom()
+        });
     });
 
 
