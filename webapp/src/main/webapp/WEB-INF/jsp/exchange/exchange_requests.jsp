@@ -93,7 +93,8 @@
                                                  '<c:out value="${data.exchangeId}"/>',
                                                  '<c:out value="${data.requester.book.owner.userId}"/>',
                                                  '<c:out value="${data.offerer.book.owner.userId}"/>',
-                                                 '${data.isReviewable}')"
+                                                 '${data.isReviewable}',
+                                                 '${data.chatAvailable}')"
                                          uk-grid>
 
 
@@ -346,7 +347,8 @@
                                                  '<c:out value="${data.exchangeId}"/>',
                                                  '<c:out value="${data.requester.book.owner.userId}"/>',
                                                  '<c:out value="${data.offerer.book.owner.userId}"/>',
-                                                 '${data.isReviewable}')"
+                                                 '${data.isReviewable}',
+                                                 '${data.chatAvailable}')"
                                          uk-grid>
 
 
@@ -574,7 +576,8 @@
                                                  '<c:out value="${data.exchangeId}"/>',
                                                  '<c:out value="${data.requester.book.owner.userId}"/>',
                                                  '<c:out value="${data.offerer.book.owner.userId}"/>',
-                                                 '${data.isReviewable}')"
+                                                 '${data.isReviewable}',
+                                                 '${data.chatAvailable}')"
                                          uk-grid>
 
                                         <div style="padding: 0">
@@ -772,7 +775,8 @@
                                                  '<c:out value="${data.exchangeId}"/>',
                                                  '<c:out value="${data.requester.book.owner.userId}"/>',
                                                  '<c:out value="${data.offerer.book.owner.userId}"/>',
-                                                 '${data.isReviewable}')"
+                                                 '${data.isReviewable}',
+                                                 '${data.chatAvailable}')"
                                          uk-grid>
 
                                         <div style="padding: 0">
@@ -970,9 +974,9 @@
                                     <spring:message code="exchange.button.add_review"/>
                                 </button>
 
-                                <!-- Chat, debería aparecer solo para el intercambio en proceso -->
+                                <!-- Chat -->
 
-                                <div style="margin: 5%; justify-content: center;display:flex">
+                                <div id="chat-button" style="margin: 5%; justify-content: center;">
                                     <a id="openChatModal" class="button" type="button"  href="#modal-chat" uk-toggle>
                                         <span uk-icon="comment" class="svgIcon" viewBox="0 0 384 512"></span>
                                     </a>
@@ -1079,25 +1083,45 @@
 </body>
 
 <script>
-    let chat = [];
 
+    let chat = new Map();
+    let exchangeId;
+    let messageObject;
     <c:if test="${not empty messages}">
-    chat = [
-        <c:forEach var="msg" items="${messages}" varStatus="status">
-        {
-            userId: "${msg.user.userId}",
-            message: "<c:out value='${msg.message}'/>"
-        }<c:if test="${!status.last}">,</c:if>
-        </c:forEach>
-    ];
+    <c:forEach var="msg" items="${messages}">
+    exchangeId = "${msg.exchange.exchangeId}";
+    messageObject = {
+        userId: "${msg.user.userId}",
+        message: "<c:out value="${msg.message}" />"
+    };
+
+    if (!chat.has(exchangeId)) {
+        chat.set(exchangeId, []);
+    }
+    chat.get(exchangeId).push(messageObject);
+    </c:forEach>
     </c:if>
+
+    let currentChat = [];
+
     function selectCard(card, requesterUsername, requesterMail, requesterLocation, offeredBookTitle,
                         offeredBookAuthors, offeredBookEdition, offeredBookImages, exchangeId,
-                        reviewerId, subjectId, isReviewable) {
+                        reviewerId, subjectId, isReviewable, chatAvailable) {
+
         // Remover la clase 'selected-card' de todas las tarjetas
         document.querySelectorAll('.exchange-card').forEach(function (el) {
             el.classList.remove('selected-card');
         });
+
+        console.log('Chat disponible:', chatAvailable);
+
+        if(chatAvailable === 'true'){
+            document.getElementById('chat-button').classList.remove('hidden')
+            document.getElementById('chat-button').classList.add('flex');
+        } else {
+            document.getElementById('chat-button').classList.remove('flex')
+            document.getElementById('chat-button').classList.add('hidden')
+        }
 
         // Agregar la clase 'selected-card' a la tarjeta clickeada
         card.classList.add('selected-card');
@@ -1125,12 +1149,15 @@
         // document.querySelector('input[name="reviewerId"]').value = reviewerId;
         // document.querySelector('input[name="subjectId"]').value = subjectId;
 
+        if(chatAvailable === 'true'){
+            console.log('Asignando valores a los campos ocultos:', subjectId, exchangeId);
+            document.querySelector('input[id="chatExchangeId"]').value = exchangeId;
+            document.querySelector('input[id="chatUserId"]').value = subjectId;
 
-        console.log('Asignando valores a los campos ocultos:', subjectId, exchangeId);
-        document.querySelector('input[id="chatExchangeId"]').value = exchangeId;
-        document.querySelector('input[id="chatUserId"]').value = subjectId;
-
-        renderExistingMessages(chat);
+            currentChat = chat.get(exchangeId);
+            removeMessages();
+            renderExistingMessages();
+        }
 
         // Limpiar imágenes anteriores
         const imageContainer = document.getElementById('info-offered-book-images');
@@ -1184,18 +1211,28 @@
             });
             document.querySelector(".message-send").value = "";
             renderNewMessage({message: messageText}, userId);
-            chat.push({userId: userId, message: messageText});
+
+            if (!chat.has(exchangeId)) {
+                chat.set(exchangeId, []);
+            }
+            chat.get(exchangeId).push({userId: userId, message: messageText});
+
             scrollToBottom();
         });
     }
 
-    function renderExistingMessages(messages) {
+    function renderExistingMessages() {
         const messagesContainer = document.getElementById('messagesContainer');
-        console.log('Mensajes:', messages[0].message);
-        for(let i = 0; i < messages.length && messages[i].message != null; i++) {
-            renderNewMessage(messages[i], messages[i].userId);
+        console.log('Mensajes:', currentChat[0].message);
+        for (let i = 0; i < currentChat.length && currentChat[i].message != null; i++) {
+            renderNewMessage(currentChat[i], currentChat[i].userId);
         }
         scrollToBottom()
+    }
+
+    function removeMessages() {
+        const messagesContainer = document.getElementById('messagesContainer');
+        messagesContainer.innerHTML = '';
     }
 
     function renderNewMessage(message, userId) {
@@ -1219,9 +1256,8 @@
 
     function scrollToBottom() {
         const messagesContainer = document.querySelector('.chat-body');
-        messagesContainer.scroll({ top: messagesContainer.scrollHeight, behavior: 'smooth' });
+        messagesContainer.scroll({top: messagesContainer.scrollHeight, behavior: 'smooth'});
     }
-
 
 
     // Inicialmente, mostrar el mensaje de selección
@@ -1230,13 +1266,13 @@
         document.getElementById('exchange-details').style.display = 'none';
         document.getElementById('add-review-button').style.display = 'block';
         document.getElementById('add-review-button').style.display = 'none';
+        document.getElementById('chat-button').classList.add('hidden');
 
         const messageInput = document.getElementById('messageInput');
         messageInput.addEventListener('focus', function () {
             scrollToBottom()
         });
     });
-
 
 
 </script>

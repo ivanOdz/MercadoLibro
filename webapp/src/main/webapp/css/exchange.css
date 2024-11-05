@@ -348,3 +348,11 @@ a:hover {
     color: #333;
     margin: 0;
 }
+
+.hidden {
+    display: none;
+}
+
+.flex {
+    display: flex;
+}

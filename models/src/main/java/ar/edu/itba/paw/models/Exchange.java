@@ -6,6 +6,7 @@ import org.hibernate.annotations.Formula;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "exchange")
@@ -165,6 +166,9 @@ public class Exchange {
         return isReviewable();
     }
 
+    public boolean getChatAvailable() {
+        return ExchangeState.equals(state, ExchangeState.ACCEPTED);
+    }
 }
 
 
