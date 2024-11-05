@@ -18,6 +18,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 
@@ -34,7 +35,7 @@ public class UserDaoJpaTest {
 	private static final String USER_PASSWORD_1 = "PROUSERPASSWORD1";
 	private static final String USER_LANGUAGE_1 = "es";
 	
-	private static final long USER_ID_2 = 1;
+	private static final long USER_ID_2 = 2;
 	private static final long USER_VERIFICATION_CODE_2 = 987654321;
 	private static final boolean USER_IS_VERIFIED_2 = true;
 	private static final String USER_NAME_2 = "PROUSER2";
@@ -46,7 +47,7 @@ public class UserDaoJpaTest {
 	private DataSource ds;
 	
 	@Autowired
-	private UserJpaDao userDao;
+	private UserDao userDao;
 	
 	@PersistenceContext
 	private EntityManager em;
@@ -78,7 +79,7 @@ public class UserDaoJpaTest {
 		Assert.assertEquals(USER_NAME_1, maybeUser.get().getUsername());
 		Assert.assertEquals(USER_MAIL_1, maybeUser.get().getMail());
 		Assert.assertEquals(USER_PASSWORD_1, maybeUser.get().getPassword());
-		Assert.assertEquals(USER_LANGUAGE_1, maybeUser.get().getUserLocations());
+		Assert.assertEquals(USER_LANGUAGE_1, maybeUser.get().getLanguage());
 		
 		Assert.assertNotEquals(USER_LANGUAGE_2, maybeUser.get().getLanguage());
 	}
