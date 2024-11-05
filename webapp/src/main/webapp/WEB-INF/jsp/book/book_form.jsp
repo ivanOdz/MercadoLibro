@@ -72,8 +72,12 @@
                         </form:label>
                         <form:select path="bookState" class="uk-input">
                             <c:forEach var="bookStateWrapper" items="${bookStates}">
-                                <form:option value="${bookStateWrapper.bookState}"
-                                             label="${bookStateWrapper.displayName}"/>
+                                <form:option value="${bookStateWrapper.enumWrapper}">
+                                    <c:set var="i18nKey" value="${bookStateWrapper.i18nDisplayName}" />
+                                    <span class="ui-search-filter-name">
+                                            <spring:message code="${i18nKey}"/>
+                                        </span>
+                                </form:option>
                             </c:forEach>
                         </form:select>
                     </div>
