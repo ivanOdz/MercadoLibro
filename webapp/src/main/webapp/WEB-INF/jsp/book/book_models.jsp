@@ -49,13 +49,14 @@
                         <input type="hidden" name="genre-filter" value=${modelBooks.metadata.genreFilter}>
                         <input type="hidden" name="search" value=""/>
 
-                        <button type="submit" class="ui-search-button uk-button uk-button-default uk-button-small"
-                                title="BookStateRemove" uk-close-icon>
+                        <button type="submit" class="uk-button uk-button-danger uk-button-small delete-button"
+                                title="BookStateRemove">
 							<span class="ui-search-filter-name">
 								<spring:message code="delete.search"/>
 							</span>
-                            <span uk-icon="close"></span>
+                            <span uk-icon="trash"></span>
                         </button>
+
                     </form>
                 </c:if>
 
@@ -72,7 +73,6 @@
 							</span>
                             <span uk-icon="trash"></span>
                         </button>
-
                     </form>
                 </c:if>
 
