@@ -24,12 +24,6 @@ public class BookServiceImpl implements BookService {
     private BookDao bookDao;
 
     @Autowired
-    private BookStateService bookStateService;
-
-    @Autowired
-    private GenreService genreService;
-
-    @Autowired
     private BookModelService bookModelService;
 
     @Autowired
@@ -171,6 +165,36 @@ public class BookServiceImpl implements BookService {
     @Override
     public void setAvailable(Book book, boolean available) {
         bookDao.setAvailable(book, available);
+    }
+
+    @Override
+    public List<GenreWrapper> getGenreWrapperList(String search, String isBookStateFilterActive, String bookStateFilter, long userId) {
+        boolean bookStateFilterActive = "true".equalsIgnoreCase(isBookStateFilterActive);
+
+        BookState state = DEFAULT_PUBLICATION_STATE_FILTER;
+        if (bookStateFilterActive) {
+            state = BookState.fromString(bookStateFilter);
+            if (state == null) {
+                bookStateFilterActive = false;
+            }
+        }
+
+        return bookDao.getGenreQtyByBook(search, bookStateFilterActive, state, userId);
+    }
+
+    @Override
+    public List<BookStateWrapper> getBookStateWrapperList(String serach, String isGenreFilterActive, String genreFilter, long userId) {
+        boolean genreFilterActive = "true".equalsIgnoreCase(isGenreFilterActive);
+
+        Genre genre = DEFAULT_PUBLICATION_GENRE_FILTER;
+        if(genreFilterActive){
+            genre = Genre.fromString(genreFilter);
+            if(genre == null){
+                genreFilterActive = false;
+            }
+        }
+
+        return bookDao.getBookStateQtyByBook(serach, genreFilterActive, genre, userId);
     }
 }
 

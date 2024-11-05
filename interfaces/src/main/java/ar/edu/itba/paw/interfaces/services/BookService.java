@@ -29,4 +29,8 @@ public interface BookService {
     List<Book> getAvailableBooksByUser(User user);
 
     void setAvailable(Book book, boolean available);
+
+    List<GenreWrapper> getGenreWrapperList(String search, String isBookStateFilterActive, String bookStateFilter, long userId);
+
+    List<BookStateWrapper> getBookStateWrapperList(String serach, String isGenreFilterActive, String genreFilter, long userId);
 }

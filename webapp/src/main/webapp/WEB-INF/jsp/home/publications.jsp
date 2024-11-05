@@ -85,13 +85,6 @@
                                         </span>
                                         <span> (${bookStateWrapper.enumWrapper.resultByState})</span>
                                     </a>
-
-                                <%--                                    <button type="submit"--%>
-<%--                                            class="ui-search-button uk-button uk-button-default uk-button-small"--%>
-<%--                                            title="${bookStateWrapper.displayName}">--%>
-<%--                                        <span class="ui-search-filter-name">${bookStateWrapper.displayName}</span>--%>
-<%--                                        <span class="ui-search-filter-name">(${bookStateWrapper.resultByState})</span>--%>
-<%--                                    </button>--%>
                                 </form>
                             </li>
                         </c:forEach>

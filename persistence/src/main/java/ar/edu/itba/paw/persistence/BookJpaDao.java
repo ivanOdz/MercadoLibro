@@ -163,7 +163,8 @@ public class BookJpaDao implements BookDao {
         return new PaginatedResponse<>(query.getResultList(), new ItemFilterMetadata(page, BOOKS_PAGE_SIZE, totalResults, search, isGenreFilterActive, genreFilter, sort, null, isBookStateFilterActive, bookStateFilter, null));
     }
 
-    public List<GenreWrapper> getGenreQtyByBook(String search, boolean isBookStateFilterActive, BookState bookStateFilter, long userId) {
+
+    public List<GenreWrapper> getGenreQtyByBook(String search, boolean isBookStateFilterActive, BookState bookStateFilter, Long userId) {
 
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT bm.genre, COUNT(*) AS genreCount " +
@@ -220,7 +221,7 @@ public class BookJpaDao implements BookDao {
         }
     }
 
-    public List<BookStateWrapper> getBookStateQtyByBook(String search, boolean isGenreFilterActive, Genre genreFilter, long userId) {
+    public List<BookStateWrapper> getBookStateQtyByBook(String search, boolean isGenreFilterActive, Genre genreFilter, Long userId) {
 
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT b.bookState, COUNT(*) AS stateCount " +

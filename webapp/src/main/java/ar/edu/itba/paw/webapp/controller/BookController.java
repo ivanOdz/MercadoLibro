@@ -48,9 +48,6 @@ public class BookController {
     private PublicationService publicationService;
 
     @Autowired
-    private BookStateService bookStateService;
-
-    @Autowired
     private LanguageService languageService;
 
     @Autowired
@@ -76,7 +73,7 @@ public class BookController {
 
 
         User loggeduser = loggedUserAdvice.getLoggedUser();
-        
+
         if (loggeduser == null) {
             String message = messageSource.getMessage("error.unauthorized", null, LocaleContextHolder.getLocale());
             throw new UserNotUnauthorizedException(message);
@@ -85,7 +82,15 @@ public class BookController {
         ModelAndView mav = new ModelAndView("book/book_home");
         PaginatedResponse<Book, ItemFilterMetadata> books = bookService.getPaginatedBooks(search, isBookStateFilterActive,
                 bookStateFilter, isGenreFilterActive, genreFilter, currentPage, loggedUserAdvice.getLoggedUser().getUserId(), sortType);
-        
+
+        List<GenreWrapper> genreWrapperList = bookService.getGenreWrapperList(search, isBookStateFilterActive, bookStateFilter, loggeduser.getUserId());
+        List<BookStateWrapper> bookStateWrapperList = bookService.getBookStateWrapperList(search, isGenreFilterActive, genreFilter, loggeduser.getUserId());
+
+        List<LocalizedEnumWrapper<GenreWrapper>> localizedGenreWrappers = EnumInternationalizationUtil.localizeGenreWrappers(genreWrapperList);
+        List<LocalizedEnumWrapper<BookStateWrapper>> localizedBookStateWrappers = EnumInternationalizationUtil.localizeBookStateWrappers(bookStateWrapperList);
+
+        mav.addObject("genreWrapperList", localizedGenreWrappers);
+        mav.addObject("bookStateWrapperList", localizedBookStateWrappers);
         mav.addObject("books", books);
         mav.addObject("user", loggeduser);
         
@@ -107,7 +112,6 @@ public class BookController {
 
         mav.addObject("genres", localizedGenreWrappers);
         mav.addObject("modelBooks", modelBooks);
-
 
         return mav;
     }
