@@ -255,10 +255,10 @@
         </div>
 
         <c:if test="${not empty publications.data}">
-          <div>
+          <div class="uk-grid-match" uk-grid style="margin-left: 0;">
             <c:forEach var="card" items="${publications.data}">
-              <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-border-rounded custom-link"
-                   style="display: grid; grid-template-columns: repeat(4, 1fr); cursor: pointer;"
+              <div class="uk-width-1-1 uk-card uk-card-default uk-card-hover uk-card-body uk-border-rounded custom-link"
+                   style="display: grid;grid-template-columns: repeat(4, 1fr);cursor: pointer;padding: 1rem;"
                    onclick="window.location.href='<c:url value='publications/${card.publicationId}' />'">
 
                   <!-- Contenedor de la imagen (Columna izquierda) -->
@@ -349,12 +349,7 @@
                     </div>
                   </div>
                 </div>
-
-
-
               </div>
-
-
             </c:forEach>
           </div>
         </c:if>
