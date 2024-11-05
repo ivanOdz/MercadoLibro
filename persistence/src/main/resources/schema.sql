@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS users (
      imageId                    INTEGER REFERENCES image(imageId),
      verificationCode           INTEGER,
      isVerified                 BOOLEAN,
-     language                   VARCHAR(64)
+     language                   VARCHAR(64) -- Le agregamos el de favorite location?
 );
 
 -- Tabla de modelo de libros
@@ -35,13 +35,6 @@ CREATE TABLE IF NOT EXISTS book_model (
       imageId                   INTEGER REFERENCES image(imageId)
 );
 
--- Relación publicacion y usuario que le dio <3
-CREATE TABLE IF NOT EXISTS favorite_publication (
-    favoritepublicationid  SERIAL PRIMARY KEY,
-    publicationId          INTEGER NOT NULL REFERENCES publication(publicationId) ON DELETE CASCADE,
-    userId                 INTEGER NOT NULL REFERENCES users(userId) ON DELETE CASCADE
-);
-
 -- Tabla de libros
 CREATE TABLE IF NOT EXISTS book (
     bookId                      SERIAL PRIMARY KEY,
@@ -50,7 +43,6 @@ CREATE TABLE IF NOT EXISTS book (
     bookState                   INTEGER NOT NULL,
     exchangesQty                INTEGER NOT NULL
 );
-
 
 -- Tabla de imágenes de libros
 CREATE TABLE IF NOT EXISTS book_image (
@@ -68,7 +60,6 @@ CREATE TABLE IF NOT EXISTS book_rating (
        bookModelId  INTEGER NOT NULL REFERENCES book_model(bookModelId) ON DELETE CASCADE,
        rating       INTEGER
 );
-
 
 -- Tabla de autores
 CREATE TABLE IF NOT EXISTS author (
@@ -97,6 +88,13 @@ CREATE TABLE IF NOT EXISTS publication (
        publicationState         INTEGER NOT NULL,
        publicationDatetime      TIMESTAMP,
        locationId               INTEGER REFERENCES location(locationId)
+);
+
+-- Relación publicacion y usuario que le dio <3
+CREATE TABLE IF NOT EXISTS favorite_publication (
+    favoritepublicationid  SERIAL PRIMARY KEY,
+    publicationId          INTEGER NOT NULL REFERENCES publication(publicationId) ON DELETE CASCADE,
+    userId                 INTEGER NOT NULL REFERENCES users(userId) ON DELETE CASCADE
 );
 
 -- Tabla de intercambios
@@ -129,10 +127,8 @@ CREATE TABLE IF NOT EXISTS publication_location (
       locationId INTEGER NOT NULL,
       PRIMARY KEY (publicationId, locationId),
       FOREIGN KEY (publicationId) REFERENCES publication(publicationId) ON DELETE CASCADE,
-      FOREIGN KEY (locationId) REFERENCES location(locationId) ON DELETE SET NULL
+      FOREIGN KEY (locationId) REFERENCES location(locationId) ON DELETE CASCADE --SET NULL
 );
-
--- Tabla de ubicaciones de los usuarios
 
 -- Tabla de ubicaciones de los usuarios
 CREATE TABLE IF NOT EXISTS user_location (
@@ -141,6 +137,3 @@ CREATE TABLE IF NOT EXISTS user_location (
          locationId      INTEGER NOT NULL REFERENCES location(locationId) ON DELETE CASCADE,
          UNIQUE (userId, locationId)
 )
-
-
-
