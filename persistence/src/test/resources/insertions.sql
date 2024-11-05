@@ -1,70 +1,65 @@
-
--- Insertar Usuarios ---------------------------------------------------------------------------------------------------
-        
-        INSERT INTO users (userName, mail, password, imageId, verificationCode, isVerified)
-        VALUES ('ivan', 'modzomek@itba.edu.ar', '', NULL, NULL, TRUE);
-
-
-        INSERT INTO users (userName, mail, password, imageId, verificationCode, isVerified)
-        VALUES ('juli', 'jtechenski@itba.edu.ar', '', NULL, NULL, TRUE);
-
-        INSERT INTO users (userName, mail, password, imageId, verificationCode, isVerified)
-        VALUES ('maggie', 'mtaurian@itba.edu.ar', '', NULL, NULL, TRUE);
-
-        INSERT INTO users (userName, mail, password, imageId, verificationCode, isVerified)
-        VALUES ('tomas', 'tscheffer@itba.edu.ar', '', NULL, NULL, TRUE);
-
--- Insertar Modelo de Libro ---------------------------------------------------------------------------------------------------
+	    
+-- Insertar Usuarios -------------------------------------------------------------------------------------------------------
 
 -- 1 --
-        INSERT INTO book_model (isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
-        VALUES ('9788497592208', 'Cien años de soledad', 'Sudamericana', 'Una novela emblemática del realismo mágico que narra la historia de la familia Buendía a lo largo de varias generaciones.', 2, 1, 600, 471, 1, 1, 1967, FALSE, TRUE, NULL);
-    
--- 2 --        
-        INSERT INTO book_model (isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
-        VALUES ('9788491050568', 'Don Quijote de la Mancha', 'Real Academia Española', 'La obra maestra de la literatura española que sigue las aventuras del caballero Don Quijote y su escudero Sancho Panza.', 3, 1, 800, 1000, 1, 2, 1605, TRUE, FALSE, NULL);
+        INSERT INTO users (userId, userName, mail, password, imageId, verificationCode, isVerified, language, favoriteLocation)
+        VALUES (1, 'Ivan', 'modzomek@itba.edu.ar', 'password', NULL, NULL, TRUE, 'en', NULL);
+        
+-- 2 --
+        INSERT INTO users (userId, userName, mail, password, imageId, verificationCode, isVerified, language, favoriteLocation)
+        VALUES (2, 'Juli', 'jtechenski@itba.edu.ar', 'password', NULL, NULL, TRUE, 'en', NULL);
 
 -- 3 --
-
-        INSERT INTO book_model (isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
-        VALUES ('9788408186206', 'La sombra del viento', 'Planeta', 'Una novela fascinante ambientada en la Barcelona de la posguerra que mezcla misterio, amor y tragedia.', 4, 2, 400, 575, 1, 1, 2001, TRUE, FALSE, NULL);
+        INSERT INTO users (userId, userName, mail, password, imageId, verificationCode, isVerified, language, favoriteLocation)
+        VALUES (3, 'Maggie', 'mtaurian@itba.edu.ar', 'drowssap', NULL, NULL, TRUE, 'es', NULL);
 
 -- 4 --
+        INSERT INTO users (userId, userName, mail, password, imageId, verificationCode, isVerified, language, favoriteLocation)
+        VALUES (4, 'Tomas', 'tscheffer@itba.edu.ar', 'drowssap', NULL, NULL, TRUE, 'es', NULL);
 
-        INSERT INTO book_model (isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
-        VALUES ('9788497592451', 'El amor en los tiempos del cólera', 'Sudamericana', 'Una historia de amor que se extiende a lo largo de más de 50 años, escrita por el ganador del Premio Nobel.', 5, 1, 500, 490, 1, 1, 1985, FALSE, TRUE, NULL);
+-- Insertar Modelos de libros ----------------------------------------------------------------------------------------------
+
+-- 1 --
+        INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
+        VALUES (1, '9788497592208', 'Cien años de soledad', 'Sudamericana', 'Una novela emblemática del realismo mágico que narra la historia de la familia Buendía a lo largo de varias generaciones.', 2, 1, 600, 471, 1, 1, 1967, FALSE, TRUE, NULL);
+    
+-- 2 --        
+        INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
+        VALUES (2, '9788491050568', 'Don Quijote de la Mancha', 'Real Academia Española', 'La obra maestra de la literatura española que sigue las aventuras del caballero Don Quijote y su escudero Sancho Panza.', 3, 1, 800, 1000, 1, 2, 1605, TRUE, FALSE, NULL);
+
+-- 3 --
+        INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
+        VALUES (3, '9788408186206', 'La sombra del viento', 'Planeta', 'Una novela fascinante ambientada en la Barcelona de la posguerra que mezcla misterio, amor y tragedia.', 4, 2, 400, 575, 1, 1, 2001, TRUE, FALSE, NULL);
+
+-- 4 --
+        INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
+        VALUES (4, '9788497592451', 'El amor en los tiempos del cólera', 'Sudamericana', 'Una historia de amor que se extiende a lo largo de más de 50 años, escrita por el ganador del Premio Nobel.', 5, 1, 500, 490, 1, 1, 1985, FALSE, TRUE, NULL);
 
 -- 5 --
-
-        INSERT INTO book_model (isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
-        VALUES ('9780062315007', 'El alquimista', 'HarperCollins', 'Una novela filosófica sobre un joven pastor que sigue su sueño de encontrar un tesoro en Egipto.', 6, 3, 300, 208, 1, 1, 1988, TRUE, FALSE, NULL);
+        INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
+        VALUES (5, '9780062315007', 'El alquimista', 'HarperCollins', 'Una novela filosófica sobre un joven pastor que sigue su sueño de encontrar un tesoro en Egipto.', 6, 3, 300, 208, 1, 1, 1988, TRUE, FALSE, NULL);
 
 -- 6 --
-
-        INSERT INTO book_model (isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
-        VALUES ('9788437604947', 'La casa de los espíritus', 'Debolsillo', 'Una obra que recorre las vidas de varias generaciones de la familia Trueba, desde lo fantástico hasta lo histórico.', 7, 2, 500, 448, 1, 1, 1982, FALSE, TRUE, NULL);
+        INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
+        VALUES (6, '9788437604947', 'La casa de los espíritus', 'Debolsillo', 'Una obra que recorre las vidas de varias generaciones de la familia Trueba, desde lo fantástico hasta lo histórico.', 7, 2, 500, 448, 1, 1, 1982, FALSE, TRUE, NULL);
 
 -- 7 --
-
-        INSERT INTO book_model (isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
-        VALUES ('9788420471839', 'Crónica de una muerte anunciada', 'Debolsillo', 'Un relato corto sobre la muerte premeditada de Santiago Nasar, basado en hechos reales.', 2, 1, 300, 128, 1, 1, 1981, TRUE, FALSE, NULL);
+        INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
+        VALUES (7, '9788420471839', 'Crónica de una muerte anunciada', 'Debolsillo', 'Un relato corto sobre la muerte premeditada de Santiago Nasar, basado en hechos reales.', 2, 1, 300, 128, 1, 1, 1981, TRUE, FALSE, NULL);
 
 -- 8 --
-
-        INSERT INTO book_model (isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
-        VALUES ('9788497594319', 'Los detectives salvajes', 'Anagrama', 'Una novela sobre la vida bohemia de poetas en el México de los años 70.', 8, 1, 700, 609, 1, 1, 1998, FALSE, TRUE, NULL);
+        INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
+        VALUES (8, '9788497594319', 'Los detectives salvajes', 'Anagrama', 'Una novela sobre la vida bohemia de poetas en el México de los años 70.', 8, 1, 700, 609, 1, 1, 1998, FALSE, TRUE, NULL);
     
 -- 9 --
-
-        INSERT INTO book_model (isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
-        VALUES ('9788423353248', 'Patria', 'Tusquets', 'Una novela que explora las vidas de dos familias vascas en el contexto del conflicto de ETA.', 9, 1, 800, 648, 1, 1, 2016, FALSE, TRUE, NULL);
+        INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
+        VALUES (9, '9788423353248', 'Patria', 'Tusquets', 'Una novela que explora las vidas de dos familias vascas en el contexto del conflicto de ETA.', 9, 1, 800, 648, 1, 1, 2016, FALSE, TRUE, NULL);
 
 -- 10 --
+        INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
+        VALUES (10, '9788445002132', 'La ciudad y los perros', 'Alfaguara', 'Una obra clave de la literatura latinoamericana que sigue a los estudiantes de un internado militar en el Perú.', 3, 2, 500, 384, 1, 1, 1962, FALSE, TRUE, NULL);
 
-        INSERT INTO book_model (isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
-        VALUES ('9788445002132', 'La ciudad y los perros', 'Alfaguara', 'Una obra clave de la literatura latinoamericana que sigue a los estudiantes de un internado militar en el Perú.', 3, 2, 500, 384, 1, 1, 1962, FALSE, TRUE, NULL);
-
--- Insertar autores ---------------------------------------------------------------------------------------------------
+-- Insertar autores --------------------------------------------------------------------------------------------------------
     
 
         INSERT INTO author (authorName)
@@ -90,18 +85,16 @@
 
         INSERT INTO author (authorName)
         VALUES ('Mario Vargas Llosa');
-
         
--- Insertar ubicación ---------------------------------------------------------------------------------------------------
+-- Insertar ubicaciones ----------------------------------------------------------------------------------------------------
 
         INSERT INTO location (locationString)
         VALUES ('Zona Norte');
 
         INSERT INTO location (locationString)
         VALUES ('Zona Sur');
-    
 
--- AUTORES ------------------------------------------------------------------------------------------------------------------
+-- AUTORES -----------------------------------------------------------------------------------------------------------------
 
 -- 1 -- Cien años de soledad
 
@@ -183,189 +176,10 @@
 		JOIN author ON authorName = 'Mario Vargas Llosa'
 		WHERE isbn = '9788445002132';
 
--- LIBROS + REVIEWS ----------------------------------------------------------------------------------------------------------------
-        
--- Insertar Libros para Ivan --
-
--- 1° -- La ciudad y los perros
-
-	INSERT INTO book (bookModelId, ownerId, bookState, exchangesQty)
-		SELECT bookModelId, userId, 1, 0
-		FROM book_model AS bookModel
-		JOIN users ON mail LIKE 'modzomek@itba.edu.ar'
-		WHERE isbn = '9788445002132' AND NOT EXISTS (SELECT 1 FROM book WHERE bookModelId = bookModel.bookModelId)
+-- IMAGENES ----------------------------------------------------------------------------------------------------------------
 		
-	INSERT INTO book_rating (userId, bookModelId, rating)
-		SELECT userId, bookModel.bookModelId, 3
-		FROM book_model AS bookModel
-		JOIN users ON mail = 'modzomek@itba.edu.ar'
-		WHERE isbn = '9788445002132' AND EXISTS (SELECT 1 FROM book WHERE bookModelId = bookModel.bookModelId);
-		 
--- 2° -- Patria
-
-	INSERT INTO book (bookModelId, ownerId, bookState, exchangesQty)
-		SELECT bookModelId, userId, 1, 0
-		FROM book_model AS bookModel
-		JOIN users ON mail LIKE 'modzomek@itba.edu.ar'
-		WHERE isbn = '9788423353248' AND NOT EXISTS (SELECT 1 FROM book WHERE bookModelId = bookModel.bookModelId)
+--		INSERT INTO image (imageId, image)
+--		VALUES (1, CAST('/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz/2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz/wAARCABAAEADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDPoop8TRhJN6uzFcRlWwFbI5IwcjGRjjkg54wf7kP8+xqIZDgAk4J4HYcmkqSWdpo41ITES7F2oFJGSeSBljyeTk4wOgAqM0hj5YGhSNiUxKu5drhiBkjkA8Hg8HBxg9CKZUitGLZgVfzSw2sG+ULg5BGOSflwcjGDwc8MJoAVV3HkheCcmm0UUxFy90poSDEGdcc9zXK/EL4oeH/hVpq3fiDVbXTI5P8AVrISZZuVB2RqC743rnaDgHJwOa+T/g1+3R4z0Hx1Z3fizUJ9S8M6xd+RdvNbCNbcgRB3hMaZBjQxs0aggh2+UM++j9qrx/B8SPHet6zHa6z4z8GWelLaabeAS29jol3NHC4lEiAh2VmXckmxizhGHyLnwnm6dJygtfP89Oh9tS4OrRxkaOJfuNXvHrraybsr3fX89D658HeONI+IOiR6jouoWupWcmB5kDhthKhtrjqjgMuVYBhnkCtWvk39iXxbpmkeLLHTdF8V3JTV/kv/AA9qNg2RMlqZJLm3mjLJ/rFwA4QmMENllQn680bSLnxJqkNnZQtc3M7bI40x8x7+wxg5J6YJNejhMV7Wl7SVl31PAznLPqWKdCN2nqrpp/kvw0fQrunltg46A8EHqM0stvJCkbOjqsq70LLgOMkZHqMgj6g1ueMdLh0WzgtG0e90y/tbi4iuJJpTIJxlGjGeFJVWwdoAIKt/FgcxqmrW2iWn2i8njtoA6o0khwqlmCjJ7DJHPQdTxXTTnzx5keZKDUuXqWKknkFzdOyRLEHYlY0yVTJ4UZJOB7kn3rUu/C19opLgAjpuAHI9faub8T+NNQ0iW2t9F0i71+7fUYrS8S1h3izUhHcuV+RHKOhAkdB+8Vvug1HtU9YmkMPOUuW2p8Nrq2qfEj4yX8vhDVLzSPDXi6WXwvp93rNoyWdlBP8AvF00FBOsQXKogTooDYRS23O+Dfjj/hBpr/w5pwv9avNZ1O0gWG0uIotO11EuYwLeQTQCVI5EaYbty5Eiq8eN1cDcXFx4nnnkurwCQLudGUYZ/uY4wOVQZIB6Ac0llqzWMdj58dpcwW940v2ZYlTzMHLc4yVYDBB9BwcAD45XjLmu/wANno9L6fifvDwSlT9m0ntp5rVa6X/Dvozv/hN8PNUt/FX9lXOoX/h7xIsP9u6HbbBcLqF5beb5Ns0GcJOz5CmUjZ8ylG81a+27/wDas034aeINP1rw9rFlqVvp12G/sptLZZL5Xj2SM906q0QAL7VXeA21mDAkL8geG/2iNL8L+O7PxJpWitLdaVcS3Gnw6tJHcrbKY5ECOUSMySAmI708oZjJ8vJUJ0fiP9qrSviVqOpf2p4a0G1udQvHNpqZaaL7FFI8zkzpAQJXTzI8SiMtiIhklLce5hYYajdNuUZen4r5vVfmfLZtl+KxdaE5xS5U22r79lpfWyav1fTp6v8AHn9tTVvH3jm81XTYItBivIo4zA8iXPlOijLq5ReSqYwQQBnjPIl+IfxJ8U+CooPGGpyaZ4Fjt7Sb+zYdU8t7udtyJIsULI0zOSVG4RqFQ8lVYs3y4fiQqahBdwPNa3MYDxvE+Gt3VZMMHGDnLJj0wce+D8RfHTfEjxCmo6nJI00YSJILaFLe3to1JJWJEwiBtzMQFA3szHJds9eKzClRoqOH5dNFfsc2G4YVSqnVVlu2t2307fPU7O++PHih7rVD4RvdZkmvoppNUu4IjI7ptLvIWIJQqPMYyHay7WIYDJrlvg/8MfFXjb4g2mlaLYanJeM+6X7Ku4RRiUoxdxlVXeu3L4XIGTg1znhOzg/tS1bUNSm06zZlW4ubWH7RcRxnhtkZeMOdueC6g8DcBzU2k63feEPGj3PhnVdStRZzyR2OoK32C5WM7gHYI7eWzI3zKrsPmYZbqfmamMnWrKdS/N0tsvTt99/0+wpYGlQhKhQSWm7W/q9n6duh3ngr4m6Fougm61DzZNSu5JBPBbRnKqZpZFPzELtHmHoSfmGelUtG+H0fxV8WazFb6tJ/Z9g63NqdolVHuRvfuCACpG3qCeeQc+clGJIwdpzuzjJ+n+e1aXhjxZqHg7UvOsriWDdIkjxrIwjnK/wsARuHXr6mto5p7Rwp4mKcF0WnT172fqjCplDpKpVwcrVJbN2aWq2Vu10vJnvnw18Map4d8LHStVNvMkVwOUJYSosZ2MCfmGDI64wOAPQGuw8P+C5ZdTtZ9LmKahDMJwzwq0EGMsmW+bnIHBXHUEV4X4O/aEvLbxPPPrslxcW8lsIxDbQqqq6kYbBIAJBbOO5HAAAHt1leB0huIZFZWAkikjfII6hgR+dfYZZiMNiKXJSv7vfe3Q/N89wuOw1bmxFvf7bPucx8Tf8Ai1Ns7aoFGxD5AD7vtB+faAQCRuKnqPwrxf8AtCTxvp2s3H9iWxurWI3P2u3iEYtVOBJvycNlQxUncwO4r7e9fFfXvB2s+CxYa7dWwvYHZ5iJF+0RszBlfaAzscNx6c5yK8P8d3XhNfDk9lpDak16GIhuA7pbtCZjL5LK7k7Vz/dGWQN3NeTnfx/HHkSel1e/3P5f5n0XC870lenLnbXvWfLbvut+q8+qNXwh8F3uEuW1SzexuIUxbN5sc0MjFMbmQEkkMAxBODuxjAxV34W+LtO0b4XQzXFxGTYF0ljABk3M7Mqgd8jp24PoccrefGXXr6K0UTi3ktCrtJAu0yuAOX5we524AOeR0rkmJ4ZdyL1OVGBx6df/ANVeV/aOHw8k8HHo02/OzW3Y+h/szFYqEo46SSbi0o9LXTWve99z/9k=' AS varbinary));
 		
-	INSERT INTO book_rating (userId, bookModelId, rating)
-		SELECT userId, bookModel.bookModelId, 2
-		FROM book_model AS bookModel
-		JOIN users ON mail = 'modzomek@itba.edu.ar'
-		WHERE isbn = '9788423353248' AND EXISTS (SELECT 1 FROM book WHERE bookModelId = bookModel.bookModelId);
-
--- Insertar Libros para Juli
-
---  1° -- La casa de los espíritus
-
-	INSERT INTO book (bookModelId, ownerId, bookState, exchangesQty)
-		SELECT bookModelId, userId, 1, 0
-		FROM book_model AS bookModel
-		JOIN users ON mail LIKE 'jtechenski@itba.edu.ar'
-		WHERE isbn = '9788437604947' AND NOT EXISTS (SELECT 1 FROM book WHERE bookModelId = bookModel.bookModelId)
-		
-	INSERT INTO book_rating (userId, bookModelId, rating)
-		SELECT userId, bookModel.bookModelId, 3
-		FROM book_model AS bookModel
-		JOIN users ON mail = 'jtechenski@itba.edu.ar'
-		WHERE isbn = '9788437604947' AND EXISTS (SELECT 1 FROM book WHERE bookModelId = bookModel.bookModelId);
-        
--- Insertar Libros para Maggie --
-
--- 1° -- El amor en los tiempos del cólera
-
-	INSERT INTO book (bookModelId, ownerId, bookState, exchangesQty)
-		SELECT bookModelId, userId, 2, 0
-		FROM book_model AS bookModel
-		JOIN users ON mail LIKE 'mtaurian@itba.edu.ar'
-		WHERE isbn = '9788497592451' AND NOT EXISTS (SELECT 1 FROM book WHERE bookModelId = bookModel.bookModelId)
-		
-	INSERT INTO book_rating (userId, bookModelId, rating)
-		SELECT userId, bookModel.bookModelId, 4
-		FROM book_model AS bookModel
-		JOIN users ON mail = 'mtaurian@itba.edu.ar'
-		WHERE isbn = '9788497592451' AND EXISTS (SELECT 1 FROM book WHERE bookModelId = bookModel.bookModelId);
-		
--- Insertar Libros para Tom's --
-
--- 1° -- Don Quijote de la Mancha
-		
-	INSERT INTO book (bookModelId, ownerId, bookState, exchangesQty)
-		SELECT bookModelId, userId, 2, 0
-		FROM book_model AS bookModel
-		JOIN users ON mail LIKE 'tscheffer@itba.edu.ar'
-		WHERE isbn = '9788491050568' AND NOT EXISTS (SELECT 1 FROM book WHERE bookModelId = bookModel.bookModelId)
-		
-	INSERT INTO book_rating (userId, bookModelId, rating)
-		SELECT userId, bookModel.bookModelId, 5
-		FROM book_model AS bookModel
-		JOIN users ON mail = 'tscheffer@itba.edu.ar'
-		WHERE isbn = '9788491050568' AND EXISTS (SELECT 1 FROM book WHERE bookModelId = bookModel.bookModelId);
-
--- PUBLICACIONES -------------------------------------------------------------------------------------------------------------
-
--- De ivan --
-
--- 1° -- La ciudad y los perros
-        
-	INSERT INTO publication (bookId, userId, publicationState, publicationDatetime, locationId)
-		SELECT book.bookId, owner.userId, 1, '2024-09-15 10:00:00', locationId
-		FROM book AS book JOIN users AS owner ON mail LIKE 'modzomek@itba.edu.ar'
-			JOIN location ON locationString LIKE 'Zona Sur'
-			WHERE book.bookModelId = (SELECT bookModelId FROM book_model WHERE isbn = '9788445002132')
-			AND NOT EXISTS (SELECT 1 FROM publication publication WHERE publication.bookId = book.bookId AND publication.userId = owner.userId);
-
--- 2° -- Patria
-			
-	INSERT INTO publication (bookId, userId, publicationState, publicationDatetime, locationId)
-		SELECT book.bookId, owner.userId, 1, '2024-09-15 12:05:00', locationId
-		FROM book AS book JOIN users AS owner ON mail LIKE 'modzomek@itba.edu.ar'
-			JOIN location ON locationString LIKE 'Zona Sur'
-			WHERE book.bookModelId = (SELECT bookModelId FROM book_model WHERE isbn = '9788423353248')
-			AND NOT EXISTS (SELECT 1 FROM publication publication WHERE publication.bookId = book.bookId AND publication.userId = owner.userId);
-
--- 3° -- Los detectives salvajes
-        
-	INSERT INTO publication (bookId, userId, publicationState, publicationDatetime, locationId)
-		SELECT book.bookId, owner.userId, 1, '2024-09-15 14:30:00', locationId
-		FROM book AS book JOIN users AS owner ON mail LIKE 'modzomek@itba.edu.ar'
-			JOIN location ON locationString LIKE 'Zona Sur'
-			WHERE book.bookModelId = (SELECT bookModelId FROM book_model WHERE isbn = '9788497594319')
-			AND NOT EXISTS (SELECT 1 FROM publication publication WHERE publication.bookId = book.bookId AND publication.userId = owner.userId);
-
--- 4° -- Crónica de una muerte anunciada
-			
-	INSERT INTO publication (bookId, userId, publicationState, publicationDatetime, locationId)
-		SELECT book.bookId, owner.userId, 1, '2024-09-15 16:40:05', locationId
-		FROM book AS book JOIN users AS owner ON mail LIKE 'modzomek@itba.edu.ar'
-			JOIN location ON locationString LIKE 'Zona Sur'
-			WHERE book.bookModelId = (SELECT bookModelId FROM book_model WHERE isbn = '9788420471839')
-			AND NOT EXISTS (SELECT 1 FROM publication publication WHERE publication.bookId = book.bookId AND publication.userId = owner.userId);
-
--- De juli --
-			
--- 1° -- La casa de los espíritus
-        
-	INSERT INTO publication (bookId, userId, publicationState, publicationDatetime, locationId)
-		SELECT book.bookId, owner.userId, 1, '2024-09-12 18:30:00', locationId
-		FROM book AS book JOIN users AS owner ON mail LIKE 'jtechenski@itba.edu.ar'
-			JOIN location ON locationString LIKE 'Zona Norte'
-			WHERE book.bookModelId = (SELECT bookModelId FROM book_model WHERE isbn = '9788437604947')
-			AND NOT EXISTS (SELECT 1 FROM publication publication WHERE publication.bookId = book.bookId AND publication.userId = owner.userId);
-
--- 2° -- El alquimista
-			
-	INSERT INTO publication (bookId, userId, publicationState, publicationDatetime, locationId)
-		SELECT book.bookId, owner.userId, 1, '2024-09-13 09:00:00', locationId
-		FROM book AS book JOIN users AS owner ON mail LIKE 'jtechenski@itba.edu.ar'
-			JOIN location ON locationString LIKE 'Zona Norte'
-			WHERE book.bookModelId = (SELECT bookModelId FROM book_model WHERE isbn = '9780062315007')
-			AND NOT EXISTS (SELECT 1 FROM publication publication WHERE publication.bookId = book.bookId AND publication.userId = owner.userId);
-
--- De maggie --
-
--- 1° -- El amor en los tiempos del cólera
-			 
-	INSERT INTO publication (bookId, userId, publicationState, publicationDatetime, locationId)
-		SELECT book.bookId, owner.userId, 1, '2024-09-11 14:45:00', locationId
-		FROM book AS book JOIN users AS owner ON mail LIKE 'mtaurian@itba.edu.ar'
-			JOIN location ON locationString LIKE 'Zona Norte'
-			WHERE book.bookModelId = (SELECT bookModelId FROM book_model WHERE isbn = '9788497592451')
-			AND NOT EXISTS (SELECT 1 FROM publication publication WHERE publication.bookId = book.bookId AND publication.userId = owner.userId);
-			
--- De tomi --
-
--- 1° -- Don Quijote de la Mancha
-			
-	INSERT INTO publication (bookId, userId, publicationState, publicationDatetime, locationId)
-		SELECT book.bookId, owner.userId, 1, '2024-09-13 12:15:00', locationId
-		FROM book AS book JOIN users AS owner ON mail LIKE 'tscheffer@itba.edu.ar'
-			JOIN location ON locationString LIKE 'Zona Norte'
-			WHERE book.bookModelId = (SELECT bookModelId FROM book_model WHERE isbn = '9788491050568')
-			AND NOT EXISTS (SELECT 1 FROM publication publication WHERE publication.bookId = book.bookId AND publication.userId = owner.userId);
-			
--- INTERCAMBIOS + REVIEW ----------------------------------------------------------------------------------------------------
-
--- 1: Ivan con Juli
-
-INSERT INTO exchange (offererPubId, requesterPubId, exchangeState, acceptCode, offererReceivedBook, requesterReceivedBook, exchangeStartDate, exchangeEndDate)
-	SELECT
-	    publicationOfferer.publicationId,
-	    publicationRequester.publicationId,
-	    1,						-- exchangeState
-	    123456789,				-- acceptCode
-	    TRUE,					-- offererReceivedBook
-	    TRUE,					-- requesterReceivedBook
-	    '2024-09-15 00:00:00',	-- exchangeStartDate
-	    '2024-09-15 01:00:00'	-- exchangeEndDate
-	FROM publication AS publicationOfferer JOIN book AS bookOfferer ON publicationOfferer.bookId = bookOfferer.bookId
-		JOIN book_model bookModelOfferer ON bookOfferer.bookModelId = bookModelOfferer.bookModelId
-		JOIN users AS offerer ON bookOfferer.ownerId = offerer.userId
-		JOIN publication AS publicationRequester ON publicationRequester.bookId = ( SELECT bookRequester.bookId FROM book AS bookRequester JOIN book_model AS bookModelRequester ON bookRequester.bookModelId = bookModelRequester.bookModelId
-													JOIN users AS requester ON bookRequester.ownerId = requester.userId WHERE requester.mail LIKE 'jtechenski@itba.edu.ar' AND bookModelRequester.isbn = '9788437604947' LIMIT 1 )
-	WHERE
-	    offerer.mail LIKE 'modzomek@itba.edu.ar'
-	    AND bookModelOfferer.isbn = '9788445002132'
-	    AND publicationOfferer.publicationState = 1;
-        
+--		INSERT INTO image (imageId, image)
+--		VALUES (2, CAST('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' AS varbinary));

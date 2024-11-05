@@ -64,7 +64,7 @@ public class TestConfig {
 		
 		dbp.addScript(pgSql);
 		dbp.addScript(schemaSql);
-//		dbp.addScript(insertionsSql);
+		dbp.addScript(insertionsSql);
 		
 		return dbp;
 	}
