@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.persistence.PublicationDao;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
+import org.hibernate.annotations.Formula;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Primary;
@@ -78,7 +79,7 @@ public class PublicationJpaDao implements PublicationDao {
     }
 
     @Override
-    public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(Long userId,String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, String sortType, String currentPage) {
+    public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(Long userId,String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, String sortType, String currentPage, User currentUser) {
         int page;
         try {
             page = Integer.parseInt(currentPage);
@@ -190,7 +191,15 @@ public class PublicationJpaDao implements PublicationDao {
 
         int totalResults = getTotalResultsByBook(userId, safeSearch, isGenreFilterActive, genreFilter, isBookStateFilterActive, bookStateFilter);
 
-        return new PaginatedResponse<>(query.getResultList(), new ItemFilterMetadata(page, PUBLICATIONS_PAGE_SIZE, totalResults, search, isGenreFilterActive, genreFilter, sort, null, isBookStateFilterActive, bookStateFilter, null));
+        PaginatedResponse<Publication, ItemFilterMetadata> paginatedResponse = new PaginatedResponse<>(query.getResultList(), new ItemFilterMetadata(page, PUBLICATIONS_PAGE_SIZE, totalResults, search, isGenreFilterActive, genreFilter, sort, null, isBookStateFilterActive, bookStateFilter, null));
+
+        if(currentUser != null){
+            for(Publication publication : paginatedResponse.getData()){
+                setIsLikedByUser(currentUser, publication);
+            }
+        }
+
+        return paginatedResponse;
     }
 
     @Override
@@ -347,11 +356,19 @@ public class PublicationJpaDao implements PublicationDao {
         em.remove(publication);
     }
 
+    private void setIsLikedByUser(User user, Publication publication) {
+        Query query = em.createQuery("SELECT COUNT(*) FROM FavoritePublication fp WHERE fp.publicationId = :publicationId AND fp.userId = :userId");
+        query.setParameter("publicationId", publication.getPublicationId());
+        query.setParameter("userId", user.getUserId());
+        publication.setLikedByUser(((Number) query.getSingleResult()).intValue() > 0);
+    }
+
     @Override
     @Transactional
     public void likePublication(long publicationId, long userId) {
+        User user = em.find(User.class, userId);
         Publication publication = em.find(Publication.class, publicationId);
-
+        setIsLikedByUser(user, publication);
         if(publication.isLikedByUser()){
             Query query = em.createQuery("SELECT fp.favoritepublicationId FROM FavoritePublication fp WHERE fp.publicationId = :publicationId AND fp.userId = :userId");
             query.setParameter("publicationId", publicationId);

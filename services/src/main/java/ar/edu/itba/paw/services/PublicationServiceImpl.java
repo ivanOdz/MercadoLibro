@@ -53,7 +53,7 @@ public class PublicationServiceImpl implements PublicationService {
     }
 
     @Override
-    public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, String isBookStateFilterActive, String bookStateFilter, String isGenreFilterActive, String genreFilter, String sortType, String currentPage) {
+    public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, String isBookStateFilterActive, String bookStateFilter, String isGenreFilterActive, String genreFilter, String sortType, String currentPage, User currentUser) {
 
         boolean bookStateFilterActive = "true".equalsIgnoreCase(isBookStateFilterActive);
         boolean genreFilterActive = "true".equalsIgnoreCase(isGenreFilterActive);
@@ -74,7 +74,7 @@ public class PublicationServiceImpl implements PublicationService {
             }
         }
 
-        return pubDao.getPaginatedPublications(null, search, bookStateFilterActive, state, genreFilterActive, genre, sortType, currentPage);
+        return pubDao.getPaginatedPublications(null, search, bookStateFilterActive, state, genreFilterActive, genre, sortType, currentPage, currentUser);
     }
 
     @Override
@@ -108,7 +108,7 @@ public class PublicationServiceImpl implements PublicationService {
         }
 
 
-        return pubDao.getPaginatedPublications(userId, search, bookStateFilterActive, state, genreFilterActive, genre, sortType, currentPage);
+        return pubDao.getPaginatedPublications(userId, search, bookStateFilterActive, state, genreFilterActive, genre, sortType, currentPage, null);
     }
 
     @Override

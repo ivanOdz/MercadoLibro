@@ -51,7 +51,7 @@ public class PublicationController {
 
         final ModelAndView mav = new ModelAndView("home/publications");
         PaginatedResponse<Publication, ItemFilterMetadata> publications = ps.getPaginatedPublications(search, isBookStateFilterActive,
-                    bookStateFilter, isGenreFilterActive, genreFilter, sortType, currentPage);
+                    bookStateFilter, isGenreFilterActive, genreFilter, sortType, currentPage, loggedUserAdvice.getLoggedUser());
 
 
         List<GenreWrapper> genreWrapperList = ps.getGenreWrapperList(search, isBookStateFilterActive, bookStateFilter);
