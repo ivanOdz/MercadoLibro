@@ -46,7 +46,6 @@ public class Publication {
     @Formula("(SELECT COUNT(fp.publicationid) FROM favorite_publication fp WHERE fp.publicationid = publicationid)")
     private Integer likes;
 
-    @Formula("(SELECT COUNT(*) > 0 FROM favorite_publication fp WHERE fp.publicationid = publicationid AND fp.userid = userid)")
     private Boolean isLikedByUser;
 
     public Publication(Long publicationId, Book book, User user,PublicationState publicationState, Timestamp publicationDatetime, Location location) {
