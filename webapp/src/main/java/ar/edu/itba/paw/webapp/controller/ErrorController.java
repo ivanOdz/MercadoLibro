@@ -35,7 +35,7 @@ public class ErrorController {
 
     @RequestMapping("/500")
     public ModelAndView internalServerError() {
-        return new ModelAndView("error/internalservererror");
+        return new ModelAndView("error/500");
     }
 //
 //    @RequestMapping("/**")

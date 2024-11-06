@@ -32,8 +32,7 @@
 
     <p><spring:message code="error.400.suggestion" arguments="${pageContext.request.contextPath}/" /></p>
 
-    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
-
-    <dotlottie-player src="https://lottie.host/95592ee1-3c31-4319-9f67-14b4822873eb/xvdEaSYngY.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player></div>
+    <dotlottie-player src="https://lottie.host/95592ee1-3c31-4319-9f67-14b4822873eb/xvdEaSYngY.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
+</div>
 </body>
 </html>
