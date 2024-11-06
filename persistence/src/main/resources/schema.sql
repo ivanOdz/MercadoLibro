@@ -36,12 +36,12 @@ CREATE TABLE IF NOT EXISTS book_model (
       title                     VARCHAR(255) NOT NULL,
       editorial                 VARCHAR(255) NOT NULL,
       description               TEXT,
-      genre                     INTEGER,
+      genre                     VARCHAR(50),
       edition                   INTEGER,
       weight                    INTEGER,
       pages                     INTEGER,
-      bookLanguage              INTEGER,
-      dimension                 INTEGER, -- SMALL, MEDIUM, LARGE.
+      bookLanguage              VARCHAR(20),
+      dimension                 VARCHAR(20), -- SMALL, MEDIUM, LARGE.
       publicationYear           SMALLINT,
       isPocketEdition           BOOLEAN,
       isHardcover               BOOLEAN,

@@ -21,43 +21,43 @@
 
 -- 1 --
         INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
-        VALUES (1, '9788497592208', 'Cien años de soledad', 'Sudamericana', 'Una novela emblemática del realismo mágico que narra la historia de la familia Buendía a lo largo de varias generaciones.', 2, 1, 600, 471, 1, 1, 1967, FALSE, TRUE, NULL);
+        VALUES (1, '9788497592208', 'Cien años de soledad', 'Sudamericana', 'Una novela emblemática del realismo mágico que narra la historia de la familia Buendía a lo largo de varias generaciones.', 'FANTASY', 1, 600, 471, 'SPANISH', 'MEDIUM', 1967, FALSE, TRUE, NULL);
     
 -- 2 --        
         INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
-        VALUES (2, '9788491050568', 'Don Quijote de la Mancha', 'Real Academia Española', 'La obra maestra de la literatura española que sigue las aventuras del caballero Don Quijote y su escudero Sancho Panza.', 3, 1, 800, 1000, 1, 2, 1605, TRUE, FALSE, NULL);
+        VALUES (2, '9788491050568', 'Don Quijote de la Mancha', 'Real Academia Española', 'La obra maestra de la literatura española que sigue las aventuras del caballero Don Quijote y su escudero Sancho Panza.', 'CLASSIC', 1, 800, 1000, 'SPANISH', 'LARGE', 1605, TRUE, FALSE, NULL);
 
 -- 3 --
         INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
-        VALUES (3, '9788408186206', 'La sombra del viento', 'Planeta', 'Una novela fascinante ambientada en la Barcelona de la posguerra que mezcla misterio, amor y tragedia.', 4, 2, 400, 575, 1, 1, 2001, TRUE, FALSE, NULL);
+        VALUES (3, '9788408186206', 'La sombra del viento', 'Planeta', 'Una novela fascinante ambientada en la Barcelona de la posguerra que mezcla misterio, amor y tragedia.', 'NOVEL', 2, 400, 575, 'SPANISH', 'SMALL', 2001, TRUE, FALSE, NULL);
 
 -- 4 --
         INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
-        VALUES (4, '9788497592451', 'El amor en los tiempos del cólera', 'Sudamericana', 'Una historia de amor que se extiende a lo largo de más de 50 años, escrita por el ganador del Premio Nobel.', 5, 1, 500, 490, 1, 1, 1985, FALSE, TRUE, NULL);
+        VALUES (4, '9788497592451', 'El amor en los tiempos del cólera', 'Sudamericana', 'Una historia de amor que se extiende a lo largo de más de 50 años, escrita por el ganador del Premio Nobel.', 'NOVEL', 1, 500, 490, 'SPANISH', 'MEDIUM', 1985, FALSE, TRUE, NULL);
 
 -- 5 --
         INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
-        VALUES (5, '9780062315007', 'El alquimista', 'HarperCollins', 'Una novela filosófica sobre un joven pastor que sigue su sueño de encontrar un tesoro en Egipto.', 6, 3, 300, 208, 1, 1, 1988, TRUE, FALSE, NULL);
+        VALUES (5, '9780062315007', 'El alquimista', 'HarperCollins', 'Una novela filosófica sobre un joven pastor que sigue su sueño de encontrar un tesoro en Egipto.', 'NOVEL', 3, 300, 208, 'SPANISH', 'MEDIUM', 1988, TRUE, FALSE, NULL);
 
 -- 6 --
         INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
-        VALUES (6, '9788437604947', 'La casa de los espíritus', 'Debolsillo', 'Una obra que recorre las vidas de varias generaciones de la familia Trueba, desde lo fantástico hasta lo histórico.', 7, 2, 500, 448, 1, 1, 1982, FALSE, TRUE, NULL);
+        VALUES (6, '9788437604947', 'La casa de los espíritus', 'Debolsillo', 'Una obra que recorre las vidas de varias generaciones de la familia Trueba, desde lo fantástico hasta lo histórico.', 'FICTION', 2, 500, 448, 'SPANISH', 'SMALL', 1982, FALSE, TRUE, NULL);
 
 -- 7 --
         INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
-        VALUES (7, '9788420471839', 'Crónica de una muerte anunciada', 'Debolsillo', 'Un relato corto sobre la muerte premeditada de Santiago Nasar, basado en hechos reales.', 2, 1, 300, 128, 1, 1, 1981, TRUE, FALSE, NULL);
+        VALUES (7, '9788420471839', 'Crónica de una muerte anunciada', 'Debolsillo', 'Un relato corto sobre la muerte premeditada de Santiago Nasar, basado en hechos reales.', 'MISTERY', 1, 300, 128, 'SPANISH', 'SMALL', 1981, TRUE, FALSE, NULL);
 
 -- 8 --
         INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
-        VALUES (8, '9788497594319', 'Los detectives salvajes', 'Anagrama', 'Una novela sobre la vida bohemia de poetas en el México de los años 70.', 8, 1, 700, 609, 1, 1, 1998, FALSE, TRUE, NULL);
+        VALUES (8, '9788497594319', 'Los detectives salvajes', 'Anagrama', 'Una novela sobre la vida bohemia de poetas en el México de los años 70.', 'MISTERY', 1, 700, 609, 'SPANISH', 'MEDIUM', 1998, FALSE, TRUE, NULL);
     
 -- 9 --
         INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
-        VALUES (9, '9788423353248', 'Patria', 'Tusquets', 'Una novela que explora las vidas de dos familias vascas en el contexto del conflicto de ETA.', 9, 1, 800, 648, 1, 1, 2016, FALSE, TRUE, NULL);
+        VALUES (9, '9788423353248', 'Patria', 'Tusquets', 'Una novela que explora las vidas de dos familias vascas en el contexto del conflicto de ETA.', 'THRILLER', 1, 800, 648, 'SPANISH', 'MEDIUM', 2016, FALSE, TRUE, NULL);
 
 -- 10 --
         INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
-        VALUES (10, '9788445002132', 'La ciudad y los perros', 'Alfaguara', 'Una obra clave de la literatura latinoamericana que sigue a los estudiantes de un internado militar en el Perú.', 3, 2, 500, 384, 1, 1, 1962, FALSE, TRUE, NULL);
+        VALUES (10, '9788445002132', 'La ciudad y los perros', 'Alfaguara', 'Una obra clave de la literatura latinoamericana que sigue a los estudiantes de un internado militar en el Perú.', 'FICTION', 2, 500, 384, 'SPANISH', 'MEDIUM', 1962, FALSE, TRUE, NULL);
 
 -- Insertar autores --------------------------------------------------------------------------------------------------------
     

@@ -60,7 +60,7 @@ public class BookDaoJpaTest {
 		
 		Optional<Book> maybeBook = bookDao.getBookById(BookConstants.ID_1);	// Cambiar en BOOK... se deberia trabajar con un Optional<Book> para mantener todo consistente
 		
-		Assert.assertNotNull(maybeBook);
+		Assert.assertTrue(maybeBook.isPresent());
 	}
 	
 }
