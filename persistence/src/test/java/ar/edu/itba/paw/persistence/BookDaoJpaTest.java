@@ -58,7 +58,7 @@ public class BookDaoJpaTest {
 	@Test
 	public void testGetBookById() throws SQLException {
 		
-		Book maybeBook = bookDao.getBookById(BookConstants.ID_1);	// Cambiar en BOOK... se deberia trabajar con un Optional<Book> para mantener todo consistente
+		Optional<Book> maybeBook = bookDao.getBookById(BookConstants.ID_1);	// Cambiar en BOOK... se deberia trabajar con un Optional<Book> para mantener todo consistente
 		
 		Assert.assertNotNull(maybeBook);
 	}

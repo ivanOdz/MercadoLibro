@@ -71,13 +71,13 @@ public class BookJpaDao implements BookDao {
     }
 
     @Override
-    public Book getBookById(long bookId) {
+    public Optional<Book> getBookById(long bookId) {
 
-        Book book =  em.find(Book.class, bookId);  // devuelve null si no existe
-//        if (book == null) {
+        Optional<Book> bookOpt =  Optional.ofNullable(em.find(Book.class, bookId));
+//        if (!bookOpt.isPresent()) {
 //            throw new BookNotFoundException("Book not found.");
 //        }
-        return book;
+        return bookOpt;
     }
 
 

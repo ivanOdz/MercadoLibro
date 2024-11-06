@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public interface BookService {
@@ -22,7 +23,7 @@ public interface BookService {
 
     void exchangeOwnership(Book b1, Book b2);
 
-    Book getBookById(long bookId);
+    Optional<Book> getBookById(long bookId);
 
     PaginatedResponse<Book, ItemFilterMetadata> getPaginatedBooks(String search, String isBookStateFilterActive, String bookStateFilter, String isGenreFilterActive, String genreFilter, String currentPage, long userId, String sortType);
 
