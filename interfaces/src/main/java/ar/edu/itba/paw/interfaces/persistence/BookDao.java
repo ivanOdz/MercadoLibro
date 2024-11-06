@@ -29,6 +29,4 @@ public interface BookDao {
     void setAvailable(Book book, boolean available);
 
     void saveBookImages(List<BookImage> bookImages);
-
-
 }
