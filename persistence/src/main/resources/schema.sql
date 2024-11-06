@@ -53,8 +53,9 @@ CREATE TABLE IF NOT EXISTS book (
     bookId                      SERIAL PRIMARY KEY,
     bookModelId                 INTEGER REFERENCES book_model(bookModelId) ON DELETE SET NULL,
     ownerId                     INTEGER NOT NULL REFERENCES users(userId) ON DELETE CASCADE,
-    bookState                   INTEGER NOT NULL,
-    exchangesQty                INTEGER NOT NULL
+    bookState                   TEXT, --INTEGER NOT NULL,
+    exchangesQty                INTEGER NOT NULL,
+    available					BOOLEAN
 );
 
 -- Tabla de imágenes de libros

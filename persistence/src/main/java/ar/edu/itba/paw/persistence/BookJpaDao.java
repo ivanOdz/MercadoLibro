@@ -27,8 +27,8 @@ import static ar.edu.itba.paw.models.utils.Constants.*;
 @Primary
 public class BookJpaDao implements BookDao {
 
-    @Autowired
-    private MessageSource messageSource;
+//    @Autowired
+//    private MessageSource messageSource;
 
     @PersistenceContext
     private EntityManager em;
@@ -36,11 +36,13 @@ public class BookJpaDao implements BookDao {
     @Override
     @Transactional
     public Book createBook(BookModel bookModel, User owner, BookState bookState) {
+    	
         final Book book = new Book(null, owner, bookModel, bookState, 0, true, new ArrayList<>());
         em.persist(book);
         em.flush();
+        
         if (book == null){
-            throw new BookBadRequestException(messageSource.getMessage("error.bookCreation", null, LocaleContextHolder.getLocale()));
+            throw new BookBadRequestException("Book not created correctly.");
         }
         return book;
     }
@@ -72,9 +74,9 @@ public class BookJpaDao implements BookDao {
     public Book getBookById(long bookId) {
 
         Book book =  em.find(Book.class, bookId);  // devuelve null si no existe
-        if (book == null) {
-            throw new BookNotFoundException(messageSource.getMessage("error.bookNotFound", new Object[]{ bookId }, LocaleContextHolder.getLocale()));
-        }
+//        if (book == null) {
+//            throw new BookNotFoundException("Book not found.");
+//        }
         return book;
     }
 

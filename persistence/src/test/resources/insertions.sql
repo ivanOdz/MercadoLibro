@@ -61,7 +61,6 @@
 
 -- Insertar autores --------------------------------------------------------------------------------------------------------
     
-
         INSERT INTO author (authorName)
         VALUES ('Gabriel García Márquez');
 
@@ -204,3 +203,22 @@
 		
 --		INSERT INTO image (imageId, image)
 --		VALUES (2, CAST('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' AS varbinary));
+
+-- LIBROS ------------------------------------------------------------------------------------------------------------------
+
+-- Insertar Libros para Ivan --
+
+-- 1 -- La ciudad y los perros
+
+	INSERT INTO book (bookId, bookModelId, ownerId, exchangesQty, available, bookState)
+	VALUES (1, 10, 1, 1, true, 'WORN');
+	
+-- 2 -- Patria
+
+	INSERT INTO book (bookId, bookModelId, ownerId, exchangesQty, available, bookState)
+	VALUES (2, 9, 1, 0, true, 'WORN');
+	
+-- 3 -- La casa de los espíritus
+
+	--INSERT INTO book (bookId, bookModelId, ownerId, exchangesQty, available, bookState)
+	--VALUES (3, 6, 2, 0, true, 'WORN');
