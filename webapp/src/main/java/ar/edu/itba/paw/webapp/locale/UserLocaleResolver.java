@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 
 public class UserLocaleResolver extends SessionLocaleResolver {
-
     @Override
     public Locale resolveLocale(HttpServletRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

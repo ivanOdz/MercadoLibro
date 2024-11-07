@@ -257,8 +257,7 @@ public class UserController {
     public ModelAndView changeLanguage(@RequestParam(name = "lang") String lang, HttpServletRequest request) {
     	
         Locale locale = Locale.forLanguageTag(lang);
-        request.getSession().setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, locale);
-
+        LocaleContextHolder.setLocale(locale);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getPrincipal() instanceof PawUserDetails pud) {
 
