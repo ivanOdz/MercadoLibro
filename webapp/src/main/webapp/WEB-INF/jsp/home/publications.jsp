@@ -556,10 +556,11 @@
 <script>
 
         document.querySelectorAll("form[id^='favoriteForm-']").forEach(form => {
-            console.log(form);
             const icon = form.querySelector('i.material-icons');
             form.addEventListener("submit", function (event) {
-                event.preventDefault();
+                <c:if test="${loggedUser} != null">
+                    event.preventDefault();
+                </c:if>
 
                 const isLiked = icon.textContent === 'favorite';
                 icon.textContent = isLiked ? 'favorite_border' : 'favorite';
