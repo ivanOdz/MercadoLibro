@@ -30,7 +30,7 @@ import java.util.Optional;
 public class UserJpaDao implements UserDao {
 
     @Autowired
-    MessageSource messageSource;
+    private MessageSource messageSource;
 
     @PersistenceContext
     private EntityManager em;
@@ -66,7 +66,7 @@ public class UserJpaDao implements UserDao {
         TypedQuery<User> query = em.createQuery("FROM User as u where u.username = :username", User.class);
         query.setParameter("username", username);
         try{
-        return Optional.ofNullable(query.getSingleResult());
+            return Optional.ofNullable(query.getSingleResult());
         } catch (NoResultException e) {
             return Optional.empty();
         }
