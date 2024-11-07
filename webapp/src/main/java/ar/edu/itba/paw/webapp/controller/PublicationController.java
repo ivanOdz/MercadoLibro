@@ -35,7 +35,7 @@ public class PublicationController {
     @Autowired
     private MessageSource messageSource;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PublicationController.class);
 
     @RequestMapping("/")
     public ModelAndView index(@RequestParam(name = "search", defaultValue = "") String search,
