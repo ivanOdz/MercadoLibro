@@ -40,7 +40,7 @@ public class PublicationController {
                               @RequestParam(name = "book-state-filter", required = false) String bookStateFilter,
                               @RequestParam(name = "is-genre-filter-active", defaultValue = "false") String isGenreFilterActive,
                               @RequestParam(name = "genre-filter", required = false) String genreFilter,
-                              @RequestParam(name = "order", defaultValue = "PUBLICATION_DATE_ASCENDING") String sortType,
+                              @RequestParam(name = "order", defaultValue = "sort.publication.date.ascending") String sortType,
                               @RequestParam(name = "page", defaultValue = "0") String currentPage) {
 
         final ModelAndView mav = new ModelAndView("home/publications");
@@ -122,6 +122,7 @@ public class PublicationController {
         List<BookStateWrapper> bookStateWrapperList = ps.getMyBookStateWrapperList(loggeduser.getUserId(), search, isGenreFilterActive, genreFilter);
 
         mav.addObject("publications", publications);
+        mav.addObject("sort-types", SortType.values());
         mav.addObject("genreWrapperList", genreWrapperList);
         mav.addObject("bookStateWrapperList", bookStateWrapperList);
 
