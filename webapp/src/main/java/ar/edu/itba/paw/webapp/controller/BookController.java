@@ -79,7 +79,7 @@ public class BookController {
 
         ModelAndView mav = new ModelAndView("book/book_home");
         PaginatedResponse<Book, ItemFilterMetadata> books = bookService.getPaginatedBooks(search, isBookStateFilterActive,
-                bookStateFilter, isGenreFilterActive, genreFilter, currentPage, loggedUserAdvice.getLoggedUser().getUserId(), sortType);
+                bookStateFilter, isGenreFilterActive, genreFilter, currentPage, loggeduser.getUserId(), sortType);
 
         List<GenreWrapper> genreWrapperList = bookService.getGenreWrapperList(search, isBookStateFilterActive, bookStateFilter, loggeduser.getUserId());
         List<BookStateWrapper> bookStateWrapperList = bookService.getBookStateWrapperList(search, isGenreFilterActive, genreFilter, loggeduser.getUserId());
@@ -115,12 +115,11 @@ public class BookController {
     }
 
     @GetMapping("/book/new_book")
-    public ModelAndView bookModelForm(@ModelAttribute("bookForm") BookForm bookForm, BindingResult errors) {
+    public ModelAndView bookModelForm(@ModelAttribute("bookForm") BookForm bookForm, BindingResult errors, @ModelAttribute("loggedUser") User loggeduser) {
 
         ModelAndView mav = new ModelAndView("/book/new_book_form");
-        User user = loggedUserAdvice.getLoggedUser();
-        
-        mav.addObject("user", user);
+
+        mav.addObject("user", loggeduser);
         mav.addObject("bookForm", bookForm);
 
 
@@ -135,25 +134,24 @@ public class BookController {
     }
 
     @PostMapping("/book/create_new_book")
-    public ModelAndView createNewBook(@Valid @ModelAttribute("bookForm") BookForm bookForm, BindingResult errors) {
+    public ModelAndView createNewBook(@Valid @ModelAttribute("bookForm") BookForm bookForm, BindingResult errors, @ModelAttribute("loggedUser") User loggeduser) {
         if (errors.hasErrors()) {
-            return bookModelForm(bookForm, errors);
+            return bookModelForm(bookForm, errors, loggeduser);
         }
 
-        User user = loggedUserAdvice.getLoggedUser();
         Book book;
 
 
 //        try {
 
-            book = bookService.createNewBook(bookForm.getIsbn(), bookForm.getTitle(), bookForm.getAuthors(), bookForm.getEditorial(), bookForm.getDescription(), bookForm.getGenre(), bookForm.getEdition(), bookForm.getPublicationYear(), bookForm.isHardcover(), bookForm.isPocketEdition(), bookForm.getDimension(), bookForm.getLanguage(), bookForm.getPages(), bookForm.getWeight(), bookForm.getBookState(), bookForm.getRating(), bookForm.getImageFiles(), bookForm.getBookCover(), user);
+            book = bookService.createNewBook(bookForm.getIsbn(), bookForm.getTitle(), bookForm.getAuthors(), bookForm.getEditorial(), bookForm.getDescription(), bookForm.getGenre(), bookForm.getEdition(), bookForm.getPublicationYear(), bookForm.isHardcover(), bookForm.isPocketEdition(), bookForm.getDimension(), bookForm.getLanguage(), bookForm.getPages(), bookForm.getWeight(), bookForm.getBookState(), bookForm.getRating(), bookForm.getImageFiles(), bookForm.getBookCover(), loggeduser);
         /*} catch (ApplicationRuntimeException e) {
             LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
             return new ModelAndView("redirect:/400");
         }*/
 
         try {
-            publicationService.createPublicationIfNeeded(bookForm.isPublish(), book.getBookId(), user.getUserId(), bookForm.getLocationId(), PublicationState.CURRENT);
+            publicationService.createPublicationIfNeeded(bookForm.isPublish(), book.getBookId(), loggeduser.getUserId(), bookForm.getLocationId(), PublicationState.CURRENT);
         } catch (ApplicationRuntimeException e) {
             LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
             return new ModelAndView("redirect:/400");
@@ -163,7 +161,7 @@ public class BookController {
     }
 
     @GetMapping("/book/new_book_model")
-    public ModelAndView bookDetailsFormNewBook(@ModelAttribute(name = "bookDetailsForm") BookDetailsForm bookDetailsForm, @RequestParam("book_model_id") Long bookModelId, BindingResult errors) {
+    public ModelAndView bookDetailsFormNewBook(@ModelAttribute(name = "bookDetailsForm") BookDetailsForm bookDetailsForm, @RequestParam("book_model_id") Long bookModelId, BindingResult errors, @ModelAttribute("loggedUser") User loggeduser) {
 
         ModelAndView mav = new ModelAndView("/book/book_form");
 
@@ -175,9 +173,7 @@ public class BookController {
             return new ModelAndView("redirect:/404");
         }
 
-        User user = loggedUserAdvice.getLoggedUser();
-
-        mav.addObject("user", user);
+        mav.addObject("user", loggeduser);
         mav.addObject("bookDetailsForm", bookDetailsForm);
         mav.addObject("step", 2);
         mav.addObject("book_model", bm);
@@ -190,16 +186,14 @@ public class BookController {
 
     // upload from preloaded book model
     @PostMapping("/book/create_book")
-    public ModelAndView createBook(@Valid @ModelAttribute(name = "bookDetailsForm") BookDetailsForm bookDetailsForm, BindingResult errors, @RequestParam("book_model_id") Long bookModelId) {
+    public ModelAndView createBook(@Valid @ModelAttribute(name = "bookDetailsForm") BookDetailsForm bookDetailsForm, BindingResult errors, @RequestParam("book_model_id") Long bookModelId, @ModelAttribute("loggedUser") User loggeduser) {
         if (errors.hasErrors()) {
-            return bookDetailsFormNewBook(bookDetailsForm, bookModelId, errors);
+            return bookDetailsFormNewBook(bookDetailsForm, bookModelId, errors, loggeduser);
         }
-        User user = loggedUserAdvice.getLoggedUser();
-
         Book book;
 
         try {
-            book = bookService.createBook(bookModelId, bookDetailsForm.getBookState(), bookDetailsForm.getRating(), bookDetailsForm.getImageFiles(), bookDetailsForm.getBookCover(), null, user, false);
+            book = bookService.createBook(bookModelId, bookDetailsForm.getBookState(), bookDetailsForm.getRating(), bookDetailsForm.getImageFiles(), bookDetailsForm.getBookCover(), null, loggeduser, false);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
             return new ModelAndView("redirect:/400");
@@ -211,7 +205,7 @@ public class BookController {
         }
 
         try {
-            publicationService.createPublicationIfNeeded(bookDetailsForm.isPublish(), book.getBookId(), user.getUserId(), bookDetailsForm.getLocationId(), PublicationState.CURRENT);
+            publicationService.createPublicationIfNeeded(bookDetailsForm.isPublish(), book.getBookId(), loggeduser.getUserId(), bookDetailsForm.getLocationId(), PublicationState.CURRENT);
         } catch (ApplicationRuntimeException e) {
             LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
             return new ModelAndView("redirect:/400");
