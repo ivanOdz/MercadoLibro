@@ -10,6 +10,7 @@ import ar.edu.itba.paw.models.utils.Rating;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserReviewServiceImpl implements UserReviewService {
@@ -20,7 +21,7 @@ public class UserReviewServiceImpl implements UserReviewService {
 	@Autowired
 	private ExchangeService exchangeService;
 
-
+	@Transactional
 	@Override
 	public Boolean createUserReview(long exchangeId, long userId, String description, int rating) {
 		// NOTE: throws NF exception
@@ -37,32 +38,38 @@ public class UserReviewServiceImpl implements UserReviewService {
 		// NOTE: throws a BR exception
 		return userReviewDao.createUserReview(exchangeId, userId, subjectId, description, rating) != null;
 	}
-	
+
+	@Transactional(readOnly = true)
 	@Override
 	public PaginatedResponse<UserReview, BasicMetadata> getReviewsGivenByUserId(long userId, int currentPage) {
 		return userReviewDao.getReviewsGivenByUserId(userId, currentPage);
 	}
 
+	@Transactional(readOnly = true)
 	@Override
 	public PaginatedResponse<UserReview, BasicMetadata> getReviewsEarnedByUserId(long userId, int currentPage) {
 		return userReviewDao.getReviewsEarnedByUserId(userId, currentPage);
 	}
-	
+
+	@Transactional(readOnly = true)
 	@Override
 	public UserReview getUserReviewEarned(long exchangeId, long userId) {
 		return userReviewDao.getUserReviewEarned(exchangeId, userId);
 	}
-	
+
+	@Transactional(readOnly = true)
 	@Override
 	public UserReview getUserReviewGiven(long exchangeId, long userId) {
 		return userReviewDao.getUserReviewGiven(exchangeId, userId);
 	}
-	
+
+	@Transactional(readOnly = true)
 	@Override
 	public Rating getUserRatingEarned(long userId) {
 		return userReviewDao.getUserRatingEarned(userId);
 	}
-    
+
+	@Transactional(readOnly = true)
 	@Override
 	public Rating getUserRatingGiven(long userId) {
 		return userReviewDao.getUserRatingGiven(userId);
