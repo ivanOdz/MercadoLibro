@@ -17,11 +17,11 @@ public class Exchange {
     @Column(name = "exchangeid")
     private Long exchangeId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "offererPubId", nullable = false)
     private Publication offerer;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "requesterPubId", nullable = false)
     private Publication requester;
 

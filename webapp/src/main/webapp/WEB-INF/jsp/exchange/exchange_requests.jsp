@@ -27,7 +27,7 @@
 
 <body>
 
-<c:url var="submitReview" value="/submitReview"/>
+<c:url var="submitReview" value="/submit_review"/>
 
 
 <navbar_wo_search/>
@@ -1115,11 +1115,11 @@
 
 
         if(chatAvailable === 'true'){
-            document.getElementById('chat-button').classList.remove('hidden')
+            document.getElementById('chat-button').classList.remove('hidden');
             document.getElementById('chat-button').classList.add('flex');
         } else {
-            document.getElementById('chat-button').classList.remove('flex')
-            document.getElementById('chat-button').classList.add('hidden')
+            document.getElementById('chat-button').classList.remove('flex');
+            document.getElementById('chat-button').classList.add('hidden');
         }
 
         // Agregar la clase 'selected-card' a la tarjeta clickeada
@@ -1148,7 +1148,7 @@
         // document.querySelector('input[name="reviewerId"]').value = reviewerId;
         // document.querySelector('input[name="subjectId"]').value = subjectId;
 
-        if(chatAvailable === 'true'){
+        if(chatAvailable === 'true' &&  currentChat !== undefined){
             document.querySelector('input[id="chatExchangeId"]').value = exchangeId;
             document.querySelector('input[id="chatUserId"]').value = subjectId;
 
@@ -1211,7 +1211,7 @@
     }
 
     function renderExistingMessages() {
-        for (let i = 0; i < currentChat.length && currentChat[i].message != null; i++) {
+        for (let i = 0;i < currentChat.length && currentChat[i].message != null; i++) {
             renderNewMessage(currentChat[i], currentChat[i].userId);
         }
         scrollToBottom()

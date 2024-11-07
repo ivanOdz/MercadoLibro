@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BookDao {
 
@@ -16,7 +17,7 @@ public interface BookDao {
 
     void setOwner(Book book, User user);
 
-    Book getBookById(long bookId);
+    Optional<Book> getBookById(long bookId);
 
     List<Book> getAllBooksByUser(long userId);
 

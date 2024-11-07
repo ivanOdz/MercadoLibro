@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.utils.BookDimension;
 import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.models.utils.Genre;
 import ar.edu.itba.paw.models.utils.Language;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -41,8 +42,7 @@ public class BookForm {
     @Max(value = 99)
     private int edition =1;
 
-    @Min(1)
-    @Max(5)
+    @Range(min = 1, max = 5)
     private int rating;
 
     private List<MultipartFile> imageFiles;

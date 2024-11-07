@@ -40,7 +40,7 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Override
     public void initializeExchange(long bookId, long locationId, long offererPubId) {
     	
-        Long userId = bs.getBookById(bookId).getOwner().getUserId();
+        Long userId = bs.getBookById(bookId).get().getOwner().getUserId();
         long requesterPubId = ps.createPublication(bookId,  userId, locationId, PublicationState.OFFERED).getPublicationId();
 
         Random random = new Random();

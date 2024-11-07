@@ -14,6 +14,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static ar.edu.itba.paw.models.utils.Constants.*;
 
@@ -115,7 +116,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book getBookById(long bookId) {
+    public Optional<Book> getBookById(long bookId) {
         return bookDao.getBookById(bookId);
     }
 

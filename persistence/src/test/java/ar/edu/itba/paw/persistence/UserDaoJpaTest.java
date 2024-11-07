@@ -112,17 +112,19 @@ public class UserDaoJpaTest { // Faltaria el de User Favorite Location
 		Assert.assertEquals(newUsername, maybeUser.get().getUsername());
 	}
 
-//	@Test
-//	@Rollback
-//	public void testAddUserLocation() throws SQLException {
-//		
-//		final Location newLocation = new Location();
-//		
-//		userDao.addUserLocation(UserConstants.ID_1, newLocation);
-//		
-//		Optional<User> maybeUser = userDao.findById(UserConstants.ID_1);
-//		
-//		Assert.assertTrue(maybeUser.isPresent());
-//		Assert.assertEquals(newLocation, maybeUser.get().getUserLocations());
-//	}
+	@Test
+	@Rollback
+	public void testAddUserLocation() throws SQLException {
+		
+		final Location newLocation = new Location();
+		int locationsSize = 0;
+		Optional<User> maybeUser = userDao.findById(UserConstants.ID_1);
+		
+		locationsSize = maybeUser.get().getUserLocations().size();
+		userDao.addUserLocation(UserConstants.ID_1, newLocation);
+		
+		Assert.assertTrue(maybeUser.isPresent());
+		Assert.assertEquals(locationsSize + 1, maybeUser.get().getUserLocations().size());
+//		Assert.assertTrue(maybeUser.get().getUserLocations().contains(newLocation)); // Por qué no anda? :(
+	}
 }
