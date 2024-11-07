@@ -130,12 +130,9 @@ public class PublicationController {
         List<GenreWrapper> genreWrapperList = ps.getMyGenreWrapperList(user.getUserId(), search, isBookStateFilterActive, bookStateFilter);
         List<BookStateWrapper> bookStateWrapperList = ps.getMyBookStateWrapperList(user.getUserId(), search, isGenreFilterActive, genreFilter);
 
-        List<LocalizedEnumWrapper<GenreWrapper>> localizedGenreWrappers = EnumInternationalizationUtil.localizeGenreWrappers(genreWrapperList);
-        List<LocalizedEnumWrapper<BookStateWrapper>> localizedBookStateWrappers = EnumInternationalizationUtil.localizeBookStateWrappers(bookStateWrapperList);
-
         mav.addObject("publications", publications);
-        mav.addObject("genreWrapperList", localizedGenreWrappers);
-        mav.addObject("bookStateWrapperList", localizedBookStateWrappers);
+        mav.addObject("genreWrapperList", genreWrapperList);
+        mav.addObject("bookStateWrapperList", bookStateWrapperList);
 
         return mav;
     }
