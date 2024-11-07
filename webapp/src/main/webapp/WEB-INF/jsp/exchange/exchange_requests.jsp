@@ -27,7 +27,7 @@
 
 <body>
 
-<c:url var="submitReview" value="/submitReview"/>
+<c:url var="submitReview" value="/submit_review"/>
 
 
 <navbar_wo_search/>
