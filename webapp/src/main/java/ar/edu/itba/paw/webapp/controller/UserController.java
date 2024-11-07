@@ -54,9 +54,6 @@ public class UserController {
     @Autowired
     private MessageSource messageSource;
 
-    @Autowired
-    private LoggedUserAdvice loggedUserAdvice;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     @RequestMapping("/login")
@@ -242,13 +239,13 @@ public class UserController {
 
     @RequestMapping("/profile")
     public ModelAndView profileHome(RedirectAttributes redirectAttributes,
-                                    @RequestParam(name = "page", defaultValue = "0") int currentPage) {
+                                    @RequestParam(name = "page", defaultValue = "0") int currentPage, @ModelAttribute("loggedUser") User loggeduser) {
         ModelAndView mav = new ModelAndView("profile/profile_home");
 
-        mav.addObject("loggedUser", loggedUserAdvice.getLoggedUser());
-        mav.addObject("locationsUser", loggedUserAdvice.getLoggedUser().getUserLocations());
-        mav.addObject("reviews", userReviewService.getReviewsEarnedByUserId(loggedUserAdvice.getLoggedUser().getUserId(), currentPage));
-        mav.addObject("userRating", userReviewService.getUserRatingEarned(loggedUserAdvice.getLoggedUser().getUserId()));
+        mav.addObject("loggedUser", loggeduser);
+        mav.addObject("locationsUser", loggeduser.getUserLocations());
+        mav.addObject("reviews", userReviewService.getReviewsEarnedByUserId(loggeduser.getUserId(), currentPage));
+        mav.addObject("userRating", userReviewService.getUserRatingEarned(loggeduser.getUserId()));
 
         return mav;
     }
