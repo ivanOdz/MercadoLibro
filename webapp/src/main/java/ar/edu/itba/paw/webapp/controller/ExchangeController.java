@@ -45,15 +45,11 @@ public class ExchangeController {
     @Autowired
     private UserReviewService userReviewService;
 
-    @Autowired
-    private LoggedUserAdvice loggedUserAdvice;
-
     @Qualifier("messageSource")
     @Autowired
     private MessageSource messageSource;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExchangeController.class);
-
 
     // Requests (osea peticiones que me hacen a mi)
     // Paso el ID, y quiero aquellas exchanges en las que soy offerer
@@ -61,14 +57,14 @@ public class ExchangeController {
     public ModelAndView exchangeRequests(@RequestParam(name = "pending-page", defaultValue = "0") int pendingPage,
                                          @RequestParam(name = "in-progress-page", defaultValue = "0") int inProgressPage,
                                          @RequestParam(name = "completed-page", defaultValue = "0") int completedPage,
-                                         @RequestParam(name = "rejected-page", defaultValue = "0") int rejectedPage) {
+                                         @RequestParam(name = "rejected-page", defaultValue = "0") int rejectedPage,
+                                         @ModelAttribute("loggedUser") User loggeduser) {
         final ModelAndView mav = new ModelAndView("exchange/exchange_requests");
 
-        User user = loggedUserAdvice.getLoggedUser();
-        PaginatedResponse<Exchange, BasicMetadata> pendingExchanges = exchangeService.getExchangeOffererListByUserId(user.getUserId(), pendingPage, ExchangeState.PENDING);
-        PaginatedResponse<Exchange, BasicMetadata> inProcessExchanges = exchangeService.getExchangeOffererListByUserId(user.getUserId(), inProgressPage, ExchangeState.ACCEPTED);
-        PaginatedResponse<Exchange, BasicMetadata> completedExchanges = exchangeService.getExchangeOffererListByUserId(user.getUserId(), completedPage, ExchangeState.TERMINATED);
-        PaginatedResponse<Exchange, BasicMetadata> rejectedExchanges = exchangeService.getExchangeOffererListByUserId(user.getUserId(), rejectedPage, ExchangeState.REJECTED);
+        PaginatedResponse<Exchange, BasicMetadata> pendingExchanges = exchangeService.getExchangeOffererListByUserId(loggeduser.getUserId(), pendingPage, ExchangeState.PENDING);
+        PaginatedResponse<Exchange, BasicMetadata> inProcessExchanges = exchangeService.getExchangeOffererListByUserId(loggeduser.getUserId(), inProgressPage, ExchangeState.ACCEPTED);
+        PaginatedResponse<Exchange, BasicMetadata> completedExchanges = exchangeService.getExchangeOffererListByUserId(loggeduser.getUserId(), completedPage, ExchangeState.TERMINATED);
+        PaginatedResponse<Exchange, BasicMetadata> rejectedExchanges = exchangeService.getExchangeOffererListByUserId(loggeduser.getUserId(), rejectedPage, ExchangeState.REJECTED);
 
         mav.addObject("pending", pendingExchanges);
         mav.addObject("inProgress", inProcessExchanges);
@@ -89,14 +85,14 @@ public class ExchangeController {
     public ModelAndView exchangeOffers(@RequestParam(name = "pending-page", defaultValue = "0") int pendingPage,
                                        @RequestParam(name = "in-progress-page", defaultValue = "0") int inProgressPage,
                                        @RequestParam(name = "completed-page", defaultValue = "0") int completedPage,
-                                       @RequestParam(name = "rejected-page", defaultValue = "0") int rejectedPage) {
+                                       @RequestParam(name = "rejected-page", defaultValue = "0") int rejectedPage,
+                                       @ModelAttribute("loggedUser") User loggeduser) {
         final ModelAndView mav = new ModelAndView("exchange/exchange_offers");
 
-        User user = loggedUserAdvice.getLoggedUser();
-        PaginatedResponse<Exchange, BasicMetadata> pendingExchanges = exchangeService.getExchangeRequesterListByUserId(user.getUserId(), pendingPage, ExchangeState.PENDING);
-        PaginatedResponse<Exchange, BasicMetadata> inProcessExchanges = exchangeService.getExchangeRequesterListByUserId(user.getUserId(), inProgressPage, ExchangeState.ACCEPTED);
-        PaginatedResponse<Exchange, BasicMetadata> completedExchanges = exchangeService.getExchangeRequesterListByUserId(user.getUserId(), completedPage, ExchangeState.TERMINATED);
-        PaginatedResponse<Exchange, BasicMetadata> rejectedExchanges = exchangeService.getExchangeRequesterListByUserId(user.getUserId(), rejectedPage, ExchangeState.REJECTED);
+        PaginatedResponse<Exchange, BasicMetadata> pendingExchanges = exchangeService.getExchangeRequesterListByUserId(loggeduser.getUserId(), pendingPage, ExchangeState.PENDING);
+        PaginatedResponse<Exchange, BasicMetadata> inProcessExchanges = exchangeService.getExchangeRequesterListByUserId(loggeduser.getUserId(), inProgressPage, ExchangeState.ACCEPTED);
+        PaginatedResponse<Exchange, BasicMetadata> completedExchanges = exchangeService.getExchangeRequesterListByUserId(loggeduser.getUserId(), completedPage, ExchangeState.TERMINATED);
+        PaginatedResponse<Exchange, BasicMetadata> rejectedExchanges = exchangeService.getExchangeRequesterListByUserId(loggeduser.getUserId(), rejectedPage, ExchangeState.REJECTED);
 
         mav.addObject("pending", pendingExchanges);
         mav.addObject("inProgress", inProcessExchanges);
@@ -114,7 +110,7 @@ public class ExchangeController {
     }
 
     @RequestMapping("/createexchange")
-    public ModelAndView exchange(@RequestParam(name = "accept_code") int acceptCode, @RequestParam(name = "state") boolean state) {
+    public ModelAndView exchange(@RequestParam(name = "accept_code") int acceptCode, @RequestParam(name = "state") boolean state, @ModelAttribute("loggedUser") User loggeduser) {
         ModelAndView mav = new ModelAndView("error/failed_authentication");
 
         Exchange ex;
@@ -126,7 +122,7 @@ public class ExchangeController {
         }
 
         // if the user that is accepting/rejecting the exchange is the one that should
-        if (ex.getOfferer().getBook().getOwner().getUserId() == loggedUserAdvice.getLoggedUser().getUserId()) {
+        if (ex.getOfferer().getBook().getOwner().getUserId() == loggeduser.getUserId()) {
             String exchangeView;
             try {
                 exchangeView = exchangeService.exchange(acceptCode, state);
@@ -159,12 +155,11 @@ public class ExchangeController {
 
 
     @GetMapping("/start_exchange")
-    public ModelAndView startExchange(@ModelAttribute("exchangeForm") ExchangeForm exchangeForm, BindingResult errors, @RequestParam(name = "publication_id") long publicationId) {
+    public ModelAndView startExchange(@ModelAttribute("exchangeForm") ExchangeForm exchangeForm, BindingResult errors, @RequestParam(name = "publication_id") long publicationId, @ModelAttribute("loggedUser") User loggeduser) {
     	
         final ModelAndView mav = new ModelAndView("/exchange/solicit_exchange");
         Publication publication;
-        User user = loggedUserAdvice.getLoggedUser();
-        
+
         try {
             publication = publicationService.getPublicationByPublicationId(publicationId);
         } catch (ApplicationRuntimeException e) {
@@ -176,9 +171,9 @@ public class ExchangeController {
 
         // NOTE: en el caso de que se haga una paginación de esta sección
         //  no hace falta realizar una excepción sino HAY QUE HACER UNA EXCEPCIÓN
-        availableBooks = bookService.getAvailableBooksByUser(loggedUserAdvice.getLoggedUser());
+        availableBooks = bookService.getAvailableBooksByUser(loggeduser);
 
-        mav.addObject("user", user);
+        mav.addObject("user", loggeduser);
         mav.addObject("availableBooks", availableBooks);
         mav.addObject("exchangeForm", exchangeForm);
         mav.addObject("publication", publication);
@@ -187,10 +182,10 @@ public class ExchangeController {
     }
 
     @PostMapping(path = "/exchange/initializeexchange")
-    public ModelAndView initializeExchange(@NotEmpty @Valid @ModelAttribute("exchangeForm") ExchangeForm exchangeInput, BindingResult errors) {
+    public ModelAndView initializeExchange(@NotEmpty @Valid @ModelAttribute("exchangeForm") ExchangeForm exchangeInput, BindingResult errors, @ModelAttribute("loggedUser") User loggeduser) {
     	
         if (errors.hasErrors()) {
-            return startExchange(exchangeInput, errors, exchangeInput.getPublicationId());
+            return startExchange(exchangeInput, errors, exchangeInput.getPublicationId(), loggeduser);
         }
 
         try {
@@ -213,7 +208,7 @@ public class ExchangeController {
 
 
     @RequestMapping("/confirm_offerer")
-    public ModelAndView confirmExchangeOffer(@RequestParam(name = "accept_code") int accept_code) {
+    public ModelAndView confirmExchangeOffer(@RequestParam(name = "accept_code") int accept_code, @ModelAttribute("loggedUser") User loggeduser) {
     	
         Exchange exchange;
         try {
@@ -224,7 +219,7 @@ public class ExchangeController {
         }
 
         // if the user that is accepting/rejecting the exchange is the one that should
-        if (exchange.getOfferer().getBook().getOwner().getUserId() == loggedUserAdvice.getLoggedUser().getUserId()) {
+        if (exchange.getOfferer().getBook().getOwner().getUserId() == loggeduser.getUserId()) {
             try {
                 exchangeService.cofirmOfferer(accept_code);
             } catch (BadRequestException e) {
@@ -246,7 +241,7 @@ public class ExchangeController {
 
 
     @RequestMapping("/confirm_requester")
-    public ModelAndView confirmExchangeRequest(@RequestParam(name = "accept_code") int accept_code) {
+    public ModelAndView confirmExchangeRequest(@RequestParam(name = "accept_code") int accept_code, @ModelAttribute("loggedUser") User loggeduser) {
         Exchange exchange;
         try {
             exchange = exchangeService.getExchangeByAcceptCode(accept_code);
@@ -256,7 +251,7 @@ public class ExchangeController {
         }
 
         // if the user that is accepting/rejecting the exchange is the one that should
-        if (exchange.getRequester().getBook().getOwner().getUserId() == loggedUserAdvice.getLoggedUser().getUserId()) {
+        if (exchange.getRequester().getBook().getOwner().getUserId() == loggeduser.getUserId()) {
             try {
                 exchangeService.cofirmRequester(accept_code);
             } catch (BadRequestException e) {
@@ -277,11 +272,12 @@ public class ExchangeController {
             @RequestParam("exchangeId") long exchangeId,
             @RequestParam("reviewDescription") String reviewDescription,
             @RequestParam("userReviewRating") int userReviewRating/*,
-		BindingResult result, RedirectAttributes redirectAttributes*/) {
+		BindingResult result, RedirectAttributes redirectAttributes*/,
+            @ModelAttribute("loggedUser") User loggeduser) {
 
         boolean success;
         try {
-            success = userReviewService.createUserReview(exchangeId, loggedUserAdvice.getLoggedUser().getUserId(), reviewDescription, userReviewRating);
+            success = userReviewService.createUserReview(exchangeId, loggeduser.getUserId(), reviewDescription, userReviewRating);
         }catch (Exception e){
             ModelAndView errormav = new ModelAndView("/debug");
             StringWriter sw = new StringWriter();
@@ -311,8 +307,6 @@ public class ExchangeController {
             exchangeService.createMessage(exchangeId, userId, message);
             return ResponseEntity.ok("Message sent successfully!");
         } catch (Exception e) {
-            // Log the error for troubleshooting
-            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to send message: " + e.getMessage());
         }
     }
