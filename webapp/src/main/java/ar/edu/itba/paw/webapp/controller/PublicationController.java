@@ -110,7 +110,7 @@ public class PublicationController {
                                        @RequestParam(name = "book-state-filter", required = false) String bookStateFilter,
                                        @RequestParam(name = "is-genre-filter-active", defaultValue = "false") String isGenreFilterActive,
                                        @RequestParam(name = "genre-filter", required = false) String genreFilter,
-                                       @RequestParam(name = "order", defaultValue = "PUBLICATION_DATE_ASCENDING") String sortType,
+                                       @RequestParam(name = "order", defaultValue = "sort.publication.date.ascending") String sortType,
                                        @RequestParam(name = "page", defaultValue = "0") String currentPage,
                                        @ModelAttribute("loggedUser") User loggeduser) {
 
