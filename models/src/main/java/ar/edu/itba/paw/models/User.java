@@ -43,7 +43,7 @@ public class User {
     @JoinColumn(name = "favoriteLocation", referencedColumnName = "locationId")
     private Location favoriteLocation;
     
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(
             name = "user_location",
             joinColumns = @JoinColumn(name = "userid"),
@@ -52,12 +52,10 @@ public class User {
     private Set<Location> userLocations = new HashSet<>();
 
     /* package */ public User(){
-
         // only for JPA
     }
-    
     public User(Long userId, String username, String mail, String password, Long imageId, Integer verificationCode, boolean isVerified, String language) {
-    	
+
         this.userId = userId;
         this.username = username;
         this.mail = mail;
@@ -66,6 +64,18 @@ public class User {
         this.verificationCode = verificationCode;
         this.isVerified = isVerified;
         this.language = language;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setUserLocations(Set<Location> userLocations) {
+        this.userLocations = userLocations;
     }
 
 
