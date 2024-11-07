@@ -46,7 +46,7 @@ public class Publication {
     @Formula("(SELECT COUNT(fp.publicationid) FROM favorite_publication fp WHERE fp.publicationid = publicationid)")
     private Integer likes;
 
-    private Boolean isLikedByUser;
+    private Boolean isLikedByUser = false;
 
     public Publication(Long publicationId, Book book, User user,PublicationState publicationState, Timestamp publicationDatetime, Location location) {
         this.publicationId = publicationId;
@@ -117,7 +117,7 @@ public class Publication {
         return likes;
     }
 
-    public boolean isLikedByUser() {
+    public Boolean getLikedByUser() {
         return isLikedByUser;
     }
 
@@ -125,7 +125,7 @@ public class Publication {
         this.likes = likes;
     }
 
-    public void setLikedByUser(boolean isLikedByUser) {
+    public void setLikedByUser(Boolean isLikedByUser) {
         this.isLikedByUser = isLikedByUser;
     }
 }

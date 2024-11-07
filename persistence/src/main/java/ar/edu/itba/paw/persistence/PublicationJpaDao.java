@@ -193,10 +193,8 @@ public class PublicationJpaDao implements PublicationDao {
 
         PaginatedResponse<Publication, ItemFilterMetadata> paginatedResponse = new PaginatedResponse<>(query.getResultList(), new ItemFilterMetadata(page, PUBLICATIONS_PAGE_SIZE, totalResults, search, isGenreFilterActive, genreFilter, sort, null, isBookStateFilterActive, bookStateFilter, null));
 
-        if(currentUser != null){
-            for(Publication publication : paginatedResponse.getData()){
-                setIsLikedByUser(currentUser, publication);
-            }
+        for(Publication publication : paginatedResponse.getData()){
+            setIsLikedByUser(currentUser, publication);
         }
 
         return paginatedResponse;
@@ -357,6 +355,10 @@ public class PublicationJpaDao implements PublicationDao {
     }
 
     private void setIsLikedByUser(User user, Publication publication) {
+        if(user == null){
+            publication.setLikedByUser(false);
+            return;
+        }
         Query query = em.createQuery("SELECT COUNT(*) FROM FavoritePublication fp WHERE fp.publicationId = :publicationId AND fp.userId = :userId");
         query.setParameter("publicationId", publication.getPublicationId());
         query.setParameter("userId", user.getUserId());
@@ -369,7 +371,7 @@ public class PublicationJpaDao implements PublicationDao {
         User user = em.find(User.class, userId);
         Publication publication = em.find(Publication.class, publicationId);
         setIsLikedByUser(user, publication);
-        if(publication.isLikedByUser()){
+        if(publication.getLikedByUser()){
             Query query = em.createQuery("SELECT fp.favoritepublicationId FROM FavoritePublication fp WHERE fp.publicationId = :publicationId AND fp.userId = :userId");
             query.setParameter("publicationId", publicationId);
             query.setParameter("userId", userId);
