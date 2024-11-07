@@ -7,8 +7,6 @@ import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 
 import ar.edu.itba.paw.webapp.form.ExchangeForm;
-import ar.edu.itba.paw.webapp.utilities.EnumInternationalizationUtil;
-import ar.edu.itba.paw.webapp.utilities.LocalizedEnumWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 @Controller
 public class PublicationController {
