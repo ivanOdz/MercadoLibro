@@ -202,12 +202,9 @@ public class UserController {
             return createForm(userForm);
         }
 
-        // using browserLanguage as user default
-        String browserLanguage = request.getHeader("Accept-Language");
-
         // verify date, create an user and send a verification email
 
-        User user = us.createUser(userForm.getUsername(), userForm.getMail(), userForm.getPassword(), browserLanguage.split(",")[0]);
+        User user = us.createUser(userForm.getUsername(), userForm.getMail(), userForm.getPassword(), LocaleContextHolder.getLocale().toLanguageTag());
 
         try {
         } catch (ApplicationRuntimeException e) {
