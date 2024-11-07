@@ -27,7 +27,7 @@ public class LoggedUserAdvice {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.getPrincipal() instanceof PawUserDetails pud) {
             Optional<User> user = us.findById(pud.getUser().getUserId());
-            LOGGER.info("Logged user is {}", pud.getUser());
+            LOGGER.info("Logged user id is {}", pud.getUser().getUserId());
             return user.orElse(null);
         }
         return null;
