@@ -25,22 +25,15 @@ public class GlobalExceptionHandlerAdvice {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandlerAdvice.class);
 
-    /*@ExceptionHandler(BadRequestException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ModelAndView handleBadRequestException(BadRequestException ex) {
-        LOGGER.warn(ex.getExceptionMessage(), ex.getStatusCode());
-        return new ModelAndView("redirect:/400");
-    }*/
-
     @ExceptionHandler({
             MethodArgumentTypeMismatchException.class,
-            HttpMessageNotReadableException.class,
-            MissingServletRequestParameterException.class,
-            IllegalArgumentException.class
+            HttpMessageNotReadableException.class,// este tampoco
+            MissingServletRequestParameterException.class, //puede volar
+            IllegalArgumentException.class,
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)  // Marcado para que Spring responda con 400 automáticamente
-    public ModelAndView handleSpringBadRequestExceptions(Exception ex) {
-        LOGGER.warn("Solicitud incorrecta: {}", ex.getMessage());
+    public ModelAndView handleSpringBadRequestExceptions(BadRequestException ex) {
+        LOGGER.warn("Solicitud incorrecta: {}", ex.getMessage(), ex);
         return new ModelAndView("error/400"); // Retorna la vista de error 400 sin redirección
     }
 /*
@@ -51,12 +44,14 @@ public class GlobalExceptionHandlerAdvice {
         return new ModelAndView("/user/demand_auth");
     }*/
 
-    @ExceptionHandler(NoHandlerFoundException.class)
-    public ModelAndView handleNotFoundException() {
-        //LOGGER.warn(ex.getExceptionMessage(), ex.getStatusCode());
+    @ExceptionHandler({
+            NoHandlerFoundException.class,
+            NotFoundException.class})
+    @ResponseStatus(HttpStatus.NOT_FOUND)  // Marcado para que Spring responda con 400 automáticamente
+    public ModelAndView handleNotFoundException(NotFoundException ex) {
+        LOGGER.warn(ex.getExceptionMessage(), ex.getStatusCode());
         return new ModelAndView("error/404");
     }
-
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
