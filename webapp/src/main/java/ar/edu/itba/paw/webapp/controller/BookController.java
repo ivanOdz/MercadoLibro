@@ -47,12 +47,6 @@ public class BookController {
     @Autowired
     private PublicationService publicationService;
 
-    @Autowired
-    private LanguageService languageService;
-
-    @Autowired
-    private BookDimensionService bookDimensionService;
-
 
     @Qualifier("messageSource")
     @Autowired
@@ -70,8 +64,6 @@ public class BookController {
                                  @RequestParam(name = "sort-type", defaultValue = "BOOK_NAME_ASCENDING") String sortType,
                                  @ModelAttribute("loggedUser") User loggeduser) {
 
-
-
         if (loggeduser == null) {
             String message = messageSource.getMessage("error.unauthorized", null, LocaleContextHolder.getLocale());
             throw new UserNotUnauthorizedException(message);
@@ -84,11 +76,8 @@ public class BookController {
         List<GenreWrapper> genreWrapperList = bookService.getGenreWrapperList(search, isBookStateFilterActive, bookStateFilter, loggeduser.getUserId());
         List<BookStateWrapper> bookStateWrapperList = bookService.getBookStateWrapperList(search, isGenreFilterActive, genreFilter, loggeduser.getUserId());
 
-        List<LocalizedEnumWrapper<GenreWrapper>> localizedGenreWrappers = EnumInternationalizationUtil.localizeGenreWrappers(genreWrapperList);
-        List<LocalizedEnumWrapper<BookStateWrapper>> localizedBookStateWrappers = EnumInternationalizationUtil.localizeBookStateWrappers(bookStateWrapperList);
-
-        mav.addObject("genreWrapperList", localizedGenreWrappers);
-        mav.addObject("bookStateWrapperList", localizedBookStateWrappers);
+        mav.addObject("genreWrapperList", genreWrapperList);
+        mav.addObject("bookStateWrapperList", bookStateWrapperList);
         mav.addObject("books", books);
         mav.addObject("user", loggeduser);
         
@@ -106,9 +95,8 @@ public class BookController {
         PaginatedResponse<BookModel, BookModelMetadata> modelBooks = bookModelService.getPaginatedBookModels(search, isGenreFilterActive, genreFilter, currentPage, sortType);
 
         List<GenreWrapper> genreWrapperList = bookModelService.getGenreWrapperList(search);
-        List<LocalizedEnumWrapper<GenreWrapper>> localizedGenreWrappers = EnumInternationalizationUtil.localizeGenreWrappers(genreWrapperList);
 
-        mav.addObject("genres", localizedGenreWrappers);
+        mav.addObject("genres", genreWrapperList);
         mav.addObject("modelBooks", modelBooks);
 
         return mav;
@@ -122,11 +110,10 @@ public class BookController {
         mav.addObject("user", loggeduser);
         mav.addObject("bookForm", bookForm);
 
-
-        mav.addObject("genres", EnumInternationalizationUtil.getLocalizedGenres());
-        mav.addObject("bookStates", EnumInternationalizationUtil.getLocalizedBookStates());
-        mav.addObject("languages", Stream.of(Language.values()).map(language -> new LanguageWrapper(language, languageService.getLanguageDisplayName(language))).collect(Collectors.toList()));
-        mav.addObject("dimensions", Stream.of(BookDimension.values()).map(dimension -> new BookDimensionWrapper(dimension, bookDimensionService.getDimensionDisplayName(dimension))).collect(Collectors.toList()));
+        mav.addObject("genres", Genre.values());
+        mav.addObject("bookStates", BookState.values());
+        mav.addObject("languages", Language.values());
+        mav.addObject("dimensions", BookDimension.values());
         mav.addObject("currentYear", Year.now().getValue());
         mav.addObject("step", 1);
 
@@ -198,11 +185,11 @@ public class BookController {
             LOGGER.error(e.getMessage(), e);
             return new ModelAndView("redirect:/400");
         }
-        try {
+        /*try {
         } catch (ApplicationRuntimeException e) {
             LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
             return new ModelAndView("redirect:/400");
-        }
+        }*/
 
         try {
             publicationService.createPublicationIfNeeded(bookDetailsForm.isPublish(), book.getBookId(), loggeduser.getUserId(), bookDetailsForm.getLocationId(), PublicationState.CURRENT);
