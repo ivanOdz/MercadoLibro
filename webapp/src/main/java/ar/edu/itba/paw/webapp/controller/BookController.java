@@ -53,8 +53,6 @@ public class BookController {
     @Autowired
     private BookDimensionService bookDimensionService;
 
-    @Autowired
-    private LoggedUserAdvice loggedUserAdvice;
 
     @Qualifier("messageSource")
     @Autowired
@@ -69,10 +67,10 @@ public class BookController {
                                  @RequestParam(name = "is-genre-filter-active", defaultValue = "false") String isGenreFilterActive,
                                  @RequestParam(name = "genre-filter", required = false) String genreFilter,
                                  @RequestParam(name = "page", defaultValue = "0") String currentPage,
-                                 @RequestParam(name = "sort-type", defaultValue = "BOOK_NAME_ASCENDING") String sortType) {
+                                 @RequestParam(name = "sort-type", defaultValue = "BOOK_NAME_ASCENDING") String sortType,
+                                 @ModelAttribute("loggedUser") User loggeduser) {
 
 
-        User loggeduser = loggedUserAdvice.getLoggedUser();
 
         if (loggeduser == null) {
             String message = messageSource.getMessage("error.unauthorized", null, LocaleContextHolder.getLocale());
