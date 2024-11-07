@@ -2,66 +2,54 @@ package ar.edu.itba.paw.models.utils;
 
 public enum Genre {
 
-	FICTION(0),
-	NON_FICTION(1),
-	MYSTERY(2),
-	THRILLER(3),
-	SCIENCE_FICTION(4),
-	FANTASY(5),
-	ROMANCE(6),
-	HISTORICAL_FICTION(7),
-	HORROR(8),
-	BIOGRAPHY(9),
-	AUTOBIOGRAPHY(10),
-	MEMOIR(11),
-	YOUNG_ADULT(12),
-	CHILDRENS_LITERATURE(13),
-	GRAPHIC_NOVEL(14),
-	CLASSIC(15),
-	ADVENTURE(16),
-	DYSTOPIAN(17),
-	SELF_HELP(18),
-	POETRY(19),
-	LITERARY_FICTION(20),
-	CRIME(21),
-	WESTERN(22),
-	CONTEMPORARY(23),
-	RELIGIOUS_SPIRITUAL(24),
-	PHILOSOPHY(25),
-	SCIENCE(26),
-	TRAVEL(27),
-	TRUE_CRIME(28),
-	HISTORICAL_NON_FICTION(29),
-	OTHER(30);
-	
-	private final int value;
+	FICTION("genre.fiction"),
+	NON_FICTION("genre.non.fiction"),
+	MYSTERY("genre.mystery"),
+	THRILLER("genre.thriller"),
+	SCIENCE_FICTION("genre.science.fiction"),
+	FANTASY("genre.fantasy"),
+	ROMANCE("genre.romance"),
+	HISTORICAL_FICTION("genre.historical.fiction"),
+	HORROR("genre.horror"),
+	BIOGRAPHY("genre.biography"),
+	AUTOBIOGRAPHY("genre.autobiography"),
+	MEMOIR("genre.memoir"),
+	YOUNG_ADULT("genre.young.adult"),
+	CHILDRENS_LITERATURE("genre.childrens.literature"),
+	GRAPHIC_NOVEL("genre.graphic.novel"),
+	CLASSIC("genre.classic"),
+	ADVENTURE("genre.adventure"),
+	DYSTOPIAN("genre.dystopian"),
+	SELF_HELP("genre.self.help"),
+	POETRY("genre.poetry"),
+	LITERARY_FICTION("genre.literary.fiction"),
+	CRIME("genre.crime"),
+	WESTERN("genre.western"),
+	CONTEMPORARY("genre.contemporary"),
+	RELIGIOUS_SPIRITUAL("genre.religious.spiritual"),
+	PHILOSOPHY("genre.philosophy"),
+	SCIENCE("genre.science"),
+	TRAVEL("genre.travel"),
+	TRUE_CRIME("genre.true.crime"),
+	HISTORICAL_NON_FICTION("genre.historical.non.fiction"),
+	OTHER("genre.other");
 
-	Genre(int value) {
-		
+	private final String value;
+
+	Genre(String value) {
 		this.value = value;
-    }
-	
-	public static Genre fromInt(int i) {
-		try {
-			return Genre.values()[i];
-		} catch (ArrayIndexOutOfBoundsException e) {
-			return null;
-		}
 	}
-	
-	public int getValue() {
-		
+
+	public String getValue() {
 		return value;
 	}
 
 	public static Genre fromString(String genreFilter) {
 		for (Genre genre : Genre.values()) {
-			if (genre.name().equalsIgnoreCase(genreFilter)) {
+			if (genre.value.equalsIgnoreCase(genreFilter)) {
 				return genre;
 			}
 		}
 		return null;
 	}
-
-
 }
