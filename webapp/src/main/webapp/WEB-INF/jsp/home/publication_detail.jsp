@@ -107,8 +107,8 @@
                         <div>
                             <p class="small-gray-text custom-link">
                                 <c:forEach var="genreWrapper" items="${genres}">
-                                    <c:if test="${genreWrapper.enumWrapper == publication.book.bookModel.genre}">
-                                        <c:set var="genre" value="${genreWrapper.i18nDisplayName}" />
+                                    <c:if test="${genreWrapper.value == publication.book.bookModel.genre.value}">
+                                        <c:set var="genre" value="${genreWrapper.value}" />
                                         <span class="ui-search-filter-name">
                                             <spring:message code="${genre}"/>
                                         </span>

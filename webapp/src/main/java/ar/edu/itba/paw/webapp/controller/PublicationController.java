@@ -102,7 +102,7 @@ public class PublicationController {
         mav.addObject("exchangeForm", new ExchangeForm());
         mav.addObject("publication", publication);
         mav.addObject("imgCount", publication.getBook().getImages().size());
-        mav.addObject("genres", EnumInternationalizationUtil.getLocalizedGenres());
+        mav.addObject("genres", Genre.values());
 
         return mav;
     }
