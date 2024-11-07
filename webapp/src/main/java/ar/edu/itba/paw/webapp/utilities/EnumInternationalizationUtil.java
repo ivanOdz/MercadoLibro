@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class EnumInternationalizationUtil {
+public final class EnumInternationalizationUtil {
 
     private EnumInternationalizationUtil() {
         // To prevent instantiation
