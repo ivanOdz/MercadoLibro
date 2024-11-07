@@ -105,7 +105,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         exchangeCompleted(acceptCode, ex);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public void cofirmRequester(int acceptCode) {
         Exchange ex = exchangeDao.confirmRequester(acceptCode);
@@ -123,28 +123,33 @@ public class ExchangeServiceImpl implements ExchangeService {
         }
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Exchange getExchangeByAcceptCode(int acceptCode) {
         return exchangeDao.findByAcceptCode(acceptCode);
     }
-    
+
+    @Transactional(readOnly = true)
     @Override
     public Exchange getExchangeById(long exchangeId) {
     	return exchangeDao.getExchangeById(exchangeId);
     }
 
     // exchanges where user is the publication owner
+    @Transactional(readOnly = true)
     @Override
     public PaginatedResponse<Exchange, BasicMetadata> getExchangeOffererListByUserId(long userId, int currentPage, ExchangeState exchangeState) {
         return exchangeDao.getAllExchangesByUserId(userId, exchangeState, currentPage, true);
     }
 
     // exchanges where user is the requester owner
+    @Transactional(readOnly = true)
     @Override
     public PaginatedResponse<Exchange, BasicMetadata> getExchangeRequesterListByUserId(long userId, int currentPage, ExchangeState exchangeState) {
         return exchangeDao.getAllExchangesByUserId(userId, exchangeState, currentPage, false);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public void createMessage(long exchangeId, long userId, String message) {
         exchangeDao.createMessage(exchangeId, userId, message, new Timestamp((new Date()).getTime()));
