@@ -30,7 +30,7 @@
                     <form action="<c:url value='' />" method="get">
                         <input type="hidden" name="is-book-state-filter-active" value="false">
                         <input type="hidden" name="is-genre-filter-active" value=${publications.metadata.isGenreFilterActive}>
-                        <input type="hidden" name="genre-filter" value=${publications.metadata.genreFilter}>
+                        <input type="hidden" name="genre-filter" value=${publications.metadata.genreFilter.value}>
                         <input type="hidden" name="search" value="<c:out value='${publications.metadata.search}'/>"/>
 
                         <button type="submit" class="uk-button uk-button-danger uk-button-small delete-button"
@@ -49,7 +49,7 @@
                     <form action="<c:url value='' />" method="get">
                         <input type="hidden" name="is-genre-filter-active" value="false">
                         <input type="hidden" name="is-book-state-filter-active" value=${publications.metadata.isBookStateFilterActive}>
-                        <input type="hidden" name="book-state-filter" value=${publications.metadata.bookStateFilter}>
+                        <input type="hidden" name="book-state-filter" value=${publications.metadata.bookStateFilter.value}>
                         <input type="hidden" name="search" value="<c:out value='${publications.metadata.search}'/>">
 
                         <button type="submit"
@@ -75,9 +75,9 @@
                                     <input type="hidden" name="search" value="<c:out value='${publications.metadata.search}'/>">
                                     <input type="hidden" name="is-book-state-filter-active" value='true'>
                                     <input type="hidden" name="book-state-filter"
-                                           value="${bookStateWrapper.bookState}">
+                                           value="${bookStateWrapper.bookState.value}">
                                     <input type="hidden" name="is-genre-filter-active" value="${publications.metadata.isGenreFilterActive}">
-                                    <input type="hidden" name="genre-filter" value="${publications.metadata.genreFilter}">
+                                    <input type="hidden" name="genre-filter" value="${publications.metadata.genreFilter.value}">
 
                                     <a href="#" class="uk-inline uk-search-button uk-button-link" title="BookStateFilterRemove" onclick="this.closest('form').submit(); return false;">
 
@@ -103,9 +103,9 @@
                         <c:forEach var="genreWrapper" items="${genreWrapperList}">
                             <li class="ui-search-filter-container">
                                 <form action="<c:url value='' />" method="get">
-                                    <input type="hidden" name="genre-filter" value="${genreWrapper.genre}">
+                                    <input type="hidden" name="genre-filter" value="${genreWrapper.genre.value}">
                                     <input type="hidden" name="is-genre-filter-active" value="true">
-                                    <input type="hidden" name="book-state-filter" value="${publications.metadata.bookStateFilter}">
+                                    <input type="hidden" name="book-state-filter" value="${publications.metadata.bookStateFilter.value}">
                                     <input type="hidden" name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}">
                                     <input type="hidden" name="search" value="<c:out value='${publications.metadata.search}'/>"/>
 
@@ -151,8 +151,8 @@
                                         <form action="<c:url value='' />" method="get">
                                             <input type="hidden" name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}">
                                             <input type="hidden" name="is-genre-filter-active" value="${publications.metadata.isGenreFilterActive}">
-                                            <input type="hidden" name="genre-filter" value="${publications.metadata.genreFilter}">
-                                            <input type="hidden" name="book-state-filter" value="${publications.metadata.bookStateFilter}">
+                                            <input type="hidden" name="genre-filter" value="${publications.metadata.genreFilter.value}">
+                                            <input type="hidden" name="book-state-filter" value="${publications.metadata.bookStateFilter.value}">
                                             <input type="hidden" name="search" value="${publications.metadata.search}"/>
                                             <input type="hidden" name="order" value="RATING_ASCENDING" />
                                             <button type="submit" class="uk-button uk-button-link uk-width-1-1 uk-text-left">
@@ -164,8 +164,8 @@
                                         <form action="<c:url value='' />" method="get">
                                             <input type="hidden" name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}">
                                             <input type="hidden" name="is-genre-filter-active" value="${publications.metadata.isGenreFilterActive}">
-                                            <input type="hidden" name="genre-filter" value="${publications.metadata.genreFilter}">
-                                            <input type="hidden" name="book-state-filter" value="${publications.metadata.bookStateFilter}">
+                                            <input type="hidden" name="genre-filter" value="${publications.metadata.genreFilter.value}">
+                                            <input type="hidden" name="book-state-filter" value="${publications.metadata.bookStateFilter.value}">
                                             <input type="hidden" name="search" value="${publications.metadata.search}"/>
                                             <input type="hidden" name="order" value="RATING_DESCENDING" />
                                             <button type="submit" class="uk-button uk-button-link uk-width-1-1 uk-text-left">
@@ -177,8 +177,8 @@
                                         <form action="<c:url value='' />" method="get">
                                             <input type="hidden" name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}">
                                             <input type="hidden" name="is-genre-filter-active" value="${publications.metadata.isGenreFilterActive}">
-                                            <input type="hidden" name="genre-filter" value="${publications.metadata.genreFilter}">
-                                            <input type="hidden" name="book-state-filter" value="${publications.metadata.bookStateFilter}">
+                                            <input type="hidden" name="genre-filter" value="${publications.metadata.genreFilter.value}">
+                                            <input type="hidden" name="book-state-filter" value="${publications.metadata.bookStateFilter.value}">
                                             <input type="hidden" name="search" value="${publications.metadata.search}"/>
                                             <input type="hidden" name="order" value="PUBLICATION_DATE_ASCENDING" />
                                             <button type="submit" class="uk-button uk-button-link uk-width-1-1 uk-text-left">
@@ -190,8 +190,8 @@
                                         <form action="<c:url value='' />" method="get">
                                             <input type="hidden" name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}">
                                             <input type="hidden" name="is-genre-filter-active" value="${publications.metadata.isGenreFilterActive}">
-                                            <input type="hidden" name="genre-filter" value="${publications.metadata.genreFilter}">
-                                            <input type="hidden" name="book-state-filter" value="${publications.metadata.bookStateFilter}">
+                                            <input type="hidden" name="genre-filter" value="${publications.metadata.genreFilter.value}">
+                                            <input type="hidden" name="book-state-filter" value="${publications.metadata.bookStateFilter.value}">
                                             <input type="hidden" name="search" value="${publications.metadata.search}"/>
                                             <input type="hidden" name="order" value="PUBLICATION_DATE_DESCENDING" />
                                             <button type="submit" class="uk-button uk-button-link uk-width-1-1 uk-text-left">
@@ -203,8 +203,8 @@
                                         <form action="<c:url value='' />" method="get">
                                             <input type="hidden" name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}">
                                             <input type="hidden" name="is-genre-filter-active" value="${publications.metadata.isGenreFilterActive}">
-                                            <input type="hidden" name="genre-filter" value="${publications.metadata.genreFilter}">
-                                            <input type="hidden" name="book-state-filter" value="${publications.metadata.bookStateFilter}">
+                                            <input type="hidden" name="genre-filter" value="${publications.metadata.genreFilter.value}">
+                                            <input type="hidden" name="book-state-filter" value="${publications.metadata.bookStateFilter.value}">
                                             <input type="hidden" name="search" value="${publications.metadata.search}"/>
                                             <input type="hidden" name="order" value="BOOK_NAME_ASCENDING" />
                                             <button type="submit" class="uk-button uk-button-link uk-width-1-1 uk-text-left">
@@ -216,8 +216,8 @@
                                         <form action="<c:url value='' />" method="get">
                                             <input type="hidden" name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}">
                                             <input type="hidden" name="is-genre-filter-active" value="${publications.metadata.isGenreFilterActive}">
-                                            <input type="hidden" name="genre-filter" value="${publications.metadata.genreFilter}">
-                                            <input type="hidden" name="book-state-filter" value="${publications.metadata.bookStateFilter}">
+                                            <input type="hidden" name="genre-filter" value="${publications.metadata.genreFilter.value}">
+                                            <input type="hidden" name="book-state-filter" value="${publications.metadata.bookStateFilter.value}">
                                             <input type="hidden" name="search" value="${publications.metadata.search}"/>
                                             <input type="hidden" name="order" value="BOOK_NAME_DESCENDING" />
                                             <button type="submit" class="uk-button uk-button-link uk-width-1-1 uk-text-left">
@@ -247,8 +247,8 @@
                             <form action="<c:url value='' />" method="get">
                                 <input type="hidden" name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}">
                                 <input type="hidden" name="is-genre-filter-active" value=${publications.metadata.isGenreFilterActive}>
-                                <input type="hidden" name="genre-filter" value=${publications.metadata.genreFilter}>
-                                <input type="hidden" name="book-state-filter" value=${publications.metadata.bookStateFilter}>
+                                <input type="hidden" name="genre-filter" value=${publications.metadata.genreFilter.value}>
+                                <input type="hidden" name="book-state-filter" value=${publications.metadata.bookStateFilter.value}>
                                 <input type="hidden" name="search" value=""/>
 
                                 <button type="submit" class="uk-button uk-button-danger uk-button-small delete-button" style="margin-left: 1rem;">
@@ -368,8 +368,8 @@
                                         <c:param name="page" value="${publications.metadata.currentPage - 1}" />
                                         <c:param name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}" />
                                         <c:param name="is-genre-filter-active" value="${publications.metadata.isGenreFilterActive}" />
-                                        <c:param name="genre-filter" value="${publications.metadata.genreFilter}" />
-                                        <c:param name="book-state-filter" value="${publications.metadata.bookStateFilter}" />
+                                        <c:param name="genre-filter" value="${publications.metadata.genreFilter.value}" />
+                                        <c:param name="book-state-filter" value="${publications.metadata.bookStateFilter.value}" />
                                         <c:param name="search" value="${publications.metadata.search}" />
                                         <c:param name="order" value="${publications.metadata.sortType}" />
                                     </c:url>
@@ -387,8 +387,8 @@
                                         <c:param name="page" value="0" />
                                         <c:param name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}" />
                                         <c:param name="is-genre-filter-active" value="${publications.metadata.isGenreFilterActive}" />
-                                        <c:param name="genre-filter" value="${publications.metadata.genreFilter}" />
-                                        <c:param name="book-state-filter" value="${publications.metadata.bookStateFilter}" />
+                                        <c:param name="genre-filter" value="${publications.metadata.genreFilter.value}" />
+                                        <c:param name="book-state-filter" value="${publications.metadata.bookStateFilter.value}" />
                                         <c:param name="search" value="${publications.metadata.search}" />
                                         <c:param name="order" value="${publications.metadata.sortType}" />
                                     </c:url>
@@ -408,8 +408,8 @@
                                         <c:param name="page" value="${i}" />
                                         <c:param name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}" />
                                         <c:param name="is-genre-filter-active" value="${publications.metadata.isGenreFilterActive}" />
-                                        <c:param name="genre-filter" value="${publications.metadata.genreFilter}" />
-                                        <c:param name="book-state-filter" value="${publications.metadata.bookStateFilter}" />
+                                        <c:param name="genre-filter" value="${publications.metadata.genreFilter.value}" />
+                                        <c:param name="book-state-filter" value="${publications.metadata.bookStateFilter.value}" />
                                         <c:param name="search" value="${publications.metadata.search}" />
                                         <c:param name="order" value="${publications.metadata.sortType}" />
                                     </c:url>
@@ -428,8 +428,8 @@
                                         <c:param name="page" value="${publications.metadata.maxPage}" />
                                         <c:param name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}" />
                                         <c:param name="is-genre-filter-active" value="${publications.metadata.isGenreFilterActive}" />
-                                        <c:param name="genre-filter" value="${publications.metadata.genreFilter}" />
-                                        <c:param name="book-state-filter" value="${publications.metadata.bookStateFilter}" />
+                                        <c:param name="genre-filter" value="${publications.metadata.genreFilter.value}" />
+                                        <c:param name="book-state-filter" value="${publications.metadata.bookStateFilter.value}" />
                                         <c:param name="search" value="${publications.metadata.search}" />
                                         <c:param name="order" value="${publications.metadata.sortType}" />
                                     </c:url>
@@ -444,8 +444,8 @@
                                         <c:param name="page" value="${publications.metadata.currentPage + 1}" />
                                         <c:param name="is-book-state-filter-active" value="${publications.metadata.isBookStateFilterActive}" />
                                         <c:param name="is-genre-filter-active" value="${publications.metadata.isGenreFilterActive}" />
-                                        <c:param name="genre-filter" value="${publications.metadata.genreFilter}" />
-                                        <c:param name="book-state-filter" value="${publications.metadata.bookStateFilter}" />
+                                        <c:param name="genre-filter" value="${publications.metadata.genreFilter.value}" />
+                                        <c:param name="book-state-filter" value="${publications.metadata.bookStateFilter.value}" />
                                         <c:param name="search" value="${publications.metadata.search}" />
                                         <c:param name="order" value="${publications.metadata.sortType}" />
                                     </c:url>
