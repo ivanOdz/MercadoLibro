@@ -53,16 +53,12 @@ public class PublicationController {
         PaginatedResponse<Publication, ItemFilterMetadata> publications = ps.getPaginatedPublications(search, isBookStateFilterActive,
                     bookStateFilter, isGenreFilterActive, genreFilter, sortType, currentPage);
 
-
         List<GenreWrapper> genreWrapperList = ps.getGenreWrapperList(search, isBookStateFilterActive, bookStateFilter);
         List<BookStateWrapper> bookStateWrapperList = ps.getBookStateWrapperList(search, isGenreFilterActive, genreFilter);
 
-        List<LocalizedEnumWrapper<GenreWrapper>> localizedGenreWrappers = EnumInternationalizationUtil.localizeGenreWrappers(genreWrapperList);
-        List<LocalizedEnumWrapper<BookStateWrapper>> localizedBookStateWrappers = EnumInternationalizationUtil.localizeBookStateWrappers(bookStateWrapperList);
-
         mav.addObject("publications", publications);
-        mav.addObject("genreWrapperList", localizedGenreWrappers);
-        mav.addObject("bookStateWrapperList", localizedBookStateWrappers);
+        mav.addObject("genreWrapperList", genreWrapperList);
+        mav.addObject("bookStateWrapperList", bookStateWrapperList);
 
         return mav;
     }
