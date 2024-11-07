@@ -21,8 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
 import ar.edu.itba.paw.interfaces.persistence.BookDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.models.Book;
+import ar.edu.itba.paw.models.BookModel;
 import ar.edu.itba.paw.models.Location;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import ar.edu.itba.paw.persistence.constants.BookConstants;
 import ar.edu.itba.paw.persistence.constants.UserConstants;
@@ -48,19 +50,29 @@ public class BookDaoJpaTest {
 		
 		jdbcTemplate = new JdbcTemplate(ds);
 	}
-	
 	// Book createBook(BookModel bookModel, User owner, BookState bookState);
 	// void createBookRating(User user, BookModel bookModel, int rating);
 	// void createBookImage(Book book, List<Image> images);
 	// void setOwner(Book book, User user);
-	// Book getBookById(long bookId);
 	
 	@Test
 	public void testGetBookById() throws SQLException {
 		
-		Optional<Book> maybeBook = bookDao.getBookById(BookConstants.ID_1);	// Cambiar en BOOK... se deberia trabajar con un Optional<Book> para mantener todo consistente
+		Optional<Book> maybeBook = bookDao.getBookById(BookConstants.ID_1);
 		
 		Assert.assertTrue(maybeBook.isPresent());
+		Assert.assertEquals(BookConstants.BOOK_MODEL_ID_1, (long)maybeBook.get().getBookModel().getBookModelId());
+		Assert.assertEquals(BookConstants.OWNER_ID_1, maybeBook.get().getOwner().getUserId());
+		Assert.assertEquals(BookConstants.AVAILABLE_1, maybeBook.get().isAvailable());
+		Assert.assertEquals(BookState.valueOf(BookConstants.BOOK_STATE_1), maybeBook.get().getBookState());
+		Assert.assertEquals((int)BookConstants.EXCHANGE_QTY_1, maybeBook.get().getExchangesQty());
 	}
 	
+//	@Test
+//	public void testCreateBook() throws SQLException {
+//		
+//		// (BookModel bookModel, User owner, BookState bookState)
+//		Optional<Book> maybeBook = bookDao.createBook(null, null, null);
+//		
+//	}
 }
