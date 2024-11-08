@@ -267,4 +267,55 @@
 	
 -- 10. Último libro 'La ciudad y los perros' no se inserta, queda solo como Modelo.
 
+-- PUBLICACIONES -----------------------------------------------------------------------------------------------------------
+
+-- De Ivan |1| -----------------------------------------------------------
+	
+-- 1° (Cien años de soledad |1|) --
+	INSERT INTO publication (publicationId, bookId, userId, publicationState, publicationDatetime, locationId)
+		SELECT 1, book.bookId, owner.userId, 'CURRENT', '2024-09-15 10:00:00', locationId
+		FROM book AS book JOIN users AS owner ON mail LIKE 'modzomek@itba.edu.ar'
+			JOIN location ON locationString LIKE 'Zona Sur' -- |2|
+			WHERE book.bookModelId = (SELECT bookModelId FROM book_model WHERE isbn = '9788497592208');
+
+-- 2° (Don Quijote de la Mancha |2|) --
+	INSERT INTO publication (publicationId, bookId, userId, publicationState, publicationDatetime, locationId)
+		SELECT 2, book.bookId, owner.userId, 'CURRENT', '2024-09-15 12:05:00', locationId
+		FROM book AS book JOIN users AS owner ON mail LIKE 'modzomek@itba.edu.ar'
+			JOIN location ON locationString LIKE 'Zona Sur' -- |2|
+			WHERE book.bookModelId = (SELECT bookModelId FROM book_model WHERE isbn = '9788491050568');
+			
+-- De Juli |2| -----------------------------------------------------------
+
+-- 3° (El amor en los tiempos del cólera |4|) --
+	INSERT INTO publication (publicationId, bookId, userId, publicationState, publicationDatetime, locationId)
+		SELECT 3, book.bookId, owner.userId, 'CURRENT', '2024-09-12 18:30:00', locationId
+		FROM book AS book JOIN users AS owner ON mail LIKE 'jtechenski@itba.edu.ar'
+			JOIN location ON locationString LIKE 'Zona Norte' -- |1|
+			WHERE book.bookModelId = (SELECT bookModelId FROM book_model WHERE isbn = '9788497592451');
+
+-- 4° (El alquimista |5|) --
+	INSERT INTO publication (publicationId, bookId, userId, publicationState, publicationDatetime, locationId)
+		SELECT 4, book.bookId, owner.userId, 'CURRENT', '2024-09-13 09:00:00', locationId
+		FROM book AS book JOIN users AS owner ON mail LIKE 'jtechenski@itba.edu.ar'
+			JOIN location ON locationString LIKE 'Zona Norte' -- |1|
+			WHERE book.bookModelId = (SELECT bookModelId FROM book_model WHERE isbn = '9780062315007');
+			
+-- De Maggie |3| ---------------------------------------------------------
+
+-- 5° (La casa de los espíritus |6|) --
+	INSERT INTO publication (publicationId, bookId, userId, publicationState, publicationDatetime, locationId)
+		SELECT 5, book.bookId, owner.userId, 'CURRENT', '2024-09-11 14:45:00', locationId
+		FROM book AS book JOIN users AS owner ON mail LIKE 'mtaurian@itba.edu.ar'
+			JOIN location ON locationString LIKE 'Zona Norte' -- |1|
+			WHERE book.bookModelId = (SELECT bookModelId FROM book_model WHERE isbn = '9788437604947');
+			
+-- De Tomi |4| -----------------------------------------------------------
+
+-- 6° (Patria |8|) --
+	INSERT INTO publication (publicationId, bookId, userId, publicationState, publicationDatetime, locationId)
+		SELECT 6, book.bookId, owner.userId, 'CURRENT', '2024-09-13 12:15:00', locationId
+		FROM book AS book JOIN users AS owner ON mail LIKE 'tscheffer@itba.edu.ar'
+			JOIN location ON locationString LIKE 'Zona Norte' -- |1|
+			WHERE book.bookModelId = (SELECT bookModelId FROM book_model WHERE isbn = '9788423353248');
 	

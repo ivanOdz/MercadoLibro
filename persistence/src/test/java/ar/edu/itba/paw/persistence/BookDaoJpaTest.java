@@ -61,7 +61,7 @@ public class BookDaoJpaTest {
 		Optional<Book> maybeBook = bookDao.getBookById(BookConstants.ID_1);
 		
 		Assert.assertTrue(maybeBook.isPresent());
-		Assert.assertEquals(BookConstants.BOOK_MODEL_ID_1, (long)maybeBook.get().getBookModel().getBookModelId());
+		Assert.assertEquals(BookConstants.BOOK_MODEL_ID_1, maybeBook.get().getBookModel().getBookModelId());
 		Assert.assertEquals(BookConstants.OWNER_ID_1, maybeBook.get().getOwner().getUserId());
 		Assert.assertEquals(BookConstants.AVAILABLE_1, maybeBook.get().isAvailable());
 		Assert.assertEquals(BookState.valueOf(BookConstants.BOOK_STATE_1), maybeBook.get().getBookState());

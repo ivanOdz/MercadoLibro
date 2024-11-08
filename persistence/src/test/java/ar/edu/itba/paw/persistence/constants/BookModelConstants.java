@@ -1,8 +1,7 @@
 package ar.edu.itba.paw.persistence.constants;
 
 public final class BookModelConstants {
-	// (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
-	
+
 	public static final Long ID_1 = 1L;
 	public static final String ISBN_1 = "9788497592208";
 	public static final String TITLE_1 = "Cien años de soledad";

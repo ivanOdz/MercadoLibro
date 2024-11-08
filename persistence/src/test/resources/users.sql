@@ -1,1 +1,0 @@
-INSERT INTO users (username, mail, password, imageId, verificationCode, isVerified, language) VALUES ('Dummy123', 'dummy123@mail.com', '123456', null, 987654321, false, 'es-AR')
