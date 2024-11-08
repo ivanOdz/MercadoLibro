@@ -20,16 +20,15 @@ public interface UserDao {
 
     void changePassword(User user, String newPassword);
 
-
     boolean updateUsername(User user, String newUsername);
 
     Optional<User> getUserToVerify(int verificationCode);
 
     void setUserLanguage(User user, String language);
     
-    public void setUserFavoriteLocation(User user, Location favoriteLocation);
+    void setUserFavoriteLocation(User user, Location favoriteLocation);
     
-    public void addUserLocation(User user,Location location);
+    void addUserLocation(User user,Location location);
     
-    public void removeUserLocation(User user, Location location);
+    void removeUserLocation(User user, Location location);
 }
