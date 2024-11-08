@@ -26,9 +26,9 @@ public interface ExchangeService {
     
     Exchange getExchangeById(long exchangeId);
     
-    PaginatedResponse<Exchange, BasicMetadata> getExchangeOffererListByUserId(long userId, int currentPage, ExchangeState exchangeState);
+    PaginatedResponse<Exchange, BasicMetadata> getExchangeOffererListByUserId(long userId, String currentPage, ExchangeState exchangeState);
 
-    PaginatedResponse<Exchange, BasicMetadata> getExchangeRequesterListByUserId(long userId, int currentPage, ExchangeState exchangeState);
+    PaginatedResponse<Exchange, BasicMetadata> getExchangeRequesterListByUserId(long userId, String currentPage, ExchangeState exchangeState);
 
     void createMessage(long exchangeId, long userId, String message);
 
