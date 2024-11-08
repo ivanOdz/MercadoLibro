@@ -27,10 +27,9 @@ public class UserReviewJpaDao implements UserReviewDao {
     private EntityManager em;
 
     @Override
-    public UserReview createUserReview(long exchangeId, long userId, long userSubjectId, String description, int rating) {
+    public void createUserReview(long exchangeId, long userId, long userSubjectId, String description, int rating) {
         final UserReview userReview = new UserReview(null, em.find(User.class, userId), em.find(User.class, userSubjectId), em.find(Exchange.class, exchangeId), description, new Timestamp(new Date().getTime()), rating);
         em.persist(userReview);
-        return userReview;
     }
 
     @Override

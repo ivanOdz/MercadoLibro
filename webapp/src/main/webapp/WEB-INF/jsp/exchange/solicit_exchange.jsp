@@ -118,14 +118,10 @@
 
         <div class="uk-inline">
             <label class="form-group">
-                <form:input type="hidden" path="bookId" value="${availableBook.bookId}" class="uk-input"/>
-                
                 <spring:message code="book.set.location"/>
-				<form:select path="locationId" class="uk-select no-arrow-select" aria-label="Not clickable icon" style="width: 90%">
-				    <c:forEach var="userLocation" items="${user.userLocations}">
-						<form:options items="${user.userLocations}" itemValue="locationId" itemLabel="locationString"/>
-				    </c:forEach>
-				</form:select>
+                <form:select path="locationId" class="uk-select no-arrow-select" aria-label="Not clickable icon" style="width: 90%">
+                    <form:options items="${user.userLocations}" itemValue="locationId" itemLabel="locationString" />
+                </form:select>
             </label>
             <form:errors path="bookId" element="p" cssStyle="color: red;"/>
         </div>

@@ -24,7 +24,7 @@ public class UserReviewServiceImpl implements UserReviewService {
 
 	@Override
 	@Transactional
-	public Boolean createUserReview(long exchangeId, long userId, String description, int rating) {
+	public void createUserReview(long exchangeId, long userId, String description, int rating) {
 		Exchange exchange = exchangeService.getExchangeById(exchangeId);
 
 		boolean nin = exchange.getIsReviewable();
@@ -33,8 +33,7 @@ public class UserReviewServiceImpl implements UserReviewService {
 		long offererId = exchange.getOfferer().getBook().getOwner().getUserId();
 		long requesterId = exchange.getRequester().getBook().getOwner().getUserId();
 		long subjectId = offererId != userId ? offererId : requesterId;
-
-		return userReviewDao.createUserReview(exchangeId, userId, subjectId, description, rating) != null;
+		userReviewDao.createUserReview(exchangeId, userId, subjectId, description, rating);
 	}
 
     @Override

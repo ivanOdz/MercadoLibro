@@ -4,27 +4,30 @@ import javax.validation.constraints.NotNull;
 
 public class ExchangeForm {
     @NotNull
-    long bookId;
+    private Long bookId;
 
     @NotNull
-    long locationId;
+    private Long locationId;
 
-    long publicationId;
+    public void setLocationId(@NotNull Long locationId) {
+        this.locationId = locationId;
+    }
 
-    @NotNull
-    public long getBookId() {
+    private Long publicationId;
+
+    public @NotNull Long getBookId() {
         return bookId;
     }
 
-    public long getLocationId() {
+    public @NotNull Long getLocationId() {
         return locationId;
     }
 
-    public long getPublicationId() {
+    public Long getPublicationId() {
         return publicationId;
     }
 
-    public void setBookId(@NotNull long bookId) {
+    public void setBookId(@NotNull Long bookId) {
         this.bookId = bookId;
     }
 
@@ -32,7 +35,7 @@ public class ExchangeForm {
         this.locationId = locationId;
     }
 
-    public void setPublicationId(long publicationId) {
+    public void setPublicationId(Long publicationId) {
         this.publicationId = publicationId;
     }
 }
