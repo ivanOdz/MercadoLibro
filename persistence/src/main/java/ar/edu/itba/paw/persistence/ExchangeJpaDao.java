@@ -86,10 +86,17 @@ public class ExchangeJpaDao implements ExchangeDao {
     }
 
     @Override
-    public PaginatedResponse<Exchange, BasicMetadata> getAllExchangesByUserId(long anUserId, ExchangeState exchangeState, int currentPage, boolean isOfferer) {
-        if(currentPage < 0){
-            currentPage = 0;
+    public PaginatedResponse<Exchange, BasicMetadata> getAllExchangesByUserId(long anUserId, ExchangeState exchangeState, String currentPage, boolean isOfferer) {
+        int page;
+        try {
+            page = Integer.parseInt(currentPage);
+            if (page < 0) {
+                page = 0;
+            }
+        } catch (NumberFormatException e) {
+            page = 0;
         }
+
 
         StringBuilder queryString = new StringBuilder("SELECT e.exchangeId FROM exchange e JOIN publication p ON p.publicationId = ");
         if (isOfferer) {
@@ -104,7 +111,7 @@ public class ExchangeJpaDao implements ExchangeDao {
         nativeQuery.setParameter("state", exchangeState.getValue());
 
         nativeQuery.setMaxResults(EXCHANGES_PAGE_SIZE);
-        nativeQuery.setFirstResult(currentPage * EXCHANGES_PAGE_SIZE);
+        nativeQuery.setFirstResult(page * EXCHANGES_PAGE_SIZE);
 
 
         @SuppressWarnings("unchecked")
@@ -115,7 +122,7 @@ public class ExchangeJpaDao implements ExchangeDao {
 
         List<Exchange> exchanges = query.getResultList();
 
-        return new PaginatedResponse<>(exchanges, new BasicMetadata(currentPage, exchangeIds.size(), EXCHANGES_PAGE_SIZE));
+        return new PaginatedResponse<>(exchanges, new BasicMetadata(page, exchangeIds.size(), EXCHANGES_PAGE_SIZE));
     }
 
     @Override

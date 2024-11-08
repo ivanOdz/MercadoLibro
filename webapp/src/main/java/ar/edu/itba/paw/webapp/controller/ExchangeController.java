@@ -54,10 +54,10 @@ public class ExchangeController {
     // Requests (osea peticiones que me hacen a mi)
     // Paso el ID, y quiero aquellas exchanges en las que soy offerer
     @RequestMapping("/offers")
-    public ModelAndView exchangeRequests(@RequestParam(name = "pending-page", defaultValue = "0") int pendingPage,
-                                         @RequestParam(name = "in-progress-page", defaultValue = "0") int inProgressPage,
-                                         @RequestParam(name = "completed-page", defaultValue = "0") int completedPage,
-                                         @RequestParam(name = "rejected-page", defaultValue = "0") int rejectedPage,
+    public ModelAndView exchangeRequests(@RequestParam(name = "pending-page", defaultValue = "0") String pendingPage,
+                                         @RequestParam(name = "in-progress-page", defaultValue = "0") String inProgressPage,
+                                         @RequestParam(name = "completed-page", defaultValue = "0") String completedPage,
+                                         @RequestParam(name = "rejected-page", defaultValue = "0") String rejectedPage,
                                          @ModelAttribute("loggedUser") User loggeduser) {
         final ModelAndView mav = new ModelAndView("exchange/exchange_requests");
 
@@ -82,10 +82,10 @@ public class ExchangeController {
     // Estado de mis ofertas
     // Paso el ID, y quiero aquellas exchanges en las que soy requester
     @RequestMapping(path = "/requests", method = RequestMethod.GET)
-    public ModelAndView exchangeOffers(@RequestParam(name = "pending-page", defaultValue = "0") int pendingPage,
-                                       @RequestParam(name = "in-progress-page", defaultValue = "0") int inProgressPage,
-                                       @RequestParam(name = "completed-page", defaultValue = "0") int completedPage,
-                                       @RequestParam(name = "rejected-page", defaultValue = "0") int rejectedPage,
+    public ModelAndView exchangeOffers(@RequestParam(name = "pending-page", defaultValue = "0") String pendingPage,
+                                       @RequestParam(name = "in-progress-page", defaultValue = "0") String inProgressPage,
+                                       @RequestParam(name = "completed-page", defaultValue = "0") String completedPage,
+                                       @RequestParam(name = "rejected-page", defaultValue = "0") String rejectedPage,
                                        @ModelAttribute("loggedUser") User loggeduser) {
         final ModelAndView mav = new ModelAndView("exchange/exchange_offers");
 
@@ -188,20 +188,7 @@ public class ExchangeController {
             return startExchange(exchangeInput, errors, exchangeInput.getPublicationId(), loggeduser);
         }
 
-        try {
-            exchangeService.initializeExchange(exchangeInput.getBookId(), exchangeInput.getLocationId(), exchangeInput.getPublicationId());
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        try {
-        } catch (BadRequestException e) {
-            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
-            return new ModelAndView("redirect:/400");
-        } catch (NotFoundException e) {
-            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
-            return new ModelAndView("redirect:/404");
-        }
+        exchangeService.initializeExchange(exchangeInput.getBookId(), exchangeInput.getLocationId(), exchangeInput.getPublicationId());
 
         return new ModelAndView("redirect:/requests");
     }
@@ -219,17 +206,9 @@ public class ExchangeController {
         }
 
         // if the user that is accepting/rejecting the exchange is the one that should
-        if (exchange.getOfferer().getBook().getOwner().getUserId() == loggeduser.getUserId()) {
-            try {
+        if (Objects.equals(exchange.getOfferer().getBook().getOwner().getUserId(), loggeduser.getUserId())) {
                 exchangeService.cofirmOfferer(accept_code);
-            } catch (BadRequestException e) {
-                LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
-                return new ModelAndView("redirect:/400");
-            } catch (NotFoundException e) {
-                LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
-                return new ModelAndView("redirect:/404");
-            }
-            return new ModelAndView("redirect:/offers");
+                return new ModelAndView("redirect:/offers");
         }
         return new ModelAndView("redirect:/failed_authentication");
     }
