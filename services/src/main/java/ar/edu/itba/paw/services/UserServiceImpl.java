@@ -30,26 +30,11 @@ public class UserServiceImpl implements UserService {
     private EmailService emailService;
 
     @Autowired
-    private MessageSource messageSource;
-
-    //@Autowired
-    //private final UserReviewService userReviewsService;
-
-    @Autowired
     private LocationDao locationDao;
-    
-    @Value("#{environment.webappUrl}")
-    private String webappUrl;
-
 
     @Transactional
     @Override
     public User createUser(String username, String mail, String password, String language) {
-        // 1. validar inputs
-        // 2. ingresarlo en la base de datos
-        // 3. generar un Token de validacion y guardarlo en la base de datos
-        // 4. enviar el token de validacion en un correo de bienvenida
-        // 5. agregar al usuario a una cola de verificacion manual
         Optional<User> u = userDao.findByMail(mail);
         
         if(u.isPresent()) {
@@ -62,6 +47,7 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    @Transactional
     @Override
     public void changePassword(int verificationCode, String newPassword) {
         userDao.changePassword(verificationCode,passwordEncoder.encode(newPassword));
@@ -78,21 +64,25 @@ public class UserServiceImpl implements UserService {
         emailService.sendPasswordChangeEmail(u);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<User> findById(long id) {
         return userDao.findById(id);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<User> findUserByEmail(String mail) {
         return userDao.findByMail(mail);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public String findUsernameByEmail(String mail){
         return findUserByEmail(mail).map(User::getUsername).orElse("");
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<User> findByUsername(String username) {
         return userDao.findByUsername(username);
@@ -104,6 +94,7 @@ public class UserServiceImpl implements UserService {
         userDao.verifyUser(verificationCode);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public boolean userExists(String mail) {
         return userDao.findByMail(mail).isPresent();
@@ -118,22 +109,26 @@ public class UserServiceImpl implements UserService {
         Random random = new Random();
         return Math.abs(random.nextInt());
     }
-    
+
+    @Transactional
     @Override
     public boolean changeUserName(long userId, String newName) {
     	return userDao.updateUsername(userId, newName);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public User getUserToVerify(int verificationCode) {
         return userDao.getUserToVerify(verificationCode);
     }
 
+    @Transactional
     @Override
     public void setUserLanguage(User user, String language) {
         userDao.setUserLanguage(user.getUserId(),language);
     }
-    
+
+    @Transactional
     @Override
     public void addLocation(Long userId, String locationString) {
 
@@ -159,7 +154,8 @@ public class UserServiceImpl implements UserService {
 	        userDao.addUserLocation(userId, newLocation);
         }
     }
-    
+
+    @Transactional
     @Override
     public void removeLocation(Long userId, Long locationId) {
     	

@@ -1,26 +1,16 @@
 package ar.edu.itba.paw.models.utils;
 
 public enum Language {
-    SPANISH(0),
-    ENGLISH(1);
+    SPANISH("language.spanish"),
+    ENGLISH("language.english");
 
-    private final int value;
+    private final String value;
 
-    Language(int value) {
+    Language(String value) {
         this.value = value;
     }
 
-
-    public static Language fromInt(int i) {
-
-        return Language.values()[i];
-    }
-    public int getValue() {
+    public String getValue() {
         return this.value;
-    }
-
-    public String getKey() {
-
-        return "language." + name();
     }
 }

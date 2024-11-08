@@ -1,32 +1,17 @@
 package ar.edu.itba.paw.models.utils;
 
 public enum BookDimension {
-    SMALL(0),
-    MEDIUM(1),
-    LARGE(2);
+    SMALL("dimension.small"),
+    MEDIUM("dimension.medium"),
+    LARGE("dimension.large");
 
-    private final int value;
+    private final String value;
 
-    BookDimension(int value) {
+    BookDimension(String value) {
         this.value = value;
     }
 
-    public static BookDimension fromInt(int i) {
-        for (BookDimension d : BookDimension.values()) {
-            if (d.getValue() == i) {
-                return d;
-            }
-        }
-        return null;
-    }
-
-    public int getValue() {
-
+    public String getValue() {
         return this.value;
-    }
-
-    public String getKey() {
-
-        return "dimension." + name();
     }
 }

@@ -2,37 +2,29 @@ package ar.edu.itba.paw.models.utils;
 
 public enum BookState {
 
-	NEW(0),
-	LIKE_NEW(1),
-	VERY_GOOD(2),
-	GOOD(3),
-	ACCEPTABLE(4),
-	WORN(5);
+	NEW("bookstate.new"),
+	LIKE_NEW("bookstate.like.new"),
+	VERY_GOOD("bookstate.very.good"),
+	GOOD("bookstate.good"),
+	ACCEPTABLE("bookstate.acceptable"),
+	WORN("bookstate.worn");
 
-	private final int value;
+	private final String value;
 
-	BookState(int value) {
+	BookState(String value) {
 		this.value = value;
-	}
-
-	public static BookState fromInt(int i) {
-		try {
-			return BookState.values()[i];
-		} catch (ArrayIndexOutOfBoundsException e) {
-			return null;
-		}
-	}
-
-	public int getValue() {
-		return this.value;
 	}
 
 	public static BookState fromString(String bookStateFilter) {
 		for (BookState state : BookState.values()) {
-			if (state.name().equalsIgnoreCase(bookStateFilter)) {
+			if (state.value.equalsIgnoreCase(bookStateFilter)) {
 				return state;
 			}
 		}
 		return null;
+	}
+
+	public String getValue() {
+		return this.value;
 	}
 }
