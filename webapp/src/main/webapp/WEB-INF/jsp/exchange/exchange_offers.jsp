@@ -77,7 +77,6 @@
                                          onclick="selectCard(this,
                                                  '<c:out value="${data.offerer.book.owner.username}"/>',
                                                  '<c:out value="${data.offerer.book.owner.mail}"/>',
-                                                 '<c:out value="${data.offerer.location.locationString}"/>',
                                                  '<c:out value="${data.requester.book.bookModel.title}"/>',
                                                  '<c:out value="${authorsListString}"/>',
                                                  '<c:out value="${data.requester.book.bookModel.edition}"/>',
@@ -267,7 +266,6 @@
                                          onclick="selectCard(this,
                                                  '<c:out value="${data.offerer.book.owner.username}"/>',
                                                  '<c:out value="${data.offerer.book.owner.mail}"/>',
-                                                 '<c:out value="${data.offerer.location.locationString}"/>',
                                                  '<c:out value="${data.requester.book.bookModel.title}"/>',
                                                  '<c:out value="${authorsListString}"/>',
                                                  '<c:out value="${data.requester.book.bookModel.edition}"/>',
@@ -488,7 +486,6 @@
                                          onclick="selectCard(this,
                                                  '<c:out value="${data.offerer.book.owner.username}"/>',
                                                  '<c:out value="${data.offerer.book.owner.mail}"/>',
-                                                 '<c:out value="${data.offerer.location.locationString}"/>',
                                                  '<c:out value="${data.requester.book.bookModel.title}"/>',
                                                  '<c:out value="${authorsListString}"/>',
                                                  '<c:out value="${data.requester.book.bookModel.edition}"/>',
@@ -680,7 +677,6 @@
                                          onclick="selectCard(this,
                                                  '<c:out value="${data.offerer.book.owner.username}"/>',
                                                  '<c:out value="${data.offerer.book.owner.mail}"/>',
-                                                 '<c:out value="${data.offerer.location.locationString}"/>',
                                                  '<c:out value="${data.requester.book.bookModel.title}"/>',
                                                  '<c:out value="${authorsListString}"/>',
                                                  '<c:out value="${data.requester.book.bookModel.edition}"/>',
@@ -991,6 +987,40 @@
 </body>
 
 <script>
+    // LOCATIONS
+    let locationMap = new Map();
+    let offererLocations, requesterLocations;
+    let id;
+    <c:if test="${not empty exchanges}">
+    <c:forEach var="exchange" items="${exchanges}">
+    id = "${exchange.exchangeId}";
+
+    offererLocations = [];
+    requesterLocations = [];
+
+    <c:forEach var="location" items="${exchange.offerer.locations}">
+    offererLocations.push({
+        locationString: "<c:out value="${location.locationString}"/>"
+    });
+    </c:forEach>
+
+    <c:forEach var="location" items="${exchange.requester.locations}">
+    requesterLocations.push({
+        locationString: "<c:out value="${location.locationString}"/>"
+    });
+    </c:forEach>
+
+    // Agregamos el intercambio al mapa si no existe
+    if (!locationMap.has(id)) {
+        locationMap.set(id, {
+            offerer: offererLocations,
+            requester: requesterLocations
+        });
+    }
+    </c:forEach>
+    </c:if>
+
+    // ---- CHAT
     let chat = new Map();
     let exchangeId;
     let messageObject;
@@ -1016,7 +1046,7 @@
 
     const language = "<c:out value="${loggedUser.language}"/>"
 
-    function selectCard(card, offererUsername, offererMail, offererLocations, requestedBookTitle, requestedBookAuthors,
+    function selectCard(card, offererUsername, offererMail, requestedBookTitle, requestedBookAuthors,
                         requestedBookEdition, requestedBookImages, exchangeId, reviewerId, subjectId, isReviewable, chatAvailable) {
 
         // Remover la clase 'selected-card' de todas las tarjetas
@@ -1025,7 +1055,7 @@
         });
 
 
-        if(chatAvailable === 'true'){
+        if (chatAvailable === 'true') {
             document.getElementById('chat-button').classList.remove('hidden')
             document.getElementById('chat-button').classList.add('flex');
         } else {
@@ -1041,9 +1071,16 @@
         document.getElementById('exchange-details').style.display = 'block';
 
         // Actualizar la información en la columna izquierda
+        let locations;
+        let locationArray = locationMap.get(exchangeId);
+        if (locationArray.requester.length > 0){
+            locations = locationArray.offerer.map(location => location.locationString).join(', ');
+        } else {
+            locations = '-';
+        }
+        document.getElementById('info-requester-location').textContent = "<spring:message code="exchange.location"/>" + " " + locations;
         document.getElementById('info-requester-username').textContent = "<spring:message code="exchange.with"/>" + " " + offererUsername;
         document.getElementById('info-requester-mail').textContent = "<spring:message code="exchange.with_email"/>" + " " + offererMail;
-        document.getElementById('info-requester-location').textContent = "<spring:message code="exchange.location"/>" + " " + offererLocations;
         document.getElementById('info-offered-book-title').textContent = "<spring:message code="exchange.book.title"/>" + " " + requestedBookTitle;
         document.getElementById('info-offered-book-authors').textContent = "<spring:message code="exchange.book.authors"/>" + " " + requestedBookAuthors;
         document.getElementById('info-offered-book-edition').textContent = "<spring:message code="exchange.book.edition"/>" + " " + requestedBookEdition;
@@ -1059,7 +1096,7 @@
         // document.querySelector('input[name="reviewerId"]').value = reviewerId;
         // document.querySelector('input[name="subjectId"]').value = subjectId;
 
-        if(chatAvailable === 'true'){
+        if (chatAvailable === 'true') {
             document.querySelector('input[id="chatExchangeId"]').value = exchangeId;
             document.querySelector('input[id="chatUserId"]').value = subjectId;
 
@@ -1122,7 +1159,7 @@
     }
 
     function renderExistingMessages() {
-        for(let i = 0; i < currentChat.length && currentChat[i].message != null; i++) {
+        for (let i = 0; i < currentChat.length && currentChat[i].message != null; i++) {
             renderNewMessage(currentChat[i], currentChat[i].userId, currentChat[i].messageTime);
         }
         scrollToBottom()
@@ -1139,7 +1176,7 @@
         const date = new Date(time);
         const hours = date.getHours().toString().padStart(2, '0');
         const minutes = date.getMinutes().toString().padStart(2, '0');
-        const messageDate = date.toLocaleDateString(language, { day: 'numeric', month: 'long' });
+        const messageDate = date.toLocaleDateString(language, {day: 'numeric', month: 'long'});
         if (messageDate !== lastDate) {
             const dateDiv = document.createElement('div');
             dateDiv.classList.add('date-separator');
@@ -1173,9 +1210,8 @@
 
     function scrollToBottom() {
         const messagesContainer = document.querySelector('.chat-body');
-        messagesContainer.scroll({ top: messagesContainer.scrollHeight, behavior: 'smooth' });
+        messagesContainer.scroll({top: messagesContainer.scrollHeight, behavior: 'smooth'});
     }
-
 
 
     // Inicialmente, mostrar el mensaje de selección
@@ -1191,7 +1227,7 @@
             scrollToBottom()
         });
     });
-    
+
 </script>
 
 </html>

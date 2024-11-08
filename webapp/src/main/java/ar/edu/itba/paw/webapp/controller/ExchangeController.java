@@ -76,6 +76,13 @@ public class ExchangeController {
         mav.addObject("messageForm", new MessageForm());
         mav.addObject("messages", inProcessExchanges.getData().stream().map(Exchange::getChat).findFirst().orElse(Collections.emptyList()));
 
+        List<Exchange> exchanges = new ArrayList<>(pendingExchanges.getData());
+        exchanges.addAll(inProcessExchanges.getData());
+        exchanges.addAll(completedExchanges.getData());
+        exchanges.addAll(rejectedExchanges.getData());
+
+        mav.addObject("exchanges",exchanges);
+
         return mav;
     }
 
@@ -105,6 +112,12 @@ public class ExchangeController {
         mav.addObject("messageForm", new MessageForm());
         mav.addObject("messages", inProcessExchanges.getData().stream().map(Exchange::getChat).findFirst().orElse(Collections.emptyList()));
 
+        List<Exchange> exchanges = new ArrayList<>(pendingExchanges.getData());
+        exchanges.addAll(inProcessExchanges.getData());
+        exchanges.addAll(completedExchanges.getData());
+        exchanges.addAll(rejectedExchanges.getData());
+
+        mav.addObject("exchanges",exchanges);
 
         return mav;
     }

@@ -85,7 +85,6 @@
                                          onclick="selectCard(this,
                                                  '<c:out value="${data.requester.book.owner.username}"/>',
                                                  '<c:out value="${data.requester.book.owner.mail}"/>',
-                                                 '<c:out value="${data.offerer.location.locationString}"/>',
                                                  '<c:out value="${data.offerer.book.bookModel.title}"/>',
                                                  '<c:out value="${authorsListString}"/>',
                                                  '<c:out value="${data.offerer.book.bookModel.title}"/>',
@@ -338,7 +337,6 @@
                                          onclick="selectCard(this,
                                                  '<c:out value="${data.requester.book.owner.username}"/>',
                                                  '<c:out value="${data.requester.book.owner.mail}"/>',
-                                                 '<c:out value="${data.offerer.location.locationString}"/>',
                                                  '<c:out value="${data.offerer.book.bookModel.title}"/>',
                                                  '<c:out value="${authorsListString}"/>',
                                                  '<c:out value="${data.offerer.book.bookModel.title}"/>',
@@ -566,7 +564,6 @@
                                          onclick="selectCard(this,
                                                  '<c:out value="${data.requester.book.owner.username}"/>',
                                                  '<c:out value="${data.requester.book.owner.mail}"/>',
-                                                 '<c:out value="${data.offerer.location.locationString}"/>',
                                                  '<c:out value="${data.offerer.book.bookModel.title}"/>',
                                                  '<c:out value="${authorsListString}"/>',
                                                  '<c:out value="${data.offerer.book.bookModel.title}"/>',
@@ -764,7 +761,6 @@
                                          onclick="selectCard(this,
                                                  '<c:out value="${data.requester.book.owner.username}"/>',
                                                  '<c:out value="${data.requester.book.owner.mail}"/>',
-                                                 '<c:out value="${data.offerer.location.locationString}"/>',
                                                  '<c:out value="${data.offerer.book.bookModel.title}"/>',
                                                  '<c:out value="${authorsListString}"/>',
                                                  '<c:out value="${data.offerer.book.bookModel.title}"/>',
@@ -1079,7 +1075,39 @@
 </body>
 
 <script>
+    // LOCATIONS
+    let locationMap = new Map();
+    let offererLocations, requesterLocations;
+    let id;
+    <c:if test="${not empty exchanges}">
+    <c:forEach var="exchange" items="${exchanges}">
+    id = "${exchange.exchangeId}";
 
+    offererLocations = [];
+    requesterLocations = [];
+
+    <c:forEach var="location" items="${exchange.offerer.locations}">
+    offererLocations.push({
+        locationString: "<c:out value="${location.locationString}"/>"
+    });
+    </c:forEach>
+
+    <c:forEach var="location" items="${exchange.requester.locations}">
+    requesterLocations.push({
+        locationString: "<c:out value="${location.locationString}"/>"
+    });
+    </c:forEach>
+
+    if (!locationMap.has(id)) {
+        locationMap.set(id, {
+            offerer: offererLocations,
+            requester: requesterLocations
+        });
+    }
+    </c:forEach>
+    </c:if>
+
+    // CHAT
     let chat = new Map();
     let exchangeId;
     let messageObject;
@@ -1106,7 +1134,7 @@
     const language = "<c:out value="${loggedUser.language}"/>"
 
 
-    function selectCard(card, requesterUsername, requesterMail, requesterLocation, offeredBookTitle,
+    function selectCard(card, requesterUsername, requesterMail, offeredBookTitle,
                         offeredBookAuthors, offeredBookEdition, offeredBookImages, exchangeId,
                         reviewerId, subjectId, isReviewable, chatAvailable) {
 
@@ -1132,9 +1160,16 @@
         document.getElementById('exchange-details').style.display = 'block';
 
         // Actualizar la información en la columna izquierda
+        let locations;
+        let locationArray = locationMap.get(exchangeId);
+        if (locationArray.requester.length > 0){
+            locations = locationArray.requester.map(location => location.locationString).join(', ');
+        } else {
+            locations = '-';
+        }
+        document.getElementById('info-requester-location').textContent = "<spring:message code="exchange.location"/>" + " " + locations;
         document.getElementById('info-requester-username').textContent = "<spring:message code="exchange.with"/>" + " " + requesterUsername;
         document.getElementById('info-requester-mail').textContent = "<spring:message code="exchange.with_email"/>" + " " + requesterMail;
-        document.getElementById('info-requester-location').textContent = "<spring:message code="exchange.location"/>" + requesterLocation;
         document.getElementById('info-offered-book-title').textContent = "<spring:message code="exchange.book.title"/>" + " " + offeredBookTitle;
         document.getElementById('info-offered-book-authors').textContent = "<spring:message code="exchange.book.authors"/>" + " " + offeredBookAuthors;
         document.getElementById('info-offered-book-edition').textContent = "<spring:message code="exchange.book.edition"/>" + " " + offeredBookEdition;
