@@ -4,6 +4,7 @@ import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.utils.*;
+import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public interface PublicationService {
 
     Publication getPublicationByPublicationId(long publicationId);
 
-    PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, String isBookStateFilterActive, String bookStateFilter, String isGenreFilterActive, String genreFilter, String sortType, String currentPage);
+    PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, String isBookStateFilterActive, String bookStateFilter, String isGenreFilterActive, String genreFilter, String sortType, String currentPage, User currentUser);
 
     int getPublicationCountByUserId(long userId);
 
@@ -38,4 +39,5 @@ public interface PublicationService {
 
     List<BookStateWrapper> getMyBookStateWrapperList(long userId, String search, String isGenreFilterActive, String genreFilter);
 
-    }
+    PaginatedResponse<Publication, BasicMetadata> getFavoritePublications(User user, String currentPage);
+}

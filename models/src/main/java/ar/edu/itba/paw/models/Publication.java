@@ -46,8 +46,7 @@ public class Publication {
     @Formula("(SELECT COUNT(fp.publicationid) FROM favorite_publication fp WHERE fp.publicationid = publicationid)")
     private Integer likes;
 
-    @Formula("(SELECT COUNT(*) > 0 FROM favorite_publication fp WHERE fp.publicationid = publicationid AND fp.userid = userid)")
-    private Boolean isLikedByUser;
+    private Boolean isLikedByUser = false;
 
     public Publication() {
         // only for JPA
@@ -130,15 +129,9 @@ public class Publication {
         return likes;
     }
 
-    public boolean isLikedByUser() {
-        return isLikedByUser;
-    }
 
     public void setLikes(Integer likes) {
         this.likes = likes;
     }
 
-    public void setLikedByUser(boolean isLikedByUser) {
-        this.isLikedByUser = isLikedByUser;
-    }
 }

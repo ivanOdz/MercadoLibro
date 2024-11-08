@@ -125,14 +125,14 @@
 
             <div class="uk-width-3-4 col-content mb-1">
                 <c:if test="${not empty publications.data}">
-                    <div  style="display:flex; justify-content: space-between; align-items: center;">
+                    <div style="display:flex; justify-content: space-between; align-items: center;">
                         <div><h2 class="mt-1">
                                 <spring:message code="publications.list.available"/>
                         </div>
                         <c:set var="sortKey" value="${publications.metadata.sortType.value}"/>
                         <div>
                             <button type="button" class="uk-button uk-button-link">
-                                <spring:message code="${sortKey}" />
+                                <spring:message code="${sortKey}"/>
                                 <span uk-drop-parent-icon></span>
                             </button>
                             <div class="uk-navbar-dropdown uk-drop" uk-drop="mode: click">
@@ -230,7 +230,7 @@
                     <c:if test="${not empty publications.metadata.search}">
                         <hr class="uk-divider-vertical" style="height: 30px; margin: 0 1rem;">
                         <h4 style="margin:0;">
-                            <spring:message code="publications.search" />
+                            <spring:message code="publications.search"/>
                             '<c:out value='${publications.metadata.search}'/>'
                         </h4>
                         <c:if test="${not empty publications.metadata.search}">
@@ -250,57 +250,126 @@
                 </div>
 
                 <c:if test="${not empty publications.data}">
-                <div class="uk-grid-match" uk-grid>
-                    <c:forEach var="card" items="${publications.data}">
-                        <div class="uk-width-1-1">
-                            <a href="<c:url value='publications/${card.publicationId}' />"
-                               class="uk-card uk-card-default uk-card-hover uk-card-body uk-border-rounded custom-link uk-flex uk-flex-middle"
-                            style="padding: 1rem !important;">
+                    <div class="uk-grid-match" uk-grid>
+                        <c:forEach var="card" items="${publications.data}" varStatus="status">
+                            <div class="uk-width-1-1">
+                                <a href="<c:url value='publications/${card.publicationId}' />"
+                                   class="uk-card uk-card-default uk-card-hover uk-card-body uk-border-rounded custom-link uk-flex uk-flex-middle"
+                                   style="padding: 1rem !important;">
 
-<%--                                <div class="uk-position-top-right"--%>
-<%--                                     style="padding: 2rem; display: flex; align-items: center;">--%>
-<%--                                    <form action="<c:url value='/like/${card.publicationId}' />" method="post">--%>
-<%--                                        <button type="submit" class="transparent"--%>
-<%--                                                style="border: none; background: none;">--%>
-<%--                                            <c:choose>--%>
-<%--                                                <c:when test="${card.likedByUser}">--%>
-<%--                                                    <i class="material-icons red-text">favorite</i>--%>
-<%--                                                </c:when>--%>
-<%--                                                <c:otherwise>--%>
-<%--                                                    <i class="material-icons grey-text">favorite_border</i>--%>
-<%--                                                </c:otherwise>--%>
-<%--                                            </c:choose>--%>
-<%--                                        </button>--%>
-<%--                                    </form>--%>
-<%--                                    <c:if test="${card.likes > 0}">--%>
-<%--                                        <p class="small-gray-text custom-link" style="margin: 0 0 0 0.5rem;">(<c:out--%>
-<%--                                                value="${card.likes}"/>)</p>--%>
-<%--                                    </c:if>--%>
-<%--                                </div>--%>
+                                    <div class="uk-position-top-right"
+                                         style="padding: 2rem; display: flex; align-items: center;">
+                                        <form id="favoriteForm-${status.index}" action="<c:url value='/like/${card.publicationId}' />" method="post">
+                                            <button type="button" class="transparent" style="border: none; background: none;">
+                                                <c:choose>
+                                                    <c:when test="${card.likedByUser}">
+                                                        <!-- Corazón relleno de rojo si ya le gustó -->
+                                                        <div class="checkmark">
+                                                            <svg viewBox="0 0 256 256">
+                                                                <rect fill="none" height="256" width="256"></rect>
+                                                                <path d="M224.6,51.9a59.5,59.5,0,0,0-43-19.9,60.5,60.5,0,0,0-44,17.6L128,59.1l-7.5-7.4C97.2,28.3,59.2,26.3,35.9,47.4a59.9,59.9,0,0,0-2.3,87l83.1,83.1a15.9,15.9,0,0,0,22.6,0l81-81C243.7,113.2,245.6,75.2,224.6,51.9Z" fill="#ff5353" stroke="none"></path>
+                                                            </svg>
+                                                        </div>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <!-- Corazón vacío con borde negro si no le gustó -->
+                                                        <div class="checkmark">
+                                                            <svg viewBox="0 0 256 256">
+                                                                <rect fill="none" height="256" width="256"></rect>
+                                                                <path d="M224.6,51.9a59.5,59.5,0,0,0-43-19.9,60.5,60.5,0,0,0-44,17.6L128,59.1l-7.5-7.4C97.2,28.3,59.2,26.3,35.9,47.4a59.9,59.9,0,0,0-2.3,87l83.1,83.1a15.9,15.9,0,0,0,22.6,0l81-81C243.7,113.2,245.6,75.2,224.6,51.9Z" fill="none" stroke="#000000" stroke-width="20"></path>
+                                                            </svg>
+                                                        </div>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </button>
+                                        </form>
 
-                                <!-- Contenedor de la imagen (Columna izquierda) -->
-                                <div class="uk-width-1-4 uk-flex uk-flex-center">
-                                    <figure class="uk-margin-remove">
-                                        <c:choose>
-                                            <c:when test="${!card.book.images[0].image.isImageNull}">
-                                                <img class="book-image uk-border-rounded"
-                                                     src="<c:url value='/images/${card.book.images[0].image.imageId}' />"
-                                                     alt="bookImage"/>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <img class="book-image uk-border-rounded"
-                                                     src="<c:url value='/images/book.jpg' />" alt="book"/>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </figure>
-                                </div>
 
-                                <!-- Contenedor del texto (Columna derecha) -->
-                                <div class="uk-width-3-4 uk-margin-small-left" style="width:10rem;">
-                                    <!-- Título del libro -->
-                                    <h5 class="uk-card-title custom-link uk-margin-remove-bottom">
-                                        <c:out value="${card.book.bookModel.title}"/>
-                                    </h5>
+                                        <script>
+                                            document.querySelectorAll("form[id^='favoriteForm-']").forEach(form => {
+                                                const button = form.querySelector('button');
+                                                const icon = form.querySelector('svg path');
+
+                                                // Verificar si el evento ya está agregado para evitar múltiples llamadas
+                                                if (!button.hasAttribute('data-listener')) {
+                                                    button.setAttribute('data-listener', 'true');  // Marcar que ya tiene un listener
+
+                                                    // Manejar el evento de clic para cambiar el estado
+                                                    button.addEventListener("click", function(event) {
+                                                        event.preventDefault();  // Evitar el comportamiento por defecto (evitar recargar)
+                                                        event.stopPropagation(); // Detener la propagación para evitar conflictos
+
+                                                        // Obtener el estado actual del corazón
+                                                        const currentIsLiked = icon.getAttribute('fill') === '#ff5353';  // Corazón relleno de rojo
+
+                                                        // Cambiar el estado del corazón
+                                                        if (currentIsLiked) {
+                                                            // Si está "me gusta", quitar el relleno y agregar borde negro
+                                                            icon.setAttribute('fill', 'none');
+                                                            icon.setAttribute('stroke', '#000000');
+                                                            icon.setAttribute('stroke-width', '20');
+                                                        } else {
+                                                            // Si no está "me gusta", rellenar el corazón de rojo y quitar el borde
+                                                            icon.setAttribute('fill', '#ff5353');
+                                                            icon.setAttribute('stroke', 'none');
+                                                        }
+
+                                                        // Obtener el publicationId desde el id del form
+                                                        const publicationId = form.id.split('-')[1];  // Obtención del publicationId
+
+                                                        // Datos a enviar
+                                                        const likeStatus = currentIsLiked ? 'false' : 'true';  // Cambiar estado de "me gusta"
+
+                                                        // Enviar la solicitud POST de manera asíncrona sin esperar la respuesta
+                                                        console.log('Enviando solicitud POST para: ' + form.action);  // Depuración de la URL
+
+                                                        fetch(form.action, {
+                                                            method: 'POST',
+                                                            headers: {
+                                                                'Content-Type': 'application/x-www-form-urlencoded'
+                                                            },
+                                                            body: new URLSearchParams({
+                                                                publicationId: publicationId,
+                                                                likeStatus: likeStatus
+                                                            })
+                                                        }).then(response => {
+                                                            if (!response.ok) {
+                                                                throw new Error('Error en la solicitud: ' + response.statusText);
+                                                            }
+                                                            console.log('Solicitud enviada correctamente');
+                                                        }).catch(error => {
+                                                            console.error('Error de red:', error.message);  // Mostrar el mensaje de error
+                                                        });
+                                                    });
+                                                }
+                                            });
+                                        </script>
+
+                                    </div>
+
+                                    <!-- Contenedor de la imagen (Columna izquierda) -->
+                                    <div class="uk-width-1-4 uk-flex uk-flex-center">
+                                        <figure class="uk-margin-remove">
+                                            <c:choose>
+                                                <c:when test="${!card.book.images[0].image.isImageNull}">
+                                                    <img class="book-image uk-border-rounded"
+                                                         src="<c:url value='/images/${card.book.images[0].image.imageId}' />"
+                                                         alt="bookImage"/>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <img class="book-image uk-border-rounded"
+                                                         src="<c:url value='/images/book.jpg' />" alt="book"/>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </figure>
+                                    </div>
+
+                                    <!-- Contenedor del texto (Columna derecha) -->
+                                    <div class="uk-width-3-4 uk-margin-small-left" style="width:10rem;">
+                                        <!-- Título del libro -->
+                                        <h5 class="uk-card-title custom-link uk-margin-remove-bottom">
+                                            <c:out value="${card.book.bookModel.title}"/>
+                                        </h5>
 
                                     <!-- Autores del libro -->
                                     <c:forEach var="author" items="${card.book.bookModel.authors}">
@@ -321,34 +390,36 @@
                                     </div>
                                 </div>
 
-                                <div class="row-container" style="width:15rem; padding-left:10rem;">
-                                    <div class="star-rating uk-flex uk-flex-middle">
-                                        <p class="small-gray-text custom-link" style="display: inline; margin-bottom: 0; margin-right:1rem;">
-                                            <c:out value="${card.book.bookModel.averageRating}"/>
-                                        </p>
-                                        <c:forEach var="i" begin="1" end="5">
-                                            <c:choose>
-                                                <c:when test="${i <= card.book.bookModel.averageRating}">
-                                                    <i class="material-icons yellow-text">star</i>
-                                                </c:when>
-                                                <c:when test="${i - 0.5 <= card.book.bookModel.averageRating && card.book.bookModel.averageRating < i}">
-                                                    <i class="material-icons yellow-text">star_half</i>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <i class="material-icons grey-text">star_border</i>
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </c:forEach>
+                                    <div class="row-container" style="width:15rem; padding-left:10rem;">
+                                        <div class="star-rating uk-flex uk-flex-middle">
+                                            <p class="small-gray-text custom-link"
+                                               style="display: inline; margin-bottom: 0; margin-right:1rem;">
+                                                <c:out value="${card.book.bookModel.averageRating}"/>
+                                            </p>
+                                            <c:forEach var="i" begin="1" end="5">
+                                                <c:choose>
+                                                    <c:when test="${i <= card.book.bookModel.averageRating}">
+                                                        <i class="material-icons yellow-text">star</i>
+                                                    </c:when>
+                                                    <c:when test="${i - 0.5 <= card.book.bookModel.averageRating && card.book.bookModel.averageRating < i}">
+                                                        <i class="material-icons yellow-text">star_half</i>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <i class="material-icons grey-text">star_border</i>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </c:forEach>
 
-                                        <p class="small-gray-text custom-link" style="display: inline; margin-left:1rem;">(<c:out
-                                                value="${card.book.bookModel.ratingCount}"/>)
-                                        </p>
+                                            <p class="small-gray-text custom-link"
+                                               style="display: inline; margin-left:1rem;">(<c:out
+                                                    value="${card.book.bookModel.ratingCount}"/>)
+                                            </p>
+                                        </div>
                                     </div>
-                                </div>
-                            </a>
-                        </div>
-                    </c:forEach>
-                </div>
+                                </a>
+                            </div>
+                        </c:forEach>
+                    </div>
                     <hr class="uk-divider-icon">
 
                     <nav aria-label="Pagination" class="uk-position-relative uk-margin">
@@ -458,7 +529,7 @@
                 </c:if>
                 <c:if test="${empty publications.data and not empty publications.metadata.search}">
                     <div style="text-align: left;">
-                        <h1><spring:message code="publications.filter.empty.header" /></h1>
+                        <h1><spring:message code="publications.filter.empty.header"/></h1>
 
                         <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
                         <div style="display: flex; justify-content: center;">

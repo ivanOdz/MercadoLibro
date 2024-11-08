@@ -12,6 +12,7 @@
 <c:url var="loginUrl" value="/login"/>
 <c:url var="registerUrl" value="/create"/>
 <c:url var="myPublicationsUrl" value="/my_publications"/>
+<c:url var="myFavoritesUrl" value="/my_favorites"/>
 
 <nav class="uk-navbar-container uk-box-shadow-small " uk-sticky>
     <div class="uk-container uk-width-1-1 nav-background">
@@ -111,6 +112,11 @@
                                     <li class="uk-margin-small-top">
                                         <a class="button-text-dropdown" href="${myPublicationsUrl}">
                                             <spring:message code="home.profile.publications"/>
+                                        </a>
+                                    </li>
+                                    <li class="uk-margin-small-top">
+                                        <a class="button-text-dropdown" href="${myFavoritesUrl}">
+                                            <spring:message code="home.profile.favorites"/>
                                         </a>
                                     </li>
                                     <li class="uk-margin-small-top">

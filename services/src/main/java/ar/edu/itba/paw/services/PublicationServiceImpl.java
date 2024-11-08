@@ -8,13 +8,13 @@ import ar.edu.itba.paw.interfaces.persistence.PublicationDao;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
+import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 import static ar.edu.itba.paw.models.utils.Constants.DEFAULT_PUBLICATION_GENRE_FILTER;
@@ -72,7 +72,7 @@ public class PublicationServiceImpl implements PublicationService {
 
     @Override
     @Transactional(readOnly = true)
-    public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, String isBookStateFilterActive, String bookStateFilter, String isGenreFilterActive, String genreFilter, String sortType, String currentPage) {
+    public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, String isBookStateFilterActive, String bookStateFilter, String isGenreFilterActive, String genreFilter, String sortType, String currentPage, User currentUser) {
 
         boolean bookStateFilterActive = "true".equalsIgnoreCase(isBookStateFilterActive);
         boolean genreFilterActive = "true".equalsIgnoreCase(isGenreFilterActive);
@@ -93,7 +93,7 @@ public class PublicationServiceImpl implements PublicationService {
             }
         }
 
-        return pubDao.getPaginatedPublications(null, search, bookStateFilterActive, state, genreFilterActive, genre, sortType, currentPage);
+        return pubDao.getPaginatedPublications(null, search, bookStateFilterActive, state, genreFilterActive, genre, sortType, currentPage, currentUser);
     }
 
     @Override
@@ -129,7 +129,7 @@ public class PublicationServiceImpl implements PublicationService {
         }
 
 
-        return pubDao.getPaginatedPublications(userId, search, bookStateFilterActive, state, genreFilterActive, genre, sortType, currentPage);
+        return pubDao.getPaginatedPublications(userId, search, bookStateFilterActive, state, genreFilterActive, genre, sortType, currentPage, null);
     }
 
     @Override
@@ -208,5 +208,9 @@ public class PublicationServiceImpl implements PublicationService {
         return pubDao.getBookStateQtyByPublication(userId, search, genreFilterActive, genre);
     }
 
+    @Override
+    public PaginatedResponse<Publication, BasicMetadata> getFavoritePublications(User user, String currentPage) {
+        return pubDao.getFavoritePublications(user, currentPage);
+    }
 
 }

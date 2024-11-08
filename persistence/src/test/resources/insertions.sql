@@ -29,19 +29,19 @@
 
 -- 3 --
         INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
-        VALUES (3, '9788408186206', 'La sombra del viento', 'Planeta', 'Una novela fascinante ambientada en la Barcelona de la posguerra que mezcla misterio, amor y tragedia.', 'NOVEL', 2, 400, 575, 'SPANISH', 'SMALL', 2001, TRUE, FALSE, NULL);
+        VALUES (3, '9788408186206', 'La sombra del viento', 'Planeta', 'Una novela fascinante ambientada en la Barcelona de la posguerra que mezcla misterio, amor y tragedia.', 'OTHER', 2, 400, 575, 'SPANISH', 'SMALL', 2001, TRUE, FALSE, NULL);
 
 -- 4 --
         INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
-        VALUES (4, '9788497592451', 'El amor en los tiempos del cólera', 'Sudamericana', 'Una historia de amor que se extiende a lo largo de más de 50 años, escrita por el ganador del Premio Nobel.', 'NOVEL', 1, 500, 490, 'SPANISH', 'MEDIUM', 1985, FALSE, TRUE, NULL);
+        VALUES (4, '9788497592451', 'El amor en los tiempos del cólera', 'Sudamericana', 'Una historia de amor que se extiende a lo largo de más de 50 años, escrita por el ganador del Premio Nobel.', 'OTHER', 1, 500, 490, 'SPANISH', 'MEDIUM', 1985, FALSE, TRUE, NULL);
 
 -- 5 --
         INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
-        VALUES (5, '9780062315007', 'El alquimista', 'HarperCollins', 'Una novela filosófica sobre un joven pastor que sigue su sueño de encontrar un tesoro en Egipto.', 'NOVEL', 3, 300, 208, 'SPANISH', 'MEDIUM', 1988, TRUE, FALSE, NULL);
+        VALUES (5, '9780062315007', 'El alquimista', 'HarperCollins', 'Una novela filosófica sobre un joven pastor que sigue su sueño de encontrar un tesoro en Egipto.', 'OTHER', 3, 300, 208, 'SPANISH', 'SMALL', 1988, TRUE, FALSE, NULL);
 
 -- 6 --
         INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
-        VALUES (6, '9788437604947', 'La casa de los espíritus', 'Debolsillo', 'Una obra que recorre las vidas de varias generaciones de la familia Trueba, desde lo fantástico hasta lo histórico.', 'FICTION', 2, 500, 448, 'SPANISH', 'SMALL', 1982, FALSE, TRUE, NULL);
+        VALUES (6, '9788437604947', 'La casa de los espíritus', 'Debolsillo', 'Una obra que recorre las vidas de varias generaciones de la familia Trueba, desde lo fantástico hasta lo histórico.', 'FICTION', 2, 500, 448, 'SPANISH', 'MEDIUM', 1982, FALSE, TRUE, NULL);
 
 -- 7 --
         INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
@@ -49,11 +49,11 @@
 
 -- 8 --
         INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
-        VALUES (8, '9788497594319', 'Los detectives salvajes', 'Anagrama', 'Una novela sobre la vida bohemia de poetas en el México de los años 70.', 'MISTERY', 1, 700, 609, 'SPANISH', 'MEDIUM', 1998, FALSE, TRUE, NULL);
+        VALUES (8, '9788497594319', 'Los detectives salvajes', 'Anagrama', 'Una novela sobre la vida bohemia de poetas en el México de los años 70.', 'MISTERY', 1, 700, 609, 'SPANISH', 'LARGE', 1998, FALSE, TRUE, NULL);
     
 -- 9 --
         INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
-        VALUES (9, '9788423353248', 'Patria', 'Tusquets', 'Una novela que explora las vidas de dos familias vascas en el contexto del conflicto de ETA.', 'THRILLER', 1, 800, 648, 'SPANISH', 'MEDIUM', 2016, FALSE, TRUE, NULL);
+        VALUES (9, '9788423353248', 'Patria', 'Tusquets', 'Una novela que explora las vidas de dos familias vascas en el contexto del conflicto de ETA.', 'THRILLER', 1, 800, 648, 'SPANISH', 'LARGE', 2016, FALSE, TRUE, NULL);
 
 -- 10 --
         INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
@@ -61,29 +61,29 @@
 
 -- Insertar autores --------------------------------------------------------------------------------------------------------
     
-        INSERT INTO author (authorName)
-        VALUES ('Gabriel García Márquez');
+        INSERT INTO author (authorId, authorName)
+        VALUES (1, 'Gabriel García Márquez');
 
-        INSERT INTO author (authorName)
-        VALUES ('Miguel de Cervantes');
+        INSERT INTO author (authorId, authorName)
+        VALUES (2, 'Miguel de Cervantes');
 
-        INSERT INTO author (authorName)
-        VALUES ('Carlos Ruiz Zafón');
+        INSERT INTO author (authorId, authorName)
+        VALUES (3, 'Carlos Ruiz Zafón');
 
-        INSERT INTO author (authorName)
-        VALUES ('Paulo Coelho');
+        INSERT INTO author (authorId, authorName)
+        VALUES (4, 'Paulo Coelho');
 
-        INSERT INTO author (authorName)
-        VALUES ('Isabel Allende');
+        INSERT INTO author (authorId, authorName)
+        VALUES (5, 'Isabel Allende');
 
-        INSERT INTO author (authorName)
-        VALUES ('Roberto Bolaño');
+        INSERT INTO author (authorId, authorName)
+        VALUES (6, 'Roberto Bolaño');
 
-        INSERT INTO author (authorName)
-        VALUES ('Fernando Aramburu');
+        INSERT INTO author (authorId, authorName)
+        VALUES (7, 'Fernando Aramburu');
 
-        INSERT INTO author (authorName)
-        VALUES ('Mario Vargas Llosa');
+        INSERT INTO author (authorId, authorName)
+        VALUES (8, 'Mario Vargas Llosa');
         
 -- Insertar ubicaciones ----------------------------------------------------------------------------------------------------
 
@@ -123,7 +123,13 @@
 		FROM book_model
 		JOIN author ON authorName = 'Gabriel García Márquez'
 		WHERE isbn = '9788497592208'
-
+		
+    INSERT INTO book_author (bookModelId, authorId)
+		SELECT bookModelId, authorId
+		FROM book_model
+		JOIN author ON authorName = 'Miguel de Cervantes' -- Solo Márquez es el autor, agregado para probar lista --
+		WHERE isbn = '9788497592208'
+		
 -- 2 -- Don Quijote de la Mancha
 
 	INSERT INTO book_author (bookModelId, authorId)
@@ -206,19 +212,59 @@
 
 -- LIBROS ------------------------------------------------------------------------------------------------------------------
 
--- Insertar Libros para Ivan --
+-- Insertar Libros para Ivan ---------------------------------------------
 
--- 1 -- La ciudad y los perros
-
-	INSERT INTO book (bookId, bookModelId, ownerId, exchangesQty, available, bookState)
-	VALUES (1, 10, 1, 1, true, 'WORN');
-	
--- 2 -- Patria
+-- 1 -- Cien años de soledad
 
 	INSERT INTO book (bookId, bookModelId, ownerId, exchangesQty, available, bookState)
-	VALUES (2, 9, 1, 0, true, 'WORN');
+	VALUES (1, 1, 1, 1, true, 'WORN');
 	
--- 3 -- La casa de los espíritus
+-- 2 -- Don Quijote de la Mancha
 
-	--INSERT INTO book (bookId, bookModelId, ownerId, exchangesQty, available, bookState)
-	--VALUES (3, 6, 2, 0, true, 'WORN');
+	INSERT INTO book (bookId, bookModelId, ownerId, exchangesQty, available, bookState)
+	VALUES (2, 2, 1, 0, true, 'ACCEPTABLE');
+	
+-- 3 -- La sombra del viento
+
+	INSERT INTO book (bookId, bookModelId, ownerId, exchangesQty, available, bookState)
+	VALUES (3, 3, 1, 0, false, 'GOOD');
+	
+-- Insertar Libros para Juli ---------------------------------------------
+
+-- 4 -- El amor en los tiempos del cólera
+
+	INSERT INTO book (bookId, bookModelId, ownerId, exchangesQty, available, bookState)
+	VALUES (4, 4, 2, 0, true, 'VERY_GOOD');
+	
+-- 5 -- El alquimista
+
+	INSERT INTO book (bookId, bookModelId, ownerId, exchangesQty, available, bookState)
+	VALUES (5, 5, 2, 0, false, 'LIKE_NEW');
+	
+-- Insertar Libros para Maggie -------------------------------------------
+
+-- 6 -- La casa de los espíritus
+
+	INSERT INTO book (bookId, bookModelId, ownerId, exchangesQty, available, bookState)
+	VALUES (6, 6, 3, 0, true, 'NEW');
+	
+-- 7 -- Crónica de una muerte anunciada
+
+	INSERT INTO book (bookId, bookModelId, ownerId, exchangesQty, available, bookState)
+	VALUES (7, 7, 3, 0, false, 'VERY_GOOD');
+	
+-- Insertar Libros para Tomi ---------------------------------------------
+
+-- 8 -- Los detectives salvajes
+
+	INSERT INTO book (bookId, bookModelId, ownerId, exchangesQty, available, bookState)
+	VALUES (8, 8, 4, 0, true, 'LIKE_NEW');
+	
+-- 9 -- Patria
+
+	INSERT INTO book (bookId, bookModelId, ownerId, exchangesQty, available, bookState)
+	VALUES (9, 9, 4, 0, false, 'NEW');
+	
+-- 10. Último libro 'La ciudad y los perros' no se inserta, queda solo como Modelo.
+
+	

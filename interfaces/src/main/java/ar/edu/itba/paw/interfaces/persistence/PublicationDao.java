@@ -1,13 +1,15 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.models.PaginatedResponse;
+import ar.edu.itba.paw.models.Publication;
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.utils.*;
+import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
-import ar.edu.itba.paw.models.utils.pagination.Metadata;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public interface PublicationDao {
 
@@ -17,7 +19,7 @@ public interface PublicationDao {
 
     Optional<Publication> getPublicationByPublicationId(long publicationId);
 
-    PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(Long userId,String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, String sortType, String currentPage);
+    PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(Long userId,String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, String sortType, String currentPage, User currentUser);
 
     int getPublicationCountByUserId(long userId);
 
@@ -29,4 +31,5 @@ public interface PublicationDao {
 
     void likePublication(long publicationId, long userId);
 
+    PaginatedResponse<Publication, BasicMetadata> getFavoritePublications(User user, String currentPage);
 }

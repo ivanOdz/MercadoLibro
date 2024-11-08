@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
+import java.sql.Time;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "favorite_publication")
@@ -12,42 +14,49 @@ public class FavoritePublication {
     @Column(name = "favoritepublicationid")
     private Long favoritepublicationId;
 
-    @Column(name = "publicationid")
-    private Long publicationId;
+    @ManyToOne
+    @JoinColumn(name = "publicationid", referencedColumnName = "publicationId", nullable = false)
+    private Publication publication;
 
-    @Column(name = "userid")
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "userid", referencedColumnName = "userId", nullable = false)
+    private User user;
+
+    @Column(name = "liked_at")
+    private Timestamp likedAt;
+
 
     public FavoritePublication() {
         // Hibernate
     }
 
-    public FavoritePublication(Long publicationId, Long userId) {
-        this.publicationId = publicationId;
-        this.userId = userId;
+    public FavoritePublication(Publication publication, User user, Timestamp likedAt) {
+        this.publication = publication;
+        this.user = user;
+        this.likedAt = likedAt;
     }
 
     public Long getFavoritepublicationId() {
         return favoritepublicationId;
     }
 
-    public Long getPublicationId() {
-        return publicationId;
+    public Publication getPublication() {
+        return publication;
     }
 
-    public Long getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
     public void setFavoritepublicationId(Long favoritepublicationId) {
         this.favoritepublicationId = favoritepublicationId;
     }
 
-    public void setPublicationId(Long publicationId) {
-        this.publicationId = publicationId;
+    public void setPublication(Publication publicationId) {
+        this.publication = publicationId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUser(User userId) {
+        this.user = userId;
     }
 }
