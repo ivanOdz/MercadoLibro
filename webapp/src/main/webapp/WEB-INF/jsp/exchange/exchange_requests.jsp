@@ -1305,16 +1305,22 @@
 
     // Inicialmente, mostrar el mensaje de selección
     document.addEventListener('DOMContentLoaded', function () {
-        document.getElementById('no-selection-message').style.display = 'block';
-        document.getElementById('exchange-details').style.display = 'none';
-        document.getElementById('add-review-button').style.display = 'block';
-        document.getElementById('add-review-button').style.display = 'none';
-        document.getElementById('chat-button').classList.add('hidden');
-
+        const noSelectionMessage = document.getElementById('no-selection-message');
+        const exchangeDetails = document.getElementById('exchange-details');
+        const addReviewButton = document.getElementById('add-review-button');
+        const chatButton = document.getElementById('chat-button');
         const messageInput = document.getElementById('messageInput');
-        messageInput.addEventListener('focus', function () {
-            scrollToBottom()
-        });
+
+        if (noSelectionMessage) noSelectionMessage.style.display = 'block';
+        if (exchangeDetails) exchangeDetails.style.display = 'none';
+        if (addReviewButton) addReviewButton.style.display = 'none'; // Establecemos 'none' directamente
+        if (chatButton) chatButton.classList.add('hidden');
+
+        if (messageInput) {
+            messageInput.addEventListener('focus', function () {
+                scrollToBottom();
+            });
+        }
     });
 
 

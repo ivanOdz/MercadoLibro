@@ -40,9 +40,14 @@
                 <h3 style="margin-right: 10%;"><spring:message code="exchange.book"/></h3>
 
                 <c:choose>
-                    <c:when test="${!empty publication.book.images && !publication.book.images[0].image.isImageNull}">
+                    <c:when test="${not empty publication.book.images && publication.book.images[0] != null && !publication.book.images[0].image.isImageNull}">
                         <img src="images/${publication.book.images[0].image.imageId}" alt="Book Image"
                              style="margin-right: 3%; width:13%; height:5%;"/>
+                    </c:when>
+                    <c:when test="${!publication.book.bookModel.image.isImageNull && publication.book.bookModel.image != null}">
+                        <img class="book-image"
+                             style="margin-right: 3%; width:13%; height:5%;"
+                             src="<c:url value='/images/${publication.book.bookModel.image.imageId}' />" alt="model"/>
                     </c:when>
                     <c:otherwise>
                         <img class="book-image"
@@ -81,9 +86,13 @@
                                     </div>
                                     <div class="uk-width-auto">
                                         <c:choose>
-                                            <c:when test="${!availableBook.images[0].image.isImageNull}">
+                                            <c:when test="${not empty availableBook.images && !availableBook.images[0].image.isImageNull && publication.book.images[0] != null}">
                                                 <img src="<c:url value='/images/${availableBook.images[0].image.imageId}' />"
                                                      alt="Book Image" width="40" height="40">
+                                            </c:when>
+                                            <c:when test="${!availableBook.bookModel.image.isImageNull && availableBook.bookModel.image != null}">
+                                                <img src="<c:url value='/images/${availableBook.bookModel.image.imageId}' />"
+                                                     alt="model" width="40" height="40">
                                             </c:when>
                                             <c:otherwise>
                                                 <img width="40" height="40"
