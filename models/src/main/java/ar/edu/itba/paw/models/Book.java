@@ -16,12 +16,15 @@ public class Book {
 	@SequenceGenerator(sequenceName = "book_bookid_seq", name = "book_bookid_seq", allocationSize = 1)
 	@Column(name = "bookid")
 	private Long bookId;
-
 	
 	//fetch = FetchType.LAZY es para indicar cuando trae los datos -> esto esta de ejemplo nomas, LAZY es el valor default
-	@ManyToOne(optional = false,  fetch = FetchType.EAGER)
+	@ManyToOne(optional = false)
 	@JoinColumn(name = "ownerid", referencedColumnName = "userid")
 	private User owner;
+
+	public void setAvailable(Boolean available) {
+		this.available = available;
+	}
 
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "bookmodelid")
@@ -29,14 +32,15 @@ public class Book {
 
 	@Enumerated(EnumType.STRING)
 	private BookState bookState;
-	
+
 	private int exchangesQty;
 
 	@Column(name = "available")
-	private Boolean available;
+	private Boolean available;   // indica si se encuentra en un intercambio en progreso
 
-	@OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<BookImage> images;
+
 
 	public Book(){
 		// only for JPA
@@ -106,5 +110,9 @@ public class Book {
 
 	public void setImages(List<BookImage> images) {
 		this.images = images;
+	}
+
+	public Boolean getAvailable() {
+		return available;
 	}
 }

@@ -199,12 +199,9 @@ public class UserController {
             return createForm(userForm);
         }
 
-        // using browserLanguage as user default
-        String browserLanguage = request.getHeader("Accept-Language");
-
         // verify date, create an user and send a verification email
 
-        User user = us.createUser(userForm.getUsername(), userForm.getMail(), userForm.getPassword(), browserLanguage.split(",")[0]);
+        User user = us.createUser(userForm.getUsername(), userForm.getMail(), userForm.getPassword(), LocaleContextHolder.getLocale().toLanguageTag());
 
         try {
         } catch (ApplicationRuntimeException e) {
@@ -254,8 +251,7 @@ public class UserController {
     public ModelAndView changeLanguage(@RequestParam(name = "lang") String lang, HttpServletRequest request) {
     	
         Locale locale = Locale.forLanguageTag(lang);
-        request.getSession().setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, locale);
-
+        LocaleContextHolder.setLocale(locale);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getPrincipal() instanceof PawUserDetails pud) {
 

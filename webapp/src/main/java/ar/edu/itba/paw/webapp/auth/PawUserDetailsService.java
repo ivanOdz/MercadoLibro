@@ -41,6 +41,9 @@ public class PawUserDetailsService implements UserDetailsService {
         } else {
             authorities = Set.of(new SimpleGrantedAuthority("EXPLORER"));
         }
+
+        Locale locale = Locale.forLanguageTag(user.getLanguage());
+        LocaleContextHolder.setLocale(locale);
         return new PawUserDetails(user, authorities);
     }
 }

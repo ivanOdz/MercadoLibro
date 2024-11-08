@@ -267,7 +267,7 @@ public class ExchangeController {
 
     ////////////////////////////////////
 
-    @RequestMapping(path = "/submitReview", method = RequestMethod.POST)
+    @RequestMapping(path = "/submit_review", method = RequestMethod.POST)
     public ModelAndView submitReview(
             @RequestParam("exchangeId") long exchangeId,
             @RequestParam("reviewDescription") String reviewDescription,
