@@ -86,7 +86,7 @@
                                                      alt="Book Image" width="40" height="40">
                                             </c:when>
                                             <c:otherwise>
-                                                <img class="uk-border-circle" width="40" height="40"
+                                                <img width="40" height="40"
                                                      src="<c:url value='/images/book.jpg' />" alt="book"/>
                                             </c:otherwise>
                                         </c:choose>

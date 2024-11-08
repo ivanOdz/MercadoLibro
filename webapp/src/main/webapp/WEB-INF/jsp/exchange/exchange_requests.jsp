@@ -1088,7 +1088,8 @@
     exchangeId = "${msg.exchange.exchangeId}";
     messageObject = {
         userId: "${msg.user.userId}",
-        message: "<c:out value="${msg.message}" />"
+        message: "<c:out value="${msg.message}" />",
+        messageTime: ${msg.messageTime.time}
     };
 
     if (!chat.has(exchangeId)) {
@@ -1099,6 +1100,11 @@
     </c:if>
 
     let currentChat = [];
+
+    let lastDate = null;
+
+    const language = "<c:out value="${loggedUser.language}"/>"
+
 
     function selectCard(card, requesterUsername, requesterMail, requesterLocation, offeredBookTitle,
                         offeredBookAuthors, offeredBookEdition, offeredBookImages, exchangeId,
@@ -1195,7 +1201,7 @@
                 }
             });
             document.querySelector(".message-send").value = "";
-            renderNewMessage({message: messageText}, userId);
+            renderNewMessage({message: messageText}, userId, new Date());
 
             if (!chat.has(exchangeId)) {
                 chat.set(exchangeId, []);
@@ -1208,7 +1214,7 @@
 
     function renderExistingMessages() {
         for (let i = 0;i < currentChat.length && currentChat[i].message != null; i++) {
-            renderNewMessage(currentChat[i], currentChat[i].userId);
+            renderNewMessage(currentChat[i], currentChat[i].userId, currentChat[i].messageTime);
         }
         scrollToBottom()
     }
@@ -1218,11 +1224,23 @@
         messagesContainer.innerHTML = '';
     }
 
-    function renderNewMessage(message, userId) {
+    function renderNewMessage(message, userId, time) {
         const messagesContainer = document.getElementById('messagesContainer');
+
+        const date = new Date(time);
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        const messageDate = date.toLocaleDateString(language, { day: 'numeric', month: 'long' });
+        if (messageDate !== lastDate) {
+            const dateDiv = document.createElement('div');
+            dateDiv.classList.add('date-separator');
+            dateDiv.textContent = messageDate;
+            messagesContainer.appendChild(dateDiv);
+            lastDate = messageDate;
+        }
+
         const messageDiv = document.createElement('div');
 
-        // Usar 'outgoing' si el usuario es el que envía el mensaje, 'incoming' en caso contrario
         if (userId === document.getElementById("chatUserId").value) {
             messageDiv.classList.add('message', 'outgoing');
         } else {
@@ -1231,7 +1249,14 @@
 
         const messageText = document.createElement('p');
         messageText.textContent = message.message;
+
+        const messageTime = document.createElement('span');
+
+        messageTime.textContent = hours + `:` + minutes;
+        messageTime.classList.add('message-time');
+
         messageDiv.appendChild(messageText);
+        messageDiv.appendChild(messageTime);
 
         messagesContainer.appendChild(messageDiv);
     }
