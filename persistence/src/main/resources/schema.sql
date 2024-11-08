@@ -97,6 +97,7 @@ CREATE TABLE IF NOT EXISTS favorite_publication (
     favoritepublicationid  SERIAL PRIMARY KEY,
     publicationId          INTEGER NOT NULL REFERENCES publication(publicationId) ON DELETE CASCADE,
     userId                 INTEGER NOT NULL REFERENCES users(userId) ON DELETE CASCADE,
+    liked_at               TIMESTAMP,
     UNIQUE (publicationId, userId)
 );
 

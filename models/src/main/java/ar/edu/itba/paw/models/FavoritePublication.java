@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
+import java.sql.Time;
 import java.sql.Timestamp;
 
 @Entity
@@ -29,9 +30,10 @@ public class FavoritePublication {
         // Hibernate
     }
 
-    public FavoritePublication(Publication publication, User user) {
+    public FavoritePublication(Publication publication, User user, Timestamp likedAt) {
         this.publication = publication;
         this.user = user;
+        this.likedAt = likedAt;
     }
 
     public Long getFavoritepublicationId() {

@@ -316,20 +316,91 @@
 
                                     <div class="uk-position-top-right"
                                          style="padding: 2rem; display: flex; align-items: center;">
-                                        <form id="favoriteForm-${status.index}"
-                                              action="<c:url value='/like/${card.publicationId}' />" method="post">
-                                            <button type="submit" class="transparent"
-                                                    style="border: none; background: none;">
+                                        <form id="favoriteForm-${status.index}" action="<c:url value='/like/${card.publicationId}' />" method="post">
+                                            <button type="button" class="transparent" style="border: none; background: none;">
                                                 <c:choose>
                                                     <c:when test="${card.likedByUser}">
-                                                        <i class="material-icons red-text">favorite</i>
+                                                        <!-- Corazón relleno de rojo si ya le gustó -->
+                                                        <div class="checkmark">
+                                                            <svg viewBox="0 0 256 256">
+                                                                <rect fill="none" height="256" width="256"></rect>
+                                                                <path d="M224.6,51.9a59.5,59.5,0,0,0-43-19.9,60.5,60.5,0,0,0-44,17.6L128,59.1l-7.5-7.4C97.2,28.3,59.2,26.3,35.9,47.4a59.9,59.9,0,0,0-2.3,87l83.1,83.1a15.9,15.9,0,0,0,22.6,0l81-81C243.7,113.2,245.6,75.2,224.6,51.9Z" fill="#ff5353" stroke="none"></path>
+                                                            </svg>
+                                                        </div>
                                                     </c:when>
                                                     <c:otherwise>
-                                                        <i class="material-icons grey-text">favorite_border</i>
+                                                        <!-- Corazón vacío con borde negro si no le gustó -->
+                                                        <div class="checkmark">
+                                                            <svg viewBox="0 0 256 256">
+                                                                <rect fill="none" height="256" width="256"></rect>
+                                                                <path d="M224.6,51.9a59.5,59.5,0,0,0-43-19.9,60.5,60.5,0,0,0-44,17.6L128,59.1l-7.5-7.4C97.2,28.3,59.2,26.3,35.9,47.4a59.9,59.9,0,0,0-2.3,87l83.1,83.1a15.9,15.9,0,0,0,22.6,0l81-81C243.7,113.2,245.6,75.2,224.6,51.9Z" fill="none" stroke="#000000" stroke-width="20"></path>
+                                                            </svg>
+                                                        </div>
                                                     </c:otherwise>
                                                 </c:choose>
                                             </button>
                                         </form>
+
+
+                                        <script>
+                                            document.querySelectorAll("form[id^='favoriteForm-']").forEach(form => {
+                                                const button = form.querySelector('button');
+                                                const icon = form.querySelector('svg path');
+
+                                                // Verificar si el evento ya está agregado para evitar múltiples llamadas
+                                                if (!button.hasAttribute('data-listener')) {
+                                                    button.setAttribute('data-listener', 'true');  // Marcar que ya tiene un listener
+
+                                                    // Manejar el evento de clic para cambiar el estado
+                                                    button.addEventListener("click", function(event) {
+                                                        event.preventDefault();  // Evitar el comportamiento por defecto (evitar recargar)
+                                                        event.stopPropagation(); // Detener la propagación para evitar conflictos
+
+                                                        // Obtener el estado actual del corazón
+                                                        const currentIsLiked = icon.getAttribute('fill') === '#ff5353';  // Corazón relleno de rojo
+
+                                                        // Cambiar el estado del corazón
+                                                        if (currentIsLiked) {
+                                                            // Si está "me gusta", quitar el relleno y agregar borde negro
+                                                            icon.setAttribute('fill', 'none');
+                                                            icon.setAttribute('stroke', '#000000');
+                                                            icon.setAttribute('stroke-width', '20');
+                                                        } else {
+                                                            // Si no está "me gusta", rellenar el corazón de rojo y quitar el borde
+                                                            icon.setAttribute('fill', '#ff5353');
+                                                            icon.setAttribute('stroke', 'none');
+                                                        }
+
+                                                        // Obtener el publicationId desde el id del form
+                                                        const publicationId = form.id.split('-')[1];  // Obtención del publicationId
+
+                                                        // Datos a enviar
+                                                        const likeStatus = currentIsLiked ? 'false' : 'true';  // Cambiar estado de "me gusta"
+
+                                                        // Enviar la solicitud POST de manera asíncrona sin esperar la respuesta
+                                                        console.log('Enviando solicitud POST para: ' + form.action);  // Depuración de la URL
+
+                                                        fetch(form.action, {
+                                                            method: 'POST',
+                                                            headers: {
+                                                                'Content-Type': 'application/x-www-form-urlencoded'
+                                                            },
+                                                            body: new URLSearchParams({
+                                                                publicationId: publicationId,
+                                                                likeStatus: likeStatus
+                                                            })
+                                                        }).then(response => {
+                                                            if (!response.ok) {
+                                                                throw new Error('Error en la solicitud: ' + response.statusText);
+                                                            }
+                                                            console.log('Solicitud enviada correctamente');
+                                                        }).catch(error => {
+                                                            console.error('Error de red:', error.message);  // Mostrar el mensaje de error
+                                                        });
+                                                    });
+                                                }
+                                            });
+                                        </script>
 
                                     </div>
 
@@ -553,29 +624,7 @@
     </div>
 </div>
 
-<script>
 
-        document.querySelectorAll("form[id^='favoriteForm-']").forEach(form => {
-            const icon = form.querySelector('i.material-icons');
-            form.addEventListener("submit", function (event) {
-                <c:if test="${loggedUser} != null">
-                    event.preventDefault();
-                </c:if>
-
-                const isLiked = icon.textContent === 'favorite';
-                icon.textContent = isLiked ? 'favorite_border' : 'favorite';
-                icon.classList.toggle('red-text', !isLiked);
-                icon.classList.toggle('grey-text', isLiked);
-
-                fetch(form.action, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    }
-                });
-            });
-        });
-</script>
 
 </body>
 </html>

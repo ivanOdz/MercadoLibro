@@ -19,6 +19,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static ar.edu.itba.paw.models.utils.Constants.*;
@@ -433,7 +434,7 @@ public class PublicationJpaDao implements PublicationDao {
             em.remove(favoritePublications.get(0));
             publication.setLikedByUser(false);
         } else {
-            FavoritePublication newFavorite = new FavoritePublication(publication, user);
+            FavoritePublication newFavorite = new FavoritePublication(publication, user, Timestamp.valueOf(LocalDateTime.now()));
             em.persist(newFavorite);
             publication.setLikedByUser(true);
         }
