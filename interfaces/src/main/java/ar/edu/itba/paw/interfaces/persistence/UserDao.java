@@ -10,32 +10,25 @@ public interface UserDao {
 
     User createUser(String username, String mail, String password, String language, int verificationCode);
     
-    void update(User user);
-    
     Optional<User> findByMail(String mail);
 
     Optional<User> findByUsername(String username);
 
-    void verifyUser(int verificationCode);
+    void verifyUser(User user);
 
-    void changePasswordSolicited(String email, int verificationCode);
+    void changePasswordSolicited(User user, int verificationCode);
 
-    void changePassword(int verificationCode, String newPassword);
+    void changePassword(User user, String newPassword);
 
+    boolean updateUsername(User user, String newUsername);
 
-    boolean updateUsername(long userId, String newUsername);
+    Optional<User> getUserToVerify(int verificationCode);
 
-    User getUserToVerify(int verificationCode);
-
-    //List<UserReview> getReviewsByUserId(long userId, int pageIndex);
-
-    //Double getUserRating(long userId);
-
-    void setUserLanguage(long userId, String language);
+    void setUserLanguage(User user, String language);
     
-    public void setUserFavoriteLocation(long userId, Location favoriteLocation);
+    void setUserFavoriteLocation(User user, Location favoriteLocation);
     
-    public void addUserLocation(long userId, Location location);
+    void addUserLocation(User user,Location location);
     
-    public void removeUserLocation(long userId, Location location);
+    void removeUserLocation(User user, Location location);
 }

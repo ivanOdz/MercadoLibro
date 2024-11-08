@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.models.User;
@@ -8,14 +9,15 @@ import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PublicationDao {
 
-    Publication createPublication(long bookId, long userId, long locationId, PublicationState publicationState);
+    Publication createPublication(Book book, User user, Location location, PublicationState publicationState);
 
-    void terminatePublication(long pubId);
+    void terminatePublication(Publication publication);
 
-    Publication getPublicationByPublicationId(long publicationId);
+    Optional<Publication> getPublicationByPublicationId(long publicationId);
 
     PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(Long userId,String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, String sortType, String currentPage, User currentUser);
 

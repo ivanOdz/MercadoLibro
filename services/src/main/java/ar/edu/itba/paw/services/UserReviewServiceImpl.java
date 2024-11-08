@@ -10,6 +10,7 @@ import ar.edu.itba.paw.models.utils.Rating;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserReviewServiceImpl implements UserReviewService {
@@ -22,8 +23,8 @@ public class UserReviewServiceImpl implements UserReviewService {
 
 
 	@Override
+	@Transactional
 	public Boolean createUserReview(long exchangeId, long userId, String description, int rating) {
-		// NOTE: throws NF exception
 		Exchange exchange = exchangeService.getExchangeById(exchangeId);
 
 		boolean nin = exchange.getIsReviewable();
@@ -33,37 +34,41 @@ public class UserReviewServiceImpl implements UserReviewService {
 		long requesterId = exchange.getRequester().getBook().getOwner().getUserId();
 		long subjectId = offererId != userId ? offererId : requesterId;
 
-		// IMPLEMENT: exception
-		// NOTE: throws a BR exception
 		return userReviewDao.createUserReview(exchangeId, userId, subjectId, description, rating) != null;
 	}
-	
-	@Override
+
+    @Override
+	@Transactional(readOnly = true)
 	public PaginatedResponse<UserReview, BasicMetadata> getReviewsGivenByUserId(long userId, int currentPage) {
 		return userReviewDao.getReviewsGivenByUserId(userId, currentPage);
 	}
 
-	@Override
+    @Override
+	@Transactional(readOnly = true)
 	public PaginatedResponse<UserReview, BasicMetadata> getReviewsEarnedByUserId(long userId, int currentPage) {
 		return userReviewDao.getReviewsEarnedByUserId(userId, currentPage);
 	}
-	
-	@Override
+
+    @Override
+	@Transactional(readOnly = true)
 	public UserReview getUserReviewEarned(long exchangeId, long userId) {
 		return userReviewDao.getUserReviewEarned(exchangeId, userId);
 	}
-	
-	@Override
+
+    @Override
+	@Transactional(readOnly = true)
 	public UserReview getUserReviewGiven(long exchangeId, long userId) {
 		return userReviewDao.getUserReviewGiven(exchangeId, userId);
 	}
-	
-	@Override
+
+    @Override
+	@Transactional(readOnly = true)
 	public Rating getUserRatingEarned(long userId) {
 		return userReviewDao.getUserRatingEarned(userId);
 	}
-    
-	@Override
+
+    @Override
+	@Transactional(readOnly = true)
 	public Rating getUserRatingGiven(long userId) {
 		return userReviewDao.getUserRatingGiven(userId);
 	}

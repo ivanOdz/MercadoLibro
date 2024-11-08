@@ -9,4 +9,5 @@ public interface LocationService {
 
     Location newLocation(String location);
 
+    Location findById(Long locationId);
 }

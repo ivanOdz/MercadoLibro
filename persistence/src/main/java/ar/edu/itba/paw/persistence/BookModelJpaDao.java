@@ -54,8 +54,6 @@ public class BookModelJpaDao implements BookModelDao {
         return authorsRta;
     }
 
-    // ASK: Preguntar si se puede hacer esto para evitar tener que hacer el modelo BookAuthor que unicamente tiene un insert.
-    // Yo creo que como lo unico que se realiza sobre book_author es un insert, no es necesario tener un modelo para eso.
     @Override
     public void createBookAuthors(List<Long> authorsIds, long bookModelId) {
         for (Long authorId : authorsIds) {

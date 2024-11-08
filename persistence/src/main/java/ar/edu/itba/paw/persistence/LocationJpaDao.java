@@ -28,7 +28,6 @@ public class LocationJpaDao implements LocationDao {
 
     @Override
     public Optional<Location> findById(long locationId) {
-
     	return Optional.ofNullable(em.find(Location.class, locationId));
     }
     
@@ -41,30 +40,10 @@ public class LocationJpaDao implements LocationDao {
     }
 
     @Override
-    @Transactional
     public Location newLocation(String locationString) {
         final Location location = new Location(null, locationString);
-
-        // NOTE: consultar por manejo de excepciones en JPA
-
-        /*
-        Number userId;
-        try {
-            userId = jdbcInsert.executeAndReturnKey(userData);
-        } catch (DataIntegrityViolationException e) {
-            String errorMessage = messageSource.getMessage("error.createUser", new Object[]{e.getStackTrace()}, LocaleContextHolder.getLocale());
-            throw new UserBadRequestException(errorMessage);
-        }
-        */
-
         em.persist(location);
         return location;
-
-
-//        Map<String, Object> params = new HashMap<>();
-//        params.put("locationstring", location);
-//
-//        return jdbcInsert.executeAndReturnKey(params).longValue();
     }
 }
 

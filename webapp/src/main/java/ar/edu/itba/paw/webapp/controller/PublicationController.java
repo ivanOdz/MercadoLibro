@@ -8,8 +8,6 @@ import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 
 import ar.edu.itba.paw.webapp.form.ExchangeForm;
-import ar.edu.itba.paw.webapp.utilities.EnumInternationalizationUtil;
-import ar.edu.itba.paw.webapp.utilities.LocalizedEnumWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,14 +29,11 @@ public class PublicationController {
     @Autowired
     private BookService bs;
 
-    @Autowired
-    private LoggedUserAdvice loggedUserAdvice;
-
     @Qualifier("messageSource")
     @Autowired
     private MessageSource messageSource;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PublicationController.class);
 
     @RequestMapping("/")
     public ModelAndView index(@RequestParam(name = "search", defaultValue = "") String search,
@@ -46,32 +41,31 @@ public class PublicationController {
                               @RequestParam(name = "book-state-filter", required = false) String bookStateFilter,
                               @RequestParam(name = "is-genre-filter-active", defaultValue = "false") String isGenreFilterActive,
                               @RequestParam(name = "genre-filter", required = false) String genreFilter,
-                              @RequestParam(name = "order", defaultValue = "PUBLICATION_DATE_ASCENDING") String sortType,
+                              @RequestParam(name = "order", defaultValue = "sort.publication.date.ascending") String sortType,
                               @RequestParam(name = "page", defaultValue = "0") String currentPage) {
 
         final ModelAndView mav = new ModelAndView("home/publications");
 
         PaginatedResponse<Publication, ItemFilterMetadata> publications = ps.getPaginatedPublications(search, isBookStateFilterActive,
+                    bookStateFilter, isGenreFilterActive, genreFilter, sortType, currentPage);
+
                     bookStateFilter, isGenreFilterActive, genreFilter, sortType, currentPage, loggedUserAdvice.getLoggedUser());
 
         List<GenreWrapper> genreWrapperList = ps.getGenreWrapperList(search, isBookStateFilterActive, bookStateFilter);
         List<BookStateWrapper> bookStateWrapperList = ps.getBookStateWrapperList(search, isGenreFilterActive, genreFilter);
 
-        List<LocalizedEnumWrapper<GenreWrapper>> localizedGenreWrappers = EnumInternationalizationUtil.localizeGenreWrappers(genreWrapperList);
-        List<LocalizedEnumWrapper<BookStateWrapper>> localizedBookStateWrappers = EnumInternationalizationUtil.localizeBookStateWrappers(bookStateWrapperList);
-
         mav.addObject("publications", publications);
-        mav.addObject("genreWrapperList", localizedGenreWrappers);
-        mav.addObject("bookStateWrapperList", localizedBookStateWrappers);
+        mav.addObject("genreWrapperList", genreWrapperList);
+        mav.addObject("bookStateWrapperList", bookStateWrapperList);
 
         return mav;
     }
 
     @PostMapping(path = "/createpublication")
-    public ModelAndView createPublication(@RequestParam(name = "bookId") long bookId, @RequestParam(name = "locationId") long locationId) {
+    public ModelAndView createPublication(@RequestParam(name = "bookId") long bookId, @RequestParam(name = "locationId") long locationId, @ModelAttribute("loggedUser") User loggeduser) {
     	
         try {
-            ps.createPublication(bookId, loggedUserAdvice.getLoggedUser().getUserId(), locationId, PublicationState.CURRENT);
+            ps.createPublication(bookId, loggeduser.getUserId(), locationId, PublicationState.CURRENT);
         } catch (ApplicationRuntimeException e) {
             LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
             return new ModelAndView("redirect:/400");
@@ -83,7 +77,7 @@ public class PublicationController {
     }
 
     @GetMapping("/publications/{publication_id:\\d+}")
-    public ModelAndView publicationDetail(@PathVariable(name = "publication_id") long publicationId) {
+    public ModelAndView publicationDetail(@PathVariable(name = "publication_id") long publicationId, @ModelAttribute("loggedUser") User loggeduser) {
         final ModelAndView mav = new ModelAndView("/home/publication_detail");
 
         Publication publication;
@@ -95,18 +89,16 @@ public class PublicationController {
         }
 
         List<Book> availableBooks;
-        User user = loggedUserAdvice.getLoggedUser();
-        mav.addObject("user", user);
-        if (user != null) {
-            // IMPLEMENT: excepción no implementada, si queda páginada no hace falta una excepción, únicamente un checkeo en el jsp
-            availableBooks = bs.getAvailableBooksByUser(user);
+        mav.addObject("user", loggeduser);
+        if (loggeduser != null) {
+            availableBooks = bs.getAvailableBooksByUser(loggeduser);
             mav.addObject("availableBooks", availableBooks);
         }
 
         mav.addObject("exchangeForm", new ExchangeForm());
         mav.addObject("publication", publication);
         mav.addObject("imgCount", publication.getBook().getImages().size());
-        mav.addObject("genres", EnumInternationalizationUtil.getLocalizedGenres());
+        mav.addObject("genres", Genre.values());
 
         return mav;
     }
@@ -122,24 +114,21 @@ public class PublicationController {
                                        @RequestParam(name = "book-state-filter", required = false) String bookStateFilter,
                                        @RequestParam(name = "is-genre-filter-active", defaultValue = "false") String isGenreFilterActive,
                                        @RequestParam(name = "genre-filter", required = false) String genreFilter,
-                                       @RequestParam(name = "order", defaultValue = "PUBLICATION_DATE_ASCENDING") String sortType,
-                                       @RequestParam(name = "page", defaultValue = "0") String currentPage) {
-//        List<Publication> publications = ps.getPublicationsByUser(loggedUserAdvice.getLoggedUser());
-        PaginatedResponse<Publication, ItemFilterMetadata> publications = ps.getMyPaginatedPublications(loggedUserAdvice.getLoggedUser().getUserId(), search, isBookStateFilterActive,
+                                       @RequestParam(name = "order", defaultValue = "sort.publication.date.ascending") String sortType,
+                                       @RequestParam(name = "page", defaultValue = "0") String currentPage,
+                                       @ModelAttribute("loggedUser") User loggeduser) {
+
+        PaginatedResponse<Publication, ItemFilterMetadata> publications = ps.getMyPaginatedPublications(loggeduser.getUserId(), search, isBookStateFilterActive,
                 bookStateFilter, isGenreFilterActive, genreFilter, sortType, currentPage);
         ModelAndView mav = new ModelAndView("/home/my_publications");
 
-        User user = loggedUserAdvice.getLoggedUser();
-
-        List<GenreWrapper> genreWrapperList = ps.getMyGenreWrapperList(user.getUserId(), search, isBookStateFilterActive, bookStateFilter);
-        List<BookStateWrapper> bookStateWrapperList = ps.getMyBookStateWrapperList(user.getUserId(), search, isGenreFilterActive, genreFilter);
-
-        List<LocalizedEnumWrapper<GenreWrapper>> localizedGenreWrappers = EnumInternationalizationUtil.localizeGenreWrappers(genreWrapperList);
-        List<LocalizedEnumWrapper<BookStateWrapper>> localizedBookStateWrappers = EnumInternationalizationUtil.localizeBookStateWrappers(bookStateWrapperList);
+        List<GenreWrapper> genreWrapperList = ps.getMyGenreWrapperList(loggeduser.getUserId(), search, isBookStateFilterActive, bookStateFilter);
+        List<BookStateWrapper> bookStateWrapperList = ps.getMyBookStateWrapperList(loggeduser.getUserId(), search, isGenreFilterActive, genreFilter);
 
         mav.addObject("publications", publications);
-        mav.addObject("genreWrapperList", localizedGenreWrappers);
-        mav.addObject("bookStateWrapperList", localizedBookStateWrappers);
+        mav.addObject("sort-types", SortType.values());
+        mav.addObject("genreWrapperList", genreWrapperList);
+        mav.addObject("bookStateWrapperList", bookStateWrapperList);
 
         return mav;
     }
@@ -158,9 +147,9 @@ public class PublicationController {
     }
 
     @GetMapping("/publications/{publication_id:\\d+}/delete")
-    public ModelAndView deletePublication(@PathVariable(name = "publication_id") long publicationId) {
+    public ModelAndView deletePublication(@PathVariable(name = "publication_id") long publicationId, @ModelAttribute("loggedUser") User loggeduser) {
         Publication publication = ps.getPublicationByPublicationId(publicationId);
-        if(publication.getUser().getUserId() != loggedUserAdvice.getLoggedUser().getUserId()) {
+        if(publication.getUser().getUserId() != loggeduser.getUserId()) {
             return new ModelAndView("redirect:/403");
         }
         ps.deletePublication(publicationId);

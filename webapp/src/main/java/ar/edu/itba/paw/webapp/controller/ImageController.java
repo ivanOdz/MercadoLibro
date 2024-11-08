@@ -19,8 +19,7 @@ public class ImageController {
 
     @GetMapping(path="/images/{imageid:\\d+}", produces = MediaType.IMAGE_JPEG_VALUE)
     public @ResponseBody byte[] getImage(@PathVariable("imageid") long id){
-        Optional<Image> im = imageService.getImageById(id);
-        return im.orElseThrow(()->new RuntimeException("Could not find image_id")).getImage();
+        return imageService.getImageById(id).getImage();
     }
 
 }

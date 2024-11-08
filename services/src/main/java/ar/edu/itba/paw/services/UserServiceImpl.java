@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.exceptions.*;
 import ar.edu.itba.paw.interfaces.services.EmailService;
+import ar.edu.itba.paw.interfaces.services.LocationService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Location;
 import ar.edu.itba.paw.models.User;
@@ -30,28 +32,13 @@ public class UserServiceImpl implements UserService {
     private EmailService emailService;
 
     @Autowired
-    private MessageSource messageSource;
+    private LocationService locationService;
 
-    //@Autowired
-    //private final UserReviewService userReviewsService;
-
-    @Autowired
-    private LocationDao locationDao;
-    
-    @Value("#{environment.webappUrl}")
-    private String webappUrl;
-
-
-    @Transactional
     @Override
+    @Transactional
     public User createUser(String username, String mail, String password, String language) {
-        // 1. validar inputs
-        // 2. ingresarlo en la base de datos
-        // 3. generar un Token de validacion y guardarlo en la base de datos
-        // 4. enviar el token de validacion en un correo de bienvenida
-        // 5. agregar al usuario a una cola de verificacion manual
         Optional<User> u = userDao.findByMail(mail);
-        
+
         if(u.isPresent()) {
             return u.get();
         }
@@ -63,48 +50,62 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changePassword(int verificationCode, String newPassword) {
-        userDao.changePassword(verificationCode,passwordEncoder.encode(newPassword));
-    }
-
     @Transactional
+    public void changePassword(int verificationCode, String newPassword) {
+        User user = getUserToVerify(verificationCode);
+        userDao.changePassword(user,passwordEncoder.encode(newPassword));
+    }
+
     @Override
+    @Transactional
     public void changePasswordSolicited(String email) {
+        Optional<User> user = userDao.findByMail(email);
+        if(user.isEmpty()){
+            throw new PasswordChangeBadRequestException("User not found");
+        }
+
         int verificationCode = generateVerificationCode();
-
-        userDao.changePasswordSolicited(email, verificationCode);
-        User u = getUserToVerify(verificationCode);
-
-        emailService.sendPasswordChangeEmail(u);
+        userDao.changePasswordSolicited(user.get(), verificationCode);
+        emailService.sendPasswordChangeEmail(user.get());
     }
 
     @Override
-    public Optional<User> findById(long id) {
-        return userDao.findById(id);
+    @Transactional(readOnly = true)
+    public User findById(long id) {
+        Optional<User> user = userDao.findById(id);
+        if(user.isEmpty()){
+            throw new UserNotFoundException("User not found");
+        }
+        return user.get();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<User> findUserByEmail(String mail) {
         return userDao.findByMail(mail);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public String findUsernameByEmail(String mail){
         return findUserByEmail(mail).map(User::getUsername).orElse("");
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<User> findByUsername(String username) {
         return userDao.findByUsername(username);
     }
 
-    @Transactional
     @Override
+    @Transactional
     public void verifyUser(int verificationCode) {
-        userDao.verifyUser(verificationCode);
+        User user = getUserToVerify(verificationCode);
+        userDao.verifyUser(user);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean userExists(String mail) {
         return userDao.findByMail(mail).isPresent();
     }
@@ -120,30 +121,35 @@ public class UserServiceImpl implements UserService {
     }
     
     @Override
+    @Transactional
     public boolean changeUserName(long userId, String newName) {
-    	return userDao.updateUsername(userId, newName);
+        Optional<User> user = userDao.findById(userId);
+        if(user.isEmpty()){
+            throw new UserModifyBadRequestException("Error modifying user: User not found");
+        }
+    	return userDao.updateUsername(user.get(), newName);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public User getUserToVerify(int verificationCode) {
-        return userDao.getUserToVerify(verificationCode);
+        Optional<User> user = userDao.getUserToVerify(verificationCode);
+        if(user.isEmpty()){
+            throw new UserVerificationBadRequestException("User verification failed");
+        }
+        return user.get();
     }
 
     @Override
+    @Transactional
     public void setUserLanguage(User user, String language) {
-        userDao.setUserLanguage(user.getUserId(),language);
+        userDao.setUserLanguage(user,language);
     }
     
     @Override
+    @Transactional
     public void addLocation(Long userId, String locationString) {
-
-        Optional<User> userOptional = userDao.findById(userId);
-        
-        if (userOptional.isEmpty()) {
-            return;
-        }
-
-        User user = userOptional.get();
+        User user = findById(userId);
         boolean locationExists = false;
         
         for (Location existingLocation : user.getUserLocations()) {
@@ -155,29 +161,16 @@ public class UserServiceImpl implements UserService {
         
         if (!locationExists)
         {
-	        Location newLocation = locationDao.newLocation(locationString);
-	        userDao.addUserLocation(userId, newLocation);
+	        Location newLocation = locationService.newLocation(locationString);
+	        userDao.addUserLocation(user, newLocation);
         }
     }
     
     @Override
+    @Transactional
     public void removeLocation(Long userId, Long locationId) {
-    	
-        Optional<User> userOptional = userDao.findById(userId);
-        
-        if (userOptional.isEmpty()) {
-            return;
-        }
-
-        Optional<Location> locationOptional = locationDao.findById(locationId);
-        
-        if (locationOptional.isEmpty()) {
-            return;
-        }
-
-        Location location = locationOptional.get();
-        
-        userDao.removeUserLocation(userId, location);
+        Location location = locationService.findById(locationId);
+        userDao.removeUserLocation(findById(userId), location);
     }
 
 }

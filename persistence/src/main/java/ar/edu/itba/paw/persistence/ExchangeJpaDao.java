@@ -18,6 +18,7 @@ import javax.persistence.TypedQuery;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static ar.edu.itba.paw.models.utils.Constants.BOOKS_PAGE_SIZE;
 import static ar.edu.itba.paw.models.utils.Constants.EXCHANGES_PAGE_SIZE;
@@ -42,68 +43,46 @@ public class ExchangeJpaDao implements ExchangeDao {
         return exchange;
     }
 
-    @Transactional
     @Override
-    public Exchange rejectExchange(int acceptCode) {
-        Exchange exchange = findByAcceptCode(acceptCode);
+    public void rejectExchange(Exchange exchange, int acceptCode) {
         exchange.setExchangeState(ExchangeState.REJECTED);
-        return exchange;
     }
 
-    @Transactional
     @Override
-    public void setEndDate(int acceptCode, Timestamp endDate) {
-        Exchange exchange = findByAcceptCode(acceptCode);
+    public void setEndDate(Exchange exchange, int acceptCode, Timestamp endDate) {
         exchange.setExchangeEndDate(endDate);
     }
 
-    @Transactional
     @Override
-    public Exchange acceptExchange(int acceptCode) {
-        Exchange exchange = findByAcceptCode(acceptCode);
+    public void acceptExchange(Exchange exchange, int acceptCode){
         exchange.setExchangeState(ExchangeState.ACCEPTED);
-        return exchange;
     }
 
-    @Transactional
     @Override
-    public Exchange confirmOfferer(int acceptCode) {
-        Exchange exchange = findByAcceptCode(acceptCode);
+    public void confirmOfferer(Exchange exchange, int acceptCode) {
         exchange.setOffererReceivedBook(true);
-        return exchange;
     }
 
-    @Transactional
     @Override
-    public Exchange confirmRequester(int acceptCode) {
-        Exchange exchange = findByAcceptCode(acceptCode);
+    public void confirmRequester(Exchange exchange, int acceptCode) {
         exchange.setRequesterReceivedBook(true);
-        return exchange;
     }
 
-    @Transactional
     @Override
-    public void updateExchangeStatus(int acceptCode, ExchangeState newStatus) {
-        Exchange exchange = findByAcceptCode(acceptCode);
+    public void updateExchangeStatus(Exchange exchange, int acceptCode, ExchangeState newStatus) {
         exchange.setExchangeState(newStatus);
     }
 
     @Override
-    public Exchange findByAcceptCode(int acceptCode) throws ExchangeNotFoundException {
+    public Optional<Exchange> findByAcceptCode(int acceptCode) throws ExchangeNotFoundException {
         TypedQuery<Exchange> exchange = em.createQuery("FROM Exchange e WHERE e.acceptCode = :acceptCode", Exchange.class);
         exchange.setParameter("acceptCode", acceptCode);
-
-        Exchange result = exchange.getSingleResult();
-        if (result == null) {
-            throw new ExchangeNotFoundException("Exchange not found");
-        }
-        return result;
+        return Optional.ofNullable(exchange.getSingleResult());
     }
 
     @Override
-    public Exchange getExchangeById(long exchangeId) {
-        return em.find(Exchange.class, exchangeId);
-        // exception if exchange is null
+    public Optional<Exchange> getExchangeById(long exchangeId) {
+        return Optional.ofNullable(em.find(Exchange.class, exchangeId));
     }
 
     @Override
@@ -140,13 +119,9 @@ public class ExchangeJpaDao implements ExchangeDao {
     }
 
     @Override
-    @Transactional
-    public void createMessage(long exchangeId, long userId, String message, Timestamp time) {
-        Exchange exchange = em.find(Exchange.class, exchangeId);
-
+    public void createMessage(Exchange exchange, long userId, String message, Timestamp time) {
         Message newMessage = new Message(null, exchange ,em.find(User.class, userId), time, message);
         em.persist(newMessage);
-
         exchange.getChat().add(newMessage);
     }
 }

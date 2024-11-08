@@ -1,29 +1,29 @@
 package ar.edu.itba.paw.models.utils;
 
 public enum SortType {
-    RATING_ASCENDING,
-    RATING_DESCENDING,
-    PUBLICATION_DATE_ASCENDING,
-    PUBLICATION_DATE_DESCENDING,
-    BOOK_NAME_ASCENDING,
-    BOOK_NAME_DESCENDING;
+    RATING_ASCENDING("sort.rating.ascending"),
+    RATING_DESCENDING("sort.rating.descending"),
+    PUBLICATION_DATE_ASCENDING("sort.publication.date.ascending"),
+    PUBLICATION_DATE_DESCENDING("sort.publication.date.descending"),
+    BOOK_NAME_ASCENDING("sort.book.name.ascending"),
+    BOOK_NAME_DESCENDING("sort.book.name.descending");
 
+    private final String value;
 
-    public static SortType fromInt(int i) {
-        try {
-            return SortType.values()[i];
-        } catch (ArrayIndexOutOfBoundsException e) {
-            return null;
-        }
+    SortType(String value) {
+        this.value = value;
     }
 
     public static SortType fromString(String sortTypeFilter) {
         for (SortType sortType : SortType.values()) {
-            if (sortType.name().equalsIgnoreCase(sortTypeFilter)) {
+            if (sortType.value.equalsIgnoreCase(sortTypeFilter)) {
                 return sortType;
             }
         }
         return null;
     }
 
+    public String getValue() {
+        return this.value;
+    }
 }

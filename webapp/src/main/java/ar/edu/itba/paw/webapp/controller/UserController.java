@@ -54,9 +54,6 @@ public class UserController {
     @Autowired
     private MessageSource messageSource;
 
-    @Autowired
-    private LoggedUserAdvice loggedUserAdvice;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     @RequestMapping("/login")
@@ -202,16 +199,7 @@ public class UserController {
             return createForm(userForm);
         }
 
-        // verify date, create an user and send a verification email
-
         User user = us.createUser(userForm.getUsername(), userForm.getMail(), userForm.getPassword(), LocaleContextHolder.getLocale().toLanguageTag());
-
-        try {
-        } catch (ApplicationRuntimeException e) {
-            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
-            return new ModelAndView("redirect:/400");
-        }
-
         return new ModelAndView("redirect:/success_registration");
     }
 
@@ -239,13 +227,13 @@ public class UserController {
 
     @RequestMapping("/profile")
     public ModelAndView profileHome(RedirectAttributes redirectAttributes,
-                                    @RequestParam(name = "page", defaultValue = "0") int currentPage) {
+                                    @RequestParam(name = "page", defaultValue = "0") int currentPage, @ModelAttribute("loggedUser") User loggeduser) {
         ModelAndView mav = new ModelAndView("profile/profile_home");
 
-        mav.addObject("loggedUser", loggedUserAdvice.getLoggedUser());
-        mav.addObject("locationsUser", loggedUserAdvice.getLoggedUser().getUserLocations());
-        mav.addObject("reviews", userReviewService.getReviewsEarnedByUserId(loggedUserAdvice.getLoggedUser().getUserId(), currentPage));
-        mav.addObject("userRating", userReviewService.getUserRatingEarned(loggedUserAdvice.getLoggedUser().getUserId()));
+        mav.addObject("loggedUser", loggeduser);
+        mav.addObject("locationsUser", loggeduser.getUserLocations());
+        mav.addObject("reviews", userReviewService.getReviewsEarnedByUserId(loggeduser.getUserId(), currentPage));
+        mav.addObject("userRating", userReviewService.getUserRatingEarned(loggeduser.getUserId()));
 
         return mav;
     }
@@ -285,9 +273,9 @@ public class UserController {
 
         }
 
-		Optional<User> updatedUser = us.findById(userId);
+		User updatedUser = us.findById(userId);
 		ModelAndView modelAndView = new ModelAndView("redirect:/profile");
-		updatedUser.ifPresent(user -> modelAndView.addObject("loggedUser", user));
+		modelAndView.addObject("loggedUser", updatedUser);
 		
 		return modelAndView;
     }
@@ -297,9 +285,9 @@ public class UserController {
     	
         us.removeLocation(userId, locationId);
         
-		Optional<User> updatedUser = us.findById(userId);
+		User updatedUser = us.findById(userId);
 		ModelAndView modelAndView = new ModelAndView("redirect:/profile");
-		updatedUser.ifPresent(user -> modelAndView.addObject("loggedUser", user));
+		modelAndView.addObject("loggedUser", updatedUser);
 		
 		return modelAndView;
     }

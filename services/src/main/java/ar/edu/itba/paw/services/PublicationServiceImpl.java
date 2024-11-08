@@ -1,17 +1,21 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.exceptions.PublicationNotFoundException;
+import ar.edu.itba.paw.interfaces.services.BookService;
+import ar.edu.itba.paw.interfaces.services.LocationService;
 import ar.edu.itba.paw.interfaces.services.PublicationService;
 import ar.edu.itba.paw.interfaces.persistence.PublicationDao;
+import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
-import javax.transaction.Transactional;
 
 import static ar.edu.itba.paw.models.utils.Constants.DEFAULT_PUBLICATION_GENRE_FILTER;
 import static ar.edu.itba.paw.models.utils.Constants.DEFAULT_PUBLICATION_STATE_FILTER;
@@ -22,12 +26,24 @@ public class PublicationServiceImpl implements PublicationService {
     @Autowired
     private PublicationDao pubDao;
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private BookService bookService;
+
+    @Autowired
+    private LocationService locationService;
+
     @Override
     @Transactional
     public Publication createPublication(long bookId, long userId, long locationId, PublicationState publicationState) {
 //        List<Location> locations = new ArrayList<>();
 //        locations.add(locationService.newLocation(location));
-        return pubDao.createPublication(bookId, userId, locationId, publicationState);
+        Book book = bookService.getBookById(bookId);
+        User user = userService.findById(userId);
+        Location location = locationService.findById(locationId);
+        return pubDao.createPublication(book, user, location, publicationState);
     }
 
     @Override
@@ -39,16 +55,23 @@ public class PublicationServiceImpl implements PublicationService {
     }
 
     @Override
+    @Transactional
     public void terminatePublication(Publication publication) {
-        pubDao.terminatePublication(publication.getPublicationId());
+        pubDao.terminatePublication(publication);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Publication getPublicationByPublicationId(long publicationId) {
-        return pubDao.getPublicationByPublicationId(publicationId);
+        Optional<Publication> publication = pubDao.getPublicationByPublicationId(publicationId);
+        if (publication.isEmpty()) {
+            throw new PublicationNotFoundException("Publication not found");
+        }
+        return publication.get();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, String isBookStateFilterActive, String bookStateFilter, String isGenreFilterActive, String genreFilter, String sortType, String currentPage, User currentUser) {
 
         boolean bookStateFilterActive = "true".equalsIgnoreCase(isBookStateFilterActive);
@@ -74,6 +97,7 @@ public class PublicationServiceImpl implements PublicationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public int getPublicationCountByUserId(long userId) {
         return pubDao.getPublicationCountByUserId(userId);
     }
@@ -83,6 +107,7 @@ public class PublicationServiceImpl implements PublicationService {
 //    }
 
     @Override
+    @Transactional(readOnly = true)
     public PaginatedResponse<Publication, ItemFilterMetadata> getMyPaginatedPublications(long userId, String search, String isBookStateFilterActive, String bookStateFilter, String isGenreFilterActive, String genreFilter, String sortType, String currentPage) {
         boolean bookStateFilterActive = "true".equalsIgnoreCase(isBookStateFilterActive);
         boolean genreFilterActive = "true".equalsIgnoreCase(isGenreFilterActive);
@@ -108,16 +133,19 @@ public class PublicationServiceImpl implements PublicationService {
     }
 
     @Override
+    @Transactional
     public void deletePublication(long publicationId) {
         pubDao.deletePublication(publicationId);
     }
 
     @Override
+    @Transactional
     public void likePublication(long publicationId, long userId) {
         pubDao.likePublication(publicationId, userId);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<GenreWrapper> getGenreWrapperList(String search, String isBookStateFilterActive, String bookStateFilter) {
         boolean bookStateFilterActive = "true".equalsIgnoreCase(isBookStateFilterActive);
 
@@ -133,6 +161,7 @@ public class PublicationServiceImpl implements PublicationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<GenreWrapper> getMyGenreWrapperList(long userId, String search, String isBookStateFilterActive, String bookStateFilter) {
         boolean bookStateFilterActive = "true".equalsIgnoreCase(isBookStateFilterActive);
 
@@ -147,8 +176,8 @@ public class PublicationServiceImpl implements PublicationService {
         return pubDao.getGenreQtyByPublication(userId, search, bookStateFilterActive, state);
     }
 
-
     @Override
+    @Transactional(readOnly = true)
     public List<BookStateWrapper> getBookStateWrapperList(String search, String isGenreFilterActive, String genreFilter) {
         boolean genreFilterActive = "true".equalsIgnoreCase(isGenreFilterActive);
 
@@ -164,6 +193,7 @@ public class PublicationServiceImpl implements PublicationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<BookStateWrapper> getMyBookStateWrapperList(long userId, String search, String isGenreFilterActive, String genreFilter) {
         boolean genreFilterActive = "true".equalsIgnoreCase(isGenreFilterActive);
 

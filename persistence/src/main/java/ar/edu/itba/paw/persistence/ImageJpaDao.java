@@ -19,13 +19,9 @@ public class ImageJpaDao implements ImageDao {
 	private EntityManager em;
 	
 	@Override
-	@Transactional
 	public Image createImage(byte[] image) {
-		System.out.println("INSIDE ImageJpaDao");
 		Image img = new Image(null, image);
-		System.out.println("created image");
 		em.persist(img);
-		System.out.println("persisted image");
 		return img;
 	}
 

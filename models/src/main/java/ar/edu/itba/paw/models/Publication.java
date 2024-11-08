@@ -21,7 +21,7 @@ public class Publication {
     @Column(name = "publicationid")
     private Long publicationId;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "bookid", nullable = false)
     private Book book;
 
