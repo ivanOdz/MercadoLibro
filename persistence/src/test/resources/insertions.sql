@@ -29,15 +29,15 @@
 
 -- 3 --
         INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
-        VALUES (3, '9788408186206', 'La sombra del viento', 'Planeta', 'Una novela fascinante ambientada en la Barcelona de la posguerra que mezcla misterio, amor y tragedia.', 'NOVEL', 2, 400, 575, 'SPANISH', 'SMALL', 2001, TRUE, FALSE, NULL);
+        VALUES (3, '9788408186206', 'La sombra del viento', 'Planeta', 'Una novela fascinante ambientada en la Barcelona de la posguerra que mezcla misterio, amor y tragedia.', 'OTHER', 2, 400, 575, 'SPANISH', 'SMALL', 2001, TRUE, FALSE, NULL);
 
 -- 4 --
         INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
-        VALUES (4, '9788497592451', 'El amor en los tiempos del cólera', 'Sudamericana', 'Una historia de amor que se extiende a lo largo de más de 50 años, escrita por el ganador del Premio Nobel.', 'NOVEL', 1, 500, 490, 'SPANISH', 'MEDIUM', 1985, FALSE, TRUE, NULL);
+        VALUES (4, '9788497592451', 'El amor en los tiempos del cólera', 'Sudamericana', 'Una historia de amor que se extiende a lo largo de más de 50 años, escrita por el ganador del Premio Nobel.', 'OTHER', 1, 500, 490, 'SPANISH', 'MEDIUM', 1985, FALSE, TRUE, NULL);
 
 -- 5 --
         INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
-        VALUES (5, '9780062315007', 'El alquimista', 'HarperCollins', 'Una novela filosófica sobre un joven pastor que sigue su sueño de encontrar un tesoro en Egipto.', 'NOVEL', 3, 300, 208, 'SPANISH', 'MEDIUM', 1988, TRUE, FALSE, NULL);
+        VALUES (5, '9780062315007', 'El alquimista', 'HarperCollins', 'Una novela filosófica sobre un joven pastor que sigue su sueño de encontrar un tesoro en Egipto.', 'OTHER', 3, 300, 208, 'SPANISH', 'MEDIUM', 1988, TRUE, FALSE, NULL);
 
 -- 6 --
         INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
@@ -259,6 +259,6 @@
 	INSERT INTO book (bookId, bookModelId, ownerId, exchangesQty, available, bookState)
 	VALUES (9, 9, 4, 0, false, 'NEW');
 	
--- 10. Último libro 'La ciudad y los perros' queda huerfano.
+-- 10. Último libro 'La ciudad y los perros' no se inserta, queda solo como Modelo.
 
 	
