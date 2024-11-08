@@ -388,6 +388,7 @@ public class PublicationJpaDao implements PublicationDao {
                 FROM FavoritePublication fp
                 WHERE fp.publication.publicationId IN (:ids)
                 AND fp.user.userId = :userId
+                AND fp.publication.publicationState = 'CURRENT'
                 ORDER BY fp.likedAt DESC
             """;
 
