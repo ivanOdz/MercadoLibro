@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.exceptions.base.ApplicationRuntimeException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
@@ -13,12 +12,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 public class PublicationController {
@@ -61,16 +60,8 @@ public class PublicationController {
 
     @PostMapping(path = "/createpublication")
     public ModelAndView createPublication(@RequestParam(name = "bookId") long bookId, @RequestParam(name = "locationId") long locationId, @ModelAttribute("loggedUser") User loggeduser) {
-    	
-        try {
-            ps.createPublication(bookId, loggeduser.getUserId(), locationId, PublicationState.CURRENT);
-        } catch (ApplicationRuntimeException e) {
-            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
-            return new ModelAndView("redirect:/400");
-        }
-
-        LOGGER.info(messageSource.getMessage("info.publication.created", null, LocaleContextHolder.getLocale()));
-
+        ps.createPublication(bookId, loggeduser.getUserId(), locationId, PublicationState.CURRENT);
+        LOGGER.info("Publication created successfully");
         return new ModelAndView("redirect:/book");
     }
 
@@ -78,13 +69,7 @@ public class PublicationController {
     public ModelAndView publicationDetail(@PathVariable(name = "publication_id") long publicationId, @ModelAttribute("loggedUser") User loggeduser) {
         final ModelAndView mav = new ModelAndView("/home/publication_detail");
 
-        Publication publication;
-        try{
-            publication = ps.getPublicationByPublicationId(publicationId);
-        } catch (ApplicationRuntimeException e) {
-            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
-            return new ModelAndView("redirect:/404");
-        }
+        Publication publication = ps.getPublicationByPublicationId(publicationId);
 
         List<Book> availableBooks;
         mav.addObject("user", loggeduser);
@@ -133,19 +118,17 @@ public class PublicationController {
 
     @RequestMapping(path = "/my_favorites")
     public ModelAndView myFavoritePublications(@RequestParam(name = "page", defaultValue = "0") String currentPage, @ModelAttribute("loggedUser") User loggeduser) {
-
         PaginatedResponse<Publication, BasicMetadata> publications = ps.getFavoritePublications(loggeduser, currentPage);
         ModelAndView mav = new ModelAndView("/home/favorite_publications");
 
         mav.addObject("publications", publications);
-
         return mav;
     }
 
     @GetMapping("/publications/{publication_id:\\d+}/delete")
     public ModelAndView deletePublication(@PathVariable(name = "publication_id") long publicationId, @ModelAttribute("loggedUser") User loggeduser) {
         Publication publication = ps.getPublicationByPublicationId(publicationId);
-        if(publication.getUser().getUserId() != loggeduser.getUserId()) {
+        if(!Objects.equals(publication.getUser().getUserId(), loggeduser.getUserId())) {
             return new ModelAndView("redirect:/403");
         }
         ps.deletePublication(publicationId);

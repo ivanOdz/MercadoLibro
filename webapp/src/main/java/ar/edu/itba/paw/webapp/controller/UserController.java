@@ -77,27 +77,13 @@ public class UserController {
 
     @RequestMapping("/verification")
     public ModelAndView verificationController(@RequestParam(name = "verification_code") int verificationCode) {
-
-        User user;
-        try {
-            user = us.getUserToVerify(verificationCode);
-        } catch (ApplicationRuntimeException e) {
-            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
-            return new ModelAndView("redirect:/404");
-        }
-
-        try {
-            us.verifyUser(verificationCode);
-        } catch (ApplicationRuntimeException e) {
-            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
-            return new ModelAndView("redirect:/400");
-        }
+        User user = us.getUserToVerify(verificationCode);
+        us.verifyUser(verificationCode);
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
         final Authentication authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-
-        LOGGER.info(messageSource.getMessage("info.user.verified", null, LocaleContextHolder.getLocale()), user.getUsername());
+        LOGGER.info("User {} has been verified",  user.getUsername());
 
         return new ModelAndView("redirect:/success_verification");
     }
@@ -120,17 +106,7 @@ public class UserController {
 
     @RequestMapping("/change_password_solicited")
     public ModelAndView changePasswordSolicited(@RequestParam(name = "email") String email) {
-
-        try {
-            us.changePasswordSolicited(email);
-        } catch (BadRequestException e) {
-            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
-            return new ModelAndView("redirect:/400");
-        } catch (NotFoundException e) {
-            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
-            return new ModelAndView("redirect:/404");
-        }
-
+        us.changePasswordSolicited(email);
         return new ModelAndView("redirect:/mail_input_message");
     }
 
@@ -144,33 +120,17 @@ public class UserController {
     @RequestMapping(value = "/change_password", method = RequestMethod.POST)
     public ModelAndView changePassword(@Valid @ModelAttribute("passwordForm") PasswordForm passwordForm, BindingResult errors, @RequestParam(name = "verification_code") int verificationCode) {
         if (errors.hasErrors()) {
-            LOGGER.info("Password form has errors. Redirecting to password form");
             return createPasswordForm(passwordForm, verificationCode);
         }
-
-        try {
-            us.changePassword(verificationCode, passwordForm.getPassword());
-        } catch (ApplicationRuntimeException e) {
-            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
-            return new ModelAndView("redirect:/400");
-        }
-
-        LOGGER.info(messageSource.getMessage("info.password.changed", null, LocaleContextHolder.getLocale()));
+        us.changePassword(verificationCode, passwordForm.getPassword());
+        LOGGER.info("Password changed successfully");
 
         return new ModelAndView("redirect:/success_password");
     }
 
     @PostMapping(value = "/changeUsername")
     public String changeUsername(@RequestParam("loggedUserId") long userId, @RequestParam("newUsername") String newUsername, RedirectAttributes redirectAttributes) {
-
-        boolean updated;
-        try{
-            updated = us.changeUserName(userId, newUsername);
-        }catch (ApplicationRuntimeException e){
-            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
-            return "redirect:/400";
-        }
-
+        boolean updated = us.changeUserName(userId, newUsername);
         if (updated) {
             redirectAttributes.addFlashAttribute("message", "done");
         } else {
