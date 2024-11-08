@@ -112,11 +112,9 @@
                         </form:label>
                         <form:select path="genre" class="uk-input">
                             <c:forEach var="genreWrapper" items="${genres}">
-                                <form:option value="${genreWrapper.enumWrapper}">
-                                    <c:set var="i18nKey" value="${genreWrapper.i18nDisplayName}" />
-                                    <span class="ui-search-filter-name">
+                                <form:option value="${genreWrapper.value}">
+                                    <c:set var="i18nKey" value="${genreWrapper.value}" />
                                         <spring:message code="${i18nKey}"/>
-                                    </span>
                                 </form:option>
                             </c:forEach>
                         </form:select>
@@ -130,7 +128,10 @@
                         </form:label>
                         <form:select path="language" class="uk-input">
                             <c:forEach var="languageWrapper" items="${languages}">
-                                <form:option value="${languageWrapper.language}" label="${languageWrapper.displayName}" />
+                                <form:option value="${languageWrapper.value}">
+                                    <c:set var="i18nKey" value="${languageWrapper.value}" />
+                                        <spring:message code="${i18nKey}"/>
+                                </form:option>
                             </c:forEach>
                         </form:select>
                     </div>
@@ -217,7 +218,10 @@
                         </form:label>
                         <form:select path="dimension" class="uk-input">
                             <c:forEach var="dimensionWrapper" items="${dimensions}">
-                                <form:option value="${dimensionWrapper.dimension}" label="${dimensionWrapper.displayName}" />
+                                <form:option value="${dimensionWrapper.value}">
+                                    <c:set var="i18nKey" value="${dimensionWrapper.value}" />
+                                            <spring:message code="${i18nKey}"/>
+                                </form:option>
                             </c:forEach>
                         </form:select>
                     </div>
@@ -277,11 +281,9 @@
                         </form:label>
                         <form:select path="bookState" class="uk-input">
                             <c:forEach var="bookStateWrapper" items="${bookStates}">
-                                <form:option value="${bookStateWrapper.enumWrapper}">
-                                    <c:set var="i18nKey" value="${bookStateWrapper.i18nDisplayName}" />
-                                        <span class="ui-search-filter-name">
+                                <form:option value="${bookStateWrapper.value}">
+                                    <c:set var="i18nKey" value="${bookStateWrapper.value}" />
                                             <spring:message code="${i18nKey}"/>
-                                        </span>
                                 </form:option>
                             </c:forEach>
                         </form:select>
