@@ -188,18 +188,23 @@
                             <div>
                                 <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-border-rounded custom-link">
                                     <figure class="uk-margin-bottom">
-                                        <c:choose>
+                                            <c:choose>
                                             <c:when test="${card.images[0] != null && !card.images[0].image.isImageNull}">
                                                 <img class="book-image"
                                                      src="<c:url value='/images/${card.images[0].image.imageId}' />"
                                                      alt="bookImage"/>
                                             </c:when>
-                                            <c:otherwise>
-                                                <img class="book-image"
-                                                     src="<c:url value='/images/book.jpg' />"
-                                                     alt="book"/>
-                                            </c:otherwise>
-                                        </c:choose>
+                                                <c:when test="${!card.bookModel.image.isImageNull}">
+                                                    <img class="book-image"
+                                                         src="<c:url value='/images/${card.bookModel.image.imageId}' />"
+                                                         alt="book"/>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <img class="book-image"
+                                                         src="<c:url value='/images/book.jpg' />"
+                                                         alt="book"/>
+                                                </c:otherwise>
+                                            </c:choose>
                                     </figure>
 
                                     <div class="uk-flex uk-flex-column uk-flex-column uk-margin-bottom">
