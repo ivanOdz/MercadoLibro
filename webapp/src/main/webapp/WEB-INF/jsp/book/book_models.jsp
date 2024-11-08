@@ -46,7 +46,7 @@
                 <c:if test="${not empty param.search}">
                     <form action="<c:url value='' />" method="get">
                         <input type="hidden" name="is-genre-filter-active" value=${modelBooks.metadata.isGenreFilterActive}>
-                        <input type="hidden" name="genre-filter" value=${modelBooks.metadata.genreFilter}>
+                        <input type="hidden" name="genre-filter" value=${modelBooks.metadata.genreFilter.value}>
                         <input type="hidden" name="search" value=""/>
 
                         <button type="submit" class="uk-button uk-button-danger uk-button-small delete-button"
@@ -87,16 +87,16 @@
                             <c:forEach var="genreWrapper" items="${genres}">
                                 <li class="ui-search-filter-container">
                                     <form action="<c:url value='' />" method="get">
-                                        <input type="hidden" name="genre-filter" value="${genreWrapper.enumWrapper.genre}">
+                                        <input type="hidden" name="genre-filter" value="${genreWrapper.genre.value}">
                                         <input type="hidden" name="is-genre-filter-active" value="true">
                                         <input type="hidden" name="search" value="<c:out value='${modelBooks.metadata.search}'/>"/>
 
                                         <a href="#" class="uk-inline uk-search-button uk-button-link" title="GenreFilterRemove" onclick="this.closest('form').submit(); return false;">
-                                            <c:set var="i18nKey" value="${genreWrapper.i18nDisplayName}" />
+                                            <c:set var="i18nKey" value="${genreWrapper.genre.value}" />
                                             <span class="ui-search-filter-name">
                                             <spring:message code="${i18nKey}"/>
                                         </span>
-                                            <span> (${genreWrapper.enumWrapper.resultByGenre})</span>
+                                            <span> (${genreWrapper.resultByGenre})</span>
                                         </a>
                                     </form>
                                 </li>
@@ -157,9 +157,9 @@
                                                 </c:forEach>
                                             </p>
                                             <p>
-                                                <c:forEach var="localizedGenreWrapper" items="${genres}">
-                                                    <c:if test="${localizedGenreWrapper.enumWrapper.genre == card.genre}">
-                                                        <c:set var="i18nKey" value="${localizedGenreWrapper.i18nDisplayName}" />
+                                                <c:forEach var="genre" items="${genres}">
+                                                    <c:if test="${genre.genre.value == card.genre.value}">
+                                                        <c:set var="i18nKey" value="${genre.genre.value}" />
                                                         <span class="ui-search-filter-name">
                                                             <spring:message code="${i18nKey}"/>
                                                         </span>
@@ -219,9 +219,9 @@
                                     <c:url var="prevPageUrl" value="">
                                         <c:param name="page" value="${modelBooks.metadata.currentPage - 1}" />
                                         <c:param name="is-genre-filter-active" value="${modelBooks.metadata.isGenreFilterActive}" />
-                                        <c:param name="genre-filter" value="${modelBooks.metadata.genreFilter}" />
+                                        <c:param name="genre-filter" value="${modelBooks.metadata.genreFilter.value}" />
                                         <c:param name="search" value="${modelBooks.metadata.search}" />
-                                        <c:param name="sort-type" value="${modelBooks.metadata.sortType}" />
+                                        <c:param name="sort-type" value="${modelBooks.metadata.sortType.value}" />
                                     </c:url>
                                     <a href="${prevPageUrl}">
                                         <span uk-pagination-previous></span>
@@ -236,9 +236,9 @@
                                     <c:url var="firstPageUrl" value="">
                                         <c:param name="page" value="0" />
                                         <c:param name="is-genre-filter-active" value="${modelBooks.metadata.isGenreFilterActive}" />
-                                        <c:param name="genre-filter" value="${modelBooks.metadata.genreFilter}" />
+                                        <c:param name="genre-filter" value="${modelBooks.metadata.genreFilter.value}" />
                                         <c:param name="search" value="${modelBooks.metadata.search}" />
-                                        <c:param name="sort-type" value="${modelBooks.metadata.sortType}" />
+                                        <c:param name="sort-type" value="${modelBooks.metadata.sortType.value}" />
                                     </c:url>
                                     <a href="${firstPageUrl}">1</a>
                                 </li>
@@ -255,9 +255,9 @@
                                     <c:url var="centralPageUrl" value="">
                                         <c:param name="page" value="${i}" />
                                         <c:param name="is-genre-filter-active" value="${modelBooks.metadata.isGenreFilterActive}" />
-                                        <c:param name="genre-filter" value="${modelBooks.metadata.genreFilter}" />
+                                        <c:param name="genre-filter" value="${modelBooks.metadata.genreFilter.value}" />
                                         <c:param name="search" value="${modelBooks.metadata.search}" />
-                                        <c:param name="sort-type" value="${modelBooks.metadata.sortType}" />
+                                        <c:param name="sort-type" value="${modelBooks.metadata.sortType.value}" />
                                     </c:url>
                                     <a href="${centralPageUrl}">${i + 1}</a> <!-- Mostrar i + 1 para la numeración -->
                                 </li>
@@ -273,9 +273,9 @@
                                     <c:url var="lastPageUrl" value="">
                                         <c:param name="page" value="${modelBooks.metadata.maxPage}" />
                                         <c:param name="is-genre-filter-active" value="${modelBooks.metadata.isGenreFilterActive}" />
-                                        <c:param name="genre-filter" value="${modelBooks.metadata.genreFilter}" />
+                                        <c:param name="genre-filter" value="${modelBooks.metadata.genreFilter.value}" />
                                         <c:param name="search" value="${modelBooks.metadata.search}" />
-                                        <c:param name="sort-type" value="${modelBooks.metadata.sortType}" />
+                                        <c:param name="sort-type" value="${modelBooks.metadata.sortType.value}" />
                                     </c:url>
                                     <a href="${lastPageUrl}">${modelBooks.metadata.maxPage + 1}</a> <!-- Mostrar maxPage + 1 -->
                                 </li>
@@ -287,9 +287,9 @@
                                     <c:url var="nextPageUrl" value="">
                                         <c:param name="page" value="${modelBooks.metadata.currentPage + 1}" />
                                         <c:param name="is-genre-filter-active" value="${modelBooks.metadata.isGenreFilterActive}" />
-                                        <c:param name="genre-filter" value="${modelBooks.metadata.genreFilter}" />
+                                        <c:param name="genre-filter" value="${modelBooks.metadata.genreFilter.value}" />
                                         <c:param name="search" value="${modelBooks.metadata.search}" />
-                                        <c:param name="sort-type" value="${modelBooks.metadata.sortType}" />
+                                        <c:param name="sort-type" value="${modelBooks.metadata.sortType.value}" />
                                     </c:url>
                                     <a href="${nextPageUrl}">
                                         <spring:message code="publications.pagination.next"/>
