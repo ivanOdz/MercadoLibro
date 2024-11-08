@@ -309,9 +309,7 @@
                                         </p>
                                     </c:forEach>
                                     <div>
-                                        <span class="uk-margin-small-right" uk-icon="location">
-                                        </span>
-
+                                        <span class="uk-margin-small-right" uk-icon="location"></span>
                                         <span>
                                             <c:forEach var="location" items="${card.locations}" varStatus="status">
                                                 <c:out value="${location.locationString}"/>

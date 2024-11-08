@@ -38,12 +38,12 @@ public class PublicationServiceImpl implements PublicationService {
     @Override
     @Transactional
     public Publication createPublication(long bookId, long userId, long locationId, PublicationState publicationState) {
-//        List<Location> locations = new ArrayList<>();
-//        locations.add(locationService.newLocation(location));
         Book book = bookService.getBookById(bookId);
         User user = userService.findById(userId);
         Location location = locationService.findById(locationId);
-        return pubDao.createPublication(book, user, location, publicationState);
+        List<Location> locations = new ArrayList<>();
+        locations.add(location);
+        return pubDao.createPublication(book, user, locations, publicationState);
     }
 
     @Override

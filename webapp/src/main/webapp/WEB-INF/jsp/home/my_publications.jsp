@@ -292,14 +292,15 @@
                       </p>
                     </c:forEach>
                     <div>
-                                        <span class="uk-margin-small-right" uk-icon="location">
-                                        </span>
-
-                      <span>
-<%--                                             <c:forEach var="location" items="${card.locations}"> --%>
-                                              <c:out value="${card.location.locationString}"/>
-<%--                                             </c:forEach> --%>
-                                        </span>
+                          <span class="uk-margin-small-right" uk-icon="location"></span>
+                          <span>
+                            <c:forEach var="location" items="${card.locations}" varStatus="status">
+                              <c:out value="${location.locationString}"/>
+                              <c:if test="${!status.last}">
+                                ,
+                              </c:if>
+                            </c:forEach>
+                          </span>
                     </div>
                   </div>
                 <div style="grid-column: 3 / 5; justify-self: center; align-self: center">
