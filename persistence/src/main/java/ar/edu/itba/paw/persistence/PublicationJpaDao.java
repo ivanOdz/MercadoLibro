@@ -355,7 +355,7 @@ public class PublicationJpaDao implements PublicationDao {
     }
 
     @Override
-    public PaginatedResponse<Publication, BasicMetadata> getFavoritePublications(Long userId, String currentPage) {
+    public PaginatedResponse<Publication, BasicMetadata> getFavoritePublications(User user, String currentPage) {
         int page;
         try {
             page = Integer.parseInt(currentPage);
@@ -372,7 +372,7 @@ public class PublicationJpaDao implements PublicationDao {
                 "ORDER BY liked_at DESC";
 
         Query nativeQuery = em.createNativeQuery(nativeQueryString);
-        nativeQuery.setParameter("userId", userId);
+        nativeQuery.setParameter("userId", user.getUserId());
         nativeQuery.setMaxResults(PUBLICATIONS_PAGE_SIZE);
         nativeQuery.setFirstResult(page * PUBLICATIONS_PAGE_SIZE);
 
@@ -393,9 +393,13 @@ public class PublicationJpaDao implements PublicationDao {
 
         TypedQuery<Publication> query = em.createQuery(jpqlQuery, Publication.class);
         query.setParameter("ids",favoritePublicationIds);
-        query.setParameter("userId", userId);
+        query.setParameter("userId", user.getUserId());
 
         List<Publication> favoritePublications = query.getResultList();
+
+        for(Publication publication : favoritePublications){
+            setIsLikedByUser(user, publication);
+        }
 
         return new PaginatedResponse<>(favoritePublications, new BasicMetadata(page, favoritePublications.size(), PUBLICATIONS_PAGE_SIZE));
     }

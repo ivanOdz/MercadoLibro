@@ -39,5 +39,5 @@ public interface PublicationService {
 
     List<BookStateWrapper> getMyBookStateWrapperList(long userId, String search, String isGenreFilterActive, String genreFilter);
 
-    PaginatedResponse<Publication, BasicMetadata> getFavoritePublications(Long userId, String currentPage);
+    PaginatedResponse<Publication, BasicMetadata> getFavoritePublications(User user, String currentPage);
 }

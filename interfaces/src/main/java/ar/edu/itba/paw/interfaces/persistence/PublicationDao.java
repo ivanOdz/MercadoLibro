@@ -29,5 +29,5 @@ public interface PublicationDao {
 
     void likePublication(long publicationId, long userId);
 
-    PaginatedResponse<Publication, BasicMetadata> getFavoritePublications(Long userId, String currentPage);
+    PaginatedResponse<Publication, BasicMetadata> getFavoritePublications(User user, String currentPage);
 }
