@@ -127,7 +127,7 @@
                                                        onclick="event.stopPropagation()" uk-toggle>
                                                         <spring:message code="exchange.button.accept"/>
                                                     </a>
-                                                    <a class="uk-button uk-button-default uk-button-small custom-link"
+                                                    <a class="uk-button uk-button-default uk-button-small"
                                                        href="#modal-exchange-rejected-${data.acceptCode}"
                                                        onclick="event.stopPropagation()" uk-toggle>
                                                         <spring:message code="email.rejectButton"/>
