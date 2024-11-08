@@ -1,18 +1,15 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.services.BookStateService;
-import ar.edu.itba.paw.interfaces.services.GenreService;
-import ar.edu.itba.paw.interfaces.services.LocationService;
 import ar.edu.itba.paw.interfaces.services.PublicationService;
 import ar.edu.itba.paw.interfaces.persistence.PublicationDao;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
+import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -24,7 +21,6 @@ public class PublicationServiceImpl implements PublicationService {
 
     @Autowired
     private PublicationDao pubDao;
-//    private final LocationService locationService;
 
     @Override
     @Transactional
@@ -182,5 +178,9 @@ public class PublicationServiceImpl implements PublicationService {
         return pubDao.getBookStateQtyByPublication(userId, search, genreFilterActive, genre);
     }
 
+    @Override
+    public PaginatedResponse<Publication, BasicMetadata> getFavoritePublications(Long userId, String currentPage) {
+        return pubDao.getFavoritePublications(userId, currentPage);
+    }
 
 }

@@ -19,10 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Controller
 public class PublicationController {
@@ -52,21 +49,9 @@ public class PublicationController {
                               @RequestParam(name = "page", defaultValue = "0") String currentPage) {
 
         final ModelAndView mav = new ModelAndView("home/publications");
-        PaginatedResponse<Publication, ItemFilterMetadata> publications;
-        try {
-            publications = ps.getPaginatedPublications(search, isBookStateFilterActive,
+
+        PaginatedResponse<Publication, ItemFilterMetadata> publications = ps.getPaginatedPublications(search, isBookStateFilterActive,
                     bookStateFilter, isGenreFilterActive, genreFilter, sortType, currentPage, loggedUserAdvice.getLoggedUser());
-
-        } catch (Exception e){
-            ModelAndView errormav = new ModelAndView("/debug");
-            StringWriter sw = new StringWriter();
-            e.printStackTrace(new PrintWriter(sw));
-            String stackTrace = sw.toString();
-
-            errormav.addObject("error", stackTrace);
-            return errormav;
-        }
-
 
         List<GenreWrapper> genreWrapperList = ps.getGenreWrapperList(search, isBookStateFilterActive, bookStateFilter);
         List<BookStateWrapper> bookStateWrapperList = ps.getBookStateWrapperList(search, isGenreFilterActive, genreFilter);

@@ -1,15 +1,13 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
-import ar.edu.itba.paw.models.Location;
 import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.utils.*;
+import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
-import ar.edu.itba.paw.models.utils.pagination.Metadata;
 
 import java.util.List;
-import java.util.Set;
 
 public interface PublicationDao {
 
@@ -31,4 +29,5 @@ public interface PublicationDao {
 
     void likePublication(long publicationId, long userId);
 
+    PaginatedResponse<Publication, BasicMetadata> getFavoritePublications(Long userId, String currentPage);
 }

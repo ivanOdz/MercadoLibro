@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.exceptions.PublicationNotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.PublicationDao;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
+import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 import org.hibernate.annotations.Formula;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -345,8 +346,6 @@ public class PublicationJpaDao implements PublicationDao {
         return ((Number) query.getSingleResult()).intValue();
     }
 
-
-
     @Override
     @Transactional
     public void deletePublication(long publicationId) {
@@ -354,33 +353,89 @@ public class PublicationJpaDao implements PublicationDao {
         em.remove(publication);
     }
 
+    @Override
+    public PaginatedResponse<Publication, BasicMetadata> getFavoritePublications(Long userId, String currentPage) {
+        int page;
+        try {
+            page = Integer.parseInt(currentPage);
+            if (page < 0) {
+                page = 0;
+            }
+        } catch (NumberFormatException e) {
+            page = 0;
+        }
+
+        String nativeQueryString = "SELECT fp.publicationid " +
+                "FROM favorite_publication fp " +
+                "WHERE fp.userid = :userId  " +
+                "ORDER BY liked_at DESC";
+
+        Query nativeQuery = em.createNativeQuery(nativeQueryString);
+        nativeQuery.setParameter("userId", userId);
+        nativeQuery.setMaxResults(PUBLICATIONS_PAGE_SIZE);
+        nativeQuery.setFirstResult(page * PUBLICATIONS_PAGE_SIZE);
+
+        @SuppressWarnings("unchecked")
+        List<Long> favoritePublicationIds = nativeQuery.getResultList().stream().mapToLong(n -> ((Number) n).longValue()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+
+        if (favoritePublicationIds.isEmpty()) {
+            return new PaginatedResponse<>(Collections.emptyList(), new BasicMetadata(page, 0, PUBLICATIONS_PAGE_SIZE));
+        }
+
+        String jpqlQuery = """
+                SELECT fp.publication
+                FROM FavoritePublication fp
+                WHERE fp.publication.publicationId IN (:ids)
+                AND fp.user.userId = :userId
+                ORDER BY fp.likedAt DESC
+            """;
+
+        TypedQuery<Publication> query = em.createQuery(jpqlQuery, Publication.class);
+        query.setParameter("ids",favoritePublicationIds);
+        query.setParameter("userId", userId);
+
+        List<Publication> favoritePublications = query.getResultList();
+
+        return new PaginatedResponse<>(favoritePublications, new BasicMetadata(page, favoritePublications.size(), PUBLICATIONS_PAGE_SIZE));
+    }
+
+
     private void setIsLikedByUser(User user, Publication publication) {
         if(user == null){
             publication.setLikedByUser(false);
             return;
         }
-        Query query = em.createQuery("SELECT COUNT(*) FROM FavoritePublication fp WHERE fp.publicationId = :publicationId AND fp.userId = :userId");
+        Query query = em.createQuery("SELECT COUNT(*) FROM FavoritePublication fp WHERE fp.publication.publicationId = :publicationId AND fp.user.userId = :userId");
         query.setParameter("publicationId", publication.getPublicationId());
         query.setParameter("userId", user.getUserId());
         publication.setLikedByUser(((Number) query.getSingleResult()).intValue() > 0);
     }
 
-    @Override
     @Transactional
     public void likePublication(long publicationId, long userId) {
         User user = em.find(User.class, userId);
         Publication publication = em.find(Publication.class, publicationId);
-        setIsLikedByUser(user, publication);
-        if(publication.getLikedByUser()){
-            Query query = em.createQuery("SELECT fp.favoritepublicationId FROM FavoritePublication fp WHERE fp.publicationId = :publicationId AND fp.userId = :userId");
-            query.setParameter("publicationId", publicationId);
-            query.setParameter("userId", userId);
-            FavoritePublication fp = em.find(FavoritePublication.class, query.getSingleResult());
-            em.remove(fp);
+
+        /*if (user == null || publication == null) {
+            throw new IllegalArgumentException("User or Publication not found");
+        }*/
+
+        TypedQuery<FavoritePublication> query = em.createQuery(
+                "SELECT fp FROM FavoritePublication fp WHERE fp.publication = :publication AND fp.user = :user",
+                FavoritePublication.class
+        );
+        query.setParameter("publication", publication);
+        query.setParameter("user", user);
+
+        List<FavoritePublication> favoritePublications = query.getResultList();
+
+        if (!favoritePublications.isEmpty()) {
+            em.remove(favoritePublications.get(0));
+            publication.setLikedByUser(false);
         } else {
-            FavoritePublication fp = new FavoritePublication(publicationId, userId);
-            em.persist(fp);
+            FavoritePublication newFavorite = new FavoritePublication(publication, user);
+            em.persist(newFavorite);
+            publication.setLikedByUser(true);
         }
     }
-
 }

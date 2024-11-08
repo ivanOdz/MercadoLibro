@@ -125,15 +125,9 @@ public class Publication {
         return likes;
     }
 
-    public Boolean getLikedByUser() {
-        return isLikedByUser;
-    }
 
     public void setLikes(Integer likes) {
         this.likes = likes;
     }
 
-    public void setLikedByUser(Boolean isLikedByUser) {
-        this.isLikedByUser = isLikedByUser;
-    }
 }
