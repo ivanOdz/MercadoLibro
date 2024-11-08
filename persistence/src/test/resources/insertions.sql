@@ -37,11 +37,11 @@
 
 -- 5 --
         INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
-        VALUES (5, '9780062315007', 'El alquimista', 'HarperCollins', 'Una novela filosófica sobre un joven pastor que sigue su sueño de encontrar un tesoro en Egipto.', 'OTHER', 3, 300, 208, 'SPANISH', 'MEDIUM', 1988, TRUE, FALSE, NULL);
+        VALUES (5, '9780062315007', 'El alquimista', 'HarperCollins', 'Una novela filosófica sobre un joven pastor que sigue su sueño de encontrar un tesoro en Egipto.', 'OTHER', 3, 300, 208, 'SPANISH', 'SMALL', 1988, TRUE, FALSE, NULL);
 
 -- 6 --
         INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
-        VALUES (6, '9788437604947', 'La casa de los espíritus', 'Debolsillo', 'Una obra que recorre las vidas de varias generaciones de la familia Trueba, desde lo fantástico hasta lo histórico.', 'FICTION', 2, 500, 448, 'SPANISH', 'SMALL', 1982, FALSE, TRUE, NULL);
+        VALUES (6, '9788437604947', 'La casa de los espíritus', 'Debolsillo', 'Una obra que recorre las vidas de varias generaciones de la familia Trueba, desde lo fantástico hasta lo histórico.', 'FICTION', 2, 500, 448, 'SPANISH', 'MEDIUM', 1982, FALSE, TRUE, NULL);
 
 -- 7 --
         INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
@@ -49,11 +49,11 @@
 
 -- 8 --
         INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
-        VALUES (8, '9788497594319', 'Los detectives salvajes', 'Anagrama', 'Una novela sobre la vida bohemia de poetas en el México de los años 70.', 'MISTERY', 1, 700, 609, 'SPANISH', 'MEDIUM', 1998, FALSE, TRUE, NULL);
+        VALUES (8, '9788497594319', 'Los detectives salvajes', 'Anagrama', 'Una novela sobre la vida bohemia de poetas en el México de los años 70.', 'MISTERY', 1, 700, 609, 'SPANISH', 'LARGE', 1998, FALSE, TRUE, NULL);
     
 -- 9 --
         INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
-        VALUES (9, '9788423353248', 'Patria', 'Tusquets', 'Una novela que explora las vidas de dos familias vascas en el contexto del conflicto de ETA.', 'THRILLER', 1, 800, 648, 'SPANISH', 'MEDIUM', 2016, FALSE, TRUE, NULL);
+        VALUES (9, '9788423353248', 'Patria', 'Tusquets', 'Una novela que explora las vidas de dos familias vascas en el contexto del conflicto de ETA.', 'THRILLER', 1, 800, 648, 'SPANISH', 'LARGE', 2016, FALSE, TRUE, NULL);
 
 -- 10 --
         INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
@@ -61,29 +61,29 @@
 
 -- Insertar autores --------------------------------------------------------------------------------------------------------
     
-        INSERT INTO author (authorName)
-        VALUES ('Gabriel García Márquez');
+        INSERT INTO author (authorId, authorName)
+        VALUES (1, 'Gabriel García Márquez');
 
-        INSERT INTO author (authorName)
-        VALUES ('Miguel de Cervantes');
+        INSERT INTO author (authorId, authorName)
+        VALUES (2, 'Miguel de Cervantes');
 
-        INSERT INTO author (authorName)
-        VALUES ('Carlos Ruiz Zafón');
+        INSERT INTO author (authorId, authorName)
+        VALUES (3, 'Carlos Ruiz Zafón');
 
-        INSERT INTO author (authorName)
-        VALUES ('Paulo Coelho');
+        INSERT INTO author (authorId, authorName)
+        VALUES (4, 'Paulo Coelho');
 
-        INSERT INTO author (authorName)
-        VALUES ('Isabel Allende');
+        INSERT INTO author (authorId, authorName)
+        VALUES (5, 'Isabel Allende');
 
-        INSERT INTO author (authorName)
-        VALUES ('Roberto Bolaño');
+        INSERT INTO author (authorId, authorName)
+        VALUES (6, 'Roberto Bolaño');
 
-        INSERT INTO author (authorName)
-        VALUES ('Fernando Aramburu');
+        INSERT INTO author (authorId, authorName)
+        VALUES (7, 'Fernando Aramburu');
 
-        INSERT INTO author (authorName)
-        VALUES ('Mario Vargas Llosa');
+        INSERT INTO author (authorId, authorName)
+        VALUES (8, 'Mario Vargas Llosa');
         
 -- Insertar ubicaciones ----------------------------------------------------------------------------------------------------
 
@@ -123,7 +123,13 @@
 		FROM book_model
 		JOIN author ON authorName = 'Gabriel García Márquez'
 		WHERE isbn = '9788497592208'
-
+		
+    INSERT INTO book_author (bookModelId, authorId)
+		SELECT bookModelId, authorId
+		FROM book_model
+		JOIN author ON authorName = 'Miguel de Cervantes' -- Solo Márquez es el autor, agregado para probar lista --
+		WHERE isbn = '9788497592208'
+		
 -- 2 -- Don Quijote de la Mancha
 
 	INSERT INTO book_author (bookModelId, authorId)
