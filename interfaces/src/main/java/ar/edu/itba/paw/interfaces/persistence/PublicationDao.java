@@ -11,7 +11,7 @@ import java.util.Set;
 
 public interface PublicationDao {
 
-    Publication createPublication(Book book, User user, Location location, PublicationState publicationState);
+    Publication createPublication(Book book, User user, List<Location> locations, PublicationState publicationState);
 
     void terminatePublication(Publication publication);
 

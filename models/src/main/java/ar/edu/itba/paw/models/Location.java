@@ -17,7 +17,12 @@ public class Location {
 
     private String locationString;
 
-    @OneToMany(mappedBy = "location")
+    @ManyToMany
+    @JoinTable(
+            name = "publication_location",
+            joinColumns = @JoinColumn(name = "locationid"),
+            inverseJoinColumns = @JoinColumn(name = "publicationid")
+    )
     private List<Publication> publications = new ArrayList<>();
     
     @ManyToMany(mappedBy = "userLocations")

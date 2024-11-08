@@ -31,13 +31,13 @@ public class Publication {
     @Column(name = "publicationdatetime")
     private Timestamp publicationDatetime;
 
-    @ManyToOne
+    @ManyToMany
     @JoinTable(
             name = "publication_location",
             joinColumns = @JoinColumn(name = "publicationid"),
             inverseJoinColumns = @JoinColumn(name = "locationid")
     )
-    private Location location;
+    private List<Location> locations;
 
     @ManyToOne
     @JoinColumn(name = "userid", nullable = false)
@@ -53,12 +53,12 @@ public class Publication {
         // only for JPA
     }
 
-    public Publication(Long publicationId, Book book, User user,PublicationState publicationState, Timestamp publicationDatetime, Location location) {
+    public Publication(Long publicationId, Book book, User user,PublicationState publicationState, Timestamp publicationDatetime, List<Location> locations) {
         this.publicationId = publicationId;
         this.book = book;
         this.publicationState = publicationState;
         this.publicationDatetime = publicationDatetime;
-        this.location = location;
+        this.locations = locations;
         this.user = user;
     }
 
@@ -97,11 +97,19 @@ public class Publication {
     public void setBook(Book book) {
         this.book = book;
     }
-    
-    public void setLocation(Location location) {
-        this.location = location;
+
+    public List<Location> getLocations() {
+        return locations;
     }
-    
+
+    public void setLocations(List<Location> locations) {
+        this.locations = locations;
+    }
+
+    public void addLocation(Location location) {
+        locations.add(location);
+    }
+
     public PublicationState getPublicationState() {
         return publicationState;
     }
@@ -118,10 +126,6 @@ public class Publication {
         this.publicationDatetime = publicationDatetime;
     }
     
-    public Location getLocation() {
-        return location;
-    }
-
     public Integer getLikes() {
         return likes;
     }

@@ -30,8 +30,8 @@ public class PublicationJpaDao implements PublicationDao {
 
     @Override
     @Transactional
-    public Publication createPublication(Book book, User user, Location location, PublicationState publicationState) {
-        final Publication publication = new Publication(null, book, user,publicationState, new Timestamp(new Date().getTime()), location);
+    public Publication createPublication(Book book, User user, List<Location> locations, PublicationState publicationState) {
+        final Publication publication = new Publication(null, book, user,publicationState, new Timestamp(new Date().getTime()), locations);
         em.persist(publication);
         return publication;
     }
