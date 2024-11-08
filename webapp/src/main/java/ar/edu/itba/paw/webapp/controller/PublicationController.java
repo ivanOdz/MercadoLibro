@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.exceptions.base.ApplicationRuntimeException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
+import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 
 import ar.edu.itba.paw.webapp.form.ExchangeForm;
@@ -143,6 +144,19 @@ public class PublicationController {
         return mav;
     }
 
+    @RequestMapping(path = "/my_favorites")
+    public ModelAndView myFavoritePublications(@RequestParam(name = "page", defaultValue = "0") String currentPage) {
+
+        User user = loggedUserAdvice.getLoggedUser();
+
+        PaginatedResponse<Publication, BasicMetadata> publications = ps.getFavoritePublications(user, currentPage);
+        ModelAndView mav = new ModelAndView("/home/favorite_publications");
+
+        mav.addObject("publications", publications);
+
+        return mav;
+    }
+
     @GetMapping("/publications/{publication_id:\\d+}/delete")
     public ModelAndView deletePublication(@PathVariable(name = "publication_id") long publicationId) {
         Publication publication = ps.getPublicationByPublicationId(publicationId);
@@ -154,9 +168,12 @@ public class PublicationController {
     }
 
     @PostMapping("/like/{publicationId:\\d+}")
-    public ModelAndView likePublication(@PathVariable(name = "publicationId") long publicationId) {
+    public ModelAndView likePublication(@PathVariable(name = "publicationId") long publicationId, @RequestParam(name = "fromFavorites", defaultValue = "false") boolean fromFavorites) {
         User user = loggedUserAdvice.getLoggedUser();
         ps.likePublication(publicationId, user.getUserId());
+        if(fromFavorites) {
+            return new ModelAndView("redirect:/my_favorites");
+        }
         return new ModelAndView("redirect:/");
     }
 
