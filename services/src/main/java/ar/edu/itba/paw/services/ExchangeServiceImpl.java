@@ -1,5 +1,8 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.exceptions.BookNotFoundException;
+import ar.edu.itba.paw.interfaces.exceptions.ExchangeBadRequestException;
+import ar.edu.itba.paw.interfaces.exceptions.ExchangeNotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.ExchangeDao;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
@@ -36,11 +39,11 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Value("#{environment.webappUrl}")
     private String webappUrl;
 
-    @Transactional
     @Override
+    @Transactional
     public void initializeExchange(long bookId, long locationId, long offererPubId) {
-    	
-        Long userId = bs.getBookById(bookId).get().getOwner().getUserId();
+    	Book book = bs.getBookById(bookId);
+        Long userId = book.getOwner().getUserId();
         long requesterPubId = ps.createPublication(bookId,  userId, locationId, PublicationState.OFFERED).getPublicationId();
 
         Random random = new Random();
@@ -60,98 +63,116 @@ public class ExchangeServiceImpl implements ExchangeService {
         emailService.sendExchangeRequestEmail(requester, offerer, bookRequested, bookOffered, ex.getAcceptCode());
     }
 
-    @Transactional
     @Override
+    @Transactional
     public String exchange(int acceptCode, boolean state) {
-    	
-        Exchange ex;
-        
+        Optional<Exchange> ex = exchangeDao.findByAcceptCode(acceptCode);
+        if (ex.isEmpty()) {
+            throw new ExchangeBadRequestException("Invalid accept code, exchange not found");
+        }
+        Exchange exchange = ex.get();
         if (state) {
-            ex = exchangeDao.acceptExchange(acceptCode);
-            bs.setAvailable(ex.getOfferer().getBook(), false);
-            bs.setAvailable(ex.getRequester().getBook(), false);
+            exchangeDao.acceptExchange(exchange ,acceptCode);
+            bs.setAvailable(exchange.getOfferer().getBook(), false);
+            bs.setAvailable(exchange.getRequester().getBook(), false);
         } else {
-            ex = exchangeDao.rejectExchange(acceptCode);
+            exchangeDao.rejectExchange(exchange,acceptCode);
 
             Date date = new Date();
             Timestamp timestamp = new Timestamp(date.getTime());
-            exchangeDao.setEndDate(acceptCode, timestamp);
+            exchangeDao.setEndDate(exchange,acceptCode, timestamp);
         }
 
-
         // --- email variables
-//        Map<String, Object> variables = new HashMap<>();
-        Book bookOffered = ex.getOfferer().getBook();
-        Book bookRequested = ex.getRequester().getBook();
+        Book bookOffered = exchange.getOfferer().getBook();
+        Book bookRequested = exchange.getRequester().getBook();
         User requester = bookRequested.getOwner();
         User offerer = bookOffered.getOwner();
 
         emailService.sendExchangeEmail(requester, offerer, bookRequested, bookOffered, state);
 
-        ps.terminatePublication(ex.getOfferer());
-        ps.terminatePublication(ex.getRequester());
+        ps.terminatePublication(exchange.getOfferer());
+        ps.terminatePublication(exchange.getRequester());
 
-        return switch (ex.getExchangeState()) {
+        return switch (exchange.getExchangeState()) {
             case ExchangeState.ACCEPTED -> "exchange/accepted";
             case ExchangeState.REJECTED -> "exchange/rejected";
             default -> "exchange/invalid";
         };
     }
 
-    @Transactional
     @Override
+    @Transactional
     public void cofirmOfferer(int acceptCode) {
-        Exchange ex = exchangeDao.confirmOfferer(acceptCode);
-        exchangeCompleted(acceptCode, ex);
+        Optional<Exchange> ex = exchangeDao.findByAcceptCode(acceptCode);
+        if (ex.isEmpty()) {
+            throw new ExchangeBadRequestException("Invalid accept code, exchange not found");
+        }
+        Exchange exchange = ex.get();
+        exchangeDao.confirmOfferer(getExchangeByAcceptCode(acceptCode), acceptCode);
+        exchangeCompleted(acceptCode, exchange);
     }
 
-    @Transactional(readOnly = true)
     @Override
+    @Transactional
     public void cofirmRequester(int acceptCode) {
-        Exchange ex = exchangeDao.confirmRequester(acceptCode);
-        exchangeCompleted(acceptCode, ex);
+        Optional<Exchange> ex = exchangeDao.findByAcceptCode(acceptCode);
+        if (ex.isEmpty()) {
+            throw new ExchangeBadRequestException("Invalid accept code, exchange not found");
+        }
+        Exchange exchange = ex.get();
+        exchangeDao.confirmRequester(exchange, acceptCode);
+        exchangeCompleted(acceptCode, exchange);
     }
 
     private void exchangeCompleted(int acceptCode, Exchange ex) {
         if (ex.isConfirmed()) {
-            exchangeDao.updateExchangeStatus(acceptCode, ExchangeState.TERMINATED);
+            exchangeDao.updateExchangeStatus(ex,acceptCode, ExchangeState.TERMINATED);
             bs.exchangeOwnership(ex.getOfferer().getBook(), ex.getRequester().getBook());
 
             Date date = new Date();
             Timestamp timestamp = new Timestamp(date.getTime());
-            exchangeDao.setEndDate(acceptCode, timestamp);
+            exchangeDao.setEndDate(ex,acceptCode, timestamp);
         }
     }
 
-    @Transactional(readOnly = true)
     @Override
+    @Transactional(readOnly = true)
     public Exchange getExchangeByAcceptCode(int acceptCode) {
-        return exchangeDao.findByAcceptCode(acceptCode);
+        Optional<Exchange> exchange = exchangeDao.findByAcceptCode(acceptCode);
+        if (exchange.isEmpty()) {
+            throw new ExchangeNotFoundException("Exchange not found");
+        }
+        return exchange.get();
     }
 
-    @Transactional(readOnly = true)
     @Override
+    @Transactional(readOnly = true)
     public Exchange getExchangeById(long exchangeId) {
-    	return exchangeDao.getExchangeById(exchangeId);
+    	Optional<Exchange> exchange = exchangeDao.getExchangeById(exchangeId);
+        if (exchange.isEmpty()) {
+            throw new ExchangeNotFoundException("Exchange not found");
+        }
+        return exchange.get();
     }
 
     // exchanges where user is the publication owner
-    @Transactional(readOnly = true)
     @Override
+    @Transactional(readOnly = true)
     public PaginatedResponse<Exchange, BasicMetadata> getExchangeOffererListByUserId(long userId, int currentPage, ExchangeState exchangeState) {
         return exchangeDao.getAllExchangesByUserId(userId, exchangeState, currentPage, true);
     }
 
     // exchanges where user is the requester owner
-    @Transactional(readOnly = true)
     @Override
+    @Transactional(readOnly = true)
     public PaginatedResponse<Exchange, BasicMetadata> getExchangeRequesterListByUserId(long userId, int currentPage, ExchangeState exchangeState) {
         return exchangeDao.getAllExchangesByUserId(userId, exchangeState, currentPage, false);
     }
 
-    @Transactional(readOnly = true)
     @Override
+    @Transactional
     public void createMessage(long exchangeId, long userId, String message) {
-        exchangeDao.createMessage(exchangeId, userId, message, new Timestamp((new Date()).getTime()));
+        exchangeDao.createMessage(getExchangeById(exchangeId), userId, message, new Timestamp((new Date()).getTime()));
     }
 }

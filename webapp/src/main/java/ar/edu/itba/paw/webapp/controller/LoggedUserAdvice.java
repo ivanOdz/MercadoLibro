@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.PawUserDetails;
@@ -26,12 +27,14 @@ public class LoggedUserAdvice {
     public User getLoggedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication.getPrincipal() instanceof PawUserDetails pud) {
-            Optional<User> user = us.findById(pud.getUser().getUserId());
-            if(user.isPresent()) {
-                LOGGER.info("Logged user id is {}", user.get().getUserId());
+            User user = null;
+            try {
+                user = us.findById(pud.getUser().getUserId());
+            } catch (UserNotFoundException e) {
+                LOGGER.warn("Failed to obtain logged user");
             }
-            else LOGGER.warn("Failed to obtain logged user");
-            return user.orElse(null);
+            LOGGER.info("Logged user id is {}", user.getUserId());
+            return user;
         }
         return null;
     }

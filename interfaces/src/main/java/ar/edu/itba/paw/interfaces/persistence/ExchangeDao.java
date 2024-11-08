@@ -7,29 +7,30 @@ import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 
 import java.sql.Timestamp;
+import java.util.Optional;
 
 public interface ExchangeDao {
 
     Exchange createExchange(long offererPubId, long requesterPubId, int acceptCode, Timestamp startDate);
 
-    Exchange rejectExchange(int acceptCode);
-    
-    void setEndDate(int acceptCode, Timestamp endDate);
+    void rejectExchange(Exchange exchange, int acceptCode);
 
-    Exchange acceptExchange(int acceptCode);
+    void setEndDate(Exchange exchange, int acceptCode, Timestamp endDate) ;
 
-    Exchange confirmOfferer(int acceptCode);
+    void acceptExchange(Exchange exchange, int acceptCode);
 
-    Exchange confirmRequester(int acceptCode);
+    void confirmOfferer(Exchange exchange, int acceptCode);
 
-    void updateExchangeStatus(int acceptCode, ExchangeState newStatus);
+    void confirmRequester(Exchange exchange, int acceptCode);
 
-    Exchange findByAcceptCode(int acceptCode) throws ExchangeNotFoundException;
+    void updateExchangeStatus(Exchange exchange, int acceptCode, ExchangeState newStatus);
 
-    Exchange getExchangeById(long exchangeId);
+    Optional<Exchange> findByAcceptCode(int acceptCode) throws ExchangeNotFoundException;
+
+    Optional<Exchange> getExchangeById(long exchangeId);
 
     PaginatedResponse<Exchange, BasicMetadata> getAllExchangesByUserId(long anUserId, ExchangeState exchangeState, int currentPage, boolean isOfferer);
 
-    void createMessage(long exchangeId,long userId, String message, Timestamp time);
+    void createMessage(Exchange exchange, long userId, String message, Timestamp time);
 
 }

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.exceptions.BookNotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
@@ -35,8 +36,6 @@ public class BookServiceImpl implements BookService {
     public Book createBook(Long bookModelId, BookState bookState, int rating, List<MultipartFile> imageFiles, int bookCoverIndex, List<Image> imageList,
                            User user, boolean newBook) {
         List<BookImage> bookImages = new ArrayList<>();
-
-
         List<Image> images;
         if (!newBook) {  // If it's a new book, the images are already saved
             images = imageService.saveImage(arrangeImages(imageFiles, bookCoverIndex));
@@ -62,37 +61,10 @@ public class BookServiceImpl implements BookService {
         bookDao.saveBookImages(bookImages);
 
         return book;
-
-
-
-        ////////////////////
-
-//
-//
-//        List<Image> images = new ArrayList<>();
-//        if (!newBook){
-//            images = imageService.saveImage(arrangeImages(imageFiles, bookCoverIndex));
-//        }
-//
-//        List<Long> imgId = new ArrayList<>();
-//        for (Image img : images) {
-//            imgId.add(img.getImageId());
-//        }
-//
-//        bookDao.createBookRating(user, bookModelService.getBookModelByBookModelId(bookModelId), rating);
-//        Book book = null;
-//        try {
-//            book = bookDao.createBook(bookModelService.getBookModelByBookModelId(bookModelId), user, bookState, images);
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
-//        bookDao.createBookImage(book.getBookId(), imgId);
-//
-//        return book;
     }
 
-    @Transactional
     @Override
+    @Transactional
     public Book createNewBook(String isbn, String title, List<String> authors, String publisher, String description, Genre genre, int edition,
                                   Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension,
                                   Language language, int pages, int weight, BookState bookState, int rating, List<MultipartFile> imageFiles, int bookCoverIndex, User user){
@@ -104,8 +76,8 @@ public class BookServiceImpl implements BookService {
         return createBook(bookModel.getBookModelId(), bookState, rating, imageFiles, bookCoverIndex, images, user, true);
     }
 
-    @Transactional
     @Override
+    @Transactional
     public void exchangeOwnership(Book b1, Book b2) {
         User owner1 = b1.getOwner();
         User owner2 = b2.getOwner();
@@ -116,11 +88,17 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Optional<Book> getBookById(long bookId) {
-        return bookDao.getBookById(bookId);
+    @Transactional(readOnly = true)
+    public Book getBookById(long bookId) {
+        Optional<Book> book = bookDao.getBookById(bookId);
+        if (book.isEmpty()) {
+            throw new BookNotFoundException("Book not found");
+        }
+        return book.get();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public PaginatedResponse<Book, ItemFilterMetadata> getPaginatedBooks(String search, String isBookStateFilterActive, String bookStateFilter, String isGenreFilterActive, String genreFilter, String currentPage, long userId, String sortType) {
 
         boolean bookStateFilterActive = "true".equalsIgnoreCase(isBookStateFilterActive);
@@ -145,7 +123,7 @@ public class BookServiceImpl implements BookService {
         return bookDao.getPaginatedBooks(search, bookStateFilterActive, state, genreFilterActive, genre, currentPage, userId, sortType);
     }
 
-    public List<MultipartFile> arrangeImages(List<MultipartFile> images, int bookCoverIndex) {
+    private List<MultipartFile> arrangeImages(List<MultipartFile> images, int bookCoverIndex) {
         if(bookCoverIndex == 0){
             return images;
         }
@@ -159,16 +137,20 @@ public class BookServiceImpl implements BookService {
         return toReturn;
     }
 
+    @Override
+    @Transactional(readOnly = true)
     public List<Book> getAvailableBooksByUser(User user){
         return bookDao.getAllBooksByUser(user.getUserId()).stream().filter(Book::isAvailable).toList();
     }
 
     @Override
+    @Transactional
     public void setAvailable(Book book, boolean available) {
         bookDao.setAvailable(book, available);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<GenreWrapper> getGenreWrapperList(String search, String isBookStateFilterActive, String bookStateFilter, long userId) {
         boolean bookStateFilterActive = "true".equalsIgnoreCase(isBookStateFilterActive);
 
@@ -184,6 +166,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<BookStateWrapper> getBookStateWrapperList(String serach, String isGenreFilterActive, String genreFilter, long userId) {
         boolean genreFilterActive = "true".equalsIgnoreCase(isGenreFilterActive);
 

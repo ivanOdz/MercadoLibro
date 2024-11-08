@@ -21,10 +21,10 @@ public class UserReviewServiceImpl implements UserReviewService {
 	@Autowired
 	private ExchangeService exchangeService;
 
-	@Transactional
+
 	@Override
+	@Transactional
 	public Boolean createUserReview(long exchangeId, long userId, String description, int rating) {
-		// NOTE: throws NF exception
 		Exchange exchange = exchangeService.getExchangeById(exchangeId);
 
 		boolean nin = exchange.getIsReviewable();
@@ -34,43 +34,41 @@ public class UserReviewServiceImpl implements UserReviewService {
 		long requesterId = exchange.getRequester().getBook().getOwner().getUserId();
 		long subjectId = offererId != userId ? offererId : requesterId;
 
-		// IMPLEMENT: exception
-		// NOTE: throws a BR exception
 		return userReviewDao.createUserReview(exchangeId, userId, subjectId, description, rating) != null;
 	}
 
+    @Override
 	@Transactional(readOnly = true)
-	@Override
 	public PaginatedResponse<UserReview, BasicMetadata> getReviewsGivenByUserId(long userId, int currentPage) {
 		return userReviewDao.getReviewsGivenByUserId(userId, currentPage);
 	}
 
+    @Override
 	@Transactional(readOnly = true)
-	@Override
 	public PaginatedResponse<UserReview, BasicMetadata> getReviewsEarnedByUserId(long userId, int currentPage) {
 		return userReviewDao.getReviewsEarnedByUserId(userId, currentPage);
 	}
 
+    @Override
 	@Transactional(readOnly = true)
-	@Override
 	public UserReview getUserReviewEarned(long exchangeId, long userId) {
 		return userReviewDao.getUserReviewEarned(exchangeId, userId);
 	}
 
+    @Override
 	@Transactional(readOnly = true)
-	@Override
 	public UserReview getUserReviewGiven(long exchangeId, long userId) {
 		return userReviewDao.getUserReviewGiven(exchangeId, userId);
 	}
 
+    @Override
 	@Transactional(readOnly = true)
-	@Override
 	public Rating getUserRatingEarned(long userId) {
 		return userReviewDao.getUserRatingEarned(userId);
 	}
 
+    @Override
 	@Transactional(readOnly = true)
-	@Override
 	public Rating getUserRatingGiven(long userId) {
 		return userReviewDao.getUserRatingGiven(userId);
 	}

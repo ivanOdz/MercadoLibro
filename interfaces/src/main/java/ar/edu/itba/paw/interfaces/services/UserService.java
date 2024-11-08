@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 public interface UserService {
 
-    Optional<User> findById(long id);
+    User findById(long id);
 
     Optional<User> findUserByEmail(String mail);
 

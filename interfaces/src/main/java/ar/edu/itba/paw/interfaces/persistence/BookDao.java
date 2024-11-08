@@ -13,8 +13,6 @@ public interface BookDao {
 
     void createBookRating(User user, BookModel bookModel, int rating);
 
-    void createBookImage(Book book, List<Image> images);
-
     void setOwner(Book book, User user);
 
     Optional<Book> getBookById(long bookId);

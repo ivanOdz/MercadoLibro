@@ -25,56 +25,26 @@ import static ar.edu.itba.paw.models.utils.Constants.*;
 @Repository
 public class PublicationJpaDao implements PublicationDao {
 
-    @Autowired
-    MessageSource messageSource;
-
     @PersistenceContext
     private EntityManager em;
 
-    // TODO: Manejo de excepciones.
-    /*public Long createPublication(long bookId, PublicationState publicationState, Timestamp publicationDatetime, Set<Location> locations) {
-        try {
-            // ASK: esta bien hacer esto directamente en vez de llamar al getBookById del BookJpaDao?
-            Book book = em.find(Book.class, bookId);
-            final Publication publication = new Publication(null, book, publicationState, publicationDatetime, locations);
-            em.persist(publication);
-            return publication.getPublicationId();
-        } catch (BookNotFoundException e) {
-            throw new IllegalArgumentException(messageSource.getMessage("book.not.found", null, null));
-        } catch (PublicationBadRequestException e) {
-            throw new IllegalArgumentException(messageSource.getMessage("publication.creation.error", null, null));
-        }
-    }*/
-
     @Override
-    public Publication createPublication(long bookId, long userId, long locationId, PublicationState publicationState) {
-    	
-        Book book = em.find(Book.class, bookId);
-        User user = em.find(User.class, userId);
-        Location location = em.find(Location.class, locationId);
-        
+    @Transactional
+    public Publication createPublication(Book book, User user, Location location, PublicationState publicationState) {
         final Publication publication = new Publication(null, book, user,publicationState, new Timestamp(new Date().getTime()), location);
         em.persist(publication);
         return publication;
     }
 
     @Override
-    public void terminatePublication(long pubId) {
-        Publication publication = em.find(Publication.class, pubId);
+    public void terminatePublication(Publication publication) {
         publication.setPublicationState(PublicationState.TERMINATED);
         em.merge(publication);
     }
 
     @Override
-    public Publication getPublicationByPublicationId(long publicationId) {
-        Optional<Publication> maybePublication = Optional.ofNullable(em.find(Publication.class, publicationId));
-
-        if(maybePublication.isEmpty()){
-            String message = messageSource.getMessage("error.publicationNotFound", new Object[]{publicationId}, LocaleContextHolder.getLocale());
-            throw new PublicationNotFoundException(message);
-        }
-
-        return maybePublication.get();
+    public Optional<Publication> getPublicationByPublicationId(long publicationId) {
+        return Optional.ofNullable(em.find(Publication.class, publicationId));
     }
 
     @Override
@@ -341,14 +311,12 @@ public class PublicationJpaDao implements PublicationDao {
 
 
     @Override
-    @Transactional
     public void deletePublication(long publicationId) {
         Publication publication = em.find(Publication.class, publicationId);
         em.remove(publication);
     }
 
     @Override
-    @Transactional
     public void likePublication(long publicationId, long userId) {
         Publication publication = em.find(Publication.class, publicationId);
 

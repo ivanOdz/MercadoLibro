@@ -27,27 +27,17 @@ import static ar.edu.itba.paw.models.utils.Constants.*;
 @Primary
 public class BookJpaDao implements BookDao {
 
-//    @Autowired
-//    private MessageSource messageSource;
-
     @PersistenceContext
     private EntityManager em;
 
     @Override
-    @Transactional
     public Book createBook(BookModel bookModel, User owner, BookState bookState) {
-    	
         final Book book = new Book(null, owner, bookModel, bookState, 0, true, new ArrayList<>());
         em.persist(book);
         em.flush();
-        
-        if (book == null){
-            throw new BookBadRequestException("Book not created correctly.");
-        }
         return book;
     }
 
-    @Transactional
     @Override
     public void createBookRating(User user, BookModel bookModel, int rating) {
         final BookRating br = new BookRating(user.getUserId(), bookModel.getBookModelId(), rating);
@@ -55,35 +45,18 @@ public class BookJpaDao implements BookDao {
     }
 
     @Override
-    @Transactional
-    public void createBookImage(Book book, List<Image> images) {
-        for (int i = 0; i < images.size(); i++) {
-            final BookImage image = new BookImage(book, i, images.get(i) , Timestamp.valueOf(LocalDateTime.now()));
-            em.persist(image);
-        }
-    }
-
-    @Transactional
-    @Override
     public void setOwner(Book book, User user) {
-        Book b = em.find(Book.class, book.getBookId());
-        b.setOwner(user);
+        book.setOwner(user);
     }
 
     @Override
     public Optional<Book> getBookById(long bookId) {
-
-        Optional<Book> bookOpt =  Optional.ofNullable(em.find(Book.class, bookId));
-//        if (!bookOpt.isPresent()) {
-//            throw new BookNotFoundException("Book not found.");
-//        }
-        return bookOpt;
+        return Optional.ofNullable(em.find(Book.class, bookId));
     }
 
 
     @Override
     public List<Book> getAllBooksByUser(long userId) {
-
         return em.createQuery("from Book as b where b.owner.userId = :userId", Book.class)
                 .setParameter("userId", userId)
                 .getResultList();
@@ -208,23 +181,20 @@ public class BookJpaDao implements BookDao {
         return genreWrappers;
     }
 
-    @Transactional
     @Override
     public void setAvailable(Book book, boolean available) {
-        Book b = em.find(Book.class, book.getBookId());
-        b.setAvailable(available);
+        book.setAvailable(available);
     }
 
     @Override
-    @Transactional
     public void saveBookImages(List<BookImage> bookImages) {
         for (BookImage bookImage : bookImages) {
             em.persist(bookImage);
         }
     }
 
+    @Override
     public List<BookStateWrapper> getBookStateQtyByBook(String search, boolean isGenreFilterActive, Genre genreFilter, Long userId) {
-
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT b.bookState, COUNT(*) AS stateCount " +
                         "FROM book b " +

@@ -1,22 +1,21 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
-import ar.edu.itba.paw.models.Location;
-import ar.edu.itba.paw.models.PaginatedResponse;
-import ar.edu.itba.paw.models.Publication;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 import ar.edu.itba.paw.models.utils.pagination.Metadata;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public interface PublicationDao {
 
-    Publication createPublication(long bookId, long userId, long locationId, PublicationState publicationState);
+    Publication createPublication(Book book, User user, Location location, PublicationState publicationState);
 
-    void terminatePublication(long pubId);
+    void terminatePublication(Publication publication);
 
-    Publication getPublicationByPublicationId(long publicationId);
+    Optional<Publication> getPublicationByPublicationId(long publicationId);
 
     PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(Long userId,String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, String sortType, String currentPage);
 

@@ -79,7 +79,7 @@ public class User {
     }
 
 
-    public long getUserId() {
+    public Long getUserId() {
         return userId;
     }
 

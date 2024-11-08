@@ -199,16 +199,7 @@ public class UserController {
             return createForm(userForm);
         }
 
-        // verify date, create an user and send a verification email
-
         User user = us.createUser(userForm.getUsername(), userForm.getMail(), userForm.getPassword(), LocaleContextHolder.getLocale().toLanguageTag());
-
-        try {
-        } catch (ApplicationRuntimeException e) {
-            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
-            return new ModelAndView("redirect:/400");
-        }
-
         return new ModelAndView("redirect:/success_registration");
     }
 
@@ -282,9 +273,9 @@ public class UserController {
 
         }
 
-		Optional<User> updatedUser = us.findById(userId);
+		User updatedUser = us.findById(userId);
 		ModelAndView modelAndView = new ModelAndView("redirect:/profile");
-		updatedUser.ifPresent(user -> modelAndView.addObject("loggedUser", user));
+		modelAndView.addObject("loggedUser", updatedUser);
 		
 		return modelAndView;
     }
@@ -294,9 +285,9 @@ public class UserController {
     	
         us.removeLocation(userId, locationId);
         
-		Optional<User> updatedUser = us.findById(userId);
+		User updatedUser = us.findById(userId);
 		ModelAndView modelAndView = new ModelAndView("redirect:/profile");
-		updatedUser.ifPresent(user -> modelAndView.addObject("loggedUser", user));
+		modelAndView.addObject("loggedUser", updatedUser);
 		
 		return modelAndView;
     }
