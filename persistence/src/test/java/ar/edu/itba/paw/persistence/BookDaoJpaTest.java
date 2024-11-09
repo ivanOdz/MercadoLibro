@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
@@ -17,10 +19,20 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import ar.edu.itba.paw.interfaces.persistence.BookDao;
+import ar.edu.itba.paw.models.Author;
 import ar.edu.itba.paw.models.Book;
+import ar.edu.itba.paw.models.BookModel;
+import ar.edu.itba.paw.models.Image;
+import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.utils.BookDimension;
 import ar.edu.itba.paw.models.utils.BookState;
+import ar.edu.itba.paw.models.utils.Genre;
+import ar.edu.itba.paw.models.utils.Language;
 import ar.edu.itba.paw.persistence.config.TestConfig;
+import ar.edu.itba.paw.persistence.constants.AuthorConstants;
 import ar.edu.itba.paw.persistence.constants.BookConstants;
+import ar.edu.itba.paw.persistence.constants.BookModelConstants;
+import ar.edu.itba.paw.persistence.constants.UserConstants;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
@@ -43,7 +55,6 @@ public class BookDaoJpaTest {
 		
 		jdbcTemplate = new JdbcTemplate(ds);
 	}
-	// Book createBook(BookModel bookModel, User owner, BookState bookState);
 	// void createBookRating(User user, BookModel bookModel, int rating);
 	// void createBookImage(Book book, List<Image> images);
 	// void setOwner(Book book, User user);
@@ -61,11 +72,41 @@ public class BookDaoJpaTest {
 		Assert.assertEquals((int)BookConstants.EXCHANGE_QTY_1, maybeBook.get().getExchangesQty());
 	}
 	
-//	@Test
-//	public void testCreateBook() throws SQLException {
-//		
-//		// (BookModel bookModel, User owner, BookState bookState)
-//		Optional<Book> maybeBook = bookDao.createBook(null, null, null);
-//		
-//	}
+	@Test
+	public void testCreateBook() {
+		
+		final Author author = em.merge(new Author(AuthorConstants.ID_8, AuthorConstants.NAME_8));
+		final List<Author> authors = new ArrayList<Author>();
+		authors.add(author);
+		
+		final BookModel bookModel = em.merge(new BookModel(	BookModelConstants.ID_10,
+															BookModelConstants.ISBN_10,
+															BookModelConstants.TITLE_10,
+															BookModelConstants.EDITORIAL_10,
+															BookModelConstants.DESCRIPTION_10,
+															Genre.fromString(BookModelConstants.GENRE_10),
+															(int)BookModelConstants.EDITION_10,
+															(int)BookModelConstants.WEIGHT_10,
+															(int)BookModelConstants.PAGES_10,
+															Language.valueOf(BookModelConstants.LANGUAGE_10),
+															BookDimension.valueOf(BookModelConstants.DIMENSION_10),
+															(short)(int)BookModelConstants.PUBLICATION_YEAR_10,
+															BookModelConstants.IS_POCKET_EDITION_10,
+															BookModelConstants.IS_HARD_COVER_10,
+															authors,
+															null
+														));
+		
+		final User user = em.merge(new User(UserConstants.ID_4, UserConstants.NAME_4, UserConstants.MAIL_4, UserConstants.PASSWORD_4, UserConstants.IMAGE_ID_4, UserConstants.VERIFICATION_CODE_4, UserConstants.IS_VERIFIED_4, UserConstants.LANGUAGE_4));
+		
+		final BookState bookState = BookState.GOOD;
+		
+		Book newBook = bookDao.createBook(bookModel, user, bookState);
+		
+		Assert.assertNotNull(newBook);
+		Assert.assertTrue(BookConstants.BOOK_MODEL_ID_9 < newBook.getBookId());
+		Assert.assertEquals(bookState, newBook.getBookState());
+		Assert.assertEquals(bookModel, newBook.getBookModel());
+		Assert.assertEquals(user, newBook.getOwner());
+	}
 }
