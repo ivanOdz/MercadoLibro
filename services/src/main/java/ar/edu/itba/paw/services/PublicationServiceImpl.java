@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.exceptions.PublicationNotFoundException;
+import ar.edu.itba.paw.interfaces.exceptions.UserNotUnauthorizedException;
 import ar.edu.itba.paw.interfaces.services.BookService;
 import ar.edu.itba.paw.interfaces.services.LocationService;
 import ar.edu.itba.paw.interfaces.services.PublicationService;
@@ -100,6 +101,17 @@ public class PublicationServiceImpl implements PublicationService {
     @Transactional(readOnly = true)
     public int getPublicationCountByUserId(long userId) {
         return pubDao.getPublicationCountByUserId(userId);
+    }
+
+    @Override
+    @Transactional
+    public void addLocation(Long publicationId, Long locationId, User user) {
+        Location location = locationService.findById(locationId);
+        Publication publication = getPublicationByPublicationId(publicationId);
+        if (!Objects.equals(publication.getUser().getUserId(), user.getUserId())) {
+            throw new UserNotUnauthorizedException("User is not the owner of the publication");
+        }
+        pubDao.addLocation(publication, location);
     }
 
 //    public List<Publication> getPublicationsByUser(User user) {

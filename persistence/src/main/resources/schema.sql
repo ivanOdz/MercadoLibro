@@ -136,8 +136,18 @@ CREATE TABLE IF NOT EXISTS publication_location (
 
 -- Tabla de ubicaciones de los usuarios
 CREATE TABLE IF NOT EXISTS user_location (
-         userLocationId  SERIAL PRIMARY KEY,
-         userId          INTEGER NOT NULL REFERENCES users(userId) ON DELETE CASCADE,
-         locationId      INTEGER NOT NULL REFERENCES location(locationId) ON DELETE CASCADE,
-         UNIQUE (userId, locationId)
-)
+     userId      INTEGER NOT NULL REFERENCES users(userId) ON DELETE CASCADE,
+     locationId  INTEGER NOT NULL REFERENCES location(locationId) ON DELETE CASCADE,
+     PRIMARY KEY (userId, locationId)
+);
+
+-- Tabla de mensajes
+CREATE TABLE IF NOT EXISTS message (
+                         exchangeid INTEGER,
+                         messageid INTEGER PRIMARY KEY,
+                         userid INTEGER,
+                         messagetime TIMESTAMP,
+                         message VARCHAR(255),
+                         CONSTRAINT message_exchangeid_fkey FOREIGN KEY (exchangeid) REFERENCES exchange(exchangeid),
+                         CONSTRAINT message_userid_fkey FOREIGN KEY (userid) REFERENCES users(userid)
+);

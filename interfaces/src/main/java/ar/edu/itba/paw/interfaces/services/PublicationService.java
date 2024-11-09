@@ -23,6 +23,8 @@ public interface PublicationService {
 
     int getPublicationCountByUserId(long userId);
 
+    void addLocation(Long publicationId, Long locationId, User user);
+
 //    List<Publication> getPublicationsByUser(User user);
 
     PaginatedResponse<Publication, ItemFilterMetadata> getMyPaginatedPublications(long userId, String search, String isBookStateFilterActive, String bookStateFilter, String isGenreFilterActive, String genreFilter, String sortType, String currentPage);

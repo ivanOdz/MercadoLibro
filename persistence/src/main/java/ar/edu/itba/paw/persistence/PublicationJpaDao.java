@@ -373,6 +373,12 @@ public class PublicationJpaDao implements PublicationDao {
         return new PaginatedResponse<>(favoritePublications, new BasicMetadata(page, favoritePublications.size(), PUBLICATIONS_PAGE_SIZE));
     }
 
+    @Override
+    public void addLocation(Publication publication, Location location) {
+        publication.addLocation(location);
+        em.merge(publication);
+    }
+
 
     private void setIsLikedByUser(User user, Publication publication) {
         if(user == null){

@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 
 import ar.edu.itba.paw.webapp.form.ExchangeForm;
+import ar.edu.itba.paw.webapp.form.LocationForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,6 +74,7 @@ public class PublicationController {
         }
 
         mav.addObject("exchangeForm", new ExchangeForm());
+        mav.addObject("locationForm", new LocationForm());
         mav.addObject("publication", publication);
         mav.addObject("imgCount", publication.getBook().getImages().size());
         mav.addObject("genres", Genre.values());
@@ -139,6 +141,11 @@ public class PublicationController {
         return new ModelAndView("redirect:/");
     }
 
+    @PostMapping("/publication/add_location")
+    public ModelAndView addLocation(@RequestParam(name = "publicationId") Long publicationId, @RequestParam(name = "locationId") long locationId, @ModelAttribute("loggedUser") User loggeduser) {
+        ps.addLocation(publicationId, locationId, loggeduser);
+        return new ModelAndView("redirect:/publications/" + publicationId);
+    }
 
 
 }

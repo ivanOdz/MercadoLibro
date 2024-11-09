@@ -32,4 +32,6 @@ public interface PublicationDao {
     void likePublication(long publicationId, long userId);
 
     PaginatedResponse<Publication, BasicMetadata> getFavoritePublications(User user, String currentPage);
+
+    void addLocation(Publication publication, Location location);
 }
