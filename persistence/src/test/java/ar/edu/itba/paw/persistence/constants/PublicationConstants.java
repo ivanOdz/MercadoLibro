@@ -7,7 +7,8 @@ public final class PublicationConstants {
 	public static final Long ID_1 = 1L;
 	public static final Long BOOK_ID_1 = 1L;
 	public static final Long USER_ID_1 = 1L;
-	public static final Long LOCATION_ID_1 = 2L;
+	public static final Long LOCATION_ID_1_1 = 2L;
+	public static final Long LOCATION_ID_1_2 = 1L;
 	public static final String STATE_1 = "CURRENT";
 	public static Timestamp DATE_TIME_1 = Timestamp.valueOf("2024-09-15 10:00:00");
 

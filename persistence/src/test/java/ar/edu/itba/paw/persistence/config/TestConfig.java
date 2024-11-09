@@ -31,6 +31,9 @@ public class TestConfig {
 	@Value("classpath:schema.sql")
 	private Resource schemaSql;
 	
+	@Value("classpath:sequences.sql")
+	private Resource sequencesSql;
+	
 	@Value("classpath:insertions.sql")
 	private Resource insertionsSql;
     
@@ -64,6 +67,7 @@ public class TestConfig {
 		
 		dbp.addScript(pgSql);
 		dbp.addScript(schemaSql);
+		dbp.addScript(sequencesSql);
 		dbp.addScript(insertionsSql);
 		
 		return dbp;

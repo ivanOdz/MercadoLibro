@@ -89,7 +89,8 @@ CREATE TABLE IF NOT EXISTS publication (
        userId                   INTEGER NOT NULL REFERENCES users(userId),
        publicationState         VARCHAR(50) NOT NULL,
        publicationDatetime      TIMESTAMP,
-       locationId               INTEGER REFERENCES location(locationId)
+       locationId               INTEGER REFERENCES location(locationId),
+       isLikedByUser			BOOLEAN -- CONFIRMAR
 );
 
 -- Relación publicacion y usuario que le dio <3
@@ -106,7 +107,7 @@ CREATE TABLE IF NOT EXISTS exchange (
         exchangeId              SERIAL PRIMARY KEY,
         offererPubId            INTEGER NOT NULL REFERENCES publication(publicationId),
         requesterPubId          INTEGER NOT NULL REFERENCES publication(publicationId),
-        exchangeState           INTEGER NOT NULL,
+        exchangeState           VARCHAR(10) NOT NULL,
         acceptCode              INTEGER NOT NULL,
         offererReceivedBook     BOOLEAN,
         requesterReceivedBook   BOOLEAN,
