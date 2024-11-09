@@ -87,7 +87,7 @@
                                                 </c:when>
                                                 <c:when test="${!card.book.bookModel.image.isImageNull && card.book.bookModel.image != null}">
                                                     <img class="book-image uk-border-rounded"
-                                                         src="<c:url value='/images/${card.bookModel.image.imageId}' />"
+                                                         src="<c:url value='/images/${card.book.bookModel.image.imageId}' />"
                                                          alt="book"/>
                                                 </c:when>
                                                 <c:otherwise>
