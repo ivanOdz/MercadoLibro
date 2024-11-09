@@ -42,7 +42,7 @@
 					<img class="profile-pic" src="<c:url value='/images/profile.png' />" alt="Default Image"/>
 				</c:otherwise>
 			</c:choose>
-			<!-- Acá agregar boton para editar imagen de perfil o clickeando sobre la imagen... -->
+			<!-- Acï¿½ agregar boton para editar imagen de perfil o clickeando sobre la imagen... -->
 		</div>
 		
 		<div class="user-data-grid-element-right">
@@ -53,7 +53,7 @@
 				<i class="material-icons edit-icon">edit</i>
 			</button>
 			<form id="change-username-form" action="<c:url value='/changeUsername' />" method="post" style="display:none;">
-				<input type="text" name="newUsername" id="new_username" value="${loggedUser.username}" required>
+				<input type="text" name="newUsername" id="new_username" value="<c:out value='${loggedUser.username}'/>" required>
 				<input type="hidden" name="loggedUserId" value="${loggedUser.userId}"><!-- Podria sacarse desde el controlador y seria mas seguro -->
 				<button type="submit" class="btn-confirm"><spring:message code="hwc.change_password.confirm"/></button>
 				<button type="button" onclick="cancelEdit()" class="btn-cancel">Cancel</button>
@@ -130,7 +130,7 @@
 	<form class="remove-location-form" action="<c:url value='/user/removeLocation' />" method="post" style="display: inline;">
 		<input type="hidden" name="userId" value="${loggedUser.userId}" />
 		<input type="hidden" name="locationId" value="${userLocation.locationId}" />
-		<input class="uk-input" type="text" name="locationString" value="${userLocation.locationString}" readonly />
+		<input class="uk-input" type="text" name="locationString" value="<c:out value='${userLocation.locationString}'/>" readonly />
 		<button type="submit" class="uk-button remove-location-btn" title="Remove Location">
 			<span uk-icon="icon: close"></span>
 		</button>
