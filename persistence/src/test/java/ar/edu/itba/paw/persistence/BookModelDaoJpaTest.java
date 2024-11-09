@@ -57,8 +57,6 @@ public class BookModelDaoJpaTest {
 		jdbcTemplate = new JdbcTemplate(ds);
 	}
 	
-//    List<GenreWrapper> getGenreQtyByBookModel(String search);
-	
 	@Test
 	public void testGetBookModelByBookModelId() {
 		
@@ -296,6 +294,55 @@ public class BookModelDaoJpaTest {
 		}
 		
 		Assert.assertTrue(found);
+	}
+	
+	@Test
+	public void testGetGenreQtyByBookModel() {
+		
+		final String search = "";
+		
+		List<GenreWrapper> genreWrapperList = bookModelDao.getGenreQtyByBookModel(search);
+		
+		int genreFantasy = 0;
+		int genreClassic = 0;
+		int genreFiction = 0;
+		int genreThriller = 0;
+		int genreMystery = 0;
+		int genreOther = 0;
+		int genreNonExistent = 0;
+		
+		for (GenreWrapper genreWrapper : genreWrapperList) {
+			
+			if (genreWrapper.getGenre() == Genre.FANTASY) {
+				genreFantasy = genreWrapper.getResultByGenre();
+			}
+			else if (genreWrapper.getGenre() == Genre.CLASSIC) {
+				genreClassic = genreWrapper.getResultByGenre();
+			}
+			else if (genreWrapper.getGenre() == Genre.FICTION) {
+				genreFiction = genreWrapper.getResultByGenre();
+			}
+			else if (genreWrapper.getGenre() == Genre.THRILLER) {
+				genreThriller = genreWrapper.getResultByGenre();
+			}
+			else if (genreWrapper.getGenre() == Genre.MYSTERY) {
+				genreMystery = genreWrapper.getResultByGenre();
+			}
+			else if (genreWrapper.getGenre() == Genre.OTHER) {
+				genreOther = genreWrapper.getResultByGenre();
+			}
+			else {
+				genreNonExistent++;
+			}
+		}
+		
+		Assert.assertEquals(1, genreFantasy);
+		Assert.assertEquals(1, genreClassic);
+		Assert.assertEquals(2, genreFiction);
+		Assert.assertEquals(1, genreThriller);
+		Assert.assertEquals(2, genreMystery);
+		Assert.assertEquals(3, genreOther);
+		Assert.assertEquals(0, genreNonExistent);
 	}
 }
 	
