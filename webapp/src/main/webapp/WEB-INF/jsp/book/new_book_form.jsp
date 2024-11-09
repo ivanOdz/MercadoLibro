@@ -112,7 +112,7 @@
                         </form:label>
                         <form:select path="genre" class="uk-input">
                             <c:forEach var="genreWrapper" items="${genres}">
-                                <form:option value="${genreWrapper.value}">
+                                <form:option value="${genreWrapper}">
                                     <c:set var="i18nKey" value="${genreWrapper.value}" />
                                         <spring:message code="${i18nKey}"/>
                                 </form:option>
