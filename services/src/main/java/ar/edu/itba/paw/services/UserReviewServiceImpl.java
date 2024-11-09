@@ -31,9 +31,6 @@ public class UserReviewServiceImpl implements UserReviewService {
 	public void createUserReview(long exchangeId, long userId, String description, int rating) {
 		Exchange exchange = exchangeService.getExchangeById(exchangeId);
 
-		boolean nin = exchange.getIsReviewable();
-		boolean nout = getUserReviewGiven(exchangeId, userId) == null;
-
 		long offererId = exchange.getOfferer().getBook().getOwner().getUserId();
 		long requesterId = exchange.getRequester().getBook().getOwner().getUserId();
 		long subjectId = offererId != userId ? offererId : requesterId;
