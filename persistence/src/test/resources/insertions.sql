@@ -342,6 +342,4 @@
         VALUES (5, 1)
         
         INSERT INTO publication_location (publicationId, locationId)
-        VALUES (6, 1)
-        
-        
+        VALUES (6, 1)    

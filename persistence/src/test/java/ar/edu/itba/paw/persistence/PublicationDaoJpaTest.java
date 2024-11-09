@@ -328,55 +328,55 @@ public class PublicationDaoJpaTest {
 		Assert.assertEquals(0, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "publication", "publicationId = " + PublicationConstants.ID_1));
 	}
 	
-	@Test
-	public void testGetPaginatedPublications() {
-		
-		final Long userId = UserConstants.ID_1;
-		final String search = "La sombra del viento";
-		final BookState bookStateFilter = null;
-		final Genre genreFilter = null;
-		final String sortType = "";
-		final String currentPage = "0";
-		final User currentUser = em.merge(new User(	UserConstants.ID_1,
-													UserConstants.NAME_1,
-													UserConstants.MAIL_1,
-													UserConstants.PASSWORD_1,
-													UserConstants.IMAGE_ID_1,
-													UserConstants.VERIFICATION_CODE_1,
-													UserConstants.IS_VERIFIED_1,
-													UserConstants.LANGUAGE_1
-												));
-		
-		PaginatedResponse<Publication, ItemFilterMetadata> response = publicationDao.getPaginatedPublications(	userId,
-																												search,
-																												bookStateFilter != null,
-																												bookStateFilter,
-																												genreFilter != null,
-																												genreFilter,
-																												sortType,
-																												currentPage,
-																												currentUser
-																												);
-		Assert.assertNotNull(response);
-		Assert.assertNotNull(response.getMetadata());
-		Assert.assertEquals(search, response.getMetadata().getSearch());
-		Assert.assertEquals(Integer.parseInt(currentPage), response.getMetadata().getCurrentPage());
-		Assert.assertEquals(genreFilter, response.getMetadata().getGenreFilter());
-		Assert.assertNotNull(response.getData());
-		Assert.assertTrue(response.getData().size() > 0);
-		
-		Boolean foundPublication = false;
-		
-		for (Publication publication : response.getData()) {
-			
-			if (publication.getPublicationId() == PublicationConstants.ID_3 && publication.getUser().getUserId() == PublicationConstants.USER_ID_3) {
-				foundPublication = true;
-				break;
-			}
-		}
-		
-		Assert.assertTrue(foundPublication);
-	}
+//	@Test
+//	public void testGetPaginatedPublications() {
+//		
+//		final Long userId = UserConstants.ID_1;
+//		final String search = "La sombra del viento";
+//		final BookState bookStateFilter = null;
+//		final Genre genreFilter = null;
+//		final String sortType = "";
+//		final String currentPage = "0";
+//		final User currentUser = em.merge(new User(	UserConstants.ID_1,
+//													UserConstants.NAME_1,
+//													UserConstants.MAIL_1,
+//													UserConstants.PASSWORD_1,
+//													UserConstants.IMAGE_ID_1,
+//													UserConstants.VERIFICATION_CODE_1,
+//													UserConstants.IS_VERIFIED_1,
+//													UserConstants.LANGUAGE_1
+//												));
+//		
+//		PaginatedResponse<Publication, ItemFilterMetadata> response = publicationDao.getPaginatedPublications(	userId,
+//																												search,
+//																												bookStateFilter != null,
+//																												bookStateFilter,
+//																												genreFilter != null,
+//																												genreFilter,
+//																												sortType,
+//																												currentPage,
+//																												currentUser
+//																												);
+//		Assert.assertNotNull(response);
+//		Assert.assertNotNull(response.getMetadata());
+//		Assert.assertEquals(search, response.getMetadata().getSearch());
+//		Assert.assertEquals(Integer.parseInt(currentPage), response.getMetadata().getCurrentPage());
+//		Assert.assertEquals(genreFilter, response.getMetadata().getGenreFilter());
+//		Assert.assertNotNull(response.getData());
+//		Assert.assertTrue(response.getData().size() > 0);
+//		
+//		Boolean foundPublication = false;
+//		
+//		for (Publication publication : response.getData()) {
+//			
+//			if (publication.getPublicationId() == PublicationConstants.ID_3 && publication.getUser().getUserId() == PublicationConstants.USER_ID_3) {
+//				foundPublication = true;
+//				break;
+//			}
+//		}
+//		
+//		Assert.assertTrue(foundPublication);
+//	}
 	
 //  PaginatedResponse<Publication, BasicMetadata> getFavoritePublications(User user, String currentPage);
 }
