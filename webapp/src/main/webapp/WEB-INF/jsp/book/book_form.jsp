@@ -72,7 +72,7 @@
                         </form:label>
                         <form:select path="bookState" class="uk-input">
                             <c:forEach var="bookStateWrapper" items="${bookStates}">
-                                <form:option value="${bookStateWrapper.value}">
+                                <form:option value="${bookStateWrapper}">
                                     <c:set var="i18nKey" value="${bookStateWrapper.value}" />
                                     <span class="ui-search-filter-name">
                                             <spring:message code="${i18nKey}"/>
@@ -159,9 +159,7 @@
                          <label class="form-group">
                             <spring:message code="book.set.location"/>
 							<form:select path="locationId" class="uk-select no-arrow-select" aria-label="Not clickable icon" style="width: 90%">
-							    <c:forEach var="userLocation" items="${user.userLocations}">
 									<form:options items="${user.userLocations}" itemValue="locationId" itemLabel="locationString"/>
-							    </c:forEach>
 							</form:select>
                         </label>
 
