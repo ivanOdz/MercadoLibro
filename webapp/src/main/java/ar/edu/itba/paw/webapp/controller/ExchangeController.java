@@ -216,8 +216,8 @@ public class ExchangeController {
     @RequestMapping(path = "/submit_review", method = RequestMethod.POST)
     public ModelAndView submitReview(
             @RequestParam("exchangeId") long exchangeId,
-            @RequestParam("reviewDescription") String reviewDescription,
-            @RequestParam("userReviewRating") int userReviewRating,
+            @RequestParam(name = "reviewDescription", defaultValue = "") String reviewDescription,
+            @RequestParam(name = "userReviewRating", defaultValue ="1") int userReviewRating,
             @ModelAttribute("loggedUser") User loggeduser) {
 
         Exchange e = exchangeService.getExchangeById(exchangeId);

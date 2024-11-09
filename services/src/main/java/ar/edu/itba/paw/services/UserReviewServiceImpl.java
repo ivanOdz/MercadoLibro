@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.exceptions.UserRatingNotFound;
+import ar.edu.itba.paw.interfaces.exceptions.UserReviewNotFound;
 import ar.edu.itba.paw.interfaces.persistence.UserReviewDao;
 import ar.edu.itba.paw.interfaces.services.ExchangeService;
 import ar.edu.itba.paw.interfaces.services.UserReviewService;
@@ -11,6 +13,8 @@ import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 public class UserReviewServiceImpl implements UserReviewService {
@@ -51,25 +55,45 @@ public class UserReviewServiceImpl implements UserReviewService {
     @Override
 	@Transactional(readOnly = true)
 	public UserReview getUserReviewEarned(long exchangeId, long userId) {
-		return userReviewDao.getUserReviewEarned(exchangeId, userId);
+		Optional<UserReview> ur = userReviewDao.getUserReviewEarned(exchangeId, userId);
+
+		if(ur.isEmpty()) {
+			throw new UserReviewNotFound("Error getting user review earned.");
+		}
+		return ur.get();
 	}
+
 
     @Override
 	@Transactional(readOnly = true)
 	public UserReview getUserReviewGiven(long exchangeId, long userId) {
-		return userReviewDao.getUserReviewGiven(exchangeId, userId);
+		Optional<UserReview> ur = userReviewDao.getUserReviewGiven(exchangeId, userId);
+
+		if(ur.isEmpty()) {
+			throw new UserReviewNotFound("Error getting user review given.");
+		}
+		return ur.get();
 	}
 
     @Override
 	@Transactional(readOnly = true)
 	public Rating getUserRatingEarned(long userId) {
-		return userReviewDao.getUserRatingEarned(userId);
+		Optional<Rating> rating = userReviewDao.getUserRatingEarned(userId);
+		if(rating.isEmpty()) {
+			throw new UserRatingNotFound("Error getting user rating earned.");
+		}
+		return rating.get();
 	}
 
     @Override
 	@Transactional(readOnly = true)
 	public Rating getUserRatingGiven(long userId) {
-		return userReviewDao.getUserRatingGiven(userId);
+		Optional<Rating> rating = userReviewDao.getUserRatingGiven(userId);
+		if(rating.isEmpty()) {
+			throw new UserRatingNotFound("Error getting user rating given.");
+		}
+
+		return rating.get();
 	}
 
 }
