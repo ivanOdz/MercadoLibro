@@ -34,4 +34,6 @@ public interface BookService {
     List<GenreWrapper> getGenreWrapperList(String search, String isBookStateFilterActive, String bookStateFilter, long userId);
 
     List<BookStateWrapper> getBookStateWrapperList(String serach, String isGenreFilterActive, String genreFilter, long userId);
+
+    Book updateBookState(Long bookId, String bookState);
 }

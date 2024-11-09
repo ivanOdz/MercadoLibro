@@ -80,7 +80,8 @@ public class BookController {
         mav.addObject("bookStateWrapperList", bookStateWrapperList);
         mav.addObject("books", books);
         mav.addObject("user", loggeduser);
-        
+        mav.addObject("bookStates", BookState.values());
+
         return mav;
     }
 
@@ -141,7 +142,7 @@ public class BookController {
         mav.addObject("step", 2);
         mav.addObject("book_model", bm);
         mav.addObject("book_model_id", bookModelId);
-        mav.addObject("bookStates", EnumInternationalizationUtil.getLocalizedBookStates());
+        mav.addObject("bookStates", BookState.values());
 
 
         return mav;
@@ -156,6 +157,13 @@ public class BookController {
         Book book = bookService.createBook(bookModelId, bookDetailsForm.getBookState(), bookDetailsForm.getRating(), bookDetailsForm.getImageFiles(), bookDetailsForm.getBookCover(), null, loggeduser, false);
 
         publicationService.createPublicationIfNeeded(bookDetailsForm.isPublish(), book.getBookId(), loggeduser.getUserId(), bookDetailsForm.getLocationId(), PublicationState.CURRENT);
+        return new ModelAndView("redirect:/book");
+    }
+
+    @PostMapping("/update_bookstate")
+    public ModelAndView updateBookState(@RequestParam("book_id") Long bookId, @RequestParam("book_state") String bookState) {
+        bookService.updateBookState(bookId, bookState);
+
         return new ModelAndView("redirect:/book");
     }
 

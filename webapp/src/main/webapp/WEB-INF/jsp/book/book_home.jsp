@@ -186,7 +186,14 @@
                     <c:if test="${not empty books.data}">
                         <c:forEach var="card" items="${books.data}">
                             <div>
-                                <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-border-rounded custom-link">
+                                <div class="uk-card uk-card-default uk-card-hover uk-card-body uk-border-rounded custom-link" style="position: relative; padding-top: 1rem;padding-left: 2rem;padding-right: 2rem">
+                                    <div class="uk-position-top-right uk-position-small">
+                                        <c:if test="${card.available}">
+                                            <a href="#modal-${card.bookId}" uk-toggle aria-label="Editar libro">
+                                                <span class="uk-icon" uk-icon="icon: pencil"></span>
+                                            </a>
+                                        </c:if>
+                                    </div>
                                     <figure class="uk-margin-bottom">
                                             <c:choose>
                                                 <c:when test="${card.images[0] != null && !card.images[0].image.isImageNull}">
@@ -228,6 +235,49 @@
                                     </div>
                                 </div>
 
+                                <div id="modal-${card.bookId}" uk-modal>
+                                    <div class="uk-modal-dialog">
+                                        <button class="uk-modal-close-default" type="button" uk-close></button>
+                                        <div class="uk-modal-header">
+
+                                            <h3><spring:message code="book.update.state.title" /></h3>
+                                            <p><spring:message code="book.update.state.instruction" /></p>
+
+                                            <div class="uk-margin">
+                                                <strong><spring:message code="book.update.state.currentCondition" />:</strong>
+                                                <c:set var="currentState" value="${card.bookState.value}"/>
+                                                <span><spring:message code="${currentState}" /></span>
+                                            </div>
+
+
+                                            <form action="<c:url value='/update_bookstate' />" method="post" class="uk-grid-large uk-grid" style="justify-content: center;">
+                                                <div class="uk-margin uk-width-1-1" style="display: flex; flex-direction: column; align-items: center;">
+
+                                                    <!-- Dropdown for Book State Selection -->
+                                                    <div class="uk-inline">
+                                                        <select class="uk-select no-arrow-select" name="book_state" id="bookState" aria-label="Seleccionar estado del libro" style="width: 90%;">
+                                                            <c:forEach var="state" items="${bookStates}">
+                                                                <option value="${state.value}">
+                                                                    <spring:message code="${state.value}" />
+                                                                </option>
+                                                            </c:forEach>
+                                                        </select>
+                                                    </div>
+
+                                                    <!-- Hidden Input for Book ID -->
+                                                    <input type="hidden" name="book_id" value="${card.bookId}" />
+
+                                                    <!-- Submit Button -->
+                                                    <div class="uk-margin-top" style="text-align: center;">
+                                                        <button class="uk-button uk-button-primary" type="submit">
+                                                            <spring:message code="book.update.state.save" />
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
                                 <!-- Modal específico para cada card -->
                                 <div id="modal-sections-${card.bookId}" uk-modal>
                                     <div class="uk-modal-dialog">
@@ -244,12 +294,12 @@
                                                                     <spring:message code="book.set.location"/>
                                                                 </label>
                                                             </div>
-												
+
                                                             <div class="uk-inline">
 <!-- 	                                                            <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: location"></span> -->
-	                                                            
+
 	                                                            <c:choose>
-	                                                            	
+
 	                                                            	<c:when test="${not empty user.userLocations}">
 																		<select class="uk-select no-arrow-select" name="locationId" aria-label="Not clickable icon" style="width: 90%">
 																		    <c:forEach var="userLocation" items="${user.userLocations}">
@@ -267,21 +317,21 @@
 														            </p>
 																	</c:otherwise>
 																</c:choose>
-																
+
 <!--                                                                 <span class="uk-form-icon uk-form-icon-flip" -->
 <!--                                                                       uk-icon="icon: location"></span> -->
 <!--                                                                 <input class="uk-input" type="text" name="location" -->
 <%--                                                                        aria-label="Not clickable icon" value="${user.favoriteLocation}"/> --%>
                                                             </div>
-                                                            
+
                                                             <input class="uk-input" type="hidden"
                                                                    value="${card.bookId}" name="bookId"
                                                                    aria-label="Not clickable icon"/>
                                                         </div>
                                                         <div class="uk-margin-top uk-button-group"
                                                              style="margin-left: 50px;">
-                                                            <button class="uk-button uk-button-primary"><spring:message
-                                                                    code="book.publish.button"/></button>
+                                                                <button class="uk-button uk-button-primary "><spring:message
+                                                                        code="book.publish.button"/></button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -289,6 +339,68 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div id="modal-${card.bookId}" uk-modal>
+                                <div class="uk-modal-dialog">
+                                    <button class="uk-modal-close-default" type="button" uk-close></button>
+                                    <div class="uk-modal-header">
+                                        <form action="<c:url value='/createpublication' />"
+                                              method="post" class="uk-grid-large uk-grid"
+                                              style="justify-content: center;">
+                                            <div class="uk-margin" style="justify-content: center">
+                                                <div class="uk-width-1-1">
+                                                    <div class="uk-width-1-1 uk-margin-top">
+                                                        <div class="uk-margin-bottom">
+                                                            <label class="uk-margin">
+                                                                <spring:message code="book.set.location"/>
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="uk-inline">
+                                                            <!-- 	                                                            <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: location"></span> -->
+
+                                                            <c:choose>
+
+                                                                <c:when test="${not empty user.userLocations}">
+                                                                    <select class="uk-select no-arrow-select" name="locationId" aria-label="Not clickable icon" style="width: 90%">
+                                                                        <c:forEach var="userLocation" items="${user.userLocations}">
+                                                                            <option value="${userLocation.locationId}"
+                                                                                    <c:if test="${userLocation.locationId == user.favoriteLocation.locationId}"/>>
+                                                                                    ${userLocation.locationString}
+                                                                            </option>
+                                                                        </c:forEach>
+                                                                    </select>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <p>
+                                                                        <spring:message code="user.no.locations"/>
+                                                                        <a href="<c:url value='/profile'/>"><spring:message code="user.add.location"/></a>
+                                                                    </p>
+                                                                </c:otherwise>
+                                                            </c:choose>
+
+                                                            <!--                                                                 <span class="uk-form-icon uk-form-icon-flip" -->
+                                                            <!--                                                                       uk-icon="icon: location"></span> -->
+                                                            <!--                                                                 <input class="uk-input" type="text" name="location" -->
+                                                                <%--                                                                        aria-label="Not clickable icon" value="${user.favoriteLocation}"/> --%>
+                                                        </div>
+
+                                                        <input class="uk-input" type="hidden"
+                                                               value="${card.bookId}" name="bookId"
+                                                               aria-label="Not clickable icon"/>
+                                                    </div>
+                                                    <div class="uk-margin-top uk-button-group"
+                                                         style="margin-left: 50px;">
+                                                        <button class="uk-button uk-button-primary"><spring:message
+                                                                code="book.publish.button"/></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
                             </div>
                         </c:forEach>
                     </c:if>
