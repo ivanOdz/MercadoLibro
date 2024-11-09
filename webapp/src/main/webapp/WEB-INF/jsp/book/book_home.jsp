@@ -309,11 +309,6 @@
                                                 <div class="uk-margin" style="justify-content: center">
                                                     <div class="uk-width-1-1">
                                                         <div class="uk-width-1-1 uk-margin-top">
-                                                            <div class="uk-margin-bottom">
-                                                                <label class="uk-margin">
-                                                                    <spring:message code="book.set.location"/>
-                                                                </label>
-                                                            </div>
 
                                                             <div class="uk-inline">
 <!-- 	                                                            <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: location"></span> -->
@@ -321,32 +316,34 @@
 
 	                                                            <c:choose>
 	                                                            	<c:when test="${not empty user.userLocations}">
+                                                                        <div class="uk-margin-bottom">
+                                                                            <label class="uk-margin">
+                                                                                <spring:message code="book.set.location"/>
+                                                                            </label>
+                                                                        </div>
                                                                         <form:select path="locationId" class="uk-select no-arrow-select" aria-label="Not clickable icon" style="width: 90%">
                                                                             <form:options items="${user.userLocations}" itemValue="locationId" itemLabel="locationString" />
                                                                         </form:select>
+                                                                        <p>
+                                                                            <button class="uk-button uk-button-primary" type="submit"><spring:message code="button.confirm"/></button>
+                                                                        </p>
 																	</c:when>
 																	<c:otherwise>
-														            <p>
-														                <spring:message code="user.no.locations"/>
-                                                                        <button class="uk-button uk-button-primary" type="submit"><spring:message code="button.confirm"/></button>
-														            </p>
+                                                                        <div class="uk-margin-bottom">
+                                                                            <label class="uk-margin">
+                                                                                <spring:message code="book.set.location"/>
+                                                                            </label>
+                                                                        </div>
+                                                                        <spring:message code="user.no.locations"/>
+                                                                        <div style="padding: 5%">
+                                                                            <a href="${profileUrl}"  class="uk-button-primary uk-button" style="margin: 2%" type="button">
+                                                                                <spring:message code="profile.goto"/>
+                                                                            </a>
+                                                                        </div>
 																	</c:otherwise>
 																</c:choose>
 
-<!--                                                                 <span class="uk-form-icon uk-form-icon-flip" -->
-<!--                                                                       uk-icon="icon: location"></span> -->
-<!--                                                                 <input class="uk-input" type="text" name="location" -->
-<%--                                                                        aria-label="Not clickable icon" value="${user.favoriteLocation}"/> --%>
                                                             </div>
-
-                                                            <input class="uk-input" type="hidden"
-                                                                   value="${card.bookId}" name="bookId"
-                                                                   aria-label="Not clickable icon"/>
-                                                        </div>
-                                                        <div class="uk-margin-top uk-button-group"
-                                                             style="margin-left: 50px;">
-                                                                <button class="uk-button uk-button-primary "><spring:message
-                                                                        code="book.publish.button"/></button>
                                                         </div>
                                                     </div>
                                                 </div>
