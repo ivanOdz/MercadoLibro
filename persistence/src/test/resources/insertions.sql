@@ -45,11 +45,11 @@
 
 -- 7 --
         INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
-        VALUES (7, '9788420471839', 'Crónica de una muerte anunciada', 'Debolsillo', 'Un relato corto sobre la muerte premeditada de Santiago Nasar, basado en hechos reales.', 'MISTERY', 1, 300, 128, 'SPANISH', 'SMALL', 1981, TRUE, FALSE, NULL);
+        VALUES (7, '9788420471839', 'Crónica de una muerte anunciada', 'Debolsillo', 'Un relato corto sobre la muerte premeditada de Santiago Nasar, basado en hechos reales.', 'MYSTERY', 1, 300, 128, 'SPANISH', 'SMALL', 1981, TRUE, FALSE, NULL);
 
 -- 8 --
         INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)
-        VALUES (8, '9788497594319', 'Los detectives salvajes', 'Anagrama', 'Una novela sobre la vida bohemia de poetas en el México de los años 70.', 'MISTERY', 1, 700, 609, 'SPANISH', 'LARGE', 1998, FALSE, TRUE, NULL);
+        VALUES (8, '9788497594319', 'Los detectives salvajes', 'Anagrama', 'Una novela sobre la vida bohemia de poetas en el México de los años 70.', 'MYSTERY', 1, 700, 609, 'SPANISH', 'LARGE', 1998, FALSE, TRUE, NULL);
     
 -- 9 --
         INSERT INTO book_model (bookModelId, isbn, title, editorial, description, genre, edition, weight, pages, bookLanguage, dimension, publicationYear, isPocketEdition, isHardcover, imageId)

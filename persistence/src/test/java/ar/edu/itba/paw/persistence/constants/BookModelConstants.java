@@ -110,7 +110,7 @@ public final class BookModelConstants {
 	public static final String TITLE_7 = "Crónica de una muerte anunciada";
 	public static final String EDITORIAL_7 = "Debolsillo";
 	public static final String DESCRIPTION_7 = "Un relato corto sobre la muerte premeditada de Santiago Nasar, basado en hechos reales.";
-	public static final String GENRE_7 = "MISTERY";
+	public static final String GENRE_7 = "MYSTERY";
 	public static final Integer EDITION_7 = 1;
 	public static final Integer WEIGHT_7 = 300;
 	public static final Integer PAGES_7 = 128;
@@ -127,7 +127,7 @@ public final class BookModelConstants {
 	public static final String TITLE_8 = "Los detectives salvajes";
 	public static final String EDITORIAL_8 = "Anagrama";
 	public static final String DESCRIPTION_8 = "Una novela sobre la vida bohemia de poetas en el México de los años 70.";
-	public static final String GENRE_8 = "MISTERY";
+	public static final String GENRE_8 = "MYSTERY";
 	public static final Integer EDITION_8 = 1;
 	public static final Integer WEIGHT_8 = 700;
 	public static final Integer PAGES_8 = 609;

@@ -57,9 +57,6 @@ public class BookModelDaoJpaTest {
 		jdbcTemplate = new JdbcTemplate(ds);
 	}
 	
-//    List<Author> createAuthors(List<String> authors);
-//    void createBookAuthors(List<Long> authorsIds, long bookModelId);
-//    PaginatedResponse<BookModel, BookModelMetadata> getPaginatedBookModels(String search, boolean isGenreFilterActive, Genre genreFilter, String currentPage, String sortType);
 //    List<GenreWrapper> getGenreQtyByBookModel(String search);
 	
 	@Test
@@ -176,6 +173,129 @@ public class BookModelDaoJpaTest {
 		Assert.assertTrue(found_2);
 	}
 	
+	@Test
+	@Rollback
+	public void testCreateAuthors() {
+		
+		final List<String> authorStrings = new ArrayList<String>();
+		authorStrings.add(BookModelConstants.NON_EXISTENT_AUTHOR_1);
+		authorStrings.add(BookModelConstants.NON_EXISTENT_AUTHOR_2);
+		
+		final List<Author> newAuthors = bookModelDao.createAuthors(authorStrings);
+		
+		Assert.assertNotNull(newAuthors);
+		
+		Boolean found_1 = false;
+		Boolean found_2 = false;
+		Boolean found_3 = false;
+		
+		for (Author author : newAuthors) {
+			
+			if (author.getAuthorName().equals(BookModelConstants.NON_EXISTENT_AUTHOR_1)) {
+				found_1 = true;
+			}
+			else if (author.getAuthorName().equals(BookModelConstants.NON_EXISTENT_AUTHOR_2)) {
+				found_2 = true;
+			}
+			else {
+				found_3 = true;
+				break;
+			}
+		}
+		
+		Assert.assertFalse(found_3);
+		Assert.assertTrue(found_1);
+		Assert.assertTrue(found_2);
+	}
+
+	@Test
+	public void testGetPaginatedBookModels() {
+		
+		final String search = "";
+		final String currentPage = "0";
+		final String sortType = "BOOK_NAME_ASCENDING";
+		final Genre genreFilter = null;
+		
+		final PaginatedResponse<BookModel, BookModelMetadata> response = bookModelDao.getPaginatedBookModels(search, genreFilter != null, genreFilter, currentPage, sortType);
+		
+		Assert.assertNotNull(response);
+		Assert.assertNotNull(response.getMetadata());
+		Assert.assertEquals(search, response.getMetadata().getSearch());
+		Assert.assertEquals(Integer.parseInt(currentPage), response.getMetadata().getCurrentPage());
+		Assert.assertEquals(genreFilter, response.getMetadata().getGenreFilter());
+		Assert.assertNotNull(response.getData());
+		Assert.assertTrue(response.getData().size() > 0);
+		
+		Integer foundTimes_1 = 0;
+		Integer foundTimes_2 = 0;
+		Integer foundTimes_3 = 0;
+		
+		for (BookModel bookModel : response.getData()) {	// To assert is not repeted
+			
+			if (bookModel.getBookModelId() == BookModelConstants.ID_1) {
+				foundTimes_1++;
+			}
+			else if (bookModel.getBookModelId() == BookModelConstants.ID_5) {
+				foundTimes_2++;
+			}
+			else if (bookModel.getBookModelId() == BookModelConstants.ID_10) {
+				foundTimes_3++;
+			}
+		}
+		
+		Assert.assertTrue(foundTimes_1 <= 1);
+		Assert.assertTrue(foundTimes_2 <= 1);
+		Assert.assertTrue(foundTimes_3 <= 1);
+	}
 	
+	@Test
+	public void testGetPaginatedBookModelsFilteredByGenreCrime() {
+		
+		final String search = "";
+		final String currentPage = "0";
+		final String sortType = "BOOK_NAME_ASCENDING";
+		final Genre genreFilter = Genre.CRIME;
+		
+		final PaginatedResponse<BookModel, BookModelMetadata> response = bookModelDao.getPaginatedBookModels(search, genreFilter != null, genreFilter, currentPage, sortType);
+		
+		Assert.assertNotNull(response);
+		Assert.assertNotNull(response.getMetadata());
+		Assert.assertEquals(search, response.getMetadata().getSearch());
+		Assert.assertEquals(Integer.parseInt(currentPage), response.getMetadata().getCurrentPage());
+		Assert.assertEquals(genreFilter, response.getMetadata().getGenreFilter());
+		Assert.assertNotNull(response.getData());
+		Assert.assertTrue(response.getData().isEmpty());
+	}
+	
+	@Test
+	public void testGetPaginatedBookModelsFilteredByBookName() {
+		
+		final String search = "La sombra del viento";
+		final String currentPage = "0";
+		final String sortType = "BOOK_NAME_ASCENDING";
+		final Genre genreFilter = null;
+		
+		final PaginatedResponse<BookModel, BookModelMetadata> response = bookModelDao.getPaginatedBookModels(search, genreFilter != null, genreFilter, currentPage, sortType);
+		
+		Assert.assertNotNull(response);
+		Assert.assertNotNull(response.getMetadata());
+		Assert.assertEquals(search, response.getMetadata().getSearch());
+		Assert.assertEquals(Integer.parseInt(currentPage), response.getMetadata().getCurrentPage());
+		Assert.assertEquals(genreFilter, response.getMetadata().getGenreFilter());
+		Assert.assertNotNull(response.getData());
+		Assert.assertTrue(response.getData().size() > 0);
+		
+		Boolean found = false;
+		
+		for (BookModel bookModel : response.getData()) {
+			
+			if (bookModel.getBookModelId() == BookModelConstants.ID_3 && bookModel.getTitle().equals(search)) {
+				found = true;
+				break;
+			}
+		}
+		
+		Assert.assertTrue(found);
+	}
 }
 	
