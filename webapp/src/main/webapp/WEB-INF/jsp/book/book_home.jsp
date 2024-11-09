@@ -355,67 +355,6 @@
                                     </div>
                                 </div>
 
-                                <div id="modal-${card.bookId}" uk-modal>
-                                <div class="uk-modal-dialog">
-                                    <button class="uk-modal-close-default" type="button" uk-close></button>
-                                    <div class="uk-modal-header">
-                                        <form action="<c:url value='/createpublication' />"
-                                              method="post" class="uk-grid-large uk-grid"
-                                              style="justify-content: center;">
-                                            <div class="uk-margin" style="justify-content: center">
-                                                <div class="uk-width-1-1">
-                                                    <div class="uk-width-1-1 uk-margin-top">
-                                                        <div class="uk-margin-bottom">
-                                                            <label class="uk-margin">
-                                                                <spring:message code="book.set.location"/>
-                                                            </label>
-                                                        </div>
-
-                                                        <div class="uk-inline">
-                                                            <!-- 	                                                            <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: location"></span> -->
-
-                                                            <c:choose>
-
-                                                                <c:when test="${not empty user.userLocations}">
-                                                                    <select class="uk-select no-arrow-select" name="locationId" aria-label="Not clickable icon" style="width: 90%">
-                                                                        <c:forEach var="userLocation" items="${user.userLocations}">
-                                                                            <option value="${userLocation.locationId}"
-                                                                                    <c:if test="${userLocation.locationId == user.favoriteLocation.locationId}"/>>
-                                                                                    ${userLocation.locationString}
-                                                                            </option>
-                                                                        </c:forEach>
-                                                                    </select>
-                                                                </c:when>
-                                                                <c:otherwise>
-                                                                    <p>
-                                                                        <spring:message code="user.no.locations"/>
-                                                                        <a href="<c:url value='/profile'/>"><spring:message code="user.add.location"/></a>
-                                                                    </p>
-                                                                </c:otherwise>
-                                                            </c:choose>
-
-                                                            <!--                                                                 <span class="uk-form-icon uk-form-icon-flip" -->
-                                                            <!--                                                                       uk-icon="icon: location"></span> -->
-                                                            <!--                                                                 <input class="uk-input" type="text" name="location" -->
-                                                                <%--                                                                        aria-label="Not clickable icon" value="${user.favoriteLocation}"/> --%>
-                                                        </div>
-
-                                                        <input class="uk-input" type="hidden"
-                                                               value="${card.bookId}" name="bookId"
-                                                               aria-label="Not clickable icon"/>
-                                                    </div>
-                                                    <div class="uk-margin-top uk-button-group"
-                                                         style="margin-left: 50px;">
-                                                        <button class="uk-button uk-button-primary"><spring:message
-                                                                code="book.publish.button"/></button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-
                             </div>
                         </c:forEach>
                     </c:if>
