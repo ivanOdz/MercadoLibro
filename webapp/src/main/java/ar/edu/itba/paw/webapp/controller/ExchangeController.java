@@ -29,6 +29,7 @@ import javax.validation.constraints.NotEmpty;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 public class ExchangeController {
@@ -74,7 +75,10 @@ public class ExchangeController {
         mav.addObject("userReviewForm", new UserReviewForm());
 
         mav.addObject("messageForm", new MessageForm());
-        mav.addObject("messages", inProcessExchanges.getData().stream().map(Exchange::getChat).findFirst().orElse(Collections.emptyList()));
+        List<Message> messages = inProcessExchanges.getData().stream()
+                .flatMap(exchange -> exchange.getChat().stream())
+                .collect(Collectors.toList());
+        mav.addObject("messages", messages);
 
         List<Exchange> exchanges = new ArrayList<>(pendingExchanges.getData());
         exchanges.addAll(inProcessExchanges.getData());
@@ -109,8 +113,11 @@ public class ExchangeController {
 
         mav.addObject("userReviewForm", new UserReviewForm());
 
+        List<Message> messages = inProcessExchanges.getData().stream()
+                .flatMap(exchange -> exchange.getChat().stream())
+                .toList();
         mav.addObject("messageForm", new MessageForm());
-        mav.addObject("messages", inProcessExchanges.getData().stream().map(Exchange::getChat).findFirst().orElse(Collections.emptyList()));
+        mav.addObject("messages", messages);
 
         List<Exchange> exchanges = new ArrayList<>(pendingExchanges.getData());
         exchanges.addAll(inProcessExchanges.getData());
