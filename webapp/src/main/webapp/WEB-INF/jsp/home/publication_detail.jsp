@@ -77,6 +77,12 @@
                                 </button>
                             </div>
                         </c:when>
+                        <c:when test="${!publication.book.bookModel.image.isImageNull && publication.book.bookModel.image != null}">
+                            <img class="book-image"
+                                 src="<c:url value='/images/${publication.book.bookModel.image.imageId}'/>"
+                                 style="height: 100%; width: auto; object-fit: contain;"
+                                 alt="book"/>
+                        </c:when>
                         <c:otherwise>
                             <img class="book-image" src="<c:url value='/images/book.jpg' />" width="300"
                                  alt="book"
