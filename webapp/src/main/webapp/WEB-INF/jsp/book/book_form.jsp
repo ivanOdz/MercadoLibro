@@ -184,7 +184,11 @@
                         <p id="location-error" style="color: red;"></p>
                     </div>
 
-
+                    <div style="margin-top: 2%; align-self: auto;">
+                        <input type="hidden" name="book_model_id" value="${book_model_id}">
+                        <button style="" id="no-publish-upload" class="uk-button uk-button-primary" type="submit"><spring:message
+                                code="add.publication.upload"/></button>
+                    </div>
 
 
                 </div>
@@ -284,18 +288,24 @@
         const locationInputDiv = document.getElementById('location-q');
         const locationField = document.querySelector('input[name="location"]');
         const locationError = document.getElementById('location-error');
+        const noPublishUploadButton = document.getElementById('no-publish-upload');
 
         yesRadio.addEventListener('change', function () {
             if (this.checked) {
                 locationInputDiv.style.display = 'block';
+                noPublishUploadButton.style.display = 'none';
             }
         });
 
         noRadio.addEventListener('change', function () {
             if (this.checked) {
                 locationInputDiv.style.display = 'none';
+                noPublishUploadButton.style.display = 'block';
                 locationField.value = '';
                 locationError.innerText = '';
+            }
+            if (!this.checked) {
+                noPublishUploadButton.style.display = 'none';
             }
         });
 

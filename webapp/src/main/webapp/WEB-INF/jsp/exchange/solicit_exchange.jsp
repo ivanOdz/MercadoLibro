@@ -118,20 +118,36 @@
 
         <div class="uk-inline">
             <label class="form-group">
-                <spring:message code="book.set.location"/>
-                <form:select path="locationId" class="uk-select no-arrow-select" aria-label="Not clickable icon" style="width: 90%">
-                    <form:options items="${user.userLocations}" itemValue="locationId" itemLabel="locationString" />
-                </form:select>
+                <c:if test="${not empty user.userLocations}">
+                    <spring:message code="book.set.location"/>
+                    <form:select path="locationId" class="uk-select no-arrow-select" aria-label="Not clickable icon" style="width: 90%">
+                        <form:options items="${user.userLocations}" itemValue="locationId" itemLabel="locationString" />
+                    </form:select>
+                    <div class="form-container" style="margin-top: 5%; margin-left: 35%; margin-bottom: 2%;">
+                        <form:input path="publicationId" type="hidden" value="${publication.publicationId}"/>
+                        <button type="submit" class="uk-button uk-button-primary">
+                            <spring:message code="add.exchange.submit"/>
+                        </button>
+                    </div>
+                </c:if>
+                <c:if test="${empty user.userLocations}">
+                    <div class="uk-margin-bottom">
+                        <label class="uk-margin">
+                            <spring:message code="book.set.location"/>
+                        </label>
+                    </div>
+                    <spring:message code="user.no.locations"/>
+                    <div style="padding: 5%; margin-bottom: 10%">
+                        <a href="${profileUrl}"  class="uk-button-primary uk-button" style="margin: 2%" type="button">
+                            <spring:message code="profile.goto"/>
+                        </a>
+                    </div>
+                </c:if>
             </label>
             <form:errors path="bookId" element="p" cssStyle="color: red;"/>
         </div>
 
-        <div class="form-container" style="margin-top: 5%; margin-left: 35%; margin-bottom: 2%;">
-            <form:input path="publicationId" type="hidden" value="${publication.publicationId}"/>
-            <button type="submit" class="uk-button uk-button-primary">
-                <spring:message code="add.exchange.submit"/>
-            </button>
-        </div>
+
     </form:form>
 </div>
 </html>
