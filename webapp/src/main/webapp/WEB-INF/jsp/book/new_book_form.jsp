@@ -112,7 +112,7 @@
                         </form:label>
                         <form:select path="genre" class="uk-input">
                             <c:forEach var="genreWrapper" items="${genres}">
-                                <form:option value="${genreWrapper.value}">
+                                <form:option value="${genreWrapper}">
                                     <c:set var="i18nKey" value="${genreWrapper.value}" />
                                         <spring:message code="${i18nKey}"/>
                                 </form:option>
@@ -128,7 +128,7 @@
                         </form:label>
                         <form:select path="language" class="uk-input">
                             <c:forEach var="languageWrapper" items="${languages}">
-                                <form:option value="${languageWrapper.value}">
+                                <form:option value="${languageWrapper}">
                                     <c:set var="i18nKey" value="${languageWrapper.value}" />
                                         <spring:message code="${i18nKey}"/>
                                 </form:option>
@@ -218,7 +218,7 @@
                         </form:label>
                         <form:select path="dimension" class="uk-input">
                             <c:forEach var="dimensionWrapper" items="${dimensions}">
-                                <form:option value="${dimensionWrapper.value}">
+                                <form:option value="${dimensionWrapper}">
                                     <c:set var="i18nKey" value="${dimensionWrapper.value}" />
                                             <spring:message code="${i18nKey}"/>
                                 </form:option>
@@ -281,7 +281,7 @@
                         </form:label>
                         <form:select path="bookState" class="uk-input">
                             <c:forEach var="bookStateWrapper" items="${bookStates}">
-                                <form:option value="${bookStateWrapper.value}">
+                                <form:option value="${bookStateWrapper}">
                                     <c:set var="i18nKey" value="${bookStateWrapper.value}" />
                                             <spring:message code="${i18nKey}"/>
                                 </form:option>
