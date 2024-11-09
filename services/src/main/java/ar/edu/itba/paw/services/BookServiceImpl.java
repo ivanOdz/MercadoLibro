@@ -180,6 +180,12 @@ public class BookServiceImpl implements BookService {
 
         return bookDao.getBookStateQtyByBook(serach, genreFilterActive, genre, userId);
     }
+
+    @Override
+    @Transactional
+    public Book updateBookState(Long bookId, String bookState) {
+        return bookDao.updateBookState(bookId, bookState).orElse(null);
+    }
 }
 
 

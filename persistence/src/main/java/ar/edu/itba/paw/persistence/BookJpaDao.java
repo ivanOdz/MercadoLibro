@@ -194,6 +194,20 @@ public class BookJpaDao implements BookDao {
     }
 
     @Override
+    public Optional<Book> updateBookState(Long bookId, String bookState) {
+        BookState state = BookState.fromString(bookState);
+        if(state != null) {
+            Optional<Book> maybebook = getBookById(bookId);
+            if (maybebook.isPresent()) {
+                maybebook.get().setBookState(state);
+                em.merge(maybebook.get());
+                return maybebook;
+            }
+        }
+        return Optional.empty();
+    }
+
+    @Override
     public List<BookStateWrapper> getBookStateQtyByBook(String search, boolean isGenreFilterActive, Genre genreFilter, Long userId) {
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT b.bookState, COUNT(*) AS stateCount " +
