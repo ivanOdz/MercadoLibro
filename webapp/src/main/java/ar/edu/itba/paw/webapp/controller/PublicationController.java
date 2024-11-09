@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 
 import ar.edu.itba.paw.webapp.form.ExchangeForm;
 import ar.edu.itba.paw.webapp.form.LocationForm;
+import ar.edu.itba.paw.webapp.form.PublicationForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +59,12 @@ public class PublicationController {
         ps.createPublication(bookId, loggeduser.getUserId(), locationId, PublicationState.CURRENT);
         LOGGER.info("Publication created successfully");
         return new ModelAndView("redirect:/book");
+    }
+
+    @PostMapping(path = "/book_home/createpublication")
+    public ModelAndView createPublicationFromBookHome(@ModelAttribute PublicationForm publicationForm, @ModelAttribute("loggedUser") User loggeduser) {
+        createPublication(publicationForm.getBookId(), publicationForm.getLocationId(), loggeduser);
+        return new ModelAndView("redirect:/my_publications");
     }
 
     @GetMapping("/publications/{publication_id:\\d+}")

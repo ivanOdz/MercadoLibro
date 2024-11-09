@@ -9,6 +9,7 @@ import ar.edu.itba.paw.models.utils.pagination.BookModelMetadata;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 import ar.edu.itba.paw.webapp.form.BookDetailsForm;
 import ar.edu.itba.paw.webapp.form.BookForm;
+import ar.edu.itba.paw.webapp.form.PublicationForm;
 import ar.edu.itba.paw.webapp.utilities.EnumInternationalizationUtil;
 import ar.edu.itba.paw.webapp.utilities.LocalizedEnumWrapper;
 import org.slf4j.Logger;
@@ -85,6 +86,7 @@ public class BookController {
         mav.addObject("bookStates", BookState.values());
 
         mav.addObject("activePublications", activePublications);
+        mav.addObject("publicationForm", new PublicationForm());
 
         return mav;
     }

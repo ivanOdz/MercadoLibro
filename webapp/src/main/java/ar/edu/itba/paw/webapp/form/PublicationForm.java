@@ -2,24 +2,27 @@ package ar.edu.itba.paw.webapp.form;
 
 public class PublicationForm {
 
-    private String location;
+    private Long locationId;
     private long bookId;
 
-    public PublicationForm(long bookId, String location) {
+    public PublicationForm(long bookId, Long locationId) {
         this.bookId = bookId;
-        this.location = location;
+        this.locationId = locationId;
     }
 
-    public String getLocation() {
-        return location;
+    public PublicationForm() {
+    }
+
+    public Long getLocationId() {
+        return locationId;
+    }
+
+    public void setLocationId(Long locationId) {
+        this.locationId = locationId;
     }
 
     public long getBookId() {
         return bookId;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
     }
 
     public void setBookId(long bookId) {

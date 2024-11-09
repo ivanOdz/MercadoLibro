@@ -213,7 +213,7 @@
                                     </div>
                                     <figure class="uk-margin-bottom">
                                             <c:choose>
-                                                <c:when test="${card.images[0] != null && !card.images[0].image.isImageNull}">
+                                                <c:when test="${not empty card.images && card.images[0] != null && !card.images[0].image.isImageNull}">
                                                     <img class="book-image"
                                                          src="<c:url value='/images/${card.images[0].image.imageId}' />"
                                                          alt="bookImage"/>
@@ -300,13 +300,12 @@
                                     </div>
                                 </div>
                                 <!-- Modal específico para cada card -->
+                                <c:url var="postUrl" value='/createpublication' />
                                 <div id="modal-sections-${card.bookId}" uk-modal>
                                     <div class="uk-modal-dialog">
                                         <button class="uk-modal-close-default" type="button" uk-close></button>
                                         <div class="uk-modal-header">
-                                            <form action="<c:url value='/createpublication' />"
-                                                  method="post" class="uk-grid-large uk-grid"
-                                                  style="justify-content: center;">
+                                            <form:form modelAttribute="publicationForm" action="${postUrl}" method="post" enctype="multipart/form-data">
                                                 <div class="uk-margin" style="justify-content: center">
                                                     <div class="uk-width-1-1">
                                                         <div class="uk-width-1-1 uk-margin-top">
@@ -318,23 +317,18 @@
 
                                                             <div class="uk-inline">
 <!-- 	                                                            <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: location"></span> -->
+                                                                <form:hidden path="bookId" value="${card.bookId}"/>
 
 	                                                            <c:choose>
-
 	                                                            	<c:when test="${not empty user.userLocations}">
-																		<select class="uk-select no-arrow-select" name="locationId" aria-label="Not clickable icon" style="width: 90%">
-																		    <c:forEach var="userLocation" items="${user.userLocations}">
-																		        <option value="${userLocation.locationId}"
-																		        	<c:if test="${userLocation.locationId == user.favoriteLocation.locationId}"/>>
-																		            ${userLocation.locationString}
-																		        </option>
-																		    </c:forEach>
-																		</select>
+                                                                        <form:select path="locationId" class="uk-select no-arrow-select" aria-label="Not clickable icon" style="width: 90%">
+                                                                            <form:options items="${user.userLocations}" itemValue="locationId" itemLabel="locationString" />
+                                                                        </form:select>
 																	</c:when>
 																	<c:otherwise>
 														            <p>
 														                <spring:message code="user.no.locations"/>
-														                <a href="<c:url value='/profile'/>"><spring:message code="user.add.location"/></a>
+                                                                        <button class="uk-button uk-button-primary" type="submit"><spring:message code="button.confirm"/></button>
 														            </p>
 																	</c:otherwise>
 																</c:choose>
@@ -356,7 +350,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </form>
+                                            </form:form>
                                         </div>
                                     </div>
                                 </div>

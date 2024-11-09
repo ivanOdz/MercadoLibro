@@ -63,10 +63,11 @@
             <div style="display: grid; grid-template-columns: repeat(3, 1fr);">
                 <div style="grid-column: 1 / 2; display: grid; justify-content: center; margin-left:2rem;">
                     <c:choose>
-                        <c:when test="${!publication.book.images[0].image.isImageNull}">
+                        <c:when test="${not empty publication.book.images && publication.book.images[0] != null && !publication.book.images[0].image.isImageNull}">
                             <img id="currentImage"
                                  src="<c:url value='/images/${publication.book.images[0].image.imageId}'/>"
-                                 alt="Book Image"/>
+                                 alt="Book Image"
+                                 style="height: 100%; width: auto; object-fit: contain;"/>
                             <div class="uk-button-group" style="justify-content:center">
                                 <button id="prevBtn" class="slider-button">
                                     <span uk-icon="icon: chevron-left"></span>
@@ -78,7 +79,8 @@
                         </c:when>
                         <c:otherwise>
                             <img class="book-image" src="<c:url value='/images/book.jpg' />" width="300"
-                                 height="400" alt="book"/>
+                                 alt="book"
+                                 style="height: 100%; width: auto; object-fit: contain;"/>
                         </c:otherwise>
                     </c:choose>
                 </div>
