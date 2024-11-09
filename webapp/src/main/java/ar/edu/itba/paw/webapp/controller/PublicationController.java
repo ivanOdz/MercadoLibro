@@ -78,6 +78,8 @@ public class PublicationController {
         mav.addObject("publication", publication);
         mav.addObject("imgCount", publication.getBook().getImages().size());
         mav.addObject("genres", Genre.values());
+        mav.addObject("bookStates", BookState.values());
+
 
         return mav;
     }
