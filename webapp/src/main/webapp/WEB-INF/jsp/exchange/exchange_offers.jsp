@@ -1137,14 +1137,11 @@
         // document.querySelector('input[name="reviewerId"]').value = reviewerId;
         // document.querySelector('input[name="subjectId"]').value = subjectId;
 
-
         if (chatAvailable === 'true') {
             document.querySelector('input[id="chatExchangeId"]').value = exchangeId;
             document.querySelector('input[id="chatUserId"]').value = subjectId;
 
             currentChat = chat.get(exchangeId);
-
-
             removeMessages();
             renderExistingMessages();
         }
