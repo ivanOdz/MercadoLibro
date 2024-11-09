@@ -3,7 +3,10 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.exceptions.ExchangeNotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.ExchangeDao;
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.models.utils.ExchangeState;
+import ar.edu.itba.paw.models.utils.Genre;
+import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -122,8 +125,26 @@ public class ExchangeJpaDao implements ExchangeDao {
 
         List<Exchange> exchanges = query.getResultList();
 
-        return new PaginatedResponse<>(exchanges, new BasicMetadata(page, exchangeIds.size(), EXCHANGES_PAGE_SIZE));
+        return new PaginatedResponse<>(exchanges, new BasicMetadata(page, getTotalResultsByExchange(anUserId, exchangeState, isOfferer), EXCHANGES_PAGE_SIZE));
     }
+
+    private int getTotalResultsByExchange(long anUserId, ExchangeState exchangeState, boolean isOfferer){
+
+        StringBuilder queryString = new StringBuilder("SELECT COUNT(*) FROM exchange e JOIN publication p ON p.publicationId = ");
+        if (isOfferer) {
+            queryString.append("e.offererpubId");
+        } else {
+            queryString.append("e.requesterpubId");
+        }
+        queryString.append(" WHERE p.userId = :userId AND e.exchangestate = :state");
+
+        Query nativeQuery = em.createNativeQuery(queryString.toString());
+        nativeQuery.setParameter("userId", anUserId);
+        nativeQuery.setParameter("state", exchangeState.getValue());
+
+        return ((Number) nativeQuery.getSingleResult()).intValue();
+    }
+
 
     @Override
     public void createMessage(Exchange exchange, long userId, String message, Timestamp time) {
