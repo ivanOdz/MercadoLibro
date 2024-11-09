@@ -110,8 +110,11 @@
                                         <span class="uk-margin-small-right" uk-icon="location">
                                         </span>
 
-                                            <span>
-                                        	<c:out value="${card.location.locationString}"/>
+                                        <span>
+                                            <c:forEach var="location" items="${card.locations}" varStatus="status">
+                                                <c:out value="${location.locationString}"/>
+                                                <c:if test="${!status.last}">,</c:if>
+                                            </c:forEach>
                                         </span>
                                         </div>
                                     </div>
