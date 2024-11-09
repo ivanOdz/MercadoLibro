@@ -229,10 +229,11 @@ public class ExchangeController {
     }
 
     @PostMapping( "/send_message")
-    public void sendMessage(@RequestParam("chatExchangeId") long exchangeId,
+    public ResponseEntity<Void> sendMessage(@RequestParam("chatExchangeId") long exchangeId,
                             @RequestParam("chatUserId") long userId,
                             @RequestParam("message") String message) {
             exchangeService.createMessage(exchangeId, userId, message);
+        return ResponseEntity.ok().build();
     }
 
 }

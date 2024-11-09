@@ -1077,7 +1077,8 @@
 <script>
     // LOCATIONS
     let locationMap = new Map();
-    let offererLocations, requesterLocations;
+    let offererLocations = [];
+    let requesterLocations = [];
     let id;
     <c:if test="${not empty exchanges}">
     <c:forEach var="exchange" items="${exchanges}">
@@ -1234,24 +1235,35 @@
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
                 }
+            }).then(response => {
+                if (response.ok) {
+                    document.querySelector(".message-send").value = "";
+                    renderNewMessage({message: messageText}, userId, Date.now());
+
+                    if (!chat.has(exchangeId)) {
+                        chat.set(exchangeId, []);
+                    }
+                    chat.get(exchangeId).push({userId: userId, message: messageText,messageTime: Date.now()});
+
+                    scrollToBottom();
+                } else {
+                    console.error('Error al enviar el mensaje');
+                }
+            }).catch(error => {
+                console.error('Error en la solicitud:', error);
             });
-            document.querySelector(".message-send").value = "";
-            renderNewMessage({message: messageText}, userId, new Date());
-
-            if (!chat.has(exchangeId)) {
-                chat.set(exchangeId, []);
-            }
-            chat.get(exchangeId).push({userId: userId, message: messageText});
-
-            scrollToBottom();
         });
     }
 
     function renderExistingMessages() {
-        for (let i = 0;i < currentChat.length && currentChat[i].message != null; i++) {
-            renderNewMessage(currentChat[i], currentChat[i].userId, currentChat[i].messageTime);
+        if (currentChat && currentChat.length > 0) {
+            currentChat.sort((a, b) => a.messageTime - b.messageTime);
+
+            for (let i = 0; i < currentChat.length && currentChat[i].message != null; i++) {
+                renderNewMessage(currentChat[i], currentChat[i].userId, currentChat[i].messageTime);
+            }
+            scrollToBottom();
         }
-        scrollToBottom()
     }
 
     function removeMessages() {
