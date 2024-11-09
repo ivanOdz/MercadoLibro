@@ -47,8 +47,8 @@
 		
 		<div class="user-data-grid-element-right">
 			
-			<h4 id="username-display" style="display: inline;"><c:out value="Your name: ${loggedUser.username}"/></h4>
-			
+			<h4 id="username-display" style="display: inline;"><spring:message code="profile.name"/><c:out value="${loggedUser.username}"/></h4>
+
 			<button type="button" id="change-username-btn" onclick="showEditForm()" style="display: inline;">
 				<i class="material-icons edit-icon">edit</i>
 			</button>
@@ -59,7 +59,7 @@
 				<button type="button" onclick="cancelEdit()" class="btn-cancel">Cancel</button>
 			</form>
 			
-			<h4><c:out value="Your mail: ${loggedUser.mail}"/></h4>
+			<h4><spring:message code="profile.mail"/><c:out value="${loggedUser.mail}"/></h4>
 			
 			<button style="margin: 5% 0 5% 0;" class="uk-button uk-button-default" type="button"><spring:message code="language"/></button>
 			<div uk-dropdown>
@@ -75,8 +75,8 @@
 
         <div class="profile-content uk-align-center" style="width: auto">
 
-			<h3><c:out value="Average rating given: ${userRating.rating}"/></h3>
-			<h3><c:out value="Average rating earned: ${userRating.rating}"/></h3>
+			<h3><spring:message code="profile.rating.given"/><c:out value="${userRating.rating}"/></h3>
+			<h3><spring:message code="profile.rating.earned"/><c:out value="${userRating.rating}"/></h3>
 			
 <!--             <div class="stars"> -->
 <%--                 <c:forEach var="i" begin="1" end="5"> --%>
