@@ -371,21 +371,24 @@
                                             <c:out value="${card.book.bookModel.title}"/>
                                         </h5>
 
-                                        <!-- Autores del libro -->
-                                        <c:forEach var="author" items="${card.book.bookModel.authors}">
-                                            <p class="small-gray-text custom-link uk-margin-remove-top">
-                                                <c:out value="${author.authorName}"/>
-                                            </p>
-                                        </c:forEach>
-                                        <div>
-                                        <span class="uk-margin-small-right" uk-icon="location">
+                                    <!-- Autores del libro -->
+                                    <c:forEach var="author" items="${card.book.bookModel.authors}">
+                                        <p class="small-gray-text custom-link uk-margin-remove-top">
+                                            <c:out value="${author.authorName}"/>
+                                        </p>
+                                    </c:forEach>
+                                    <div>
+                                        <span class="uk-margin-small-right" uk-icon="location"></span>
+                                        <span>
+                                            <c:forEach var="location" items="${card.locations}" varStatus="status">
+                                                <c:out value="${location.locationString}"/>
+                                                <c:if test="${!status.last}">
+                                                    ,
+                                                </c:if>
+                                            </c:forEach>
                                         </span>
-
-                                            <span>
-                                        	<c:out value="${card.location.locationString}"/>
-                                        </span>
-                                        </div>
                                     </div>
+                                </div>
 
                                     <div class="row-container" style="width:15rem; padding-left:10rem;">
                                         <div class="star-rating uk-flex uk-flex-middle">

@@ -208,7 +208,14 @@
                             <spring:message code="publication.details.location"/>
                         </p>
                         <p style="text-align: center;">
-                            <strong><c:out value="${publication.location.locationString}"/></strong>
+                            <strong>
+                                <c:forEach var="location" items="${publication.locations}" varStatus="status">
+                                    <c:out value="${location.locationString}"/>
+                                    <c:if test="${!status.last}">
+                                        ,
+                                    </c:if>
+                                </c:forEach>
+                            </strong>
                         </p>
                     </div>
                 </div>

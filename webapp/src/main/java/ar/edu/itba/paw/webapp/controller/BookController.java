@@ -125,25 +125,8 @@ public class BookController {
         if (errors.hasErrors()) {
             return bookModelForm(bookForm, errors, loggeduser);
         }
-
-        Book book;
-
-
-//        try {
-
-            book = bookService.createNewBook(bookForm.getIsbn(), bookForm.getTitle(), bookForm.getAuthors(), bookForm.getEditorial(), bookForm.getDescription(), bookForm.getGenre(), bookForm.getEdition(), bookForm.getPublicationYear(), bookForm.isHardcover(), bookForm.isPocketEdition(), bookForm.getDimension(), bookForm.getLanguage(), bookForm.getPages(), bookForm.getWeight(), bookForm.getBookState(), bookForm.getRating(), bookForm.getImageFiles(), bookForm.getBookCover(), loggeduser);
-        /*} catch (ApplicationRuntimeException e) {
-            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
-            return new ModelAndView("redirect:/400");
-        }*/
-
-        try {
-            publicationService.createPublicationIfNeeded(bookForm.isPublish(), book.getBookId(), loggeduser.getUserId(), bookForm.getLocationId(), PublicationState.CURRENT);
-        } catch (ApplicationRuntimeException e) {
-            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
-            return new ModelAndView("redirect:/400");
-        }
-
+        Book book = bookService.createNewBook(bookForm.getIsbn(), bookForm.getTitle(), bookForm.getAuthors(), bookForm.getEditorial(), bookForm.getDescription(), bookForm.getGenre(), bookForm.getEdition(), bookForm.getPublicationYear(), bookForm.isHardcover(), bookForm.isPocketEdition(), bookForm.getDimension(), bookForm.getLanguage(), bookForm.getPages(), bookForm.getWeight(), bookForm.getBookState(), bookForm.getRating(), bookForm.getImageFiles(), bookForm.getBookCover(), loggeduser);
+        publicationService.createPublicationIfNeeded(bookForm.isPublish(), book.getBookId(), loggeduser.getUserId(), bookForm.getLocationId(), PublicationState.CURRENT);
         return new ModelAndView("redirect:/book");
     }
 
@@ -152,14 +135,7 @@ public class BookController {
 
         ModelAndView mav = new ModelAndView("/book/book_form");
 
-        BookModel bm;
-        try {
-            bm = bookModelService.getBookModelByBookModelId(bookModelId);
-        } catch (ApplicationRuntimeException e) {
-            LOGGER.error(e.getExceptionMessage(), e.getStatusCode(), e.getStackTrace());
-            return new ModelAndView("redirect:/404");
-        }
-
+        BookModel bm = bookModelService.getBookModelByBookModelId(bookModelId);
         mav.addObject("user", loggeduser);
         mav.addObject("bookDetailsForm", bookDetailsForm);
         mav.addObject("step", 2);
@@ -177,27 +153,9 @@ public class BookController {
         if (errors.hasErrors()) {
             return bookDetailsFormNewBook(bookDetailsForm, bookModelId, errors, loggeduser);
         }
-        Book book;
+        Book book = bookService.createBook(bookModelId, bookDetailsForm.getBookState(), bookDetailsForm.getRating(), bookDetailsForm.getImageFiles(), bookDetailsForm.getBookCover(), null, loggeduser, false);
 
-        try {
-            book = bookService.createBook(bookModelId, bookDetailsForm.getBookState(), bookDetailsForm.getRating(), bookDetailsForm.getImageFiles(), bookDetailsForm.getBookCover(), null, loggeduser, false);
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
-            return new ModelAndView("redirect:/400");
-        }
-        /*try {
-        } catch (ApplicationRuntimeException e) {
-            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
-            return new ModelAndView("redirect:/400");
-        }*/
-
-        try {
-            publicationService.createPublicationIfNeeded(bookDetailsForm.isPublish(), book.getBookId(), loggeduser.getUserId(), bookDetailsForm.getLocationId(), PublicationState.CURRENT);
-        } catch (ApplicationRuntimeException e) {
-            LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
-            return new ModelAndView("redirect:/400");
-        }
-
+        publicationService.createPublicationIfNeeded(bookDetailsForm.isPublish(), book.getBookId(), loggeduser.getUserId(), bookDetailsForm.getLocationId(), PublicationState.CURRENT);
         return new ModelAndView("redirect:/book");
     }
 
