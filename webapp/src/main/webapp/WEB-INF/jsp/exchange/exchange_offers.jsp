@@ -94,6 +94,11 @@
                                                          src="<c:url value='/images/${data.requester.book.images[0].image.imageId}' />"
                                                          alt="bookImage"/>
                                                 </c:when>
+                                                <c:when test="${!data.requester.book.bookModel.image.isImageNull && data.requester.book.bookModel.image != null}">
+                                                    <img class="book-image"
+                                                         src="<c:url value='/images/${data.requester.book.bookModel.image.imageId}' />"
+                                                         alt="modelImage"/>
+                                                </c:when>
                                                 <c:otherwise>
                                                     <img class="book-image"
                                                          src="<c:url value='/images/book.jpg' />" alt="book"/>
@@ -127,6 +132,11 @@
                                                     <img class="book-image"
                                                          src="<c:url value='/images/${data.offerer.book.images[0].image.imageId}' />"
                                                          alt="bookImage"/>
+                                                </c:when>
+                                                <c:when test="${!data.offerer.book.bookModel.image.isImageNull && data.offerer.book.bookModel.image != null}">
+                                                    <img class="book-image"
+                                                         src="<c:url value='/images/${data.offerer.book.bookModel.image.imageId}' />"
+                                                         alt="modelImage"/>
                                                 </c:when>
                                                 <c:otherwise>
                                                     <img class="book-image"
@@ -283,6 +293,11 @@
                                                          src="<c:url value='/images/${data.requester.book.images[0].image.imageId}' />"
                                                          alt="bookImage"/>
                                                 </c:when>
+                                                <c:when test="${!data.requester.book.bookModel.image.isImageNull && data.requester.book.bookModel.image != null}">
+                                                    <img class="book-image"
+                                                         src="<c:url value='/images/${data.requester.book.bookModel.image.imageId}' />"
+                                                         alt="modelImage"/>
+                                                </c:when>
                                                 <c:otherwise>
                                                     <img class="book-image"
                                                          src="<c:url value='/images/book.jpg' />" alt="book"/>
@@ -348,6 +363,11 @@
                                                     <img class="book-image"
                                                          src="<c:url value='/images/${data.offerer.book.images[0].image.imageId}' />"
                                                          alt="bookImage"/>
+                                                </c:when>
+                                                <c:when test="${!data.offerer.book.bookModel.image.isImageNull && data.offerer.book.bookModel.image != null}">
+                                                    <img class="book-image"
+                                                         src="<c:url value='/images/${data.offerer.book.bookModel.image.imageId}' />"
+                                                         alt="modelImage"/>
                                                 </c:when>
                                                 <c:otherwise>
                                                     <img class="book-image"
@@ -503,6 +523,11 @@
                                                          src="<c:url value='/images/${data.requester.book.images[0].image.imageId}' />"
                                                          alt="bookImage"/>
                                                 </c:when>
+                                                <c:when test="${!data.requester.book.bookModel.image.isImageNull && data.requester.book.bookModel.image != null}">
+                                                    <img class="book-image"
+                                                         src="<c:url value='/images/${data.requester.book.bookModel.image.imageId}' />"
+                                                         alt="modelImage"/>
+                                                </c:when>
                                                 <c:otherwise>
                                                     <img class="book-image"
                                                          src="<c:url value='/images/book.jpg' />" alt="book"/>
@@ -539,6 +564,11 @@
                                                     <img class="book-image"
                                                          src="<c:url value='/images/${data.offerer.book.images[0].image.imageId}' />"
                                                          alt="bookImage"/>
+                                                </c:when>
+                                                <c:when test="${!data.offerer.book.bookModel.image.isImageNull && data.offerer.book.bookModel.image != null}">
+                                                    <img class="book-image"
+                                                         src="<c:url value='/images/${data.offerer.book.bookModel.image.imageId}' />"
+                                                         alt="modelImage"/>
                                                 </c:when>
                                                 <c:otherwise>
                                                     <img class="book-image"
@@ -695,6 +725,11 @@
                                                          src="<c:url value='/images/${data.requester.book.images[0].image.imageId}' />"
                                                          alt="bookImage"/>
                                                 </c:when>
+                                                <c:when test="${!data.requester.book.bookModel.image.isImageNull && data.requester.book.bookModel.image != null}">
+                                                    <img class="book-image"
+                                                         src="<c:url value='/images/${data.requester.book.bookModel.image.imageId}' />"
+                                                         alt="modelImage"/>
+                                                </c:when>
                                                 <c:otherwise>
                                                     <img class="book-image"
                                                          src="<c:url value='/images/book.jpg' />" alt="book"/>
@@ -733,6 +768,11 @@
                                                     <img class="book-image"
                                                          src="<c:url value='/images/${data.offerer.book.images[0].image.imageId}' />"
                                                          alt="bookImage"/>
+                                                </c:when>
+                                                <c:when test="${!data.offerer.book.bookModel.image.isImageNull && data.offerer.book.bookModel.image != null}">
+                                                    <img class="book-image"
+                                                         src="<c:url value='/images/${data.offerer.book.bookModel.image.imageId}' />"
+                                                         alt="modelImage"/>
                                                 </c:when>
                                                 <c:otherwise>
                                                     <img class="book-image"
