@@ -5,7 +5,6 @@ public enum PublicationState {
     CURRENT(1),
     OFFERED(2);
 
-
     private final int value;
 
     PublicationState(int value) {

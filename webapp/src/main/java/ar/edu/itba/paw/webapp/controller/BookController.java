@@ -76,10 +76,13 @@ public class BookController {
         List<GenreWrapper> genreWrapperList = bookService.getGenreWrapperList(search, isBookStateFilterActive, bookStateFilter, loggeduser.getUserId());
         List<BookStateWrapper> bookStateWrapperList = bookService.getBookStateWrapperList(search, isGenreFilterActive, genreFilter, loggeduser.getUserId());
 
+        List<Publication> activePublications = publicationService.getActivePublicationsByUser(loggeduser);
+
         mav.addObject("genreWrapperList", genreWrapperList);
         mav.addObject("bookStateWrapperList", bookStateWrapperList);
         mav.addObject("books", books);
         mav.addObject("user", loggeduser);
+        mav.addObject("activePublications", activePublications);
         
         return mav;
     }

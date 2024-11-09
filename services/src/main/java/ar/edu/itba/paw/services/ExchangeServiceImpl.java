@@ -73,8 +73,8 @@ public class ExchangeServiceImpl implements ExchangeService {
         Exchange exchange = ex.get();
         if (state) {
             exchangeDao.acceptExchange(exchange ,acceptCode);
-            bs.setAvailable(exchange.getOfferer().getBook(), false);
-            bs.setAvailable(exchange.getRequester().getBook(), false);
+//            bs.setAvailable(exchange.getOfferer().getBook(), false);
+//            bs.setAvailable(exchange.getRequester().getBook(), false);
         } else {
             exchangeDao.rejectExchange(exchange,acceptCode);
 

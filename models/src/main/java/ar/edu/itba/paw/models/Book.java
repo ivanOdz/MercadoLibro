@@ -56,6 +56,7 @@ public class Book {
         this.images = images;
     }
 
+
 	public long getBookId() {
 		return bookId;
 	}

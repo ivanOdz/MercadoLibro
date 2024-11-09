@@ -25,7 +25,7 @@ public interface PublicationService {
 
     void addLocation(Long publicationId, Long locationId, User user);
 
-//    List<Publication> getPublicationsByUser(User user);
+    List<Publication> getActivePublicationsByUser(User user);
 
     PaginatedResponse<Publication, ItemFilterMetadata> getMyPaginatedPublications(long userId, String search, String isBookStateFilterActive, String bookStateFilter, String isGenreFilterActive, String genreFilter, String sortType, String currentPage);
 

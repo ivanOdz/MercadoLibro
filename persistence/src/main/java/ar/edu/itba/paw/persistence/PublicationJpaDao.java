@@ -35,6 +35,7 @@ public class PublicationJpaDao implements PublicationDao {
     @Transactional
     public Publication createPublication(Book book, User user, List<Location> locations, PublicationState publicationState) {
         final Publication publication = new Publication(null, book, user,publicationState, new Timestamp(new Date().getTime()), locations);
+        book.setAvailable(false);
         em.persist(publication);
         return publication;
     }
@@ -379,6 +380,13 @@ public class PublicationJpaDao implements PublicationDao {
         em.merge(publication);
     }
 
+    @Override
+    public List<Publication> getActivePublicationsByUser(User user) {
+        TypedQuery<Publication> query = em.createQuery("FROM Publication p WHERE p.user = :user AND p.publicationState = :publicationState", Publication.class);
+        query.setParameter("publicationState", PublicationState.CURRENT);
+        query.setParameter("user", user);
+        return query.getResultList();
+    }
 
     private void setIsLikedByUser(User user, Publication publication) {
         if(user == null){

@@ -114,9 +114,11 @@ public class PublicationServiceImpl implements PublicationService {
         pubDao.addLocation(publication, location);
     }
 
-//    public List<Publication> getPublicationsByUser(User user) {
-//        return pubDao.getPublicationsByUserId(user.getUserId()) ;
-//    }
+    @Override
+    @Transactional(readOnly = true)
+    public List<Publication> getActivePublicationsByUser(User user) {
+        return pubDao.getActivePublicationsByUser(user) ;
+    }
 
     @Override
     @Transactional(readOnly = true)
@@ -148,6 +150,8 @@ public class PublicationServiceImpl implements PublicationService {
     @Transactional
     public void deletePublication(long publicationId) {
         pubDao.deletePublication(publicationId);
+        Publication p = getPublicationByPublicationId(publicationId);
+        p.getBook().setAvailable(true);
     }
 
     @Override

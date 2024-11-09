@@ -34,4 +34,6 @@ public interface PublicationDao {
     PaginatedResponse<Publication, BasicMetadata> getFavoritePublications(User user, String currentPage);
 
     void addLocation(Publication publication, Location location);
+
+    List<Publication> getActivePublicationsByUser(User user);
 }

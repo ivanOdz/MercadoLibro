@@ -19,6 +19,23 @@
 
     <title><spring:message code="book.view.title"/></title>
 </head>
+<script>
+    let bookMap = new Map();
+    <c:forEach var="pub" items="${activePublications}">
+        if (!bookMap.has(${pub.book.bookId})) {
+            bookMap.set(${pub.book.bookId}, ${pub.publicationId});
+            console.log(${pub.book.bookId} + " -> " + ${pub.publicationId});
+        }
+    </c:forEach>
+    function seePublication(bookId) {
+        let publicationId = bookMap.get(bookId);
+        console.log(publicationId);
+        if (publicationId) {
+            window.location.href = '/publications/' + publicationId;
+        }
+    }
+</script>
+
 <body>
 <navbar_wo_search></navbar_wo_search>
 
@@ -214,14 +231,18 @@
                                         </div>
                                         <c:choose>
                                             <c:when test="${card.available}">
-                                                <a class="uk-button uk-button-default uk-button-primary uk-width-1-1"
+                                                <a class="uk-button uk-button-default uk-button-primary uk-width-1-1 uk-border-rounded"
+                                                   style="background-color: #669cf4;"
                                                    href="#modal-sections-${card.bookId}" uk-toggle>
                                                     <spring:message code="book.publish.button"/>
                                                 </a>
                                             </c:when>
                                             <c:otherwise>
-                                                <button class="uk-button uk-button-primary uk-width-1-1" disabled>
+                                                <button class="uk-button uk-button-primary uk-width-1-1 uk-border-rounded" disabled>
                                                     <spring:message code="book.published.button"/>
+                                                </button>
+                                                <button class="button-pub" onclick="seePublication(${card.bookId})">
+                                                    <spring:message  code="publication.goto" />
                                                 </button>
                                             </c:otherwise>
                                         </c:choose>
@@ -280,8 +301,9 @@
                                                         </div>
                                                         <div class="uk-margin-top uk-button-group"
                                                              style="margin-left: 50px;">
-                                                            <button class="uk-button uk-button-primary"><spring:message
-                                                                    code="book.publish.button"/></button>
+                                                            <button class="uk-button uk-button-primary">
+                                                                <spring:message code="book.publish.button"/>
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 </div>
