@@ -347,19 +347,31 @@
                     <div class="uk-modal-header">
                         <h2 class="uk-modal-title"><spring:message code="publication.add.location"/></h2>
                     </div>
-                    <form:form modelAttribute="locationForm" action="${postUrl}" method="post" enctype="multipart/form-data">
+                    <c:if test="${not empty user.userLocations}">
+                        <form:form modelAttribute="locationForm" action="${postUrl}" method="post" enctype="multipart/form-data">
+                            <div style="padding: 5%">
+                                <p><spring:message code="publication.add.location.description"/></p>
+                                <form:select path="locationId" class="uk-select no-arrow-select" aria-label="Not clickable icon" style="width: 90%">
+                                    <form:options items="${user.userLocations}" itemValue="locationId" itemLabel="locationString" />
+                                </form:select>
+                            </div>
+                            <form:hidden path="publicationId" value="${publication.publicationId}"/>
+                            <div class="uk-modal-footer uk-text-right">
+                                <button class="uk-button uk-button-default uk-modal-close" type="button"><spring:message code="exchange.button.cancel"/></button>
+                                <button class="uk-button uk-button-primary" type="submit"><spring:message code="button.confirm"/></button>
+                            </div>
+                        </form:form>
+                    </c:if>
+                    <c:url var="profileUrl" value="/profile"/>
+                    <c:if test="${empty user.userLocations}">
                         <div style="padding: 5%">
-                            <p><spring:message code="publication.add.location.description"/></p>
-                            <form:select path="locationId" class="uk-select no-arrow-select" aria-label="Not clickable icon" style="width: 90%">
-                                <form:options items="${user.userLocations}" itemValue="locationId" itemLabel="locationString" />
-                            </form:select>
+                            <spring:message code="user.add.location"/>
+                            <a href="${profileUrl}"  class="uk-button-primary uk-button" style="margin: 2%" type="button">
+                                <spring:message code="profile.goto"/>
+                            </a>
                         </div>
-                        <form:hidden path="publicationId" value="${publication.publicationId}"/>
-                        <div class="uk-modal-footer uk-text-right">
-                            <button class="uk-button uk-button-default uk-modal-close" type="button"><spring:message code="exchange.button.cancel"/></button>
-                            <button class="uk-button uk-button-primary" type="submit"><spring:message code="button.confirm"/></button>
-                        </div>
-                    </form:form>
+                    </c:if>
+
                 </div>
             </div>
 
