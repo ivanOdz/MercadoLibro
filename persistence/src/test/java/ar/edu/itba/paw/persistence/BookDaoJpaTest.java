@@ -144,42 +144,40 @@ public class BookDaoJpaTest {
 		
 		Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "book_rating", "userId = " + user.getUserId() + " AND bookModelId = '" + bookModel.getBookModelId() + "' AND rating = 4"));
 	}
-	
-	// ERROR EXTRAÑO!
-	
-//	@Test
-//	@Rollback
-//	public void testSetOwner() {
-//		
-//		final Author author = em.merge(new Author(AuthorConstants.ID_2, AuthorConstants.NAME_2));
-//		final List<Author> authors = new ArrayList<Author>();
-//		authors.add(author);
-//		
-//		final BookModel bookModel = em.merge(new BookModel(	BookModelConstants.ID_2,
-//															BookModelConstants.ISBN_2,
-//															BookModelConstants.TITLE_2,
-//															BookModelConstants.EDITORIAL_2,
-//															BookModelConstants.DESCRIPTION_2,
-//															Genre.fromString("genre" + BookModelConstants.GENRE_2),
-//															(int)BookModelConstants.EDITION_2,
-//															(int)BookModelConstants.WEIGHT_2,
-//															(int)BookModelConstants.PAGES_2,
-//															Language.valueOf(BookModelConstants.LANGUAGE_2),
-//															BookDimension.valueOf(BookModelConstants.DIMENSION_2),
-//															(short)(int)BookModelConstants.PUBLICATION_YEAR_2,
-//															BookModelConstants.IS_POCKET_EDITION_2,
-//															BookModelConstants.IS_HARD_COVER_2,
-//															authors,
-//															null
-//														));
-//		
-//		final User oldOwner = em.merge(new User(UserConstants.ID_1, UserConstants.NAME_1, UserConstants.MAIL_1, UserConstants.PASSWORD_1, UserConstants.IMAGE_ID_1, UserConstants.VERIFICATION_CODE_1, UserConstants.IS_VERIFIED_1, UserConstants.LANGUAGE_1));
-//		final User newOwner = em.merge(new User(UserConstants.ID_2, UserConstants.NAME_2, UserConstants.MAIL_2, UserConstants.PASSWORD_2, UserConstants.IMAGE_ID_2, UserConstants.VERIFICATION_CODE_2, UserConstants.IS_VERIFIED_2, UserConstants.LANGUAGE_2));
-//		final Book book = em.merge(new Book(BookConstants.ID_2, oldOwner, bookModel, BookState.fromString(BookConstants.BOOK_STATE_2), (int)BookConstants.EXCHANGE_QTY_2, BookConstants.AVAILABLE_2, null));
-//		
-//		bookDao.setOwner(book, newOwner);
-//		em.flush();
-//		
-//		Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "book", "ownerId = " + newOwner.getUserId() + " AND bookModelId = " + bookModel.getBookModelId()));
-//	}
+
+	@Test
+	@Rollback
+	public void testSetOwner() {
+		
+		final Author author = em.merge(new Author(AuthorConstants.ID_2, AuthorConstants.NAME_2));
+		final List<Author> authors = new ArrayList<Author>();
+		authors.add(author);
+		
+		final BookModel bookModel = em.merge(new BookModel(	BookModelConstants.ID_2,
+															BookModelConstants.ISBN_2,
+															BookModelConstants.TITLE_2,
+															BookModelConstants.EDITORIAL_2,
+															BookModelConstants.DESCRIPTION_2,
+															Genre.fromString("genre" + BookModelConstants.GENRE_2),
+															(int)BookModelConstants.EDITION_2,
+															(int)BookModelConstants.WEIGHT_2,
+															(int)BookModelConstants.PAGES_2,
+															Language.valueOf(BookModelConstants.LANGUAGE_2),
+															BookDimension.valueOf(BookModelConstants.DIMENSION_2),
+															(short)(int)BookModelConstants.PUBLICATION_YEAR_2,
+															BookModelConstants.IS_POCKET_EDITION_2,
+															BookModelConstants.IS_HARD_COVER_2,
+															authors,
+															null
+														));
+		
+		final User oldOwner = em.merge(new User(UserConstants.ID_1, UserConstants.NAME_1, UserConstants.MAIL_1, UserConstants.PASSWORD_1, UserConstants.IMAGE_ID_1, UserConstants.VERIFICATION_CODE_1, UserConstants.IS_VERIFIED_1, UserConstants.LANGUAGE_1));
+		final User newOwner = em.merge(new User(UserConstants.ID_2, UserConstants.NAME_2, UserConstants.MAIL_2, UserConstants.PASSWORD_2, UserConstants.IMAGE_ID_2, UserConstants.VERIFICATION_CODE_2, UserConstants.IS_VERIFIED_2, UserConstants.LANGUAGE_2));
+		final Book book = em.merge(new Book(BookConstants.ID_2, oldOwner, bookModel, BookState.fromString(BookConstants.BOOK_STATE_2), (int)BookConstants.EXCHANGE_QTY_2, BookConstants.AVAILABLE_2, new ArrayList<BookImage>()));
+		
+		bookDao.setOwner(book, newOwner);
+		em.flush();
+		
+		Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "book", "ownerId = " + newOwner.getUserId() + " AND bookModelId = " + bookModel.getBookModelId()));
+	}
 }

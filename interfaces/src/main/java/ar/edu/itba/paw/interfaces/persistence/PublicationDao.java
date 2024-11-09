@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public interface PublicationDao {
 
-    Publication createPublication(Book book, User user, List<Location> locations, PublicationState publicationState);
+	Publication createPublication(Book book, User user, List<Location> locations, PublicationState publicationState);
 
     void terminatePublication(Publication publication);
 
