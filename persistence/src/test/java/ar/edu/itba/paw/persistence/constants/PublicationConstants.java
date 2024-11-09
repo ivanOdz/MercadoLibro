@@ -51,4 +51,11 @@ public final class PublicationConstants {
 	public static final int COUNT_USER_2 = 2;
 	public static final int COUNT_USER_3 = 1;
 	public static final int COUNT_USER_4 = 1;
+	
+	public static final int COUNT_STATE_WORN_USER_1 = 1;
+	public static final int COUNT_STATE_ACCEPTABLE_USER_1 = 1;
+	public static final int COUNT_STATE_GOOD_USER_1 = 0;
+	public static final int COUNT_STATE_VERY_GOOD_USER_1 = 0;
+	public static final int COUNT_STATE_LIKE_NEW_USER_1 = 0;
+	public static final int COUNT_STATE_NEW_USER_1 = 0;
 }

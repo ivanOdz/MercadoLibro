@@ -283,17 +283,17 @@ public class BookModelDaoJpaTest {
 		Assert.assertNotNull(response.getData());
 		Assert.assertTrue(response.getData().size() > 0);
 		
-		Boolean found = false;
+		Boolean foundBook = false;
 		
 		for (BookModel bookModel : response.getData()) {
 			
 			if (bookModel.getBookModelId() == BookModelConstants.ID_3 && bookModel.getTitle().equals(search)) {
-				found = true;
+				foundBook = true;
 				break;
 			}
 		}
 		
-		Assert.assertTrue(found);
+		Assert.assertTrue(foundBook);
 	}
 	
 	@Test

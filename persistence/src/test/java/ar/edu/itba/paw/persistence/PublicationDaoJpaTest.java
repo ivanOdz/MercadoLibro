@@ -25,15 +25,17 @@ import ar.edu.itba.paw.models.Author;
 import ar.edu.itba.paw.models.Book;
 import ar.edu.itba.paw.models.BookImage;
 import ar.edu.itba.paw.models.BookModel;
-import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.Location;
+import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.utils.BookDimension;
 import ar.edu.itba.paw.models.utils.BookState;
+import ar.edu.itba.paw.models.utils.BookStateWrapper;
 import ar.edu.itba.paw.models.utils.Genre;
 import ar.edu.itba.paw.models.utils.Language;
 import ar.edu.itba.paw.models.utils.PublicationState;
+import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import ar.edu.itba.paw.persistence.constants.AuthorConstants;
 import ar.edu.itba.paw.persistence.constants.BookConstants;
@@ -63,13 +65,6 @@ public class PublicationDaoJpaTest {
 		
 		jdbcTemplate = new JdbcTemplate(ds);
 	}
-	
-//    PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(Long userId,String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, String sortType, String currentPage, User currentUser);
-//    List<BookStateWrapper> getBookStateQtyByPublication(Long userId, String search, boolean isGenreFilterActive, Genre genreFilter);
-//    List<GenreWrapper> getGenreQtyByPublication(Long userId, String search, boolean isBookStateFilterActive, BookState bookStateFilter);
-//    void deletePublication(long publicationId);
-//    void likePublication(long publicationId, long userId);
-//    PaginatedResponse<Publication, BasicMetadata> getFavoritePublications(User user, String currentPage);
 	
 	@Test
 	public void testGetPublicationByPublicationId() {
@@ -276,4 +271,112 @@ public class PublicationDaoJpaTest {
 		Assert.assertEquals(PublicationConstants.COUNT_USER_3, publicationDao.getPublicationCountByUserId(UserConstants.ID_3));
 		Assert.assertEquals(PublicationConstants.COUNT_USER_4, publicationDao.getPublicationCountByUserId(UserConstants.ID_4));
 	}
+	
+	@Test
+	public void testGetBookStateQtyByPublication() {
+		
+		final Long userId = UserConstants.ID_1;
+		final String search = "";
+		final Genre genreFilter = null;
+		
+		List<BookStateWrapper> bookStateWrapperList = publicationDao.getBookStateQtyByPublication(userId, search, genreFilter != null, genreFilter);
+		
+		int countStateWorn = 0;
+		int countStateAcceptable = 0;
+		int countStateGood = 0;
+		int countStateVeryGood = 0;
+		int countStateLikeNew = 0;
+		int countStateNew = 0;
+		
+		for (BookStateWrapper bookStateWrapper : bookStateWrapperList) {
+			
+			if (bookStateWrapper.getBookState() == BookState.WORN) {
+				countStateWorn++;
+			}
+			else if (bookStateWrapper.getBookState() == BookState.ACCEPTABLE) {
+				countStateAcceptable++;
+			}
+			else if (bookStateWrapper.getBookState() == BookState.GOOD) {
+				countStateGood++;
+			}
+			else if (bookStateWrapper.getBookState() == BookState.VERY_GOOD) {
+				countStateVeryGood++;
+			}
+			else if (bookStateWrapper.getBookState() == BookState.LIKE_NEW) {
+				countStateLikeNew++;
+			}
+			else if (bookStateWrapper.getBookState() == BookState.NEW) {
+				countStateNew++;
+			}
+		}
+		
+		Assert.assertEquals(PublicationConstants.COUNT_STATE_WORN_USER_1, countStateWorn);
+		Assert.assertEquals(PublicationConstants.COUNT_STATE_ACCEPTABLE_USER_1, countStateAcceptable);
+		Assert.assertEquals(PublicationConstants.COUNT_STATE_GOOD_USER_1, countStateGood);
+		Assert.assertEquals(PublicationConstants.COUNT_STATE_VERY_GOOD_USER_1, countStateVeryGood);
+		Assert.assertEquals(PublicationConstants.COUNT_STATE_LIKE_NEW_USER_1, countStateLikeNew);
+		Assert.assertEquals(PublicationConstants.COUNT_STATE_NEW_USER_1, countStateNew);
+	}
+
+	@Test
+	@Rollback
+	public void testDeletePublication() {
+		
+		publicationDao.deletePublication(PublicationConstants.ID_1);
+		em.flush();
+		
+		Assert.assertEquals(0, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "publication", "publicationId = " + PublicationConstants.ID_1));
+	}
+	
+	@Test
+	public void testGetPaginatedPublications() {
+		
+		final Long userId = UserConstants.ID_1;
+		final String search = "La sombra del viento";
+		final BookState bookStateFilter = null;
+		final Genre genreFilter = null;
+		final String sortType = "";
+		final String currentPage = "0";
+		final User currentUser = em.merge(new User(	UserConstants.ID_1,
+													UserConstants.NAME_1,
+													UserConstants.MAIL_1,
+													UserConstants.PASSWORD_1,
+													UserConstants.IMAGE_ID_1,
+													UserConstants.VERIFICATION_CODE_1,
+													UserConstants.IS_VERIFIED_1,
+													UserConstants.LANGUAGE_1
+												));
+		
+		PaginatedResponse<Publication, ItemFilterMetadata> response = publicationDao.getPaginatedPublications(	userId,
+																												search,
+																												bookStateFilter != null,
+																												bookStateFilter,
+																												genreFilter != null,
+																												genreFilter,
+																												sortType,
+																												currentPage,
+																												currentUser
+																												);
+		Assert.assertNotNull(response);
+		Assert.assertNotNull(response.getMetadata());
+		Assert.assertEquals(search, response.getMetadata().getSearch());
+		Assert.assertEquals(Integer.parseInt(currentPage), response.getMetadata().getCurrentPage());
+		Assert.assertEquals(genreFilter, response.getMetadata().getGenreFilter());
+		Assert.assertNotNull(response.getData());
+		Assert.assertTrue(response.getData().size() > 0);
+		
+		Boolean foundPublication = false;
+		
+		for (Publication publication : response.getData()) {
+			
+			if (publication.getPublicationId() == PublicationConstants.ID_3 && publication.getUser().getUserId() == PublicationConstants.USER_ID_3) {
+				foundPublication = true;
+				break;
+			}
+		}
+		
+		Assert.assertTrue(foundPublication);
+	}
+	
+//  PaginatedResponse<Publication, BasicMetadata> getFavoritePublications(User user, String currentPage);
 }
