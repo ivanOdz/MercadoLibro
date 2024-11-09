@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
-import java.sql.SQLException;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -22,7 +22,7 @@ import ar.edu.itba.paw.interfaces.persistence.LocationDao;
 import ar.edu.itba.paw.models.Location;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import ar.edu.itba.paw.persistence.constants.LocationConstants;
-import ar.edu.itba.paw.persistence.constants.UserConstants;
+import ar.edu.itba.paw.persistence.constants.PublicationConstants;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
@@ -47,23 +47,49 @@ public class LocationDaoJpaTest {
 	}
 	
 	@Test
-	public void testFindById() throws SQLException {
+	public void testFindById() {
 		
 		Optional<Location> maybeLocation = locationDao.findById(LocationConstants.ID_1);
 		
 		Assert.assertTrue(maybeLocation.isPresent());
-		
 		Assert.assertEquals(LocationConstants.STRING_1, maybeLocation.get().getLocationString());
 	}
 	
-//	@Test
-//	@Rollback
-//	public void testNewLocation() throws SQLException {
-//
-//		final String newLocationString = "newLocation";
-//		
-//		Location newLocation = locationDao.newLocation(newLocationString);
-//		
-//		Assert.assertEquals(newLocationString, newLocation.getLocationString());
-//	}
+	@Test
+	public void testGetLocationByPublicationId() {
+		
+		Set<Location> locations = locationDao.getLocationByPublicationId(PublicationConstants.ID_1);
+		Boolean found_1 = false;
+		Boolean found_2 = false;
+		Boolean found_3 = false;
+		
+		for (Location location : locations) {
+			
+			if (location.getLocationId().equals(PublicationConstants.LOCATION_ID_1_1)) {
+				found_1 = true;
+			}
+			else if (location.getLocationId().equals(PublicationConstants.LOCATION_ID_1_2)) {
+				found_2 = true;
+			}
+			else {
+				found_3 = true;
+				break;
+			}
+		}
+		
+		Assert.assertFalse(found_3);
+		Assert.assertTrue(found_1);
+		Assert.assertTrue(found_2);
+	}
+	
+	@Test
+	@Rollback
+	public void testNewLocation() {
+
+		final String newLocationString = "newLocation";
+		
+		Location newLocation = locationDao.newLocation(newLocationString);
+		
+		Assert.assertEquals(newLocationString, newLocation.getLocationString());
+	}
 }

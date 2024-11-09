@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.persistence;
 
-import java.sql.SQLException;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
@@ -13,21 +12,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import ar.edu.itba.paw.interfaces.persistence.BookDao;
-import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.models.Book;
-import ar.edu.itba.paw.models.BookModel;
-import ar.edu.itba.paw.models.Location;
-import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import ar.edu.itba.paw.persistence.constants.BookConstants;
-import ar.edu.itba.paw.persistence.constants.UserConstants;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
@@ -56,7 +49,7 @@ public class BookDaoJpaTest {
 	// void setOwner(Book book, User user);
 	
 	@Test
-	public void testGetBookById() throws SQLException {
+	public void testGetBookById() {
 		
 		Optional<Book> maybeBook = bookDao.getBookById(BookConstants.ID_1);
 		

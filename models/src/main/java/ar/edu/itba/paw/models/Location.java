@@ -57,7 +57,7 @@ public class Location {
         return locationString;
     }
 
-    public void setLocationId(long locationId) {
+    public void setLocationId(Long locationId) {
         this.locationId = locationId;
     }
 

@@ -13,8 +13,8 @@ public final class UserConstants {
 	public static final String MAIL_1 = "modzomek@itba.edu.ar";
 	public static final String PASSWORD_1 = "password";
 	public static final Long IMAGE_ID_1 = null;
-	public static final Long VERIFICATION_CODE_1 = 123456789L;
-	public static final Boolean IS_VERIFIED_1 = true;
+	public static final Integer VERIFICATION_CODE_1 = 123456789;
+	public static final boolean IS_VERIFIED_1 = true;
 	public static final String LANGUAGE_1 = "en";
 	public static final Long FAVORITE_LOCATION_1 = null;
 	
@@ -23,8 +23,8 @@ public final class UserConstants {
 	public static final String MAIL_2 = "jtechenski@itba.edu.ar";
 	public static final String PASSWORD_2 = "password";
 	public static final Long IMAGE_ID_2 = null;
-	public static final Long VERIFICATION_CODE_2 = 987654321L;
-	public static final Boolean IS_VERIFIED_2 = true;
+	public static final Integer VERIFICATION_CODE_2 = 987654321;
+	public static final boolean IS_VERIFIED_2 = true;
 	public static final String LANGUAGE_2 = "en";
 	public static final Long FAVORITE_LOCATION_2 = null;
 	
@@ -33,8 +33,8 @@ public final class UserConstants {
 	public static final String MAIL_3 = "mtaurian@itba.edu.ar";
 	public static final String PASSWORD_3 = "drowssap";
 	public static final Long IMAGE_ID_3 = null;
-	public static final Long VERIFICATION_CODE_3 = 300000000L;
-	public static final Boolean IS_VERIFIED_3 = true;
+	public static final Integer VERIFICATION_CODE_3 = 300000000;
+	public static final boolean IS_VERIFIED_3 = true;
 	public static final String LANGUAGE_3 = "es";
 	public static final Long FAVORITE_LOCATION_3 = null;
 	
@@ -43,8 +43,8 @@ public final class UserConstants {
 	public static final String MAIL_4 = "tscheffer@itba.edu.ar";
 	public static final String PASSWORD_4 = "drowssap";
 	public static final Long IMAGE_ID_4 = null;
-	public static final Long VERIFICATION_CODE_4 = 400000000L;
-	public static final Boolean IS_VERIFIED_4 = true;
+	public static final Integer VERIFICATION_CODE_4 = 400000000;
+	public static final boolean IS_VERIFIED_4 = true;
 	public static final String LANGUAGE_4 = "es";
 	public static final Long FAVORITE_LOCATION_4 = null;
 }

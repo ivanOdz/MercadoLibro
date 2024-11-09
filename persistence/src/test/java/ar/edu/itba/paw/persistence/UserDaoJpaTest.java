@@ -1,6 +1,4 @@
 package ar.edu.itba.paw.persistence;
-
-import java.sql.SQLException;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
@@ -16,18 +14,20 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.models.Location;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.config.TestConfig;
+import ar.edu.itba.paw.persistence.constants.LocationConstants;
 import ar.edu.itba.paw.persistence.constants.UserConstants;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 @Transactional
-public class UserDaoJpaTest { // Faltaria el de User Favorite Location
+public class UserDaoJpaTest {
 	
 	@Autowired
 	private DataSource ds;
@@ -47,7 +47,7 @@ public class UserDaoJpaTest { // Faltaria el de User Favorite Location
 	}
 	
 	@Test
-	public void testFindById() throws SQLException {
+	public void testFindById() {
 		
 		Optional<User> maybeUser = userDao.findById(UserConstants.ID_1);
 		
@@ -60,14 +60,18 @@ public class UserDaoJpaTest { // Faltaria el de User Favorite Location
 		Assert.assertEquals(UserConstants.LANGUAGE_1, maybeUser.get().getLanguage());
 		
 		Assert.assertNotEquals(UserConstants.NON_EXISTING_ID, maybeUser.get().getLanguage());
+	}
+	
+	@Test
+	public void testFindByIdNonExistent() {
 		
-		maybeUser = userDao.findById(UserConstants.NON_EXISTING_ID);
+		Optional<User> maybeUser = userDao.findById(UserConstants.NON_EXISTING_ID);
 		
 		Assert.assertFalse(maybeUser.isPresent());
 	}
 	
 	@Test
-	public void testFindByMail() throws SQLException {
+	public void testFindByMail() {
 		
 		Optional<User> maybeUser = userDao.findByMail(UserConstants.MAIL_1);
 		
@@ -76,7 +80,7 @@ public class UserDaoJpaTest { // Faltaria el de User Favorite Location
 	}
 	
 	@Test
-	public void testFindByName() throws SQLException {
+	public void testFindByName() {
 		
 		Optional<User> maybeUser = userDao.findByUsername(UserConstants.NAME_1);
 		
@@ -84,46 +88,47 @@ public class UserDaoJpaTest { // Faltaria el de User Favorite Location
 		Assert.assertEquals(UserConstants.ID_1, maybeUser.get().getUserId());
 	}
 	
-//	@Test
-//	@Rollback
-//	public void testChangePassword() throws SQLException {
-//		
-//		final String newPassword = "newPass";
-//		
-//		userDao.changePassword(UserConstants.VERIFICATION_CODE_1.intValue(), newPassword);
-//		
-//		Optional<User> maybeUser = userDao.findById(UserConstants.ID_1);	// Esta seria la unica forma de validar... así que estaria bien?
-//		
-//		Assert.assertTrue(maybeUser.isPresent());
-//		Assert.assertEquals(newPassword, maybeUser.get().getPassword());
-//	}
-//	
-//	@Test
-//	@Rollback
-//	public void testUpdateUsername() throws SQLException {
-//		
-//		final String newUsername = "Mariano";
-//		
-//		userDao.updateUsername(UserConstants.ID_1, newUsername);
-//		
-//		Optional<User> maybeUser = userDao.findById(UserConstants.ID_1);
-//		
-//		Assert.assertTrue(maybeUser.isPresent());
-//	}
-//
-//	@Test
-//	@Rollback
-//	public void testAddUserLocation() throws SQLException {
-//		
-//		final Location newLocation = new Location();
-//		int locationsSize = 0;
-//		Optional<User> maybeUser = userDao.findById(UserConstants.ID_1);
-//		
-//		locationsSize = maybeUser.get().getUserLocations().size();
-//		userDao.addUserLocation(UserConstants.ID_1, newLocation);
-//		
-//		Assert.assertTrue(maybeUser.isPresent());
-//		Assert.assertEquals(locationsSize + 1, maybeUser.get().getUserLocations().size());
-////		Assert.assertTrue(maybeUser.get().getUserLocations().contains(newLocation)); // Por qué no anda? :(
-//	}
+	@Test
+	@Rollback
+	public void testChangePassword() {
+
+		final User user = em.merge(new User(UserConstants.ID_1, UserConstants.NAME_1, UserConstants.MAIL_1, UserConstants.PASSWORD_1, UserConstants.IMAGE_ID_1, UserConstants.VERIFICATION_CODE_1, UserConstants.IS_VERIFIED_1, UserConstants.LANGUAGE_1));
+		final String newPassword = "newPass";
+		
+		userDao.changePassword(user, newPassword);
+		em.flush();
+		
+		Assert.assertEquals(0, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "users", "userId = " + UserConstants.ID_1 + " AND password = '" + UserConstants.PASSWORD_1 + "'"));
+		Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "users", "userId = " + UserConstants.ID_1 + " AND password = '" + newPassword + "'"));
+	}
+	
+	@Test
+	@Rollback
+	public void testUpdateUsername() {
+		
+		final User user = em.merge(new User(UserConstants.ID_1, UserConstants.NAME_1, UserConstants.MAIL_1, UserConstants.PASSWORD_1, UserConstants.IMAGE_ID_1, UserConstants.VERIFICATION_CODE_1, UserConstants.IS_VERIFIED_1, UserConstants.LANGUAGE_1));
+		final String newUsername = "Mariano";
+		
+		userDao.updateUsername(user, newUsername);
+		em.flush();
+		
+		Assert.assertEquals(0, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "users", "userId = " + UserConstants.ID_1 + " AND userName = '" + UserConstants.NAME_1 + "'"));
+		Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "users", "userId = " + UserConstants.ID_1 + " AND userName = '" + newUsername + "'"));
+	}
+
+	@Test
+	@Rollback
+	public void testAddUserLocation() {
+		
+		final User user = em.merge(new User(UserConstants.ID_1, UserConstants.NAME_1, UserConstants.MAIL_1, UserConstants.PASSWORD_1, UserConstants.IMAGE_ID_1, UserConstants.VERIFICATION_CODE_1, UserConstants.IS_VERIFIED_1, UserConstants.LANGUAGE_1));
+		final Location newLocation = em.merge(new Location(LocationConstants.ID_3, LocationConstants.STRING_3));
+		int locationsSize = 0;
+		
+		locationsSize = user.getUserLocations().size();
+		userDao.addUserLocation(user, newLocation);
+		em.flush();
+		
+		Assert.assertEquals(locationsSize + 1, user.getUserLocations().size());
+		Assert.assertTrue(user.getUserLocations().contains(newLocation));
+	}
 }

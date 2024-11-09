@@ -1,4 +1,4 @@
-	    
+
 -- Insertar Usuarios -------------------------------------------------------------------------------------------------------
 
 -- 1 --
@@ -96,6 +96,8 @@
         INSERT INTO location (locationId, locationString)
         VALUES (3, 'CABA');
         
+-- Asignar a cada usuario
+
         INSERT INTO user_location (userLocationId, userId, locationId)
         VALUES (1, 1, 1)
         
@@ -318,4 +320,28 @@
 		FROM book AS book JOIN users AS owner ON mail LIKE 'tscheffer@itba.edu.ar'
 			JOIN location ON locationString LIKE 'Zona Norte' -- |1|
 			WHERE book.bookModelId = (SELECT bookModelId FROM book_model WHERE isbn = '9788423353248');
-	
+
+-- Asignar una o varias ubicaciones a cada publicacion
+
+        INSERT INTO publication_location (publicationId, locationId)
+        VALUES (1, 1)
+        
+        INSERT INTO publication_location (publicationId, locationId)
+        VALUES (1, 2)
+        
+        INSERT INTO publication_location (publicationId, locationId)
+        VALUES (2, 2)
+        
+        INSERT INTO publication_location (publicationId, locationId)
+        VALUES (3, 1)
+                
+        INSERT INTO publication_location (publicationId, locationId)
+        VALUES (4, 1)
+        
+        INSERT INTO publication_location (publicationId, locationId)
+        VALUES (5, 1)
+        
+        INSERT INTO publication_location (publicationId, locationId)
+        VALUES (6, 1)
+        
+        
