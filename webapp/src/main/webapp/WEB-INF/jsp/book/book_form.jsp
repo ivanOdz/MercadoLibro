@@ -74,9 +74,7 @@
                             <c:forEach var="bookStateWrapper" items="${bookStates}">
                                 <form:option value="${bookStateWrapper}">
                                     <c:set var="i18nKey" value="${bookStateWrapper.value}" />
-                                    <span class="ui-search-filter-name">
                                             <spring:message code="${i18nKey}"/>
-                                        </span>
                                 </form:option>
                             </c:forEach>
                         </form:select>
@@ -156,7 +154,6 @@
 
                     <div id="location-q" class="uk-inline" style="display: none;">
                         <c:if test="${not empty user.userLocations}">
-
                          <label class="form-group">
                             <spring:message code="book.set.location"/>
 							<form:select path="locationId" class="uk-select no-arrow-select" aria-label="Not clickable icon" style="width: 90%">
@@ -165,7 +162,7 @@
                         </label>
                         </c:if>
                         <c:url var="profileUrl" value="/profile"/>
-                        <c:if test="${empty user.userLocations}">
+                            <c:if test="${empty user.userLocations}">
                             <div style="padding: 5%">
                                 <spring:message code="user.add.location"/>
                                 <a href="${profileUrl}"  class="uk-button-primary uk-button" style="margin: 2%" type="button">
