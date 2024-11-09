@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS publication (
        publicationId            SERIAL PRIMARY KEY,
        bookId                   INTEGER NOT NULL REFERENCES book(bookId),
        userId                   INTEGER NOT NULL REFERENCES users(userId),
-       publicationState         INTEGER NOT NULL,
+       publicationState         VARCHAR(50) NOT NULL,
        publicationDatetime      TIMESTAMP,
        locationId               INTEGER REFERENCES location(locationId)
 );
