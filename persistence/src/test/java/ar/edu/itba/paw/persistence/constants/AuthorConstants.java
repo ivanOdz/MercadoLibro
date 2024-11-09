@@ -26,4 +26,7 @@ public final class AuthorConstants {
 	
 	public static final Long ID_8 = 8L;
 	public static final String NAME_8 = "Mario Vargas Llosa";
+	
+	public static final Long NON_EXISTENT_ID_1 = 9L;
+	public static final Long NON_EXISTENT_ID_2 = 10L;
 }
