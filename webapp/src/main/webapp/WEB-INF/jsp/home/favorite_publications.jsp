@@ -85,6 +85,11 @@
                                                          src="<c:url value='/images/${card.book.images[0].image.imageId}' />"
                                                          alt="bookImage"/>
                                                 </c:when>
+                                                <c:when test="${!card.book.bookModel.image.isImageNull && card.book.bookModel.image != null}">
+                                                    <img class="book-image uk-border-rounded"
+                                                         src="<c:url value='/images/${card.bookModel.image.imageId}' />"
+                                                         alt="book"/>
+                                                </c:when>
                                                 <c:otherwise>
                                                     <img class="book-image uk-border-rounded"
                                                          src="<c:url value='/images/book.jpg' />" alt="book"/>
