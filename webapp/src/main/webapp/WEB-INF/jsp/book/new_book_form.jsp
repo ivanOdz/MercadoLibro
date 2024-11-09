@@ -362,20 +362,41 @@
                 <input type="hidden" id="location-error-message" value="<spring:message code='NotBlank.bookForm.location'/>" />
 
                 <div id="location-q" class="uk-inline" style="display: none;">
-
-                    <label class="form-group">
-                        <spring:message code="book.set.location"/>
-                        <form:select path="locationId" class="uk-select no-arrow-select" aria-label="Not clickable icon" style="width: 90%">
+                    <c:if test="${not empty user.userLocations}">
+                        <label class="form-group">
+                            <spring:message code="book.set.location"/>
+                            <form:select path="locationId" class="uk-select no-arrow-select" aria-label="Not clickable icon" style="width: 90%">
                                 <form:options items="${user.userLocations}" itemValue="locationId" itemLabel="locationString"/>
-                        </form:select>
-                    </label>
+                            </form:select>
+                        </label>
+                        <div style="margin-top: 2%; align-self: auto;">
+                            <button class="uk-button uk-button-primary"
+                                    type="submit"><spring:message code="add.publication.upload"/></button>
+                        </div>
+                    </c:if>
+                    <c:url var="profileUrl" value="/profile"/>
+                    <c:if test="${empty user.userLocations}">
+                        <div class="uk-margin-bottom">
+                            <label class="uk-margin">
+                                <spring:message code="book.set.location"/>
+                            </label>
+                        </div>
+                        <spring:message code="user.no.locations"/>
+                        <div style="padding: 5%">
+                            <a href="${profileUrl}"  class="uk-button-primary uk-button" style="margin: 2%" type="button">
+                                <spring:message code="profile.goto"/>
+                            </a>
+                        </div>
+                    </c:if>
+
 
                 <%--                         <form:errors path="locationId" element="p" cssStyle="color: red;" /> --%>
                     <p id="location-error" style="color: red;"></p>
                 </div>
 
                 <div style="margin-top: 2%; align-self: auto;">
-                    <button class="uk-button uk-button-primary" type="submit"><spring:message code="add.publication.upload"/></button>
+                    <button style="" id="no-publish-upload"  class="uk-button uk-button-primary"
+                            type="submit"><spring:message code="add.publication.upload"/></button>
                 </div>
             </div>
                 <%---------------------------------------------------------------- END STEP 2 ----------------------------------------------------------------%>
@@ -493,18 +514,24 @@
         const locationInputDiv = document.getElementById('location-q');
         const locationField = document.querySelector('input[name="location"]');
         const locationError = document.getElementById('location-error');
+        const noPublishUploadButton = document.getElementById('no-publish-upload');
 
         yesRadio.addEventListener('change', function () {
             if (this.checked) {
                 locationInputDiv.style.display = 'block';
+                noPublishUploadButton.style.display = 'none';
             }
         });
 
         noRadio.addEventListener('change', function () {
             if (this.checked) {
                 locationInputDiv.style.display = 'none';
+                noPublishUploadButton.style.display = 'block';
                 locationField.value = '';
                 locationError.innerText = '';
+            }
+            if (!this.checked) {
+                noPublishUploadButton.style.display = 'none';
             }
         });
 
