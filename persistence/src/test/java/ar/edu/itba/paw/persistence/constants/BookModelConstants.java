@@ -172,4 +172,22 @@ public final class BookModelConstants {
 	public static final Boolean IS_HARD_COVER_10 = true;
 	public static final Long IMAGE_ID_10 = null;
 	public static final String AUTHOR_10 = "Mario Vargas Llosa";
+	
+	public static final Long NON_EXISTENT_ID = 11L;
+	public static final String NON_EXISTENT_ISBN = "9780134685991";
+	public static final String NON_EXISTENT_TITLE = "Effective Java";
+	public static final String NON_EXISTENT_EDITORIAL = "Addison-Wesley";
+	public static final String NON_EXISTENT_DESCRIPTION = "Una obra clave de la literatura latinoamericana que sigue a los estudiantes de un internado militar en el Perú.";
+	public static final String NON_EXISTENT_GENRE = "OTHER";
+	public static final Integer NON_EXISTENT_EDITION = 2;
+	public static final Integer NON_EXISTENT_WEIGHT = 850;
+	public static final Integer NON_EXISTENT_PAGES = 416;
+	public static final String NON_EXISTENT_LANGUAGE = "ENGLISH";
+	public static final String NON_EXISTENT_DIMENSION = "LARGE";
+	public static final Integer NON_EXISTENT_PUBLICATION_YEAR = 2018;
+	public static final Boolean NON_EXISTENT_IS_POCKET_EDITION = false;
+	public static final Boolean NON_EXISTENT_IS_HARD_COVER = true;
+	public static final Long NON_EXISTENT_IMAGE_ID = null;
+	public static final String NON_EXISTENT_AUTHOR_1 = "Joshua Bloch 1";
+	public static final String NON_EXISTENT_AUTHOR_2 = "Joshua Bloch 2";
 }
