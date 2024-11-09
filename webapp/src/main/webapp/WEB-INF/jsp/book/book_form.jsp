@@ -163,11 +163,21 @@
 									<form:options items="${user.userLocations}" itemValue="locationId" itemLabel="locationString"/>
 							</form:select>
                         </label>
+                            <div style="margin-top: 2%; align-self: auto;">
+                                <input type="hidden" name="book_model_id" value="${book_model_id}">
+                                <button class="uk-button uk-button-primary" type="submit"><spring:message
+                                        code="add.publication.upload"/></button>
+                            </div>
                         </c:if>
                         <c:url var="profileUrl" value="/profile"/>
                         <c:if test="${empty user.userLocations}">
+                            <div class="uk-margin-bottom">
+                                <label class="uk-margin">
+                                    <spring:message code="book.set.location"/>
+                                </label>
+                            </div>
+                            <spring:message code="user.no.locations"/>
                             <div style="padding: 5%">
-                                <spring:message code="user.add.location"/>
                                 <a href="${profileUrl}"  class="uk-button-primary uk-button" style="margin: 2%" type="button">
                                     <spring:message code="profile.goto"/>
                                 </a>
@@ -179,11 +189,7 @@
 
 
 
-                    <div style="margin-top: 2%; align-self: auto;">
-                        <input type="hidden" name="book_model_id" value="${book_model_id}">
-                        <button class="uk-button uk-button-primary" type="submit"><spring:message
-                                code="add.publication.upload"/></button>
-                    </div>
+
                 </div>
                     <%---------------------------------------------------------------- END STEP 2 ----------------------------------------------------------------%>
             </div>
