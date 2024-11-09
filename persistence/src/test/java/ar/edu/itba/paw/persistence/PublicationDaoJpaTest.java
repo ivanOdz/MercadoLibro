@@ -64,10 +64,7 @@ public class PublicationDaoJpaTest {
 		jdbcTemplate = new JdbcTemplate(ds);
 	}
 	
-//	Publication createPublication(Book book, User user, List<Location> locations, PublicationState publicationState);
-//    void terminatePublication(Publication publication);
 //    PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(Long userId,String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, String sortType, String currentPage, User currentUser);
-//    int getPublicationCountByUserId(long userId);
 //    List<BookStateWrapper> getBookStateQtyByPublication(Long userId, String search, boolean isGenreFilterActive, Genre genreFilter);
 //    List<GenreWrapper> getGenreQtyByPublication(Long userId, String search, boolean isBookStateFilterActive, BookState bookStateFilter);
 //    void deletePublication(long publicationId);
@@ -181,5 +178,102 @@ public class PublicationDaoJpaTest {
 		em.flush();
 		
 		Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "publication", "publicationId = " + PublicationConstants.ID_1 + "AND publicationState LIKE 'TERMINATED'"));
+	}
+	
+	@Test
+	@Rollback
+	public void testCreatePublication() {
+		// Book 3 selected (this one is not publicated yet)
+		final User user = em.merge(new User(	UserConstants.ID_1,
+												UserConstants.NAME_1,
+												UserConstants.MAIL_1,
+												UserConstants.PASSWORD_1,
+												UserConstants.IMAGE_ID_1,
+												UserConstants.VERIFICATION_CODE_1,
+												UserConstants.IS_VERIFIED_1,
+												UserConstants.LANGUAGE_1
+											));
+
+		final Author author = em.merge(new Author(AuthorConstants.ID_3, BookModelConstants.AUTHOR_3));
+		final List<Author> authors = new ArrayList<Author>();
+		authors.add(author);
+		
+		final BookModel bookModel = em.merge(new BookModel( BookModelConstants.ID_3,
+															BookModelConstants.ISBN_3,
+															BookModelConstants.TITLE_3,
+															BookModelConstants.EDITORIAL_3,
+															BookModelConstants.DESCRIPTION_3,
+															Genre.fromString("genre." + BookModelConstants.GENRE_3),
+															(int)BookModelConstants.EDITION_3,
+															(int)BookModelConstants.WEIGHT_3,
+															(int)BookModelConstants.PAGES_3,
+															Language.valueOf(BookModelConstants.LANGUAGE_3),
+															BookDimension.valueOf(BookModelConstants.DIMENSION_3),
+															(short)(int)BookModelConstants.PUBLICATION_YEAR_3,
+															BookModelConstants.IS_POCKET_EDITION_3,
+															BookModelConstants.IS_HARD_COVER_3,
+															authors,
+															null
+														));
+		
+		final Book book = em.merge(new Book(	PublicationConstants.BOOK_ID_3,
+												user,
+												bookModel,
+												BookState.fromString(BookConstants.BOOK_STATE_3),
+												(int)BookConstants.EXCHANGE_QTY_3,
+												BookConstants.AVAILABLE_3,
+												new ArrayList<BookImage>()
+											));
+		
+		final Location location_1 = new Location(LocationConstants.ID_2, LocationConstants.STRING_2);
+		final Location location_2 = new Location(LocationConstants.ID_3, LocationConstants.STRING_3);
+		final List<Location> locations = new ArrayList<Location>();
+		locations.add(location_1);
+		locations.add(location_2);
+		
+		final Publication newPublication = publicationDao.createPublication(book, user, locations, PublicationState.CURRENT);
+		
+		Assert.assertNotNull(newPublication);
+		Assert.assertNotNull(newPublication.getUser());
+		Assert.assertNotNull(newPublication.getBook());
+		Assert.assertTrue(PublicationConstants.ID_6 < newPublication.getPublicationId());
+		Assert.assertEquals(user.getUserId(), newPublication.getUser().getUserId());
+		Assert.assertEquals(book.getBookId(), newPublication.getBook().getBookId());
+		
+		List<Location> newPublicationLocations = newPublication.getLocations();
+		
+		Assert.assertNotNull(newPublicationLocations);
+		Assert.assertNotEquals(0, newPublicationLocations.size());
+		
+		Boolean found_1 = false;
+		Boolean found_2 = false;
+		Boolean found_3 = false;
+		
+		for (Location location : locations) {
+			
+			if (location.getLocationId() == LocationConstants.ID_2) {
+				found_1 = true;
+			}
+			else if (location.getLocationId() == LocationConstants.ID_3) {
+				found_2 = true;
+			}
+			else {
+				found_3 = true;
+				break;
+			}
+		}
+		
+		Assert.assertFalse(found_3);
+		Assert.assertTrue(found_1);
+		Assert.assertTrue(found_2);
+	}
+	
+	@Test
+	public void testGetPublicationCountByUserId() {
+		
+		Assert.assertEquals(PublicationConstants.COUNT_USER_1, publicationDao.getPublicationCountByUserId(UserConstants.ID_1));
+		Assert.assertEquals(PublicationConstants.COUNT_USER_2, publicationDao.getPublicationCountByUserId(UserConstants.ID_2));
+		Assert.assertEquals(PublicationConstants.COUNT_USER_3, publicationDao.getPublicationCountByUserId(UserConstants.ID_3));
+		Assert.assertEquals(PublicationConstants.COUNT_USER_4, publicationDao.getPublicationCountByUserId(UserConstants.ID_4));
 	}
 }
