@@ -10,6 +10,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/css/uikit.min.css" rel="stylesheet"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.16.20/js/uikit-icons.min.js"></script>
+    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
     <link href="<c:url value='/css/navbar.css?v=1.0' />" rel="stylesheet"/>
 
     <title><spring:message code="confirmation.page.title"/></title>
@@ -17,17 +18,18 @@
 <body>
 <navbar/>
 
-<div class="uk-container uk-margin-large-top uk-margin-large-bottom">
-    <div class="uk-text-center">
-        <h1 class="uk-heading-large"><spring:message code="rejected.title"/></h1>
-        <p class="uk-text-lead"><spring:message code="rejected.message"/></p>
+<div style="display: flex; flex-direction: column; align-items: center; text-align: center; height: 100vh; justify-content: center;">
+    <h1><spring:message code="rejected.title"/></h1>
+    <p class="uk-text-lead"><spring:message code="rejected.message"/></p>
 
-        <p>
-            <a class="uk-button uk-button-primary" href="<c:url value='/' />">
-                <spring:message code="confirmation.home.button"/>
-            </a>
-        </p>
-    </div>
+
+
+    <dotlottie-player src="https://lottie.host/a607003e-f593-49f7-9472-b34f8de508ed/q98EjxTiGC.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
+    <p>
+        <a class="uk-button uk-button-primary" href="<c:url value='/' />">
+            <spring:message code="confirmation.home.button"/>
+        </a>
+    </p>
 </div>
 
 </body>
