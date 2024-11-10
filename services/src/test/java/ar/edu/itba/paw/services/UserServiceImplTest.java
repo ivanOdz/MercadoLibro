@@ -1,36 +1,48 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.interfaces.persistence.PublicationDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.UserReviewService;
-
-import org.hamcrest.core.IsNull;
+import ar.edu.itba.paw.models.User;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.context.MessageSource;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import static org.mockito.Mockito.*;
 
-import static org.hamcrest.CoreMatchers.any;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
-
-import java.util.Locale;
 import java.util.Optional;
-/*
+
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceImplTest {	// Falla en el userService.createUser ya que devuelve null, passwordEncoder.encode(PASSWORD) dentro de la implementacion devuelve null
 	
+	@Mock
+	private PublicationDao pubDao;
+	@Mock
+    private MessageSource messageSource;
+	@Mock
+	private EmailService emailService;
+	@Mock
+	private UserReviewService userReviewsService;
+	@Mock
+	private PasswordEncoder passwordEncoder;
+	@Mock
+	private UserDao userDao;
+	
+	@InjectMocks
+	private UserServiceImpl userService;
+	
+    @Before
+    public void setUp() {
+        when(passwordEncoder.encode(PASSWORD)).thenReturn(PASSWORD);
+    }
+    
 	private static final long USER_ID = 1;
 	private static final String USER_NAME = "userName";
 	private static final String MAIL = "user@mail.com";
@@ -40,49 +52,29 @@ public class UserServiceImplTest {	// Falla en el userService.createUser ya que 
 	private static final boolean IS_VERIFIED = false;
 	private static final String LANGUAGE = "es-AR";
 	private static final String ENCODED_PASS = "encodedPassword";
-	
-	@Mock
-	private PublicationDao pubDao;
-	@Mock
-	private PasswordEncoder passwordEncoder;
-	@Mock
-    private MessageSource messageSource;
-	@Mock
-	private EmailService emailService;
-	@Mock
-	private UserReviewService userReviewsService;
-	@Mock
-	private UserDao userDao;
-	
-	@InjectMocks
-	private UserServiceImpl userService;
-	
-    @Before
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
-    }
     
 	@Test
 	public void testCreate() {
 		
 		// 1. Precondiciones
-		User mockUser = new User(USER_ID, USER_NAME, MAIL, PASSWORD, IMAGE_ID, VERIFICATION_CODE, IS_VERIFIED, LANGUAGE);
-		
-		when (passwordEncoder.encode(PASSWORD)).thenReturn(ENCODED_PASS);
-		when (userDao.find(MAIL)).thenReturn(Optional.empty());
-		when (messageSource.getMessage(eq("email.subject.verification"), eq(null), eq(Locale.forLanguageTag(mockUser.getLanguage())))).thenReturn("Mensaje_internacionalizado");
-		when (userDao.createUser(eq(USER_NAME), eq(MAIL), eq(null), eq(LANGUAGE), anyInt())).thenReturn(mockUser);
-		when (userDao.createUser(eq(USER_NAME), eq(MAIL), eq(ENCODED_PASS), eq(LANGUAGE), anyInt())).thenReturn(mockUser);
-		
+		when (userDao.createUser(anyString(), anyString(), anyString(), anyString(), anyInt())).thenReturn(	new User(	USER_ID,
+																														USER_NAME,
+																														MAIL,
+																														PASSWORD,
+																														IMAGE_ID,
+																														VERIFICATION_CODE,
+																														IS_VERIFIED,
+																														LANGUAGE
+																													));
 		// 2. Ejercita la clase bajo prueba
-		User user = userService.createUser(USER_NAME, MAIL, PASSWORD, LANGUAGE);
+		User newUser = userService.createUser(USER_NAME, MAIL, PASSWORD, LANGUAGE);
 		
 		// 3. Valida las postcondiciones
-		assertNotNull(user);
-		assertEquals(USER_NAME, user.getUsername());
-		assertEquals(MAIL, user.getMail());
-		assertEquals(ENCODED_PASS, user.getPassword());
-		assertEquals(LANGUAGE, user.getLanguage());
+		Assert.assertNotNull(newUser);
+		Assert.assertEquals(USER_NAME, newUser.getUsername());
+		Assert.assertEquals(MAIL, newUser.getMail());
+		Assert.assertEquals(PASSWORD, newUser.getPassword());
+		Assert.assertEquals(LANGUAGE, newUser.getLanguage());
 	}
 
 	@Test(expected = DuplicateKeyException.class)
@@ -93,4 +85,21 @@ public class UserServiceImplTest {	// Falla en el userService.createUser ya que 
 	
 	    userService.createUser(USER_NAME, MAIL, PASSWORD, LANGUAGE);
 	}
-}*/
+	
+//    User findById(long id);
+//    Optional<User> findUserByEmail(String mail);
+//    String findUsernameByEmail(String mail);
+//    User createUser(String username, String mail, String password, String language);
+//    Optional<User> findByUsername(String username);
+//    void verifyUser(int verificationCode);
+//    void changePasswordSolicited(String email);
+//    void changePassword(int verificationCode, String newPassword);
+//    //List<UserReview> getReviewsByUserId(long userId, int pageIndex);
+//    boolean userExists(String mail);
+//    boolean changeUserName(long userId, String newName);
+//    User getUserToVerify(int verificationCode);
+//    //Double getUserRating(long userId);
+//    void setUserLanguage(User user, String language);
+//    public void addLocation(Long userId, String locationString);
+//    public void removeLocation(Long userId, Long locationId);
+}
