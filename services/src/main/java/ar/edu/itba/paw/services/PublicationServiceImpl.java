@@ -149,9 +149,9 @@ public class PublicationServiceImpl implements PublicationService {
     @Override
     @Transactional
     public void deletePublication(long publicationId) {
-        pubDao.deletePublication(publicationId);
         Publication p = getPublicationByPublicationId(publicationId);
         p.getBook().setAvailable(true);
+        pubDao.deletePublication(publicationId);
     }
 
     @Override
