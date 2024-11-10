@@ -7,8 +7,6 @@ import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.webapp.auth.PawUserDetailsService;
 import ar.edu.itba.paw.webapp.form.PasswordForm;
 import ar.edu.itba.paw.webapp.form.UserForm;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -44,7 +42,6 @@ public class UserController {
     @Autowired
     private MessageSource messageSource;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     @RequestMapping("/login")
     public ModelAndView login(@RequestParam(value = "error", required = false) String error) {
@@ -68,7 +65,6 @@ public class UserController {
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
         final Authentication authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-        LOGGER.info("User {} has been verified",  user.getUsername());
 
         return new ModelAndView("redirect:/success_verification");
     }
@@ -108,7 +104,6 @@ public class UserController {
             return createPasswordForm(passwordForm, verificationCode);
         }
         us.changePassword(verificationCode, passwordForm.getPassword());
-        LOGGER.info("Password changed successfully");
 
         return new ModelAndView("redirect:/success_password");
     }
@@ -188,7 +183,7 @@ public class UserController {
 
         return new ModelAndView("redirect:/profile");
     }
-    
+
     @PostMapping("/user/addLocation")
     public ModelAndView addLocation(@RequestParam Long userId, @RequestParam String locationString) {
         us.addLocation(userId, locationString);
