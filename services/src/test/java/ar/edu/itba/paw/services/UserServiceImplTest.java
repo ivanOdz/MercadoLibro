@@ -20,7 +20,7 @@ import static org.mockito.Mockito.*;
 import java.util.Optional;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UserServiceImplTest {	// Falla en el userService.createUser ya que devuelve null, passwordEncoder.encode(PASSWORD) dentro de la implementacion devuelve null
+public class UserServiceImplTest {
 	
 	@Mock
 	private PublicationDao pubDao;
@@ -54,7 +54,7 @@ public class UserServiceImplTest {	// Falla en el userService.createUser ya que 
 	private static final String ENCODED_PASS = "encodedPassword";
     
 	@Test
-	public void testCreate() {
+	public void testCreateUser() {
 		
 		// 1. Precondiciones
 		when (userDao.createUser(anyString(), anyString(), anyString(), anyString(), anyInt())).thenReturn(	new User(	USER_ID,
@@ -78,28 +78,25 @@ public class UserServiceImplTest {	// Falla en el userService.createUser ya que 
 	}
 
 	@Test(expected = DuplicateKeyException.class)
-	public void testCreateDuplicate() {
+	public void testCreateUserDuplicate() {
 		
 	    when (passwordEncoder.encode(PASSWORD)).thenReturn(ENCODED_PASS);
 	    when (userDao.createUser(eq(USER_NAME), eq(MAIL), eq(ENCODED_PASS), eq(LANGUAGE), anyInt())).thenThrow(new DuplicateKeyException("Usuario ya existe"));
 	
 	    userService.createUser(USER_NAME, MAIL, PASSWORD, LANGUAGE);
 	}
-	
 //    User findById(long id);
-//    Optional<User> findUserByEmail(String mail);
-//    String findUsernameByEmail(String mail);
 //    User createUser(String username, String mail, String password, String language);
 //    Optional<User> findByUsername(String username);
 //    void verifyUser(int verificationCode);
 //    void changePasswordSolicited(String email);
 //    void changePassword(int verificationCode, String newPassword);
-//    //List<UserReview> getReviewsByUserId(long userId, int pageIndex);
 //    boolean userExists(String mail);
 //    boolean changeUserName(long userId, String newName);
 //    User getUserToVerify(int verificationCode);
-//    //Double getUserRating(long userId);
 //    void setUserLanguage(User user, String language);
-//    public void addLocation(Long userId, String locationString);
-//    public void removeLocation(Long userId, Long locationId);
+//    void addLocation(Long userId, String locationString);
+//    void removeLocation(Long userId, Long locationId);
+	
+	
 }
