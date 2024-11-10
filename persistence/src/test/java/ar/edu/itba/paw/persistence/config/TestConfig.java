@@ -69,7 +69,7 @@ public class TestConfig {
 		dbp.addScript(schemaSql);
 		dbp.addScript(sequencesSql);
 		dbp.addScript(insertionsSql);
-		
+
 		return dbp;
 	}
 	
