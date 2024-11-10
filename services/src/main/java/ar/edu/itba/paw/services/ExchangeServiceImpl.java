@@ -38,29 +38,30 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Override
     @Transactional
     public void initializeExchange(long bookId, long locationId, long offererPubId) {
+    	
     	Book book = bs.getBookById(bookId);
         Long userId = book.getOwner().getUserId();
         long requesterPubId = ps.createPublication(bookId,  userId, locationId, PublicationState.OFFERED).getPublicationId();
 
         Random random = new Random();
         int acceptCode = Math.abs(random.nextInt());
-
         Date date = new Date();
         Timestamp timestamp = new Timestamp(date.getTime());
 
-        Optional<Exchange> ex = exchangeDao.createExchange(offererPubId, requesterPubId, acceptCode, timestamp);
-        if(ex.isPresent()) {
-            LOGGER.info("Created exchange with ID: {}", ex.get().getExchangeId());
-
+        Exchange ex = exchangeDao.createExchange(offererPubId, requesterPubId, acceptCode, timestamp);
+        
+        if (ex != null) {
+        	
+            LOGGER.info("Created exchange with ID: {}", ex.getExchangeId());
             // mail variables setup
-            User offerer = ex.get().getOfferer().getBook().getOwner();
-            User requester = ex.get().getRequester().getBook().getOwner();
-            Book bookOffered = ex.get().getOfferer().getBook();
-            Book bookRequested = ex.get().getRequester().getBook();
+            User offerer = ex.getOfferer().getBook().getOwner();
+            User requester = ex.getRequester().getBook().getOwner();
+            Book bookOffered = ex.getOfferer().getBook();
+            Book bookRequested = ex.getRequester().getBook();
 
-            emailService.sendExchangeRequestEmail(requester, offerer, bookRequested, bookOffered, ex.get().getAcceptCode());
+            emailService.sendExchangeRequestEmail(requester, offerer, bookRequested, bookOffered, ex.getAcceptCode());
         }
-        else{
+        else {
             LOGGER.warn("Could not initialize exchange for book id {}", bookId);
         }
     }
@@ -68,6 +69,7 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Override
     @Transactional
     public String exchange(int acceptCode, boolean state) {
+    	
         LOGGER.info("Processing exchange for acceptCode: {}", acceptCode);
 
         Optional<Exchange> ex = exchangeDao.findByAcceptCode(acceptCode);
@@ -116,6 +118,7 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Override
     @Transactional
     public void cofirmOfferer(int acceptCode) {
+    	
         LOGGER.info("Processing confirmOfferer for acceptCode: {}", acceptCode);
 
         Optional<Exchange> ex = exchangeDao.findByAcceptCode(acceptCode);
@@ -135,6 +138,7 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Override
     @Transactional
     public void cofirmRequester(int acceptCode) {
+    	
         LOGGER.info("Processing confirmRequester for acceptCode: {}", acceptCode);
 
         Optional<Exchange> ex = exchangeDao.findByAcceptCode(acceptCode);
@@ -167,6 +171,7 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Override
     @Transactional(readOnly = true)
     public Exchange getExchangeByAcceptCode(int acceptCode) {
+    	
         LOGGER.info("Searching for exchange with acceptCode: {}", acceptCode);
 
         Optional<Exchange> exchange = exchangeDao.findByAcceptCode(acceptCode);
@@ -181,6 +186,7 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Override
     @Transactional(readOnly = true)
     public Exchange getExchangeById(long exchangeId) {
+    	
         LOGGER.info("Searching for exchange with exchangeId: {}", exchangeId);
 
         Optional<Exchange> exchange = exchangeDao.getExchangeById(exchangeId);

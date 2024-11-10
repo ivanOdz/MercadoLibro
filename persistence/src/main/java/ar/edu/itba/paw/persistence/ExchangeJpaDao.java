@@ -27,15 +27,15 @@ public class ExchangeJpaDao implements ExchangeDao {
     private EntityManager em;
 
     @Override
-    public Optional<Exchange> createExchange(long offererPubId, long requesterPubId, int acceptCode, Timestamp startDate) {
+    public Exchange createExchange(long offererPubId, long requesterPubId, int acceptCode, Timestamp startDate) {
+    	
         Publication offerer = em.find(Publication.class, offererPubId);
         Publication requester = em.find(Publication.class, requesterPubId);
-
-        //TODO: Chequear que las publicaciones existan y que no sean del mismo usuario.
-
         final Exchange exchange = new Exchange(null, offerer, requester, ExchangeState.PENDING, acceptCode, false, false, startDate, null, new ArrayList<>());
+        
         em.persist(exchange);
-        return Optional.of(exchange);
+        
+        return exchange;
     }
 
     @Override
@@ -82,7 +82,8 @@ public class ExchangeJpaDao implements ExchangeDao {
 
     @Override
     public PaginatedResponse<Exchange, BasicMetadata> getAllExchangesByUserId(long anUserId, ExchangeState exchangeState, String currentPage, boolean isOfferer) {
-        int page;
+        
+    	int page;
         try {
             page = Integer.parseInt(currentPage);
             if (page < 0) {
@@ -92,13 +93,14 @@ public class ExchangeJpaDao implements ExchangeDao {
             page = 0;
         }
 
-
         StringBuilder queryString = new StringBuilder("SELECT e.exchangeId FROM exchange e JOIN publication p ON p.publicationId = ");
+        
         if (isOfferer) {
             queryString.append("e.offererpubId");
         } else {
             queryString.append("e.requesterpubId");
         }
+        
         queryString.append(" WHERE p.userId = :userId AND e.exchangestate = :state");
 
         Query nativeQuery = em.createNativeQuery(queryString.toString());
@@ -107,7 +109,6 @@ public class ExchangeJpaDao implements ExchangeDao {
 
         nativeQuery.setMaxResults(EXCHANGES_PAGE_SIZE);
         nativeQuery.setFirstResult(page * EXCHANGES_PAGE_SIZE);
-
 
         @SuppressWarnings("unchecked")
         List<Long> exchangeIds = nativeQuery.getResultList().stream().mapToLong(n -> ((Number) n).longValue()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
@@ -120,9 +121,10 @@ public class ExchangeJpaDao implements ExchangeDao {
         return new PaginatedResponse<>(exchanges, new BasicMetadata(page, getTotalResultsByExchange(anUserId, exchangeState, isOfferer), EXCHANGES_PAGE_SIZE));
     }
 
-    private int getTotalResultsByExchange(long anUserId, ExchangeState exchangeState, boolean isOfferer){
+    private int getTotalResultsByExchange(long anUserId, ExchangeState exchangeState, boolean isOfferer) {
 
         StringBuilder queryString = new StringBuilder("SELECT COUNT(*) FROM exchange e JOIN publication p ON p.publicationId = ");
+        
         if (isOfferer) {
             queryString.append("e.offererpubId");
         } else {
@@ -140,6 +142,7 @@ public class ExchangeJpaDao implements ExchangeDao {
 
     @Override
     public void createMessage(Exchange exchange, long userId, String message, Timestamp time) {
+    	
         Message newMessage = new Message(null, exchange ,em.find(User.class, userId), time, message);
         em.persist(newMessage);
         exchange.getChat().add(newMessage);
