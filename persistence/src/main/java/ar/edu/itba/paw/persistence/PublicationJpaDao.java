@@ -52,7 +52,7 @@ public class PublicationJpaDao implements PublicationDao {
     }
 
     @Override
-    public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(Long userId,String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, String sortType, String currentPage, User currentUser) {
+    public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(Long userId, String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, String sortType, String currentPage, User currentUser) {
         int page;
         try {
             page = Integer.parseInt(currentPage);
@@ -109,11 +109,11 @@ public class PublicationJpaDao implements PublicationDao {
                 break;
             case PUBLICATION_DATE_DESCENDING:
                 nativeQueryString.append(" GROUP BY p.publicationid ");
-                nativeQueryString.append(" ORDER BY publicationDatetime DESC");
+                nativeQueryString.append(" ORDER BY p.publicationdatetime DESC");
                 break;
             default:
                 nativeQueryString.append(" GROUP BY p.publicationid ");
-                nativeQueryString.append(" ORDER BY publicationDatetime ASC");
+                nativeQueryString.append(" ORDER BY p.publicationdatetime ASC");
         }
 
         Query nativeQuery = em.createNativeQuery(nativeQueryString.toString());
