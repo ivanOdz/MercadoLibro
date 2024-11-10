@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import java.util.Optional;
 
 @Service
@@ -25,16 +26,12 @@ public class UserReviewServiceImpl implements UserReviewService {
 	@Autowired
 	private ExchangeService exchangeService;
 
-
 	@Override
 	@Transactional
-	public void createUserReview(long exchangeId, long userId, String description, int rating) {
+	public UserReview createUserReview(long exchangeId, long userId, String description, int rating) {
 		Exchange exchange = exchangeService.getExchangeById(exchangeId);
-
-		long offererId = exchange.getOfferer().getBook().getOwner().getUserId();
-		long requesterId = exchange.getRequester().getBook().getOwner().getUserId();
-		long subjectId = offererId != userId ? offererId : requesterId;
-		userReviewDao.createUserReview(exchangeId, userId, subjectId, description, rating);
+		return userReviewDao.createOrUpdateUserReview(exchangeId, userId, userId != exchange.getOfferer().getUser().getUserId() ?
+				exchange.getOfferer().getUser().getUserId() : exchange.getRequester().getUser().getUserId(), description, rating);
 	}
 
     @Override
@@ -63,13 +60,8 @@ public class UserReviewServiceImpl implements UserReviewService {
 
     @Override
 	@Transactional(readOnly = true)
-	public UserReview getUserReviewGiven(long exchangeId, long userId) {
-		Optional<UserReview> ur = userReviewDao.getUserReviewGiven(exchangeId, userId);
-
-		if(ur.isEmpty()) {
-			throw new UserReviewNotFound("Error getting user review given.");
-		}
-		return ur.get();
+	public Optional<UserReview> getUserReviewGiven(long exchangeId, long userId) {
+		return userReviewDao.getUserReviewGiven(exchangeId, userId);
 	}
 
     @Override

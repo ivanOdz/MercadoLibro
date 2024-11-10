@@ -82,4 +82,32 @@ public class UserReview {
 		
 		return reviewRating;
 	}
+
+	public void setReviewRating(int reviewRating) {
+		this.reviewRating = reviewRating;
+	}
+
+	public void setReviewDate(Timestamp reviewDate) {
+		this.reviewDate = reviewDate;
+	}
+
+	public void setReviewDescription(String reviewDescription) {
+		this.reviewDescription = reviewDescription;
+	}
+
+	public void setExchange(Exchange exchange) {
+		this.exchange = exchange;
+	}
+
+	public void setSubject(User subject) {
+		this.subject = subject;
+	}
+
+	public void setReviewer(User reviewer) {
+		this.reviewer = reviewer;
+	}
+
+	public void setUserReviewId(Long userReviewId) {
+		this.userReviewId = userReviewId;
+	}
 }

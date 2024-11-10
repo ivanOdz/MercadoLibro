@@ -27,9 +27,39 @@ public class UserReviewJpaDao implements UserReviewDao {
     private EntityManager em;
 
     @Override
-    public void createUserReview(long exchangeId, long userId, long userSubjectId, String description, int rating) {
-        final UserReview userReview = new UserReview(null, em.find(User.class, userId), em.find(User.class, userSubjectId), em.find(Exchange.class, exchangeId), description, new Timestamp(new Date().getTime()), rating);
-        em.persist(userReview);
+    public UserReview createOrUpdateUserReview(long exchangeId, long reviewerId, long subjectId, String description, int rating) {
+
+        TypedQuery<UserReview> query = em.createQuery(
+                "SELECT ur FROM UserReview ur WHERE ur.exchange.exchangeId = :exchangeId AND ur.reviewer.userId = :reviewerId AND ur.subject.userId = :subjectId",
+                UserReview.class
+        );
+        query.setParameter("exchangeId", exchangeId);
+        query.setParameter("reviewerId", reviewerId);
+        query.setParameter("subjectId", subjectId);
+
+        List<UserReview> results = query.getResultList();
+        UserReview userReview;
+
+        if (!results.isEmpty()) {
+            userReview = results.getFirst();
+            userReview.setReviewDescription(description);
+            userReview.setReviewRating(rating);
+            userReview.setReviewDate(new Timestamp(new Date().getTime()));
+            em.merge(userReview);
+        } else {
+            userReview = new UserReview(
+                    null,
+                    em.find(User.class, reviewerId),
+                    em.find(User.class, subjectId),
+                    em.find(Exchange.class, exchangeId),
+                    description,
+                    new Timestamp(new Date().getTime()),
+                    rating
+            );
+            em.persist(userReview);
+        }
+
+        return userReview;
     }
 
     @Override
