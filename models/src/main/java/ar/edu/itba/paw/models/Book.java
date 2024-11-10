@@ -105,10 +105,6 @@ public class Book {
 		this.exchangesQty = exchangesQty;
 	}
 
-	public void setAvailable(boolean available) {
-		this.available = available;
-	}
-
 	public void setImages(List<BookImage> images) {
 		this.images = images;
 	}

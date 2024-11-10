@@ -6,6 +6,8 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.interfaces.persistence.BookDao;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,15 +33,21 @@ public class BookServiceImpl implements BookService {
     @Autowired
     private ImageService imageService;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(BookServiceImpl.class);
+
     @Override
     @Transactional
     public Book createBook(Long bookModelId, BookState bookState, int rating, List<MultipartFile> imageFiles, int bookCoverIndex, List<Image> imageList,
                            User user, boolean newBook) {
+        LOGGER.info("Starting the creation of the book with model ID: {}", bookModelId);
+
         List<BookImage> bookImages = new ArrayList<>();
         List<Image> images;
         if (!newBook) {  // If it's a new book, the images are already saved
+            LOGGER.info("Saving new images for the book.");
             images = imageService.saveImage(arrangeImages(imageFiles, bookCoverIndex));
         } else {
+            LOGGER.info("Using provided image list for the book.");
             images = imageList;
         }
 
@@ -52,13 +60,20 @@ public class BookServiceImpl implements BookService {
             bookImages.add(bookImage);
         }
 
+        LOGGER.info("Creating book rating for user: {} with rating: {}", user.getUserId(), rating);
         bookDao.createBookRating(user, bookModelService.getBookModelByBookModelId(bookModelId), rating);
+
+        LOGGER.info("Creating book for book model ID: {}", bookModelId);
         Book book = bookDao.createBook(bookModelService.getBookModelByBookModelId(bookModelId), user, bookState);
+
+        // Adding images to the book
+        LOGGER.info("Adding images to the newly created book.");
         for (BookImage bookImage : bookImages) {
             bookImage.setBook(book);
             book.getImages().add(bookImage);
         }
         bookDao.saveBookImages(bookImages);
+        LOGGER.info("Successfully created book with ID: {}", book.getBookId());
 
         return book;
     }
@@ -68,10 +83,14 @@ public class BookServiceImpl implements BookService {
     public Book createNewBook(String isbn, String title, List<String> authors, String publisher, String description, Genre genre, int edition,
                                   Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension,
                                   Language language, int pages, int weight, BookState bookState, int rating, List<MultipartFile> imageFiles, int bookCoverIndex, User user){
+        LOGGER.info("Starting creation of new book with ISBN: {}", isbn);
+
+        LOGGER.info("Saving images for the new book.");
         List<Image> images = imageService.saveImage(arrangeImages(imageFiles, bookCoverIndex));
 
         BookModel bookModel = bookModelService.createBookModel(isbn, title, authors, publisher, description, genre, edition,
                 publicationYear, isHardcover, isPocketEdition, dimension, language, pages, weight, images.get(bookCoverIndex));
+
 
         return createBook(bookModel.getBookModelId(), bookState, rating, imageFiles, bookCoverIndex, images, user, true);
     }
@@ -79,21 +98,34 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public void exchangeOwnership(Book b1, Book b2) {
+        LOGGER.info("Exchanging ownership of books: {} and {}", b1.getBookId(), b2.getBookId());
+
         User owner1 = b1.getOwner();
         User owner2 = b2.getOwner();
+
+        LOGGER.info("Current owners - Book {}: {}, Book {}: {}", b1.getBookId(), owner1.getUserId(), b2.getBookId(), owner2.getUserId());
+
         bookDao.setOwner(b1, owner2);
         setAvailable(b1, true);
+        LOGGER.info("Ownership of Book {} transferred to User {}", b1.getBookId(), owner2.getUserId());
+
         bookDao.setOwner(b2, owner1);
         setAvailable(b2, true);
+        LOGGER.info("Ownership of Book {} transferred to User {}", b2.getBookId(), owner1.getUserId());
     }
 
     @Override
     @Transactional(readOnly = true)
     public Book getBookById(long bookId) {
+        LOGGER.info("Attempting to retrieve Book with ID: {}", bookId);
+
         Optional<Book> book = bookDao.getBookById(bookId);
         if (book.isEmpty()) {
+            LOGGER.warn("Book with ID: {} not found", bookId);
             throw new BookNotFoundException("Book not found");
         }
+
+        LOGGER.info("Book with ID: {} found successfully", bookId);
         return book.get();
     }
 
@@ -184,7 +216,16 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public Book updateBookState(Long bookId, String bookState) {
-        return bookDao.updateBookState(bookId, bookState).orElse(null);
+        LOGGER.info("Attempting to update the state of Book with ID: {} to state: {}", bookId, bookState);
+
+        Optional<Book> updatedBook = bookDao.updateBookState(bookId, bookState);
+        if (updatedBook.isPresent()) {
+            LOGGER.info("Successfully updated Book with ID: {} to state: {}", bookId, bookState);
+            return updatedBook.get();
+        } else {
+            LOGGER.warn("Book with ID: {} not found, state update failed", bookId);
+            return null;  // Return null if the book wasn't found or update failed
+        }
     }
 }
 
