@@ -21,13 +21,11 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import ar.edu.itba.paw.interfaces.persistence.ExchangeDao;
-import ar.edu.itba.paw.models.BookModel;
 import ar.edu.itba.paw.models.Exchange;
 import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import ar.edu.itba.paw.persistence.config.TestConfig;
-import ar.edu.itba.paw.persistence.constants.BookModelConstants;
 import ar.edu.itba.paw.persistence.constants.PublicationConstants;
 import ar.edu.itba.paw.persistence.constants.UserConstants;
 

@@ -22,8 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ar.edu.itba.paw.interfaces.persistence.BookModelDao;
 import ar.edu.itba.paw.models.Author;
 import ar.edu.itba.paw.models.BookModel;
-import ar.edu.itba.paw.models.Image;
-import ar.edu.itba.paw.models.Location;
 import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.utils.BookDimension;
 import ar.edu.itba.paw.models.utils.Genre;
@@ -33,7 +31,6 @@ import ar.edu.itba.paw.models.utils.pagination.BookModelMetadata;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import ar.edu.itba.paw.persistence.constants.AuthorConstants;
 import ar.edu.itba.paw.persistence.constants.BookModelConstants;
-import ar.edu.itba.paw.persistence.constants.PublicationConstants;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
