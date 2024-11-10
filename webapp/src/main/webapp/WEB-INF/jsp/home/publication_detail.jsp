@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ include file="/WEB-INF/jsp/components/navbar_wo_search.jsp" %>
 <%@ include file="/WEB-INF/jsp/head/headers.jsp" %>
 
@@ -226,7 +227,7 @@
                     </strong>
                 </div>
                 <div style="text-align: center;">
-                    <strong>${publication.publicationDatetime}</strong>
+                    <strong><fmt:formatDate value="${publication.publicationDatetime}" pattern="dd/MM/yyyy"/></strong>
                 </div>
                 <div style="text-align: center;">
                     <strong><c:out value="${publication.book.bookModel.editorial}"/></strong>

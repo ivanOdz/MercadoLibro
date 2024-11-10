@@ -90,13 +90,15 @@ public class PublicationJpaDao implements PublicationDao {
             nativeQueryString.append("AND b.bookState = :bookState ");
         }
 
-        nativeQueryString.append(" GROUP BY p.publicationid ");
+//nativeQueryString.append(" GROUP BY p.publicationid ");
 
         switch (sort) {
             case RATING_ASCENDING:
+                nativeQueryString.append(" GROUP BY p.publicationid ");
                 nativeQueryString.append(" ORDER BY COALESCE(AVG(br.rating), 0) ASC");
                 break;
             case RATING_DESCENDING:
+                nativeQueryString.append(" GROUP BY p.publicationid ");
                 nativeQueryString.append(" ORDER BY COALESCE(AVG(br.rating), 0) DESC");
                 break;
             case BOOK_NAME_ASCENDING:
@@ -106,9 +108,11 @@ public class PublicationJpaDao implements PublicationDao {
                 nativeQueryString.append(" ORDER BY bm.title DESC");
                 break;
             case PUBLICATION_DATE_DESCENDING:
+                nativeQueryString.append(" GROUP BY p.publicationid ");
                 nativeQueryString.append(" ORDER BY publicationDatetime DESC");
                 break;
             default:
+                nativeQueryString.append(" GROUP BY p.publicationid ");
                 nativeQueryString.append(" ORDER BY publicationDatetime ASC");
         }
 

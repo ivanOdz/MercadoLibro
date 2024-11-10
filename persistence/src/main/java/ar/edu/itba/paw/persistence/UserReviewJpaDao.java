@@ -9,7 +9,6 @@ import ar.edu.itba.paw.models.utils.Rating;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -27,9 +26,39 @@ public class UserReviewJpaDao implements UserReviewDao {
     private EntityManager em;
 
     @Override
-    public void createUserReview(long exchangeId, long userId, long userSubjectId, String description, int rating) {
-        final UserReview userReview = new UserReview(null, em.find(User.class, userId), em.find(User.class, userSubjectId), em.find(Exchange.class, exchangeId), description, new Timestamp(new Date().getTime()), rating);
-        em.persist(userReview);
+    public UserReview createOrUpdateUserReview(long exchangeId, long reviewerId, long subjectId, String description, int rating) {
+
+        TypedQuery<UserReview> query = em.createQuery(
+                "SELECT ur FROM UserReview ur WHERE ur.exchange.exchangeId = :exchangeId AND ur.reviewer.userId = :reviewerId AND ur.subject.userId = :subjectId",
+                UserReview.class
+        );
+        query.setParameter("exchangeId", exchangeId);
+        query.setParameter("reviewerId", reviewerId);
+        query.setParameter("subjectId", subjectId);
+
+        List<UserReview> results = query.getResultList();
+        UserReview userReview;
+
+        if (!results.isEmpty()) {
+            userReview = results.getFirst();
+            userReview.setReviewDescription(description);
+            userReview.setReviewRating(rating);
+            userReview.setReviewDate(new Timestamp(new Date().getTime()));
+            em.merge(userReview);
+        } else {
+            userReview = new UserReview(
+                    null,
+                    em.find(User.class, reviewerId),
+                    em.find(User.class, subjectId),
+                    em.find(Exchange.class, exchangeId),
+                    description,
+                    new Timestamp(new Date().getTime()),
+                    rating
+            );
+            em.persist(userReview);
+        }
+
+        return userReview;
     }
 
     @Override
@@ -68,43 +97,28 @@ public class UserReviewJpaDao implements UserReviewDao {
         TypedQuery<UserReview> query = em.createQuery("FROM UserReview ur WHERE ur.userReviewId IN :reviewIds ORDER BY ur.reviewDate DESC", UserReview.class);
         query.setParameter("reviewIds", reviewIds);
 
-
-        List<UserReview> reviews = new ArrayList<>();
-        try{
-            reviews = query.getResultList();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        List<UserReview> reviews = query.getResultList();
 
         return new PaginatedResponse<>(reviews, new BasicMetadata(currentPage, reviews.size(), PROFILE_PAGE_SIZE));
     }
 
     @Override
-    public UserReview getUserReviewEarned(long exchangeId, long userId) {
+    public Optional<UserReview> getUserReviewEarned(long exchangeId, long userId) {
         String queryStr = "SELECT ur FROM UserReview ur WHERE ur.exchange.exchangeId = :exchangeId AND ur.subject.userId = :userId";
         TypedQuery<UserReview> query = em.createQuery(queryStr, UserReview.class);
         query.setParameter("exchangeId", exchangeId);
         query.setParameter("userId", userId);
-        try {
-            return query.getSingleResult();
-        } catch (NoResultException e) {
-            return null;
-        }
-
+        return Optional.ofNullable(query.getSingleResult());
     }
 
     @Override
-    public UserReview getUserReviewGiven(long exchangeId, long userId) {
+    public Optional<UserReview> getUserReviewGiven(long exchangeId, long userId) {
         String stringQuery = "FROM UserReview ur WHERE ur.exchange.exchangeId = :exchangeId AND ur.reviewer.userId = :userId";
 
         TypedQuery<UserReview> query = em.createQuery(stringQuery, UserReview.class);
         query.setParameter("exchangeId", exchangeId);
         query.setParameter("userId", userId);
-        try {
-            return query.getSingleResult();
-        } catch (NoResultException e) {
-            return null;
-        }
+        return Optional.ofNullable(query.getSingleResult());
     }
 
     private Rating getRatingFromUserId(String stringQuery, long userId) {
@@ -123,14 +137,14 @@ public class UserReviewJpaDao implements UserReviewDao {
     }
 
     @Override
-    public Rating getUserRatingEarned(long userId) {
+    public Optional<Rating> getUserRatingEarned(long userId) {
         String stringQuery = "SELECT COALESCE(AVG(ur.userreviewRating), 5.0), COUNT(ur.userreviewRating) FROM user_review ur WHERE ur.subjectId = :userId";
-        return getRatingFromUserId(stringQuery, userId);
+        return Optional.of(getRatingFromUserId(stringQuery, userId));
     }
 
     @Override
-    public Rating getUserRatingGiven(long userId) {
+    public Optional<Rating> getUserRatingGiven(long userId) {
         String stringQuery = "SELECT COALESCE(AVG(ur.userreviewRating), 5.0) AS averageRating, COUNT(ur.userreviewRating) AS countRating FROM user_review ur WHERE ur.reviewerId = :userId";
-        return getRatingFromUserId(stringQuery, userId);
+        return Optional.of(getRatingFromUserId(stringQuery, userId));
     }
 }

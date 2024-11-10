@@ -29,6 +29,7 @@ import javax.validation.constraints.NotEmpty;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 public class ExchangeController {
@@ -74,7 +75,11 @@ public class ExchangeController {
         mav.addObject("userReviewForm", new UserReviewForm());
 
         mav.addObject("messageForm", new MessageForm());
-        mav.addObject("messages", inProcessExchanges.getData().stream().map(Exchange::getChat).findFirst().orElse(Collections.emptyList()));
+
+        List<Message> messages = inProcessExchanges.getData().stream()
+                .flatMap(exchange -> exchange.getChat().stream())
+                .collect(Collectors.toList());
+        mav.addObject("messages", messages);
 
         List<Exchange> exchanges = new ArrayList<>(pendingExchanges.getData());
         exchanges.addAll(inProcessExchanges.getData());
@@ -110,7 +115,11 @@ public class ExchangeController {
         mav.addObject("userReviewForm", new UserReviewForm());
 
         mav.addObject("messageForm", new MessageForm());
-        mav.addObject("messages", inProcessExchanges.getData().stream().map(Exchange::getChat).findFirst().orElse(Collections.emptyList()));
+
+        List<Message> messages = inProcessExchanges.getData().stream()
+                .flatMap(exchange -> exchange.getChat().stream())
+                .collect(Collectors.toList());
+        mav.addObject("messages", messages);
 
         List<Exchange> exchanges = new ArrayList<>(pendingExchanges.getData());
         exchanges.addAll(inProcessExchanges.getData());
@@ -216,8 +225,8 @@ public class ExchangeController {
     @RequestMapping(path = "/submit_review", method = RequestMethod.POST)
     public ModelAndView submitReview(
             @RequestParam("exchangeId") long exchangeId,
-            @RequestParam("reviewDescription") String reviewDescription,
-            @RequestParam("userReviewRating") int userReviewRating,
+            @RequestParam(name = "reviewDescription", defaultValue = "") String reviewDescription,
+            @RequestParam(name = "userReviewRating", defaultValue ="1") int userReviewRating,
             @ModelAttribute("loggedUser") User loggeduser) {
 
         Exchange e = exchangeService.getExchangeById(exchangeId);

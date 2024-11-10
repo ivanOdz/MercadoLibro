@@ -1,4 +1,3 @@
-
 -- Insertar Usuarios -------------------------------------------------------------------------------------------------------
 
 -- 1 --
@@ -98,23 +97,23 @@
         
 -- Asignar a cada usuario
 
-        INSERT INTO user_location (userLocationId, userId, locationId)
-        VALUES (1, 1, 1)
+        INSERT INTO user_location (userId, locationId)
+        VALUES (1, 1)
         
-        INSERT INTO user_location (userLocationId, userId, locationId)
-        VALUES (2, 1, 2)
+        INSERT INTO user_location (userId, locationId)
+        VALUES (1, 2)
         
-        INSERT INTO user_location (userLocationId, userId, locationId)
-        VALUES (3, 1, 3)
+        INSERT INTO user_location (userId, locationId)
+        VALUES (1, 3)
                 
-        INSERT INTO user_location (userLocationId, userId, locationId)
-        VALUES (4, 2, 1)
+        INSERT INTO user_location (userId, locationId)
+        VALUES (2, 1)
         
-        INSERT INTO user_location (userLocationId, userId, locationId)
-        VALUES (5, 3, 2)
+        INSERT INTO user_location (userId, locationId)
+        VALUES (3, 2)
         
-        INSERT INTO user_location (userLocationId, userId, locationId)
-        VALUES (6, 4, 3)
+        INSERT INTO user_location (userId, locationId)
+        VALUES (4, 3)
         
 -- AUTORES -----------------------------------------------------------------------------------------------------------------
 

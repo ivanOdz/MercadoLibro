@@ -3,7 +3,6 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.exceptions.BookModelNotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.BookModelDao;
 import ar.edu.itba.paw.interfaces.services.BookModelService;
-import ar.edu.itba.paw.interfaces.services.GenreService;
 import ar.edu.itba.paw.models.Author;
 import ar.edu.itba.paw.models.BookModel;
 import ar.edu.itba.paw.models.Image;
@@ -11,26 +10,20 @@ import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.BookModelMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.support.SimpleTriggerContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 
 import static ar.edu.itba.paw.models.utils.Constants.DEFAULT_PUBLICATION_GENRE_FILTER;
-import static ar.edu.itba.paw.models.utils.Constants.DEFAULT_PUBLICATION_STATE_FILTER;
 
 @Service
 public class BookModelServiceImpl implements BookModelService {
 
     @Autowired
     private BookModelDao bookModelDao;
-
-    @Autowired
-    private GenreService genreService;
 
     @Override
     @Transactional
