@@ -55,10 +55,11 @@ public class EmailServiceImpl implements EmailService {
                 helper.setSubject(subject);
                 helper.setText(html, true);
                 helper.setFrom("mercado.libro.staff@gmail.com");
+                mailSender.send(message);
+                LOGGER.info("Email sent correctly");
             } catch (MessagingException e) {
-                LOGGER.error(messageSource.getMessage("error.email.sending", null, l),receiver, e.getStackTrace());
+                LOGGER.error("Error sending email");
             }
-            mailSender.send(message);
     }
 
 
@@ -115,8 +116,5 @@ public class EmailServiceImpl implements EmailService {
         String locale = user.getLanguage() != null ? user.getLanguage() : Locale.getDefault().getLanguage();
 
         sendEmail(user.getMail(), variables, "changePassword", messageSource.getMessage("email.subject.passwordChange", null, Locale.forLanguageTag(locale)), locale);
-
     }
-
-
 }
