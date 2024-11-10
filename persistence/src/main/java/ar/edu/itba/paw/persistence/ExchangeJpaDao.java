@@ -3,16 +3,10 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.exceptions.ExchangeNotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.ExchangeDao;
 import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.models.utils.ExchangeState;
-import ar.edu.itba.paw.models.utils.Genre;
-import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -23,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static ar.edu.itba.paw.models.utils.Constants.BOOKS_PAGE_SIZE;
 import static ar.edu.itba.paw.models.utils.Constants.EXCHANGES_PAGE_SIZE;
 
 @Primary
@@ -33,9 +26,8 @@ public class ExchangeJpaDao implements ExchangeDao {
     @PersistenceContext
     private EntityManager em;
 
-
     @Override
-    public Exchange createExchange(long offererPubId, long requesterPubId, int acceptCode, Timestamp startDate) {
+    public Optional<Exchange> createExchange(long offererPubId, long requesterPubId, int acceptCode, Timestamp startDate) {
         Publication offerer = em.find(Publication.class, offererPubId);
         Publication requester = em.find(Publication.class, requesterPubId);
 
@@ -43,7 +35,7 @@ public class ExchangeJpaDao implements ExchangeDao {
 
         final Exchange exchange = new Exchange(null, offerer, requester, ExchangeState.PENDING, acceptCode, false, false, startDate, null, new ArrayList<>());
         em.persist(exchange);
-        return exchange;
+        return Optional.of(exchange);
     }
 
     @Override

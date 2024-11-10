@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.exceptions.BookNotFoundException;
 import ar.edu.itba.paw.interfaces.exceptions.ExchangeBadRequestException;
 import ar.edu.itba.paw.interfaces.exceptions.ExchangeNotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.ExchangeDao;
@@ -9,9 +8,9 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,11 +32,8 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Autowired
     private EmailService emailService;
 
-    @Autowired
-    private MessageSource messageSource;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExchangeServiceImpl.class);
 
-    @Value("#{environment.webappUrl}")
-    private String webappUrl;
 
     @Override
     @Transactional
@@ -52,34 +48,48 @@ public class ExchangeServiceImpl implements ExchangeService {
         Date date = new Date();
         Timestamp timestamp = new Timestamp(date.getTime());
 
-        Exchange ex = exchangeDao.createExchange(offererPubId, requesterPubId, acceptCode, timestamp);
+        Optional<Exchange> ex = exchangeDao.createExchange(offererPubId, requesterPubId, acceptCode, timestamp);
+        if(ex.isPresent()) {
+            LOGGER.info("Created exchange with ID: {}", ex.get().getExchangeId());
 
-        // mail variables setup
-        User offerer = ex.getOfferer().getBook().getOwner();
-        User requester = ex.getRequester().getBook().getOwner();
-        Book bookOffered = ex.getOfferer().getBook();
-        Book bookRequested = ex.getRequester().getBook();
+            // mail variables setup
+            User offerer = ex.get().getOfferer().getBook().getOwner();
+            User requester = ex.get().getRequester().getBook().getOwner();
+            Book bookOffered = ex.get().getOfferer().getBook();
+            Book bookRequested = ex.get().getRequester().getBook();
 
-        emailService.sendExchangeRequestEmail(requester, offerer, bookRequested, bookOffered, ex.getAcceptCode());
+            emailService.sendExchangeRequestEmail(requester, offerer, bookRequested, bookOffered, ex.get().getAcceptCode());
+        }
+        else{
+            LOGGER.warn("Could not initialize exchange for book id {}", bookId);
+        }
     }
 
     @Override
     @Transactional
     public String exchange(int acceptCode, boolean state) {
+        LOGGER.info("Processing exchange for acceptCode: {}", acceptCode);
+
         Optional<Exchange> ex = exchangeDao.findByAcceptCode(acceptCode);
         if (ex.isEmpty()) {
+            LOGGER.warn("Exchange not found for acceptCode: {}", acceptCode);
             throw new ExchangeBadRequestException("Invalid accept code, exchange not found");
         }
+
         Exchange exchange = ex.get();
+        LOGGER.info("Found exchange with ID: {} for acceptCode: {}", exchange.getExchangeId(), acceptCode);
+
         if (state) {
+            LOGGER.info("Accepting exchange with acceptCode: {}", acceptCode);
             exchangeDao.acceptExchange(exchange ,acceptCode);
-//            bs.setAvailable(exchange.getOfferer().getBook(), false);
-//            bs.setAvailable(exchange.getRequester().getBook(), false);
         } else {
+            LOGGER.info("Rejecting exchange with acceptCode: {}", acceptCode);
             exchangeDao.rejectExchange(exchange,acceptCode);
 
             Date date = new Date();
             Timestamp timestamp = new Timestamp(date.getTime());
+
+            LOGGER.info("Setting end date for exchange with acceptCode: {} at timestamp: {}", acceptCode, timestamp);
             exchangeDao.setEndDate(exchange,acceptCode, timestamp);
         }
 
@@ -94,36 +104,54 @@ public class ExchangeServiceImpl implements ExchangeService {
         ps.terminatePublication(exchange.getOfferer());
         ps.terminatePublication(exchange.getRequester());
 
-        return switch (exchange.getExchangeState()) {
+        String redirect = switch (exchange.getExchangeState()) {
             case ExchangeState.ACCEPTED -> "exchange/accepted";
             case ExchangeState.REJECTED -> "exchange/rejected";
             default -> "exchange/invalid";
         };
+        LOGGER.info("Exchange of id: {} processed successfully", exchange.getExchangeId());
+        return redirect;
     }
 
     @Override
     @Transactional
     public void cofirmOfferer(int acceptCode) {
+        LOGGER.info("Processing confirmOfferer for acceptCode: {}", acceptCode);
+
         Optional<Exchange> ex = exchangeDao.findByAcceptCode(acceptCode);
         if (ex.isEmpty()) {
+            LOGGER.warn("Exchange not found for acceptCode: {}", acceptCode);
             throw new ExchangeBadRequestException("Invalid accept code, exchange not found");
         }
+
         Exchange exchange = ex.get();
+        LOGGER.info("Found exchange with ID: {} for acceptCode: {}", exchange.getExchangeId(), acceptCode);
+
         exchangeDao.confirmOfferer(getExchangeByAcceptCode(acceptCode), acceptCode);
         exchangeCompleted(acceptCode, exchange);
+        LOGGER.info("Confirmed offerer for acceptCode: {}", acceptCode);
     }
 
     @Override
     @Transactional
     public void cofirmRequester(int acceptCode) {
+        LOGGER.info("Processing confirmRequester for acceptCode: {}", acceptCode);
+
         Optional<Exchange> ex = exchangeDao.findByAcceptCode(acceptCode);
         if (ex.isEmpty()) {
+            LOGGER.warn("Exchange not found for acceptCode: {}", acceptCode);
             throw new ExchangeBadRequestException("Invalid accept code, exchange not found");
         }
         Exchange exchange = ex.get();
+        LOGGER.info("Found exchange with ID: {} for acceptCode: {}", exchange.getExchangeId(), acceptCode);
+
         exchangeDao.confirmRequester(exchange, acceptCode);
+        LOGGER.info("Confirmed requester for acceptCode: {}", acceptCode);
+
         exchangeCompleted(acceptCode, exchange);
+        LOGGER.info("Exchange completed for acceptCode: {}", acceptCode);
     }
+
 
     private void exchangeCompleted(int acceptCode, Exchange ex) {
         if (ex.isConfirmed()) {
@@ -139,20 +167,28 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Override
     @Transactional(readOnly = true)
     public Exchange getExchangeByAcceptCode(int acceptCode) {
+        LOGGER.info("Searching for exchange with acceptCode: {}", acceptCode);
+
         Optional<Exchange> exchange = exchangeDao.findByAcceptCode(acceptCode);
         if (exchange.isEmpty()) {
+            LOGGER.warn("Exchange not found for acceptCode: {}", acceptCode);
             throw new ExchangeNotFoundException("Exchange not found");
         }
+        LOGGER.info("Exchange found for acceptCode: {}", acceptCode);
         return exchange.get();
     }
 
     @Override
     @Transactional(readOnly = true)
     public Exchange getExchangeById(long exchangeId) {
-    	Optional<Exchange> exchange = exchangeDao.getExchangeById(exchangeId);
+        LOGGER.info("Searching for exchange with exchangeId: {}", exchangeId);
+
+        Optional<Exchange> exchange = exchangeDao.getExchangeById(exchangeId);
         if (exchange.isEmpty()) {
+            LOGGER.warn("Exchange not found for exchangeId: {}", exchangeId);
             throw new ExchangeNotFoundException("Exchange not found");
         }
+        LOGGER.info("Exchange found for exchangeId: {}", exchangeId);
         return exchange.get();
     }
 

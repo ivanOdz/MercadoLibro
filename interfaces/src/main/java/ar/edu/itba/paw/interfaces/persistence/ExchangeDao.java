@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface ExchangeDao {
 
-    Exchange createExchange(long offererPubId, long requesterPubId, int acceptCode, Timestamp startDate);
+    Optional<Exchange> createExchange(long offererPubId, long requesterPubId, int acceptCode, Timestamp startDate);
 
     void rejectExchange(Exchange exchange, int acceptCode);
 
