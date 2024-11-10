@@ -5,9 +5,11 @@ import ar.edu.itba.paw.models.UserReview;
 import ar.edu.itba.paw.models.utils.Rating;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 
+import java.util.Optional;
+
 public interface UserReviewService {
 
-	void createUserReview(long exchangeId, long userId, String description, int rating);
+	UserReview createUserReview(long exchangeId, long userId, String description, int rating);
 
 	PaginatedResponse<UserReview, BasicMetadata> getReviewsGivenByUserId(long userId, int currentPage);
 
@@ -15,7 +17,7 @@ public interface UserReviewService {
 
 	UserReview getUserReviewEarned(long exchangeId, long userId);
 	
-	UserReview getUserReviewGiven(long exchangeId, long userId);
+	Optional<UserReview> getUserReviewGiven(long exchangeId, long userId);
 	
 	Rating getUserRatingEarned(long userId);
 	
