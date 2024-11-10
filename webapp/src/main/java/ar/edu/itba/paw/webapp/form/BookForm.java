@@ -2,7 +2,6 @@ package ar.edu.itba.paw.webapp.form;
 
 import javax.validation.constraints.*;
 
-import ar.edu.itba.paw.models.Location;
 import ar.edu.itba.paw.models.utils.BookDimension;
 import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.models.utils.Genre;
@@ -169,12 +168,11 @@ public class BookForm {
 
     // Setters
 
-
     public void setIsbn(@NotBlank @Pattern(regexp = "^(97[89])\\d{1,5}\\d{1,7}\\d{1,7}\\d$") String isbn) {
         this.isbn = isbn;
     }
 
-    public void setTitle(@NotBlank @Size(min = 1, max = 255) String title) {
+    public void setTitle(@Size(min = 1, max = 255) String title) {
         this.title = title;
     }
 
@@ -189,23 +187,22 @@ public class BookForm {
     public void setDescription(@Size(min = 10, max = 2000) String description) {
         this.description = description;
     }
-    
+
     public void setGenre(@NotNull Genre genre) {
-    	this.genre = genre;
+        this.genre = genre;
     }
-    
+
     public void setBookState(@NotNull BookState bookState) {
-    	this.bookState = bookState;
+        this.bookState = bookState;
     }
-    
-    public void setEdition(@Min(1) @Max(99) int edition) {
+
+    public void setEdition(@Min(value = 1) @Max(value = 99) int edition) {
         this.edition = edition;
     }
 
-    public void setRating(@Min(1) @Max(5) int rating) {
+    public void setRating(@Range(min = 1, max = 5) int rating) {
         this.rating = rating;
     }
-
 
     public void setImageFiles(List<MultipartFile> imageFiles) {
         this.imageFiles = imageFiles;
@@ -215,11 +212,11 @@ public class BookForm {
         this.publicationYear = publicationYear;
     }
 
-    public void setHardcover(boolean hardcover) {
+    public void setIsHardcover(boolean hardcover) {
         isHardcover = hardcover;
     }
 
-    public void setPocketEdition(boolean pocketEdition) {
+    public void setIsPocketEdition(boolean pocketEdition) {
         isPocketEdition = pocketEdition;
     }
 
@@ -247,7 +244,7 @@ public class BookForm {
         this.publish = publish;
     }
 
-    public void setLocationId(long location) {
-        this.locationId = location;
+    public void setLocationId(long locationId) {
+        this.locationId = locationId;
     }
 }
