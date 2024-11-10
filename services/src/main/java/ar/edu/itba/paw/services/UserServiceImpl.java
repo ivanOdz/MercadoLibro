@@ -49,7 +49,6 @@ public class UserServiceImpl implements UserService {
 
         LOGGER.info("New user created with id: {}", user.getUserId());
         emailService.sendVerificationEmail(user);
-        LOGGER.info("Verification email sent to user of id: {}", user.getUserId());
 
         return user;
     }
