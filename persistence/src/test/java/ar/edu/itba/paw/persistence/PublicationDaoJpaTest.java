@@ -112,62 +112,7 @@ public class PublicationDaoJpaTest {
 	@Rollback
 	public void testTerminatePublication() {
 		
-		final User user = em.merge(new User(	PublicationConstants.USER_ID_1,
-												UserConstants.NAME_1,
-												UserConstants.MAIL_1,
-												UserConstants.PASSWORD_1,
-												UserConstants.IMAGE_ID_1,
-												UserConstants.VERIFICATION_CODE_1,
-												UserConstants.IS_VERIFIED_1,
-												UserConstants.LANGUAGE_1
-											));
-		
-		final Author author_1 = em.merge(new Author(AuthorConstants.ID_1, BookModelConstants.AUTHOR_1_1));
-		final Author author_2 = em.merge(new Author(AuthorConstants.ID_2, BookModelConstants.AUTHOR_1_2));
-		final List<Author> authors = new ArrayList<Author>();
-		authors.add(author_1);
-		authors.add(author_2);
-		
-		final BookModel bookModel = em.merge(new BookModel( BookModelConstants.ID_1,
-															BookModelConstants.ISBN_1,
-															BookModelConstants.TITLE_1,
-															BookModelConstants.EDITORIAL_1,
-															BookModelConstants.DESCRIPTION_1,
-															Genre.fromString("genre." + BookModelConstants.GENRE_1),
-															(int)BookModelConstants.EDITION_1,
-															(int)BookModelConstants.WEIGHT_1,
-															(int)BookModelConstants.PAGES_1,
-															Language.valueOf(BookModelConstants.LANGUAGE_1),
-															BookDimension.valueOf(BookModelConstants.DIMENSION_1),
-															(short)(int)BookModelConstants.PUBLICATION_YEAR_1,
-															BookModelConstants.IS_POCKET_EDITION_1,
-															BookModelConstants.IS_HARD_COVER_1,
-															authors,
-															null
-														));
-		
-		final Book book = em.merge(new Book(	PublicationConstants.BOOK_ID_1,
-												user,
-												bookModel,
-												BookState.fromString(BookConstants.BOOK_STATE_1),
-												(int)BookConstants.EXCHANGE_QTY_1,
-												BookConstants.AVAILABLE_1,
-												new ArrayList<BookImage>()
-											));
-		
-		final Location location_1 = new Location(LocationConstants.ID_1, LocationConstants.STRING_1);
-		final Location location_2 = new Location(LocationConstants.ID_2, LocationConstants.STRING_2);
-		final List<Location> locations = new ArrayList<Location>();
-		locations.add(location_1);
-		locations.add(location_2);
-		
-		final Publication publication = new Publication(	PublicationConstants.ID_1,
-															book,
-															user,
-															PublicationState.valueOf(PublicationConstants.STATE_1),
-															PublicationConstants.DATE_TIME_1,
-															locations
-														);
+		final Publication publication = em.find(Publication.class, PublicationConstants.ID_1);
 		
 		publicationDao.terminatePublication(publication);
 		em.flush();
@@ -179,46 +124,8 @@ public class PublicationDaoJpaTest {
 	@Rollback
 	public void testCreatePublication() {
 		// Book 3 selected (this one is not publicated yet)
-		final User user = em.merge(new User(	UserConstants.ID_1,
-												UserConstants.NAME_1,
-												UserConstants.MAIL_1,
-												UserConstants.PASSWORD_1,
-												UserConstants.IMAGE_ID_1,
-												UserConstants.VERIFICATION_CODE_1,
-												UserConstants.IS_VERIFIED_1,
-												UserConstants.LANGUAGE_1
-											));
-
-		final Author author = em.merge(new Author(AuthorConstants.ID_3, BookModelConstants.AUTHOR_3));
-		final List<Author> authors = new ArrayList<Author>();
-		authors.add(author);
-		
-		final BookModel bookModel = em.merge(new BookModel( BookModelConstants.ID_3,
-															BookModelConstants.ISBN_3,
-															BookModelConstants.TITLE_3,
-															BookModelConstants.EDITORIAL_3,
-															BookModelConstants.DESCRIPTION_3,
-															Genre.fromString("genre." + BookModelConstants.GENRE_3),
-															(int)BookModelConstants.EDITION_3,
-															(int)BookModelConstants.WEIGHT_3,
-															(int)BookModelConstants.PAGES_3,
-															Language.valueOf(BookModelConstants.LANGUAGE_3),
-															BookDimension.valueOf(BookModelConstants.DIMENSION_3),
-															(short)(int)BookModelConstants.PUBLICATION_YEAR_3,
-															BookModelConstants.IS_POCKET_EDITION_3,
-															BookModelConstants.IS_HARD_COVER_3,
-															authors,
-															null
-														));
-		
-		final Book book = em.merge(new Book(	PublicationConstants.BOOK_ID_3,
-												user,
-												bookModel,
-												BookState.fromString(BookConstants.BOOK_STATE_3),
-												(int)BookConstants.EXCHANGE_QTY_3,
-												BookConstants.AVAILABLE_3,
-												new ArrayList<BookImage>()
-											));
+		final User user = em.find(User.class, UserConstants.ID_1);
+		final Book book = em.find(Book.class, BookConstants.ID_1);
 		
 		final Location location_1 = new Location(LocationConstants.ID_2, LocationConstants.STRING_2);
 		final Location location_2 = new Location(LocationConstants.ID_3, LocationConstants.STRING_3);

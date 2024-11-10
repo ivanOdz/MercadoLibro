@@ -80,26 +80,8 @@ public class BookDaoJpaTest {
 		final List<Author> authors = new ArrayList<Author>();
 		authors.add(author);
 		
-		final BookModel bookModel = em.merge(new BookModel(	BookModelConstants.ID_10,
-															BookModelConstants.ISBN_10,
-															BookModelConstants.TITLE_10,
-															BookModelConstants.EDITORIAL_10,
-															BookModelConstants.DESCRIPTION_10,
-															Genre.fromString("genre." + BookModelConstants.GENRE_10),
-															(int)BookModelConstants.EDITION_10,
-															(int)BookModelConstants.WEIGHT_10,
-															(int)BookModelConstants.PAGES_10,
-															Language.valueOf(BookModelConstants.LANGUAGE_10),
-															BookDimension.valueOf(BookModelConstants.DIMENSION_10),
-															(short)(int)BookModelConstants.PUBLICATION_YEAR_10,
-															BookModelConstants.IS_POCKET_EDITION_10,
-															BookModelConstants.IS_HARD_COVER_10,
-															authors,
-															null
-														));
-		
-		final User user = em.merge(new User(UserConstants.ID_4, UserConstants.NAME_4, UserConstants.MAIL_4, UserConstants.PASSWORD_4, UserConstants.IMAGE_ID_4, UserConstants.VERIFICATION_CODE_4, UserConstants.IS_VERIFIED_4, UserConstants.LANGUAGE_4));
-		
+		final BookModel bookModel = em.find(BookModel.class, BookConstants.ID_1);
+		final User user = em.find(User.class, UserConstants.ID_4);
 		final BookState bookState = BookState.GOOD;
 		
 		Book newBook = bookDao.createBook(bookModel, user, bookState);
@@ -119,25 +101,8 @@ public class BookDaoJpaTest {
 		final List<Author> authors = new ArrayList<Author>();
 		authors.add(author);
 		
-		final BookModel bookModel = em.merge(new BookModel(	BookModelConstants.ID_2,
-															BookModelConstants.ISBN_2,
-															BookModelConstants.TITLE_2,
-															BookModelConstants.EDITORIAL_2,
-															BookModelConstants.DESCRIPTION_2,
-															Genre.fromString("genre." + BookModelConstants.GENRE_2),
-															(int)BookModelConstants.EDITION_2,
-															(int)BookModelConstants.WEIGHT_2,
-															(int)BookModelConstants.PAGES_2,
-															Language.valueOf(BookModelConstants.LANGUAGE_2),
-															BookDimension.valueOf(BookModelConstants.DIMENSION_2),
-															(short)(int)BookModelConstants.PUBLICATION_YEAR_2,
-															BookModelConstants.IS_POCKET_EDITION_2,
-															BookModelConstants.IS_HARD_COVER_2,
-															authors,
-															null
-														));
-		
-		final User user = em.merge(new User(UserConstants.ID_1, UserConstants.NAME_1, UserConstants.MAIL_1, UserConstants.PASSWORD_1, UserConstants.IMAGE_ID_1, UserConstants.VERIFICATION_CODE_1, UserConstants.IS_VERIFIED_1, UserConstants.LANGUAGE_1));
+		final BookModel bookModel = em.find(BookModel.class, BookModelConstants.ID_2);
+		final User user = em.find(User.class, UserConstants.ID_1);
 		
 		bookDao.createBookRating(user, bookModel, 4);
 		em.flush();
@@ -153,26 +118,9 @@ public class BookDaoJpaTest {
 		final List<Author> authors = new ArrayList<Author>();
 		authors.add(author);
 		
-		final BookModel bookModel = em.merge(new BookModel(	BookModelConstants.ID_2,
-															BookModelConstants.ISBN_2,
-															BookModelConstants.TITLE_2,
-															BookModelConstants.EDITORIAL_2,
-															BookModelConstants.DESCRIPTION_2,
-															Genre.fromString("genre" + BookModelConstants.GENRE_2),
-															(int)BookModelConstants.EDITION_2,
-															(int)BookModelConstants.WEIGHT_2,
-															(int)BookModelConstants.PAGES_2,
-															Language.valueOf(BookModelConstants.LANGUAGE_2),
-															BookDimension.valueOf(BookModelConstants.DIMENSION_2),
-															(short)(int)BookModelConstants.PUBLICATION_YEAR_2,
-															BookModelConstants.IS_POCKET_EDITION_2,
-															BookModelConstants.IS_HARD_COVER_2,
-															authors,
-															null
-														));
-		
-		final User oldOwner = em.merge(new User(UserConstants.ID_1, UserConstants.NAME_1, UserConstants.MAIL_1, UserConstants.PASSWORD_1, UserConstants.IMAGE_ID_1, UserConstants.VERIFICATION_CODE_1, UserConstants.IS_VERIFIED_1, UserConstants.LANGUAGE_1));
-		final User newOwner = em.merge(new User(UserConstants.ID_2, UserConstants.NAME_2, UserConstants.MAIL_2, UserConstants.PASSWORD_2, UserConstants.IMAGE_ID_2, UserConstants.VERIFICATION_CODE_2, UserConstants.IS_VERIFIED_2, UserConstants.LANGUAGE_2));
+		final BookModel bookModel = em.find(BookModel.class, BookModelConstants.ID_2);
+		final User oldOwner = em.find(User.class, UserConstants.ID_1);
+		final User newOwner = em.find(User.class, UserConstants.ID_2);
 		final Book book = em.merge(new Book(BookConstants.ID_2, oldOwner, bookModel, BookState.fromString(BookConstants.BOOK_STATE_2), (int)BookConstants.EXCHANGE_QTY_2, BookConstants.AVAILABLE_2, new ArrayList<BookImage>()));
 		
 		bookDao.setOwner(book, newOwner);
