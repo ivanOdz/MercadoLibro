@@ -143,7 +143,7 @@ public class UserController {
             return createForm(userForm);
         }
 
-        User user = us.createUser(userForm.getUsername(), userForm.getMail(), userForm.getPassword(), LocaleContextHolder.getLocale().toLanguageTag());
+        us.createUser(userForm.getUsername(), userForm.getMail(), userForm.getPassword(), LocaleContextHolder.getLocale().toLanguageTag());
         return new ModelAndView("redirect:/success_registration");
     }
 
