@@ -62,24 +62,6 @@ public class UserReviewJpaDao implements UserReviewDao {
     }
 
     @Override
-    public PaginatedResponse<UserReview, BasicMetadata> getReviewsGivenByUserId(long userId, int currentPage) {
-        if(currentPage < 0){
-            currentPage = 0;
-        }
-        int offset = currentPage * PROFILE_PAGE_SIZE;
-
-        TypedQuery<UserReview> query = em.createQuery("FROM UserReview ur WHERE ur.reviewer.userId = :userId ORDER BY ur.reviewDate DESC", UserReview.class);
-
-        query.setParameter("userId", userId);
-        query.setMaxResults(PROFILE_PAGE_SIZE);
-        query.setFirstResult(offset);
-
-        List<UserReview> data = query.getResultList();
-
-        return new PaginatedResponse<>(data, new BasicMetadata(currentPage, data.size(), PROFILE_PAGE_SIZE));
-    }
-
-    @Override
     public PaginatedResponse<UserReview, BasicMetadata> getReviewsEarnedByUserId(long userId, int currentPage) {
         if(currentPage < 0){
             currentPage = 0;
@@ -102,25 +84,6 @@ public class UserReviewJpaDao implements UserReviewDao {
         return new PaginatedResponse<>(reviews, new BasicMetadata(currentPage, reviews.size(), PROFILE_PAGE_SIZE));
     }
 
-    @Override
-    public Optional<UserReview> getUserReviewEarned(long exchangeId, long userId) {
-        String queryStr = "SELECT ur FROM UserReview ur WHERE ur.exchange.exchangeId = :exchangeId AND ur.subject.userId = :userId";
-        TypedQuery<UserReview> query = em.createQuery(queryStr, UserReview.class);
-        query.setParameter("exchangeId", exchangeId);
-        query.setParameter("userId", userId);
-        return Optional.ofNullable(query.getSingleResult());
-    }
-
-    @Override
-    public Optional<UserReview> getUserReviewGiven(long exchangeId, long userId) {
-        String stringQuery = "FROM UserReview ur WHERE ur.exchange.exchangeId = :exchangeId AND ur.reviewer.userId = :userId";
-
-        TypedQuery<UserReview> query = em.createQuery(stringQuery, UserReview.class);
-        query.setParameter("exchangeId", exchangeId);
-        query.setParameter("userId", userId);
-        return Optional.ofNullable(query.getSingleResult());
-    }
-
     private Rating getRatingFromUserId(String stringQuery, long userId) {
         Query query = em.createNativeQuery(stringQuery);
         query.setParameter("userId", userId);
@@ -139,12 +102,6 @@ public class UserReviewJpaDao implements UserReviewDao {
     @Override
     public Optional<Rating> getUserRatingEarned(long userId) {
         String stringQuery = "SELECT COALESCE(AVG(ur.userreviewRating), 5.0), COUNT(ur.userreviewRating) FROM user_review ur WHERE ur.subjectId = :userId";
-        return Optional.of(getRatingFromUserId(stringQuery, userId));
-    }
-
-    @Override
-    public Optional<Rating> getUserRatingGiven(long userId) {
-        String stringQuery = "SELECT COALESCE(AVG(ur.userreviewRating), 5.0) AS averageRating, COUNT(ur.userreviewRating) AS countRating FROM user_review ur WHERE ur.reviewerId = :userId";
         return Optional.of(getRatingFromUserId(stringQuery, userId));
     }
 }
