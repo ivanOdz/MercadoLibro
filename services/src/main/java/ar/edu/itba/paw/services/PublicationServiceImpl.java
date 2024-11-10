@@ -11,15 +11,15 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.*;
 
+import static ar.edu.itba.paw.models.utils.Constants.*;
 
-import static ar.edu.itba.paw.models.utils.Constants.DEFAULT_PUBLICATION_GENRE_FILTER;
-import static ar.edu.itba.paw.models.utils.Constants.DEFAULT_PUBLICATION_STATE_FILTER;
 
 @Service
 public class PublicationServiceImpl implements PublicationService {
@@ -36,6 +36,8 @@ public class PublicationServiceImpl implements PublicationService {
     @Autowired
     private LocationService locationService;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(PublicationServiceImpl.class);
+
     @Override
     @Transactional
     public Publication createPublication(long bookId, long userId, long locationId, PublicationState publicationState) {
@@ -44,7 +46,12 @@ public class PublicationServiceImpl implements PublicationService {
         Location location = locationService.findById(locationId);
         List<Location> locations = new ArrayList<>();
         locations.add(location);
-        return pubDao.createPublication(book, user, locations, publicationState);
+
+        Publication publication = pubDao.createPublication(book, user, locations, publicationState);
+        // In case create publication fails, this log wont appear as it will throw an exception.
+        LOGGER.info("Publication of id {} successfully created", publication.getPublicationId());
+
+        return publication;
     }
 
     @Override
@@ -59,6 +66,7 @@ public class PublicationServiceImpl implements PublicationService {
     @Transactional
     public void terminatePublication(Publication publication) {
         pubDao.terminatePublication(publication);
+        LOGGER.info("Publication of id {} successfully terminated", publication.getPublicationId());
     }
 
     @Override
@@ -66,6 +74,7 @@ public class PublicationServiceImpl implements PublicationService {
     public Publication getPublicationByPublicationId(long publicationId) {
         Optional<Publication> publication = pubDao.getPublicationByPublicationId(publicationId);
         if (publication.isEmpty()) {
+            LOGGER.warn("Publication of id {} not found", publicationId);
             throw new PublicationNotFoundException("Publication not found");
         }
         return publication.get();
@@ -108,10 +117,13 @@ public class PublicationServiceImpl implements PublicationService {
     public void addLocation(Long publicationId, Long locationId, User user) {
         Location location = locationService.findById(locationId);
         Publication publication = getPublicationByPublicationId(publicationId);
+
         if (!Objects.equals(publication.getUser().getUserId(), user.getUserId())) {
+            LOGGER.error("User with ID {} is not the owner of the publication with ID {}", user.getUserId(), publicationId);
             throw new UserNotUnauthorizedException("User is not the owner of the publication");
         }
         pubDao.addLocation(publication, location);
+        LOGGER.info("Location with ID {} successfully added to publication with ID {}", locationId, publicationId);
     }
 
     @Override
@@ -152,12 +164,15 @@ public class PublicationServiceImpl implements PublicationService {
         Publication p = getPublicationByPublicationId(publicationId);
         p.getBook().setAvailable(true);
         pubDao.deletePublication(publicationId);
+
+        LOGGER.info("Publication with ID {} deleted successfully, Book marked as available", publicationId);
     }
 
     @Override
     @Transactional
     public void likePublication(long publicationId, long userId) {
         pubDao.likePublication(publicationId, userId);
+        LOGGER.info("User with ID {} liked Publication with ID {}", userId, publicationId);
     }
 
     @Override
@@ -228,5 +243,4 @@ public class PublicationServiceImpl implements PublicationService {
     public PaginatedResponse<Publication, BasicMetadata> getFavoritePublications(User user, String currentPage) {
         return pubDao.getFavoritePublications(user, currentPage);
     }
-
 }

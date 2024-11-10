@@ -58,7 +58,7 @@ public class EmailServiceImpl implements EmailService {
                 mailSender.send(message);
                 LOGGER.info("Email sent correctly");
             } catch (MessagingException e) {
-                LOGGER.error("Error sending email");
+                LOGGER.warn("Error sending email");
             }
     }
 
