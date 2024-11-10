@@ -36,32 +36,8 @@ public class UserReviewServiceImpl implements UserReviewService {
 
     @Override
 	@Transactional(readOnly = true)
-	public PaginatedResponse<UserReview, BasicMetadata> getReviewsGivenByUserId(long userId, int currentPage) {
-		return userReviewDao.getReviewsGivenByUserId(userId, currentPage);
-	}
-
-    @Override
-	@Transactional(readOnly = true)
 	public PaginatedResponse<UserReview, BasicMetadata> getReviewsEarnedByUserId(long userId, int currentPage) {
 		return userReviewDao.getReviewsEarnedByUserId(userId, currentPage);
-	}
-
-    @Override
-	@Transactional(readOnly = true)
-	public UserReview getUserReviewEarned(long exchangeId, long userId) {
-		Optional<UserReview> ur = userReviewDao.getUserReviewEarned(exchangeId, userId);
-
-		if(ur.isEmpty()) {
-			throw new UserReviewNotFound("Error getting user review earned.");
-		}
-		return ur.get();
-	}
-
-
-    @Override
-	@Transactional(readOnly = true)
-	public Optional<UserReview> getUserReviewGiven(long exchangeId, long userId) {
-		return userReviewDao.getUserReviewGiven(exchangeId, userId);
 	}
 
     @Override
@@ -73,16 +49,4 @@ public class UserReviewServiceImpl implements UserReviewService {
 		}
 		return rating.get();
 	}
-
-    @Override
-	@Transactional(readOnly = true)
-	public Rating getUserRatingGiven(long userId) {
-		Optional<Rating> rating = userReviewDao.getUserRatingGiven(userId);
-		if(rating.isEmpty()) {
-			throw new UserRatingNotFound("Error getting user rating given.");
-		}
-
-		return rating.get();
-	}
-
 }
