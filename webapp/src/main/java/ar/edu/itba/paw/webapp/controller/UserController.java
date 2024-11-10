@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.exceptions.base.ApplicationRuntimeException;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 import ar.edu.itba.paw.interfaces.services.UserReviewService;
@@ -25,8 +24,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import java.util.Locale;
@@ -50,8 +47,7 @@ public class UserController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     @RequestMapping("/login")
-    public ModelAndView login(@RequestParam(value = "error", required = false) String error,
-                              @RequestParam(value = "logout", required = false) String logout) {
+    public ModelAndView login(@RequestParam(value = "error", required = false) String error) {
         ModelAndView modelAndView = new ModelAndView("user/login");
 
         if (error != null) {
@@ -59,10 +55,6 @@ public class UserController {
 
             String errorMessage = messageSource.getMessage("login.invalid", null, locale);
             modelAndView.addObject("error", errorMessage);
-        }
-
-        if (logout != null) {
-            modelAndView.addObject("message", "Has cerrado sesión correctamente.");
         }
 
         return modelAndView;
@@ -181,7 +173,6 @@ public class UserController {
     public ModelAndView profileHome(@RequestParam(name = "page", defaultValue = "0") int currentPage, @ModelAttribute("loggedUser") User loggeduser) {
         ModelAndView mav = new ModelAndView("profile/profile_home");
 
-        mav.addObject("loggedUser", loggeduser);
         mav.addObject("locationsUser", loggeduser.getUserLocations());
         mav.addObject("reviews", userReviewService.getReviewsEarnedByUserId(loggeduser.getUserId(), currentPage));
         mav.addObject("userRating", userReviewService.getUserRatingEarned(loggeduser.getUserId()));
@@ -190,20 +181,10 @@ public class UserController {
     }
 
     @RequestMapping("/language")
-    public ModelAndView changeLanguage(@RequestParam(name = "lang") String lang) {
-    	
+    public ModelAndView changeLanguage(@RequestParam(name = "lang") String lang,  @ModelAttribute("loggedUser") User loggeduser) {
         Locale locale = Locale.forLanguageTag(lang);
         LocaleContextHolder.setLocale(locale);
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
-
-            try {
-                us.setUserLanguage(pud.getUser(), lang);
-            } catch (ApplicationRuntimeException e) {
-                LOGGER.error(e.getExceptionMessage(), e.getStatusCode());
-                return new ModelAndView("redirect:/400");
-            }
-        }
+        us.setUserLanguage(loggeduser, lang);
 
         return new ModelAndView("redirect:/profile");
     }
@@ -211,22 +192,14 @@ public class UserController {
     @PostMapping("/user/addLocation")
     public ModelAndView addLocation(@RequestParam Long userId, @RequestParam String locationString) {
         us.addLocation(userId, locationString);
-		User updatedUser = us.findById(userId);
-		ModelAndView modelAndView = new ModelAndView("redirect:/profile");
-		modelAndView.addObject("loggedUser", updatedUser);
-		
-		return modelAndView;
+
+		return new ModelAndView("redirect:/profile");
     }
 
     @PostMapping("/user/removeLocation")
     public ModelAndView removeLocation(@RequestParam Long userId, @RequestParam Long locationId) {
-    	
         us.removeLocation(userId, locationId);
-        
-		User updatedUser = us.findById(userId);
-		ModelAndView modelAndView = new ModelAndView("redirect:/profile");
-		modelAndView.addObject("loggedUser", updatedUser);
-		
-		return modelAndView;
+
+		return new ModelAndView("redirect:/profile");
     }
 }
