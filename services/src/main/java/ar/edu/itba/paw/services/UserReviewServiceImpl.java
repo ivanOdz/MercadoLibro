@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.exceptions.UserRatingNotFound;
-import ar.edu.itba.paw.interfaces.exceptions.UserReviewNotFound;
 import ar.edu.itba.paw.interfaces.persistence.UserReviewDao;
 import ar.edu.itba.paw.interfaces.services.ExchangeService;
 import ar.edu.itba.paw.interfaces.services.UserReviewService;
@@ -10,6 +9,8 @@ import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.UserReview;
 import ar.edu.itba.paw.models.utils.Rating;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,12 +27,22 @@ public class UserReviewServiceImpl implements UserReviewService {
 	@Autowired
 	private ExchangeService exchangeService;
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserReviewServiceImpl.class);
+
 	@Override
 	@Transactional
 	public UserReview createUserReview(long exchangeId, long userId, String description, int rating) {
 		Exchange exchange = exchangeService.getExchangeById(exchangeId);
-		return userReviewDao.createOrUpdateUserReview(exchangeId, userId, userId != exchange.getOfferer().getUser().getUserId() ?
-				exchange.getOfferer().getUser().getUserId() : exchange.getRequester().getUser().getUserId(), description, rating);
+
+		long targetUserId = (userId != exchange.getOfferer().getUser().getUserId()) ?
+				exchange.getOfferer().getUser().getUserId() : exchange.getRequester().getUser().getUserId();
+
+		LOGGER.info("Creating or updating user review for exchange ID: {} and user ID: {}", exchangeId, userId);
+		UserReview userReview = userReviewDao.createOrUpdateUserReview(exchangeId, userId, targetUserId, description, rating);
+
+		LOGGER.info("User review created/updated for user ID: {} on exchange ID: {}", targetUserId, exchangeId);
+
+		return userReview;
 	}
 
     @Override
@@ -43,10 +54,15 @@ public class UserReviewServiceImpl implements UserReviewService {
     @Override
 	@Transactional(readOnly = true)
 	public Rating getUserRatingEarned(long userId) {
+		LOGGER.info("Fetching user rating earned for user ID: {}", userId);
+
 		Optional<Rating> rating = userReviewDao.getUserRatingEarned(userId);
 		if(rating.isEmpty()) {
+			LOGGER.warn("User rating not found for user ID: {}", userId);
 			throw new UserRatingNotFound("Error getting user rating earned.");
 		}
+
+		LOGGER.info("User rating found for user ID: {}", userId);
 		return rating.get();
 	}
 }
