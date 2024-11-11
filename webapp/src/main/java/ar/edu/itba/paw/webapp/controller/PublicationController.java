@@ -69,8 +69,8 @@ public class PublicationController {
 
         Publication publication = ps.getPublicationByPublicationId(publicationId);
 
-        if(publication.getPublicationState() != PublicationState.CURRENT ||
-                (!Objects.equals(loggeduser.getUserId(), publication.getUser().getUserId()) && PublicationState.OFFERED == publication.getPublicationState())) {
+        if (publication.getPublicationState() == PublicationState.TERMINATED ||
+                (PublicationState.OFFERED.equals(publication.getPublicationState()) && (loggeduser.getUserId() != publication.getUser().getUserId()))){
             return new ModelAndView("redirect:/403");
         }
 
