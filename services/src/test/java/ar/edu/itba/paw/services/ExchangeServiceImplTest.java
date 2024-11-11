@@ -53,18 +53,18 @@ public class ExchangeServiceImplTest {
 	@Test(expected = ExchangeBadRequestException.class)
 	public void testExchangeBadRequestException() {
 		
-        Location location = spy(Location.class);
+        Location location = mock(Location.class);
         List<Location> locations = new ArrayList<>();
         locations.add(location);
         location.setLocationId(LOCATION_ID);
         
-        User user_1 = spy(User.class);
-        User user_2 = spy(User.class);
-        Book book_1 = spy(Book.class);
-        Book book_2 = spy(Book.class);
-        Publication publication_1 = spy(Publication.class);
-        Publication publication_2 = spy(Publication.class);
-        Exchange exchange = spy(Exchange.class);
+        User user_1 = mock(User.class);
+        User user_2 = mock(User.class);
+        Book book_1 = mock(Book.class);
+        Book book_2 = mock(Book.class);
+        Publication publication_1 = mock(Publication.class);
+        Publication publication_2 = mock(Publication.class);
+        Exchange exchange = mock(Exchange.class);
         
         user_1.setUserId(USER_ID_1);
         book_1.setBookId(BOOK_ID_1);
