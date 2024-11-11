@@ -69,6 +69,10 @@ public class PublicationController {
 
         Publication publication = ps.getPublicationByPublicationId(publicationId);
 
+        if(publication.getPublicationState() != PublicationState.CURRENT) {
+            return new ModelAndView("redirect:/403");
+        }
+
         List<Book> availableBooks;
         if (loggeduser != null) {
             availableBooks = bs.getAvailableBooksByUser(loggeduser);
