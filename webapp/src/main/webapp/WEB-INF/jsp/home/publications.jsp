@@ -321,7 +321,6 @@
                                                         const likeStatus = currentIsLiked ? 'false' : 'true';  // Cambiar estado de "me gusta"
 
                                                         // Enviar la solicitud POST de manera asíncrona sin esperar la respuesta
-                                                        console.log('Enviando solicitud POST para: ' + form.action);  // Depuración de la URL
 
                                                         fetch(form.action, {
                                                             method: 'POST',
@@ -336,9 +335,7 @@
                                                             if (!response.ok) {
                                                                 throw new Error('Error en la solicitud: ' + response.statusText);
                                                             }
-                                                            console.log('Solicitud enviada correctamente');
                                                         }).catch(error => {
-                                                            console.error('Error de red:', error.message);  // Mostrar el mensaje de error
                                                         });
                                                     });
                                                 }

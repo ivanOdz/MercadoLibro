@@ -20,18 +20,18 @@
     <title><spring:message code="book.view.title"/></title>
 </head>
 <script>
+    const baseUrl = '<c:url value="/publications/" />';
+
     let bookMap = new Map();
     <c:forEach var="pub" items="${activePublications}">
         if (!bookMap.has(${pub.book.bookId})) {
             bookMap.set(${pub.book.bookId}, ${pub.publicationId});
-            console.log(${pub.book.bookId} + " -> " + ${pub.publicationId});
         }
     </c:forEach>
     function seePublication(bookId) {
         let publicationId = bookMap.get(bookId);
-        console.log(publicationId);
         if (publicationId) {
-            window.location.href = '/publications/' + publicationId;
+            window.location.href = baseUrl + publicationId;
         }
     }
 </script>
@@ -187,6 +187,7 @@
                     </c:if>
                 </c:if>
             </div>
+
 
 
             <div class="uk-width-3-4@s col-content">

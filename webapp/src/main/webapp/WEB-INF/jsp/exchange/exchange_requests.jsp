@@ -1287,10 +1287,8 @@
 
                     scrollToBottom();
                 } else {
-                    console.error('Error al enviar el mensaje');
                 }
             }).catch(error => {
-                console.error('Error en la solicitud:', error);
             });
         });
     }
