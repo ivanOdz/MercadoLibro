@@ -33,7 +33,7 @@ import java.util.Locale;
 import java.util.Properties;
 
 @EnableTransactionManagement
-@PropertySource("classpath:application${spring.profiles.active}.properties")
+@PropertySource("classpath:application.properties")
 @EnableWebMvc
 @ComponentScan({
         "ar.edu.itba.paw.webapp.controller",
