@@ -140,7 +140,7 @@
         <c:forEach var="userLocation" items="${loggedUser.userLocations}">
             <div class="location-item">
                 <form class="remove-location-form" action="<c:url value='/user/removeLocation' />" method="post"
-                      style="display: inline;">
+                      style="display: flex;">
                     <input type="hidden" name="userId" value="${loggedUser.userId}"/>
                     <input type="hidden" name="locationId" value="${userLocation.locationId}"/>
                     <input style="border: none" class="uk-input" type="text" name="locationString"
