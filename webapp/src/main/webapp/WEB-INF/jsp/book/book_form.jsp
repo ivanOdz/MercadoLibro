@@ -153,11 +153,11 @@
                     <input type="hidden" id="location-error-message" value="<spring:message code='NotBlank.bookForm.location'/>" />
 
                     <div id="location-q" class="uk-inline" style="display: none;">
-                        <c:if test="${not empty user.userLocations}">
+                        <c:if test="${not empty loggedUser.userLocations}">
                          <label class="form-group">
                             <spring:message code="book.set.location"/>
 							<form:select path="locationId" class="uk-select no-arrow-select" aria-label="Not clickable icon" style="width: 90%">
-									<form:options items="${user.userLocations}" itemValue="locationId" itemLabel="locationString"/>
+									<form:options items="${loggedUser.userLocations}" itemValue="locationId" itemLabel="locationString"/>
 							</form:select>
                         </label>
                             <div style="margin-top: 2%; align-self: auto;">
@@ -167,7 +167,7 @@
                             </div>
                         </c:if>
                         <c:url var="profileUrl" value="/profile"/>
-                        <c:if test="${empty user.userLocations}">
+                        <c:if test="${empty loggedUser.userLocations}">
                             <div class="uk-margin-bottom">
                                 <label class="uk-margin">
                                     <spring:message code="book.set.location"/>
