@@ -118,10 +118,10 @@
 
         <div class="uk-inline">
             <label class="form-group">
-                <c:if test="${not empty user.userLocations}">
+                <c:if test="${not empty loggedUser.userLocations}">
                     <spring:message code="book.set.location"/>
                     <form:select path="locationId" class="uk-select no-arrow-select" aria-label="Not clickable icon" style="width: 90%">
-                        <form:options items="${user.userLocations}" itemValue="locationId" itemLabel="locationString" />
+                        <form:options items="${loggedUser.userLocations}" itemValue="locationId" itemLabel="locationString" />
                     </form:select>
                     <div class="form-container" style="margin-top: 5%; margin-left: 35%; margin-bottom: 2%;">
                         <form:input path="publicationId" type="hidden" value="${publication.publicationId}"/>
@@ -130,7 +130,7 @@
                         </button>
                     </div>
                 </c:if>
-                <c:if test="${empty user.userLocations}">
+                <c:if test="${empty loggedUser.userLocations}">
                     <div class="uk-margin-bottom">
                         <label class="uk-margin">
                             <spring:message code="book.set.location"/>

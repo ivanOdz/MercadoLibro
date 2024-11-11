@@ -9,8 +9,6 @@ import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 import ar.edu.itba.paw.webapp.form.ExchangeForm;
 import ar.edu.itba.paw.webapp.form.LocationForm;
 import ar.edu.itba.paw.webapp.form.PublicationForm;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +26,6 @@ public class PublicationController {
     @Autowired
     private BookService bs;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PublicationController.class);
 
     @RequestMapping("/")
     public ModelAndView index(@RequestParam(name = "search", defaultValue = "") String search,
@@ -57,7 +54,6 @@ public class PublicationController {
     @PostMapping(path = "/createpublication")
     public ModelAndView createPublication(@RequestParam(name = "bookId") long bookId, @RequestParam(name = "locationId") long locationId, @ModelAttribute("loggedUser") User loggeduser) {
         ps.createPublication(bookId, loggeduser.getUserId(), locationId, PublicationState.CURRENT);
-        LOGGER.info("Publication created successfully");
         return new ModelAndView("redirect:/book");
     }
 
@@ -74,19 +70,16 @@ public class PublicationController {
         Publication publication = ps.getPublicationByPublicationId(publicationId);
 
         List<Book> availableBooks;
-        mav.addObject("user", loggeduser);
         if (loggeduser != null) {
             availableBooks = bs.getAvailableBooksByUser(loggeduser);
             mav.addObject("availableBooks", availableBooks);
         }
 
+        mav.addObject("publication", publication);
         mav.addObject("exchangeForm", new ExchangeForm());
         mav.addObject("locationForm", new LocationForm());
-        mav.addObject("publication", publication);
-        mav.addObject("imgCount", publication.getBook().getImages().size());
         mav.addObject("genres", Genre.values());
         mav.addObject("bookStates", BookState.values());
-
 
         return mav;
     }
@@ -114,7 +107,6 @@ public class PublicationController {
         List<BookStateWrapper> bookStateWrapperList = ps.getMyBookStateWrapperList(loggeduser.getUserId(), search, isGenreFilterActive, genreFilter);
 
         mav.addObject("publications", publications);
-        mav.addObject("sort-types", SortType.values());
         mav.addObject("genreWrapperList", genreWrapperList);
         mav.addObject("bookStateWrapperList", bookStateWrapperList);
 
@@ -155,6 +147,4 @@ public class PublicationController {
         ps.addLocation(publicationId, locationId, loggeduser);
         return new ModelAndView("redirect:/publications/" + publicationId);
     }
-
-
 }

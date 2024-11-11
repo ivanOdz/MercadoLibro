@@ -1,16 +1,11 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.exceptions.PublicationNotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.PublicationDao;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
-import org.hibernate.annotations.Formula;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Primary;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -102,9 +97,11 @@ public class PublicationJpaDao implements PublicationDao {
                 nativeQueryString.append(" ORDER BY COALESCE(AVG(br.rating), 0) DESC");
                 break;
             case BOOK_NAME_ASCENDING:
+                nativeQueryString.append(" GROUP BY p.publicationid, bm.title ");
                 nativeQueryString.append(" ORDER BY bm.title ASC");
                 break;
             case BOOK_NAME_DESCENDING:
+                nativeQueryString.append(" GROUP BY p.publicationid, bm.title ");
                 nativeQueryString.append(" ORDER BY bm.title DESC");
                 break;
             case PUBLICATION_DATE_DESCENDING:

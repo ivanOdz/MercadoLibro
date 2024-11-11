@@ -240,6 +240,7 @@ public class PublicationServiceImpl implements PublicationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public PaginatedResponse<Publication, BasicMetadata> getFavoritePublications(User user, String currentPage) {
         return pubDao.getFavoritePublications(user, currentPage);
     }
