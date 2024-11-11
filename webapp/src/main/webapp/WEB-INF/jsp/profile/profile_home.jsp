@@ -140,7 +140,7 @@
         <c:forEach var="userLocation" items="${loggedUser.userLocations}">
             <div class="location-item">
                 <form class="remove-location-form" action="<c:url value='/user/removeLocation' />" method="post"
-                      style="display: inline;">
+                      style="display: flex;">
                     <input type="hidden" name="userId" value="${loggedUser.userId}"/>
                     <input type="hidden" name="locationId" value="${userLocation.locationId}"/>
                     <input style="border: none" class="uk-input" type="text" name="locationString"
@@ -177,7 +177,7 @@
     <c:if test="${not empty reviews.data}">
         <c:forEach var="review" items="${reviews.data}">
 
-            <div class="uk-card uk-card-body uk-border-rounded uk-box-shadow-small uk-width-expand">
+            <div class="uk-card uk-card-body uk-border-rounded uk-box-shadow-small uk-width-expand" style="background-color: #f7f7f7">
                 <div>
                     <p class="date-text"><fmt:formatDate value="${review.reviewDate}" pattern="dd/MM/yyyy"/></p>
                     <p><c:out value='${review.reviewer.username}'/>: <c:out value='${review.reviewDescription}'/></p>
