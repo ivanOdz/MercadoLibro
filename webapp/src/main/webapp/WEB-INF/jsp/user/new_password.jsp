@@ -25,7 +25,7 @@
                 <div class="uk-width-1-1 uk-margin-top">
                     <div>
                     <label>
-                        <spring:message code="hwc.create.password"/>
+                        <spring:message code="hwc.create.new.password"/>
                     </label>
                     </div>
                     <div class="uk-inline">
