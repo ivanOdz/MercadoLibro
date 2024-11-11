@@ -2,12 +2,11 @@ package ar.edu.itba.paw.webapp.form;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 public class MailForm {
 
     @NotEmpty(message = "{mailForm.email.notEmpty}")
-    @Email(message = "{mailForm.email.invalidFormat}")
+    @Email(message = "{Email.email.invalidFormat}")
     private String email;
 
     // Getters y Setters
