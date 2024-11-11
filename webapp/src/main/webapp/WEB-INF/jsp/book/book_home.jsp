@@ -315,14 +315,14 @@
                                                                 <form:hidden path="bookId" value="${card.bookId}"/>
 
 	                                                            <c:choose>
-	                                                            	<c:when test="${not empty user.userLocations}">
+	                                                            	<c:when test="${not empty loggedUser.userLocations}">
                                                                         <div class="uk-margin-bottom">
                                                                             <label class="uk-margin">
                                                                                 <spring:message code="book.set.location"/>
                                                                             </label>
                                                                         </div>
                                                                         <form:select path="locationId" class="uk-select no-arrow-select" aria-label="Not clickable icon" style="width: 90%">
-                                                                            <form:options items="${user.userLocations}" itemValue="locationId" itemLabel="locationString" />
+                                                                            <form:options items="${loggedUser.userLocations}" itemValue="locationId" itemLabel="locationString" />
                                                                         </form:select>
                                                                         <p>
                                                                             <button class="uk-button uk-button-primary" type="submit"><spring:message code="button.confirm"/></button>

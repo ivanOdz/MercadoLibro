@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.exceptions.UserNotUnauthorizedException;
-import ar.edu.itba.paw.interfaces.exceptions.base.ApplicationRuntimeException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
@@ -10,14 +8,7 @@ import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 import ar.edu.itba.paw.webapp.form.BookDetailsForm;
 import ar.edu.itba.paw.webapp.form.BookForm;
 import ar.edu.itba.paw.webapp.form.PublicationForm;
-import ar.edu.itba.paw.webapp.utilities.EnumInternationalizationUtil;
-import ar.edu.itba.paw.webapp.utilities.LocalizedEnumWrapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,12 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.time.Year;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 @Controller
@@ -49,12 +36,6 @@ public class BookController {
     private PublicationService publicationService;
 
 
-    @Qualifier("messageSource")
-    @Autowired
-    private MessageSource messageSource;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(BookController.class);
-
     @RequestMapping("/book")
     public ModelAndView bookHome(@RequestParam(name = "search", defaultValue = "") String search,
                                  @RequestParam(name = "is-book-state-filter-active", defaultValue = "false") String isBookStateFilterActive,
@@ -65,11 +46,6 @@ public class BookController {
                                  @RequestParam(name = "sort-type", defaultValue = "BOOK_NAME_ASCENDING") String sortType,
                                  @ModelAttribute("loggedUser") User loggeduser) {
 
-        if (loggeduser == null) {
-            String message = messageSource.getMessage("error.unauthorized", null, LocaleContextHolder.getLocale());
-            throw new UserNotUnauthorizedException(message);
-        }
-
         ModelAndView mav = new ModelAndView("book/book_home");
         PaginatedResponse<Book, ItemFilterMetadata> books = bookService.getPaginatedBooks(search, isBookStateFilterActive,
                 bookStateFilter, isGenreFilterActive, genreFilter, currentPage, loggeduser.getUserId(), sortType);
@@ -79,10 +55,9 @@ public class BookController {
 
         List<Publication> activePublications = publicationService.getActivePublicationsByUser(loggeduser);
 
+        mav.addObject("books", books);
         mav.addObject("genreWrapperList", genreWrapperList);
         mav.addObject("bookStateWrapperList", bookStateWrapperList);
-        mav.addObject("books", books);
-        mav.addObject("user", loggeduser);
         mav.addObject("bookStates", BookState.values());
 
         mav.addObject("activePublications", activePublications);
@@ -114,7 +89,6 @@ public class BookController {
 
         ModelAndView mav = new ModelAndView("/book/new_book_form");
 
-        mav.addObject("user", loggeduser);
         mav.addObject("bookForm", bookForm);
 
         mav.addObject("genres", Genre.values());
@@ -143,7 +117,6 @@ public class BookController {
         ModelAndView mav = new ModelAndView("/book/book_form");
 
         BookModel bm = bookModelService.getBookModelByBookModelId(bookModelId);
-        mav.addObject("user", loggeduser);
         mav.addObject("bookDetailsForm", bookDetailsForm);
         mav.addObject("step", 2);
         mav.addObject("book_model", bm);
