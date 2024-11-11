@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> user = userDao.findByMail(email);
         if(user.isEmpty()){
             LOGGER.warn("User not found for email, attempt made.");
-            throw new PasswordChangeBadRequestException("User not found");
+            return;
         }
 
         int verificationCode = generateVerificationCode();
