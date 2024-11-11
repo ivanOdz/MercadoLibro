@@ -164,11 +164,12 @@ public class BookServiceImpl implements BookService {
         if (bookCoverIndex == 0) {
             return images;
         }
+        
         List<MultipartFile> toReturn = new ArrayList<>();
         toReturn.add(images.get(bookCoverIndex));
         
         for (MultipartFile image : images) {
-            if(images.indexOf(image) != bookCoverIndex){
+            if (images.indexOf(image) != bookCoverIndex){
                 toReturn.add(image);
             }
         }
@@ -212,9 +213,9 @@ public class BookServiceImpl implements BookService {
         boolean genreFilterActive = "true".equalsIgnoreCase(isGenreFilterActive);
 
         Genre genre = DEFAULT_PUBLICATION_GENRE_FILTER;
-        if(genreFilterActive){
+        if (genreFilterActive) {
             genre = Genre.fromString(genreFilter);
-            if(genre == null){
+            if (genre == null) {
                 genreFilterActive = false;
             }
         }
