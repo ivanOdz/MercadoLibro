@@ -246,6 +246,7 @@
                     selectCoverButton.innerText = 'Select as cover';
                     selectCoverButton.type = 'button';
 
+                    coverInput.value = 0;
                     selectCoverButton.addEventListener('click', function () {
                         document.querySelectorAll('.image-wrapper').forEach(wrapper => {
                             wrapper.style.border = 'none';
