@@ -30,7 +30,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.Properties;
 
 @EnableTransactionManagement
