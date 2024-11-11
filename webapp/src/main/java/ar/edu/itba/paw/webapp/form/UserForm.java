@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.form;
 
-
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
