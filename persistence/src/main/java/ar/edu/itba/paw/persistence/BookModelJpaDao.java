@@ -132,7 +132,7 @@ public class BookModelJpaDao implements BookModelDao {
 
         List<BookModel> bookModels = query.getResultList();
 
-        return new PaginatedResponse<>(bookModels, new BookModelMetadata(page, BOOKS_PAGE_SIZE, totalResults, safeSearch, isGenreFilterActive, genreFilter, sort, null));
+        return new PaginatedResponse<>(bookModels, new BookModelMetadata(page, BOOKS_PAGE_SIZE, totalResults, search, isGenreFilterActive, genreFilter, sort, null));
     }
 
     @Override
