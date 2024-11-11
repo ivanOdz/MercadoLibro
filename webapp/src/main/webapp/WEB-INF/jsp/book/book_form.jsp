@@ -88,7 +88,7 @@
                         </label>
 
                         <div class="star-rating">
-                            <form:radiobutton path="rating" value="5" id="star5"/>
+                            <form:radiobutton path="rating" value="5" id="star5" />
                             <label for="star5" title="5 stars">
                                 <span uk-icon="icon: star; ratio: 1.5"></span>
                             </label>
@@ -108,7 +108,7 @@
                                 <span uk-icon="icon: star; ratio: 1.5"></span>
                             </label>
 
-                            <form:radiobutton path="rating" value="1" id="star1"/>
+                            <form:radiobutton path="rating" value="1" id="star1" checked="checked"/>
                             <label for="star1" title="1 star">
                                 <span uk-icon="icon: star; ratio: 1.5"></span>
                             </label>
