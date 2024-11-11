@@ -42,7 +42,7 @@
                     <img class="profile-pic" src="<c:url value='/images/profile.png' />" alt="Default Image"/>
                 </c:otherwise>
             </c:choose>
-            <!-- Ac� agregar boton para editar imagen de perfil o clickeando sobre la imagen... -->
+            <!-- Acá agregar boton para editar imagen de perfil o clickeando sobre la imagen... -->
         </div>
 
         <div class="user-data-grid-element-right">
@@ -84,15 +84,9 @@
     </div>
 
     <div class="profile-content uk-align-center" style="width: auto">
-
-        <h4>
-            <spring:message code="profile.rating.given"/>
-            <span><c:out value="${userRating.rating}"/></span>
-        </h4>
-
         <h4>
             <spring:message code="profile.rating.earned"/>
-            <span><c:out value="${userRating.rating}"/></span>
+            <span><fmt:formatNumber value="${userRating.rating}" maxFractionDigits="1"/></span>
         </h4>
 
 
@@ -149,7 +143,7 @@
                       style="display: inline;">
                     <input type="hidden" name="userId" value="${loggedUser.userId}"/>
                     <input type="hidden" name="locationId" value="${userLocation.locationId}"/>
-                    <input class="uk-input" type="text" name="locationString"
+                    <input style="border: none" class="uk-input" type="text" name="locationString"
                            value="<c:out value='${userLocation.locationString}'/>" readonly/>
                     <button type="submit" class="uk-button remove-location-btn" title="Remove Location">
                         <span uk-icon="icon: close"></span>
@@ -163,7 +157,7 @@
             <input id="new-location-input" type="text" name="locationString" style="margin-top: 3%;" class="uk-input"
                    placeholder="<spring:message code='user.new.location.placeholder'/>" required/>
             <button id="add-location-btn" type="submit" style="margin-top: 2%;" class="uk-button uk-button-primary">
-                <spring:message code="user.add.location"/></button>
+                <spring:message code="user.add.location.button"/></button>
         </form>
 
 
