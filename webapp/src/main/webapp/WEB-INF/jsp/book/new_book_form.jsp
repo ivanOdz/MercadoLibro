@@ -340,7 +340,7 @@
 
                     <div id="image-preview-container" class="uk-margin-top"></div>
 
-<%--                <input type="hidden" id="cover-input" name="bookCover">--%>
+                <input type="hidden" id="cover-input" name="bookCover">
 
                 <!-- Publish -->
                 <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid" style="margin-top: 2%;">
@@ -434,19 +434,19 @@
         authorIndex--;
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
-        var previewContainer = document.getElementById('image-preview-container');
-        var fileInput = document.getElementById('file-input');
-        var coverInput = document.getElementById('cover-input');
+    document.addEventListener('DOMContentLoaded', function () {
+        let previewContainer = document.getElementById('image-preview-container');
+        let fileInput = document.getElementById('file-input');
+        let coverInput = document.getElementById('cover-input');
 
-        fileInput.addEventListener('change', function(event) {
+        fileInput.addEventListener('change', function (event) {
             const files = event.target.files;
 
             previewContainer.innerHTML = '';
 
-            for (const file of files) {
+            Array.from(files).forEach((file, index) => {
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     const imgWrapper = document.createElement('div');
                     imgWrapper.classList.add('image-wrapper');
 
@@ -461,7 +461,7 @@
                     deleteButton.innerHTML = '<span uk-icon="icon: trash"></span>';
                     deleteButton.classList.add('delete-button');
 
-                    deleteButton.addEventListener('click', function() {
+                    deleteButton.addEventListener('click', function () {
                         imgWrapper.remove();
                     });
 
@@ -470,7 +470,7 @@
                     selectCoverButton.innerText = 'Select as cover';
                     selectCoverButton.type = 'button';
 
-                    selectCoverButton.addEventListener('click', function() {
+                    selectCoverButton.addEventListener('click', function () {
                         document.querySelectorAll('.image-wrapper').forEach(wrapper => {
                             wrapper.style.border = 'none';
                         });
@@ -485,9 +485,10 @@
                     previewContainer.appendChild(imgWrapper);
                 };
                 reader.readAsDataURL(file);
-            }
+            });
         });
     });
+
 
     document.addEventListener('DOMContentLoaded', function() {
         const publishRadioButtons = document.getElementsByName('publish');

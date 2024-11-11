@@ -131,7 +131,7 @@
 
                     <div id="image-preview-container" class="uk-margin-top"></div>
 
-                        <%--                <input type="hidden" id="cover-input" name="bookCover">--%>
+                    <input type="hidden" id="cover-input" name="bookCover">
 
                     <!-- Publish -->
                     <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid" style="margin-top: 2%;">
@@ -201,27 +201,26 @@
 <script type="text/javascript">
 
 	document.addEventListener("DOMContentLoaded", function () {
-	    var step = ${step};
-	    var tabs = UIkit.tab('.uk-tab');
+        let step = ${step};
+        let tabs = UIkit.tab('.uk-tab');
 	    tabs.show(step - 1);
 	});
 	
 	function nextSection(index) {
-	    var tabs = UIkit.tab('.uk-tab');
+        let tabs = UIkit.tab('.uk-tab');
 	    tabs.show(index);
 	}
-
     document.addEventListener('DOMContentLoaded', function () {
-        var previewContainer = document.getElementById('image-preview-container');
-        var fileInput = document.getElementById('file-input');
-        var coverInput = document.getElementById('cover-input');
+        let previewContainer = document.getElementById('image-preview-container');
+        let fileInput = document.getElementById('file-input');
+        let coverInput = document.getElementById('cover-input');
 
         fileInput.addEventListener('change', function (event) {
             const files = event.target.files;
 
             previewContainer.innerHTML = '';
 
-            for (const file of files) {
+            Array.from(files).forEach((file, index) => {
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     const imgWrapper = document.createElement('div');
@@ -262,9 +261,10 @@
                     previewContainer.appendChild(imgWrapper);
                 };
                 reader.readAsDataURL(file);
-            }
+            });
         });
     });
+
 
     document.addEventListener('DOMContentLoaded', function () {
         const publishRadioButtons = document.getElementsByName('publish');
