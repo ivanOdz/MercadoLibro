@@ -1,8 +1,5 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.exceptions.base.ApplicationRuntimeException;
-import ar.edu.itba.paw.interfaces.exceptions.base.BadRequestException;
-import ar.edu.itba.paw.interfaces.exceptions.base.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.ExchangeState;
@@ -17,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -26,8 +22,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -45,12 +39,6 @@ public class ExchangeController {
 
     @Autowired
     private UserReviewService userReviewService;
-
-    @Qualifier("messageSource")
-    @Autowired
-    private MessageSource messageSource;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ExchangeController.class);
 
     // Requests (osea peticiones que me hacen a mi)
     // Paso el ID, y quiero aquellas exchanges en las que soy offerer
@@ -138,25 +126,22 @@ public class ExchangeController {
         Exchange ex = exchangeService.getExchangeByAcceptCode(acceptCode);
 
         // if the user that is accepting/rejecting the exchange is the one that should
-        if (ex.getOfferer().getBook().getOwner().getUserId() == loggeduser.getUserId()) {
+        if (Objects.equals(ex.getOfferer().getBook().getOwner().getUserId(), loggeduser.getUserId())) {
             String exchangeView;
             exchangeView = exchangeService.exchange(acceptCode, state);
             mav = new ModelAndView(exchangeView);
         }
-        LOGGER.info("Exchange started between {} and {}", ex.getOfferer().getBook().getOwner().getUsername(), ex.getRequester().getBook().getOwner().getUsername());
         return mav;
     }
 
 
     @RequestMapping("/exchange/accepted")
     public ModelAndView exchangeAccepted() {
-        LOGGER.info(messageSource.getMessage("info.exchange.accepted", null, LocaleContextHolder.getLocale()));
         return new ModelAndView("exchange/accepted");
     }
 
     @RequestMapping("/exchange/invalid")
     public ModelAndView exchangeRejected() {
-        LOGGER.info(messageSource.getMessage("info.exchange.rejected", null, LocaleContextHolder.getLocale()));
         return new ModelAndView("/exchange/invalid");
     }
 
@@ -173,7 +158,6 @@ public class ExchangeController {
 
         availableBooks = bookService.getAvailableBooksByUser(loggeduser);
 
-        mav.addObject("user", loggeduser);
         mav.addObject("availableBooks", availableBooks);
         mav.addObject("exchangeForm", exchangeForm);
         mav.addObject("publication", publication);
@@ -244,5 +228,4 @@ public class ExchangeController {
             exchangeService.createMessage(exchangeId, userId, message);
         return ResponseEntity.ok().build();
     }
-
 }
