@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <html>
 <%@include file="/WEB-INF/jsp/head/headers.jsp" %>
 <head>
@@ -15,7 +16,7 @@
 </head>
 <body>
 
-<c:url value="/change_password_solicited" var="changePasswordUrl"/>
+<c:url value="/mail_input" var="changePasswordUrl"/>
 <div style="display: flex; place-items: center; height: 100%;">
     <div class="uk-container container">
 
@@ -29,8 +30,7 @@
         <h2 style="justify-content: center; display: flex; place-items: center;"><spring:message code="new.password.title"/></h2>
         <h4><spring:message code="new.password.description"/></h4>
         <div style="justify-content: center;">
-            <form action="${changePasswordUrl}" method="post" class="uk-grid-large uk-grid"
-                  style="justify-content: center;">
+            <form:form action="${changePasswordUrl}" modelAttribute="mailForm" method="post" class="uk-grid-large uk-grid" style="justify-content: center;">
                 <div class="uk-margin" style="justify-content: center">
 
                     <div class="uk-width-1-1 uk-margin-top">
@@ -41,19 +41,18 @@
                         </div>
                         <div class="uk-inline">
                             <span class="uk-form-icon" uk-icon="icon: mail"></span>
-                            <input class="uk-input" type="text" name="email" aria-label="Not clickable icon"/>
+                            <form:input path="email" cssClass="uk-input" type="text" aria-label="Not clickable icon"/>
                         </div>
                         <form:errors path="email" element="p" cssStyle="color: red;"/>
                     </div>
 
                     <div class="uk-margin-top uk-button-group" style="margin-left: 50px;">
-                        <button class="uk-button uk-button-primary"><spring:message
-                                code="hwc.change_password.confirm"/></button>
+                        <button type="submit" class="uk-button uk-button-primary">
+                            <spring:message code="hwc.change_password.confirm"/>
+                        </button>
                     </div>
-
                 </div>
-
-            </form>
+            </form:form>
         </div>
     </div>
 </div>

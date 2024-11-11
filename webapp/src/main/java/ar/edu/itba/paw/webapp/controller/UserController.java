@@ -5,6 +5,7 @@ import ar.edu.itba.paw.webapp.auth.PawUserDetails;
 import ar.edu.itba.paw.interfaces.services.UserReviewService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.webapp.auth.PawUserDetailsService;
+import ar.edu.itba.paw.webapp.form.MailForm;
 import ar.edu.itba.paw.webapp.form.PasswordForm;
 import ar.edu.itba.paw.webapp.form.UserForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,14 +81,20 @@ public class UserController {
         return new ModelAndView("redirect:/logout");
     }
 
-    @RequestMapping("/mail_input")
-    public ModelAndView mailInput() {
-        return new ModelAndView("user/mail_input");
+    @RequestMapping(path = "/mail_input", method = RequestMethod.GET)
+    public ModelAndView mailInput(@ModelAttribute("mailForm") MailForm mailForm) {
+        ModelAndView modelAndView = new ModelAndView("user/mail_input");
+        modelAndView.addObject("mailForm", new MailForm());
+        return modelAndView;
     }
 
-    @RequestMapping("/change_password_solicited")
-    public ModelAndView changePasswordSolicited(@RequestParam(name = "email") String email) {
-        us.changePasswordSolicited(email);
+    @RequestMapping(path = "/mail_input", method = RequestMethod.POST)
+    public ModelAndView mailInputCheck(@Valid @ModelAttribute("mailForm") MailForm mailForm, BindingResult errors) {
+        if(errors.hasErrors()) {
+            return new ModelAndView("user/mail_input"); // Devuelve la vista explícitamente para mantener BindingResult
+        }
+        us.changePasswordSolicited(mailForm.getEmail());
+
         return new ModelAndView("redirect:/mail_input_message");
     }
 
