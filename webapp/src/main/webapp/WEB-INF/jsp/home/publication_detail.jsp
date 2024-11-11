@@ -307,7 +307,7 @@
 
             <div style="display: grid; justify-content: center; grid-template-columns: repeat(2, 1fr);">
 
-                <c:if test="${user.userId != publication.book.owner.userId}">
+                <c:if test="${loggedUser.userId != publication.book.owner.userId}">
                     <div style="grid-column: span 1">
                         <p class="uk-text-medium"
                            style="font-size: 25px; text-align: center;">
@@ -354,12 +354,12 @@
                     <div class="uk-modal-header">
                         <h2 class="uk-modal-title"><spring:message code="publication.add.location"/></h2>
                     </div>
-                    <c:if test="${not empty user.userLocations}">
+                    <c:if test="${not empty loggedUser.userLocations}">
                         <form:form modelAttribute="locationForm" action="${postUrl}" method="post" enctype="multipart/form-data">
                             <div style="padding: 5%">
                                 <p><spring:message code="publication.add.location.description"/></p>
                                 <form:select path="locationId" class="uk-select no-arrow-select" aria-label="Not clickable icon" style="width: 90%">
-                                    <form:options items="${user.userLocations}" itemValue="locationId" itemLabel="locationString" />
+                                    <form:options items="${loggedUser.userLocations}" itemValue="locationId" itemLabel="locationString" />
                                 </form:select>
                             </div>
                             <form:hidden path="publicationId" value="${publication.publicationId}"/>
@@ -370,7 +370,7 @@
                         </form:form>
                     </c:if>
                     <c:url var="profileUrl" value="/profile"/>
-                    <c:if test="${empty user.userLocations}">
+                    <c:if test="${empty loggedUser.userLocations}">
                         <div style="padding: 5%">
                             <spring:message code="user.add.location"/>
                             <a href="${profileUrl}"  class="uk-button-primary uk-button" style="margin: 2%" type="button">
