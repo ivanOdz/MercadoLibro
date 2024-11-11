@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.util.List;
 import java.util.Optional;
 
 @Primary
@@ -47,7 +48,8 @@ public class UserJpaDao implements UserDao {
     public Optional<User> findByMail(String mail) {
         final TypedQuery<User> query = em.createQuery("FROM User as u where u.mail = :mail", User.class);
         query.setParameter("mail", mail);
-        return Optional.ofNullable(query.getSingleResult());
+        List<User> results = query.getResultList();
+        return results.isEmpty() ? Optional.empty() : Optional.of(results.getFirst());
     }
 
     @Override
