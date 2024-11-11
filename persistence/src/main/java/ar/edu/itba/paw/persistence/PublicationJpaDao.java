@@ -383,8 +383,9 @@ public class PublicationJpaDao implements PublicationDao {
 
     @Override
     public List<Publication> getActivePublicationsByUser(User user) {
-        TypedQuery<Publication> query = em.createQuery("FROM Publication p WHERE p.user = :user AND p.publicationState = :publicationState", Publication.class);
+        TypedQuery<Publication> query = em.createQuery("FROM Publication p WHERE p.user = :user AND p.publicationState = :publicationState OR p.publicationState =:state", Publication.class);
         query.setParameter("publicationState", PublicationState.CURRENT);
+        query.setParameter("state", PublicationState.OFFERED);
         query.setParameter("user", user);
         return query.getResultList();
     }
