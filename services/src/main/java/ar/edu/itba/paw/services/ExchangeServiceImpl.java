@@ -93,6 +93,7 @@ public class ExchangeServiceImpl implements ExchangeService {
 
             LOGGER.info("Setting end date for exchange with acceptCode: {} at timestamp: {}", acceptCode, timestamp);
             exchangeDao.setEndDate(exchange,acceptCode, timestamp);
+            bs.setAvailable(exchange.getRequester().getBook(), true);
         }
 
         // --- email variables
