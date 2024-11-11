@@ -1,9 +1,7 @@
 package ar.edu.itba.paw.services;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -50,9 +48,6 @@ public class PublicationServiceImplTest {
     private static final long BOOK_ID = 100;
     private static final long OWNER_ID = 300;
     private static final long LOCATION_ID = 20;
-    private static final int EXCHANGES_QTY = 5;
-    private static final int RATING = 4;
-    private static final Timestamp IMAGE_DATETIME = new Timestamp(System.currentTimeMillis());
     
     @Test
     public void testCreatePublication() {
