@@ -1,14 +1,10 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.models.Location;
-import ar.edu.itba.paw.models.utils.BookDimension;
 import ar.edu.itba.paw.models.utils.BookState;
-import ar.edu.itba.paw.models.utils.Genre;
-import ar.edu.itba.paw.models.utils.Language;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class BookDetailsForm {
@@ -16,8 +12,7 @@ public class BookDetailsForm {
     @NotNull
     private BookState bookState;
 
-    @Min(1)
-    @Max(5)
+    @Range(min = 1, max = 5)
     private int rating;
 
     private List<MultipartFile> imageFiles;
@@ -35,8 +30,7 @@ public class BookDetailsForm {
         return bookState;
     }
 
-    @Min(1)
-    @Max(5)
+    @Range(min = 1, max = 5)
     public int getRating() {
         return rating;
     }
@@ -63,7 +57,7 @@ public class BookDetailsForm {
         this.bookState = bookState;
     }
 
-    public void setRating(@Min(1) @Max(5) int rating) {
+    public void setRating(@Range(min = 1, max = 5) int rating) {
         this.rating = rating;
     }
 

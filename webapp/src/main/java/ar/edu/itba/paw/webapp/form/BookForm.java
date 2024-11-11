@@ -107,8 +107,7 @@ public class BookForm {
         return edition;
     }
 
-    @Min(1)
-    @Max(5)
+    @Range(min = 1, max = 5)
     public int getRating() {
         return rating;
     }
