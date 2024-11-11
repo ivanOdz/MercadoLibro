@@ -43,6 +43,7 @@ public class BookServiceImpl implements BookService {
 
         List<BookImage> bookImages = new ArrayList<>();
         List<Image> images;
+        
         if (!newBook) {  // If it's a new book, the images are already saved
             LOGGER.info("Saving new images for the book.");
             images = imageService.saveImage(arrangeImages(imageFiles, bookCoverIndex));
@@ -68,6 +69,7 @@ public class BookServiceImpl implements BookService {
 
         // Adding images to the book
         LOGGER.info("Adding images to the newly created book.");
+        
         for (BookImage bookImage : bookImages) {
             bookImage.setBook(book);
             book.getImages().add(bookImage);
@@ -98,6 +100,7 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public void exchangeOwnership(Book b1, Book b2) {
+    	
         LOGGER.info("Exchanging ownership of books: {} and {}", b1.getBookId(), b2.getBookId());
 
         User owner1 = b1.getOwner();
@@ -117,6 +120,7 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional(readOnly = true)
     public Book getBookById(long bookId) {
+    	
         LOGGER.info("Attempting to retrieve Book with ID: {}", bookId);
 
         Optional<Book> book = bookDao.getBookById(bookId);
@@ -145,7 +149,7 @@ public class BookServiceImpl implements BookService {
         }
 
         Genre genre = DEFAULT_BOOK_GENRE_FILTER;
-        if(genreFilterActive){
+        if (genreFilterActive){
             genre = Genre.fromString(genreFilter);
             if(genre == null){
                 genreFilterActive = false;
@@ -156,11 +160,13 @@ public class BookServiceImpl implements BookService {
     }
 
     private List<MultipartFile> arrangeImages(List<MultipartFile> images, int bookCoverIndex) {
-        if(bookCoverIndex == 0){
+    	
+        if (bookCoverIndex == 0) {
             return images;
         }
         List<MultipartFile> toReturn = new ArrayList<>();
         toReturn.add(images.get(bookCoverIndex));
+        
         for (MultipartFile image : images) {
             if(images.indexOf(image) != bookCoverIndex){
                 toReturn.add(image);
@@ -184,9 +190,11 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional(readOnly = true)
     public List<GenreWrapper> getGenreWrapperList(String search, String isBookStateFilterActive, String bookStateFilter, long userId) {
+    	
         boolean bookStateFilterActive = "true".equalsIgnoreCase(isBookStateFilterActive);
 
         BookState state = DEFAULT_PUBLICATION_STATE_FILTER;
+        
         if (bookStateFilterActive) {
             state = BookState.fromString(bookStateFilter);
             if (state == null) {
@@ -200,6 +208,7 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional(readOnly = true)
     public List<BookStateWrapper> getBookStateWrapperList(String serach, String isGenreFilterActive, String genreFilter, long userId) {
+    	
         boolean genreFilterActive = "true".equalsIgnoreCase(isGenreFilterActive);
 
         Genre genre = DEFAULT_PUBLICATION_GENRE_FILTER;
@@ -216,6 +225,7 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public Book updateBookState(Long bookId, String bookState) {
+    	
         LOGGER.info("Attempting to update the state of Book with ID: {} to state: {}", bookId, bookState);
 
         Optional<Book> updatedBook = bookDao.updateBookState(bookId, bookState);
@@ -228,21 +238,3 @@ public class BookServiceImpl implements BookService {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

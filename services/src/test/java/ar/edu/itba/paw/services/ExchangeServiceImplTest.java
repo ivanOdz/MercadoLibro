@@ -48,9 +48,6 @@ public class ExchangeServiceImplTest {
     private static final PublicationState PUBLICATION_STATE_2 = PublicationState.CURRENT;
     
     private static final long LOCATION_ID = 1L;  
-    private static final String LOCATION_STRING = "Zona Norte";
-    private static final long OFFERER_PUB_ID = 1L;
-    private static final long REQUESTER_PUB_ID = 2L;
     private static final int ACCEPT_CODE = 123456789;
 
 	@Test(expected = ExchangeBadRequestException.class)
