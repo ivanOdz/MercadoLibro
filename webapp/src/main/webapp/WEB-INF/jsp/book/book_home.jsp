@@ -235,6 +235,7 @@
                                         <div class="">
                                             <h5 class="uk-card-title custom-link">${card.bookModel.title}</h5>
                                             <p class="small-gray-text custom-link">${card.bookModel.authors[0].authorName}</p>
+                                            <p class="small-gray-text custom-link"><spring:message code="${card.bookState.value}" /></p>
                                         </div>
                                         <c:choose>
                                             <c:when test="${card.available}">
