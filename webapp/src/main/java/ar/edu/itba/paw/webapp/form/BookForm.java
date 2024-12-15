@@ -20,10 +20,10 @@ public class BookForm {
 
     @Size(min = 1, max = 255)
     private String title;
-    
+
     @NotEmpty
     private List<String> authors = new ArrayList<>();
-    
+
     @NotBlank
     @Size(min = 1, max = 100)
     private String editorial;
@@ -33,12 +33,11 @@ public class BookForm {
 
     @NotNull
     private Genre genre;
-    
+
     @NotNull
     private BookState bookState;
 
-    @Min(value = 1)
-    @Max(value = 99)
+    @Range(min = 1, max = 99)
     private int edition =1;
 
     @Range(min = 1, max = 5)
@@ -101,8 +100,7 @@ public class BookForm {
     	return bookState;
     }
     
-    @Min(1)
-    @Max(99)
+    @Range(min = 1, max = 99)
     public int getEdition() {
         return edition;
     }
@@ -195,7 +193,7 @@ public class BookForm {
         this.bookState = bookState;
     }
 
-    public void setEdition(@Min(value = 1) @Max(value = 99) int edition) {
+    public void setEdition(@Range(min = 1, max = 99) int edition) {
         this.edition = edition;
     }
 
