@@ -29,7 +29,7 @@ public interface PublicationService {
 
     PaginatedResponse<Publication, ItemFilterMetadata> getMyPaginatedPublications(long userId, String search, String isBookStateFilterActive, String bookStateFilter, String isGenreFilterActive, String genreFilter, String sortType, String currentPage);
 
-    void deletePublication(long publicationId);
+    void deletePublication(long userId, long publicationId);
 
     void likePublication(long publicationId, long userId);
 

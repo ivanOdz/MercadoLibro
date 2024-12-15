@@ -129,11 +129,7 @@ public class PublicationController {
 
     @GetMapping("/publications/{publication_id:\\d+}/delete")
     public ModelAndView deletePublication(@PathVariable(name = "publication_id") long publicationId, @ModelAttribute("loggedUser") User loggeduser) {
-        Publication publication = ps.getPublicationByPublicationId(publicationId);
-        if(!Objects.equals(publication.getUser().getUserId(), loggeduser.getUserId())) {
-            return new ModelAndView("redirect:/403");
-        }
-        ps.deletePublication(publicationId);
+        ps.deletePublication(loggeduser.getUserId(), publicationId);
         return new ModelAndView("redirect:/my_publications");
     }
 

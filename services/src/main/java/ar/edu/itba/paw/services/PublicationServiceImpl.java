@@ -160,12 +160,13 @@ public class PublicationServiceImpl implements PublicationService {
 
     @Override
     @Transactional
-    public void deletePublication(long publicationId) {
+    public void deletePublication(long userId, long publicationId) {
         Publication p = getPublicationByPublicationId(publicationId);
-        p.getBook().setAvailable(true);
-        pubDao.deletePublication(publicationId);
-
-        LOGGER.info("Publication with ID {} deleted successfully, Book marked as available", publicationId);
+        if(p.getUser().getUserId() == userId) {
+            p.getBook().setAvailable(true);
+            pubDao.deletePublication(publicationId);
+            LOGGER.info("Publication with ID {} deleted successfully, Book marked as available", publicationId);
+        }
     }
 
     @Override
