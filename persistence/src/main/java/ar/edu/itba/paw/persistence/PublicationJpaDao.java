@@ -47,14 +47,8 @@ public class PublicationJpaDao implements PublicationDao {
     }
 
     @Override
-    public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(Long userId, String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, String sortType, String currentPage, User currentUser) {
-        int page;
-        try {
-            page = Integer.parseInt(currentPage);
-            if (page < 0) {
-                page = 0;
-            }
-        } catch (NumberFormatException e) {
+    public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(Long userId, String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, String sortType, int page, User currentUser) {
+        if (page < 0) {
             page = 0;
         }
 
@@ -325,14 +319,8 @@ public class PublicationJpaDao implements PublicationDao {
     }
 
     @Override
-    public PaginatedResponse<Publication, BasicMetadata> getFavoritePublications(User user, String currentPage) {
-        int page;
-        try {
-            page = Integer.parseInt(currentPage);
-            if (page < 0) {
-                page = 0;
-            }
-        } catch (NumberFormatException e) {
+    public PaginatedResponse<Publication, BasicMetadata> getFavoritePublications(User user, int page) {
+        if (page < 0) {
             page = 0;
         }
 

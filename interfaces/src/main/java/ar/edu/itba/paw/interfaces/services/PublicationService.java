@@ -19,7 +19,7 @@ public interface PublicationService {
 
     Publication getPublicationByPublicationId(long publicationId);
 
-    PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, String isBookStateFilterActive, String bookStateFilter, String isGenreFilterActive, String genreFilter, String sortType, String currentPage, User currentUser);
+    PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, String isBookStateFilterActive, String bookStateFilter, String isGenreFilterActive, String genreFilter, String sortType, int currentPage, User currentUser);
 
     int getPublicationCountByUserId(long userId);
 
@@ -27,7 +27,7 @@ public interface PublicationService {
 
     List<Publication> getActivePublicationsByUser(User user);
 
-    PaginatedResponse<Publication, ItemFilterMetadata> getMyPaginatedPublications(long userId, String search, String isBookStateFilterActive, String bookStateFilter, String isGenreFilterActive, String genreFilter, String sortType, String currentPage);
+    PaginatedResponse<Publication, ItemFilterMetadata> getMyPaginatedPublications(long userId, String search, String isBookStateFilterActive, String bookStateFilter, String isGenreFilterActive, String genreFilter, String sortType, int currentPage);
 
     void deletePublication(long userId, long publicationId);
 
@@ -41,7 +41,7 @@ public interface PublicationService {
 
     List<BookStateWrapper> getMyBookStateWrapperList(long userId, String search, String isGenreFilterActive, String genreFilter);
 
-    PaginatedResponse<Publication, BasicMetadata> getFavoritePublications(User user, String currentPage);
+    PaginatedResponse<Publication, BasicMetadata> getFavoritePublications(User user, int currentPage);
 
     Publication getActivePublication(User user, long publicationId);
 }

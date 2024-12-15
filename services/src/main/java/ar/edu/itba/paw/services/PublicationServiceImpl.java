@@ -82,7 +82,7 @@ public class PublicationServiceImpl implements PublicationService {
 
     @Override
     @Transactional(readOnly = true)
-    public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, String isBookStateFilterActive, String bookStateFilter, String isGenreFilterActive, String genreFilter, String sortType, String currentPage, User currentUser) {
+    public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, String isBookStateFilterActive, String bookStateFilter, String isGenreFilterActive, String genreFilter, String sortType, int currentPage, User currentUser) {
 
         boolean bookStateFilterActive = "true".equalsIgnoreCase(isBookStateFilterActive);
         boolean genreFilterActive = "true".equalsIgnoreCase(isGenreFilterActive);
@@ -134,7 +134,7 @@ public class PublicationServiceImpl implements PublicationService {
 
     @Override
     @Transactional(readOnly = true)
-    public PaginatedResponse<Publication, ItemFilterMetadata> getMyPaginatedPublications(long userId, String search, String isBookStateFilterActive, String bookStateFilter, String isGenreFilterActive, String genreFilter, String sortType, String currentPage) {
+    public PaginatedResponse<Publication, ItemFilterMetadata> getMyPaginatedPublications(long userId, String search, String isBookStateFilterActive, String bookStateFilter, String isGenreFilterActive, String genreFilter, String sortType, int currentPage) {
         boolean bookStateFilterActive = "true".equalsIgnoreCase(isBookStateFilterActive);
         boolean genreFilterActive = "true".equalsIgnoreCase(isGenreFilterActive);
 
@@ -242,7 +242,7 @@ public class PublicationServiceImpl implements PublicationService {
 
     @Override
     @Transactional(readOnly = true)
-    public PaginatedResponse<Publication, BasicMetadata> getFavoritePublications(User user, String currentPage) {
+    public PaginatedResponse<Publication, BasicMetadata> getFavoritePublications(User user, int currentPage) {
         return pubDao.getFavoritePublications(user, currentPage);
     }
 

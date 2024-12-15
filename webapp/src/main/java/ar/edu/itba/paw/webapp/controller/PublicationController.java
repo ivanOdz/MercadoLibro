@@ -33,7 +33,7 @@ public class PublicationController {
                               @RequestParam(name = "is-genre-filter-active", defaultValue = "false") String isGenreFilterActive,
                               @RequestParam(name = "genre-filter", required = false) String genreFilter,
                               @RequestParam(name = "order", defaultValue = "sort.publication.date.descending") String sortType,
-                              @RequestParam(name = "page", defaultValue = "0") String currentPage, @ModelAttribute("loggedUser") User loggeduser) {
+                              @RequestParam(name = "page", defaultValue = "0") int currentPage, @ModelAttribute("loggedUser") User loggeduser) {
 
         final ModelAndView mav = new ModelAndView("home/publications");
 
@@ -98,7 +98,7 @@ public class PublicationController {
                                        @RequestParam(name = "is-genre-filter-active", defaultValue = "false") String isGenreFilterActive,
                                        @RequestParam(name = "genre-filter", required = false) String genreFilter,
                                        @RequestParam(name = "order", defaultValue = "sort.publication.date.ascending") String sortType,
-                                       @RequestParam(name = "page", defaultValue = "0") String currentPage,
+                                       @RequestParam(name = "page", defaultValue = "0") int currentPage,
                                        @ModelAttribute("loggedUser") User loggeduser) {
 
         PaginatedResponse<Publication, ItemFilterMetadata> publications = ps.getMyPaginatedPublications(loggeduser.getUserId(), search, isBookStateFilterActive,
@@ -116,7 +116,7 @@ public class PublicationController {
     }
 
     @RequestMapping(path = "/my_favorites")
-    public ModelAndView myFavoritePublications(@RequestParam(name = "page", defaultValue = "0") String currentPage, @ModelAttribute("loggedUser") User loggeduser) {
+    public ModelAndView myFavoritePublications(@RequestParam(name = "page", defaultValue = "0") int currentPage, @ModelAttribute("loggedUser") User loggeduser) {
         PaginatedResponse<Publication, BasicMetadata> publications = ps.getFavoritePublications(loggeduser, currentPage);
         ModelAndView mav = new ModelAndView("/home/favorite_publications");
 
