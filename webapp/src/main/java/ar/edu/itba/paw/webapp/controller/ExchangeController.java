@@ -170,24 +170,11 @@ public class ExchangeController {
         return new ModelAndView("redirect:/requests");
     }
 
-
     @RequestMapping("/confirm_offerer")
-    public ModelAndView confirmExchangeOffer(@RequestParam(name = "accept_code") int accept_code, @ModelAttribute("loggedUser") User loggeduser) {
-        Exchange exchange = exchangeService.getExchangeByAcceptCode(accept_code);
-
-        // if the user that is accepting/rejecting the exchange is the one that should
-        if (Objects.equals(exchange.getOfferer().getBook().getOwner().getUserId(), loggeduser.getUserId())) {
-            exchangeService.cofirmOfferer(accept_code);
-            return new ModelAndView("redirect:/offers");
-        }
-        return new ModelAndView("redirect:/failed_authentication");
+    public ModelAndView confirmExchangeOffer(@RequestParam(name = "accept_code") int acceptCode, @ModelAttribute("loggedUser") User loggeduser) {
+        exchangeService.cofirmOfferer(loggeduser.getUserId(), acceptCode);
+        return new ModelAndView("redirect:/offers");
     }
-
-    @RequestMapping("/failed_authentication")
-    public ModelAndView failedAuthentication() {
-        return new ModelAndView("error/failed_authentication");
-    }
-
 
     @RequestMapping("/confirm_requester")
     public ModelAndView confirmExchangeRequest(@RequestParam(name = "accept_code") int acceptCode, @ModelAttribute("loggedUser") User loggeduser) {

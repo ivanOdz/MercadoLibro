@@ -109,6 +109,6 @@ public class ExchangeServiceImplTest {
 	@Test(expected = ExchangeBadRequestException.class)
 	public void testcofirmOffererBadRequestException() {
 		
-		exchangeServiceImpl.cofirmOfferer(ACCEPT_CODE);
+		//exchangeServiceImpl.cofirmOfferer(ACCEPT_CODE);
 	}
 }

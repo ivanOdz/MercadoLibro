@@ -15,7 +15,7 @@ public interface ExchangeService {
     /**
      * confirms that the offerer received the book
      */
-    void cofirmOfferer(int acceptCode);
+    void cofirmOfferer(long userId, int acceptCode);
 
     /**
      * confirms that the requester received the book
