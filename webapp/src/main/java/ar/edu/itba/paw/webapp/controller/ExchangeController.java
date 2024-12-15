@@ -38,10 +38,10 @@ public class ExchangeController {
     // Requests (osea peticiones que me hacen a mi)
     // Paso el ID, y quiero aquellas exchanges en las que soy offerer
     @RequestMapping("/offers")
-    public ModelAndView exchangeRequests(@RequestParam(name = "pending-page", defaultValue = "0") String pendingPage,
-                                         @RequestParam(name = "in-progress-page", defaultValue = "0") String inProgressPage,
-                                         @RequestParam(name = "completed-page", defaultValue = "0") String completedPage,
-                                         @RequestParam(name = "rejected-page", defaultValue = "0") String rejectedPage,
+    public ModelAndView exchangeRequests(@RequestParam(name = "pending-page", defaultValue = "0") int pendingPage,
+                                         @RequestParam(name = "in-progress-page", defaultValue = "0") int inProgressPage,
+                                         @RequestParam(name = "completed-page", defaultValue = "0") int completedPage,
+                                         @RequestParam(name = "rejected-page", defaultValue = "0") int rejectedPage,
                                          @ModelAttribute("loggedUser") User loggeduser) {
         final ModelAndView mav = new ModelAndView("exchange/exchange_requests");
 
@@ -77,10 +77,10 @@ public class ExchangeController {
     // Estado de mis ofertas
     // Paso el ID, y quiero aquellas exchanges en las que soy requester
     @RequestMapping(path = "/requests", method = RequestMethod.GET)
-    public ModelAndView exchangeOffers(@RequestParam(name = "pending-page", defaultValue = "0") String pendingPage,
-                                       @RequestParam(name = "in-progress-page", defaultValue = "0") String inProgressPage,
-                                       @RequestParam(name = "completed-page", defaultValue = "0") String completedPage,
-                                       @RequestParam(name = "rejected-page", defaultValue = "0") String rejectedPage,
+    public ModelAndView exchangeOffers(@RequestParam(name = "pending-page", defaultValue = "0") int pendingPage,
+                                       @RequestParam(name = "in-progress-page", defaultValue = "0") int inProgressPage,
+                                       @RequestParam(name = "completed-page", defaultValue = "0") int completedPage,
+                                       @RequestParam(name = "rejected-page", defaultValue = "0") int rejectedPage,
                                        @ModelAttribute("loggedUser") User loggeduser) {
         final ModelAndView mav = new ModelAndView("exchange/exchange_offers");
 

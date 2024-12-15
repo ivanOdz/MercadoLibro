@@ -81,15 +81,8 @@ public class ExchangeJpaDao implements ExchangeDao {
     }
 
     @Override
-    public PaginatedResponse<Exchange, BasicMetadata> getAllExchangesByUserId(long anUserId, ExchangeState exchangeState, String currentPage, boolean isOfferer) {
-        
-    	int page;
-        try {
-            page = Integer.parseInt(currentPage);
-            if (page < 0) {
-                page = 0;
-            }
-        } catch (NumberFormatException e) {
+    public PaginatedResponse<Exchange, BasicMetadata> getAllExchangesByUserId(long anUserId, ExchangeState exchangeState, int page, boolean isOfferer) {
+        if (page < 0) {
             page = 0;
         }
 
