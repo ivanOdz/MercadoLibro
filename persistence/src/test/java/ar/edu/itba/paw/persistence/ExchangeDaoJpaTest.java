@@ -213,14 +213,14 @@ public class ExchangeDaoJpaTest {
 	@Test
 	public void testGetAllExchangesByUserId() {
 		
-		final String currentPage = "0";
+		final int currentPage = 0;
 		final boolean isOfferer = offererPubId != UserConstants.ID_1;
 				
 		PaginatedResponse<Exchange, BasicMetadata> response = exchangeDao.getAllExchangesByUserId(UserConstants.ID_1, ExchangeState.valueOf(exchangeState), currentPage, isOfferer);
 		
 		Assert.assertNotNull(response);
 		Assert.assertNotNull(response.getMetadata());
-		Assert.assertEquals(Integer.parseInt(currentPage), response.getMetadata().getCurrentPage());
+		Assert.assertEquals(currentPage, response.getMetadata().getCurrentPage());
 		Assert.assertNotNull(response.getData());
 		Assert.assertTrue(response.getData().size() > 0);
 		

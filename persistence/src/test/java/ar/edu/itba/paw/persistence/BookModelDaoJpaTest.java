@@ -207,7 +207,7 @@ public class BookModelDaoJpaTest {
 	public void testGetPaginatedBookModels() {
 		
 		final String search = "";
-		final String currentPage = "0";
+		final int currentPage = 0;
 		final String sortType = "BOOK_NAME_ASCENDING";
 		final Genre genreFilter = null;
 		
@@ -216,7 +216,7 @@ public class BookModelDaoJpaTest {
 		Assert.assertNotNull(response);
 		Assert.assertNotNull(response.getMetadata());
 		Assert.assertEquals(search, response.getMetadata().getSearch());
-		Assert.assertEquals(Integer.parseInt(currentPage), response.getMetadata().getCurrentPage());
+		Assert.assertEquals(currentPage, response.getMetadata().getCurrentPage());
 		Assert.assertEquals(genreFilter, response.getMetadata().getGenreFilter());
 		Assert.assertNotNull(response.getData());
 		Assert.assertTrue(response.getData().size() > 0);
@@ -247,7 +247,7 @@ public class BookModelDaoJpaTest {
 	public void testGetPaginatedBookModelsFilteredByGenreCrime() {
 		
 		final String search = "";
-		final String currentPage = "0";
+		final int currentPage = 0;
 		final String sortType = "BOOK_NAME_ASCENDING";
 		final Genre genreFilter = Genre.CRIME;
 		
@@ -256,7 +256,7 @@ public class BookModelDaoJpaTest {
 		Assert.assertNotNull(response);
 		Assert.assertNotNull(response.getMetadata());
 		Assert.assertEquals(search, response.getMetadata().getSearch());
-		Assert.assertEquals(Integer.parseInt(currentPage), response.getMetadata().getCurrentPage());
+		Assert.assertEquals(currentPage, response.getMetadata().getCurrentPage());
 		Assert.assertEquals(genreFilter, response.getMetadata().getGenreFilter());
 		Assert.assertNotNull(response.getData());
 		Assert.assertTrue(response.getData().isEmpty());
@@ -266,7 +266,7 @@ public class BookModelDaoJpaTest {
 	public void testGetPaginatedBookModelsFilteredByBookName() {
 		
 		final String search = "La sombra del viento";
-		final String currentPage = "0";
+		final int currentPage = 0;
 		final String sortType = "BOOK_NAME_ASCENDING";
 		final Genre genreFilter = null;
 		
@@ -275,7 +275,7 @@ public class BookModelDaoJpaTest {
 		Assert.assertNotNull(response);
 		Assert.assertNotNull(response.getMetadata());
 		Assert.assertEquals(search, response.getMetadata().getSearch());
-		Assert.assertEquals(Integer.parseInt(currentPage), response.getMetadata().getCurrentPage());
+		Assert.assertEquals(currentPage, response.getMetadata().getCurrentPage());
 		Assert.assertEquals(genreFilter, response.getMetadata().getGenreFilter());
 		Assert.assertNotNull(response.getData());
 		Assert.assertTrue(response.getData().size() > 0);
@@ -342,4 +342,3 @@ public class BookModelDaoJpaTest {
 		Assert.assertEquals(0, genreNonExistent);
 	}
 }
-	

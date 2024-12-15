@@ -236,7 +236,7 @@ public class PublicationDaoJpaTest {
 		final BookState bookStateFilter = null;
 		final Genre genreFilter = null;
 		final String sortType = "sort.book.name.ascending";
-		final String currentPage = "0";
+		final int currentPage = 0;
 		final User currentUser = em.find(User.class, UserConstants.ID_3);
 		
 		PaginatedResponse<Publication, ItemFilterMetadata> response = publicationDao.getPaginatedPublications(	userId,
@@ -252,7 +252,7 @@ public class PublicationDaoJpaTest {
 		Assert.assertNotNull(response);
 		Assert.assertNotNull(response.getMetadata());
 		Assert.assertEquals(search, response.getMetadata().getSearch());
-		Assert.assertEquals(Integer.parseInt(currentPage), response.getMetadata().getCurrentPage());
+		Assert.assertEquals(currentPage, response.getMetadata().getCurrentPage());
 		Assert.assertEquals(genreFilter, response.getMetadata().getGenreFilter());
 		Assert.assertNotNull(response.getData());
 		Assert.assertTrue(response.getData().size() > 0);
