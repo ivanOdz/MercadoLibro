@@ -71,12 +71,9 @@ public class UserController {
     }
 
     @RequestMapping("/check_verify")
-    public ModelAndView checkVerify() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.getPrincipal() instanceof PawUserDetails pud) {
-            if (pud.getUser().isVerified()) {
-                return new ModelAndView("redirect:/");
-            }
+    public ModelAndView checkVerify(@ModelAttribute("loggedUser") User loggeduser) {
+        if (loggeduser.isVerified()) {
+            return new ModelAndView("redirect:/");
         }
         return new ModelAndView("redirect:/logout");
     }
