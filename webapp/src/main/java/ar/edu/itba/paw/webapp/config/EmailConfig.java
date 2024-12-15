@@ -2,7 +2,6 @@ package ar.edu.itba.paw.webapp.config;
 
 // https://howtodoinjava.com/spring-core/send-email-with-spring-javamailsenderimpl-example/
 // https://docs.spring.io/spring-framework/reference/integration/email.html#mail-usage-mime
-import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -22,12 +21,6 @@ import java.util.Properties;
 @Configuration
 @EnableAsync
 public class EmailConfig {
-
-    MessageSource messageSource;
-
-    public EmailConfig(final MessageSource messageSource) {
-        this.messageSource = messageSource;
-    }
 
     @Bean
     public JavaMailSender getJavaMailSender(){
