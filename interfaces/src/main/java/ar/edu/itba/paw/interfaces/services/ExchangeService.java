@@ -10,7 +10,7 @@ public interface ExchangeService {
 
     void initializeExchange(long bookId, long locationId, long offererPubId);
 
-    String exchange(int acceptCode, boolean state);
+    boolean exchange(int acceptCode, boolean state);
 
     /**
      * confirms that the offerer received the book

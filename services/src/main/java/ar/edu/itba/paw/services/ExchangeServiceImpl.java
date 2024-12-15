@@ -68,7 +68,7 @@ public class ExchangeServiceImpl implements ExchangeService {
 
     @Override
     @Transactional
-    public String exchange(int acceptCode, boolean state) {
+    public boolean exchange(int acceptCode, boolean state) {
     	
         LOGGER.info("Processing exchange for acceptCode: {}", acceptCode);
 
@@ -107,13 +107,9 @@ public class ExchangeServiceImpl implements ExchangeService {
         ps.terminatePublication(exchange.getOfferer());
         ps.terminatePublication(exchange.getRequester());
 
-        String redirect = switch (exchange.getExchangeState()) {
-            case ExchangeState.ACCEPTED -> "exchange/accepted";
-            case ExchangeState.REJECTED -> "exchange/rejected";
-            default -> "exchange/invalid";
-        };
         LOGGER.info("Exchange of id: {} processed successfully", exchange.getExchangeId());
-        return redirect;
+
+        return exchange.getExchangeState() == ExchangeState.ACCEPTED;
     }
 
     @Override

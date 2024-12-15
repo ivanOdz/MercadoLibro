@@ -116,19 +116,11 @@ public class ExchangeController {
 
     @RequestMapping("/createexchange")
     public ModelAndView exchange(@RequestParam(name = "accept_code") int acceptCode, @RequestParam(name = "state") boolean state, @ModelAttribute("loggedUser") User loggeduser) {
-        ModelAndView mav = new ModelAndView("error/failed_authentication");
-
-        Exchange ex = exchangeService.getExchangeByAcceptCode(acceptCode);
-
-        // if the user that is accepting/rejecting the exchange is the one that should
-        if (Objects.equals(ex.getOfferer().getBook().getOwner().getUserId(), loggeduser.getUserId())) {
-            String exchangeView;
-            exchangeView = exchangeService.exchange(acceptCode, state);
-            mav = new ModelAndView(exchangeView);
+        if(exchangeService.exchange(acceptCode, state)){
+            return new ModelAndView("exchange/accepted");
         }
-        return mav;
+        return new ModelAndView("exchange/rejected");
     }
-
 
     @RequestMapping("/exchange/accepted")
     public ModelAndView exchangeAccepted() {
@@ -143,15 +135,11 @@ public class ExchangeController {
 
     @GetMapping("/start_exchange")
     public ModelAndView startExchange(@ModelAttribute("exchangeForm") ExchangeForm exchangeForm, BindingResult errors, @RequestParam(name = "publication_id") long publicationId, @ModelAttribute("loggedUser") User loggeduser) {
-    	
         final ModelAndView mav = new ModelAndView("/exchange/solicit_exchange");
         Publication publication;
 
         publication = publicationService.getPublicationByPublicationId(publicationId);
-
-        List<Book> availableBooks;
-
-        availableBooks = bookService.getAvailableBooksByUser(loggeduser);
+        List<Book> availableBooks = bookService.getAvailableBooksByUser(loggeduser);
 
         mav.addObject("availableBooks", availableBooks);
         mav.addObject("exchangeForm", exchangeForm);
