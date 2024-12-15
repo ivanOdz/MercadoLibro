@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
-import java.util.Objects;
 
 @Controller
 public class PublicationController {
@@ -67,18 +66,16 @@ public class PublicationController {
     public ModelAndView publicationDetail(@PathVariable(name = "publication_id") long publicationId, @ModelAttribute("loggedUser") User loggeduser) {
         final ModelAndView mav = new ModelAndView("/home/publication_detail");
 
-        Publication publication = ps.getPublicationByPublicationId(publicationId);
+        Publication publication = ps.getActivePublication(loggeduser, publicationId);
 
-        if (publication.getPublicationState() == PublicationState.TERMINATED ||
-                (PublicationState.OFFERED.equals(publication.getPublicationState()) && (loggeduser.getUserId() != publication.getUser().getUserId()))){
-            return new ModelAndView("redirect:/403");
+        if(publication == null) {
+            return new ModelAndView("redirect:/404");
         }
 
-        List<Book> availableBooks;
-        if (loggeduser != null) {
-            availableBooks = bs.getAvailableBooksByUser(loggeduser);
-            mav.addObject("availableBooks", availableBooks);
-        }
+        List<Book> availableBooks = bs.getAvailableBooksByUser(loggeduser);
+
+        // Available books puede ser una lista vacia si es que el usuario no esta autenticado o no tiene libros
+        mav.addObject("availableBooks", availableBooks);
 
         mav.addObject("publication", publication);
         mav.addObject("exchangeForm", new ExchangeForm());

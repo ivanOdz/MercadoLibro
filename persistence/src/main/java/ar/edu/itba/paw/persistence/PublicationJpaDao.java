@@ -390,6 +390,19 @@ public class PublicationJpaDao implements PublicationDao {
         return query.getResultList();
     }
 
+    @Override
+    public Publication getActivePublicationById(User user, long publicationId) {
+        Optional<Publication> maybePub = getPublicationByPublicationId(publicationId);
+        if(user == null) {
+            return maybePub.orElse(null);
+        }
+        if (maybePub.isPresent() && (maybePub.get().getPublicationState() == PublicationState.CURRENT ||
+                (maybePub.get().getPublicationState() == PublicationState.OFFERED && Objects.equals(maybePub.get().getUser().getUserId(), user.getUserId())))) {
+                return maybePub.get();
+        }
+        return null;
+    }
+
     private void setIsLikedByUser(User user, Publication publication) {
         if(user == null){
             publication.setLikedByUser(false);

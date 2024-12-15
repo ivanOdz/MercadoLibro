@@ -36,4 +36,6 @@ public interface PublicationDao {
     void addLocation(Publication publication, Location location);
 
     List<Publication> getActivePublicationsByUser(User user);
+
+    Publication getActivePublicationById(User user, long publicationId);
 }

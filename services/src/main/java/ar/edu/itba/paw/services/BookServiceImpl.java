@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -179,6 +180,9 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional(readOnly = true)
     public List<Book> getAvailableBooksByUser(User user){
+        if(user == null){
+            return Collections.emptyList();
+        }
         return bookDao.getAllBooksByUser(user.getUserId()).stream().filter(Book::isAvailable).toList();
     }
 

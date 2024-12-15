@@ -245,4 +245,9 @@ public class PublicationServiceImpl implements PublicationService {
     public PaginatedResponse<Publication, BasicMetadata> getFavoritePublications(User user, String currentPage) {
         return pubDao.getFavoritePublications(user, currentPage);
     }
+
+    @Override
+    public Publication getActivePublication(User user, long publicationId) {
+        return pubDao.getActivePublicationById(user, publicationId);
+    }
 }
