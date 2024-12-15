@@ -208,12 +208,8 @@ public class ExchangeController {
             @RequestParam(name = "userReviewRating", defaultValue ="1") int userReviewRating,
             @ModelAttribute("loggedUser") User loggeduser) {
 
-        Exchange e = exchangeService.getExchangeById(exchangeId);
-        if (Objects.equals(e.getRequester().getBook().getOwner().getUserId(), loggeduser.getUserId()) || Objects.equals(e.getOfferer().getBook().getOwner().getUserId(), loggeduser.getUserId())) {
-            userReviewService.createUserReview(exchangeId, loggeduser.getUserId(), reviewDescription, userReviewRating);
-            return new ModelAndView("redirect:/requests");
-        }
-        return new ModelAndView("redirect:/failed_authentication");
+        userReviewService.createUserReview(exchangeId, loggeduser.getUserId(), reviewDescription, userReviewRating);
+        return new ModelAndView("redirect:/requests");
     }
 
     @PostMapping( "/send_message")

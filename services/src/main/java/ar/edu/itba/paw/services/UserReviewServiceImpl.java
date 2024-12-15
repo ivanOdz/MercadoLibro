@@ -34,8 +34,15 @@ public class UserReviewServiceImpl implements UserReviewService {
 	public UserReview createUserReview(long exchangeId, long userId, String description, int rating) {
 		Exchange exchange = exchangeService.getExchangeById(exchangeId);
 
-		long targetUserId = (userId != exchange.getOfferer().getUser().getUserId()) ?
-				exchange.getOfferer().getUser().getUserId() : exchange.getRequester().getUser().getUserId();
+		long offererId = exchange.getOfferer().getUser().getUserId();
+		long requesterId = exchange.getRequester().getUser().getUserId();
+
+		if (userId != offererId && userId != requesterId) {
+			LOGGER.warn("The provided userId: {} does not match the offerer or requester for exchange ID: {}", userId, exchangeId);
+			return null;
+		}
+
+		long targetUserId = (userId != offererId) ? offererId : requesterId;
 
 		LOGGER.info("Creating or updating user review for exchange ID: {} and user ID: {}", exchangeId, userId);
 		UserReview userReview = userReviewDao.createOrUpdateUserReview(exchangeId, userId, targetUserId, description, rating);
