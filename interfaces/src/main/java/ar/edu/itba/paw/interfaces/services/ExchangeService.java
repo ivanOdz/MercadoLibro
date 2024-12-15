@@ -20,7 +20,7 @@ public interface ExchangeService {
     /**
      * confirms that the requester received the book
      */
-    void cofirmRequester(int acceptCode);
+    void cofirmRequester(long userId, int acceptCode);
 
     Exchange getExchangeByAcceptCode(int acceptCode);
     

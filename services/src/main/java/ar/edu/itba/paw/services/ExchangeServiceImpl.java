@@ -138,7 +138,7 @@ public class ExchangeServiceImpl implements ExchangeService {
 
     @Override
     @Transactional
-    public void cofirmRequester(int acceptCode) {
+    public void cofirmRequester(long userId, int acceptCode) {
     	
         LOGGER.info("Processing confirmRequester for acceptCode: {}", acceptCode);
 
@@ -150,11 +150,13 @@ public class ExchangeServiceImpl implements ExchangeService {
         Exchange exchange = ex.get();
         LOGGER.info("Found exchange with ID: {} for acceptCode: {}", exchange.getExchangeId(), acceptCode);
 
-        exchangeDao.confirmRequester(exchange, acceptCode);
-        LOGGER.info("Confirmed requester for acceptCode: {}", acceptCode);
+        if(exchange.getRequester().getBook().getOwner().getUserId() == userId) {
+            exchangeDao.confirmRequester(exchange, acceptCode);
+            LOGGER.info("Confirmed requester for acceptCode: {}", acceptCode);
 
-        exchangeCompleted(acceptCode, exchange);
-        LOGGER.info("Exchange completed for acceptCode: {}", acceptCode);
+            exchangeCompleted(acceptCode, exchange);
+            LOGGER.info("Exchange completed for acceptCode: {}", acceptCode);
+        }
     }
 
 
