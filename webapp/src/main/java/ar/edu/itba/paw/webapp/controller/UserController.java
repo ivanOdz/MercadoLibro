@@ -111,6 +111,12 @@ public class UserController {
             return createPasswordForm(passwordForm, verificationCode);
         }
         us.changePassword(verificationCode, passwordForm.getPassword());
+        User user = us.getUserToVerify(verificationCode);
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
+        final Authentication authenticationToken =
+                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
         return new ModelAndView("redirect:/success_password");
     }
