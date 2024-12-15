@@ -42,7 +42,7 @@ public class BookController {
                                  @RequestParam(name = "book-state-filter", required = false) String bookStateFilter,
                                  @RequestParam(name = "is-genre-filter-active", defaultValue = "false") String isGenreFilterActive,
                                  @RequestParam(name = "genre-filter", required = false) String genreFilter,
-                                 @RequestParam(name = "page", defaultValue = "0") String currentPage,
+                                 @RequestParam(name = "page", defaultValue = "0") int currentPage,
                                  @RequestParam(name = "sort-type", defaultValue = "BOOK_NAME_ASCENDING") String sortType,
                                  @ModelAttribute("loggedUser") User loggeduser) {
 
@@ -70,7 +70,7 @@ public class BookController {
     public ModelAndView bookModels(@RequestParam(name = "search", defaultValue = "") String search,
                                    @RequestParam(name = "is-genre-filter-active", defaultValue = "false") String isGenreFilterActive,
                                    @RequestParam(name = "genre-filter", required = false) String genreFilter,
-                                   @RequestParam(name = "page", defaultValue = "0") String currentPage,
+                                   @RequestParam(name = "page", defaultValue = "0") int currentPage,
                                    @RequestParam(name = "sort-type", defaultValue = "BOOK_NAME_ASCENDING") String sortType) {
 
         ModelAndView mav = new ModelAndView("book/book_models");

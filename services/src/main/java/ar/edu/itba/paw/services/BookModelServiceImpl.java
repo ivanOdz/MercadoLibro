@@ -57,7 +57,7 @@ public class BookModelServiceImpl implements BookModelService {
 
     @Override
     @Transactional(readOnly = true)
-    public PaginatedResponse<BookModel, BookModelMetadata> getPaginatedBookModels(String search, String isGenreFilterActive, String genreFilter, String currentPage, String sortType) {
+    public PaginatedResponse<BookModel, BookModelMetadata> getPaginatedBookModels(String search, String isGenreFilterActive, String genreFilter, int currentPage, String sortType) {
         boolean genreFilterActive = "true".equalsIgnoreCase(isGenreFilterActive);
 
         Genre genre = DEFAULT_PUBLICATION_GENRE_FILTER;

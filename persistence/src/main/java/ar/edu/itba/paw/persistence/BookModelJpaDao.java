@@ -64,14 +64,8 @@ public class BookModelJpaDao implements BookModelDao {
     }
 
     @Override
-    public PaginatedResponse<BookModel, BookModelMetadata> getPaginatedBookModels(String search, boolean isGenreFilterActive, Genre genreFilter, String currentPage, String sortType) {
-        int page;
-        try {
-            page = Integer.parseInt(currentPage);
-            if (page < 0) {
-                page = 0;
-            }
-        } catch (NumberFormatException e) {
+    public PaginatedResponse<BookModel, BookModelMetadata> getPaginatedBookModels(String search, boolean isGenreFilterActive, Genre genreFilter, int page, String sortType) {
+        if (page < 0) {
             page = 0;
         }
 

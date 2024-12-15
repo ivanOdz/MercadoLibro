@@ -52,14 +52,8 @@ public class BookJpaDao implements BookDao {
     }
 
     @Override
-    public PaginatedResponse<Book, ItemFilterMetadata> getPaginatedBooks(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, String currentPage, long userId, String sortType) {
-        int page;
-        try {
-            page = Integer.parseInt(currentPage);
-            if (page < 0) {
-                page = 0;
-            }
-        } catch (NumberFormatException e) {
+    public PaginatedResponse<Book, ItemFilterMetadata> getPaginatedBooks(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, int page, long userId, String sortType) {
+        if(page < 0){
             page = 0;
         }
 
