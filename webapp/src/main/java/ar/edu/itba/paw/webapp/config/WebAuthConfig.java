@@ -61,12 +61,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/favicon.ico").permitAll()
                 .antMatchers("/user_auth").anonymous()
                 .antMatchers("/create","/login","/mail_input", "/change_password", "/success_registration", "/mail_input_message").anonymous()
-                .antMatchers("/post/edit").authenticated()
-                .antMatchers("/post/{postId}").access("@accessHelper.isOwner(#pricipal, #postId)") // para areas de acceso a un admin
                 .antMatchers("/book","/book/**", "/start_exchange", "/profile", "/requests", "/offers", "/send_message", "/submit_review", "/like/**", "/success_password").authenticated()
                 .antMatchers("/**").permitAll()
-                //.antMatchers("/book/edit_book").hasRole("EXPLORER")
-                //.antMatchers("/publications/edit_publication").hasRole("PUBLISHER")
                 .and().formLogin()
                 .usernameParameter("username")
                 .passwordParameter("password")
