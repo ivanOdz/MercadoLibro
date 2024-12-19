@@ -34,7 +34,6 @@ import java.util.Properties;
 
 @EnableTransactionManagement
 @PropertySource("classpath:applicationdev.properties")
-@EnableWebMvc
 @ComponentScan({
         "ar.edu.itba.paw.webapp.controller",
         "ar.edu.itba.paw.webapp.locale",
@@ -55,19 +54,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Value("#{environment.dataBasePassword}")
     private String dataBasePassword;
 
-    @Value("#{environment.inProduction}")
-    private String inProduction;
-
-    @Bean
-    public ViewResolver viewResolver() {
-        final InternalResourceViewResolver vr = new InternalResourceViewResolver();
-
-        vr.setViewClass(JstlView.class);
-        vr.setPrefix("/WEB-INF/jsp/");
-        vr.setSuffix(".jsp");
-
-        return vr;
-    }
 
     @Bean
     public MessageSource messageSource() {
@@ -80,7 +66,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean
-    public DataSource dataSource(Environment environment) {
+    public DataSource dataSource() {
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
         ds.setDriverClass(org.postgresql.Driver.class);
         ds.setUrl(dataBaseURL);
@@ -113,14 +99,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean
-    public DataSourceInitializer dsInitializer(final DataSource ds) {
-        final DataSourceInitializer dsi = new DataSourceInitializer();
-        dsi.setDataSource(ds);
-        dsi.setDatabasePopulator(dsPopulator());
-        return dsi;
-    }
-
-    @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean(final DataSource ds) {
         final LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
         factoryBean.setPackagesToScan("ar.edu.itba.paw.models");
@@ -132,17 +110,20 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         final Properties jpaProperties = new Properties();
         jpaProperties.setProperty("hibernate.hbm2ddl.auto", "update");
         jpaProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQL92Dialect");
-
-
-        // No es un booleano, validarlo con String
-//        if(Objects.equals(inProduction, "false")) {
-//            jpaProperties.setProperty("hibernate.show_sql", "true");
-//            jpaProperties.setProperty("hibernate.format_sql", "true");
-//        }
-
         factoryBean.setJpaProperties(jpaProperties);
+
         return factoryBean;
     }
+
+    /*
+    import org.springframework.web.multipart.support.StandardServletMultipartResolver;
+
+    @Bean
+    public StandardServletMultipartResolver multipartResolver() {
+        return new StandardServletMultipartResolver();
+    }
+    */
+
 
     @Bean
     public CommonsMultipartResolver multipartResolver() {
@@ -151,19 +132,29 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         return multipartResolver;
     }
 
+    @Bean
+    public DataSourceInitializer dsInitializer(final DataSource ds) {
+        final DataSourceInitializer dsi = new DataSourceInitializer();
+        dsi.setDataSource(ds);
+        dsi.setDatabasePopulator(dsPopulator());
+        return dsi;
+    }
+
     private DatabasePopulator dsPopulator() {
         ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
         dbp.addScript(schemaSql);
         return dbp;
     }
 
+    /*
+    // Dont need to handle static resources
     @Override
     public void addResourceHandlers(final ResourceHandlerRegistry registry) {
         super.addResourceHandlers(registry);
         registry.addResourceHandler("/css/**").addResourceLocations("/css/");
         registry.addResourceHandler("/images/**").addResourceLocations("/images/");
     }
-
+    */
     @Bean
     public PlatformTransactionManager transactionManager(final EntityManagerFactory emf) {
         return new JpaTransactionManager(emf);
