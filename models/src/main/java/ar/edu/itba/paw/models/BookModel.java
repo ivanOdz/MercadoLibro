@@ -233,6 +233,45 @@ public class BookModel {
         return ratingCount;
     }
 
+    public void setEdition(Integer edition) {
+        this.edition = edition;
+    }
+
+    public void setWeight(Integer weight) {
+        this.weight = weight;
+    }
+
+    public void setPages(Integer pages) {
+        this.pages = pages;
+    }
+
+    public void setPublicationYear(Short publicationYear) {
+        this.publicationYear = publicationYear;
+    }
+
+    public Boolean getPocketEdition() {
+        return isPocketEdition;
+    }
+
+    public void setPocketEdition(Boolean pocketEdition) {
+        isPocketEdition = pocketEdition;
+    }
+
+    public Boolean getHardcover() {
+        return isHardcover;
+    }
+
+    public void setHardcover(Boolean hardcover) {
+        isHardcover = hardcover;
+    }
+
+    public void setAverageRating(Double averageRating) {
+        this.averageRating = averageRating;
+    }
+
+    public void setRatingCount(Integer ratingCount) {
+        this.ratingCount = ratingCount;
+    }
 
     public boolean getIsImageNull() {
         return image == null;
