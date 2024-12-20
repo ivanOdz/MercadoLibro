@@ -80,7 +80,7 @@ public class BookController {
     */
 
     @GET
-    @Produces(value = {VndType.APPLICATION_BOOK})
+    @Produces(value = {VndType.APPLICATION_BOOKS})
     public Response getBooks(@QueryParam("search") @DefaultValue("")final String search,
                              @QueryParam("sort-type") @DefaultValue("BOOK_NAME_ASCENDING") final String sortType,
                              @QueryParam("is-book-state-filter-active") @DefaultValue("false") final String isBookStateFilterActive,
@@ -96,24 +96,7 @@ public class BookController {
         return Response.ok(new GenericEntity<List<BookDTO>>(books) {}).build();
     }
 
-    // ASK because it should be a /books/book_model but that is not RESTful
-    @RequestMapping("/book/book_models")
-    public ModelAndView bookModels(@RequestParam(name = "search", defaultValue = "") String search,
-                                   @RequestParam(name = "is-genre-filter-active", defaultValue = "false") String isGenreFilterActive,
-                                   @RequestParam(name = "genre-filter", required = false) String genreFilter,
-                                   @RequestParam(name = "page", defaultValue = "0") int currentPage,
-                                   @RequestParam(name = "sort-type", defaultValue = "BOOK_NAME_ASCENDING") String sortType) {
 
-        ModelAndView mav = new ModelAndView("book/book_models");
-        PaginatedResponse<BookModel, BookModelMetadata> modelBooks = bookModelService.getPaginatedBookModels(search, isGenreFilterActive, genreFilter, currentPage, sortType);
-
-        List<GenreWrapper> genreWrapperList = bookModelService.getGenreWrapperList(search);
-
-        mav.addObject("genres", genreWrapperList);
-        mav.addObject("modelBooks", modelBooks);
-
-        return mav;
-    }
 
 
     @GetMapping("/book/new_book")
