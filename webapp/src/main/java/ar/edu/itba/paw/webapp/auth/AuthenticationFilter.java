@@ -1,6 +1,5 @@
-package ar.edu.itba.paw.webapp.config;
+package ar.edu.itba.paw.webapp.auth;
 
-import ar.edu.itba.paw.webapp.auth.JwtTokenUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;

@@ -1,8 +1,5 @@
-package ar.edu.itba.paw.webapp.config;
+package ar.edu.itba.paw.webapp.auth;
 
-import ar.edu.itba.paw.webapp.auth.JwtTokenUtil;
-import ar.edu.itba.paw.webapp.auth.PawUserDetails;
-import ar.edu.itba.paw.webapp.auth.PawUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
