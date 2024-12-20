@@ -27,7 +27,7 @@
     </listener-class>
   </listener>
 
-<!--  Managing global errors-->
+  <!--  Managing global errors-->
     <error-page>
       <error-code>400</error-code>
         <location>/WEB-INF/jsp/error/400.jsp</location>
@@ -48,26 +48,6 @@
     <location>/WEB-INF/jsp/error/500.jsp</location>
   </error-page>
 
-
-  <servlet>
-    <servlet-name>dispatcher</servlet-name>
-    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-
-    <init-param>
-      <param-name>contextClass</param-name>
-      <param-value>
-        org.springframework.web.context.support.AnnotationConfigWebApplicationContext
-      </param-value>
-    </init-param>
-
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-
-  <servlet-mapping>
-    <servlet-name>dispatcher</servlet-name>
-    <url-pattern>/</url-pattern>
-  </servlet-mapping>
-
   <filter>
     <filter-name>encodingFilter</filter-name>
     <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -81,9 +61,37 @@
     </init-param>
   </filter>
 
+  <servlet>
+    <servlet-name>jersey</servlet-name>
+    <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+    <init-param>
+      <param-name>jersey.config.server.provider.packages</param-name>
+      <param-value>ar.edu.itba.paw.webapp.controller</param-value>
+    </init-param>
+    <!-- pass to next filter if Jersey/App returns 404 -->
+    <init-param>
+      <param-name>jersey.config.servlet.filter.forwardOn404</param-name>
+      <param-value>true</param-value>
+    </init-param>
+
+    <init-param>
+      <param-name>jersey.config.server.provider.classnames</param-name>
+      <param-value>org.glassfish.jersey.media.multipart.MultiPartFeature</param-value>
+    </init-param>
+
+    <init-param>
+      <param-name>jersey.config.server.response.setStatusOverSendError</param-name>
+      <param-value>true</param-value>
+    </init-param>
+
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+
+
   <filter-mapping>
     <filter-name>encodingFilter</filter-name>
-    <url-pattern>/*</url-pattern>
+    <url-pattern>/api/*</url-pattern>
   </filter-mapping>
 
   <filter>
@@ -94,7 +102,7 @@
 
   <filter-mapping>
     <filter-name>springSecurityFilterChain</filter-name>
-    <servlet-name>dispatcher</servlet-name>
+    <url-pattern>/api/*</url-pattern>
   </filter-mapping>
 
   <filter>
@@ -104,7 +112,15 @@
 
   <filter-mapping>
     <filter-name>openEntityManagerInView</filter-name>
-    <servlet-name>dispatcher</servlet-name>
+    <url-pattern>/api/*</url-pattern>
   </filter-mapping>
+
+  <servlet-mapping>
+    <servlet-name>jersey</servlet-name>
+    <url-pattern>/api/*</url-pattern>
+  </servlet-mapping>
+
+
+
 
 </web-app>
