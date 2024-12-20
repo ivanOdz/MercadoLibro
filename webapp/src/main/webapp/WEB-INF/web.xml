@@ -61,9 +61,10 @@
     </init-param>
   </filter>
 
-  <servlet>
-    <servlet-name>jersey</servlet-name>
-    <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+
+  <filter>
+    <filter-name>jersey</filter-name>
+    <filter-class>org.glassfish.jersey.servlet.ServletContainer</filter-class>
     <init-param>
       <param-name>jersey.config.server.provider.packages</param-name>
       <param-value>ar.edu.itba.paw.webapp.controller</param-value>
@@ -73,7 +74,6 @@
       <param-name>jersey.config.servlet.filter.forwardOn404</param-name>
       <param-value>true</param-value>
     </init-param>
-
     <init-param>
       <param-name>jersey.config.server.provider.classnames</param-name>
       <param-value>org.glassfish.jersey.media.multipart.MultiPartFeature</param-value>
@@ -84,14 +84,12 @@
       <param-value>true</param-value>
     </init-param>
 
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-
+  </filter>
 
 
   <filter-mapping>
     <filter-name>encodingFilter</filter-name>
-    <url-pattern>/api/*</url-pattern>
+    <url-pattern>/*</url-pattern>
   </filter-mapping>
 
   <filter>
@@ -102,7 +100,7 @@
 
   <filter-mapping>
     <filter-name>springSecurityFilterChain</filter-name>
-    <url-pattern>/api/*</url-pattern>
+    <url-pattern>/*</url-pattern>
   </filter-mapping>
 
   <filter>
@@ -112,13 +110,13 @@
 
   <filter-mapping>
     <filter-name>openEntityManagerInView</filter-name>
-    <url-pattern>/api/*</url-pattern>
+    <url-pattern>/*</url-pattern>
   </filter-mapping>
 
-  <servlet-mapping>
-    <servlet-name>jersey</servlet-name>
-    <url-pattern>/api/*</url-pattern>
-  </servlet-mapping>
+  <filter-mapping>
+    <filter-name>jersey</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
 
 
 
