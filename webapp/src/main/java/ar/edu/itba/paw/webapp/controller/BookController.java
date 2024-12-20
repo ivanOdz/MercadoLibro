@@ -5,10 +5,13 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.BookModelMetadata;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
+import ar.edu.itba.paw.webapp.dto.BookDTO;
 import ar.edu.itba.paw.webapp.form.BookDetailsForm;
 import ar.edu.itba.paw.webapp.form.BookForm;
 import ar.edu.itba.paw.webapp.form.PublicationForm;
+import ar.edu.itba.paw.webapp.mediaTypes.VndType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,11 +22,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Past;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import java.time.Year;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
-@Controller
+@Path("/books")
+@Component
 public class BookController {
 
     @Autowired
@@ -35,8 +46,10 @@ public class BookController {
     @Autowired
     private PublicationService publicationService;
 
+    @Context
+    private UriInfo uriInfo;
 
-    @RequestMapping("/book")
+    /*@RequestMapping("/book")
     public ModelAndView bookHome(@RequestParam(name = "search", defaultValue = "") String search,
                                  @RequestParam(name = "is-book-state-filter-active", defaultValue = "false") String isBookStateFilterActive,
                                  @RequestParam(name = "book-state-filter", required = false) String bookStateFilter,
@@ -47,8 +60,7 @@ public class BookController {
                                  @ModelAttribute("loggedUser") User loggeduser) {
 
         ModelAndView mav = new ModelAndView("book/book_home");
-        PaginatedResponse<Book, ItemFilterMetadata> books = bookService.getPaginatedBooks(search, isBookStateFilterActive,
-                bookStateFilter, isGenreFilterActive, genreFilter, currentPage, loggeduser.getUserId(), sortType);
+
 
         List<GenreWrapper> genreWrapperList = bookService.getGenreWrapperList(search, isBookStateFilterActive, bookStateFilter, loggeduser.getUserId());
         List<BookStateWrapper> bookStateWrapperList = bookService.getBookStateWrapperList(search, isGenreFilterActive, genreFilter, loggeduser.getUserId());
@@ -65,24 +77,27 @@ public class BookController {
 
         return mav;
     }
+    */
 
-    @RequestMapping("/book/book_models")
-    public ModelAndView bookModels(@RequestParam(name = "search", defaultValue = "") String search,
-                                   @RequestParam(name = "is-genre-filter-active", defaultValue = "false") String isGenreFilterActive,
-                                   @RequestParam(name = "genre-filter", required = false) String genreFilter,
-                                   @RequestParam(name = "page", defaultValue = "0") int currentPage,
-                                   @RequestParam(name = "sort-type", defaultValue = "BOOK_NAME_ASCENDING") String sortType) {
-
-        ModelAndView mav = new ModelAndView("book/book_models");
-        PaginatedResponse<BookModel, BookModelMetadata> modelBooks = bookModelService.getPaginatedBookModels(search, isGenreFilterActive, genreFilter, currentPage, sortType);
-
-        List<GenreWrapper> genreWrapperList = bookModelService.getGenreWrapperList(search);
-
-        mav.addObject("genres", genreWrapperList);
-        mav.addObject("modelBooks", modelBooks);
-
-        return mav;
+    @GET
+    @Produces(value = {VndType.APPLICATION_BOOKS})
+    public Response getBooks(@QueryParam("search") @DefaultValue("")final String search,
+                             @QueryParam("sort-type") @DefaultValue("BOOK_NAME_ASCENDING") final String sortType,
+                             @QueryParam("is-book-state-filter-active") @DefaultValue("false") final String isBookStateFilterActive,
+                             @QueryParam("book-state-filter") String bookStateFilter, //required = false
+                             @QueryParam("genre-filter") final String genreFilter,  // required = false
+                             @QueryParam("page") @DefaultValue("0")final int currentPage,
+                             @QueryParam("is-genre-filter-active") @DefaultValue("false") final String isGenreFilterActive,
+                             @ModelAttribute("loggedUser") User loggeduser) {
+        PaginatedResponse<Book, ItemFilterMetadata> paginated = bookService.getPaginatedBooks(search, isBookStateFilterActive,
+                bookStateFilter, isGenreFilterActive, genreFilter, currentPage, loggeduser.getUserId(), sortType);
+        final List<BookDTO> books = paginated.getData().stream()
+                .map(book -> BookDTO.fromBook(uriInfo, book)).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<BookDTO>>(books) {}).build();
     }
+
+
+
 
     @GetMapping("/book/new_book")
     public ModelAndView bookModelForm(@ModelAttribute("bookForm") BookForm bookForm, BindingResult errors, @ModelAttribute("loggedUser") User loggeduser) {
