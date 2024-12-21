@@ -52,7 +52,7 @@
         <jpa.version>1.0.0.Final</jpa.version>
         <jaxb.version>2.3.0</jaxb.version>
 
-        <jjwt.version>0.11.1</jjwt.version>
+        <jjwt.version>0.11.5</jjwt.version>
     </properties>
 
 
@@ -92,12 +92,6 @@
                 <artifactId>spring-security-config</artifactId>
                 <version>${spring.security.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>spring-security-oauth2-jose</artifactId>
-                <version>${spring.security.version}</version>
-            </dependency>
-
 
             <dependency>
                 <groupId>javax.servlet</groupId>
@@ -243,6 +237,25 @@
                 <groupId>javax.xml.bind</groupId>
                 <artifactId>jaxb-api</artifactId>
                 <version>${jaxb.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-api</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-impl</artifactId>
+                <version>${jjwt.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-jackson</artifactId>
+                <version>${jjwt.version}</version>
+                <scope>runtime</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
