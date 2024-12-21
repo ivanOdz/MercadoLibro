@@ -40,8 +40,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public AuthenticationFilter authenticationFilter() throws Exception {
-        return new AuthenticationFilter();
+    public BasicAuthTokenIssuerFilter basicAuthTokenIssuerFilter() throws Exception {
+        return new BasicAuthTokenIssuerFilter(authenticationManager(), authenticationEntryPoint());
     }
 
     @Bean
@@ -110,7 +110,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
 
                 // Custom Authentication Filter - Applied after the JWT filter
-                .addFilterAfter(authenticationFilter(), JwtAuthenticationFilter.class);
+                .addFilterAfter(basicAuthTokenIssuerFilter(), JwtAuthenticationFilter.class);
     }
 
     @Override
