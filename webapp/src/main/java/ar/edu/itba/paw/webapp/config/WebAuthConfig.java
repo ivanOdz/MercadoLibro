@@ -2,9 +2,11 @@ package ar.edu.itba.paw.webapp.config;
 
 import ar.edu.itba.paw.webapp.auth.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,6 +22,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -31,18 +34,13 @@ import static org.springframework.web.cors.CorsConfiguration.ALL;
 public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private PawUserDetailsService userDetails;
+    private PawUserDetailsService userDetailsService;
 
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter();
-    }
-
-    @Bean
-    public BasicAuthTokenIssuerFilter basicAuthTokenIssuerFilter() throws Exception {
-        return new BasicAuthTokenIssuerFilter(authenticationManager(), authenticationEntryPoint());
-    }
+    @Autowired
+    private BasicAuthTokenIssuerFilter basicAuthTokenIssuerFilter;
 
     @Bean
     public AuthenticationEntryPoint authenticationEntryPoint() {
@@ -56,7 +54,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetails)
+        auth.userDetailsService(userDetailsService)
                 .passwordEncoder(passwordEncoder());
     }
 
@@ -66,13 +64,18 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
+    public JwtTokenUtil jwtTokenUtil(@Value("classpath:jwt.key") Resource jwtKeyResource) throws IOException {
+        return new JwtTokenUtil(jwtKeyResource);
+    }
+
+
+    @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Collections.singletonList(ALL));
-        //configuration.setAllowedOrigins(Arrays.asList("https://your-frontend-domain.com"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.addAllowedHeader(ALL);
-        configuration.setExposedHeaders(Arrays.asList("Authorization", "Link", "Location", "ETag", "Jwt"));
+        configuration.setExposedHeaders(Arrays.asList("Authorization", "Link", "Location", "ETag", "Total-Elements"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
@@ -107,10 +110,10 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .and()
 
                 // JWT Authentication Filter - Validates the JWT token
-                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 
                 // Custom Authentication Filter - Applied after the JWT filter
-                .addFilterAfter(basicAuthTokenIssuerFilter(), JwtAuthenticationFilter.class);
+                .addFilterBefore(basicAuthTokenIssuerFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override
