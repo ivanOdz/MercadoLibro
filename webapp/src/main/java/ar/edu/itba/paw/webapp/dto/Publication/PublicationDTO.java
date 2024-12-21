@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.dto.PublicationDTO;
+package ar.edu.itba.paw.webapp.dto.Publication;
 
 import ar.edu.itba.paw.models.Book;
 import ar.edu.itba.paw.models.Location;

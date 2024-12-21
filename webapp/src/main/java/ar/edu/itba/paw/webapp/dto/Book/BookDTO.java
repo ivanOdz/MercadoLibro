@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.dto;
+package ar.edu.itba.paw.webapp.dto.Book;
 
 import ar.edu.itba.paw.models.Book;
 import ar.edu.itba.paw.models.BookImage;

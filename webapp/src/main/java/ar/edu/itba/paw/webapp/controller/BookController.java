@@ -5,24 +5,21 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.BookModelMetadata;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
-import ar.edu.itba.paw.webapp.dto.BookDTO;
+import ar.edu.itba.paw.webapp.dto.Book.BookDTO;
+import ar.edu.itba.paw.webapp.dto.Book.BookModelDTO;
 import ar.edu.itba.paw.webapp.form.BookDetailsForm;
 import ar.edu.itba.paw.webapp.form.BookForm;
-import ar.edu.itba.paw.webapp.form.PublicationForm;
 import ar.edu.itba.paw.webapp.mediaTypes.VndType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Past;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
@@ -96,53 +93,42 @@ public class BookController {
         return Response.ok(new GenericEntity<List<BookDTO>>(books) {}).build();
     }
 
+    /*
+    // ASK because it should be a /books/book_model but could be NOT RESTful
+    @RequestMapping("/book/book_models")
+    public ModelAndView bookModels(@RequestParam(name = "search", defaultValue = "") String search,
+                                   @RequestParam(name = "is-genre-filter-active", defaultValue = "false") String isGenreFilterActive,
+                                   @RequestParam(name = "genre-filter", required = false) String genreFilter,
+                                   @RequestParam(name = "page", defaultValue = "0") int currentPage,
+                                   @RequestParam(name = "sort-type", defaultValue = "BOOK_NAME_ASCENDING") String sortType) {
 
+        ModelAndView mav = new ModelAndView("book/book_models");
+        PaginatedResponse<BookModel, BookModelMetadata> modelBooks = bookModelService.getPaginatedBookModels(search, isGenreFilterActive, genreFilter, currentPage, sortType);
 
+        List<GenreWrapper> genreWrapperList = bookModelService.getGenreWrapperList(search);
 
-    @GetMapping("/book/new_book")
-    public ModelAndView bookModelForm(@ModelAttribute("bookForm") BookForm bookForm, BindingResult errors, @ModelAttribute("loggedUser") User loggeduser) {
-
-        ModelAndView mav = new ModelAndView("/book/new_book_form");
-
-        mav.addObject("bookForm", bookForm);
-
-        mav.addObject("genres", Genre.values());
-        mav.addObject("bookStates", BookState.values());
-        mav.addObject("languages", Language.values());
-        mav.addObject("dimensions", BookDimension.values());
-        mav.addObject("currentYear", Year.now().getValue());
-        mav.addObject("step", 1);
-
-        return mav;
-    }
-
-    @PostMapping("/book/create_new_book")
-    public ModelAndView createNewBook(@Valid @ModelAttribute("bookForm") BookForm bookForm, BindingResult errors, @ModelAttribute("loggedUser") User loggeduser) {
-        if (errors.hasErrors()) {
-            return bookModelForm(bookForm, errors, loggeduser);
-        }
-        Book book = bookService.createNewBook(bookForm.getIsbn(), bookForm.getTitle(), bookForm.getAuthors(), bookForm.getEditorial(), bookForm.getDescription(), bookForm.getGenre(), bookForm.getEdition(), bookForm.getPublicationYear(), bookForm.isHardcover(), bookForm.isPocketEdition(), bookForm.getDimension(), bookForm.getLanguage(), bookForm.getPages(), bookForm.getWeight(), bookForm.getBookState(), bookForm.getRating(), bookForm.getImageFiles(), bookForm.getBookCover(), loggeduser);
-        publicationService.createPublicationIfNeeded(bookForm.isPublish(), book.getBookId(), loggeduser.getUserId(), bookForm.getLocationId(), PublicationState.CURRENT);
-        return new ModelAndView("redirect:/book");
-    }
-
-    @GetMapping("/book/new_book_model")
-    public ModelAndView bookDetailsFormNewBook(@ModelAttribute(name = "bookDetailsForm") BookDetailsForm bookDetailsForm, @RequestParam("book_model_id") Long bookModelId, BindingResult errors, @ModelAttribute("loggedUser") User loggeduser) {
-
-        ModelAndView mav = new ModelAndView("/book/book_form");
-
-        BookModel bm = bookModelService.getBookModelByBookModelId(bookModelId);
-        mav.addObject("bookDetailsForm", bookDetailsForm);
-        mav.addObject("step", 2);
-        mav.addObject("book_model", bm);
-        mav.addObject("book_model_id", bookModelId);
-        mav.addObject("bookStates", BookState.values());
-
+        mav.addObject("genres", genreWrapperList);
+        mav.addObject("modelBooks", modelBooks);
 
         return mav;
+    }*/
+
+    @GET
+    @Path("/book_models")
+    @Produces(value = {VndType.APPLICATION_BOOK_MODELS})
+    public Response getBookModels(@QueryParam("search") @DefaultValue("")final String search,
+                                  @QueryParam("is-genre-filter-active") @DefaultValue("false")final String isGenreFilterActive,
+                                  @QueryParam("genre-filter")final String genreFilter,
+                                  @QueryParam("page") @DefaultValue("0") final int currentPage,
+                                  @QueryParam("sort-type") @DefaultValue("BOOK_NAME_ASCENDING") String sortType) {
+
+        PaginatedResponse<BookModel, BookModelMetadata> modelBooks = bookModelService.getPaginatedBookModels(search, isGenreFilterActive, genreFilter, currentPage, sortType);
+
+        List<BookModelDTO> bookModels = modelBooks.getData().stream().map(bm -> BookModelDTO.fromBookModel(uriInfo, bm)).toList();
+
+        return Response.ok(new GenericEntity<List<BookModelDTO>>(bookModels) {}).build();
     }
 
-    // upload from preloaded book model
     @PostMapping("/book/create_book")
     public ModelAndView createBook(@Valid @ModelAttribute(name = "bookDetailsForm") BookDetailsForm bookDetailsForm, BindingResult errors, @RequestParam("book_model_id") Long bookModelId, @ModelAttribute("loggedUser") User loggeduser) {
         if (errors.hasErrors()) {
@@ -160,5 +146,54 @@ public class BookController {
 
         return new ModelAndView("redirect:/book");
     }
+
+
+    @PostMapping("/book/create_new_book")
+    public ModelAndView createNewBook(@Valid @ModelAttribute("bookForm") BookForm bookForm, BindingResult errors, @ModelAttribute("loggedUser") User loggeduser) {
+        if (errors.hasErrors()) {
+            return bookModelForm(bookForm, errors, loggeduser);
+        }
+        Book book = bookService.createNewBook(bookForm.getIsbn(), bookForm.getTitle(), bookForm.getAuthors(), bookForm.getEditorial(), bookForm.getDescription(), bookForm.getGenre(), bookForm.getEdition(), bookForm.getPublicationYear(), bookForm.isHardcover(), bookForm.isPocketEdition(), bookForm.getDimension(), bookForm.getLanguage(), bookForm.getPages(), bookForm.getWeight(), bookForm.getBookState(), bookForm.getRating(), bookForm.getImageFiles(), bookForm.getBookCover(), loggeduser);
+        publicationService.createPublicationIfNeeded(bookForm.isPublish(), book.getBookId(), loggeduser.getUserId(), bookForm.getLocationId(), PublicationState.CURRENT);
+        return new ModelAndView("redirect:/book");
+    }
+
+
+    // Screens
+    /*
+    // upload from preloaded book model
+    @GetMapping("/book/new_book")
+    public ModelAndView bookModelForm(@ModelAttribute("bookForm") BookForm bookForm, BindingResult errors, @ModelAttribute("loggedUser") User loggeduser) {
+
+        ModelAndView mav = new ModelAndView("/book/new_book_form");
+
+        mav.addObject("bookForm", bookForm);
+
+        mav.addObject("genres", Genre.values());
+        mav.addObject("bookStates", BookState.values());
+        mav.addObject("languages", Language.values());
+        mav.addObject("dimensions", BookDimension.values());
+        mav.addObject("currentYear", Year.now().getValue());
+        mav.addObject("step", 1);
+
+        return mav;
+    }*/
+
+    /*
+    @GetMapping("/book/new_book_model")
+    public ModelAndView bookDetailsFormNewBook(@ModelAttribute(name = "bookDetailsForm") BookDetailsForm bookDetailsForm, @RequestParam("book_model_id") Long bookModelId, BindingResult errors, @ModelAttribute("loggedUser") User loggeduser) {
+
+        ModelAndView mav = new ModelAndView("/book/book_form");
+
+        BookModel bm = bookModelService.getBookModelByBookModelId(bookModelId);
+        mav.addObject("bookDetailsForm", bookDetailsForm);
+        mav.addObject("step", 2);
+        mav.addObject("book_model", bm);
+        mav.addObject("book_model_id", bookModelId);
+        mav.addObject("bookStates", BookState.values());
+
+
+        return mav;
+    }*/
 
 }

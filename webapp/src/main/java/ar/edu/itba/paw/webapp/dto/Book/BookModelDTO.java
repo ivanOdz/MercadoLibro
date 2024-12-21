@@ -1,10 +1,14 @@
-package ar.edu.itba.paw.webapp.dto;
+package ar.edu.itba.paw.webapp.dto.Book;
 
+import ar.edu.itba.paw.models.Author;
+import ar.edu.itba.paw.models.BookImage;
 import ar.edu.itba.paw.models.BookModel;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class BookModelDTO {
     private String isbn;
@@ -46,8 +50,17 @@ public class BookModelDTO {
         dto.self = uriInfo.getBaseUriBuilder().path("book_models")
                 .path(String.valueOf(bookModel.getBookModelId())).build();
 
-        // ASK : how do we map authors
-        dto.authors = null;
+        dto.authors = bookModel.getAuthors().stream().map(new Function<Author, URI>() {
+            @Override
+            public URI apply(Author author) {
+                return uriInfo.getBaseUriBuilder()
+                        .path("books")
+                        .path("book_models")
+                        .path("authors")
+                        .path(String.valueOf(author.getAuthorid())).build();
+            }
+        }).collect(Collectors.toList());
+
         return dto;
     }
 
