@@ -52,7 +52,7 @@
         <jpa.version>1.0.0.Final</jpa.version>
         <jaxb.version>2.3.0</jaxb.version>
 
-        <jjwt.version>0.12.6</jjwt.version>
+        <jjwt.version>0.11.1</jjwt.version>
     </properties>
 
 
