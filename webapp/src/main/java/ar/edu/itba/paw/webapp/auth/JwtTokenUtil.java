@@ -19,14 +19,11 @@ import java.util.Date;
 @Component
 public class JwtTokenUtil {
 
-    @Value("classpath:jwt.key")
-    private Resource jwtKeyResource;
-
     private final SecretKey jwtSigningKey;
 
     private static final int EXPIRATION_TIME = 7 * 24 * 60 * 60 * 1000; //1 week (in millis)
 
-    public JwtTokenUtil() throws IOException {
+    public JwtTokenUtil(@Value("classpath:jwt.key") Resource jwtKeyResource) throws IOException {
         byte[] keyBytes = FileCopyUtils.copyToByteArray(jwtKeyResource.getInputStream());
         this.jwtSigningKey = Keys.hmacShaKeyFor(keyBytes);
     }
