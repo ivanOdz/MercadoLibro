@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.auth;
 
-import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -20,9 +19,6 @@ import java.util.Date;
 @Component
 public class JwtTokenUtil {
 
-    @Autowired
-    private UserService userService;
-
     @Value("classpath:jwt.key")
     private Resource jwtKeyResource;
 
@@ -37,7 +33,7 @@ public class JwtTokenUtil {
 
     public String createToken(Authentication userAuth) {
         PawUserDetails pud = (PawUserDetails) userAuth.getPrincipal();
-        User user = userService.findById(pud.getUser().getUserId());
+        User user = pud.getUser();
 
         Claims claims = Jwts.claims();
 
@@ -52,4 +48,23 @@ public class JwtTokenUtil {
                 .compact();
     }
 
+    public String parseToken(String header) {
+        if (header == null || !header.startsWith("Bearer ")) {
+            return null;
+        }
+
+        final String token = header.substring(7);   // Remove "Bearer "
+
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(jwtSigningKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        if (claims.getExpiration() == null || claims.getExpiration().before(new Date())) {
+            return null;
+        }
+
+        return claims.getSubject();
+    }
 }
