@@ -30,4 +30,6 @@ public interface BookDao {
     void saveBookImages(List<BookImage> bookImages);
 
     Optional<Book> updateBookState(Long bookId, String bookState);
+
+    void setImage(Book book, BookImage image);
 }

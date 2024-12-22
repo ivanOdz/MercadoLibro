@@ -4,21 +4,14 @@ import ar.edu.itba.paw.interfaces.services.BookModelService;
 import ar.edu.itba.paw.interfaces.services.BookService;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.BookDimension;
-import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.models.utils.Genre;
 import ar.edu.itba.paw.models.utils.Language;
 import ar.edu.itba.paw.models.utils.pagination.BookModelMetadata;
 import ar.edu.itba.paw.webapp.dto.Book.AuthorDTO;
-import ar.edu.itba.paw.webapp.dto.Book.BookDTO;
 import ar.edu.itba.paw.webapp.dto.Book.BookModelDTO;
-import ar.edu.itba.paw.webapp.form.BookDetailsForm;
 import ar.edu.itba.paw.webapp.mediaTypes.VndType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
@@ -109,4 +102,5 @@ public class BookModelController {
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(bookModel.getBookModelId())).build()).build();
     }
 
+    // IMPLEMENT book model rating should be in book model service
 }

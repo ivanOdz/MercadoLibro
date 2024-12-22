@@ -13,13 +13,15 @@ import java.util.Optional;
 @Service
 public interface BookService {
 
-    Book createBook(Long bookModelId, BookState bookState, int rating, List<MultipartFile> imageFiles, int bookCoverIndex, List<Image> imageList,
-                    User user, boolean newBook);
+//    Book createBook(Long bookModelId, BookState bookState, int rating, List<MultipartFile> imageFiles, int bookCoverIndex, List<Image> imageList,
+//                    User user, boolean newBook);
+
+    Book createBook(Long bookModelId,User user, BookState bookState);
 
 
-    Book createNewBook(String isbn, String title, List<String> authors, String publisher, String description, Genre genre, int edition,
-                         Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension,
-                         Language language, int pages, int weight, BookState bookState, int rating, List<MultipartFile> imageFiles, int bookCoverIndex, User user);
+//    Book createNewBook(String isbn, String title, List<String> authors, String publisher, String description, Genre genre, int edition,
+//                         Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension,
+//                         Language language, int pages, int weight, BookState bookState, int rating, List<MultipartFile> imageFiles, int bookCoverIndex, User user);
 
     void exchangeOwnership(Book b1, Book b2);
 
@@ -36,4 +38,6 @@ public interface BookService {
     List<BookStateWrapper> getBookStateWrapperList(String serach, String isGenreFilterActive, String genreFilter, long userId);
 
     Book updateBookState(Long bookId, String bookState);
+
+    void setImage(Long bookId, Long imageId);
 }

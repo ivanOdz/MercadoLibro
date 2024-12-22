@@ -191,6 +191,11 @@ public class BookJpaDao implements BookDao {
     }
 
     @Override
+    public void setImage(Book book, BookImage image) {
+        book.getImages().add(image);
+    }
+
+    @Override
     public List<BookStateWrapper> getBookStateQtyByBook(String search, boolean isGenreFilterActive, Genre genreFilter, Long userId) {
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT b.bookState, COUNT(*) AS stateCount " +
