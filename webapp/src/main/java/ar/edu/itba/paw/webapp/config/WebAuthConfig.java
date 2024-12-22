@@ -105,7 +105,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/book","/book/**", "/start_exchange", "/profile", "/requests", "/offers", "/send_message", "/submit_review", "/like/**", "/success_password").authenticated()
                 .antMatchers("/**").permitAll()*/
                 .and()
-                //.headers().cacheControl().disable().and()
+                .headers().cacheControl().disable().and()
 
                 // JWT Authentication Filter - Validates the JWT token
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
