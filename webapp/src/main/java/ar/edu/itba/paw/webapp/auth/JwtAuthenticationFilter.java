@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.auth;
 
+import ar.edu.itba.paw.interfaces.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,17 +33,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
-        String username = jwtTokenUtil.parseToken(header);
+        String userIdString = jwtTokenUtil.parseToken(header);
 
-        if (username == null) {
+        if (userIdString == null) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        long userIdNumber;
+        try {
+            userIdNumber = Long.parseLong(userIdString);
+        } catch (NumberFormatException e){
             filterChain.doFilter(request, response);
             return;
         }
 
         PawUserDetails pawUserDetails;
         try {
-            pawUserDetails = (PawUserDetails) pawUserDetailsService.loadUserByUsername(username);
-        } catch (UsernameNotFoundException e){
+            pawUserDetails = (PawUserDetails) pawUserDetailsService.loadUserById(userIdNumber);
+        } catch (UserNotFoundException e){
             filterChain.doFilter(request, response);
             return;
         }

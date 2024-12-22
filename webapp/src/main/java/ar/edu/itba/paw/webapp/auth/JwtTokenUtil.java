@@ -36,7 +36,8 @@ public class JwtTokenUtil {
 
         Claims claims = Jwts.claims();
 
-        claims.setSubject(user.getUsername());
+        claims.setSubject(user.getUserId().toString());
+        claims.put("name", user.getUsername()); 
 
         //claims.put("authorization", user.getRole());
         return "Bearer " + Jwts.builder()
