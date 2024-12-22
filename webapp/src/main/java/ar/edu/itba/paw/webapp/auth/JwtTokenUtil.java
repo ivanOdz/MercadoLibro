@@ -21,6 +21,8 @@ public class JwtTokenUtil {
 
     private final SecretKey jwtSigningKey;
 
+    private static final String BEARER_PREFIX = "Bearer ";
+
     private static final int EXPIRATION_TIME = 7 * 24 * 60 * 60 * 1000; //1 week (in millis)
 
     public JwtTokenUtil(@Value("classpath:jwt.key") Resource jwtKeyResource) throws IOException {
@@ -46,19 +48,20 @@ public class JwtTokenUtil {
     }
 
     public String parseToken(String header) {
-        if (header == null || !header.startsWith("Bearer ")) {
+        if (header == null || !header.startsWith(BEARER_PREFIX)) {
             return null;
         }
 
-        final String token = header.substring(7);   // Remove "Bearer "
+        final String token = header.substring(BEARER_PREFIX.length());   // Remove "Bearer "
 
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(jwtSigningKey)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-
-        if (claims.getExpiration() == null || claims.getExpiration().before(new Date())) {
+        Claims claims;
+        try {
+            claims = Jwts.parserBuilder()
+                    .setSigningKey(jwtSigningKey)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (Exception e) {
             return null;
         }
 
