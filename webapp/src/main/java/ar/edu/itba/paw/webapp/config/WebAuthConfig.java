@@ -20,7 +20,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -91,16 +90,22 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .and()
 
         // Set permissions on endpoints
-                .authorizeRequests()
-                .antMatchers("/images/**, /css/**").permitAll() // Esto vuela porque se encarga el front
+                .authorizeRequests().anyRequest().authenticated()
+                //
+                //
+                // .antMatchers("api/users/test").authenticated()
+                //.anyRequest().permitAll() // Other endpoints can be accessed freely
+
+                /*.antMatchers("/images/**, /css/**").permitAll() // Esto vuela porque se encarga el front
                 .antMatchers("/api/auth/login").permitAll()  // Allow login endpoint without authentication
                 .antMatchers("/", "/publications/*").permitAll()
                 .antMatchers("/favicon.ico").permitAll()    // Esto vuela porque se encarga el front
                 .antMatchers("/user_auth").anonymous()      // Esto vuela porque se encarga el front
                 .antMatchers("/create","/login","/mail_input", "/change_password", "/success_registration", "/mail_input_message").anonymous()
                 .antMatchers("/book","/book/**", "/start_exchange", "/profile", "/requests", "/offers", "/send_message", "/submit_review", "/like/**", "/success_password").authenticated()
-                .antMatchers("/**").permitAll()
+                .antMatchers("/**").permitAll()*/
                 .and()
+                //.headers().cacheControl().disable().and()
 
                 // JWT Authentication Filter - Validates the JWT token
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
