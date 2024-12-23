@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 import ar.edu.itba.paw.webapp.dto.Book.BookDTO;
 import ar.edu.itba.paw.webapp.mediaTypes.VndType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
@@ -32,9 +33,6 @@ public class BookController {
 
     @Context
     private UriInfo uriInfo;
-
-    @Context
-    private HttpServletRequest request;
 
 
     @GET
@@ -84,11 +82,12 @@ public class BookController {
     @POST
     @Consumes(value = {VndType.APPLICATION_BOOK})
     public Response postBook(final BookDTO bookDTO, @QueryParam("bookModel") final long bookModelId) {
-        // TODO agregar el usuario logueado desde jwt
-        // User loggedUser = (User) request.getAttribute("loggedUser");
-        Book book = bookService.createBook(bookModelId, null, BookState.valueOf(bookDTO.getState()));
+        User loggedUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Book book = bookService.createBook(bookModelId, loggedUser, BookState.valueOf(bookDTO.getState()));
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(book.getBookId())).build()).build();
     }
+
+    // new boo
 
     @PATCH
     @Path("/{id}/images")

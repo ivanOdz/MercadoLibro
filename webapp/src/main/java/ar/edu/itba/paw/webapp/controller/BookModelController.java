@@ -51,7 +51,6 @@ public class BookModelController {
     }*/
 
     @GET
-    @Path("/book_models")
     @Produces(value = {VndType.APPLICATION_BOOK_MODEL})
     public Response getBookModels(@QueryParam("search") @DefaultValue("")final String search,
                                   @QueryParam("is-genre-filter-active") @DefaultValue("false")final String isGenreFilterActive,
@@ -80,22 +79,26 @@ public class BookModelController {
 
 
     @POST
-    @Consumes(value = {VndType.APPLICATION_BOOK_MODEL})
+    @Consumes(value = {VndType.APPLICATION_BOOK_MODEL})  // /book_models
     public Response postBookModel(final BookModelDTO bookModelDTO) {
         BookModel bookModel = bookModelService.createBookModel(bookModelDTO.getIsbn(), bookModelDTO.getTitle(), bookModelDTO.getEditorial(), bookModelDTO.getDescription(), Genre.valueOf(bookModelDTO.getGenre()), bookModelDTO.getEdition(),bookModelDTO.getPublicationYear(), bookModelDTO.getHardcover(), bookModelDTO.getPocketEdition(), BookDimension.valueOf(bookModelDTO.getDimension()), Language.valueOf(bookModelDTO.getBookLanguage()),bookModelDTO.getPages(),bookModelDTO.getWeight());
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(bookModel.getBookModelId())).build()).build();
     }
 
     @PATCH
-    @Path("{id}/authors")
+    @Path("{id}/authors")  // /book_models/{id}/authors
     @Consumes(value = {VndType.APPLICATION_AUTHOR})
     public Response setAuthor(@PathParam("id") Long bookModelId, AuthorDTO authorDTO) {
         BookModel bookModel = bookModelService.addAuthor(bookModelId, authorDTO.getName());
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(bookModel.getBookModelId())).build()).build();
     }
 
+    // IMPLEMENT GET authors
+    // IMPLEMENT GET cover
+
+
     @PATCH
-    @Path("{id}/cover")
+    @Path("{id}/cover") // /book_models/{id}/cover
     @Consumes(value = {VndType.APPLICATION_BOOK_COVER})
     public Response setBookCover(@PathParam("id") Long bookModelId, @QueryParam("image-id") Long imageId) {
         BookModel bookModel = bookModelService.setCover(bookModelId, imageId);

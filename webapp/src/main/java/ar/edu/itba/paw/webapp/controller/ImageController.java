@@ -35,16 +35,16 @@ public class ImageController {
     }*/
 
     @GET
-    @Path("/{imageid:\\d+}")
+    @Path("/{id}")
     @Produces(value = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public Response getImage(@PathVariable("imageid") long id){
+    public Response getImage(@PathParam("id") long id){
         Image image = imageService.getImageById(id);
         return Response.ok(new GenericEntity<ImageDTO>(new ImageDTO().fromImageDTO(image)) {}).build();
     }
 
     @POST
     @Consumes(value = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public Response saveImage(final MultipartFile image){
+    public Response saveImage(final MultipartFile image){ // /images
         Image imageObj = imageService.saveImage(image);
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(imageObj.getImageId())).build()).build();
     }

@@ -1,14 +1,11 @@
 package ar.edu.itba.paw.webapp.dto.Book;
 
-import ar.edu.itba.paw.models.Author;
-import ar.edu.itba.paw.models.BookImage;
 import ar.edu.itba.paw.models.BookModel;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class BookModelDTO {
     private String isbn;
@@ -27,7 +24,8 @@ public class BookModelDTO {
     private Integer ratingCount;
     private Double averageRating;
     private URI self;
-    private List<URI> authors;
+    private URI authors;
+    private URI cover;
 
     public static BookModelDTO fromBookModel(final UriInfo uriInfo, final BookModel bookModel){
         final BookModelDTO dto = new BookModelDTO();
@@ -50,17 +48,13 @@ public class BookModelDTO {
         dto.self = uriInfo.getBaseUriBuilder().path("book_models")
                 .path(String.valueOf(bookModel.getBookModelId())).build();
 
-        dto.authors = bookModel.getAuthors().stream().map(new Function<Author, URI>() {
-            @Override
-            public URI apply(Author author) {
-                return uriInfo.getBaseUriBuilder()
+        dto.authors = uriInfo.getBaseUriBuilder()
                         .path("books")
                         .path("book_models")
-                        .path("authors")
-                        .path(String.valueOf(author.getAuthorid())).build();
-            }
-        }).collect(Collectors.toList());
-
+                        .path("authors").build();
+        dto.cover = uriInfo.getBaseUriBuilder()
+                .path("images")
+                .path(String.valueOf(bookModel.getImage().getImageId())).build();
         return dto;
     }
 
@@ -192,13 +186,19 @@ public class BookModelDTO {
         this.self = self;
     }
 
-    public List<URI> getAuthors() {
+    public URI getAuthors() {
         return authors;
     }
 
-    public void setAuthors(List<URI> authors) {
+    public void setAuthors(URI authors) {
         this.authors = authors;
     }
 
+    public URI getCover() {
+        return cover;
+    }
 
+    public void setCover(URI cover) {
+        this.cover = cover;
+    }
 }
