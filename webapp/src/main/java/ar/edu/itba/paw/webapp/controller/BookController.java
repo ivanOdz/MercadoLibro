@@ -27,8 +27,8 @@ public class BookController {
     @Autowired
     private BookService bookService;
 
-    @Autowired
-    private PublicationService publicationService;
+//    @Autowired
+//    private PublicationService publicationService;
 
     @Context
     private UriInfo uriInfo;
@@ -39,8 +39,8 @@ public class BookController {
     public Response getBooks(@QueryParam("search") @DefaultValue("")final String search,
                              @QueryParam("sort-type") @DefaultValue("BOOK_NAME_ASCENDING") final String sortType,
                              @QueryParam("is-book-state-filter-active") @DefaultValue("false") final String isBookStateFilterActive,
-                             @QueryParam("book-state-filter") String bookStateFilter, //required = false
-                             @QueryParam("genre-filter") final String genreFilter,  // required = false
+                             @QueryParam("book-state-filter") String bookStateFilter,
+                             @QueryParam("genre-filter") final String genreFilter,
                              @QueryParam("page") @DefaultValue("0")final int currentPage,
                              @QueryParam("is-genre-filter-active") @DefaultValue("false") final String isGenreFilterActive,
                              @ModelAttribute("loggedUser") User loggeduser) {
@@ -78,11 +78,13 @@ public class BookController {
         return new ModelAndView("redirect:/book");
     }*/
 
+
+    // CHECK rating can be done like this
     @POST
     @Consumes(value = {VndType.APPLICATION_BOOK})
-    public Response postBook(final BookDTO bookDTO, @QueryParam("bookModel") final long bookModelId) {
+    public Response postBook(final BookDTO bookDTO, @QueryParam("bookModel") final long bookModelId, @QueryParam("rating") final Integer rating) {
         User loggedUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Book book = bookService.createBook(bookModelId, loggedUser, BookState.valueOf(bookDTO.getState()));
+        Book book = bookService.createBook(bookModelId, loggedUser, BookState.valueOf(bookDTO.getState()), rating);
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(book.getBookId())).build()).build();
     }
 

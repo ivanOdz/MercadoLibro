@@ -80,7 +80,7 @@ public class BookModelController {
 
     @POST
     @Consumes(value = {VndType.APPLICATION_BOOK_MODEL})  // /book_models
-    public Response postBookModel(final BookModelDTO bookModelDTO) {
+    public Response postBookModel(final BookModelDTO bookModelDTO, @QueryParam("rating") final Integer rating) {
         BookModel bookModel = bookModelService.createBookModel(bookModelDTO.getIsbn(), bookModelDTO.getTitle(), bookModelDTO.getEditorial(), bookModelDTO.getDescription(), Genre.valueOf(bookModelDTO.getGenre()), bookModelDTO.getEdition(),bookModelDTO.getPublicationYear(), bookModelDTO.getHardcover(), bookModelDTO.getPocketEdition(), BookDimension.valueOf(bookModelDTO.getDimension()), Language.valueOf(bookModelDTO.getBookLanguage()),bookModelDTO.getPages(),bookModelDTO.getWeight(), bookModelDTO.getAuthors());
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(bookModel.getBookModelId())).build()).build();
     }
@@ -93,9 +93,6 @@ public class BookModelController {
 //        return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(bookModel.getBookModelId())).build()).build();
 //    }
 
-    // IMPLEMENT GET cover
-
-
     @PATCH
     @Path("{id}/cover") // /book_models/{id}/cover
     @Consumes(value = {VndType.APPLICATION_BOOK_COVER})
@@ -103,6 +100,4 @@ public class BookModelController {
         BookModel bookModel = bookModelService.setCover(bookModelId, imageId);
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(bookModel.getBookModelId())).build()).build();
     }
-
-    // IMPLEMENT book model rating should be in book model service
 }

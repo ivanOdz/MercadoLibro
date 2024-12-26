@@ -37,7 +37,8 @@ public class BookModelServiceImpl implements BookModelService {
 
     @Override
     @Transactional
-    public BookModel createBookModel(String isbn, String title, String publisher, String description, Genre genre, int edition, Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight, List<String> authors) {
+    public BookModel createBookModel(String isbn, String title, String publisher, String description, Genre genre, int edition, Short publicationYear,
+                                     boolean isHardcover, boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight, List<String> authors) {
         LOGGER.info("Starting creation of BookModel with ISBN: {}", isbn);
 
         BookModel bookModelOpt = bookModelDao.createBookModel(isbn, title, publisher, description, genre, edition, publicationYear, isHardcover, isPocketEdition, dimension, language, pages, weight);

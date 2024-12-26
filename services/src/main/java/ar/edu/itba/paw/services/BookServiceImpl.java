@@ -84,8 +84,12 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public Book createBook(Long bookModelId, User user, BookState bookState){
+    public Book createBook(Long bookModelId, User user, BookState bookState, Integer rating){
         LOGGER.info("Creating book for book model ID: {}", bookModelId);
+
+        BookModel bm = bookModelService.getBookModelByBookModelId(bookModelId);
+        bookDao.createBookRating(user, bm, rating);
+
         return bookDao.createBook(bookModelService.getBookModelByBookModelId(bookModelId), user, bookState);
     }
 

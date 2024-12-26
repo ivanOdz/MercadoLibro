@@ -16,7 +16,7 @@ public interface BookService {
 //    Book createBook(Long bookModelId, BookState bookState, int rating, List<MultipartFile> imageFiles, int bookCoverIndex, List<Image> imageList,
 //                    User user, boolean newBook);
 
-    Book createBook(Long bookModelId,User user, BookState bookState);
+    Book createBook(Long bookModelId,User user, BookState bookState, Integer rating);
 
 
 //    Book createNewBook(String isbn, String title, List<String> authors, String publisher, String description, Genre genre, int edition,
