@@ -14,15 +14,13 @@ import java.util.Optional;
 public interface BookModelService {
 
     BookModel createBookModel(String isbn, String title, String publisher, String description, Genre genre, int edition,
-                                        Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight);
+                                        Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight, List<String> authors);
 
     BookModel getBookModelByBookModelId(Long bookModelId);
 
     PaginatedResponse<BookModel, BookModelMetadata> getPaginatedBookModels(String search, String isGenreFilterActive, String genreFilter, int currentPage, String sortType);
 
     List<GenreWrapper> getGenreWrapperList(String search);
-
-    BookModel addAuthor(Long bookModelId, String authorName);
 
     BookModel setCover(Long bookModelId, Long imageId);
 }

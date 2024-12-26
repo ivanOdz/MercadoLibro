@@ -35,16 +35,17 @@ public class BookModelServiceImpl implements BookModelService {
     private static final Logger LOGGER = LoggerFactory.getLogger(BookModelServiceImpl.class);
 
 
-    // TODO: Add authors to bookModel separately
     @Override
     @Transactional
-    public BookModel createBookModel(String isbn, String title, String publisher, String description, Genre genre, int edition, Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight) {
+    public BookModel createBookModel(String isbn, String title, String publisher, String description, Genre genre, int edition, Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight, List<String> authors) {
         LOGGER.info("Starting creation of BookModel with ISBN: {}", isbn);
 
-//        List<Author> newauthors = bookModelDao.createAuthors(authors);
         BookModel bookModelOpt = bookModelDao.createBookModel(isbn, title, publisher, description, genre, edition, publicationYear, isHardcover, isPocketEdition, dimension, language, pages, weight);
         LOGGER.info("BookModel created successfully with ISBN: {}", isbn);
 
+        for(String author : authors){
+            bookModelDao.addAuthor(bookModelOpt, author);
+        }
         return bookModelOpt;
     }
 
@@ -82,13 +83,6 @@ public class BookModelServiceImpl implements BookModelService {
     @Transactional(readOnly = true)
     public List<GenreWrapper> getGenreWrapperList(String search) {
         return bookModelDao.getGenreQtyByBookModel(search);
-    }
-
-    @Override
-    @Transactional
-    public BookModel addAuthor(Long bookModelId, String authorName) {
-        BookModel bm = getBookModelByBookModelId(bookModelId);
-        return bookModelDao.addAuthor(bm, authorName);
     }
 
     @Transactional

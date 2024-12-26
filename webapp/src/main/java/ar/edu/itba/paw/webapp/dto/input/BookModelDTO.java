@@ -1,7 +1,7 @@
-package ar.edu.itba.paw.webapp.dto.Book;
+package ar.edu.itba.paw.webapp.dto.input;
 
+import ar.edu.itba.paw.models.Author;
 import ar.edu.itba.paw.models.BookModel;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
@@ -24,7 +24,7 @@ public class BookModelDTO {
     private Integer ratingCount;
     private Double averageRating;
     private URI self;
-    private URI authors;
+    private List<String> authors;
     private URI cover;
 
     public static BookModelDTO fromBookModel(final UriInfo uriInfo, final BookModel bookModel){
@@ -48,10 +48,7 @@ public class BookModelDTO {
         dto.self = uriInfo.getBaseUriBuilder().path("book_models")
                 .path(String.valueOf(bookModel.getBookModelId())).build();
 
-        dto.authors = uriInfo.getBaseUriBuilder()
-                        .path("books")
-                        .path("book_models")
-                        .path("authors").build();
+        dto.authors = bookModel.getAuthors().stream().map(Author::getAuthorName).toList();
         dto.cover = uriInfo.getBaseUriBuilder()
                 .path("images")
                 .path(String.valueOf(bookModel.getImage().getImageId())).build();
@@ -186,11 +183,11 @@ public class BookModelDTO {
         this.self = self;
     }
 
-    public URI getAuthors() {
+    public List<String> getAuthors() {
         return authors;
     }
 
-    public void setAuthors(URI authors) {
+    public void setAuthors(List<String> authors) {
         this.authors = authors;
     }
 

@@ -8,7 +8,7 @@ import ar.edu.itba.paw.models.utils.Genre;
 import ar.edu.itba.paw.models.utils.Language;
 import ar.edu.itba.paw.models.utils.pagination.BookModelMetadata;
 import ar.edu.itba.paw.webapp.dto.Book.AuthorDTO;
-import ar.edu.itba.paw.webapp.dto.Book.BookModelDTO;
+import ar.edu.itba.paw.webapp.dto.input.BookModelDTO;
 import ar.edu.itba.paw.webapp.mediaTypes.VndType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -81,19 +81,18 @@ public class BookModelController {
     @POST
     @Consumes(value = {VndType.APPLICATION_BOOK_MODEL})  // /book_models
     public Response postBookModel(final BookModelDTO bookModelDTO) {
-        BookModel bookModel = bookModelService.createBookModel(bookModelDTO.getIsbn(), bookModelDTO.getTitle(), bookModelDTO.getEditorial(), bookModelDTO.getDescription(), Genre.valueOf(bookModelDTO.getGenre()), bookModelDTO.getEdition(),bookModelDTO.getPublicationYear(), bookModelDTO.getHardcover(), bookModelDTO.getPocketEdition(), BookDimension.valueOf(bookModelDTO.getDimension()), Language.valueOf(bookModelDTO.getBookLanguage()),bookModelDTO.getPages(),bookModelDTO.getWeight());
+        BookModel bookModel = bookModelService.createBookModel(bookModelDTO.getIsbn(), bookModelDTO.getTitle(), bookModelDTO.getEditorial(), bookModelDTO.getDescription(), Genre.valueOf(bookModelDTO.getGenre()), bookModelDTO.getEdition(),bookModelDTO.getPublicationYear(), bookModelDTO.getHardcover(), bookModelDTO.getPocketEdition(), BookDimension.valueOf(bookModelDTO.getDimension()), Language.valueOf(bookModelDTO.getBookLanguage()),bookModelDTO.getPages(),bookModelDTO.getWeight(), bookModelDTO.getAuthors());
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(bookModel.getBookModelId())).build()).build();
     }
 
-    @PATCH
-    @Path("{id}/authors")  // /book_models/{id}/authors
-    @Consumes(value = {VndType.APPLICATION_AUTHOR})
-    public Response setAuthor(@PathParam("id") Long bookModelId, AuthorDTO authorDTO) {
-        BookModel bookModel = bookModelService.addAuthor(bookModelId, authorDTO.getName());
-        return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(bookModel.getBookModelId())).build()).build();
-    }
+//    @PATCH
+//    @Path("{id}/authors")  // /book_models/{id}/authors
+//    @Consumes(value = {VndType.APPLICATION_AUTHOR})
+//    public Response setAuthor(@PathParam("id") Long bookModelId, AuthorDTO authorDTO) {
+//        BookModel bookModel = bookModelService.addAuthor(bookModelId, authorDTO.getName());
+//        return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(bookModel.getBookModelId())).build()).build();
+//    }
 
-    // IMPLEMENT GET authors
     // IMPLEMENT GET cover
 
 
