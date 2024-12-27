@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.exceptions.BookModelNotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.BookModelDao;
 import ar.edu.itba.paw.interfaces.services.BookModelService;
+import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.models.Author;
 import ar.edu.itba.paw.models.BookModel;
 import ar.edu.itba.paw.models.Image;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import java.util.List;
@@ -27,17 +29,24 @@ public class BookModelServiceImpl implements BookModelService {
     @Autowired
     private BookModelDao bookModelDao;
 
+    @Autowired
+    private ImageService imageService;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(BookModelServiceImpl.class);
+
 
     @Override
     @Transactional
-    public BookModel createBookModel(String isbn, String title, List<String> authors, String publisher, String description, Genre genre, int edition, Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight, Image image) {
+    public BookModel createBookModel(String isbn, String title, String publisher, String description, Genre genre, int edition, Short publicationYear,
+                                     boolean isHardcover, boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight, List<String> authors) {
         LOGGER.info("Starting creation of BookModel with ISBN: {}", isbn);
 
-        List<Author> newauthors = bookModelDao.createAuthors(authors);
-        BookModel bookModelOpt = bookModelDao.createBookModel(isbn, title, publisher, description, genre, edition, publicationYear, isHardcover, isPocketEdition, dimension, language, pages, weight, image, newauthors);
+        BookModel bookModelOpt = bookModelDao.createBookModel(isbn, title, publisher, description, genre, edition, publicationYear, isHardcover, isPocketEdition, dimension, language, pages, weight);
         LOGGER.info("BookModel created successfully with ISBN: {}", isbn);
 
+        for(String author : authors){
+            bookModelDao.addAuthor(bookModelOpt, author);
+        }
         return bookModelOpt;
     }
 
@@ -75,5 +84,13 @@ public class BookModelServiceImpl implements BookModelService {
     @Transactional(readOnly = true)
     public List<GenreWrapper> getGenreWrapperList(String search) {
         return bookModelDao.getGenreQtyByBookModel(search);
+    }
+
+    @Transactional
+    @Override
+    public BookModel setCover(Long bookModelId, Long imageId) {
+        BookModel bookModel = getBookModelByBookModelId(bookModelId);
+        Image image = imageService.getImageById(imageId);
+        return bookModelDao.setCover(bookModel, image);
     }
 }

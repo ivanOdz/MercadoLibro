@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.dto.Book;
+package ar.edu.itba.paw.webapp.dto.input;
 
 import ar.edu.itba.paw.models.Book;
 import ar.edu.itba.paw.models.BookImage;
@@ -15,7 +15,7 @@ public class BookDTO {
     private URI self;
 
     private URI owner;
-    private URI book_model;
+    private URI bookModel;
     private List<URI> images;
 
     public static BookDTO fromBook(final UriInfo uriInfo, final Book book){
@@ -27,7 +27,7 @@ public class BookDTO {
                 .path(String.valueOf(book.getBookId())).build();
         dto.owner = uriInfo.getBaseUriBuilder().path("users")
                 .path(String.valueOf(book.getOwner().getUserId())).build();
-        dto.book_model = uriInfo.getBaseUriBuilder().path("book_models")
+        dto.bookModel = uriInfo.getBaseUriBuilder().path("book_models")
                 .path(String.valueOf(book.getBookModel().getBookModelId())).build();
 
         dto.images = book.getImages().stream().map(new Function<BookImage, URI>() {
@@ -66,12 +66,12 @@ public class BookDTO {
         this.owner = owner;
     }
 
-    public URI getBook_model() {
-        return book_model;
+    public URI getBookModel() {
+        return bookModel;
     }
 
-    public void setBook_model(URI book_model) {
-        this.book_model = book_model;
+    public void setBookModel(URI bookModel) {
+        this.bookModel = bookModel;
     }
 
     public URI getSelf() {
