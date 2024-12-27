@@ -5,11 +5,16 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 
+import ar.edu.itba.paw.webapp.dto.input.ConfirmExchangeDTO;
+import ar.edu.itba.paw.webapp.dto.input.ExchangeDTO;
+import ar.edu.itba.paw.webapp.dto.input.MessageDTO;
 import ar.edu.itba.paw.webapp.form.ExchangeForm;
 import ar.edu.itba.paw.webapp.form.MessageForm;
 import ar.edu.itba.paw.webapp.form.UserReviewForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -17,10 +22,18 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
+import javax.ws.rs.PATCH;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Controller
+@Component
+@Path("exchanges")
 public class ExchangeController {
 
     @Autowired
@@ -34,6 +47,87 @@ public class ExchangeController {
 
     @Autowired
     private UserReviewService userReviewService;
+
+    @Context
+    private UriInfo uriInfo;
+
+    /*
+    @PostMapping(path = "/exchange/initializeexchange")
+    public ModelAndView initializeExchange(@NotEmpty @Valid @ModelAttribute("exchangeForm") ExchangeForm exchangeInput, BindingResult errors, @ModelAttribute("loggedUser") User loggeduser) {
+        if (errors.hasErrors()) {
+            return startExchange(exchangeInput, errors, exchangeInput.getPublicationId(), loggeduser);
+        }
+
+        return new ModelAndView("redirect:/requests");
+    }*/
+
+    @POST
+    public Response createExchange(ExchangeDTO exchangeDTO){
+        Exchange exchange = exchangeService.initializeExchange(exchangeDTO.getBookId(), exchangeInput.getLocationId(), exchangeInput.getPublicationId());
+        return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(exchange.getExchangeId())).build()).build();
+    }
+
+    /*
+    @PostMapping( "/send_message")
+    public ResponseEntity<Void> sendMessage(@RequestParam("chatExchangeId") long exchangeId,
+                            @RequestParam("chatUserId") long userId,
+                            @RequestParam("message") String message) {
+            exchangeService.createMessage(exchangeId, userId, message);
+        return ResponseEntity.ok().build();
+    }
+    */
+
+    @PATCH
+    @Path("/{id}/message")
+    public Response sendMessage(@PathParam("id") long exchangeId, MessageDTO messageDTO) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        exchangeService.createMessage(exchangeId, user, messageDTO.getMessage());
+        return Response.noContent().build();
+    }
+
+    /*
+    @RequestMapping("/createexchange")
+    public ModelAndView exchange(@RequestParam(name = "accept_code") int acceptCode, @RequestParam(name = "state") boolean state, @ModelAttribute("loggedUser") User loggeduser) {
+        if(exchangeService.exchange(acceptCode, state)){
+            return new ModelAndView("exchange/accepted");
+        }
+        return new ModelAndView("exchange/rejected");
+    }*/
+
+    @PATCH
+    @Path("/{id}/start")
+    public Response startExchange(@PathParam("id") Integer exchangeId) {
+        exchangeService.exchange(exchangeId, true);
+        return Response.noContent().build();
+    }
+
+    @PATCH
+    @Path("/{id}/reject")
+    public Response rejectExchange(@PathParam("id") Integer exchangeId) {
+        exchangeService.exchange(exchangeId, false);
+        return Response.noContent().build();
+    }
+
+
+    // CHECK: exchangeId not used and could be a better way to obtain the logged user
+    @PATCH
+    @Path("/{id}/confirm_offer")
+    public Response confirmExchangeOffer(@PathParam("id") Integer exchangeId, ConfirmExchangeDTO confirmExchangeDTO) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        exchangeService.confirmOffer(user.getUserId(), confirmExchangeDTO.getAcceptCode());
+        return Response.noContent().build();
+    }
+
+    // CHECK: exchangeId not used and could be a better way to obtain the logged user
+    @PATCH
+    @Path("/{id}/confirm_request")
+    public Response confirmExchangeRequest( @PathParam("id") Integer exchangeId, ConfirmExchangeDTO confirmExchangeDTO) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        exchangeService.confirmRequest(user.getUserId(), confirmExchangeDTO.getAcceptCode());
+        return Response.noContent().build();
+    }
+
+    // --------------------------------------
 
     // Requests (osea peticiones que me hacen a mi)
     // Paso el ID, y quiero aquellas exchanges en las que soy offerer
@@ -114,25 +208,24 @@ public class ExchangeController {
         return mav;
     }
 
-    @RequestMapping("/createexchange")
-    public ModelAndView exchange(@RequestParam(name = "accept_code") int acceptCode, @RequestParam(name = "state") boolean state, @ModelAttribute("loggedUser") User loggeduser) {
-        if(exchangeService.exchange(acceptCode, state)){
-            return new ModelAndView("exchange/accepted");
-        }
-        return new ModelAndView("exchange/rejected");
-    }
 
-    @RequestMapping("/exchange/accepted")
-    public ModelAndView exchangeAccepted() {
-        return new ModelAndView("exchange/accepted");
-    }
 
-    @RequestMapping("/exchange/invalid")
-    public ModelAndView exchangeRejected() {
-        return new ModelAndView("/exchange/invalid");
+    //IMPLEMENT reviews in user controller
+    @RequestMapping(path = "/submit_review", method = RequestMethod.POST)
+    public ModelAndView submitReview(
+            @RequestParam("exchangeId") long exchangeId,
+            @RequestParam(name = "reviewDescription", defaultValue = "") String reviewDescription,
+            @RequestParam(name = "userReviewRating", defaultValue ="1") int userReviewRating,
+            @ModelAttribute("loggedUser") User loggeduser) {
+
+        userReviewService.createUserReview(exchangeId, loggeduser.getUserId(), reviewDescription, userReviewRating);
+        return new ModelAndView("redirect:/requests");
     }
 
 
+    //Screens
+
+    /*
     @GetMapping("/start_exchange")
     public ModelAndView startExchange(@ModelAttribute("exchangeForm") ExchangeForm exchangeForm, BindingResult errors, @RequestParam(name = "publication_id") long publicationId, @ModelAttribute("loggedUser") User loggeduser) {
         final ModelAndView mav = new ModelAndView("/exchange/solicit_exchange");
@@ -146,46 +239,17 @@ public class ExchangeController {
         mav.addObject("publication", publication);
 
         return mav;
+    }*/
+
+    /*
+    @RequestMapping("/exchange/accepted")
+    public ModelAndView exchangeAccepted() {
+        return new ModelAndView("exchange/accepted");
     }
 
-    @PostMapping(path = "/exchange/initializeexchange")
-    public ModelAndView initializeExchange(@NotEmpty @Valid @ModelAttribute("exchangeForm") ExchangeForm exchangeInput, BindingResult errors, @ModelAttribute("loggedUser") User loggeduser) {
-        if (errors.hasErrors()) {
-            return startExchange(exchangeInput, errors, exchangeInput.getPublicationId(), loggeduser);
-        }
+    @RequestMapping("/exchange/invalid")
+    public ModelAndView exchangeRejected() {
+        return new ModelAndView("/exchange/invalid");
+    }*/
 
-        exchangeService.initializeExchange(exchangeInput.getBookId(), exchangeInput.getLocationId(), exchangeInput.getPublicationId());
-        return new ModelAndView("redirect:/requests");
-    }
-
-    @RequestMapping("/confirm_offerer")
-    public ModelAndView confirmExchangeOffer(@RequestParam(name = "accept_code") int acceptCode, @ModelAttribute("loggedUser") User loggeduser) {
-        exchangeService.cofirmOfferer(loggeduser.getUserId(), acceptCode);
-        return new ModelAndView("redirect:/offers");
-    }
-
-    @RequestMapping("/confirm_requester")
-    public ModelAndView confirmExchangeRequest(@RequestParam(name = "accept_code") int acceptCode, @ModelAttribute("loggedUser") User loggeduser) {
-        exchangeService.cofirmRequester(loggeduser.getUserId(), acceptCode);
-        return new ModelAndView("redirect:/requests");
-    }
-
-    @RequestMapping(path = "/submit_review", method = RequestMethod.POST)
-    public ModelAndView submitReview(
-            @RequestParam("exchangeId") long exchangeId,
-            @RequestParam(name = "reviewDescription", defaultValue = "") String reviewDescription,
-            @RequestParam(name = "userReviewRating", defaultValue ="1") int userReviewRating,
-            @ModelAttribute("loggedUser") User loggeduser) {
-
-        userReviewService.createUserReview(exchangeId, loggeduser.getUserId(), reviewDescription, userReviewRating);
-        return new ModelAndView("redirect:/requests");
-    }
-
-    @PostMapping( "/send_message")
-    public ResponseEntity<Void> sendMessage(@RequestParam("chatExchangeId") long exchangeId,
-                            @RequestParam("chatUserId") long userId,
-                            @RequestParam("message") String message) {
-            exchangeService.createMessage(exchangeId, userId, message);
-        return ResponseEntity.ok().build();
-    }
 }

@@ -37,7 +37,7 @@ public class ExchangeServiceImpl implements ExchangeService {
 
     @Override
     @Transactional
-    public void initializeExchange(long bookId, long locationId, long offererPubId) {
+    public Exchange initializeExchange(long bookId, long locationId, long offererPubId) {
     	
     	Book book = bs.getBookById(bookId);
         Long userId = book.getOwner().getUserId();
@@ -64,6 +64,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         else {
             LOGGER.warn("Could not initialize exchange for book id {}", bookId);
         }
+        return ex;
     }
 
     @Override
@@ -114,7 +115,7 @@ public class ExchangeServiceImpl implements ExchangeService {
 
     @Override
     @Transactional
-    public void cofirmOfferer(long userId, int acceptCode) {
+    public void confirmOffer(long userId, int acceptCode) {
     	
         LOGGER.info("Processing confirmOfferer for acceptCode: {}", acceptCode);
 
@@ -136,7 +137,7 @@ public class ExchangeServiceImpl implements ExchangeService {
 
     @Override
     @Transactional
-    public void cofirmRequester(long userId, int acceptCode) {
+    public void confirmRequest(long userId, int acceptCode) {
     	
         LOGGER.info("Processing confirmRequester for acceptCode: {}", acceptCode);
 
@@ -215,7 +216,7 @@ public class ExchangeServiceImpl implements ExchangeService {
 
     @Override
     @Transactional
-    public void createMessage(long exchangeId, long userId, String message) {
-        exchangeDao.createMessage(getExchangeById(exchangeId), userId, message, new Timestamp((new Date()).getTime()));
+    public void createMessage(long exchangeId, User user, String message) {
+        exchangeDao.createMessage(getExchangeById(exchangeId), user.getUserId(), message, new Timestamp((new Date()).getTime()));
     }
 }
