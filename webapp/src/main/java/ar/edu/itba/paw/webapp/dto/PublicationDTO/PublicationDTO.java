@@ -1,31 +1,42 @@
 package ar.edu.itba.paw.webapp.dto.PublicationDTO;
 
-import ar.edu.itba.paw.models.Book;
-import ar.edu.itba.paw.models.Location;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.models.utils.PublicationState;
 
+import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.sql.Timestamp;
-import java.util.List;
 
 public class PublicationDTO {
-    private Long publicationId;
-    private Book book;
+    private URI book;
     private PublicationState publicationState;
     private Timestamp publicationDatetime;
-    private List<Location> locations;
-    private User user;
+    private URI locations; //maybe List<LocationDTO> ?
+    private URI user;
     private Integer likes;
-    private Boolean isLikedByUser = false;
+    private Boolean isLikedByUser;
 
     private URI self;
 
-    public Long getPublicationId() {
-        return publicationId;
+
+    public PublicationDTO fromPublication(final UriInfo uriInfo, final Publication publication) {
+        final PublicationDTO dto = new PublicationDTO();
+
+        dto.publicationState = publication.getPublicationState();
+        dto.publicationDatetime = publication.getPublicationDatetime();
+        dto.likes = publication.getLikes();
+        dto.isLikedByUser = publication.getLikedByUser();
+
+        dto.self = uriInfo.getBaseUriBuilder().path("publications").path(String.valueOf(publication.getPublicationId())).build();
+        dto.book = uriInfo.getBaseUriBuilder().path("books").path(String.valueOf(publication.getBook().getBookId())).build();
+        dto.user = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(publication.getUser())).build();
+
+        // TODO : locations
+
+        return dto;
     }
 
-    public Book getBook() {
+    public URI getBook() {
         return book;
     }
 
@@ -37,11 +48,11 @@ public class PublicationDTO {
         return publicationDatetime;
     }
 
-    public List<Location> getLocations() {
+    public URI getLocations() {
         return locations;
     }
 
-    public User getUser() {
+    public URI getUser() {
         return user;
     }
 
@@ -57,11 +68,7 @@ public class PublicationDTO {
         return self;
     }
 
-    public void setPublicationId(Long publicationId) {
-        this.publicationId = publicationId;
-    }
-
-    public void setBook(Book book) {
+    public void setBook(URI book) {
         this.book = book;
     }
 
@@ -73,11 +80,11 @@ public class PublicationDTO {
         this.publicationDatetime = publicationDatetime;
     }
 
-    public void setLocations(List<Location> locations) {
+    public void setLocations(URI locations) {
         this.locations = locations;
     }
 
-    public void setUser(User user) {
+    public void setUser(URI user) {
         this.user = user;
     }
 
