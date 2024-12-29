@@ -1,22 +1,30 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.exceptions.PublicationNotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 
+import ar.edu.itba.paw.webapp.dto.Publication.PublicationDTO;
 import ar.edu.itba.paw.webapp.form.ExchangeForm;
 import ar.edu.itba.paw.webapp.form.LocationForm;
 import ar.edu.itba.paw.webapp.form.PublicationForm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
 import java.util.List;
 
-@Controller
+@Path("/publications")
+@Component
 public class PublicationController {
 
     @Autowired
@@ -25,6 +33,11 @@ public class PublicationController {
     @Autowired
     private BookService bs;
 
+    @Context
+    private UriInfo uriInfo;
+
+    @Context
+    HttpServletRequest request;
 
     @RequestMapping("/")
     public ModelAndView index(@RequestParam(name = "search", defaultValue = "") String search,
@@ -62,6 +75,26 @@ public class PublicationController {
         return new ModelAndView("redirect:/my_publications");
     }
 
+    @GET
+    @Path("/{publication_id}")
+    @Produces(value = { MediaType.APPLICATION_JSON })
+    public Response getPublication(@PathParam("publication_id") Long publicationId) throws PublicationNotFoundException {
+        User loggeduser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Publication publication;
+        try {
+            publication = ps.getActivePublication(loggeduser, publicationId);
+        } catch (PublicationNotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        PublicationDTO dto = PublicationDTO.fromPublication(uriInfo, publication);
+        GenericEntity<PublicationDTO> genericEntity = new GenericEntity<PublicationDTO>(dto) {};
+
+        return Response.ok(genericEntity).build();
+
+    }
+
+    /*
     @GetMapping("/publications/{publication_id:\\d+}")
     public ModelAndView publicationDetail(@PathVariable(name = "publication_id") long publicationId, @ModelAttribute("loggedUser") User loggeduser) {
         final ModelAndView mav = new ModelAndView("/home/publication_detail");
@@ -85,6 +118,7 @@ public class PublicationController {
 
         return mav;
     }
+     */
 
     @RequestMapping(path = "/user_auth")
     public ModelAndView forceUserAuth() {
