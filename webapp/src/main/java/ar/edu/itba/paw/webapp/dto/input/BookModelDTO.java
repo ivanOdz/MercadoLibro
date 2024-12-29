@@ -1,5 +1,6 @@
-package ar.edu.itba.paw.webapp.dto;
+package ar.edu.itba.paw.webapp.dto.input;
 
+import ar.edu.itba.paw.models.Author;
 import ar.edu.itba.paw.models.BookModel;
 
 import javax.ws.rs.core.UriInfo;
@@ -23,7 +24,8 @@ public class BookModelDTO {
     private Integer ratingCount;
     private Double averageRating;
     private URI self;
-    private List<URI> authors;
+    private List<String> authors;
+    private URI cover;
 
     public static BookModelDTO fromBookModel(final UriInfo uriInfo, final BookModel bookModel){
         final BookModelDTO dto = new BookModelDTO();
@@ -46,8 +48,10 @@ public class BookModelDTO {
         dto.self = uriInfo.getBaseUriBuilder().path("book_models")
                 .path(String.valueOf(bookModel.getBookModelId())).build();
 
-        // ASK : how do we map authors
-        dto.authors = null;
+        dto.authors = bookModel.getAuthors().stream().map(Author::getAuthorName).toList();
+        dto.cover = uriInfo.getBaseUriBuilder()
+                .path("images")
+                .path(String.valueOf(bookModel.getImage().getImageId())).build();
         return dto;
     }
 
@@ -179,13 +183,19 @@ public class BookModelDTO {
         this.self = self;
     }
 
-    public List<URI> getAuthors() {
+    public List<String> getAuthors() {
         return authors;
     }
 
-    public void setAuthors(List<URI> authors) {
+    public void setAuthors(List<String> authors) {
         this.authors = authors;
     }
 
+    public URI getCover() {
+        return cover;
+    }
 
+    public void setCover(URI cover) {
+        this.cover = cover;
+    }
 }

@@ -12,15 +12,17 @@ import java.util.Optional;
 
 public interface BookModelDao {
 
-    BookModel createBookModel(String isbn, String title, String publisher, String description, Genre genre, int edition, Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight, Image bookCover, List<Author> authors);
+    BookModel createBookModel(String isbn, String title, String publisher, String description, Genre genre, int edition, Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight);
 
-    List<Author> createAuthors(List<String> authors);
-
-    void createBookAuthors(List<Long> authorsIds, long bookModelId);
+//    List<Author> createAuthors(List<String> authors);
 
     Optional<BookModel> getBookModelByBookModelId(Long bookModelId);
 
     PaginatedResponse<BookModel, BookModelMetadata> getPaginatedBookModels(String search, boolean isGenreFilterActive, Genre genreFilter, int currentPage, String sortType);
 
     List<GenreWrapper> getGenreQtyByBookModel(String search);
+
+    BookModel addAuthor(BookModel bookModel, String authorName);
+
+    BookModel setCover(BookModel bookModel, Image image);
 }

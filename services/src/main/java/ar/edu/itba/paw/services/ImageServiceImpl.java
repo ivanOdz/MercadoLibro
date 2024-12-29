@@ -25,7 +25,7 @@ public class ImageServiceImpl implements ImageService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ImageServiceImpl.class);
 
-    @Override
+    /*@Override
     @Transactional
     public List<Image> saveImage(List<MultipartFile> image) {
         LOGGER.info("Starting to save images, total images: {}", image.size());
@@ -44,6 +44,24 @@ public class ImageServiceImpl implements ImageService {
 
         LOGGER.info("Finished saving images, total saved: {}", images.size());
         return images;
+    }*/
+
+    @Override
+    @Transactional
+    public Image saveImage(MultipartFile file) {
+        Image image = new Image();
+
+        try {
+            LOGGER.info("Saving image with original filename: {}", file.getOriginalFilename());
+            imageDao.createImage(file.getBytes());
+            LOGGER.info("Image with filename {} saved successfully", file.getOriginalFilename());
+        } catch (IOException e) {
+            LOGGER.warn("Error saving image with filename: {}", file.getOriginalFilename());
+            throw new ImageBadRequestException("Error saving image");
+        }
+
+        LOGGER.info("Image saved");
+        return image;
     }
 
     @Override

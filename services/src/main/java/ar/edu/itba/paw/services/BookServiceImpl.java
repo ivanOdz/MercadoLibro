@@ -36,6 +36,7 @@ public class BookServiceImpl implements BookService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BookServiceImpl.class);
 
+    /*
     @Override
     @Transactional
     public Book createBook(Long bookModelId, BookState bookState, int rating, List<MultipartFile> imageFiles, int bookCoverIndex, List<Image> imageList,
@@ -79,8 +80,20 @@ public class BookServiceImpl implements BookService {
         LOGGER.info("Successfully created book with ID: {}", book.getBookId());
 
         return book;
+    }*/
+
+    @Override
+    @Transactional
+    public Book createBook(Long bookModelId, User user, BookState bookState, Integer rating){
+        LOGGER.info("Creating book for book model ID: {}", bookModelId);
+
+        BookModel bm = bookModelService.getBookModelByBookModelId(bookModelId);
+        bookDao.createBookRating(user, bm, rating);
+
+        return bookDao.createBook(bookModelService.getBookModelByBookModelId(bookModelId), user, bookState);
     }
 
+    /*
     @Override
     @Transactional
     public Book createNewBook(String isbn, String title, List<String> authors, String publisher, String description, Genre genre, int edition,
@@ -92,16 +105,16 @@ public class BookServiceImpl implements BookService {
         List<Image> images = imageService.saveImage(arrangeImages(imageFiles, bookCoverIndex));
 
         BookModel bookModel = bookModelService.createBookModel(isbn, title, authors, publisher, description, genre, edition,
-                publicationYear, isHardcover, isPocketEdition, dimension, language, pages, weight, images.get(bookCoverIndex));
+                publicationYear, isHardcover, isPocketEdition, dimension, language, pages, weight);
 
 
         return createBook(bookModel.getBookModelId(), bookState, rating, imageFiles, bookCoverIndex, images, user, true);
     }
+    */
 
     @Override
     @Transactional
     public void exchangeOwnership(Book b1, Book b2) {
-    	
         LOGGER.info("Exchanging ownership of books: {} and {}", b1.getBookId(), b2.getBookId());
 
         User owner1 = b1.getOwner();
@@ -241,5 +254,17 @@ public class BookServiceImpl implements BookService {
             LOGGER.warn("Book with ID: {} not found, state update failed", bookId);
             return null;  // Return null if the book wasn't found or update failed
         }
+    }
+
+    @Transactional
+    @Override
+    public void setImage(Long bookId, Long imageId) {
+        Image image = imageService.getImageById(imageId);
+        Book book = getBookById(bookId);
+        BookImage bookImage = new BookImage();
+        bookImage.setImage(image);
+        bookImage.setImageOrder(book.getImages().size());
+        bookImage.setImageDatetime(Timestamp.valueOf(LocalDateTime.now()));
+        bookDao.setImage(book, bookImage);
     }
 }

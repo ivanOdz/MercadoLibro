@@ -23,19 +23,19 @@ public class BookModelJpaDao implements BookModelDao {
 
     @Override
     public BookModel createBookModel(String isbn, String title, String publisher, String description, Genre genre, int edition, Short publicationYear, boolean isHardcover,
-                                boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight, Image bookCover, List<Author> authors) {
+                                boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight) {
 
         //TODO: Completar como corresponde campo authors y chequear el rating.
         final BookModel bookModel = new BookModel(null, isbn, title, publisher, description, genre, edition, weight,
-              pages, language, dimension, publicationYear, isPocketEdition, isHardcover, authors, bookCover);
+              pages, language, dimension, publicationYear, isPocketEdition, isHardcover, null, null);
 
         em.persist(bookModel);
         return bookModel;
 
     }
 
-    @Override
-    public List<Author> createAuthors(List<String> authors) {
+    /*@Override
+    public List<Author> createAuthor(List<String> authors) {
         List<Author> authorsRta = new ArrayList<>();
 
         for(String author : authors) {
@@ -45,18 +45,7 @@ public class BookModelJpaDao implements BookModelDao {
         }
 
         return authorsRta;
-    }
-
-    @Override
-    public void createBookAuthors(List<Long> authorsIds, long bookModelId) {
-        for (Long authorId : authorsIds) {
-            String query = "INSERT INTO book_author (bookModelId, authorId) VALUES (?1, ?2)";
-            em.createNativeQuery(query)
-                    .setParameter(1, bookModelId)
-                    .setParameter(2, authorId)
-                    .executeUpdate();
-        }
-    }
+    }*/
 
     @Override
     public Optional<BookModel> getBookModelByBookModelId(Long bookModelId) {
@@ -154,6 +143,20 @@ public class BookModelJpaDao implements BookModelDao {
         }
 
         return genreWrappers;
+    }
+
+    @Override
+    public BookModel addAuthor(BookModel bookModel, String authorName) {
+        Author newAuthor = new Author(null, authorName);
+        em.persist(newAuthor);
+        bookModel.getAuthors().add(newAuthor);
+        return bookModel;
+    }
+
+    @Override
+    public BookModel setCover(BookModel bookModel, Image image) {
+        bookModel.setImage(image);
+        return bookModel;
     }
 
     private int getTotalResultsByBook(String search, boolean isGenreFilterActive, Genre genreFilter) {
