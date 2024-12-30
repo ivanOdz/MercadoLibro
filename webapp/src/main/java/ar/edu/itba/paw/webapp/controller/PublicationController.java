@@ -11,6 +11,7 @@ import ar.edu.itba.paw.webapp.dto.Publication.PublicationDTO;
 import ar.edu.itba.paw.webapp.form.ExchangeForm;
 import ar.edu.itba.paw.webapp.form.LocationForm;
 import ar.edu.itba.paw.webapp.form.PublicationForm;
+import ar.edu.itba.paw.webapp.mediaTypes.VndType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -63,17 +64,29 @@ public class PublicationController {
         return mav;
     }
 
+    @POST
+    @Consumes(value = {VndType.APPLICATION_PUBLICATION})
+    public Response postPublication(final PublicationDTO publicationDTO, @QueryParam("book") long bookId, @QueryParam("locations") final long locationId) {
+        User loggeduser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Publication publication = ps.createPublication(bookId, loggeduser, locationId);
+        return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(publication.getPublicationId())).build()).build();
+    }
+
+    /*
     @PostMapping(path = "/createpublication")
     public ModelAndView createPublication(@RequestParam(name = "bookId") long bookId, @RequestParam(name = "locationId") long locationId, @ModelAttribute("loggedUser") User loggeduser) {
         ps.createPublication(bookId, loggeduser.getUserId(), locationId, PublicationState.CURRENT);
         return new ModelAndView("redirect:/book");
     }
+    */
 
+    /*
     @PostMapping(path = "/book_home/createpublication")
     public ModelAndView createPublicationFromBookHome(@ModelAttribute PublicationForm publicationForm, @ModelAttribute("loggedUser") User loggeduser) {
         createPublication(publicationForm.getBookId(), publicationForm.getLocationId(), loggeduser);
         return new ModelAndView("redirect:/my_publications");
     }
+    */
 
     @GET
     @Path("/{publication_id}")
