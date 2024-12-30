@@ -40,14 +40,13 @@ public class PublicationServiceImpl implements PublicationService {
 
     @Override
     @Transactional
-    public Publication createPublication(long bookId, long userId, long locationId, PublicationState publicationState) {
+    public Publication createPublication(long bookId, User user, long locationId) {
         Book book = bookService.getBookById(bookId);
-        User user = userService.findById(userId);
         Location location = locationService.findById(locationId);
         List<Location> locations = new ArrayList<>();
         locations.add(location);
 
-        Publication publication = pubDao.createPublication(book, user, locations, publicationState);
+        Publication publication = pubDao.createPublication(book, user, locations, PublicationState.CURRENT);
         // In case create publication fails, this log wont appear as it will throw an exception.
         LOGGER.info("Publication of id {} successfully created", publication.getPublicationId());
 
@@ -58,7 +57,7 @@ public class PublicationServiceImpl implements PublicationService {
     @Transactional
     public void createPublicationIfNeeded(boolean publish, long bookId, long userId, long locationId, PublicationState publicationState) {
         if (publish) {
-            createPublication(bookId, userId, locationId, publicationState);
+            createPublication(bookId, userService.findById(userId), locationId, publicationState);
         }
     }
 

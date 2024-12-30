@@ -19,7 +19,7 @@ public class PublicationDTO {
     private URI self;
 
 
-    public PublicationDTO fromPublication(final UriInfo uriInfo, final Publication publication) {
+    public static PublicationDTO fromPublication(final UriInfo uriInfo, final Publication publication) {
         final PublicationDTO dto = new PublicationDTO();
 
         dto.publicationState = publication.getPublicationState();
