@@ -265,9 +265,24 @@ public class PublicationController {
     }
     */
 
+    @PATCH
+    @Path("/{publication_id}/locations")
+    @Consumes(value = {VndType.APPLICATION_PUBLICATION})
+    public Response addLocation(@PathParam("publication_id") Long publicationId, @QueryParam("location_id") final long locationId) throws PublicationNotFoundException {
+        User loggeduser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        try {
+            ps.addLocation(publicationId, locationId, loggeduser);
+        } catch (PublicationNotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.noContent().build();
+    }
+
+    /*
     @PostMapping("/publication/add_location")
     public ModelAndView addLocation(@RequestParam(name = "publicationId") Long publicationId, @RequestParam(name = "locationId") long locationId, @ModelAttribute("loggedUser") User loggeduser) {
         ps.addLocation(publicationId, locationId, loggeduser);
         return new ModelAndView("redirect:/publications/" + publicationId);
     }
+    */
 }
