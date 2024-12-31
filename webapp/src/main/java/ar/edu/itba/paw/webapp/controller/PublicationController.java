@@ -219,8 +219,21 @@ public class PublicationController {
     }
     */
 
-    @PostMapping("/like/{publicationId:\\d+}")
+    @POST
+    @Path("/like/{publication_id}")
+    @Consumes(value = {VndType.APPLICATION_PUBLICATION})
+    public Response likePublication(@PathParam("publication_id") Long publicationId) throws PublicationNotFoundException {
+        User loggeduser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        try {
+            ps.likePublication(publicationId, loggeduser.getUserId());
+        } catch (PublicationNotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.noContent().build();
+    }
 
+    /*
+    @PostMapping("/like/{publicationId:\\d+}")
     public ModelAndView likePublication(@PathVariable(name = "publicationId") long publicationId, @RequestParam(name = "fromFavorites", defaultValue = "false") boolean fromFavorites, @ModelAttribute("loggedUser") User loggeduser) {
         ps.likePublication(publicationId, loggeduser.getUserId());
         if(fromFavorites) {
@@ -228,6 +241,7 @@ public class PublicationController {
         }
         return new ModelAndView("redirect:/");
     }
+    */
 
     @PostMapping("/publication/add_location")
     public ModelAndView addLocation(@RequestParam(name = "publicationId") Long publicationId, @RequestParam(name = "locationId") long locationId, @ModelAttribute("loggedUser") User loggeduser) {
