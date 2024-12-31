@@ -124,28 +124,20 @@ public class PublicationServiceImpl implements PublicationService {
 
     @Override
     @Transactional(readOnly = true)
-    public PaginatedResponse<Publication, ItemFilterMetadata> getMyPaginatedPublications(long userId, String search, String isBookStateFilterActive, String bookStateFilter, String isGenreFilterActive, String genreFilter, String sortType, int currentPage) {
-        boolean bookStateFilterActive = "true".equalsIgnoreCase(isBookStateFilterActive);
-        boolean genreFilterActive = "true".equalsIgnoreCase(isGenreFilterActive);
+    public PaginatedResponse<Publication, ItemFilterMetadata> getMyPaginatedPublications(long userId, String search, String state, String genre, String sortType, int currentPage) {
 
-        BookState state = DEFAULT_PUBLICATION_STATE_FILTER;
-        if (bookStateFilterActive) {
-            state = BookState.fromString(bookStateFilter);
-            if (state == null) {
-                bookStateFilterActive = false;
-            }
+        BookState state_filter = DEFAULT_PUBLICATION_STATE_FILTER;
+        if (state != null) {
+            state_filter = BookState.fromString(state);
         }
 
-        Genre genre = DEFAULT_PUBLICATION_GENRE_FILTER;
-        if(genreFilterActive){
-            genre = Genre.fromString(genreFilter);
-            if(genre == null){
-                genreFilterActive = false;
-            }
+        Genre genre_filter = DEFAULT_PUBLICATION_GENRE_FILTER;
+        if(genre != null){
+            genre_filter = Genre.fromString(genre);
         }
 
 
-        return pubDao.getPaginatedPublications(userId, search, state, genre, sortType, currentPage, null);
+        return pubDao.getPaginatedPublications(userId, search, state_filter, genre_filter, sortType, currentPage, null);
     }
 
     @Override
