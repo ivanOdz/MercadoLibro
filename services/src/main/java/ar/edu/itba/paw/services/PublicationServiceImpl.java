@@ -81,14 +81,11 @@ public class PublicationServiceImpl implements PublicationService {
 
     @Override
     @Transactional(readOnly = true)
-    PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, String state, String genre, String sortType, int currentPage, User currentUser) {
-
-        boolean bookStateFilterActive = state != null;
-        boolean genreFilterActive = genre != null;
+    public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, String state, String genre, String sortType, int currentPage, User currentUser) {
 
         BookState state_filter = DEFAULT_PUBLICATION_STATE_FILTER;
         if (state != null) {
-            book_filter = BookState.fromString(state);
+            state_filter = BookState.fromString(state);
         }
 
         Genre genre_filter = DEFAULT_PUBLICATION_GENRE_FILTER;
@@ -96,7 +93,7 @@ public class PublicationServiceImpl implements PublicationService {
             genre_filter = Genre.fromString(genre);
         }
 
-        return pubDao.getPaginatedPublications(null, search, state, genre, sortType, currentPage, currentUser);
+        return pubDao.getPaginatedPublications(null, search, state_filter, genre_filter, sortType, currentPage, currentUser);
     }
 
     @Override
@@ -148,7 +145,7 @@ public class PublicationServiceImpl implements PublicationService {
         }
 
 
-        return pubDao.getPaginatedPublications(userId, search, bookStateFilterActive, state, genreFilterActive, genre, sortType, currentPage, null);
+        return pubDao.getPaginatedPublications(userId, search, state, genre, sortType, currentPage, null);
     }
 
     @Override
