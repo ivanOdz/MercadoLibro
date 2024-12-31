@@ -156,8 +156,10 @@ public class PublicationServiceImpl implements PublicationService {
     @Override
     @Transactional
     public void likePublication(long publicationId, long userId) {
-        pubDao.likePublication(publicationId, userId);
-        LOGGER.info("User with ID {} liked Publication with ID {}", userId, publicationId);
+        if(getPublicationByPublicationId(publicationId) != null) {
+            pubDao.likePublication(publicationId, userId);
+            LOGGER.info("User with ID {} liked Publication with ID {}", userId, publicationId);
+        }
     }
 
     @Override
