@@ -57,7 +57,7 @@ public class PublicationServiceImpl implements PublicationService {
     @Transactional
     public void createPublicationIfNeeded(boolean publish, long bookId, long userId, long locationId, PublicationState publicationState) {
         if (publish) {
-            createPublication(bookId, userService.findById(userId), locationId, publicationState);
+            createPublication(bookId, userService.findById(userId), locationId);
         }
     }
 
