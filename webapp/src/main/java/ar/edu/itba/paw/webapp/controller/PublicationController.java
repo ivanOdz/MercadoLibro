@@ -198,11 +198,26 @@ public class PublicationController {
         return mav;
     }
 
+    @DELETE
+    @Path("/{publication_id}")
+    @Produces(value = {VndType.APPLICATION_PUBLICATION})
+    public Response deletePublication(@PathParam("publication_id") Long publicationId) throws PublicationNotFoundException {
+        User loggeduser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        try {
+            ps.deletePublication(loggeduser.getUserId(), publicationId);
+        } catch (PublicationNotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.noContent().build();
+    }
+
+    /*
     @GetMapping("/publications/{publication_id:\\d+}/delete")
     public ModelAndView deletePublication(@PathVariable(name = "publication_id") long publicationId, @ModelAttribute("loggedUser") User loggeduser) {
         ps.deletePublication(loggeduser.getUserId(), publicationId);
         return new ModelAndView("redirect:/my_publications");
     }
+    */
 
     @PostMapping("/like/{publicationId:\\d+}")
 
