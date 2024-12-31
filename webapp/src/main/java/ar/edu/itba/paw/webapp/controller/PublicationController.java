@@ -42,6 +42,10 @@ public class PublicationController {
     @Context
     HttpServletRequest request;
 
+    /*
+        * Unified methods index(...) and myPublications(...).
+        * Main difference is if loggeduser is null (index) else works like myPublications
+     */
     @GET
     @Produces(value = {VndType.APPLICATION_PUBLICATION})
     public Response getPublications(@QueryParam("search") @DefaultValue("")final String search,
@@ -141,7 +145,7 @@ public class PublicationController {
 
     @GET
     @Path("/{publication_id}")
-    @Produces(value = { MediaType.APPLICATION_JSON })
+    @Produces(value = {VndType.APPLICATION_PUBLICATION})
     public Response getPublication(@PathParam("publication_id") Long publicationId) throws PublicationNotFoundException {
         User loggeduser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Publication publication;
@@ -184,11 +188,16 @@ public class PublicationController {
     }
      */
 
+    /* SHOULDN'T BE HERE
     @RequestMapping(path = "/user_auth")
     public ModelAndView forceUserAuth() {
         return new ModelAndView("/user/demand_auth");
     }
+    */
 
+    /*
+        * Filters and sorting could be implemented if wanted
+     */
 
     @GET
     @Path("/favorites")
