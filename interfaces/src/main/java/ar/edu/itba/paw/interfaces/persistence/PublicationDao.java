@@ -19,7 +19,7 @@ public interface PublicationDao {
 
     Optional<Publication> getPublicationByPublicationId(long publicationId);
 
-    PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(Long userId,String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, String sortType, int currentPage, User currentUser);
+    PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(Long userId, String search, BookState state, Genre genre, String sortType, int currentPage, User currentUser);
 
     int getPublicationCountByUserId(long userId);
 
