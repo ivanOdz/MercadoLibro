@@ -189,6 +189,27 @@ public class PublicationController {
         return new ModelAndView("/user/demand_auth");
     }
 
+
+    @GET
+    @Path("/favorites")
+    @Produces(value = {VndType.APPLICATION_PUBLICATION})
+    public Response getFavoritePublications(@QueryParam("search") @DefaultValue("")final String search,
+                                    @QueryParam("page") @DefaultValue("0")final int currentPage,
+                                    @QueryParam("size") Integer size) {
+
+        User loggeduser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        PaginatedResponse<Publication, BasicMetadata> publications = ps.getFavoritePublications(loggeduser, currentPage);
+
+        List<PublicationDTO> publicationDTOList = publications.getData().stream()
+                .map(publication -> PublicationDTO.fromPublication(uriInfo, publication)).collect(Collectors.toList());;
+
+        Response.ResponseBuilder response = Response.ok(new GenericEntity<List<PublicationDTO>>(publicationDTOList) {});
+
+        return PageResponseUtil.getResponse(currentPage, publications.getMetadata().getMaxPage(), uriInfo, response);
+    }
+
+    /*
     @RequestMapping(path = "/my_favorites")
     public ModelAndView myFavoritePublications(@RequestParam(name = "page", defaultValue = "0") int currentPage, @ModelAttribute("loggedUser") User loggeduser) {
         PaginatedResponse<Publication, BasicMetadata> publications = ps.getFavoritePublications(loggeduser, currentPage);
@@ -197,6 +218,7 @@ public class PublicationController {
         mav.addObject("publications", publications);
         return mav;
     }
+    */
 
     @DELETE
     @Path("/{publication_id}")
