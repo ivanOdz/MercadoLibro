@@ -19,7 +19,7 @@ public interface PublicationService {
 
     Publication getPublicationByPublicationId(long publicationId);
 
-    PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, String isBookStateFilterActive, String bookStateFilter, String isGenreFilterActive, String genreFilter, String sortType, int currentPage, User currentUser);
+    PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, String state, String genre, String sortType, int currentPage, User currentUser);
 
     int getPublicationCountByUserId(long userId);
 
