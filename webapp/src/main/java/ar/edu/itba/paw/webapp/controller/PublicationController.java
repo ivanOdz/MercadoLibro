@@ -12,6 +12,7 @@ import ar.edu.itba.paw.webapp.form.ExchangeForm;
 import ar.edu.itba.paw.webapp.form.LocationForm;
 import ar.edu.itba.paw.webapp.form.PublicationForm;
 import ar.edu.itba.paw.webapp.mediaTypes.VndType;
+import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -23,8 +24,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Path("/publications")
+@Path("/")
 @Component
 public class PublicationController {
 
@@ -40,6 +42,28 @@ public class PublicationController {
     @Context
     HttpServletRequest request;
 
+    @GET
+    @Produces(value = {VndType.APPLICATION_PUBLICATION})
+    public Response getAllPublications(@QueryParam("search") @DefaultValue("")final String search,
+                                       @QueryParam("sort-type") @DefaultValue("BOOK_NAME_ASCENDING") final String sortType,
+                                       @QueryParam("state") String state,
+                                       @QueryParam("genre") final String genre,
+                                       @QueryParam("page") @DefaultValue("0")final int currentPage,
+                                       @QueryParam("size") Integer size,
+                                       @ModelAttribute("loggedUser") User loggeduser) {
+
+        PaginatedResponse<Publication, ItemFilterMetadata> publications = ps.getPaginatedPublications(search,
+                state, genre, sortType, currentPage, loggeduser);
+
+        List<PublicationDTO> publicationDTOList = publications.getData().stream()
+                .map(publication -> PublicationDTO.fromPublication(uriInfo, publication)).collect(Collectors.toList());;
+
+        Response.ResponseBuilder response = Response.ok(new GenericEntity<List<PublicationDTO>>(publicationDTOList) {});
+
+        return PageResponseUtil.getResponse(currentPage, publications.getMetadata().getMaxPage(), uriInfo, response);
+    }
+
+    /*
     @RequestMapping("/")
     public ModelAndView index(@RequestParam(name = "search", defaultValue = "") String search,
                               @RequestParam(name = "is-book-state-filter-active", defaultValue = "false") String isBookStateFilterActive,
@@ -63,6 +87,7 @@ public class PublicationController {
 
         return mav;
     }
+    */
 
     @POST
     @Consumes(value = {VndType.APPLICATION_PUBLICATION})
