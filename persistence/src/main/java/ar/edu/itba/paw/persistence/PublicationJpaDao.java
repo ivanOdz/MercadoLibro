@@ -48,7 +48,9 @@ public class PublicationJpaDao implements PublicationDao {
     }
 
     @Override
-    public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(Long userId, String search, BookState state, Genre genre, String sortType, int page, User currentUser) {
+    public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, BookState state, Genre genre, String sortType, int page, User currentUser) {
+        Long userId = (currentUser != null ? currentUser.getUserId() : null);
+
         if (page < 0) {
             page = 0;
         }

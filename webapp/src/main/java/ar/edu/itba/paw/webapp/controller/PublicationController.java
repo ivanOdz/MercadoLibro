@@ -44,7 +44,7 @@ public class PublicationController {
 
     @GET
     @Produces(value = {VndType.APPLICATION_PUBLICATION})
-    public Response getAllPublications(@QueryParam("search") @DefaultValue("")final String search,
+    public Response getPublications(@QueryParam("search") @DefaultValue("")final String search,
                                        @QueryParam("sort-type") @DefaultValue("BOOK_NAME_ASCENDING") final String sortType,
                                        @QueryParam("state") String state,
                                        @QueryParam("genre") final String genre,
@@ -88,6 +88,32 @@ public class PublicationController {
         return mav;
     }
     */
+
+    /*
+    @RequestMapping(path = "/my_publications")
+    public ModelAndView myPublications(@RequestParam(name = "search", defaultValue = "") String search,
+                                       @RequestParam(name = "is-book-state-filter-active", defaultValue = "false") String isBookStateFilterActive,
+                                       @RequestParam(name = "book-state-filter", required = false) String bookStateFilter,
+                                       @RequestParam(name = "is-genre-filter-active", defaultValue = "false") String isGenreFilterActive,
+                                       @RequestParam(name = "genre-filter", required = false) String genreFilter,
+                                       @RequestParam(name = "order", defaultValue = "sort.publication.date.ascending") String sortType,
+                                       @RequestParam(name = "page", defaultValue = "0") int currentPage,
+                                       @ModelAttribute("loggedUser") User loggeduser) {
+
+        PaginatedResponse<Publication, ItemFilterMetadata> publications = ps.getMyPaginatedPublications(loggeduser.getUserId(), search, isBookStateFilterActive,
+                bookStateFilter, isGenreFilterActive, genreFilter, sortType, currentPage);
+        ModelAndView mav = new ModelAndView("/home/my_publications");
+
+        List<GenreWrapper> genreWrapperList = ps.getMyGenreWrapperList(loggeduser.getUserId(), search, isBookStateFilterActive, bookStateFilter);
+        List<BookStateWrapper> bookStateWrapperList = ps.getMyBookStateWrapperList(loggeduser.getUserId(), search, isGenreFilterActive, genreFilter);
+
+        mav.addObject("publications", publications);
+        mav.addObject("genreWrapperList", genreWrapperList);
+        mav.addObject("bookStateWrapperList", bookStateWrapperList);
+
+        return mav;
+    }
+     */
 
     @POST
     @Consumes(value = {VndType.APPLICATION_PUBLICATION})
@@ -161,30 +187,6 @@ public class PublicationController {
     @RequestMapping(path = "/user_auth")
     public ModelAndView forceUserAuth() {
         return new ModelAndView("/user/demand_auth");
-    }
-
-    @RequestMapping(path = "/my_publications")
-    public ModelAndView myPublications(@RequestParam(name = "search", defaultValue = "") String search,
-                                       @RequestParam(name = "is-book-state-filter-active", defaultValue = "false") String isBookStateFilterActive,
-                                       @RequestParam(name = "book-state-filter", required = false) String bookStateFilter,
-                                       @RequestParam(name = "is-genre-filter-active", defaultValue = "false") String isGenreFilterActive,
-                                       @RequestParam(name = "genre-filter", required = false) String genreFilter,
-                                       @RequestParam(name = "order", defaultValue = "sort.publication.date.ascending") String sortType,
-                                       @RequestParam(name = "page", defaultValue = "0") int currentPage,
-                                       @ModelAttribute("loggedUser") User loggeduser) {
-
-        PaginatedResponse<Publication, ItemFilterMetadata> publications = ps.getMyPaginatedPublications(loggeduser.getUserId(), search, isBookStateFilterActive,
-                bookStateFilter, isGenreFilterActive, genreFilter, sortType, currentPage);
-        ModelAndView mav = new ModelAndView("/home/my_publications");
-
-        List<GenreWrapper> genreWrapperList = ps.getMyGenreWrapperList(loggeduser.getUserId(), search, isBookStateFilterActive, bookStateFilter);
-        List<BookStateWrapper> bookStateWrapperList = ps.getMyBookStateWrapperList(loggeduser.getUserId(), search, isGenreFilterActive, genreFilter);
-
-        mav.addObject("publications", publications);
-        mav.addObject("genreWrapperList", genreWrapperList);
-        mav.addObject("bookStateWrapperList", bookStateWrapperList);
-
-        return mav;
     }
 
     @RequestMapping(path = "/my_favorites")

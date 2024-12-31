@@ -93,7 +93,7 @@ public class PublicationServiceImpl implements PublicationService {
             genre_filter = Genre.fromString(genre);
         }
 
-        return pubDao.getPaginatedPublications(null, search, state_filter, genre_filter, sortType, currentPage, currentUser);
+        return pubDao.getPaginatedPublications(search, state_filter, genre_filter, sortType, currentPage, currentUser);
     }
 
     @Override
@@ -122,6 +122,7 @@ public class PublicationServiceImpl implements PublicationService {
         return pubDao.getActivePublicationsByUser(user) ;
     }
 
+    /*
     @Override
     @Transactional(readOnly = true)
     public PaginatedResponse<Publication, ItemFilterMetadata> getMyPaginatedPublications(long userId, String search, String state, String genre, String sortType, int currentPage) {
@@ -139,6 +140,7 @@ public class PublicationServiceImpl implements PublicationService {
 
         return pubDao.getPaginatedPublications(userId, search, state_filter, genre_filter, sortType, currentPage, null);
     }
+    */
 
     @Override
     @Transactional

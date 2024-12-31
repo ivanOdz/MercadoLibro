@@ -27,7 +27,7 @@ public interface PublicationService {
 
     List<Publication> getActivePublicationsByUser(User user);
 
-    PaginatedResponse<Publication, ItemFilterMetadata> getMyPaginatedPublications(long userId, String search, String state, String genre, String sortType, int currentPage);
+    //PaginatedResponse<Publication, ItemFilterMetadata> getMyPaginatedPublications(long userId, String search, String state, String genre, String sortType, int currentPage);
 
     void deletePublication(long userId, long publicationId);
 
