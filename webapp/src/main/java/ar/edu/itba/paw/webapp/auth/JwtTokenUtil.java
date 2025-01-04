@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.auth;
 
 import ar.edu.itba.paw.models.User;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -40,7 +41,7 @@ public class JwtTokenUtil {
         claims.put("name", user.getUsername()); 
 
         //claims.put("authorization", user.getRole());
-        return "Bearer " + Jwts.builder()
+        return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
@@ -62,7 +63,14 @@ public class JwtTokenUtil {
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
-        } catch (Exception e) {
+
+        } catch(ExpiredJwtException e) {
+            // TODO: Analizar refreshToken en HttpOnl Cookie
+            // Si es valida, adjuntar a la response nuevo access token y nuevo refresh token,
+            // caso contrario retorno null
+            return null;
+        }
+        catch (Exception e) {
             return null;
         }
 

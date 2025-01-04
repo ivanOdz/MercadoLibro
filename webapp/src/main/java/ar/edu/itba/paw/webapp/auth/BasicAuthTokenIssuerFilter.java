@@ -26,6 +26,6 @@ public class BasicAuthTokenIssuerFilter extends BasicAuthenticationFilter {
     protected void onSuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, Authentication authResult) throws IOException {
         super.onSuccessfulAuthentication(request, response, authResult);
         String jwt = jwtTokenUtil.createToken(authResult);
-        response.addHeader(HttpHeaders.AUTHORIZATION, jwt);
+        response.addHeader("X-New-Access-Token", jwt);
     }
 }
