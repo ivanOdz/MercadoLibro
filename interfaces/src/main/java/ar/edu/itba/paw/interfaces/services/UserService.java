@@ -11,17 +11,15 @@ public interface UserService {
 
     Optional<User> findByUsername(String username);
 
-    void verifyUser(int verificationCode);
+    User verifyUser(int verificationCode);
 
     void changePasswordSolicited(String email);
-    
-    void changePassword(int verificationCode, String newPassword);
+
+    User changePassword(int verificationCode, String newPassword);
 
     boolean userExists(String mail);
     
     boolean changeUserName(long userId, String newName);
-
-    User getUserToVerify(int verificationCode);
 
     void setUserLanguage(User user, String language);
     

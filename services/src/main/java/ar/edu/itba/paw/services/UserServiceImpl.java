@@ -55,13 +55,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void changePassword(int verificationCode, String newPassword) {
+    public User changePassword(int verificationCode, String newPassword) {
         LOGGER.info("Password change request received.");
 
-        User user = getUserToVerify(verificationCode);
-        userDao.changePassword(user,passwordEncoder.encode(newPassword));
+        Optional<User> user = userDao.findByVerificationCode(verificationCode);
+        if (user.isPresent()) {
+            userDao.changePassword(user.get(), passwordEncoder.encode(newPassword));
 
-        LOGGER.info("Password changed successfully for user with ID: {}", user.getUserId());
+            LOGGER.info("Password changed successfully for user with ID: {}", user.get().getUserId());
+        }
+        else {
+            throw new UserVerificationBadRequestException("User verification failed");
+        }
+        return user.get();
     }
 
     @Override
@@ -117,18 +123,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void verifyUser(int verificationCode) {
+    public User verifyUser(int verificationCode) {
         LOGGER.info("Initiating user verification process.");
 
-        User user = getUserToVerify(verificationCode);
-
-        if (user != null) {
-            LOGGER.info("User of ID {} found for verification. Proceeding with verification.", user.getUserId());
-            userDao.verifyUser(user);
-            LOGGER.info("User verification completed successfully.");
-        } else {
-            LOGGER.warn("User verification failed. No user found for provided verification code.");
+        Optional<User> user = userDao.findByVerificationCode(verificationCode);
+        if (user.isEmpty()) {
+            LOGGER.warn("User verification failed: no user found for provided verification code.");
+            throw new UserVerificationBadRequestException("User verification failed");
         }
+
+        LOGGER.info("User of ID {} found for verification. Proceeding with verification.", user.get().getUserId());
+        userDao.verifyUser(user.get());
+        LOGGER.info("User verification completed successfully.");
+
+        return user.get();
     }
 
     @Override
@@ -176,21 +184,6 @@ public class UserServiceImpl implements UserService {
         }
 
         return result;
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public User getUserToVerify(int verificationCode) {
-        LOGGER.info("Attempting to verify user with provided verification code.");
-
-        Optional<User> user = userDao.getUserToVerify(verificationCode);
-        if (user.isEmpty()) {
-            LOGGER.warn("User verification failed: no user found for provided verification code.");
-            throw new UserVerificationBadRequestException("User verification failed");
-        }
-
-        LOGGER.info("User verification successful.");
-        return user.get();
     }
 
     @Override
