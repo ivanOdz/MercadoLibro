@@ -10,9 +10,7 @@ public class SupportedLanguageValidator implements ConstraintValidator<Supported
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        if (value == null || value.isBlank()) {
-            return true;
-        }
+        if(value == null) return true;
         return SUPPORTED_LANGUAGES.contains(value);
     }
 }

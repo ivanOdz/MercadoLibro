@@ -72,22 +72,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void changePasswordSolicited(String email) {
+    public Integer changePasswordSolicited(String email) {
         // Not logging user email, as it is sensitive information
         LOGGER.info("Password change request received.");
 
         Optional<User> user = userDao.findByMail(email);
         if(user.isEmpty()){
             LOGGER.warn("User not found for email, attempt made.");
-            return;
+            return -1;
         }
 
-        int verificationCode = generateVerificationCode();
-        userDao.changePasswordSolicited(user.get(), verificationCode);
+        int passwordCode = generateVerificationCode();
+        userDao.changePasswordSolicited(user.get(), passwordCode);
         LOGGER.info("Verification code generated and saved for user with ID: {}", user.get().getUserId());
 
         emailService.sendPasswordChangeEmail(user.get());
         LOGGER.info("Password change email sent to user with ID: {}", user.get().getUserId());
+        return passwordCode;
     }
 
     @Override
@@ -167,7 +168,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public boolean changeUserName(long userId, String newName) {
+    public boolean changeUsername(long userId, String newName) {
         LOGGER.info("Request to change username received for user ID: {}", userId);
 
         Optional<User> user = userDao.findById(userId);
@@ -188,9 +189,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void setUserLanguage(User user, String language) {
-        LOGGER.info("Initiating language update for user with ID: {}", user.getUserId());
+    public void setUserLanguage(long userId, String language) {
+        LOGGER.info("Initiating language update for user with ID: {}", userId);
 
+        User user = findById(userId);
         userDao.setUserLanguage(user, language);
 
         LOGGER.info("Language {} successfully updated for user with ID: {}", language, user.getUserId());

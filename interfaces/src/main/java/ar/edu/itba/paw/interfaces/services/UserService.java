@@ -13,15 +13,15 @@ public interface UserService {
 
     User verifyUser(int verificationCode);
 
-    void changePasswordSolicited(String email);
+    Integer changePasswordSolicited(String email);
 
     User changePassword(int verificationCode, String newPassword);
 
     boolean userExists(String mail);
     
-    boolean changeUserName(long userId, String newName);
+    boolean changeUsername(long userId, String newName);
 
-    void setUserLanguage(User user, String language);
+    void setUserLanguage(long userId, String language);
     
     void addLocation(Long userId, String locationString);
     

@@ -3,88 +3,109 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.interfaces.services.UserReviewService;
 import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.webapp.auth.PawUserDetailsService;
+import ar.edu.itba.paw.webapp.dto.User.*;
 import ar.edu.itba.paw.webapp.form.MailForm;
-import ar.edu.itba.paw.webapp.form.PasswordForm;
-import ar.edu.itba.paw.webapp.form.UserForm;
+import ar.edu.itba.paw.webapp.mediaTypes.VndType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Controller;
+import org.springframework.security.core.parameters.P;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
-import java.util.Locale;
-
-
-@Controller
+@Path("/users")
+@Component
 public class UserController {
 
     @Autowired
     private UserService us;
 
     @Autowired
-    private PawUserDetailsService userDetailsService;
-
-    @Autowired
     private UserReviewService userReviewService;
 
     @Autowired
-    private MessageSource messageSource;
+    private JwtTokenUtil jwtTokenUtil;
+
+    @Context
+    private UriInfo uriInfo;
 
 
-    @RequestMapping("/login")
-    public ModelAndView login(@RequestParam(value = "error", required = false) String error) {
-        ModelAndView modelAndView = new ModelAndView("user/login");
+    @POST
+    @Consumes(value = {VndType.APPLICATION_USER})
+    public Response createUser(@Valid @NotNull final RegisterForm registerForm) {
+        User user = us.createUser(registerForm.getUsername(), registerForm.getMail(), registerForm.getPassword(), LocaleContextHolder.getLocale().toLanguageTag());
+        return Response.created(uriInfo.getAbsolutePathBuilder().path(user.getUserId().toString()).build()).build();
+    }
 
-        if (error != null) {
-            Locale locale = LocaleContextHolder.getLocale();
-
-            String errorMessage = messageSource.getMessage("login.invalid", null, locale);
-            modelAndView.addObject("error", errorMessage);
+    @PATCH
+    @Path("/{id}")
+    @Consumes(value = {VndType.APPLICATION_USER})
+    public Response updateUser(@PathParam("id") final long userId, @Valid final UserUpdateDTO request) {
+        if (request.getLanguage() != null) {
+            us.setUserLanguage(userId, request.getLanguage());
         }
 
-        return modelAndView;
+        if (request.getNewUsername() != null) {
+            us.changeUsername(userId, request.getNewUsername());
+        }
+
+        return Response.noContent().build();
     }
 
-    @RequestMapping("/verification")
-    public ModelAndView verificationController(@RequestParam(name = "verification_code") int verificationCode) {
-        User user = us.getUserToVerify(verificationCode);
-        us.verifyUser(verificationCode);
-
-        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
-        final Authentication authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-
-        return new ModelAndView("redirect:/success_verification");
+    @POST
+    @Path("/password-code")
+    @Consumes(value = {VndType.APPLICATION_USER})
+    public Response createPasswordCode(@Valid EmailDTO emailDTO) {
+        Integer passwordCode = us.changePasswordSolicited(emailDTO.getEmail());
+        return Response.created(uriInfo.getAbsolutePathBuilder().path(passwordCode.toString()).build()).build();
     }
 
-    @RequestMapping("/check_verify")
+    @PATCH
+    @Path("/password-code/{code}")
+    @Consumes(value = {VndType.USER_PASSWORD})
+    public Response updatePassword(@PathParam("code") final int code, @Valid final PasswordChangeRequest request) {
+        us.changePassword(code, request.getNewPassword());
+        return Response.noContent().build();
+    }
+
+    @POST
+    @Path("/verification-code")
+    public Response createVerificationCode(){
+        // Is it necessary?
+        return Response.ok().build();
+    }
+
+    @POST
+    @Path("/verification-code/{verification_code}")
+    public Response verifyUser(@PathParam("verification_code") int verificationCode) {
+        User user = us.verifyUser(verificationCode);
+
+        return Response.noContent().header(HttpHeaders.AUTHORIZATION, jwtTokenUtil.createToken(user)).build();
+    }
+
+
+    /*@RequestMapping("/check_verify")
     public ModelAndView checkVerify(@ModelAttribute("loggedUser") User loggeduser) {
         if (loggeduser.isVerified()) {
             return new ModelAndView("redirect:/");
         }
         return new ModelAndView("redirect:/logout");
-    }
+    }*/
 
-    @RequestMapping(path = "/mail_input", method = RequestMethod.GET)
-    public ModelAndView mailInput(@ModelAttribute("mailForm") MailForm mailForm) {
-        ModelAndView modelAndView = new ModelAndView("user/mail_input");
-        modelAndView.addObject("mailForm", new MailForm());
-        return modelAndView;
-    }
 
-    @RequestMapping(path = "/mail_input", method = RequestMethod.POST)
+    /*@RequestMapping(path = "/mail_input", method = RequestMethod.POST)
     public ModelAndView mailInputCheck(@Valid @ModelAttribute("mailForm") MailForm mailForm, BindingResult errors) {
         if(errors.hasErrors()) {
             return new ModelAndView("user/mail_input"); // Devuelve la vista explícitamente para mantener BindingResult
@@ -92,22 +113,29 @@ public class UserController {
         us.changePasswordSolicited(mailForm.getEmail());
 
         return new ModelAndView("redirect:/mail_input_message");
-    }
+    }*/
 
-    @RequestMapping(path = "/change_password", method = RequestMethod.GET)
+        /*@RequestMapping(path = "/mail_input", method = RequestMethod.GET)
+    public ModelAndView mailInput(@ModelAttribute("mailForm") MailForm mailForm) {
+        ModelAndView modelAndView = new ModelAndView("user/mail_input");
+        modelAndView.addObject("mailForm", new MailForm());
+        return modelAndView;
+    }*/
+
+
+        /*@RequestMapping(path = "/change_password", method = RequestMethod.GET)
     public ModelAndView createPasswordForm(@ModelAttribute("passwordForm") PasswordForm passwordForm, @RequestParam(name = "verification_code") int verificationCode) {
         ModelAndView mav = new ModelAndView("user/new_password");
         mav.addObject("verification_code", verificationCode);
         return mav;
-    }
+    }*/
 
-    @RequestMapping(value = "/change_password", method = RequestMethod.POST)
+    /*@RequestMapping(value = "/change_password", method = RequestMethod.POST)
     public ModelAndView changePassword(@Valid @ModelAttribute("passwordForm") PasswordForm passwordForm, BindingResult errors, @RequestParam(name = "verification_code") int verificationCode) {
         if (errors.hasErrors()) {
             return createPasswordForm(passwordForm, verificationCode);
         }
-        us.changePassword(verificationCode, passwordForm.getPassword());
-        User user = us.getUserToVerify(verificationCode);
+        User user = us.changePassword(verificationCode, passwordForm.getPassword());
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
         final Authentication authenticationToken =
@@ -115,11 +143,12 @@ public class UserController {
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
         return new ModelAndView("redirect:/success_password");
-    }
+    }*/
 
-    @PostMapping(value = "/changeUsername")
+
+    /*@PostMapping(value = "/changeUsername")
     public String changeUsername(@RequestParam("loggedUserId") long userId, @RequestParam("newUsername") String newUsername, RedirectAttributes redirectAttributes) {
-        boolean updated = us.changeUserName(userId, newUsername);
+        boolean updated = us.changeUsername(userId, newUsername);
         if (updated) {
             redirectAttributes.addFlashAttribute("message", "done");
         } else {
@@ -127,71 +156,16 @@ public class UserController {
         }
 
         return "redirect:/profile";
-    }
+    }*/
 
-    @RequestMapping(path = "/create", method = RequestMethod.GET)
-    public ModelAndView createForm(@ModelAttribute("userForm") UserForm userForm) {
-        return new ModelAndView("user/create");
-    }
-
-    @RequestMapping(path = "/create", method = RequestMethod.POST)
-    public ModelAndView create(@Valid @ModelAttribute("userForm") UserForm userForm,
-                               BindingResult errors) {
-
-        if (errors.hasErrors()) {
-            return createForm(userForm);
-        }
-
-        if (us.userExists(userForm.getMail())) {
-            errors.rejectValue("mail", "error.user.exists");
-            return createForm(userForm);
-        }
-
-        us.createUser(userForm.getUsername(), userForm.getMail(), userForm.getPassword(), LocaleContextHolder.getLocale().toLanguageTag());
-        return new ModelAndView("redirect:/success_registration");
-    }
-
-    // success screens
-
-    @RequestMapping("/success_registration")
-    public ModelAndView successRegistration() {
-        return new ModelAndView("user/success_registration");
-    }
-
-    @RequestMapping("/success_verification")
-    public ModelAndView successVerification() {
-        return new ModelAndView("user/success_verification");
-    }
-
-    @RequestMapping("/mail_input_message")
-    public ModelAndView mailInputMessage() {
-        return new ModelAndView("user/mail_input_message");
-    }
-
-    @RequestMapping("/success_password")
-    public ModelAndView successPassword() {
-        return new ModelAndView("user/success_password");
-    }
-
-    @RequestMapping("/profile")
-    public ModelAndView profileHome(@RequestParam(name = "page", defaultValue = "0") int currentPage, @ModelAttribute("loggedUser") User loggeduser) {
-        ModelAndView mav = new ModelAndView("profile/profile_home");
-
-        mav.addObject("locationsUser", loggeduser.getUserLocations());
-        mav.addObject("reviews", userReviewService.getReviewsEarnedByUserId(loggeduser.getUserId(), currentPage));
-        mav.addObject("userRating", userReviewService.getUserRatingEarned(loggeduser.getUserId()));
-
-        return mav;
-    }
-
-    @RequestMapping("/language")
+    /*@RequestMapping("/language")
     public ModelAndView changeLanguage(@RequestParam(name = "lang") String lang,  @ModelAttribute("loggedUser") User loggeduser) {
         Locale locale = Locale.forLanguageTag(lang);
         LocaleContextHolder.setLocale(locale);
         us.setUserLanguage(loggeduser, lang);
 
         return new ModelAndView("redirect:/profile");
-    }
+    }*/
 
     @PostMapping("/user/addLocation")
     public ModelAndView addLocation(@RequestParam Long userId, @RequestParam String locationString) {
@@ -206,4 +180,16 @@ public class UserController {
 
 		return new ModelAndView("redirect:/profile");
     }
+
+    @RequestMapping("/profile")
+    public ModelAndView profileHome(@RequestParam(name = "page", defaultValue = "0") int currentPage, @ModelAttribute("loggedUser") User loggeduser) {
+        ModelAndView mav = new ModelAndView("profile/profile_home");
+
+        mav.addObject("locationsUser", loggeduser.getUserLocations());
+        mav.addObject("reviews", userReviewService.getReviewsEarnedByUserId(loggeduser.getUserId(), currentPage));
+        mav.addObject("userRating", userReviewService.getUserRatingEarned(loggeduser.getUserId()));
+
+        return mav;
+    }
+
 }
