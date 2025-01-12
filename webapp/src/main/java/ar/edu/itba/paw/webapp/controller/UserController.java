@@ -1,13 +1,20 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.models.Location;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.utils.Rating;
+import ar.edu.itba.paw.interfaces.exceptions.PublicationNotFoundException;
+import ar.edu.itba.paw.interfaces.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.services.UserReviewService;
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.webapp.auth.JwtTokenUtil;
 import ar.edu.itba.paw.webapp.dto.User.*;
-import ar.edu.itba.paw.webapp.form.MailForm;
+import ar.edu.itba.paw.webapp.dto.input.BookDTO;
 import ar.edu.itba.paw.webapp.mediaTypes.VndType;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
@@ -16,11 +23,18 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.awt.PageAttributes.MediaType;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -41,7 +55,25 @@ public class UserController {
     @Context
     private UriInfo uriInfo;
 
-
+    @GET
+    @Path("/{id}")
+    @Produces(value = {VndType.APPLICATION_USER})
+    public Response getUser(@PathParam("id") final long userId) {
+    	
+    	User user = null;
+    	
+    	try {
+    		user = us.findById(userId);
+    	} catch (UserNotFoundException e) {
+    		return Response.status(Response.Status.NOT_FOUND).build();
+		}
+    	
+    	UserDTO dto = UserDTO.fromUser(uriInfo, user);
+    	GenericEntity<UserDTO> genericEntity = new GenericEntity<UserDTO>(dto) {};
+    	
+    	return Response.ok(genericEntity).build();
+    }
+    
     @POST
     @Consumes(value = {VndType.APPLICATION_USER})
     public Response createUser(@Valid @NotNull final RegisterForm registerForm) {
@@ -95,7 +127,64 @@ public class UserController {
         return Response.noContent().header(HttpHeaders.AUTHORIZATION, jwtTokenUtil.createToken(user)).build();
     }
 
+    // 1) Podemos devolver arreglo de Strings en el mismo GET de users. 
+    // 2) Endpoint separado de Location por userID | Hipervinculo en el GET de USERS (lista de URN's).
+    @POST
+    @Path("/{id}/locations")
+    @Consumes(value = {VndType.APPLICATION_USER})
+    public Response createLocation(@RequestParam Long userId, @RequestParam String locationString) {
+    	Location location = us.addLocation(userId, locationString);
+    	
+		return Response.created(uriInfo.getAbsolutePathBuilder().path(location.toString()).build()).build();
+    }
+    
+    @DELETE
+    @Path("/{user_id}/locations/{location_id}")
+    @Produces(value = {VndType.APPLICATION_USER})
+    public Response removeLocation(@RequestParam Long userId, @RequestParam Long locationId) {
+        
+    	us.removeLocation(userId, locationId); // Podriamos ver de meterle que tire excepcion
+        
+    	return Response.noContent().build();
+    }
+    
+    @GET
+    @Path("/{id}/average_rating")
+    @Produces(value = {VndType.APPLICATION_USER})
+    public Response getUserAverageRating(@PathParam("id") final long userId) {
+    	
+    	User user = null;
+    	
+    	try {
+    		user = us.findById(userId);
+    	} catch (UserNotFoundException e) {
+    		return Response.status(Response.Status.NOT_FOUND).build();
+		}
+    	
+    	Rating rating = userReviewService.getUserRatingEarned(userId);
+    	int count = rating.getRatingCount();
+    	double average = rating.getRating();
+    	
+    	Map<String, Object> response = new HashMap<>();
+    	
+    	response.put("username", user.getUsername());
+    	response.put("countRating", count);
+    	response.put("averageRating", average);
+    	
+    	return Response.ok(response).build();
+    }
+    
+    @RequestMapping("/profile")
+    public ModelAndView profileHome(@RequestParam(name = "page", defaultValue = "0") int currentPage, @ModelAttribute("loggedUser") User loggeduser) {
+        ModelAndView mav = new ModelAndView("profile/profile_home");
 
+        mav.addObject("locationsUser", loggeduser.getUserLocations());
+        mav.addObject("reviews", userReviewService.getReviewsEarnedByUserId(loggeduser.getUserId(), currentPage));
+        //mav.addObject("userRating", userReviewService.getUserRatingEarned(loggeduser.getUserId()));
+
+        return mav;
+    }
+    
     /*@RequestMapping("/check_verify")
     public ModelAndView checkVerify(@ModelAttribute("loggedUser") User loggeduser) {
         if (loggeduser.isVerified()) {
@@ -166,30 +255,4 @@ public class UserController {
 
         return new ModelAndView("redirect:/profile");
     }*/
-
-    @PostMapping("/user/addLocation")
-    public ModelAndView addLocation(@RequestParam Long userId, @RequestParam String locationString) {
-        us.addLocation(userId, locationString);
-
-		return new ModelAndView("redirect:/profile");
-    }
-
-    @PostMapping("/user/removeLocation")
-    public ModelAndView removeLocation(@RequestParam Long userId, @RequestParam Long locationId) {
-        us.removeLocation(userId, locationId);
-
-		return new ModelAndView("redirect:/profile");
-    }
-
-    @RequestMapping("/profile")
-    public ModelAndView profileHome(@RequestParam(name = "page", defaultValue = "0") int currentPage, @ModelAttribute("loggedUser") User loggeduser) {
-        ModelAndView mav = new ModelAndView("profile/profile_home");
-
-        mav.addObject("locationsUser", loggeduser.getUserLocations());
-        mav.addObject("reviews", userReviewService.getReviewsEarnedByUserId(loggeduser.getUserId(), currentPage));
-        mav.addObject("userRating", userReviewService.getUserRatingEarned(loggeduser.getUserId()));
-
-        return mav;
-    }
-
 }

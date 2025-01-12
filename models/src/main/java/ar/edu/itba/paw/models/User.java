@@ -112,11 +112,8 @@ public class User {
         return isVerified;
     }
     
-    public String getFavoriteLocation() {
-    	if (favoriteLocation != null) {
-    		return favoriteLocation.getLocationString();
-    	}
-    	return null;
+    public Location getFavoriteLocation() {
+    	return favoriteLocation;
     }
     
     public Set<Location> getUserLocations() {

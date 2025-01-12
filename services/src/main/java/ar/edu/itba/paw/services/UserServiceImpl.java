@@ -200,7 +200,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void addLocation(Long userId, String locationString) {
+    public Location addLocation(Long userId, String locationString) {
         LOGGER.info("Attempting to add a location for user with ID: {}", userId);
 
         User user = findById(userId);
@@ -214,11 +214,15 @@ public class UserServiceImpl implements UserService {
             }
         }
 
+        Location newLocation = null;
+        
         if (!locationExists) {
-            Location newLocation = locationService.newLocation(locationString);
+        	newLocation = locationService.newLocation(locationString);
             userDao.addUserLocation(user, newLocation);
             LOGGER.info("New location added for user with ID: {}", userId);
         }
+        
+        return newLocation;
     }
 
 

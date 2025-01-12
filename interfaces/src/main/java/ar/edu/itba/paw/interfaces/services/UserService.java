@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces.services;
 
+import ar.edu.itba.paw.models.Location;
 import ar.edu.itba.paw.models.User;
 import java.util.Optional;
 
@@ -23,7 +24,7 @@ public interface UserService {
 
     void setUserLanguage(long userId, String language);
     
-    void addLocation(Long userId, String locationString);
+    Location addLocation(Long userId, String locationString);
     
     void removeLocation(Long userId, Long locationId);
 }

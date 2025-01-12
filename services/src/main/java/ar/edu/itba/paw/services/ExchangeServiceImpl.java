@@ -41,7 +41,7 @@ public class ExchangeServiceImpl implements ExchangeService {
     	
     	Book book = bs.getBookById(bookId);
         Long userId = book.getOwner().getUserId();
-        long requesterPubId = ps.createPublication(bookId,  userId, locationId, PublicationState.OFFERED).getPublicationId();
+        long requesterPubId = 0/*ps.createPublication(bookId,  userId, locationId, PublicationState.OFFERED).getPublicationId()*/;
 
         Random random = new Random();
         int acceptCode = Math.abs(random.nextInt());
