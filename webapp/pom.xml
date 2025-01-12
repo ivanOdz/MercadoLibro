@@ -92,7 +92,6 @@
             <artifactId>spring-security-config</artifactId>
         </dependency>
 
-
         <!-- Logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -133,6 +132,20 @@
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
+        </dependency>
+
+        <!-- JWT Util -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
         </dependency>
 
         <!-- Jersey -->
