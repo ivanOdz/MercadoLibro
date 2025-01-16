@@ -6,26 +6,16 @@ import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 
 import ar.edu.itba.paw.webapp.dto.input.ConfirmExchangeDTO;
-import ar.edu.itba.paw.webapp.dto.input.ExchangeDTO;
 import ar.edu.itba.paw.webapp.dto.input.MessageDTO;
-import ar.edu.itba.paw.webapp.form.ExchangeForm;
 import ar.edu.itba.paw.webapp.form.MessageForm;
 import ar.edu.itba.paw.webapp.form.UserReviewForm;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
-import javax.ws.rs.PATCH;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -62,8 +52,8 @@ public class ExchangeController {
     }*/
 
     @POST
-    public Response createExchange(ExchangeDTO exchangeDTO){
-        Exchange exchange = exchangeService.initializeExchange(exchangeDTO.getBookId(), exchangeInput.getLocationId(), exchangeInput.getPublicationId());
+    public Response createExchange(@QueryParam("book") final Integer bookId, @QueryParam("publication") final Integer pubId, @QueryParam("location") final Integer locationId) {
+        Exchange exchange = exchangeService.initializeExchange(bookId, locationId, pubId);
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(exchange.getExchangeId())).build()).build();
     }
 
@@ -121,7 +111,7 @@ public class ExchangeController {
     // CHECK: exchangeId not used and could be a better way to obtain the logged user
     @PATCH
     @Path("/{id}/confirm_request")
-    public Response confirmExchangeRequest( @PathParam("id") Integer exchangeId, ConfirmExchangeDTO confirmExchangeDTO) {
+    public Response confirmExchangeRequest(@PathParam("id") Integer exchangeId, ConfirmExchangeDTO confirmExchangeDTO) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         exchangeService.confirmRequest(user.getUserId(), confirmExchangeDTO.getAcceptCode());
         return Response.noContent().build();
