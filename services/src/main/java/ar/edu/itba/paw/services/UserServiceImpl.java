@@ -55,33 +55,40 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void changePassword(int verificationCode, String newPassword) {
+    public User changePassword(int verificationCode, String newPassword) {
         LOGGER.info("Password change request received.");
 
-        User user = getUserToVerify(verificationCode);
-        userDao.changePassword(user,passwordEncoder.encode(newPassword));
+        Optional<User> user = userDao.findByVerificationCode(verificationCode);
+        if (user.isPresent()) {
+            userDao.changePassword(user.get(), passwordEncoder.encode(newPassword));
 
-        LOGGER.info("Password changed successfully for user with ID: {}", user.getUserId());
+            LOGGER.info("Password changed successfully for user with ID: {}", user.get().getUserId());
+        }
+        else {
+            throw new UserVerificationBadRequestException("User verification failed");
+        }
+        return user.get();
     }
 
     @Override
     @Transactional
-    public void changePasswordSolicited(String email) {
+    public Integer changePasswordSolicited(String email) {
         // Not logging user email, as it is sensitive information
         LOGGER.info("Password change request received.");
 
         Optional<User> user = userDao.findByMail(email);
         if(user.isEmpty()){
             LOGGER.warn("User not found for email, attempt made.");
-            return;
+            return -1;
         }
 
-        int verificationCode = generateVerificationCode();
-        userDao.changePasswordSolicited(user.get(), verificationCode);
+        int passwordCode = generateVerificationCode();
+        userDao.changePasswordSolicited(user.get(), passwordCode);
         LOGGER.info("Verification code generated and saved for user with ID: {}", user.get().getUserId());
 
         emailService.sendPasswordChangeEmail(user.get());
         LOGGER.info("Password change email sent to user with ID: {}", user.get().getUserId());
+        return passwordCode;
     }
 
     @Override
@@ -117,18 +124,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void verifyUser(int verificationCode) {
+    public User verifyUser(int verificationCode) {
         LOGGER.info("Initiating user verification process.");
 
-        User user = getUserToVerify(verificationCode);
-
-        if (user != null) {
-            LOGGER.info("User of ID {} found for verification. Proceeding with verification.", user.getUserId());
-            userDao.verifyUser(user);
-            LOGGER.info("User verification completed successfully.");
-        } else {
-            LOGGER.warn("User verification failed. No user found for provided verification code.");
+        Optional<User> user = userDao.findByVerificationCode(verificationCode);
+        if (user.isEmpty()) {
+            LOGGER.warn("User verification failed: no user found for provided verification code.");
+            throw new UserVerificationBadRequestException("User verification failed");
         }
+
+        LOGGER.info("User of ID {} found for verification. Proceeding with verification.", user.get().getUserId());
+        userDao.verifyUser(user.get());
+        LOGGER.info("User verification completed successfully.");
+
+        return user.get();
     }
 
     @Override
@@ -159,7 +168,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public boolean changeUserName(long userId, String newName) {
+    public boolean changeUsername(long userId, String newName) {
         LOGGER.info("Request to change username received for user ID: {}", userId);
 
         Optional<User> user = userDao.findById(userId);
@@ -179,25 +188,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public User getUserToVerify(int verificationCode) {
-        LOGGER.info("Attempting to verify user with provided verification code.");
-
-        Optional<User> user = userDao.getUserToVerify(verificationCode);
-        if (user.isEmpty()) {
-            LOGGER.warn("User verification failed: no user found for provided verification code.");
-            throw new UserVerificationBadRequestException("User verification failed");
-        }
-
-        LOGGER.info("User verification successful.");
-        return user.get();
-    }
-
-    @Override
     @Transactional
-    public void setUserLanguage(User user, String language) {
-        LOGGER.info("Initiating language update for user with ID: {}", user.getUserId());
+    public void setUserLanguage(long userId, String language) {
+        LOGGER.info("Initiating language update for user with ID: {}", userId);
 
+        User user = findById(userId);
         userDao.setUserLanguage(user, language);
 
         LOGGER.info("Language {} successfully updated for user with ID: {}", language, user.getUserId());
@@ -205,7 +200,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void addLocation(Long userId, String locationString) {
+    public Location addLocation(Long userId, String locationString) {
         LOGGER.info("Attempting to add a location for user with ID: {}", userId);
 
         User user = findById(userId);
@@ -219,11 +214,15 @@ public class UserServiceImpl implements UserService {
             }
         }
 
+        Location newLocation = null;
+        
         if (!locationExists) {
-            Location newLocation = locationService.newLocation(locationString);
+        	newLocation = locationService.newLocation(locationString);
             userDao.addUserLocation(user, newLocation);
             LOGGER.info("New location added for user with ID: {}", userId);
         }
+        
+        return newLocation;
     }
 
 

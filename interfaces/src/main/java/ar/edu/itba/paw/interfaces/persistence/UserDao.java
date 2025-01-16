@@ -8,13 +8,15 @@ public interface UserDao {
 	
     Optional<User> findById(long id);
 
-    User createUser(String username, String mail, String password, String language, int verificationCode);
-    
     Optional<User> findByMail(String mail);
 
     Optional<User> findByUsername(String username);
 
+    Optional<User> findByVerificationCode(int verificationCode);
+
     void verifyUser(User user);
+
+    User createUser(String username, String mail, String password, String language, int verificationCode);
 
     void changePasswordSolicited(User user, int verificationCode);
 
@@ -22,7 +24,6 @@ public interface UserDao {
 
     boolean updateUsername(User user, String newUsername);
 
-    Optional<User> getUserToVerify(int verificationCode);
 
     void setUserLanguage(User user, String language);
     

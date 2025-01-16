@@ -48,7 +48,9 @@ public class PublicationJpaDao implements PublicationDao {
     }
 
     @Override
-    public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(Long userId, String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, String sortType, int page, User currentUser) {
+    public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, BookState state, Genre genre, String sortType, int page, User currentUser) {
+        Long userId = (currentUser != null ? currentUser.getUserId() : null);
+
         if (page < 0) {
             page = 0;
         }
@@ -68,19 +70,17 @@ public class PublicationJpaDao implements PublicationDao {
                         "WHERE p.publicationState = :publicationState AND LOWER(bm.title) LIKE LOWER(:safeSearch) ESCAPE '\\' "
         );
 
-        if(userId!=null){
+        if(userId != null){
             nativeQueryString.append("AND p.userId = :userId ");
         }
 
-        if (isGenreFilterActive) {
+        if (genre != null) {
             nativeQueryString.append("AND bm.genre = :genre ");
         }
 
-        if (isBookStateFilterActive) {
+        if (state != null) {
             nativeQueryString.append("AND b.bookState = :bookState ");
         }
-
-//nativeQueryString.append(" GROUP BY p.publicationid ");
 
         switch (sort) {
             case RATING_ASCENDING:
@@ -118,12 +118,12 @@ public class PublicationJpaDao implements PublicationDao {
         String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
         nativeQuery.setParameter("safeSearch", "%" + safeSearch.toLowerCase() + "%");
 
-        if(isGenreFilterActive){
-            nativeQuery.setParameter("genre", genreFilter.toString());
+        if(genre != null){
+            nativeQuery.setParameter("genre", genre.toString());
         }
 
-        if(isBookStateFilterActive){
-            nativeQuery.setParameter("bookState", bookStateFilter.toString());
+        if(state != null){
+            nativeQuery.setParameter("bookState", state.toString());
         }
 
         nativeQuery.setMaxResults(PUBLICATIONS_PAGE_SIZE);
@@ -157,9 +157,9 @@ public class PublicationJpaDao implements PublicationDao {
         TypedQuery<Publication> query = em.createQuery(jpqlQuery, Publication.class);
         query.setParameter("ids",publicationIds);
 
-        int totalResults = getTotalResultsByBook(userId, safeSearch, isGenreFilterActive, genreFilter, isBookStateFilterActive, bookStateFilter);
+        int totalResults = getTotalResultsByBook(userId, safeSearch, genre, state);
 
-        PaginatedResponse<Publication, ItemFilterMetadata> paginatedResponse = new PaginatedResponse<>(query.getResultList(), new ItemFilterMetadata(page, PUBLICATIONS_PAGE_SIZE, totalResults, search, isGenreFilterActive, genreFilter, sort, null, isBookStateFilterActive, bookStateFilter, null));
+        PaginatedResponse<Publication, ItemFilterMetadata> paginatedResponse = new PaginatedResponse<>(query.getResultList(), new ItemFilterMetadata(page, PUBLICATIONS_PAGE_SIZE, totalResults, search, (genre != null), genre, sort, null, (state != null), state, null));
 
         for(Publication publication : paginatedResponse.getData()){
             setIsLikedByUser(currentUser, publication);
@@ -270,7 +270,7 @@ public class PublicationJpaDao implements PublicationDao {
     }
 
 
-    private int getTotalResultsByBook(Long userId, String search, boolean isGenreFilterActive, Genre genreFilter, boolean isBookStateFilterActive, BookState bookStateFilter){
+    private int getTotalResultsByBook(Long userId, String search, Genre genre, BookState state){
         StringBuilder nativeQueryString = new StringBuilder(
                 "SELECT COUNT(*) " +
                         "FROM publication p " +
@@ -279,15 +279,15 @@ public class PublicationJpaDao implements PublicationDao {
                         "WHERE p.publicationState = :publicationState AND LOWER(bm.title) LIKE LOWER(:safeSearch) ESCAPE '\\' "
         );
 
-        if(userId!=null){
+        if(userId != null){
             nativeQueryString.append("AND p.userId = :userId ");
         }
 
-        if (isGenreFilterActive) {
+        if (genre != null) {
             nativeQueryString.append("AND bm.genre = :genre ");
         }
 
-        if (isBookStateFilterActive) {
+        if (state != null) {
             nativeQueryString.append("AND b.bookState = :bookState ");
         }
 
@@ -302,12 +302,12 @@ public class PublicationJpaDao implements PublicationDao {
         String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
         query.setParameter("safeSearch", "%" + safeSearch.toLowerCase() + "%");
 
-        if(isGenreFilterActive){
-            query.setParameter("genre", genreFilter.toString());
+        if (genre != null) {
+            query.setParameter("genre", genre.toString());
         }
 
-        if(isBookStateFilterActive){
-            query.setParameter("bookState", bookStateFilter.toString());
+        if (state != null) {
+            query.setParameter("bookState", state.toString());
         }
 
         return ((Number) query.getSingleResult()).intValue();

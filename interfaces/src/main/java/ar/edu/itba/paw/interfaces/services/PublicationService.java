@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface PublicationService {
 
-    Publication createPublication(long bookId, long userId, long locationId, PublicationState publicationState);
+    Publication createPublication(long bookId, User user, long locationId);
 
     void createPublicationIfNeeded(boolean publish, long bookId, long userId, long locationId, PublicationState publicationState);
 
@@ -19,7 +19,7 @@ public interface PublicationService {
 
     Publication getPublicationByPublicationId(long publicationId);
 
-    PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, String isBookStateFilterActive, String bookStateFilter, String isGenreFilterActive, String genreFilter, String sortType, int currentPage, User currentUser);
+    PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, String state, String genre, String sortType, int currentPage, User currentUser);
 
     int getPublicationCountByUserId(long userId);
 
@@ -27,7 +27,7 @@ public interface PublicationService {
 
     List<Publication> getActivePublicationsByUser(User user);
 
-    PaginatedResponse<Publication, ItemFilterMetadata> getMyPaginatedPublications(long userId, String search, String isBookStateFilterActive, String bookStateFilter, String isGenreFilterActive, String genreFilter, String sortType, int currentPage);
+    //PaginatedResponse<Publication, ItemFilterMetadata> getMyPaginatedPublications(long userId, String search, String state, String genre, String sortType, int currentPage);
 
     void deletePublication(long userId, long publicationId);
 
