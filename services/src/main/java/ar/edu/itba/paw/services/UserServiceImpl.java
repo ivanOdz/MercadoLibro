@@ -169,6 +169,10 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public boolean changeUsername(long userId, String newName) {
+        if(newName == null) {
+            return false;
+        }
+
         LOGGER.info("Request to change username received for user ID: {}", userId);
 
         Optional<User> user = userDao.findById(userId);
@@ -190,6 +194,11 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void setUserLanguage(long userId, String language) {
+
+        if(language == null){
+            return;
+        }
+
         LOGGER.info("Initiating language update for user with ID: {}", userId);
 
         User user = findById(userId);
