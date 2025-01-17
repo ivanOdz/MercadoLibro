@@ -1,36 +1,35 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.models.Location;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.models.utils.Rating;
-import ar.edu.itba.paw.interfaces.exceptions.PublicationNotFoundException;
 import ar.edu.itba.paw.interfaces.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.services.UserReviewService;
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import ar.edu.itba.paw.webapp.auth.JwtTokenUtil;
 import ar.edu.itba.paw.webapp.dto.User.*;
-import ar.edu.itba.paw.webapp.dto.input.BookDTO;
+import ar.edu.itba.paw.webapp.dto.input.ReviewInputDTO;
+import ar.edu.itba.paw.webapp.dto.output.ReviewDTO;
+import ar.edu.itba.paw.webapp.form.MessageForm;
+import ar.edu.itba.paw.webapp.form.UserReviewForm;
 import ar.edu.itba.paw.webapp.mediaTypes.VndType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.awt.PageAttributes.MediaType;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -183,6 +182,23 @@ public class UserController {
         //mav.addObject("userRating", userReviewService.getUserRatingEarned(loggeduser.getUserId()));
 
         return mav;
+    }
+
+    @POST
+    @Path("/{id}/reviews")
+    public Response createReview(@PathParam("id") final long userId,
+                                 @QueryParam("exchange_id") final Integer exchangeId,
+                                 ReviewInputDTO reviewInputDTO) {
+        userReviewService.createUserReview(exchangeId, userId, reviewInputDTO.getDescription(), reviewInputDTO.getRating());
+        return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(userId)).path("reviews").build()).build();
+    }
+
+    @GET
+    @Path("/{id}/reviews")
+    public Response getReviews(@PathParam("id") final long userId){
+        PaginatedResponse<UserReview, BasicMetadata> reviews = userReviewService.getReviewsEarnedByUserId(userId, 0);
+        List<ReviewDTO> reviewDTOS = reviews.getData().stream().map(review -> ReviewDTO.fromUserReview(uriInfo, review)).toList();
+        return Response.ok(new GenericEntity<List<ReviewDTO>>(reviewDTOS) {}).build();
     }
     
     /*@RequestMapping("/check_verify")
