@@ -73,13 +73,12 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public Integer changePasswordSolicited(String email) {
-        // Not logging user email, as it is sensitive information
         LOGGER.info("Password change request received.");
 
         Optional<User> user = userDao.findByMail(email);
         if(user.isEmpty()){
-            LOGGER.warn("User not found for email, attempt made.");
-            return -1;
+            LOGGER.warn("User not found when attempting to change password");
+            throw new UserNotFoundException("User not found for email: \"" + email + "\"");
         }
 
         int passwordCode = generateVerificationCode();
