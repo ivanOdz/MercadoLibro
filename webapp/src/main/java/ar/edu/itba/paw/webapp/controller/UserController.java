@@ -50,9 +50,6 @@ public class UserController {
     private UserService us;
 
     @Autowired
-    private BookService bs;
-
-    @Autowired
     private ExchangeService es;
 
     @Autowired
@@ -193,57 +190,6 @@ public class UserController {
 
         return mav;
     }
-
-    // Books
-
-    @GET
-    @Path("/{id}/books")
-    @Produces(value = {VndType.APPLICATION_BOOK})
-    public Response getBooks(@QueryParam("search") @DefaultValue("")final String search,
-                             @QueryParam("sort-type") @DefaultValue("BOOK_NAME_ASCENDING") final String sortType,
-                             @QueryParam("is-book-state-filter-active") @DefaultValue("false") final String isBookStateFilterActive,
-                             @QueryParam("book-state-filter") String bookStateFilter,
-                             @QueryParam("genre-filter") final String genreFilter,
-                             @QueryParam("page") @DefaultValue("0")final int currentPage,
-                             @QueryParam("is-genre-filter-active") @DefaultValue("false") final String isGenreFilterActive,
-                             @PathParam("id") final long userId) {
-        PaginatedResponse<Book, ItemFilterMetadata> paginated = bs.getPaginatedBooks(search, isBookStateFilterActive,
-                bookStateFilter, isGenreFilterActive, genreFilter, currentPage, userId, sortType);
-        final List<BookDTO> books = paginated.getData().stream()
-                .map(book -> BookDTO.fromBook(uriInfo, book)).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<BookDTO>>(books) {}).build();
-    }
-
-    @POST
-    @Consumes(value = {VndType.APPLICATION_BOOK})
-    public Response postBook(final BookDTO bookDTO, @QueryParam("bookModel") final long bookModelId, @QueryParam("rating") final Integer rating) {
-        User loggedUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Book book = bs.createBook(bookModelId, loggedUser, BookState.valueOf(bookDTO.getState()), rating);
-        return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(book.getBookId())).build()).build();
-    }
-
-    @GET
-    @Path("/{id}/books/genres-summary")
-    public Response getGenresSummary(@PathParam("id") final long userId,
-                                     @RequestParam(name = "search", defaultValue = "") String search,
-                                     @RequestParam(name = "is-book-state-filter-active", defaultValue = "false") String isBookStateFilterActive,
-                                     @RequestParam(name = "book-state-filter", required = false) String bookStateFilter) {
-        List<GenreWrapper> genresSummary = bs.getGenreWrapperList(search, isBookStateFilterActive, bookStateFilter, userId);
-        List<GenreDTO> genres = genresSummary.stream().map(g -> GenreDTO.fromGenreWrapper(uriInfo, g)).toList();
-        return Response.ok(new GenericEntity<List<GenreDTO>>(genres) {}).build();
-    }
-
-    @GET
-    @Path("/{id}/books/genres-summary")
-    public Response getConditionSummary(@PathParam("id") final long userId,
-                                     @RequestParam(name = "search", defaultValue = "") String search,
-                                     @RequestParam(name = "is-genre-filter-active", defaultValue = "false") String isGenreFilterActive,
-                                     @RequestParam(name = "genre-filter", required = false) String genreFilter) {
-        List<BookStateWrapper> conditionSummary = bs.getBookStateWrapperList(search, isGenreFilterActive, genreFilter, userId);
-        List<BookConditionDTO> conditions = conditionSummary.stream().map(g -> BookConditionDTO.fromBookState(uriInfo, g)).toList();
-        return Response.ok(new GenericEntity<List<BookConditionDTO>>(conditions) {}).build();
-    }
-
 
 
     // Reviews

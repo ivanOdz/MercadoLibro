@@ -1,14 +1,29 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
+import ar.edu.itba.paw.models.Book;
+import ar.edu.itba.paw.models.PaginatedResponse;
+import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.utils.BookState;
+import ar.edu.itba.paw.models.utils.BookStateWrapper;
+import ar.edu.itba.paw.models.utils.GenreWrapper;
+import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
+import ar.edu.itba.paw.webapp.dto.input.BookDTO;
+import ar.edu.itba.paw.webapp.dto.output.BookConditionDTO;
+import ar.edu.itba.paw.webapp.dto.output.GenreDTO;
 import ar.edu.itba.paw.webapp.mediaTypes.VndType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Path("books")
@@ -16,24 +31,72 @@ import javax.ws.rs.core.UriInfo;
 public class BookController {
 
     @Autowired
-    private BookService bookService;
+    private BookService bs;
 
     @Context
     private UriInfo uriInfo;
+
+    @GET
+    @Produces(value = {VndType.APPLICATION_BOOK})
+    public Response getBooks(@QueryParam("owner") final long userId,
+                             @QueryParam("search") @DefaultValue("")final String search,
+                             @QueryParam("sort-type") @DefaultValue("BOOK_NAME_ASCENDING") final String sortType,
+                             @QueryParam("is-book-state-filter-active") @DefaultValue("false") final String isBookStateFilterActive,
+                             @QueryParam("book-state-filter") String bookStateFilter,
+                             @QueryParam("genre-filter") final String genreFilter,
+                             @QueryParam("page") @DefaultValue("0")final int currentPage,
+                             @QueryParam("is-genre-filter-active") @DefaultValue("false") final String isGenreFilterActive) {
+        PaginatedResponse<Book, ItemFilterMetadata> paginated = bs.getPaginatedBooks(search, isBookStateFilterActive,
+                bookStateFilter, isGenreFilterActive, genreFilter, currentPage, userId, sortType);
+        final List<BookDTO> books = paginated.getData().stream()
+                .map(book -> BookDTO.fromBook(uriInfo, book)).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<BookDTO>>(books) {}).build();
+    }
+
+    @POST
+    @Consumes(value = {VndType.APPLICATION_BOOK})
+    public Response postBook(final BookDTO bookDTO, @QueryParam("bookModel") final long bookModelId, @QueryParam("rating") final Integer rating) {
+        User loggedUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Book book = bs.createBook(bookModelId, loggedUser, BookState.valueOf(bookDTO.getState()), rating);
+        return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(book.getBookId())).build()).build();
+    }
 
     @PATCH
     @Path("/{id}/state")
     @Consumes(value = {VndType.APPLICATION_BOOK_STATE})
     public Response updateBookState(@PathParam("id") final long bookId, final String bookState) {
-        bookService.updateBookState(bookId, bookState);
+        bs.updateBookState(bookId, bookState);
         return Response.noContent().build();
     }
 
     @PATCH
     @Path("/{id}/images")
     public Response setImages(@PathParam("id") final long bookId, @QueryParam("image-id") final long imageId) {
-        bookService.setImage(bookId, imageId);
+        bs.setImage(bookId, imageId);
         return Response.noContent().build();
+    }
+
+
+    @GET
+    @Path("/genres-summary")
+    public Response getGenresSummary(@QueryParam("owner") final long userId,
+                                     @RequestParam(name = "search", defaultValue = "") String search,
+                                     @RequestParam(name = "is-book-state-filter-active", defaultValue = "false") String isBookStateFilterActive,
+                                     @RequestParam(name = "book-state-filter", required = false) String bookStateFilter) {
+        List<GenreWrapper> genresSummary = bs.getGenreWrapperList(search, isBookStateFilterActive, bookStateFilter, userId);
+        List<GenreDTO> genres = genresSummary.stream().map(g -> GenreDTO.fromGenreWrapper(uriInfo, g)).toList();
+        return Response.ok(new GenericEntity<List<GenreDTO>>(genres) {}).build();
+    }
+
+    @GET
+    @Path("/condition-summary")
+    public Response getConditionSummary(@QueryParam("owner") final long userId,
+                                        @RequestParam(name = "search", defaultValue = "") String search,
+                                        @RequestParam(name = "is-genre-filter-active", defaultValue = "false") String isGenreFilterActive,
+                                        @RequestParam(name = "genre-filter", required = false) String genreFilter) {
+        List<BookStateWrapper> conditionSummary = bs.getBookStateWrapperList(search, isGenreFilterActive, genreFilter, userId);
+        List<BookConditionDTO> conditions = conditionSummary.stream().map(g -> BookConditionDTO.fromBookState(uriInfo, g)).toList();
+        return Response.ok(new GenericEntity<List<BookConditionDTO>>(conditions) {}).build();
     }
 
 
@@ -87,8 +150,8 @@ public class BookController {
         ModelAndView mav = new ModelAndView("book/book_home");
 
 
-        List<GenreWrapper> genreWrapperList = bookService.getGenreWrapperList(search, isBookStateFilterActive, bookStateFilter, loggeduser.getUserId());
-        List<BookStateWrapper> bookStateWrapperList = bookService.getBookStateWrapperList(search, isGenreFilterActive, genreFilter, loggeduser.getUserId());
+        List<GenreWrapper> genreWrapperList = bs.getGenreWrapperList(search, isBookStateFilterActive, bookStateFilter, loggeduser.getUserId());
+        List<BookStateWrapper> bookStateWrapperList = bs.getBookStateWrapperList(search, isGenreFilterActive, genreFilter, loggeduser.getUserId());
 
         List<Publication> activePublications = publicationService.getActivePublicationsByUser(loggeduser);
 
@@ -103,4 +166,6 @@ public class BookController {
         return mav;
     }
     */
+
+
 }
