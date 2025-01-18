@@ -2,6 +2,7 @@ package ar.edu.itba.paw.interfaces.persistence;
 
 import ar.edu.itba.paw.interfaces.exceptions.ExchangeNotFoundException;
 import ar.edu.itba.paw.models.Exchange;
+import ar.edu.itba.paw.models.Message;
 import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
@@ -33,4 +34,5 @@ public interface ExchangeDao {
 
     void createMessage(Exchange exchange, long userId, String message, Timestamp time);
 
+    Optional<Message> getMessageById(long messageId);
 }

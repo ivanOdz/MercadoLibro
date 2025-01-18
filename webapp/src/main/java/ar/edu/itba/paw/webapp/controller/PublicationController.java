@@ -26,7 +26,7 @@ import javax.ws.rs.core.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Path("/")
+@Path("publications")
 @Component
 public class PublicationController {
 
@@ -251,7 +251,7 @@ public class PublicationController {
     */
 
     @POST
-    @Path("/like/{publication_id}")
+    @Path("/{publication_id}/like")
     @Consumes(value = {VndType.APPLICATION_PUBLICATION})
     public Response likePublication(@PathParam("publication_id") Long publicationId) throws PublicationNotFoundException {
         User loggeduser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.exceptions.ExchangeBadRequestException;
 import ar.edu.itba.paw.interfaces.exceptions.ExchangeNotFoundException;
+import ar.edu.itba.paw.interfaces.exceptions.MessageNotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.ExchangeDao;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
@@ -231,5 +232,15 @@ public class ExchangeServiceImpl implements ExchangeService {
     public List<Message> getMessages(long exchangeId) {
         Exchange e = getExchangeById(exchangeId);
         return e.getChat();
+    }
+
+    @Override
+    public Message getMessage(long messageId) {
+        Optional<Message> m =  exchangeDao.getMessageById(messageId);
+        if (m.isEmpty()) {
+            LOGGER.warn("Message not found for messageId: {}", messageId);
+            throw new MessageNotFoundException("Message not found");
+        }
+        return m.get();
     }
 }

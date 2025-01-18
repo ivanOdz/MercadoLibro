@@ -142,4 +142,11 @@ public class ExchangeJpaDao implements ExchangeDao {
         em.persist(newMessage);
         exchange.getChat().add(newMessage);
     }
+
+    @Override
+    public Optional<Message> getMessageById(long messageId) {
+        TypedQuery<Message> m = em.createQuery("FROM Message e WHERE e.messageId = :id", Message.class);
+        m.setParameter("id", messageId);
+        return Optional.ofNullable(em.find(Message.class, messageId));
+    }
 }

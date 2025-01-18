@@ -39,4 +39,6 @@ public interface ExchangeService {
 
     List<Message> getMessages(long exchangeId);
 
+    Message getMessage(long messageId);
+
 }

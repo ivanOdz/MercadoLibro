@@ -85,13 +85,12 @@ public class ExchangeController {
         return Response.ok(new GenericEntity<List<MessagesDTO>>(messages) {}).build();
     }
 
-    // ASK
     @GET
     @Path("/{id}/messages/{message_id}")
     public Response getMessage(@PathParam("id") long exchangeId, @PathParam("message_id") long messageId) {
-        List<Message> m = exchangeService.getMessage(messageId);
-        List<MessagesDTO> messages = m.stream().map(message -> MessagesDTO.fromMessage(uriInfo, message)).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<MessagesDTO>>(messages) {}).build();
+        Message m = exchangeService.getMessage(messageId);
+        MessagesDTO message = MessagesDTO.fromMessage(uriInfo, m);
+        return Response.ok(new GenericEntity<MessagesDTO>(message) {}).build();
     }
 
     /*
