@@ -11,6 +11,7 @@ import ar.edu.itba.paw.webapp.dto.output.ExchangeDTO;
 import ar.edu.itba.paw.webapp.dto.output.MessagesDTO;
 import ar.edu.itba.paw.webapp.form.MessageForm;
 import ar.edu.itba.paw.webapp.form.UserReviewForm;
+import ar.edu.itba.paw.webapp.mediaTypes.VndType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -44,8 +45,8 @@ public class ExchangeController {
     @Context
     private UriInfo uriInfo;
 
-
     @GET
+    @Produces(value = {VndType.APPLICATION_EXCHANGE})
     public Response getExchanges(@QueryParam("id") final long userId,
                                  @QueryParam("state") final ExchangeState state,
                                  @QueryParam("isOfferer") @DefaultValue("false") final Boolean isOfferer,
@@ -77,6 +78,7 @@ public class ExchangeController {
 
     @PATCH
     @Path("/{id}/message")
+    @Consumes(value = {VndType.APPLICATION_MESSAGE})
     public Response sendMessage(@PathParam("id") long exchangeId, MessageDTO messageDTO) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         exchangeService.createMessage(exchangeId, user, messageDTO.getMessage());

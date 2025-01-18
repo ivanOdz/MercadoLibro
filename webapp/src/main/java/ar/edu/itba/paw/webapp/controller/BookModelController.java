@@ -26,8 +26,6 @@ import java.util.List;
 public class BookModelController {
 
     @Autowired
-    private BookService bookService;
-    @Autowired
     private BookModelService bookModelService;
 
     @Context
@@ -54,17 +52,8 @@ public class BookModelController {
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(bookModel.getBookModelId())).build()).build();
     }
 
-//    @PATCH
-//    @Path("{id}/authors")  // /book_models/{id}/authors
-//    @Consumes(value = {VndType.APPLICATION_AUTHOR})
-//    public Response setAuthor(@PathParam("id") Long bookModelId, AuthorDTO authorDTO) {
-//        BookModel bookModel = bookModelService.addAuthor(bookModelId, authorDTO.getName());
-//        return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(bookModel.getBookModelId())).build()).build();
-//    }
-
     @PATCH
     @Path("{id}/cover") // /book_models/{id}/cover
-    @Consumes(value = {VndType.APPLICATION_BOOK_COVER})
     public Response setBookCover(@PathParam("id") Long bookModelId, @QueryParam("image-id") Long imageId) {
         BookModel bookModel = bookModelService.setCover(bookModelId, imageId);
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(bookModel.getBookModelId())).build()).build();
@@ -72,6 +61,7 @@ public class BookModelController {
 
     @GET
     @Path("/genres-summary")
+    @Produces(value = {VndType.APPLICATION_GENRE_SUMMARY})
     public Response getGenresSummary(@QueryParam("search") String search){
         List<GenreWrapper> genresSummary = bookModelService.getGenreWrapperList(search);
         List<GenreDTO> genres = genresSummary.stream().map(g -> GenreDTO.fromGenreWrapper(uriInfo, g)).toList();

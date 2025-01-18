@@ -50,9 +50,6 @@ public class UserController {
     private UserService us;
 
     @Autowired
-    private ExchangeService es;
-
-    @Autowired
     private UserReviewService userReviewService;
 
     @Autowired
@@ -196,6 +193,7 @@ public class UserController {
 
     @POST
     @Path("/{id}/reviews")
+    @Consumes(value = {VndType.APPLICATION_USER_REVIEW_INPUT})
     public Response createReview(@PathParam("id") final long userId,
                                  @QueryParam("exchange_id") final Integer exchangeId,
                                  ReviewInputDTO reviewInputDTO) {
@@ -205,6 +203,7 @@ public class UserController {
 
     @GET
     @Path("/{id}/reviews")
+    @Produces(value = {VndType.APPLICATION_USER_REVIEW})
     public Response getReviews(@PathParam("id") final long userId){
         PaginatedResponse<UserReview, BasicMetadata> reviews = userReviewService.getReviewsEarnedByUserId(userId, 0);
         List<ReviewDTO> reviewDTOS = reviews.getData().stream().map(review -> ReviewDTO.fromUserReview(uriInfo, review)).toList();

@@ -9,6 +9,7 @@ import ar.edu.itba.paw.models.utils.BookStateWrapper;
 import ar.edu.itba.paw.models.utils.GenreWrapper;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 import ar.edu.itba.paw.webapp.dto.input.BookDTO;
+import ar.edu.itba.paw.webapp.dto.input.BookStateDTO;
 import ar.edu.itba.paw.webapp.dto.output.BookConditionDTO;
 import ar.edu.itba.paw.webapp.dto.output.GenreDTO;
 import ar.edu.itba.paw.webapp.mediaTypes.VndType;
@@ -17,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
@@ -64,8 +66,8 @@ public class BookController {
     @PATCH
     @Path("/{id}/state")
     @Consumes(value = {VndType.APPLICATION_BOOK_STATE})
-    public Response updateBookState(@PathParam("id") final long bookId, final String bookState) {
-        bs.updateBookState(bookId, bookState);
+    public Response updateBookState(@PathParam("id") final long bookId, @Valid final BookStateDTO bookState) {
+        bs.updateBookState(bookId, bookState.getBookState());
         return Response.noContent().build();
     }
 
@@ -79,6 +81,7 @@ public class BookController {
 
     @GET
     @Path("/genres-summary")
+    @Produces(value = {VndType.APPLICATION_GENRE_SUMMARY})
     public Response getGenresSummary(@QueryParam("owner") final long userId,
                                      @QueryParam("search") String search,
                                      @QueryParam("is-book-state-filter-active") String isBookStateFilterActive,
@@ -90,6 +93,7 @@ public class BookController {
 
     @GET
     @Path("/condition-summary")
+    @Produces(value = {VndType.APPLICATION_CONDITION_SUMMARY})
     public Response getConditionSummary(@QueryParam("owner") final long userId,
                                         @QueryParam("search") String search,
                                         @QueryParam("is-genre-filter-active") String isGenreFilterActive,
