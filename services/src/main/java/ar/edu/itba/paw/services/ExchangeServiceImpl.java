@@ -201,22 +201,35 @@ public class ExchangeServiceImpl implements ExchangeService {
     }
 
     // exchanges where user is the publication owner
-    @Override
-    @Transactional(readOnly = true)
-    public PaginatedResponse<Exchange, BasicMetadata> getExchangeOffererListByUserId(long userId, int currentPage, ExchangeState exchangeState) {
-        return exchangeDao.getAllExchangesByUserId(userId, exchangeState, currentPage, true);
-    }
+//    @Override
+//    @Transactional(readOnly = true)
+//    public PaginatedResponse<Exchange, BasicMetadata> getExchangeOffererListByUserId(long userId, int currentPage, ExchangeState exchangeState) {
+//        return exchangeDao.getAllExchangesByUserId(userId, exchangeState, currentPage, true);
+//    }
+//
+//    // exchanges where user is the requester owner
+//    @Override
+//    @Transactional(readOnly = true)
+//    public PaginatedResponse<Exchange, BasicMetadata> getExchangeRequesterListByUserId(long userId, int currentPage, ExchangeState exchangeState) {
+//        return exchangeDao.getAllExchangesByUserId(userId, exchangeState, currentPage, false);
+//    }
 
-    // exchanges where user is the requester owner
+
     @Override
-    @Transactional(readOnly = true)
-    public PaginatedResponse<Exchange, BasicMetadata> getExchangeRequesterListByUserId(long userId, int currentPage, ExchangeState exchangeState) {
-        return exchangeDao.getAllExchangesByUserId(userId, exchangeState, currentPage, false);
+    public PaginatedResponse<Exchange, BasicMetadata> getExchanges(long userId, ExchangeState exchangeState, Boolean isOfferer, Boolean isRequester, int currentPage) {
+        return exchangeDao.getAllExchangesByUserId(userId, exchangeState, currentPage, isOfferer, isRequester);
     }
 
     @Override
     @Transactional
     public void createMessage(long exchangeId, User user, String message) {
         exchangeDao.createMessage(getExchangeById(exchangeId), user.getUserId(), message, new Timestamp((new Date()).getTime()));
+    }
+
+    @Override
+    @Transactional
+    public List<Message> getMessages(long exchangeId) {
+        Exchange e = getExchangeById(exchangeId);
+        return e.getChat();
     }
 }

@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 
 import ar.edu.itba.paw.webapp.dto.input.ConfirmExchangeDTO;
 import ar.edu.itba.paw.webapp.dto.input.MessageDTO;
+import ar.edu.itba.paw.webapp.dto.output.MessagesDTO;
 import ar.edu.itba.paw.webapp.form.MessageForm;
 import ar.edu.itba.paw.webapp.form.UserReviewForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.util.*;
@@ -73,6 +75,23 @@ public class ExchangeController {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         exchangeService.createMessage(exchangeId, user, messageDTO.getMessage());
         return Response.noContent().build();
+    }
+
+    @GET
+    @Path("/{id}/messages")
+    public Response getMessages(@PathParam("id") long exchangeId) {
+        List<Message> m = exchangeService.getMessages(exchangeId);
+        List<MessagesDTO> messages = m.stream().map(message -> MessagesDTO.fromMessage(uriInfo, message)).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<MessagesDTO>>(messages) {}).build();
+    }
+
+    // ASK
+    @GET
+    @Path("/{id}/messages/{message_id}")
+    public Response getMessage(@PathParam("id") long exchangeId, @PathParam("message_id") long messageId) {
+        List<Message> m = exchangeService.getMessage(messageId);
+        List<MessagesDTO> messages = m.stream().map(message -> MessagesDTO.fromMessage(uriInfo, message)).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<MessagesDTO>>(messages) {}).build();
     }
 
     /*

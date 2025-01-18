@@ -27,38 +27,9 @@ public class BookController {
     @Autowired
     private BookService bookService;
 
-//    @Autowired
-//    private PublicationService publicationService;
-
     @Context
     private UriInfo uriInfo;
 
-
-    @GET
-    @Produces(value = {VndType.APPLICATION_BOOK})
-    public Response getBooks(@QueryParam("search") @DefaultValue("")final String search,
-                             @QueryParam("sort-type") @DefaultValue("BOOK_NAME_ASCENDING") final String sortType,
-                             @QueryParam("is-book-state-filter-active") @DefaultValue("false") final String isBookStateFilterActive,
-                             @QueryParam("book-state-filter") String bookStateFilter,
-                             @QueryParam("genre-filter") final String genreFilter,
-                             @QueryParam("page") @DefaultValue("0")final int currentPage,
-                             @QueryParam("is-genre-filter-active") @DefaultValue("false") final String isGenreFilterActive,
-                             @ModelAttribute("loggedUser") User loggeduser) {
-        PaginatedResponse<Book, ItemFilterMetadata> paginated = bookService.getPaginatedBooks(search, isBookStateFilterActive,
-                bookStateFilter, isGenreFilterActive, genreFilter, currentPage, loggeduser.getUserId(), sortType);
-        final List<BookDTO> books = paginated.getData().stream()
-                .map(book -> BookDTO.fromBook(uriInfo, book)).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<BookDTO>>(books) {}).build();
-    }
-
-
-    //PATCH
-    /*
-    @PostMapping("/update_bookstate")
-    public ModelAndView updateBookState(@RequestParam("book_id") Long bookId, @RequestParam("book_state") String bookState) {
-        bookService.updateBookState(bookId, bookState);
-        return new ModelAndView("redirect:/book");
-    }*/
     @PATCH
     @Path("/{id}/state")
     @Consumes(value = {VndType.APPLICATION_BOOK_STATE})
@@ -66,29 +37,6 @@ public class BookController {
         bookService.updateBookState(bookId, bookState);
         return Response.noContent().build();
     }
-
-    /*
-    @PostMapping("/book/create_new_book")
-    public ModelAndView createNewBook(@Valid @ModelAttribute("bookForm") BookForm bookForm, BindingResult errors, @ModelAttribute("loggedUser") User loggeduser) {
-        if (errors.hasErrors()) {
-            return bookModelForm(bookForm, errors, loggeduser);
-        }
-        Book book = bookService.createNewBook(bookForm.getIsbn(), bookForm.getTitle(), bookForm.getAuthors(), bookForm.getEditorial(), bookForm.getDescription(), bookForm.getGenre(), bookForm.getEdition(), bookForm.getPublicationYear(), bookForm.isHardcover(), bookForm.isPocketEdition(), bookForm.getDimension(), bookForm.getLanguage(), bookForm.getPages(), bookForm.getWeight(), bookForm.getBookState(), bookForm.getRating(), bookForm.getImageFiles(), bookForm.getBookCover(), loggeduser);
-        publicationService.createPublicationIfNeeded(bookForm.isPublish(), book.getBookId(), loggeduser.getUserId(), bookForm.getLocationId(), PublicationState.CURRENT);
-        return new ModelAndView("redirect:/book");
-    }*/
-
-
-    // CHECK rating can be done like this
-    @POST
-    @Consumes(value = {VndType.APPLICATION_BOOK})
-    public Response postBook(final BookDTO bookDTO, @QueryParam("bookModel") final long bookModelId, @QueryParam("rating") final Integer rating) {
-        User loggedUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Book book = bookService.createBook(bookModelId, loggedUser, BookState.valueOf(bookDTO.getState()), rating);
-        return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(book.getBookId())).build()).build();
-    }
-
-    // new boo
 
     @PATCH
     @Path("/{id}/images")

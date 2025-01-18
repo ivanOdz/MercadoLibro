@@ -81,17 +81,19 @@ public class ExchangeJpaDao implements ExchangeDao {
     }
 
     @Override
-    public PaginatedResponse<Exchange, BasicMetadata> getAllExchangesByUserId(long anUserId, ExchangeState exchangeState, int page, boolean isOfferer) {
+    public PaginatedResponse<Exchange, BasicMetadata> getAllExchangesByUserId(long anUserId, ExchangeState exchangeState, int page, boolean isOfferer, boolean isRequester) {
         if (page < 0) {
             page = 0;
         }
 
-        StringBuilder queryString = new StringBuilder("SELECT e.exchangeId FROM exchange e JOIN publication p ON p.publicationId = ");
+        StringBuilder queryString = new StringBuilder("SELECT e.exchangeId FROM exchange e JOIN publication p ON ");
         
-        if (isOfferer) {
-            queryString.append("e.offererpubId");
+        if(isOfferer && isRequester) {
+            queryString.append("(p.publicationId = e.offererpubId OR p.publicationId = e.requesterpubId)");
+        } else if (isOfferer) {
+            queryString.append("p.publicationId = e.offererpubId");
         } else {
-            queryString.append("e.requesterpubId");
+            queryString.append("p.publicationId = e.requesterpubId");
         }
         
         queryString.append(" WHERE p.userId = :userId AND e.exchangestate = :state");

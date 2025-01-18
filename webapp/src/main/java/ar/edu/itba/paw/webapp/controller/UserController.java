@@ -1,15 +1,21 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.services.BookService;
+import ar.edu.itba.paw.interfaces.services.ExchangeService;
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.models.utils.Rating;
 import ar.edu.itba.paw.interfaces.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.services.UserReviewService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
+import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 import ar.edu.itba.paw.webapp.auth.JwtTokenUtil;
 import ar.edu.itba.paw.webapp.dto.User.*;
+import ar.edu.itba.paw.webapp.dto.input.BookDTO;
 import ar.edu.itba.paw.webapp.dto.input.ReviewInputDTO;
+import ar.edu.itba.paw.webapp.dto.output.ExchangeDTO;
 import ar.edu.itba.paw.webapp.dto.output.ReviewDTO;
 import ar.edu.itba.paw.webapp.form.MessageForm;
 import ar.edu.itba.paw.webapp.form.UserReviewForm;
@@ -17,6 +23,7 @@ import ar.edu.itba.paw.webapp.mediaTypes.VndType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -44,6 +51,12 @@ public class UserController {
 
     @Autowired
     private UserService us;
+
+    @Autowired
+    private BookService bs;
+
+    @Autowired
+    private ExchangeService es;
 
     @Autowired
     private UserReviewService userReviewService;
@@ -184,6 +197,37 @@ public class UserController {
         return mav;
     }
 
+    // Books
+
+    @GET
+    @Path("/{id}/books")
+    @Produces(value = {VndType.APPLICATION_BOOK})
+    public Response getBooks(@QueryParam("search") @DefaultValue("")final String search,
+                             @QueryParam("sort-type") @DefaultValue("BOOK_NAME_ASCENDING") final String sortType,
+                             @QueryParam("is-book-state-filter-active") @DefaultValue("false") final String isBookStateFilterActive,
+                             @QueryParam("book-state-filter") String bookStateFilter,
+                             @QueryParam("genre-filter") final String genreFilter,
+                             @QueryParam("page") @DefaultValue("0")final int currentPage,
+                             @QueryParam("is-genre-filter-active") @DefaultValue("false") final String isGenreFilterActive,
+                             @PathParam("id") final long userId) {
+        PaginatedResponse<Book, ItemFilterMetadata> paginated = bs.getPaginatedBooks(search, isBookStateFilterActive,
+                bookStateFilter, isGenreFilterActive, genreFilter, currentPage, userId, sortType);
+        final List<BookDTO> books = paginated.getData().stream()
+                .map(book -> BookDTO.fromBook(uriInfo, book)).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<BookDTO>>(books) {}).build();
+    }
+
+    @POST
+    @Consumes(value = {VndType.APPLICATION_BOOK})
+    public Response postBook(final BookDTO bookDTO, @QueryParam("bookModel") final long bookModelId, @QueryParam("rating") final Integer rating) {
+        User loggedUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Book book = bs.createBook(bookModelId, loggedUser, BookState.valueOf(bookDTO.getState()), rating);
+        return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(book.getBookId())).build()).build();
+    }
+
+
+    // Reviews
+
     @POST
     @Path("/{id}/reviews")
     public Response createReview(@PathParam("id") final long userId,
@@ -200,7 +244,24 @@ public class UserController {
         List<ReviewDTO> reviewDTOS = reviews.getData().stream().map(review -> ReviewDTO.fromUserReview(uriInfo, review)).toList();
         return Response.ok(new GenericEntity<List<ReviewDTO>>(reviewDTOS) {}).build();
     }
-    
+
+
+    // Exchange
+
+    @GET
+    @Path("/{id}/exchanges")
+    public Response getExchanges(@PathParam("id") final long userId,
+                             @QueryParam("state") final ExchangeState state,
+                             @QueryParam("isOfferer") final Boolean isOfferer,
+                             @QueryParam("isRequester") final Boolean isRequester,
+                             @QueryParam("page") final int page) {
+        PaginatedResponse<Exchange, BasicMetadata> exchanges = es.getExchanges(userId, state, isOfferer, isRequester, page);
+
+        List<ExchangeDTO> exchangeDTOS = exchanges.getData().stream().map(exchange -> ExchangeDTO.fromExchange(uriInfo, exchange)).toList();
+
+        return Response.ok(new GenericEntity<List<ExchangeDTO>>(exchangeDTOS) {}).build();
+    }
+
     /*@RequestMapping("/check_verify")
     public ModelAndView checkVerify(@ModelAttribute("loggedUser") User loggeduser) {
         if (loggeduser.isVerified()) {
