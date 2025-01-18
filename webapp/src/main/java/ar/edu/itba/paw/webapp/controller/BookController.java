@@ -80,9 +80,9 @@ public class BookController {
     @GET
     @Path("/genres-summary")
     public Response getGenresSummary(@QueryParam("owner") final long userId,
-                                     @RequestParam(name = "search", defaultValue = "") String search,
-                                     @RequestParam(name = "is-book-state-filter-active", defaultValue = "false") String isBookStateFilterActive,
-                                     @RequestParam(name = "book-state-filter", required = false) String bookStateFilter) {
+                                     @QueryParam("search") String search,
+                                     @QueryParam("is-book-state-filter-active") String isBookStateFilterActive,
+                                     @QueryParam("book-state-filter") String bookStateFilter) {
         List<GenreWrapper> genresSummary = bs.getGenreWrapperList(search, isBookStateFilterActive, bookStateFilter, userId);
         List<GenreDTO> genres = genresSummary.stream().map(g -> GenreDTO.fromGenreWrapper(uriInfo, g)).toList();
         return Response.ok(new GenericEntity<List<GenreDTO>>(genres) {}).build();
@@ -91,9 +91,9 @@ public class BookController {
     @GET
     @Path("/condition-summary")
     public Response getConditionSummary(@QueryParam("owner") final long userId,
-                                        @RequestParam(name = "search", defaultValue = "") String search,
-                                        @RequestParam(name = "is-genre-filter-active", defaultValue = "false") String isGenreFilterActive,
-                                        @RequestParam(name = "genre-filter", required = false) String genreFilter) {
+                                        @QueryParam("search") String search,
+                                        @QueryParam("is-genre-filter-active") String isGenreFilterActive,
+                                        @QueryParam("genre-filter") String genreFilter) {
         List<BookStateWrapper> conditionSummary = bs.getBookStateWrapperList(search, isGenreFilterActive, genreFilter, userId);
         List<BookConditionDTO> conditions = conditionSummary.stream().map(g -> BookConditionDTO.fromBookState(uriInfo, g)).toList();
         return Response.ok(new GenericEntity<List<BookConditionDTO>>(conditions) {}).build();
