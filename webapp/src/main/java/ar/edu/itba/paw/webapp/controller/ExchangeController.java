@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 
 import ar.edu.itba.paw.webapp.dto.input.ConfirmExchangeDTO;
 import ar.edu.itba.paw.webapp.dto.input.MessageDTO;
+import ar.edu.itba.paw.webapp.dto.output.ExchangeDTO;
 import ar.edu.itba.paw.webapp.dto.output.MessagesDTO;
 import ar.edu.itba.paw.webapp.form.MessageForm;
 import ar.edu.itba.paw.webapp.form.UserReviewForm;
@@ -43,15 +44,20 @@ public class ExchangeController {
     @Context
     private UriInfo uriInfo;
 
-    /*
-    @PostMapping(path = "/exchange/initializeexchange")
-    public ModelAndView initializeExchange(@NotEmpty @Valid @ModelAttribute("exchangeForm") ExchangeForm exchangeInput, BindingResult errors, @ModelAttribute("loggedUser") User loggeduser) {
-        if (errors.hasErrors()) {
-            return startExchange(exchangeInput, errors, exchangeInput.getPublicationId(), loggeduser);
-        }
 
-        return new ModelAndView("redirect:/requests");
-    }*/
+    @GET
+    public Response getExchanges(@QueryParam("id") final long userId,
+                                 @QueryParam("state") final ExchangeState state,
+                                 @QueryParam("isOfferer") @DefaultValue("false") final Boolean isOfferer,
+                                 @QueryParam("isRequester") @DefaultValue("false") final Boolean isRequester,
+                                 @QueryParam("page") final Integer page) {
+        PaginatedResponse<Exchange, BasicMetadata> exchanges = exchangeService.getExchanges(userId, state, isOfferer, isRequester, page);
+
+        List<ExchangeDTO> exchangeDTOS = exchanges.getData().stream().map(exchange -> ExchangeDTO.fromExchange(uriInfo, exchange)).toList();
+
+        return Response.ok(new GenericEntity<List<ExchangeDTO>>(exchangeDTOS) {}).build();
+    }
+
 
     @POST
     public Response createExchange(@QueryParam("book") final Integer bookId, @QueryParam("publication") final Integer pubId, @QueryParam("location") final Integer locationId) {

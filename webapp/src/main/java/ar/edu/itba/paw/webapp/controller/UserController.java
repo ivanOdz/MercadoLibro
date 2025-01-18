@@ -211,23 +211,6 @@ public class UserController {
         return Response.ok(new GenericEntity<List<ReviewDTO>>(reviewDTOS) {}).build();
     }
 
-
-    // Exchange
-
-    @GET
-    @Path("/{id}/exchanges")
-    public Response getExchanges(@PathParam("id") final long userId,
-                             @QueryParam("state") final ExchangeState state,
-                             @QueryParam("isOfferer") final Boolean isOfferer,
-                             @QueryParam("isRequester") final Boolean isRequester,
-                             @QueryParam("page") final int page) {
-        PaginatedResponse<Exchange, BasicMetadata> exchanges = es.getExchanges(userId, state, isOfferer, isRequester, page);
-
-        List<ExchangeDTO> exchangeDTOS = exchanges.getData().stream().map(exchange -> ExchangeDTO.fromExchange(uriInfo, exchange)).toList();
-
-        return Response.ok(new GenericEntity<List<ExchangeDTO>>(exchangeDTOS) {}).build();
-    }
-
     /*@RequestMapping("/check_verify")
     public ModelAndView checkVerify(@ModelAttribute("loggedUser") User loggeduser) {
         if (loggeduser.isVerified()) {

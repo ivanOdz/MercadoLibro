@@ -8,6 +8,8 @@ import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 
 import ar.edu.itba.paw.webapp.dto.Publication.PublicationDTO;
+import ar.edu.itba.paw.webapp.dto.output.BookConditionDTO;
+import ar.edu.itba.paw.webapp.dto.output.GenreDTO;
 import ar.edu.itba.paw.webapp.form.ExchangeForm;
 import ar.edu.itba.paw.webapp.form.LocationForm;
 import ar.edu.itba.paw.webapp.form.PublicationForm;
@@ -294,4 +296,26 @@ public class PublicationController {
         return new ModelAndView("redirect:/publications/" + publicationId);
     }
     */
+
+    @GET
+    @Path("/genres-summary")
+    public Response getGenresSummary(@QueryParam("owner") final long userId,
+                                     @QueryParam("search") String search,
+                                     @QueryParam("is-book-state-filter-active") String isBookStateFilterActive,
+                                     @QueryParam("book-state-filter") String bookStateFilter) {
+        List<GenreWrapper> genresSummary = ps.getMyGenreWrapperList(userId, search, isBookStateFilterActive, bookStateFilter);
+        List<GenreDTO> genres = genresSummary.stream().map(g -> GenreDTO.fromGenreWrapper(uriInfo, g)).toList();
+        return Response.ok(new GenericEntity<List<GenreDTO>>(genres) {}).build();
+    }
+
+    @GET
+    @Path("/condition-summary")
+    public Response getConditionSummary(@QueryParam("owner") final long userId,
+                                        @QueryParam("search") String search,
+                                        @QueryParam("is-genre-filter-active") String isGenreFilterActive,
+                                        @QueryParam("genre-filter") String genreFilter) {
+        List<BookStateWrapper> conditionSummary = ps.getBookStateWrapperList(search, isGenreFilterActive, genreFilter);
+        List<BookConditionDTO> conditions = conditionSummary.stream().map(g -> BookConditionDTO.fromBookState(uriInfo, g)).toList();
+        return Response.ok(new GenericEntity<List<BookConditionDTO>>(conditions) {}).build();
+    }
 }
