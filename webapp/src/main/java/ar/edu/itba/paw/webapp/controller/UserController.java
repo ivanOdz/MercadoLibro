@@ -3,9 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.BookService;
 import ar.edu.itba.paw.interfaces.services.ExchangeService;
 import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.models.utils.BookState;
-import ar.edu.itba.paw.models.utils.ExchangeState;
-import ar.edu.itba.paw.models.utils.Rating;
+import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.interfaces.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.services.UserReviewService;
 import ar.edu.itba.paw.interfaces.services.UserService;
@@ -15,10 +13,10 @@ import ar.edu.itba.paw.webapp.auth.JwtTokenUtil;
 import ar.edu.itba.paw.webapp.dto.User.*;
 import ar.edu.itba.paw.webapp.dto.input.BookDTO;
 import ar.edu.itba.paw.webapp.dto.input.ReviewInputDTO;
+import ar.edu.itba.paw.webapp.dto.output.BookConditionDTO;
 import ar.edu.itba.paw.webapp.dto.output.ExchangeDTO;
+import ar.edu.itba.paw.webapp.dto.output.GenreDTO;
 import ar.edu.itba.paw.webapp.dto.output.ReviewDTO;
-import ar.edu.itba.paw.webapp.form.MessageForm;
-import ar.edu.itba.paw.webapp.form.UserReviewForm;
 import ar.edu.itba.paw.webapp.mediaTypes.VndType;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +28,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -224,6 +221,29 @@ public class UserController {
         Book book = bs.createBook(bookModelId, loggedUser, BookState.valueOf(bookDTO.getState()), rating);
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(book.getBookId())).build()).build();
     }
+
+    @GET
+    @Path("/{id}/books/genres-summary")
+    public Response getGenresSummary(@PathParam("id") final long userId,
+                                     @RequestParam(name = "search", defaultValue = "") String search,
+                                     @RequestParam(name = "is-book-state-filter-active", defaultValue = "false") String isBookStateFilterActive,
+                                     @RequestParam(name = "book-state-filter", required = false) String bookStateFilter) {
+        List<GenreWrapper> genresSummary = bs.getGenreWrapperList(search, isBookStateFilterActive, bookStateFilter, userId);
+        List<GenreDTO> genres = genresSummary.stream().map(g -> GenreDTO.fromGenreWrapper(uriInfo, g)).toList();
+        return Response.ok(new GenericEntity<List<GenreDTO>>(genres) {}).build();
+    }
+
+    @GET
+    @Path("/{id}/books/genres-summary")
+    public Response getConditionSummary(@PathParam("id") final long userId,
+                                     @RequestParam(name = "search", defaultValue = "") String search,
+                                     @RequestParam(name = "is-genre-filter-active", defaultValue = "false") String isGenreFilterActive,
+                                     @RequestParam(name = "genre-filter", required = false) String genreFilter) {
+        List<BookStateWrapper> conditionSummary = bs.getBookStateWrapperList(search, isGenreFilterActive, genreFilter, userId);
+        List<BookConditionDTO> conditions = conditionSummary.stream().map(g -> BookConditionDTO.fromBookState(uriInfo, g)).toList();
+        return Response.ok(new GenericEntity<List<BookConditionDTO>>(conditions) {}).build();
+    }
+
 
 
     // Reviews
