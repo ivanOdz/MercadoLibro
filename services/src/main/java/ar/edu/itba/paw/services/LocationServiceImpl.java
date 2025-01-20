@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -51,4 +52,14 @@ public class LocationServiceImpl implements LocationService {
         LOGGER.info("Location with ID: {} found", locationId);
         return location.get();
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Location> getLocationByPublicationId(Integer publicationId) {
+        LOGGER.info("Searching for locations of publication of ID: {}", publicationId);
+
+        return locationDao.getLocationByPublicationId(publicationId).stream().toList();
+    }
+
+
 }

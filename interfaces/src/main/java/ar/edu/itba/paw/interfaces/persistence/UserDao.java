@@ -22,8 +22,7 @@ public interface UserDao {
 
     void changePassword(User user, String newPassword);
 
-    boolean updateUsername(User user, String newUsername);
-
+    User updateUsername(User user, String newUsername);
 
     void setUserLanguage(User user, String language);
     

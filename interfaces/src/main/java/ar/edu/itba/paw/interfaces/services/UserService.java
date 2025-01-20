@@ -2,6 +2,8 @@ package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.Location;
 import ar.edu.itba.paw.models.User;
+
+import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
@@ -9,6 +11,8 @@ public interface UserService {
     User findById(long id);
 
     User createUser(String username, String mail, String password, String language);
+
+    User updateUser(long userId, String language, String username);
 
     Optional<User> findByUsername(String username);
 
@@ -20,9 +24,11 @@ public interface UserService {
 
     boolean userExists(String mail);
     
-    boolean changeUsername(long userId, String newName);
+    User changeUsername(long userId, String newName);
 
-    void setUserLanguage(long userId, String language);
+    User setUserLanguage(long userId, String language);
+
+    List<Location> getLocations(long userId, Integer publicationId);
     
     Location addLocation(Long userId, String locationString);
     

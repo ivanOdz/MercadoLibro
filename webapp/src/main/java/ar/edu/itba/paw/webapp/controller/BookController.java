@@ -14,6 +14,7 @@ import ar.edu.itba.paw.webapp.dto.output.BookConditionDTO;
 import ar.edu.itba.paw.webapp.dto.output.GenreDTO;
 import ar.edu.itba.paw.webapp.mediaTypes.VndType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,6 +38,28 @@ public class BookController {
 
     @Context
     private UriInfo uriInfo;
+
+    // @GET /users/{id} -> UserDTO + Links(headers)
+
+    // @GET /users/{id}/books -> Obtiene lista de libros de un usuario books
+
+    /// next: users/{id}/books?page=2
+
+    // @GET /books/{id} -> Obtiene 1 libro books
+
+    //@GET /users/{id}/books/genres-summary -> Obtiene los resultados que hay agrupado por genero
+    //@GET /users/{id}/books/condition-summary -> Obtiene los resultados que hay agrupado por condicion de libro
+
+    //@GET /publications/condition-summary
+    //@GET /publications/genres-summary
+
+    //@GET /book-model/genres-summary
+
+    // @GET /users/{id}/exchanges -> Lista de exchanges para el usuario x
+
+    // @GET /exchanges/{id}
+
+
 
     @GET
     @Produces(value = {VndType.APPLICATION_BOOK})

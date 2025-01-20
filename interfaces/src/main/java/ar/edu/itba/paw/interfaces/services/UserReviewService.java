@@ -8,7 +8,9 @@ import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 
 public interface UserReviewService {
 
-	UserReview createUserReview(long exchangeId, long userId, String description, int rating);
+	UserReview findUserReviewById(long reviewId);
+
+	UserReview createUserReview(long exchangeId, Long targetId, String description, int rating);
 
 	PaginatedResponse<UserReview, BasicMetadata> getReviewsEarnedByUserId(long userId, int currentPage);
 	

@@ -99,8 +99,8 @@ public class UserJpaDao implements UserDao {
     }
 
     @Override
-    public boolean updateUsername(User user, String newUsername) {
+    public User updateUsername(User user, String newUsername) {
         user.setUsername(newUsername);
-        return true;
+        return user;
     }
 }

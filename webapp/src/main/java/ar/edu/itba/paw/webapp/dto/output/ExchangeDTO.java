@@ -20,6 +20,10 @@ public class ExchangeDTO {
     private URI requester;
     private URI chat;
 
+    private URI offererReview;
+    private URI requesterReview;
+
+
     static public ExchangeDTO fromExchange(UriInfo uriInfo, Exchange exchange){
         ExchangeDTO dto = new ExchangeDTO();
         dto.state = exchange.getState().toString();
@@ -34,6 +38,11 @@ public class ExchangeDTO {
         dto.offerer = uriInfo.getBaseUriBuilder().path("publications").path(String.valueOf(exchange.getOfferer().getPublicationId())).build();
         dto.requester = uriInfo.getBaseUriBuilder().path("publications").path(String.valueOf(exchange.getRequester().getPublicationId())).build();
         dto.chat = uriInfo.getBaseUriBuilder().path("exchanges").path(String.valueOf(exchange.getExchangeId())).path("messages").build();
+
+        // /users/{offererReview}/reviews/{idReview} o null si no hay hecha una review.
+        dto.offererReview =;
+        dto.requesterReview =;
+
         return dto;
     }
 

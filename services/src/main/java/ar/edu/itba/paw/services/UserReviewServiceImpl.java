@@ -30,22 +30,32 @@ public class UserReviewServiceImpl implements UserReviewService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserReviewServiceImpl.class);
 
 	@Override
+	public UserReview findUserReviewById(long reviewId) {
+		return userReviewDao.findUserReviewById(reviewId);
+	}
+
+	@Override
 	@Transactional
-	public UserReview createUserReview(long exchangeId, long userId, String description, int rating) {
+	public UserReview createUserReview(long exchangeId, Long targetUserId, String description, int rating) {
 		Exchange exchange = exchangeService.getExchangeById(exchangeId);
+
+		if(targetUserId == null) {
+			LOGGER.warn("The provided userId: {} cannot be null", targetUserId);
+			return null;
+		}
 
 		long offererId = exchange.getOfferer().getUser().getUserId();
 		long requesterId = exchange.getRequester().getUser().getUserId();
 
-		if (userId != offererId && userId != requesterId) {
-			LOGGER.warn("The provided userId: {} does not match the offerer or requester for exchange ID: {}", userId, exchangeId);
+		if (targetUserId != offererId && targetUserId != requesterId) {
+			LOGGER.warn("The provided userId: {} does not match the offerer or requester for exchange ID: {}", targetUserId, exchangeId);
 			return null;
 		}
 
-		long targetUserId = (userId != offererId) ? offererId : requesterId;
+		long reviewerId = (targetUserId != offererId) ? offererId : requesterId;
 
-		LOGGER.info("Creating or updating user review for exchange ID: {} and user ID: {}", exchangeId, userId);
-		UserReview userReview = userReviewDao.createOrUpdateUserReview(exchangeId, userId, targetUserId, description, rating);
+		LOGGER.info("Creating or updating user review for exchange ID: {} and user ID: {}", exchangeId, targetUserId);
+		UserReview userReview = userReviewDao.createOrUpdateUserReview(exchangeId, reviewerId, targetUserId, description, rating);
 
 		LOGGER.info("User review created/updated for user ID: {} on exchange ID: {}", targetUserId, exchangeId);
 

@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.LocationService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Location;
+import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import org.slf4j.Logger;
@@ -50,6 +51,19 @@ public class UserServiceImpl implements UserService {
         LOGGER.info("New user created with id: {}", user.getUserId());
         emailService.sendVerificationEmail(user);
 
+        return user;
+    }
+
+    @Override
+    @Transactional
+    public User updateUser(long userId, String language, String username) {
+        User user = null;
+        if(language != null){
+            user = setUserLanguage(userId, language);
+        }
+        if(username != null){
+            user = changeUsername(userId, username);
+        }
         return user;
     }
 
@@ -167,11 +181,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public boolean changeUsername(long userId, String newName) {
-        if(newName == null) {
-            return false;
-        }
-
+    public User changeUsername(long userId, String newName) {
         LOGGER.info("Request to change username received for user ID: {}", userId);
 
         Optional<User> user = userDao.findById(userId);
@@ -180,30 +190,33 @@ public class UserServiceImpl implements UserService {
             throw new UserModifyBadRequestException("Error modifying user: User not found");
         }
 
-        boolean result = userDao.updateUsername(user.get(), newName);
-        if (result) {
-            LOGGER.info("Username successfully updated for user ID: {}", userId);
-        } else {
-            LOGGER.warn("Failed to update username for user ID: {}", userId);
-        }
+        User updatedUser = userDao.updateUsername(user.get(), newName);
 
-        return result;
+        LOGGER.info("Username successfully updated for user ID: {}", userId);
+
+        return updatedUser;
     }
 
     @Override
     @Transactional
-    public void setUserLanguage(long userId, String language) {
-
-        if(language == null){
-            return;
-        }
-
+    public User setUserLanguage(long userId, String language) {
         LOGGER.info("Initiating language update for user with ID: {}", userId);
 
         User user = findById(userId);
         userDao.setUserLanguage(user, language);
 
         LOGGER.info("Language {} successfully updated for user with ID: {}", language, user.getUserId());
+        return user;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Location> getLocations(long userId, Integer publicationId) {
+        if(publicationId == null){
+            return findById(userId).getUserLocations().stream().toList();
+        }
+
+        return locationService.getLocationByPublicationId(publicationId);
     }
 
     @Override

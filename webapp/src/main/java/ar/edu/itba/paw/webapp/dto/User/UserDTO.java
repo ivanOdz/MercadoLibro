@@ -17,6 +17,8 @@ public class UserDTO {
 	private URI image;
 	
 	private URI favoriteLocation;
+
+	private URI rating;
 	
 	private List<URI> locations;
 	
@@ -30,9 +32,11 @@ public class UserDTO {
 		
 		dto.self = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(user.getUserId())).build();
 		dto.image = uriInfo.getBaseUriBuilder().path("image").path(String.valueOf(user.getImageId())).build();
-		dto.favoriteLocation = uriInfo.getBaseUriBuilder().path("location").path(String.valueOf(user.getFavoriteLocation().getLocationId())).build();
-		dto.locations = user.getUserLocations().stream().map(location -> uriInfo.getBaseUriBuilder().path("location").path(String.valueOf(location.getLocationId())).build()).toList();
-		
+
+		// Revisar esto despues.
+		dto.locations = user.getUserLocations().stream().map(location -> uriInfo.getBaseUriBuilder().path("locations").path(String.valueOf(location.getLocationId())).build()).toList();
+		dto.favoriteLocation = uriInfo.getBaseUriBuilder().path("locations").path(String.valueOf(user.getFavoriteLocation().getLocationId())).build();
+
 		return dto;
 	}
     

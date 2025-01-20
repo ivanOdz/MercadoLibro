@@ -9,6 +9,8 @@ import java.util.Optional;
 
 public interface UserReviewDao {
 
+	UserReview findUserReviewById(long reviewId);
+
 	UserReview createOrUpdateUserReview(long exchangeId, long userId, long userSubjectId, String description, int rating);
 
 	PaginatedResponse<UserReview, BasicMetadata> getReviewsEarnedByUserId(long userId, int currentPage);

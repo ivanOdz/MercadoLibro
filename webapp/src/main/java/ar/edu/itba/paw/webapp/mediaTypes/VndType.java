@@ -7,6 +7,8 @@ public class VndType {
 
     public static final String APPLICATION_USER = "application/vnd.users.v1+json";
     public static final String USER_PASSWORD = "application/vnd.users.password.v1+json";
+    public static final String APPLICATION_LOCATION = "application/vnd.locations.v1+json";
+
     //public static final String USER_LANGUAGE = "application/vnd.users.language.v1+json";
     //public static final String USER_USERNAME = "application/vnd.users.username.v1+json";
     public static final String APPLICATION_BOOK = "application/vnd.books.v1+json";
@@ -21,5 +23,4 @@ public class VndType {
     public static final String APPLICATION_CONDITION_SUMMARY = "application/vnd.genre.summary.v1+json";
     public static final String APPLICATION_MESSAGE = "application/vnd.message.v1+json";
     public static final String APPLICATION_USER_REVIEW = "application/vnd.user.review.v1+json";
-    public static final String APPLICATION_USER_REVIEW_INPUT = "application/vnd.user.review.input.v1+json";
 }
