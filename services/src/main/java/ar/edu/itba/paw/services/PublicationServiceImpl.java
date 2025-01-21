@@ -164,66 +164,66 @@ public class PublicationServiceImpl implements PublicationService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<GenreWrapper> getGenreWrapperList(String search, String isBookStateFilterActive, String bookStateFilter) {
-        boolean bookStateFilterActive = "true".equalsIgnoreCase(isBookStateFilterActive);
+    public List<GenreWrapper> getGenreWrapperList(String search, String state) {
+        boolean bookStateFilterActive = state != null;
 
-        BookState state = DEFAULT_PUBLICATION_STATE_FILTER;
+        BookState state_filter = DEFAULT_PUBLICATION_STATE_FILTER;
         if (bookStateFilterActive) {
-            state = BookState.fromString(bookStateFilter);
-            if (state == null) {
+            state_filter = BookState.fromString(state);
+            if (state_filter == null) {
                 bookStateFilterActive = false;
             }
         }
 
-        return pubDao.getGenreQtyByPublication(null, search, bookStateFilterActive, state);
+        return pubDao.getGenreQtyByPublication(null, search, state_filter);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<GenreWrapper> getMyGenreWrapperList(long userId, String search, String isBookStateFilterActive, String bookStateFilter) {
-        boolean bookStateFilterActive = "true".equalsIgnoreCase(isBookStateFilterActive);
+    public List<GenreWrapper> getMyGenreWrapperList(long userId, String search, String state) {
+        boolean bookStateFilterActive = state != null;
 
-        BookState state = DEFAULT_PUBLICATION_STATE_FILTER;
+        BookState state_filter = DEFAULT_PUBLICATION_STATE_FILTER;
         if (bookStateFilterActive) {
-            state = BookState.fromString(bookStateFilter);
-            if (state == null) {
+            state_filter = BookState.fromString(state);
+            if (state_filter == null) {
                 bookStateFilterActive = false;
             }
         }
 
-        return pubDao.getGenreQtyByPublication(userId, search, bookStateFilterActive, state);
+        return pubDao.getGenreQtyByPublication(userId, search, state_filter);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<BookStateWrapper> getBookStateWrapperList(String search, String isGenreFilterActive, String genreFilter) {
-        boolean genreFilterActive = "true".equalsIgnoreCase(isGenreFilterActive);
+    public List<BookStateWrapper> getBookStateWrapperList(String search, String genre) {
+        boolean genreFilterActive = genre != null;
 
-        Genre genre = DEFAULT_PUBLICATION_GENRE_FILTER;
+        Genre genre_filter = DEFAULT_PUBLICATION_GENRE_FILTER;
         if(genreFilterActive){
-            genre = Genre.fromString(genreFilter);
-            if(genre == null){
+            genre_filter = Genre.fromString(genre);
+            if(genre_filter == null){
                 genreFilterActive = false;
             }
         }
 
-        return pubDao.getBookStateQtyByPublication(null,search, genreFilterActive, genre);
+        return pubDao.getBookStateQtyByPublication(null, search, genre_filter);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<BookStateWrapper> getMyBookStateWrapperList(long userId, String search, String isGenreFilterActive, String genreFilter) {
-        boolean genreFilterActive = "true".equalsIgnoreCase(isGenreFilterActive);
+    public List<BookStateWrapper> getMyBookStateWrapperList(long userId, String search, String genre) {
+        boolean genreFilterActive = genre != null;
 
-        Genre genre = DEFAULT_PUBLICATION_GENRE_FILTER;
+        Genre genre_filter = DEFAULT_PUBLICATION_GENRE_FILTER;
         if(genreFilterActive){
-            genre = Genre.fromString(genreFilter);
-            if(genre == null){
+            genre_filter = Genre.fromString(genre);
+            if(genre_filter == null){
                 genreFilterActive = false;
             }
         }
 
-        return pubDao.getBookStateQtyByPublication(userId, search, genreFilterActive, genre);
+        return pubDao.getBookStateQtyByPublication(userId, search, genre_filter);
     }
 
     @Override

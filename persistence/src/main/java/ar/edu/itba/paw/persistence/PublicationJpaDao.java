@@ -179,18 +179,18 @@ public class PublicationJpaDao implements PublicationDao {
     }
 
     @Override
-    public List<GenreWrapper> getGenreQtyByPublication(Long userId, String search, boolean isBookStateFilterActive, BookState bookStateFilter) {
+    public List<GenreWrapper> getGenreQtyByPublication(Long userId, String search, BookState state) {
         StringBuilder sqlQuery =  new StringBuilder("SELECT bm.genre, COUNT(*) AS genreCount " +
                         "FROM publication p " +
                         "JOIN book b ON p.bookId = b.bookId " +
                         "JOIN book_model bm ON b.bookModelId = bm.bookModelId " +
                         "WHERE p.publicationState = :publicationState AND LOWER(bm.title) LIKE LOWER(:safeSearch) ESCAPE '\\' ");
 
-        if(userId!=null){
+        if(userId != null){
             sqlQuery.append("AND p.userId = :userId ");
         }
 
-        if(isBookStateFilterActive){
+        if(state != null){
             sqlQuery.append("AND b.bookState = :bookState ");
         }
 
@@ -206,8 +206,8 @@ public class PublicationJpaDao implements PublicationDao {
         String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
         query.setParameter("safeSearch", "%" + safeSearch.toLowerCase() + "%");
 
-        if(isBookStateFilterActive){
-            query.setParameter("bookState", bookStateFilter.toString());
+        if(state != null){
+            query.setParameter("bookState", state.toString());
         }
 
         List<Object[]> results = query.getResultList();
@@ -225,19 +225,19 @@ public class PublicationJpaDao implements PublicationDao {
 
 
     @Override
-    public List<BookStateWrapper> getBookStateQtyByPublication(Long userId, String search, boolean isGenreFilterActive, Genre genreFilter) {
+    public List<BookStateWrapper> getBookStateQtyByPublication(Long userId, String search, Genre genre) {
         StringBuilder sqlQuery =  new StringBuilder("SELECT b.bookState, COUNT(*) AS stateCount " +
                 "FROM publication p " +
                 "JOIN book b ON p.bookId = b.bookId " +
                 "JOIN book_model bm ON b.bookModelId = bm.bookModelId " +
                 "WHERE p.publicationState = :publicationState AND LOWER(bm.title) LIKE LOWER(:safeSearch) ESCAPE '\\' ");
 
-        if(isGenreFilterActive){
-            sqlQuery.append("AND bm.genre = :genre ");
+        if(userId != null){
+            sqlQuery.append("AND p.userId = :userId ");
         }
 
-        if(userId!=null){
-            sqlQuery.append("AND p.userId = :userId ");
+        if(genre != null){
+            sqlQuery.append("AND bm.genre = :genre ");
         }
 
         sqlQuery.append("GROUP BY b.bookState");
@@ -252,8 +252,8 @@ public class PublicationJpaDao implements PublicationDao {
         String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
         query.setParameter("safeSearch", "%" + safeSearch.toLowerCase() + "%");
 
-        if(isGenreFilterActive){
-            query.setParameter("genre", genreFilter.toString());
+        if(genre != null){
+            query.setParameter("genre", genre.toString());
         }
 
         List<Object[]> results = query.getResultList();
