@@ -51,7 +51,7 @@ public class PublicationController {
     @GET
     @Produces(value = {VndType.APPLICATION_PUBLICATION})
     public Response getPublications(@QueryParam("search") @DefaultValue("")final String search,
-                                       @QueryParam("sort-type") @DefaultValue("BOOK_NAME_ASCENDING") final String sortType,
+                                       @QueryParam("sort_type") @DefaultValue("BOOK_NAME_ASCENDING") final String sortType,
                                        @QueryParam("state") String state,
                                        @QueryParam("genre") final String genre,
                                        @QueryParam("page") @DefaultValue("0")final int currentPage,
@@ -298,7 +298,7 @@ public class PublicationController {
     */
 
     @GET
-    @Path("/genres-summary")
+    @Path("/genres_summary")
     public Response getGenresSummary(@QueryParam("owner") final long userId,
                                      @QueryParam("search") String search,
                                      @QueryParam("state") String state) {
@@ -308,7 +308,7 @@ public class PublicationController {
     }
 
     @GET
-    @Path("/condition-summary")
+    @Path("/condition_summary")
     public Response getConditionSummary(@QueryParam("owner") final long userId,
                                         @QueryParam("search") String search,
                                         @QueryParam("genre") String genre) {
