@@ -65,7 +65,7 @@ public class BookController {
     @Produces(value = {VndType.APPLICATION_BOOK})
     public Response getBooks(@QueryParam("owner") final long userId,
                              @QueryParam("search") @DefaultValue("")final String search,
-                             @QueryParam("sort-type") @DefaultValue("BOOK_NAME_ASCENDING") final String sortType,
+                             @QueryParam("sort_type") @DefaultValue("BOOK_NAME_ASCENDING") final String sortType,
                              @QueryParam("state") String state,
                              @QueryParam("genre") final String genre,
                              @QueryParam("page") @DefaultValue("0")final int currentPage) {
@@ -92,14 +92,14 @@ public class BookController {
 
     @PATCH
     @Path("/{id}/images")
-    public Response setImages(@PathParam("id") final long bookId, @QueryParam("image-id") final long imageId) {
+    public Response setImages(@PathParam("id") final long bookId, @QueryParam("image_id") final long imageId) {
         bs.setImage(bookId, imageId);
         return Response.noContent().build();
     }
 
 
     @GET
-    @Path("/genres-summary")
+    @Path("/genres_summary")
     @Produces(value = {VndType.APPLICATION_GENRE_SUMMARY})
     public Response getGenresSummary(@QueryParam("owner") final long userId,
                                      @QueryParam("search") String search,
@@ -110,7 +110,7 @@ public class BookController {
     }
 
     @GET
-    @Path("/condition-summary")
+    @Path("/condition_summary")
     @Produces(value = {VndType.APPLICATION_CONDITION_SUMMARY})
     public Response getConditionSummary(@QueryParam("owner") final long userId,
                                         @QueryParam("search") String search,
