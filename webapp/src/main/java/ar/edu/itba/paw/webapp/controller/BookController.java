@@ -66,15 +66,11 @@ public class BookController {
     public Response getBooks(@QueryParam("owner") final long userId,
                              @QueryParam("search") @DefaultValue("")final String search,
                              @QueryParam("sort-type") @DefaultValue("BOOK_NAME_ASCENDING") final String sortType,
-                             @QueryParam("is-book-state-filter-active") @DefaultValue("false") final String isBookStateFilterActive,
-                             @QueryParam("book-state-filter") String bookStateFilter,
-                             @QueryParam("genre-filter") final String genreFilter,
-                             @QueryParam("page") @DefaultValue("0")final int currentPage,
-                             @QueryParam("is-genre-filter-active") @DefaultValue("false") final String isGenreFilterActive) {
-        PaginatedResponse<Book, ItemFilterMetadata> paginated = bs.getPaginatedBooks(search, isBookStateFilterActive,
-                bookStateFilter, isGenreFilterActive, genreFilter, currentPage, userId, sortType);
-        final List<BookDTO> books = paginated.getData().stream()
-                .map(book -> BookDTO.fromBook(uriInfo, book)).collect(Collectors.toList());
+                             @QueryParam("state") String state,
+                             @QueryParam("genre") final String genre,
+                             @QueryParam("page") @DefaultValue("0")final int currentPage) {
+        PaginatedResponse<Book, ItemFilterMetadata> paginated = bs.getPaginatedBooks(search, state, genre, currentPage, userId, sortType);
+        final List<BookDTO> books = paginated.getData().stream().map(book -> BookDTO.fromBook(uriInfo, book)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<BookDTO>>(books) {}).build();
     }
 
@@ -107,9 +103,8 @@ public class BookController {
     @Produces(value = {VndType.APPLICATION_GENRE_SUMMARY})
     public Response getGenresSummary(@QueryParam("owner") final long userId,
                                      @QueryParam("search") String search,
-                                     @QueryParam("is-book-state-filter-active") String isBookStateFilterActive,
-                                     @QueryParam("book-state-filter") String bookStateFilter) {
-        List<GenreWrapper> genresSummary = bs.getGenreWrapperList(search, isBookStateFilterActive, bookStateFilter, userId);
+                                     @QueryParam("state") String state) {
+        List<GenreWrapper> genresSummary = bs.getGenreWrapperList(search, state, userId);
         List<GenreDTO> genres = genresSummary.stream().map(g -> GenreDTO.fromGenreWrapper(uriInfo, g)).toList();
         return Response.ok(new GenericEntity<List<GenreDTO>>(genres) {}).build();
     }
@@ -119,9 +114,8 @@ public class BookController {
     @Produces(value = {VndType.APPLICATION_CONDITION_SUMMARY})
     public Response getConditionSummary(@QueryParam("owner") final long userId,
                                         @QueryParam("search") String search,
-                                        @QueryParam("is-genre-filter-active") String isGenreFilterActive,
-                                        @QueryParam("genre-filter") String genreFilter) {
-        List<BookStateWrapper> conditionSummary = bs.getBookStateWrapperList(search, isGenreFilterActive, genreFilter, userId);
+                                        @QueryParam("genre") String genre) {
+        List<BookStateWrapper> conditionSummary = bs.getBookStateWrapperList(search, genre, userId);
         List<BookConditionDTO> conditions = conditionSummary.stream().map(g -> BookConditionDTO.fromBookState(uriInfo, g)).toList();
         return Response.ok(new GenericEntity<List<BookConditionDTO>>(conditions) {}).build();
     }

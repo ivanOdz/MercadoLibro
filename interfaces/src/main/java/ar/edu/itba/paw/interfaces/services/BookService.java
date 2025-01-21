@@ -27,15 +27,15 @@ public interface BookService {
 
     Book getBookById(long bookId);
 
-    PaginatedResponse<Book, ItemFilterMetadata> getPaginatedBooks(String search, String isBookStateFilterActive, String bookStateFilter, String isGenreFilterActive, String genreFilter, int currentPage, long userId, String sortType);
+    PaginatedResponse<Book, ItemFilterMetadata> getPaginatedBooks(String search, String state, String genre, int currentPage, long userId, String sortType);
 
     List<Book> getAvailableBooksByUser(User user);
 
     void setAvailable(Book book, boolean available);
 
-    List<GenreWrapper> getGenreWrapperList(String search, String isBookStateFilterActive, String bookStateFilter, long userId);
+    List<GenreWrapper> getGenreWrapperList(String search, String state, long userId);
 
-    List<BookStateWrapper> getBookStateWrapperList(String serach, String isGenreFilterActive, String genreFilter, long userId);
+    List<BookStateWrapper> getBookStateWrapperList(String serach, String genre, long userId);
 
     Book updateBookState(Long bookId, String bookState);
 

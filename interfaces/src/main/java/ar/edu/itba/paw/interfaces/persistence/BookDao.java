@@ -19,11 +19,11 @@ public interface BookDao {
 
     List<Book> getAllBooksByUser(long userId);
 
-    PaginatedResponse<Book, ItemFilterMetadata> getPaginatedBooks(String search, boolean isBookStateFilterActive, BookState bookStateFilter, boolean isGenreFilterActive, Genre genreFilter, int currentPage, long userId, String sortType);
+    PaginatedResponse<Book, ItemFilterMetadata> getPaginatedBooks(String search, BookState state, Genre genre, int currentPage, long userId, String sortType);
 
-    List<BookStateWrapper> getBookStateQtyByBook(String search, boolean isGenreFilterActive, Genre genreFilter, Long userId);
+    List<BookStateWrapper> getBookStateQtyByBook(String search, Genre genre, Long userId);
 
-    List<GenreWrapper> getGenreQtyByBook(String search, boolean isBookStateFilterActive, BookState bookStateFilter, Long userId);
+    List<GenreWrapper> getGenreQtyByBook(String search, BookState state, Long userId);
 
     void setAvailable(Book book, boolean available);
 
