@@ -159,7 +159,7 @@ public class PublicationJpaDao implements PublicationDao {
 
         int totalResults = getTotalResultsByBook(userId, safeSearch, genre, state);
 
-        PaginatedResponse<Publication, ItemFilterMetadata> paginatedResponse = new PaginatedResponse<>(query.getResultList(), new ItemFilterMetadata(page, PUBLICATIONS_PAGE_SIZE, totalResults, search, (genre != null), genre, sort, null, (state != null), state, null));
+        PaginatedResponse<Publication, ItemFilterMetadata> paginatedResponse = new PaginatedResponse<>(query.getResultList(), new ItemFilterMetadata(page, PUBLICATIONS_PAGE_SIZE, totalResults, search, genre, sort, null,  state, null));
 
         for(Publication publication : paginatedResponse.getData()){
             setIsLikedByUser(currentUser, publication);
