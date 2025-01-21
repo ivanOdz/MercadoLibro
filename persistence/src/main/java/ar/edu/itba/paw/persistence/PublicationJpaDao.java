@@ -79,7 +79,7 @@ public class PublicationJpaDao implements PublicationDao {
         }
 
         if (state != null) {
-            nativeQueryString.append("AND b.bookState = :bookState ");
+            nativeQueryString.append("AND b.bookState = :state ");
         }
 
         switch (sort) {
@@ -123,7 +123,7 @@ public class PublicationJpaDao implements PublicationDao {
         }
 
         if(state != null){
-            nativeQuery.setParameter("bookState", state.toString());
+            nativeQuery.setParameter("state", state.toString());
         }
 
         nativeQuery.setMaxResults(PUBLICATIONS_PAGE_SIZE);
@@ -191,7 +191,7 @@ public class PublicationJpaDao implements PublicationDao {
         }
 
         if(state != null){
-            sqlQuery.append("AND b.bookState = :bookState ");
+            sqlQuery.append("AND b.bookState = :state ");
         }
 
         sqlQuery.append("GROUP BY bm.genre");
@@ -207,7 +207,7 @@ public class PublicationJpaDao implements PublicationDao {
         query.setParameter("safeSearch", "%" + safeSearch.toLowerCase() + "%");
 
         if(state != null){
-            query.setParameter("bookState", state.toString());
+            query.setParameter("state", state.toString());
         }
 
         List<Object[]> results = query.getResultList();
@@ -288,7 +288,7 @@ public class PublicationJpaDao implements PublicationDao {
         }
 
         if (state != null) {
-            nativeQueryString.append("AND b.bookState = :bookState ");
+            nativeQueryString.append("AND b.bookState = :state ");
         }
 
         Query query = em.createNativeQuery(nativeQueryString.toString());
@@ -307,7 +307,7 @@ public class PublicationJpaDao implements PublicationDao {
         }
 
         if (state != null) {
-            query.setParameter("bookState", state.toString());
+            query.setParameter("state", state.toString());
         }
 
         return ((Number) query.getSingleResult()).intValue();
