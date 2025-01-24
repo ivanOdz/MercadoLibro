@@ -33,13 +33,13 @@ public interface PublicationService {
 
     void likePublication(long publicationId, long userId);
 
-    List<GenreWrapper> getGenreWrapperList(String search, String isBookStateFilterActive, String bookStateFilter);
+    List<GenreWrapper> getGenreWrapperList(String search, String state);
 
-    List<BookStateWrapper> getBookStateWrapperList(String search, String isGenreFilterActive, String genreFilter);
+    List<BookStateWrapper> getBookStateWrapperList(String search, String genre);
 
-    List<GenreWrapper> getMyGenreWrapperList(long userId, String search, String isBookStateFilterActive, String bookStateFilter);
+    List<GenreWrapper> getMyGenreWrapperList(long userId, String search, String state);
 
-    List<BookStateWrapper> getMyBookStateWrapperList(long userId, String search, String isGenreFilterActive, String genreFilter);
+    List<BookStateWrapper> getMyBookStateWrapperList(long userId, String search, String genre);
 
     PaginatedResponse<Publication, BasicMetadata> getFavoritePublications(User user, int currentPage);
 

@@ -149,28 +149,28 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    public PaginatedResponse<Book, ItemFilterMetadata> getPaginatedBooks(String search, String isBookStateFilterActive, String bookStateFilter, String isGenreFilterActive, String genreFilter, int currentPage, long userId, String sortType) {
+    public PaginatedResponse<Book, ItemFilterMetadata> getPaginatedBooks(String search, String state, String genre, int currentPage, long userId, String sortType) {
 
-        boolean bookStateFilterActive = "true".equalsIgnoreCase(isBookStateFilterActive);
-        boolean genreFilterActive = "true".equalsIgnoreCase(isGenreFilterActive);
+        boolean bookStateFilterActive = state != null;
+        boolean genreFilterActive = genre != null;
 
-        BookState state = DEFAULT_BOOK_STATE_FILTER;
+        BookState state_filter = DEFAULT_BOOK_STATE_FILTER;
         if (bookStateFilterActive) {
-            state = BookState.fromString(bookStateFilter);
-            if (state == null) {
+            state_filter = BookState.fromString(state);
+            if (state_filter == null) {
                 bookStateFilterActive = false;
             }
         }
 
-        Genre genre = DEFAULT_BOOK_GENRE_FILTER;
+        Genre genre_filter = DEFAULT_BOOK_GENRE_FILTER;
         if (genreFilterActive){
-            genre = Genre.fromString(genreFilter);
-            if(genre == null){
+            genre_filter = Genre.fromString(genre);
+            if(genre_filter == null){
                 genreFilterActive = false;
             }
         }
 
-        return bookDao.getPaginatedBooks(search, bookStateFilterActive, state, genreFilterActive, genre, currentPage, userId, sortType);
+        return bookDao.getPaginatedBooks(search, state_filter, genre_filter, currentPage, userId, sortType);
     }
 
     private List<MultipartFile> arrangeImages(List<MultipartFile> images, int bookCoverIndex) {
@@ -207,37 +207,37 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<GenreWrapper> getGenreWrapperList(String search, String isBookStateFilterActive, String bookStateFilter, long userId) {
+    public List<GenreWrapper> getGenreWrapperList(String search, String state, long userId) {
     	
-        boolean bookStateFilterActive = "true".equalsIgnoreCase(isBookStateFilterActive);
+        boolean bookStateFilterActive = state != null;
 
-        BookState state = DEFAULT_PUBLICATION_STATE_FILTER;
+        BookState state_filter = DEFAULT_PUBLICATION_STATE_FILTER;
         
         if (bookStateFilterActive) {
-            state = BookState.fromString(bookStateFilter);
-            if (state == null) {
+            state_filter = BookState.fromString(state);
+            if (state_filter == null) {
                 bookStateFilterActive = false;
             }
         }
 
-        return bookDao.getGenreQtyByBook(search, bookStateFilterActive, state, userId);
+        return bookDao.getGenreQtyByBook(search, state_filter, userId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<BookStateWrapper> getBookStateWrapperList(String serach, String isGenreFilterActive, String genreFilter, long userId) {
+    public List<BookStateWrapper> getBookStateWrapperList(String serach, String genre, long userId) {
     	
-        boolean genreFilterActive = "true".equalsIgnoreCase(isGenreFilterActive);
+        boolean genreFilterActive = genre != null;
 
-        Genre genre = DEFAULT_PUBLICATION_GENRE_FILTER;
+        Genre genre_filter = DEFAULT_PUBLICATION_GENRE_FILTER;
         if (genreFilterActive) {
-            genre = Genre.fromString(genreFilter);
-            if (genre == null) {
+            genre_filter = Genre.fromString(genre);
+            if (genre_filter == null) {
                 genreFilterActive = false;
             }
         }
 
-        return bookDao.getBookStateQtyByBook(serach, genreFilterActive, genre, userId);
+        return bookDao.getBookStateQtyByBook(serach, genre_filter, userId);
     }
 
     @Override

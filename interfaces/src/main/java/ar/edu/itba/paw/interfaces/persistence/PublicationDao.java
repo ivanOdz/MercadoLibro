@@ -23,9 +23,9 @@ public interface PublicationDao {
 
     int getPublicationCountByUserId(long userId);
 
-    List<BookStateWrapper> getBookStateQtyByPublication(Long userId, String search, boolean isGenreFilterActive, Genre genreFilter);
+    List<BookStateWrapper> getBookStateQtyByPublication(Long userId, String search, Genre genre);
 
-    List<GenreWrapper> getGenreQtyByPublication(Long userId, String search, boolean isBookStateFilterActive, BookState bookStateFilter);
+    List<GenreWrapper> getGenreQtyByPublication(Long userId, String search, BookState state);
 
     void deletePublication(long publicationId);
 

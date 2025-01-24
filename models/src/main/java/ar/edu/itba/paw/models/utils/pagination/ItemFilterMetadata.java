@@ -10,10 +10,10 @@ public class ItemFilterMetadata extends GenreFilterMetadata{
     private final BookState bookStateFilter;
     private List<BookStateWrapper> bookStateWrapperList;
 
-    public ItemFilterMetadata(int currentPage, int pageSize, int totalResults, String search, boolean isGenreFilterActive, Genre genreFilter, SortType sortType, List<GenreWrapper> genreWrapperList, boolean isBookStateFilterActive, BookState bookStateFilter, List<BookStateWrapper> bookStateWrapperList) {
-        super(currentPage, pageSize, totalResults, search, isGenreFilterActive, genreFilter, sortType, genreWrapperList);
-        this.isBookStateFilterActive = isBookStateFilterActive;
-        this.bookStateFilter = bookStateFilter;
+    public ItemFilterMetadata(int currentPage, int pageSize, int totalResults, String search, Genre genre, SortType sortType, List<GenreWrapper> genreWrapperList, BookState state, List<BookStateWrapper> bookStateWrapperList) {
+        super(currentPage, pageSize, totalResults, search, genre, sortType, genreWrapperList);
+        this.isBookStateFilterActive = state != null;
+        this.bookStateFilter = state;
         this.bookStateWrapperList = bookStateWrapperList;
     }
 

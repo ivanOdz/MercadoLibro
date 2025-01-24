@@ -51,7 +51,7 @@ public class PublicationController {
     @GET
     @Produces(value = {VndType.APPLICATION_PUBLICATION})
     public Response getPublications(@QueryParam("search") @DefaultValue("")final String search,
-                                       @QueryParam("sort-type") @DefaultValue("BOOK_NAME_ASCENDING") final String sortType,
+                                       @QueryParam("sort_type") @DefaultValue("BOOK_NAME_ASCENDING") final String sortType,
                                        @QueryParam("state") String state,
                                        @QueryParam("genre") final String genre,
                                        @QueryParam("page") @DefaultValue("0")final int currentPage,
@@ -298,23 +298,21 @@ public class PublicationController {
     */
 
     @GET
-    @Path("/genres-summary")
+    @Path("/genres_summary")
     public Response getGenresSummary(@QueryParam("owner") final long userId,
                                      @QueryParam("search") String search,
-                                     @QueryParam("is-book-state-filter-active") String isBookStateFilterActive,
-                                     @QueryParam("book-state-filter") String bookStateFilter) {
-        List<GenreWrapper> genresSummary = ps.getMyGenreWrapperList(userId, search, isBookStateFilterActive, bookStateFilter);
+                                     @QueryParam("state") String state) {
+        List<GenreWrapper> genresSummary = ps.getMyGenreWrapperList(userId, search, state);
         List<GenreDTO> genres = genresSummary.stream().map(g -> GenreDTO.fromGenreWrapper(uriInfo, g)).toList();
         return Response.ok(new GenericEntity<List<GenreDTO>>(genres) {}).build();
     }
 
     @GET
-    @Path("/condition-summary")
+    @Path("/condition_summary")
     public Response getConditionSummary(@QueryParam("owner") final long userId,
                                         @QueryParam("search") String search,
-                                        @QueryParam("is-genre-filter-active") String isGenreFilterActive,
-                                        @QueryParam("genre-filter") String genreFilter) {
-        List<BookStateWrapper> conditionSummary = ps.getBookStateWrapperList(search, isGenreFilterActive, genreFilter);
+                                        @QueryParam("genre") String genre) {
+        List<BookStateWrapper> conditionSummary = ps.getBookStateWrapperList(search, genre);
         List<BookConditionDTO> conditions = conditionSummary.stream().map(g -> BookConditionDTO.fromBookState(uriInfo, g)).toList();
         return Response.ok(new GenericEntity<List<BookConditionDTO>>(conditions) {}).build();
     }
