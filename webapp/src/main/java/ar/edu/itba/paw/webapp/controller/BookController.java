@@ -13,6 +13,7 @@ import ar.edu.itba.paw.webapp.dto.input.BookStateDTO;
 import ar.edu.itba.paw.webapp.dto.output.BookConditionDTO;
 import ar.edu.itba.paw.webapp.dto.output.GenreDTO;
 import ar.edu.itba.paw.webapp.mediaTypes.VndType;
+import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -71,7 +72,8 @@ public class BookController {
                              @QueryParam("page") @DefaultValue("0")final int currentPage) {
         PaginatedResponse<Book, ItemFilterMetadata> paginated = bs.getPaginatedBooks(search, state, genre, currentPage, userId, sortType);
         final List<BookDTO> books = paginated.getData().stream().map(book -> BookDTO.fromBook(uriInfo, book)).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<BookDTO>>(books) {}).build();
+        Response.ResponseBuilder response = Response.ok(new GenericEntity<List<BookDTO>>(books) {});
+        return PageResponseUtil.getResponse(currentPage, paginated.getMetadata().getMaxPage(), uriInfo, response);
     }
 
     @POST
