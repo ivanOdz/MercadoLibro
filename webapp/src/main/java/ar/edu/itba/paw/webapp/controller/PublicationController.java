@@ -56,10 +56,10 @@ public class PublicationController {
                                        @QueryParam("genre") final String genre,
                                        @QueryParam("page") @DefaultValue("0")final int currentPage,
                                        @QueryParam("size") Integer size,
-                                       @ModelAttribute("loggedUser") User loggeduser) {
+                                       @QueryParam("user-id") long userId) {
 
         PaginatedResponse<Publication, ItemFilterMetadata> publications = ps.getPaginatedPublications(search,
-                state, genre, sortType, currentPage, loggeduser);
+                state, genre, sortType, currentPage, userId);
 
         List<PublicationDTO> publicationDTOList = publications.getData().stream()
                 .map(publication -> PublicationDTO.fromPublication(uriInfo, publication)).collect(Collectors.toList());;

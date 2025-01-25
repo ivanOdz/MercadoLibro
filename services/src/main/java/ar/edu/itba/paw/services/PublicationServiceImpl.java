@@ -81,8 +81,9 @@ public class PublicationServiceImpl implements PublicationService {
 
     @Override
     @Transactional(readOnly = true)
-    public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, String state, String genre, String sortType, int currentPage, User currentUser) {
+    public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, String state, String genre, String sortType, int currentPage, long userId) {
 
+        User currentUser = userService.findById(userId);
         BookState state_filter = DEFAULT_PUBLICATION_STATE_FILTER;
         if (state != null) {
             state_filter = BookState.fromString(state);
