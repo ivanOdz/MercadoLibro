@@ -10,6 +10,7 @@ import ar.edu.itba.paw.webapp.dto.input.BookModelDTO;
 import ar.edu.itba.paw.webapp.dto.output.BookConditionDTO;
 import ar.edu.itba.paw.webapp.dto.output.GenreDTO;
 import ar.edu.itba.paw.webapp.mediaTypes.VndType;
+import ar.edu.itba.paw.webapp.utils.SerializationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,7 +43,13 @@ public class BookModelController {
         PaginatedResponse<BookModel, BookModelMetadata> modelBooks = bookModelService.getPaginatedBookModels(search, isGenreFilterActive, genreFilter, currentPage, sortType);
         List<BookModelDTO> bookModels = modelBooks.getData().stream().map(bm -> BookModelDTO.fromBookModel(uriInfo, bm)).toList();
 
-        return Response.ok(new GenericEntity<List<BookModelDTO>>(bookModels) {}).build();
+        Response.ResponseBuilder response = Response.ok(new GenericEntity<List<BookModelDTO>>(bookModels) {});
+
+        List<GenreWrapper> genresSummary = bookModelService.getGenreWrapperList(search);
+        response.header("X-genre-summary", SerializationUtils.serializeGenreWrapper(genresSummary));
+
+
+        return response.build();
     }
 
     @POST
@@ -59,12 +66,5 @@ public class BookModelController {
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(bookModel.getBookModelId())).build()).build();
     }
 
-    @GET
-    @Path("/genres-summary")
-    @Produces(value = {VndType.APPLICATION_GENRE_SUMMARY})
-    public Response getGenresSummary(@QueryParam("search") String search){
-        List<GenreWrapper> genresSummary = bookModelService.getGenreWrapperList(search);
-        List<GenreDTO> genres = genresSummary.stream().map(g -> GenreDTO.fromGenreWrapper(uriInfo, g)).toList();
-        return Response.ok(new GenericEntity<List<GenreDTO>>(genres) {}).build();
-    }
+
 }

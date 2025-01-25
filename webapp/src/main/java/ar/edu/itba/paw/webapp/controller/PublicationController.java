@@ -15,6 +15,7 @@ import ar.edu.itba.paw.webapp.form.LocationForm;
 import ar.edu.itba.paw.webapp.form.PublicationForm;
 import ar.edu.itba.paw.webapp.mediaTypes.VndType;
 import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
+import ar.edu.itba.paw.webapp.utils.SerializationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -65,6 +66,12 @@ public class PublicationController {
                 .map(publication -> PublicationDTO.fromPublication(uriInfo, publication)).collect(Collectors.toList());;
 
         Response.ResponseBuilder response = Response.ok(new GenericEntity<List<PublicationDTO>>(publicationDTOList) {});
+
+
+        List<GenreWrapper> genresSummary = ps.getMyGenreWrapperList(userId, search, state);
+        List<BookStateWrapper> conditionSummary = ps.getBookStateWrapperList(search, genre);
+        response.header("X-genre-summary", SerializationUtils.serializeGenreWrapper(genresSummary));
+        response.header("X-condition-summary", SerializationUtils.serializeConditionWrapper(conditionSummary));
 
         return PageResponseUtil.getResponse(currentPage, publications.getMetadata().getMaxPage(), uriInfo, response);
     }
@@ -297,23 +304,5 @@ public class PublicationController {
     }
     */
 
-    @GET
-    @Path("/genres_summary")
-    public Response getGenresSummary(@QueryParam("owner") final long userId,
-                                     @QueryParam("search") String search,
-                                     @QueryParam("state") String state) {
-        List<GenreWrapper> genresSummary = ps.getMyGenreWrapperList(userId, search, state);
-        List<GenreDTO> genres = genresSummary.stream().map(g -> GenreDTO.fromGenreWrapper(uriInfo, g)).toList();
-        return Response.ok(new GenericEntity<List<GenreDTO>>(genres) {}).build();
-    }
 
-    @GET
-    @Path("/condition_summary")
-    public Response getConditionSummary(@QueryParam("owner") final long userId,
-                                        @QueryParam("search") String search,
-                                        @QueryParam("genre") String genre) {
-        List<BookStateWrapper> conditionSummary = ps.getBookStateWrapperList(search, genre);
-        List<BookConditionDTO> conditions = conditionSummary.stream().map(g -> BookConditionDTO.fromBookState(uriInfo, g)).toList();
-        return Response.ok(new GenericEntity<List<BookConditionDTO>>(conditions) {}).build();
-    }
 }
