@@ -40,7 +40,12 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Override
     @Transactional
     public Exchange initializeExchange(long bookId, long locationId, long offererPubId) {
-    	
+
+        if(ps.getPublicationByPublicationId(offererPubId).getPublicationState() != PublicationState.CURRENT) {
+            LOGGER.warn("Publication with id {} is not in current state", offererPubId);
+            throw new ExchangeBadRequestException("Publication is not in current state");
+        }
+
     	Book book = bs.getBookById(bookId);
         Long userId = book.getOwner().getUserId();
         long requesterPubId = 0/*ps.createPublication(bookId,  userId, locationId, PublicationState.OFFERED).getPublicationId()*/;
