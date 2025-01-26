@@ -92,6 +92,7 @@ public class BookController {
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(book.getBookId())).build()).build();
     }
 
+    // CHECK: state is not an object
     @PATCH
     @Path("/{id}/state")
     @Consumes(value = {VndType.APPLICATION_BOOK_STATE})
@@ -99,6 +100,7 @@ public class BookController {
         bs.updateBookState(bookId, bookState.getBookState());
         return Response.noContent().build();
     }
+
 
     @PATCH
     @Path("/{id}/images")

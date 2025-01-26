@@ -20,6 +20,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import javax.ws.rs.HttpMethod;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -48,6 +49,14 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     public AccessDeniedHandler accessDeniedHandler() {
         return new ForbiddenRequestHandler();
     }
+
+
+    /**
+     * Access control methods
+     */
+    private static final String USER_ACCESS = "@accessControl.userAccess(request, #id)";
+    private static final String BOOKS_ACCESS = "@accessControl.booksAccess(request)";
+    private static final String BOOK_MODIFY_ACCESS = "@accessControl.modifyBookAccess(request, #id)";
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -90,8 +99,47 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .and()
 
         // Set permissions on endpoints
-                .authorizeRequests().anyRequest().authenticated()
+//                .authorizeRequests().anyRequest().authenticated()
                 //
+
+                .authorizeRequests()
+
+                /*
+                 * Book controller
+                 **/
+                .antMatchers(HttpMethod.GET,"/api/books")
+                    .access(BOOKS_ACCESS)
+
+//                 CHECK: book post passes security checks. SecurityContextHolder returns null on controller layer but then it does not fail on service layer
+
+                .antMatchers(HttpMethod.PATCH, "/api/books/{id:\\d+}")
+                    .access(BOOK_MODIFY_ACCESS)
+
+                .antMatchers(HttpMethod.PATCH, "/api/books/{id:\\d+}}/images")
+                    .access(BOOK_MODIFY_ACCESS)
+
+                /*
+                 * Book Model controller
+                 */
+
+                /*
+                 * Exchange controller
+                 */
+
+                /*
+                 * Publication controller
+                 */
+
+                /*
+                 * User controller
+                 */
+
+
+                .antMatchers("/api/**").permitAll()
+
+//                 IMPLEMENT: Exceptions controller missing
+//                 IMPLEMENT: Image controller missing
+
                 //
                 // .antMatchers("api/users/test").authenticated()
                 //.anyRequest().permitAll() // Other endpoints can be accessed freely
