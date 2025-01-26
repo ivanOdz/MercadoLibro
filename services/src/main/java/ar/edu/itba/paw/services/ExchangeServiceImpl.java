@@ -36,6 +36,7 @@ public class ExchangeServiceImpl implements ExchangeService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExchangeServiceImpl.class);
 
 
+    // FIXME: missing implementation of createPublication
     @Override
     @Transactional
     public Exchange initializeExchange(long bookId, long locationId, long offererPubId) {
