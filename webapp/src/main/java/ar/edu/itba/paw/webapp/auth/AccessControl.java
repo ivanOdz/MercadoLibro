@@ -1,15 +1,16 @@
 package ar.edu.itba.paw.webapp.auth;
 
 import ar.edu.itba.paw.interfaces.services.BookService;
-import ar.edu.itba.paw.models.Book;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.interfaces.services.ExchangeService;
+import ar.edu.itba.paw.interfaces.services.LocationService;
+import ar.edu.itba.paw.interfaces.services.PublicationService;
+import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.models.utils.PublicationState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-import java.net.http.HttpRequest;
 
 
 @Component
@@ -21,9 +22,18 @@ public class AccessControl {
     @Autowired
     private BookService bookService;
 
-    public Boolean userAccess(HttpRequest request, Long id) {
+    @Autowired
+    private ExchangeService exchangeService;
 
-        return true;
+    @Autowired
+    private PublicationService publicationService;
+
+    @Autowired
+    private LocationService locationService;
+
+    public Boolean exchangeUserAccess(HttpServletRequest request) {
+        long userId = Long.parseLong(request.getParameter("id"));
+        return getUser().getUserId().equals(userId);
     }
 
     public Boolean booksAccess(HttpServletRequest request) {
@@ -37,6 +47,48 @@ public class AccessControl {
         Book b = bookService.getBookById(id);
         return b.getOwner().getUserId().equals(userId);
     }
+
+    public Boolean exchangeAccess(HttpServletRequest request) {
+        long exchangeId = Long.parseLong(request.getParameter("id"));
+        Exchange e = exchangeService.getExchangeById(exchangeId);
+
+        long userId = getUser().getUserId();
+
+        // userId matches requester or offerer id
+        return e.getRequester().getUser().getUserId().equals(userId) || e.getOfferer().getUser().getUserId().equals(userId);
+    }
+
+    public Boolean createExchangeAccess(HttpServletRequest request) {
+        // publication must be current
+        Publication p = publicationService.getPublicationByPublicationId(Long.parseLong(request.getParameter("publication")));
+
+        // user must be the owner of the book
+        Book b = bookService.getBookById(Long.parseLong(request.getParameter("book")));
+
+        // location must be in the user's locations
+        Location l = locationService.findById(Long.parseLong(request.getParameter("location")));
+
+        return p.getPublicationState().equals(PublicationState.CURRENT) &&
+                b.getOwner().getUserId().equals(getUser().getUserId()) &&
+                l.getUsers().contains(getUser());
+    }
+
+    public Boolean exchangeRequesterAccess(HttpServletRequest request, Long id) {
+        Long loggedUserId = getUser().getUserId();
+        Long userId = Long.parseLong(request.getParameter("user-id"));
+        return exchangeService.getExchangeById(id).getRequester().getUser().getUserId().equals(loggedUserId)
+                && userId.equals(loggedUserId);
+    }
+
+    public Boolean exchangeOffererAccess(HttpServletRequest request, Long id) {
+        Long loggedUserId = getUser().getUserId();
+        Long userId = Long.parseLong(request.getParameter("user-id"));
+
+        return exchangeService.getExchangeById(id).getOfferer().getUser().getUserId().equals(loggedUserId)
+                && userId.equals(loggedUserId);
+    }
+
+
 
     private User getUser(){
         return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

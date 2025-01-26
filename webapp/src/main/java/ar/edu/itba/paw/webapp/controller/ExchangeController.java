@@ -33,15 +33,6 @@ public class ExchangeController {
     @Autowired
     private ExchangeService exchangeService;
 
-    @Autowired
-    private PublicationService publicationService;
-
-    @Autowired
-    private BookService bookService;
-
-    @Autowired
-    private UserReviewService userReviewService;
-
     @Context
     private UriInfo uriInfo;
 
@@ -66,18 +57,10 @@ public class ExchangeController {
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(exchange.getExchangeId())).build()).build();
     }
 
-    /*
-    @PostMapping( "/send_message")
-    public ResponseEntity<Void> sendMessage(@RequestParam("chatExchangeId") long exchangeId,
-                            @RequestParam("chatUserId") long userId,
-                            @RequestParam("message") String message) {
-            exchangeService.createMessage(exchangeId, userId, message);
-        return ResponseEntity.ok().build();
-    }
-    */
 
-    @PATCH
-    @Path("/{id}/message")
+    // CHECK: application message same output and input
+    @POST
+    @Path("/{id}/messages")
     @Consumes(value = {VndType.APPLICATION_MESSAGE})
     public Response sendMessage(@PathParam("id") long exchangeId, MessageDTO messageDTO) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -87,6 +70,7 @@ public class ExchangeController {
 
     @GET
     @Path("/{id}/messages")
+    @Produces(value = {VndType.APPLICATION_MESSAGE})
     public Response getMessages(@PathParam("id") long exchangeId) {
         List<Message> m = exchangeService.getMessages(exchangeId);
         List<MessagesDTO> messages = m.stream().map(message -> MessagesDTO.fromMessage(uriInfo, message)).collect(Collectors.toList());
@@ -101,45 +85,41 @@ public class ExchangeController {
         return Response.ok(new GenericEntity<MessagesDTO>(message) {}).build();
     }
 
-    /*
-    @RequestMapping("/createexchange")
-    public ModelAndView exchange(@RequestParam(name = "accept_code") int acceptCode, @RequestParam(name = "state") boolean state, @ModelAttribute("loggedUser") User loggeduser) {
-        if(exchangeService.exchange(acceptCode, state)){
-            return new ModelAndView("exchange/accepted");
-        }
-        return new ModelAndView("exchange/rejected");
-    }*/
-
+    // CHECK: path not RESTful + userId not used in back (only for security)
     @PATCH
     @Path("/{id}/start")
-    public Response startExchange(@PathParam("id") Integer exchangeId) {
+    public Response startExchange(@PathParam("id") Integer exchangeId,
+                                  @QueryParam("user-id") Long userId) {
         exchangeService.exchange(exchangeId, true);
         return Response.noContent().build();
     }
 
+    // CHECK: path may not be RESTful + userId not used in back (only for security)
     @PATCH
-    @Path("/{id}/reject")
-    public Response rejectExchange(@PathParam("id") Integer exchangeId) {
+    @Path("/{id}/rejection")
+    public Response rejectExchange(@PathParam("id") Integer exchangeId,
+                                   @QueryParam("user-id") Long userId) {
         exchangeService.exchange(exchangeId, false);
         return Response.noContent().build();
     }
 
-
-    // CHECK: exchangeId not used and could be a better way to obtain the logged user
     @PATCH
-    @Path("/{id}/confirm_offer")
-    public Response confirmExchangeOffer(@PathParam("id") Integer exchangeId, ConfirmExchangeDTO confirmExchangeDTO) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        exchangeService.confirmOffer(user.getUserId(), confirmExchangeDTO.getAcceptCode());
+    @Path("/{id}/confirmation/offerer")
+    @Consumes(value = {VndType.APPLICATION_CONFIRM_EXCHANGE})
+    public Response confirmExchange(@PathParam("id") Integer exchangeId,
+                                    @QueryParam("user-id") Long userId,
+                                    ConfirmExchangeDTO confirmExchangeDTO) {
+        exchangeService.confirmOffer(userId, confirmExchangeDTO.getAcceptCode());
         return Response.noContent().build();
     }
 
-    // CHECK: exchangeId not used and could be a better way to obtain the logged user
     @PATCH
-    @Path("/{id}/confirm_request")
-    public Response confirmExchangeRequest(@PathParam("id") Integer exchangeId, ConfirmExchangeDTO confirmExchangeDTO) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        exchangeService.confirmRequest(user.getUserId(), confirmExchangeDTO.getAcceptCode());
+    @Path("/{id}/confirmation/requester")
+    @Consumes(value = {VndType.APPLICATION_CONFIRM_EXCHANGE})
+    public Response confirmExchangeRequest(@PathParam("id") Integer exchangeId,
+                                           @QueryParam("user-id") Long userId,
+                                           ConfirmExchangeDTO confirmExchangeDTO) {
+        exchangeService.confirmRequest(userId, confirmExchangeDTO.getAcceptCode());
         return Response.noContent().build();
     }
 

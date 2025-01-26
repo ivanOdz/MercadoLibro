@@ -54,9 +54,13 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     /**
      * Access control methods
      */
-    private static final String USER_ACCESS = "@accessControl.userAccess(request, #id)";
     private static final String BOOKS_ACCESS = "@accessControl.booksAccess(request)";
     private static final String BOOK_MODIFY_ACCESS = "@accessControl.modifyBookAccess(request, #id)";
+    private static final String EXCHANGES_USER_ACCESS = "@accessControl.exchangeUserAccess(request)";
+    private static final String EXCHANGES_ACCESS = "@accessControl.exchangeAccess(request)";
+    private static final String CREATE_EXCHANGE_ACCESS = "@accessControl.createExchangeAccess(request)";
+    private static final String EXCHANGES_OFFERER_ACCESS = "@accessControl.exchangeOffererAccess(request, #id)";
+    private static final String EXCHANGES_REQUESTER_ACCESS = "@accessControl.exchangeRequesterAccess(request, #id)";
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -88,78 +92,105 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable().cors().and()
 
         // Set session management to stateless
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
+        .sessionManagement()
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .and()
 
         // Set unauthorized and forbidden requests exception handler
-                .exceptionHandling()
-                .authenticationEntryPoint(authenticationEntryPoint())
-                .accessDeniedHandler(accessDeniedHandler())
-                .and()
+        .exceptionHandling()
+        .authenticationEntryPoint(authenticationEntryPoint())
+        .accessDeniedHandler(accessDeniedHandler())
+        .and()
 
         // Set permissions on endpoints
-//                .authorizeRequests().anyRequest().authenticated()
-                //
+        //.authorizeRequests().anyRequest().authenticated()
 
-                .authorizeRequests()
+        .authorizeRequests()
 
-                /*
-                 * Book controller
-                 **/
-                .antMatchers(HttpMethod.GET,"/api/books")
-                    .access(BOOKS_ACCESS)
+        /*
+         * Book controller
+         **/
+        .antMatchers(HttpMethod.GET,"/api/books")
+            .access(BOOKS_ACCESS)
 
-//                 CHECK: book post passes security checks. SecurityContextHolder returns null on controller layer but then it does not fail on service layer
+        // CHECK: book post passes security checks. SecurityContextHolder returns null on controller layer but then it does not fail on service layer
 
-                .antMatchers(HttpMethod.PATCH, "/api/books/{id:\\d+}")
-                    .access(BOOK_MODIFY_ACCESS)
+        .antMatchers(HttpMethod.PATCH, "/api/books/{id:\\d+}")
+            .access(BOOK_MODIFY_ACCESS)
 
-                .antMatchers(HttpMethod.PATCH, "/api/books/{id:\\d+}}/images")
-                    .access(BOOK_MODIFY_ACCESS)
+        .antMatchers(HttpMethod.PATCH, "/api/books/{id:\\d+}}/images")
+            .access(BOOK_MODIFY_ACCESS)
 
-                /*
-                 * Book Model controller
-                 */
+        /*
+         * Book Model controller
+         */
 
-                /*
-                 * Exchange controller
-                 */
+        // ASK: What checks do we want for the book model controller?
 
-                /*
-                 * Publication controller
-                 */
+        /*
+         * Exchange controller
+         */
 
-                /*
-                 * User controller
-                 */
+                .antMatchers(HttpMethod.GET, "/api/exchanges")
+                    .access(EXCHANGES_USER_ACCESS)
+
+                .antMatchers(HttpMethod.POST, "/api/exchanges")
+                    .access(CREATE_EXCHANGE_ACCESS)
+
+                .antMatchers(HttpMethod.POST, "/api/exchanges/{id:\\d+}/messages")
+                    .access(EXCHANGES_ACCESS)
+
+                .antMatchers(HttpMethod.GET, "/api/exchanges/{id:\\d+}/messages")
+                    .access(EXCHANGES_ACCESS)
 
 
-                .antMatchers("/api/**").permitAll()
+                // CHECK: start and reject are not restful
+                .antMatchers(HttpMethod.PATCH, "/api/exchanges/{id:\\d+}/start")
+                    .access(EXCHANGES_OFFERER_ACCESS)
+
+                .antMatchers(HttpMethod.PATCH, "/api/exchanges/{id:\\d+}/reject")
+                    .access(EXCHANGES_OFFERER_ACCESS)
+
+                .antMatchers(HttpMethod.PATCH, "/api/exchanges/{id:\\d+}/confirmation/offerer")
+                    .access(EXCHANGES_OFFERER_ACCESS)
+
+                .antMatchers(HttpMethod.PATCH, "/api/exchanges/{id:\\d+}/confirmation/requester")
+                .access(EXCHANGES_REQUESTER_ACCESS)
+
+        /*
+         * Publication controller
+         */
+
+        /*
+         * User controller
+         */
+
+
+        .antMatchers("/api/**").permitAll()
 
 //                 IMPLEMENT: Exceptions controller missing
 //                 IMPLEMENT: Image controller missing
 
-                //
-                // .antMatchers("api/users/test").authenticated()
-                //.anyRequest().permitAll() // Other endpoints can be accessed freely
+        //
+        // .antMatchers("api/users/test").authenticated()
+        //.anyRequest().permitAll() // Other endpoints can be accessed freely
 
-                /*.antMatchers("/images/**, /css/**").permitAll() // Esto vuela porque se encarga el front
-                .antMatchers("/api/auth/login").permitAll()  // Allow login endpoint without authentication
-                .antMatchers("/", "/publications/*").permitAll()
-                .antMatchers("/favicon.ico").permitAll()    // Esto vuela porque se encarga el front
-                .antMatchers("/user_auth").anonymous()      // Esto vuela porque se encarga el front
-                .antMatchers("/create","/login","/mail_input", "/change_password", "/success_registration", "/mail_input_message").anonymous()
-                .antMatchers("/book","/book/**", "/start_exchange", "/profile", "/requests", "/offers", "/send_message", "/submit_review", "/like/**", "/success_password").authenticated()
-                .antMatchers("/**").permitAll()*/
-                .and()
-                .headers().cacheControl().disable().and()
+        /*.antMatchers("/images/**, /css/**").permitAll() // Esto vuela porque se encarga el front
+        .antMatchers("/api/auth/login").permitAll()  // Allow login endpoint without authentication
+        .antMatchers("/", "/publications/*").permitAll()
+        .antMatchers("/favicon.ico").permitAll()    // Esto vuela porque se encarga el front
+        .antMatchers("/user_auth").anonymous()      // Esto vuela porque se encarga el front
+        .antMatchers("/create","/login","/mail_input", "/change_password", "/success_registration", "/mail_input_message").anonymous()
+        .antMatchers("/book","/book/**", "/start_exchange", "/profile", "/requests", "/offers", "/send_message", "/submit_review", "/like/**", "/success_password").authenticated()
+        .antMatchers("/**").permitAll()*/
+        .and()
+        .headers().cacheControl().disable().and()
 
-                // JWT Authentication Filter - Validates the JWT token
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+        // JWT Authentication Filter - Validates the JWT token
+        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 
-                // Custom Authentication Filter - Applied after the JWT filter
-                .addFilterBefore(basicAuthTokenIssuerFilter, UsernamePasswordAuthenticationFilter.class);
+        // Custom Authentication Filter - Applied after the JWT filter
+        .addFilterBefore(basicAuthTokenIssuerFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override
