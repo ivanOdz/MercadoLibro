@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.ws.rs.core.UriInfo;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.utils.Rating;
 
 public class UserDTO {
 	
@@ -12,35 +13,73 @@ public class UserDTO {
 	
 	private String mail;
 	
+	private int ratingCount;
+
+	private double ratingAverage;
+
 	private URI self;
-	
+
 	private URI image;
-	
+
 	private URI favoriteLocation;
 
-	private URI rating;
-	
-	private List<URI> locations;
-	
-	
-	public static UserDTO fromUser(final UriInfo uriInfo, final User user) {
+	private URI locations;
+
+	private URI reviews;
+
+	private URI books;
+
+	private URI likes;
+
+	public static UserDTO fromUser(final UriInfo uriInfo, final User user, Rating userRating) {
 		
 		final UserDTO dto = new UserDTO();
 		
 		dto.username = user.getUsername();
 		dto.mail = user.getMail();
-		
-		dto.self = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(user.getUserId())).build();
+		dto.ratingCount = userRating.getRatingCount();
+		dto.ratingAverage = userRating.getRating();
+
+		// links
+		dto.self = uriInfo.getBaseUriBuilder().path("users").path(user.getUserId().toString()).build();
 		dto.image = uriInfo.getBaseUriBuilder().path("image").path(String.valueOf(user.getImageId())).build();
-
-		// Revisar esto despues.
-		dto.locations = user.getUserLocations().stream().map(location -> uriInfo.getBaseUriBuilder().path("locations").path(String.valueOf(location.getLocationId())).build()).toList();
-		dto.favoriteLocation = uriInfo.getBaseUriBuilder().path("locations").path(String.valueOf(user.getFavoriteLocation().getLocationId())).build();
-
+		dto.locations = uriInfo.getBaseUriBuilder().path("users").path(user.getUserId().toString()).path("locations").build();
+		dto.favoriteLocation = uriInfo.getBaseUriBuilder().path("users").path(user.getUserId().toString()).
+				path("locations").path(String.valueOf(user.getFavoriteLocation().getLocationId())).build();
+		dto.reviews = uriInfo.getBaseUriBuilder().path("users").path(user.getUserId().toString()).path("reviews").queryParam("page", 0).build();
+		dto.books = uriInfo.getBaseUriBuilder().path("books").queryParam("owner", user.getUserId()).queryParam("page", 0).build();
 		return dto;
 	}
-    
-    public void setUsername(String username) {
+
+	public URI getReviews() {
+		return reviews;
+	}
+
+	public void setReviews(URI reviews) {
+		this.reviews = reviews;
+	}
+
+	public URI getBooks() {
+		return books;
+	}
+
+	public void setBooks(URI books) {
+		this.books = books;
+	}
+
+	public void setLocations(URI locations) {
+		this.locations = locations;
+	}
+
+	public URI getLikes() {
+		return likes;
+	}
+
+	public void setLikes(URI likes) {
+		this.likes = likes;
+	}
+
+	public void setUsername(String username) {
     	this.username = username;
     }
     
@@ -51,7 +90,7 @@ public class UserDTO {
     public void setSelf(URI self) {
         this.self = self;
     }
-	
+
     public void setImage(URI image) {
     	this.image = image;
     }
@@ -60,7 +99,7 @@ public class UserDTO {
     	this.favoriteLocation = favoriteLocation;
     }
     
-    public void setLocation(List<URI> locations) {
+    public void setLocation(URI locations) {
     	this.locations = locations;
     }
     
@@ -84,7 +123,24 @@ public class UserDTO {
     	return favoriteLocation;
     }
     
-    public List<URI> getLocations() {
+    public URI getLocations() {
     	return locations;
     }
+
+	public int getRatingCount() {
+		return ratingCount;
+	}
+
+	public void setRatingCount(int ratingCount) {
+		this.ratingCount = ratingCount;
+	}
+
+	public double getRatingAverage() {
+		return ratingAverage;
+	}
+
+	public void setRatingAverage(double ratingAverage) {
+		this.ratingAverage = ratingAverage;
+	}
 }
+

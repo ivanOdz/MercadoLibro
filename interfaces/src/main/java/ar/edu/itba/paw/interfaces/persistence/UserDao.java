@@ -28,7 +28,7 @@ public interface UserDao {
     
     void setUserFavoriteLocation(User user, Location favoriteLocation);
     
-    void addUserLocation(User user,Location location);
+    void addUserLocation(User user, Location location);
     
     void removeUserLocation(User user, Location location);
 }
