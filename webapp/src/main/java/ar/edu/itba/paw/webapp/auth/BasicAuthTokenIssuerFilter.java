@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.auth;
 
 
+import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,7 +26,20 @@ public class BasicAuthTokenIssuerFilter extends BasicAuthenticationFilter {
     @Override
     protected void onSuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, Authentication authResult) throws IOException {
         super.onSuccessfulAuthentication(request, response, authResult);
-        String jwt = jwtTokenUtil.createToken(authResult);
-        response.addHeader("X-New-Access-Token", jwt);
+
+        User user = (User) authResult.getPrincipal();
+
+        String accessToken = jwtTokenUtil.createAccessToken(user);
+        String refreshToken = jwtTokenUtil.createRefreshToken(user);
+
+        response.addHeader(JwtTokenUtil.ACCESS_TOKEN_HEADER, accessToken);
+        response.addHeader(JwtTokenUtil.REFRESH_TOKEN_HEADER, refreshToken);
+
+        response.addHeader("X-User-URI", "users/" + user.getUserId());
     }
 }
+
+/*
+    1) Devolver via header al autenticarlo, el endpoint para pedir al usuario -> Podemos usar userid para Enpoints
+    2) Una vez que se tiene los tokens, que angular haga get al /users/{username}
+ */
