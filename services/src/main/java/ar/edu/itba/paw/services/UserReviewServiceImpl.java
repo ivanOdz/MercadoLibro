@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.exceptions.UserRatingNotFound;
+import ar.edu.itba.paw.interfaces.exceptions.UserReviewNotFound;
 import ar.edu.itba.paw.interfaces.persistence.UserReviewDao;
 import ar.edu.itba.paw.interfaces.services.ExchangeService;
 import ar.edu.itba.paw.interfaces.services.UserReviewService;
@@ -30,8 +31,15 @@ public class UserReviewServiceImpl implements UserReviewService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserReviewServiceImpl.class);
 
 	@Override
-	public UserReview findUserReviewById(long reviewId) {
-		return userReviewDao.findUserReviewById(reviewId);
+	public UserReview findUserReviewById(long targetId, long reviewId) {
+		UserReview ur = userReviewDao.findUserReviewById(reviewId);
+
+		if(ur.getReviewer().getUserId() != targetId && ur.getSubject().getUserId() != reviewId){
+			LOGGER.warn("User review found but target id not ");
+			throw new UserReviewNotFound("User review not found");
+		}
+
+		return ur;
 	}
 
 	@Override
