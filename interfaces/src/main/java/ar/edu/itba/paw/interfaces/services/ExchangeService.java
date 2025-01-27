@@ -13,18 +13,6 @@ public interface ExchangeService {
 
     Exchange initializeExchange(long bookId, long locationId, long offererPubId);
 
-    boolean exchange(int acceptCode, boolean state);
-
-    /**
-     * confirms that the offerer received the book
-     */
-    void confirmOffer(long userId, int acceptCode);
-
-    /**
-     * confirms that the requester received the book
-     */
-    void confirmRequest(long userId, int acceptCode);
-
     Exchange getExchangeByAcceptCode(int acceptCode);
     
     Exchange getExchangeById(long exchangeId);
@@ -40,5 +28,7 @@ public interface ExchangeService {
     List<Message> getMessages(long exchangeId);
 
     Message getMessage(long messageId);
+
+    void updateExchange(Integer acceptCode, Boolean accepted, Boolean requester);
 
 }

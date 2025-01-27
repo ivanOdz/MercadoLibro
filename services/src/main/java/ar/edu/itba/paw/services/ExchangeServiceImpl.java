@@ -74,9 +74,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         return ex;
     }
 
-    @Override
-    @Transactional
-    public boolean exchange(int acceptCode, boolean state) {
+    private boolean exchange(int acceptCode, boolean state) {
     	
         LOGGER.info("Processing exchange for acceptCode: {}", acceptCode);
 
@@ -120,9 +118,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         return exchange.getExchangeState() == ExchangeState.ACCEPTED;
     }
 
-    @Override
-    @Transactional
-    public void confirmOffer(long userId, int acceptCode) {
+    private void confirmOffer(long userId, int acceptCode) {
     	
         LOGGER.info("Processing confirmOfferer for acceptCode: {}", acceptCode);
 
@@ -142,9 +138,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         }
     }
 
-    @Override
-    @Transactional
-    public void confirmRequest(long userId, int acceptCode) {
+    private void confirmRequest(long userId, int acceptCode) {
     	
         LOGGER.info("Processing confirmRequester for acceptCode: {}", acceptCode);
 
@@ -248,5 +242,23 @@ public class ExchangeServiceImpl implements ExchangeService {
             throw new MessageNotFoundException("Message not found");
         }
         return m.get();
+    }
+
+    @Transactional
+    @Override
+    public void updateExchange(Integer acceptCode, Boolean accepted, Boolean requester) {
+        Exchange e = getExchangeByAcceptCode(acceptCode);
+        if (accepted != null) {
+            exchange(acceptCode,accepted);
+        } else if (requester != null) {
+            if (requester) {
+                confirmRequest(e.getRequester().getBook().getOwner().getUserId(), acceptCode);
+            } else {
+                confirmOffer(e.getOfferer().getBook().getOwner().getUserId(), acceptCode);
+            }
+        } else {
+            LOGGER.warn("Invalid parameters for updateExchange");
+            throw new ExchangeBadRequestException("Invalid parameters for updateExchange");
+        }
     }
 }

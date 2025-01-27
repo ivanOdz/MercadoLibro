@@ -5,18 +5,14 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 
-import ar.edu.itba.paw.webapp.dto.input.ConfirmExchangeDTO;
 import ar.edu.itba.paw.webapp.dto.input.MessageDTO;
+import ar.edu.itba.paw.webapp.dto.input.UpdateExchangeDTO;
 import ar.edu.itba.paw.webapp.dto.output.ExchangeDTO;
 import ar.edu.itba.paw.webapp.dto.output.MessagesDTO;
-import ar.edu.itba.paw.webapp.form.MessageForm;
-import ar.edu.itba.paw.webapp.form.UserReviewForm;
 import ar.edu.itba.paw.webapp.mediaTypes.VndType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -85,12 +81,24 @@ public class ExchangeController {
         return Response.ok(new GenericEntity<MessagesDTO>(message) {}).build();
     }
 
+    @PATCH
+    @Path("/{id}")
+    @Consumes(value = {VndType.APPLICATION_UPDATE_EXCHANGE})
+    public Response updateExchange(@PathParam("id") final Long exchangeId,
+                                   @QueryParam("accepted") final Boolean accepted,
+                                   @QueryParam("confirm") final Boolean requester,
+                                   UpdateExchangeDTO updateExchangeDTO) {
+        exchangeService.updateExchange(updateExchangeDTO.getAcceptCode(), accepted, requester);
+        return Response.noContent().build();
+    }
+
+    /*
     // CHECK: path not RESTful + userId not used in back (only for security)
     @PATCH
     @Path("/{id}/start")
     public Response startExchange(@PathParam("id") Integer exchangeId,
                                   @QueryParam("user-id") Long userId) {
-        exchangeService.exchange(exchangeId, true);
+        exchangeService.exchange(acceptCode, true);
         return Response.noContent().build();
     }
 
@@ -99,10 +107,12 @@ public class ExchangeController {
     @Path("/{id}/rejection")
     public Response rejectExchange(@PathParam("id") Integer exchangeId,
                                    @QueryParam("user-id") Long userId) {
-        exchangeService.exchange(exchangeId, false);
+        exchangeService.exchange(acceptCode, false);
         return Response.noContent().build();
     }
 
+
+    // CHECK : id not used
     @PATCH
     @Path("/{id}/confirmation/offerer")
     @Consumes(value = {VndType.APPLICATION_CONFIRM_EXCHANGE})
@@ -121,7 +131,7 @@ public class ExchangeController {
                                            ConfirmExchangeDTO confirmExchangeDTO) {
         exchangeService.confirmRequest(userId, confirmExchangeDTO.getAcceptCode());
         return Response.noContent().build();
-    }
+    }*/
 
     //Screens
 

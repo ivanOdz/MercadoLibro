@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.dto.input;
 
-public class ConfirmExchangeDTO {
+public class UpdateExchangeDTO {
     Integer acceptCode;
 
     public Integer getAcceptCode() {
