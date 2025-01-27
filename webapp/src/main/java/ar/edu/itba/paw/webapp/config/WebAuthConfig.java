@@ -59,8 +59,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     private static final String EXCHANGES_USER_ACCESS = "@accessControl.exchangeUserAccess(request)";
     private static final String EXCHANGES_ACCESS = "@accessControl.exchangeAccess(request)";
     private static final String CREATE_EXCHANGE_ACCESS = "@accessControl.createExchangeAccess(request)";
-    private static final String EXCHANGES_OFFERER_ACCESS = "@accessControl.exchangeOffererAccess(request, #id)";
-    private static final String EXCHANGES_REQUESTER_ACCESS = "@accessControl.exchangeRequesterAccess(request, #id)";
+    private static final String EXCHANGES_UPDATE_ACCESS = "@accessControl.exchangeUpdateAccess(request, #id)";
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -145,17 +144,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
 
                 // CHECK: start and reject are not restful
-                .antMatchers(HttpMethod.PATCH, "/api/exchanges/{id:\\d+}/start")
-                    .access(EXCHANGES_OFFERER_ACCESS)
-
-                .antMatchers(HttpMethod.PATCH, "/api/exchanges/{id:\\d+}/reject")
-                    .access(EXCHANGES_OFFERER_ACCESS)
-
-                .antMatchers(HttpMethod.PATCH, "/api/exchanges/{id:\\d+}/confirmation/offerer")
-                    .access(EXCHANGES_OFFERER_ACCESS)
-
-                .antMatchers(HttpMethod.PATCH, "/api/exchanges/{id:\\d+}/confirmation/requester")
-                .access(EXCHANGES_REQUESTER_ACCESS)
+                .antMatchers(HttpMethod.PATCH, "/api/exchanges/{id:\\d+}")
+                    .access(EXCHANGES_UPDATE_ACCESS)
 
         /*
          * Publication controller

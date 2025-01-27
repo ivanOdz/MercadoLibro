@@ -59,18 +59,32 @@ public class AccessControl {
     }
 
     public Boolean createExchangeAccess(HttpServletRequest request) {
-        // publication must be current
-        Publication p = publicationService.getPublicationByPublicationId(Long.parseLong(request.getParameter("publication")));
-
         // user must be the owner of the book
         Book b = bookService.getBookById(Long.parseLong(request.getParameter("book")));
 
         // location must be in the user's locations
         Location l = locationService.findById(Long.parseLong(request.getParameter("location")));
 
-        return p.getPublicationState().equals(PublicationState.CURRENT) &&
-                b.getOwner().getUserId().equals(getUser().getUserId()) &&
+        return b.getOwner().getUserId().equals(getUser().getUserId()) &&
                 l.getUsers().contains(getUser());
+    }
+
+    public Boolean exchangeUpdateAccess(HttpServletRequest request, Long id) {
+        Exchange e = exchangeService.getExchangeById(id);
+        User lu = getUser();
+
+        Boolean requester = Boolean.parseBoolean(request.getParameter("requester"));
+        Boolean accepted = Boolean.parseBoolean(request.getParameter("accepted"));
+
+        if(accepted != null){
+            return getUser().getUserId().equals(e.getOfferer().getUser().getUserId());
+        }
+
+        if(requester != null){
+            return requester ? lu.getUserId().equals(e.getRequester().getUser().getUserId()) : lu.getUserId().equals(e.getOfferer().getUser().getUserId());
+        }
+
+        return false;
     }
 
     public Boolean exchangeRequesterAccess(HttpServletRequest request, Long id) {
