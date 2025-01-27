@@ -12,7 +12,7 @@ public interface UserService {
 
     User createUser(String username, String mail, String password, String language);
 
-    User updateUser(long userId, String language, String username);
+    User updateUser(String username, String language, String newUsername);
 
     Optional<User> findByUsername(String username);
 
@@ -27,6 +27,8 @@ public interface UserService {
     User changeUsername(long userId, String newName);
 
     User setUserLanguage(long userId, String language);
+
+    Location getLocation(long locationId);
 
     List<Location> getLocations(long userId, Integer publicationId);
     

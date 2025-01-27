@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 import javax.crypto.SecretKey;
+import javax.ws.rs.core.NewCookie;
 import java.io.IOException;
 import java.util.Date;
 
@@ -24,16 +25,31 @@ public class JwtTokenUtil {
 
     private static final String BEARER_PREFIX = "Bearer ";
 
-    private static final int EXPIRATION_TIME = 7 * 24 * 60 * 60 * 1000; //1 week (in millis)
+    public static final String ACCESS_TOKEN_HEADER = "X-Access-Token";
+
+    public static final String REFRESH_TOKEN_HEADER = "X-Refresh-Token";
+
+    private static final int REFRESH_TOKEN_EXPIRATION_TIME = 7 * 24 * 60 * 60 ; //1 week (in seconds)
+
+    private static final int ACCESS_TOKEN_EXPIRATION_TIME = 60 * 60 * 1000; // 1h
 
     public JwtTokenUtil(@Value("classpath:jwt.key") Resource jwtKeyResource) throws IOException {
         byte[] keyBytes = FileCopyUtils.copyToByteArray(jwtKeyResource.getInputStream());
         this.jwtSigningKey = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String createToken(Authentication userAuth) {
-        PawUserDetails pud = (PawUserDetails) userAuth.getPrincipal();
-        User user = pud.getUser();
+    public String createAccessToken(User user) {
+        return createToken(user, ACCESS_TOKEN_EXPIRATION_TIME);
+    }
+
+    public String createRefreshToken(User user) {
+        return createToken(user, REFRESH_TOKEN_EXPIRATION_TIME);
+    }
+
+    // Authentication userAuth
+    private String createToken(User user, int expirationTime) {
+        //PawUserDetails pud = (PawUserDetails) userAuth.getPrincipal();
+        //User user = pud.getUser();
 
         Claims claims = Jwts.claims();
 
@@ -44,7 +60,7 @@ public class JwtTokenUtil {
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(jwtSigningKey, SignatureAlgorithm.HS256)
                 .compact();
     }

@@ -5,7 +5,6 @@ import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.LocationService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Location;
-import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import org.slf4j.Logger;
@@ -35,6 +34,7 @@ public class UserServiceImpl implements UserService {
     private LocationService locationService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
+    private static final int MAX_LOCATIONS_PER_USER = 5;
 
     @Override
     @Transactional
@@ -56,13 +56,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User updateUser(long userId, String language, String username) {
-        User user = null;
+    public User updateUser(String username, String language, String newUsername) {
+        User user = userDao.findByUsername(username).orElseThrow(() -> new UserNotFoundException("No such user"));
         if(language != null){
-            user = setUserLanguage(userId, language);
+            user = setUserLanguage(user.getUserId(), language);
         }
-        if(username != null){
-            user = changeUsername(userId, username);
+        if(newUsername != null){
+            user = changeUsername(user.getUserId(), newUsername);
         }
         return user;
     }
@@ -220,29 +220,30 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Location getLocation(long locationId) {
+        return locationService.findById(locationId);
+    }
+
+
+
+    @Override
     @Transactional
     public Location addLocation(Long userId, String locationString) {
         LOGGER.info("Attempting to add a location for user with ID: {}", userId);
 
         User user = findById(userId);
-        boolean locationExists = false;
 
-        for (Location existingLocation : user.getUserLocations()) {
-            if (existingLocation.getLocationString().equals(locationString)) {
-                LOGGER.info("Location already exists for user with ID: {}", userId);
-                locationExists = true;
-                break;
-            }
+        if(user.getUserLocations().size() >= MAX_LOCATIONS_PER_USER){
+            LOGGER.warn("Location could not be added. Maximum amount of location for user {} reached.", userId);
+            throw new LocationMaximumAmountBadRequestException("Maximum amount of location reached");
         }
 
-        Location newLocation = null;
-        
-        if (!locationExists) {
-        	newLocation = locationService.newLocation(locationString);
-            userDao.addUserLocation(user, newLocation);
-            LOGGER.info("New location added for user with ID: {}", userId);
-        }
-        
+        Location newLocation =  locationService.newLocation(locationString);
+        userDao.addUserLocation(user, newLocation);
+
+        LOGGER.info("New location added for user with ID: {}", userId);
+
         return newLocation;
     }
 
