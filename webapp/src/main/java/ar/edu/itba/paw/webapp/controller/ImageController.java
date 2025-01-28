@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.webapp.dto.ImageDTO;
+import ar.edu.itba.paw.webapp.utils.CacheResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -32,10 +33,11 @@ public class ImageController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @Produces(value = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE, "image/jpg", MediaType.MULTIPART_FORM_DATA_VALUE})
     public Response getImage(@PathParam("id") long id){
         Image image = imageService.getImageById(id);
-        return Response.ok(new GenericEntity<ImageDTO>(new ImageDTO().fromImageDTO(image)) {}).build();
+        Response.ResponseBuilder response = Response.ok(new GenericEntity<ImageDTO>(new ImageDTO().fromImageDTO(image)) {});
+        return CacheResponseUtil.unconditionalCacheResponse(response);
     }
 
     @POST
