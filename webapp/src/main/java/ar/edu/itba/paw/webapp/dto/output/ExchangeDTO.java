@@ -40,8 +40,8 @@ public class ExchangeDTO {
         dto.chat = uriInfo.getBaseUriBuilder().path("exchanges").path(String.valueOf(exchange.getExchangeId())).path("messages").build();
 
         // /users/{offererReview}/reviews/{idReview} o null si no hay hecha una review.
-        dto.offererReview =;
-        dto.requesterReview =;
+        dto.offererReview = exchange.getIsReviewable() ? uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(exchange.getOfferer().getUser().getUserId())).path("reviews").path(String.valueOf(exchange.getOfferer().getUser().getUserId())).build() : null;
+        dto.requesterReview = exchange.getIsReviewable() ? uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(exchange.getRequester().getUser().getUserId())).path("reviews").path(String.valueOf(exchange.getRequester().getUser().getUserId())).build() : null;
 
         return dto;
     }
@@ -124,5 +124,21 @@ public class ExchangeDTO {
 
     public void setChat(URI chat) {
         this.chat = chat;
+    }
+
+    public URI getOffererReview() {
+        return offererReview;
+    }
+
+    public URI getRequesterReview() {
+        return requesterReview;
+    }
+
+    public void setOffererReview(URI offererReview) {
+        this.offererReview = offererReview;
+    }
+
+    public void setRequesterReview(URI requesterReview) {
+        this.requesterReview = requesterReview;
     }
 }
