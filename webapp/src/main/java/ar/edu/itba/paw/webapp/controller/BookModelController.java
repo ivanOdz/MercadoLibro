@@ -10,16 +10,14 @@ import ar.edu.itba.paw.webapp.dto.input.BookModelDTO;
 import ar.edu.itba.paw.webapp.dto.output.BookConditionDTO;
 import ar.edu.itba.paw.webapp.dto.output.GenreDTO;
 import ar.edu.itba.paw.webapp.mediaTypes.VndType;
+import ar.edu.itba.paw.webapp.utils.CacheResponseUtil;
 import ar.edu.itba.paw.webapp.utils.SerializationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import java.util.List;
 
 @Path("book_models")
@@ -38,7 +36,8 @@ public class BookModelController {
                                   @QueryParam("is-genre-filter-active") @DefaultValue("false")final String isGenreFilterActive,
                                   @QueryParam("genre-filter")final String genreFilter,
                                   @QueryParam("page") @DefaultValue("0") final int currentPage,
-                                  @QueryParam("sort-type") @DefaultValue("BOOK_NAME_ASCENDING") String sortType) {
+                                  @QueryParam("sort-type") @DefaultValue("BOOK_NAME_ASCENDING") String sortType,
+                                  @Context Request request) {
 
         PaginatedResponse<BookModel, BookModelMetadata> modelBooks = bookModelService.getPaginatedBookModels(search, isGenreFilterActive, genreFilter, currentPage, sortType);
         List<BookModelDTO> bookModels = modelBooks.getData().stream().map(bm -> BookModelDTO.fromBookModel(uriInfo, bm)).toList();
@@ -48,8 +47,7 @@ public class BookModelController {
         List<GenreWrapper> genresSummary = bookModelService.getGenreWrapperList(search);
         response.header("X-genre-summary", SerializationUtils.serializeGenreWrapper(genresSummary));
 
-
-        return response.build();
+        return CacheResponseUtil.conditionalCacheResponse(request, new EntityTag(Integer.toString(modelBooks.getData().hashCode())));
     }
 
     @POST
