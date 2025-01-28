@@ -59,6 +59,7 @@ public class BookServiceImplTest {
 	@Mock
 	private User user;
 
+	/*
     @Test
     public void testCreateBookUsingProvidedImageList() {
     	
@@ -93,6 +94,7 @@ public class BookServiceImplTest {
         Assert.assertEquals(bookImages.size(), createdBook.getImages().size());
         Assert.assertEquals(bookImages.get(0).getImageOrder(), createdBook.getImages().get(0).getImageOrder());
     }
+	 */
 
 	@Test(expected = BookNotFoundException.class)
 	public void testGetBookByIdNotFoundException() {

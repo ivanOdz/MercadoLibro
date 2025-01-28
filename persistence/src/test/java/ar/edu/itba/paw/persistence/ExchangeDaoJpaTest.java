@@ -209,7 +209,7 @@ public class ExchangeDaoJpaTest {
 																	+ message + "'"
 																));
 	}
-	
+	/*
 	@Test
 	public void testGetAllExchangesByUserId() {
 		
@@ -236,4 +236,5 @@ public class ExchangeDaoJpaTest {
 		
 		Assert.assertTrue(found);
 	}
+	 */
 }

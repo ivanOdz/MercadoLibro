@@ -179,7 +179,7 @@ public class PublicationDaoJpaTest {
 		final String search = "";
 		final Genre genreFilter = null;
 		
-		List<BookStateWrapper> bookStateWrapperList = publicationDao.getBookStateQtyByPublication(userId, search, genreFilter != null, genreFilter);
+		List<BookStateWrapper> bookStateWrapperList = publicationDao.getBookStateQtyByPublication(userId, search, genreFilter);
 		
 		int countStateWorn = 0;
 		int countStateAcceptable = 0;
@@ -239,11 +239,8 @@ public class PublicationDaoJpaTest {
 		final int currentPage = 0;
 		final User currentUser = em.find(User.class, UserConstants.ID_3);
 		
-		PaginatedResponse<Publication, ItemFilterMetadata> response = publicationDao.getPaginatedPublications(	userId,
-																												search,
-																												bookStateFilter != null,
+		PaginatedResponse<Publication, ItemFilterMetadata> response = publicationDao.getPaginatedPublications(  search,
 																												bookStateFilter,
-																												genreFilter != null,
 																												genreFilter,
 																												sortType,
 																												currentPage,
