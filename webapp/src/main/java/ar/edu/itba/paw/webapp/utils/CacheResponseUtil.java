@@ -11,6 +11,7 @@ public class CacheResponseUtil {
 
     public static Response conditionalCacheResponse(Request request, EntityTag entityTag) {
         CacheControl cc = new CacheControl();
+        cc.setMustRevalidate(true);
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
         if (builder == null) {
             builder = Response.ok().tag(entityTag);
