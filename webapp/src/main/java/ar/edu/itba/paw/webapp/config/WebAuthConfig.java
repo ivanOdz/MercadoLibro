@@ -182,6 +182,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
          * User controller
          */
 
+        // IMPLEMENT: UserController
 
         .antMatchers("/api/**").permitAll()
 
