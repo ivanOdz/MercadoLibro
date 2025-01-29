@@ -9,6 +9,6 @@ import java.util.List;
 public class BookModelMetadata extends GenreFilterMetadata {
 
     public BookModelMetadata(int currentPage, int pageSize, int totalResults, String search, boolean isGenreFilterActive, Genre genreFilter, SortType sortType, List<GenreWrapper> genreWrapperList) {
-        super(currentPage, pageSize, totalResults, search, isGenreFilterActive, genreFilter, sortType, genreWrapperList);
+        super(currentPage, pageSize, totalResults, search, genreFilter, sortType, genreWrapperList);
     }
 }

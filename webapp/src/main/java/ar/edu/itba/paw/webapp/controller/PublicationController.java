@@ -76,58 +76,7 @@ public class PublicationController {
         return PageResponseUtil.getResponse(currentPage, publications.getMetadata().getMaxPage(), uriInfo, response);
     }
 
-    /*
-    @RequestMapping("/")
-    public ModelAndView index(@RequestParam(name = "search", defaultValue = "") String search,
-                              @RequestParam(name = "is-book-state-filter-active", defaultValue = "false") String isBookStateFilterActive,
-                              @RequestParam(name = "book-state-filter", required = false) String bookStateFilter,
-                              @RequestParam(name = "is-genre-filter-active", defaultValue = "false") String isGenreFilterActive,
-                              @RequestParam(name = "genre-filter", required = false) String genreFilter,
-                              @RequestParam(name = "order", defaultValue = "sort.publication.date.descending") String sortType,
-                              @RequestParam(name = "page", defaultValue = "0") int currentPage, @ModelAttribute("loggedUser") User loggeduser) {
-
-        final ModelAndView mav = new ModelAndView("home/publications");
-
-        PaginatedResponse<Publication, ItemFilterMetadata> publications = ps.getPaginatedPublications(search, isBookStateFilterActive,
-                    bookStateFilter, isGenreFilterActive, genreFilter, sortType, currentPage, loggeduser);
-
-        List<GenreWrapper> genreWrapperList = ps.getGenreWrapperList(search, isBookStateFilterActive, bookStateFilter);
-        List<BookStateWrapper> bookStateWrapperList = ps.getBookStateWrapperList(search, isGenreFilterActive, genreFilter);
-
-        mav.addObject("publications", publications);
-        mav.addObject("genreWrapperList", genreWrapperList);
-        mav.addObject("bookStateWrapperList", bookStateWrapperList);
-
-        return mav;
-    }
-    */
-
-    /*
-    @RequestMapping(path = "/my_publications")
-    public ModelAndView myPublications(@RequestParam(name = "search", defaultValue = "") String search,
-                                       @RequestParam(name = "is-book-state-filter-active", defaultValue = "false") String isBookStateFilterActive,
-                                       @RequestParam(name = "book-state-filter", required = false) String bookStateFilter,
-                                       @RequestParam(name = "is-genre-filter-active", defaultValue = "false") String isGenreFilterActive,
-                                       @RequestParam(name = "genre-filter", required = false) String genreFilter,
-                                       @RequestParam(name = "order", defaultValue = "sort.publication.date.ascending") String sortType,
-                                       @RequestParam(name = "page", defaultValue = "0") int currentPage,
-                                       @ModelAttribute("loggedUser") User loggeduser) {
-
-        PaginatedResponse<Publication, ItemFilterMetadata> publications = ps.getMyPaginatedPublications(loggeduser.getUserId(), search, isBookStateFilterActive,
-                bookStateFilter, isGenreFilterActive, genreFilter, sortType, currentPage);
-        ModelAndView mav = new ModelAndView("/home/my_publications");
-
-        List<GenreWrapper> genreWrapperList = ps.getMyGenreWrapperList(loggeduser.getUserId(), search, isBookStateFilterActive, bookStateFilter);
-        List<BookStateWrapper> bookStateWrapperList = ps.getMyBookStateWrapperList(loggeduser.getUserId(), search, isGenreFilterActive, genreFilter);
-
-        mav.addObject("publications", publications);
-        mav.addObject("genreWrapperList", genreWrapperList);
-        mav.addObject("bookStateWrapperList", bookStateWrapperList);
-
-        return mav;
-    }
-     */
-
+    // FIXME: user id in endpoint should be uri not called as a SecurityContextHolder
     @POST
     @Consumes(value = {VndType.APPLICATION_PUBLICATION})
     public Response postPublication(final PublicationDTO publicationDTO, @QueryParam("book") long bookId, @QueryParam("locations") final long locationId) {
@@ -136,21 +85,6 @@ public class PublicationController {
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(publication.getPublicationId())).build()).build();
     }
 
-    /*
-    @PostMapping(path = "/createpublication")
-    public ModelAndView createPublication(@RequestParam(name = "bookId") long bookId, @RequestParam(name = "locationId") long locationId, @ModelAttribute("loggedUser") User loggeduser) {
-        ps.createPublication(bookId, loggeduser.getUserId(), locationId, PublicationState.CURRENT);
-        return new ModelAndView("redirect:/book");
-    }
-    */
-
-    /*
-    @PostMapping(path = "/book_home/createpublication")
-    public ModelAndView createPublicationFromBookHome(@ModelAttribute PublicationForm publicationForm, @ModelAttribute("loggedUser") User loggeduser) {
-        createPublication(publicationForm.getBookId(), publicationForm.getLocationId(), loggeduser);
-        return new ModelAndView("redirect:/my_publications");
-    }
-    */
 
     @GET
     @Path("/{publication_id}")
@@ -171,31 +105,6 @@ public class PublicationController {
 
     }
 
-    /*
-    @GetMapping("/publications/{publication_id:\\d+}")
-    public ModelAndView publicationDetail(@PathVariable(name = "publication_id") long publicationId, @ModelAttribute("loggedUser") User loggeduser) {
-        final ModelAndView mav = new ModelAndView("/home/publication_detail");
-
-        Publication publication = ps.getActivePublication(loggeduser, publicationId);
-
-        if(publication == null) {
-            return new ModelAndView("redirect:/404");
-        }
-
-        List<Book> availableBooks = bs.getAvailableBooksByUser(loggeduser);
-
-        // Available books puede ser una lista vacia si es que el usuario no esta autenticado o no tiene libros
-        mav.addObject("availableBooks", availableBooks);
-
-        mav.addObject("publication", publication);
-        mav.addObject("exchangeForm", new ExchangeForm());
-        mav.addObject("locationForm", new LocationForm());
-        mav.addObject("genres", Genre.values());
-        mav.addObject("bookStates", BookState.values());
-
-        return mav;
-    }
-     */
 
     /* SHOULDN'T BE HERE
     @RequestMapping(path = "/user_auth")
@@ -227,17 +136,8 @@ public class PublicationController {
         return PageResponseUtil.getResponse(currentPage, publications.getMetadata().getMaxPage(), uriInfo, response);
     }
 
-    /*
-    @RequestMapping(path = "/my_favorites")
-    public ModelAndView myFavoritePublications(@RequestParam(name = "page", defaultValue = "0") int currentPage, @ModelAttribute("loggedUser") User loggeduser) {
-        PaginatedResponse<Publication, BasicMetadata> publications = ps.getFavoritePublications(loggeduser, currentPage);
-        ModelAndView mav = new ModelAndView("/home/favorite_publications");
 
-        mav.addObject("publications", publications);
-        return mav;
-    }
-    */
-
+    // FIXME: user id in endpoint should be uri not called as a SecurityContextHolder
     @DELETE
     @Path("/{publication_id}")
     @Produces(value = {VndType.APPLICATION_PUBLICATION})

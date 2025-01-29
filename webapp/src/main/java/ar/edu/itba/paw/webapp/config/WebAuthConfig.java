@@ -60,6 +60,10 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     private static final String EXCHANGES_ACCESS = "@accessControl.exchangeAccess(request)";
     private static final String CREATE_EXCHANGE_ACCESS = "@accessControl.createExchangeAccess(request)";
     private static final String EXCHANGES_UPDATE_ACCESS = "@accessControl.exchangeUpdateAccess(request, #id)";
+    private static final String PUBLICATION_ACCESS = "@accessControl.publicationAccess(request, #publication_id)";
+    private static final String PUBLICATIONS_POST_ACCESS = "@accessControl.publicationsPostAccess(request, #publication_id)";
+    private static final String PUBLICATION_MODIFY_ACCESS = "@accessControl.publicationsModifyAccess(request, #publication_id)";
+    private static final String PUBLICATIONS_GENERAL_ACCESS = "@accessControl.publicationsGeneralAccess(request, #publication_id)";
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -114,7 +118,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
         // CHECK: book post passes security checks. SecurityContextHolder returns null on controller layer but then it does not fail on service layer
 
-        .antMatchers(HttpMethod.PATCH, "/api/books/{id:\\d+}")
+        .antMatchers(HttpMethod.PATCH, "/api/books/{id:\\d+}/state")
             .access(BOOK_MODIFY_ACCESS)
 
         .antMatchers(HttpMethod.PATCH, "/api/books/{id:\\d+}}/images")
@@ -123,35 +127,58 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         /*
          * Book Model controller
          */
+        .antMatchers("/api/book-models")
+            .authenticated()
 
-        // ASK: What checks do we want for the book model controller?
-
+        .antMatchers("/api/book-models/**")
+            .authenticated()
         /*
          * Exchange controller
          */
 
-                .antMatchers(HttpMethod.GET, "/api/exchanges")
-                    .access(EXCHANGES_USER_ACCESS)
+        .antMatchers(HttpMethod.GET, "/api/exchanges")
+            .access(EXCHANGES_USER_ACCESS)
 
-                .antMatchers(HttpMethod.POST, "/api/exchanges")
-                    .access(CREATE_EXCHANGE_ACCESS)
+        .antMatchers(HttpMethod.POST, "/api/exchanges")
+            .access(CREATE_EXCHANGE_ACCESS)
 
-                .antMatchers(HttpMethod.POST, "/api/exchanges/{id:\\d+}/messages")
-                    .access(EXCHANGES_ACCESS)
+        .antMatchers(HttpMethod.POST, "/api/exchanges/{id:\\d+}/messages")
+            .access(EXCHANGES_ACCESS)
 
-                .antMatchers(HttpMethod.GET, "/api/exchanges/{id:\\d+}/messages")
-                    .access(EXCHANGES_ACCESS)
+        .antMatchers(HttpMethod.GET, "/api/exchanges/{id:\\d+}/messages")
+            .access(EXCHANGES_ACCESS)
 
 
-                // CHECK: start and reject are not restful
-                .antMatchers(HttpMethod.PATCH, "/api/exchanges/{id:\\d+}")
-                    .access(EXCHANGES_UPDATE_ACCESS)
+        .antMatchers(HttpMethod.PATCH, "/api/exchanges/{id:\\d+}")
+            .access(EXCHANGES_UPDATE_ACCESS)
 
         /*
          * Publication controller
          */
 
-        /*
+        .antMatchers(HttpMethod.GET, "/api/publications")
+            .access(PUBLICATIONS_GENERAL_ACCESS)
+
+
+        .antMatchers(HttpMethod.POST, "/api/publications")
+            .access(PUBLICATIONS_POST_ACCESS)
+
+        //  NOTE: useful for favorite publications
+        .antMatchers(HttpMethod.GET, "/api/publications/{publication_id:\\d+}")
+            .access(PUBLICATION_ACCESS)
+
+        .antMatchers(HttpMethod.DELETE, "/api/publications/{publication_id:\\d+}")
+            .access(PUBLICATION_MODIFY_ACCESS)
+
+        // CHECK: location does not belong to user should return bad request or not found, this just checks if the user can modify publication
+        .antMatchers(HttpMethod.PATCH, "/api/publications/{publication_id:\\d+}/locations")
+                .access(PUBLICATION_MODIFY_ACCESS)
+
+
+        // POST /publications/{id}/favorite -> marcar como favorita
+        // DELETE /publications/{id}/favorite -> desmarcar como favorita
+
+                /*
          * User controller
          */
 

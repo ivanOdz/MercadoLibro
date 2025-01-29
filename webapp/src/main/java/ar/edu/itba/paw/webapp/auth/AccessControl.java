@@ -31,11 +31,14 @@ public class AccessControl {
     @Autowired
     private LocationService locationService;
 
+
+    // FIXME: id in endpoint should be uri
     public Boolean exchangeUserAccess(HttpServletRequest request) {
         long userId = Long.parseLong(request.getParameter("id"));
         return getUser().getUserId().equals(userId);
     }
 
+    // FIXME: id in endpoint should be uri
     public Boolean booksAccess(HttpServletRequest request) {
         long userId = Long.parseLong(request.getParameter("owner"));
         return getUser().getUserId().equals(userId);
@@ -48,6 +51,7 @@ public class AccessControl {
         return b.getOwner().getUserId().equals(userId);
     }
 
+    // FIXME: id in endpoint should be uri
     public Boolean exchangeAccess(HttpServletRequest request) {
         long exchangeId = Long.parseLong(request.getParameter("id"));
         Exchange e = exchangeService.getExchangeById(exchangeId);
@@ -58,6 +62,7 @@ public class AccessControl {
         return e.getRequester().getUser().getUserId().equals(userId) || e.getOfferer().getUser().getUserId().equals(userId);
     }
 
+    // FIXME: ids in endpoint should be uri
     public Boolean createExchangeAccess(HttpServletRequest request) {
         // user must be the owner of the book
         Book b = bookService.getBookById(Long.parseLong(request.getParameter("book")));
@@ -87,21 +92,41 @@ public class AccessControl {
         return false;
     }
 
-    public Boolean exchangeRequesterAccess(HttpServletRequest request, Long id) {
-        Long loggedUserId = getUser().getUserId();
-        Long userId = Long.parseLong(request.getParameter("user-id"));
-        return exchangeService.getExchangeById(id).getRequester().getUser().getUserId().equals(loggedUserId)
-                && userId.equals(loggedUserId);
+    // CHECK: publication access could be different if accessed from library
+    public Boolean publicationAccess(HttpServletRequest request, Long id) {
+        Publication p = publicationService.getPublicationByPublicationId(id);
+        User lu = getUser();
+
+        if(p.getPublicationState() == PublicationState.CURRENT){
+            return true;
+        }
+        return p.getUser().getUserId().equals(lu.getUserId());
     }
 
-    public Boolean exchangeOffererAccess(HttpServletRequest request, Long id) {
-        Long loggedUserId = getUser().getUserId();
-        Long userId = Long.parseLong(request.getParameter("user-id"));
-
-        return exchangeService.getExchangeById(id).getOfferer().getUser().getUserId().equals(loggedUserId)
-                && userId.equals(loggedUserId);
+    // FIXME: user id in endpoint should be sent as an uri
+    public Boolean publicationsPostAccess(HttpServletRequest request, Long publicationId) {
+        // IMPLEMENT:  user id in uri matches logged user id
+        Long userId = Long.parseLong(request.getParameter("user"));
+        return getUser().getUserId().equals(userId);
     }
 
+    public Boolean publicationsModifyAccess(HttpServletRequest request, Long publicationId) {
+        Publication p = publicationService.getPublicationByPublicationId(publicationId);
+        return getUser().getUserId().equals(p.getUser().getUserId());
+    }
+
+    // FIXME: user id in endpoint should be sent as an uri
+    public Boolean publicationsGeneralAccess(HttpServletRequest request, Long publication_id) {
+        boolean favorite = Boolean.parseBoolean(request.getParameter("favorite"));
+
+        // IMPLEMENT:  favorite is marked then check if userId matches logged user
+
+        if(!favorite) return true;
+
+        // ASK : could this be just an .authenticated()?
+        return getUser() != null;
+
+    }
 
 
     private User getUser(){

@@ -81,6 +81,8 @@ public class ExchangeController {
         return Response.ok(new GenericEntity<MessagesDTO>(message) {}).build();
     }
 
+    // IMPLEMENT: GET /exchanges/{id}
+
     @PATCH
     @Path("/{id}")
     @Consumes(value = {VndType.APPLICATION_UPDATE_EXCHANGE})
@@ -91,47 +93,6 @@ public class ExchangeController {
         exchangeService.updateExchange(updateExchangeDTO.getAcceptCode(), accepted, requester);
         return Response.noContent().build();
     }
-
-    /*
-    // CHECK: path not RESTful + userId not used in back (only for security)
-    @PATCH
-    @Path("/{id}/start")
-    public Response startExchange(@PathParam("id") Integer exchangeId,
-                                  @QueryParam("user-id") Long userId) {
-        exchangeService.exchange(acceptCode, true);
-        return Response.noContent().build();
-    }
-
-    // CHECK: path may not be RESTful + userId not used in back (only for security)
-    @PATCH
-    @Path("/{id}/rejection")
-    public Response rejectExchange(@PathParam("id") Integer exchangeId,
-                                   @QueryParam("user-id") Long userId) {
-        exchangeService.exchange(acceptCode, false);
-        return Response.noContent().build();
-    }
-
-
-    // CHECK : id not used
-    @PATCH
-    @Path("/{id}/confirmation/offerer")
-    @Consumes(value = {VndType.APPLICATION_CONFIRM_EXCHANGE})
-    public Response confirmExchange(@PathParam("id") Integer exchangeId,
-                                    @QueryParam("user-id") Long userId,
-                                    ConfirmExchangeDTO confirmExchangeDTO) {
-        exchangeService.confirmOffer(userId, confirmExchangeDTO.getAcceptCode());
-        return Response.noContent().build();
-    }
-
-    @PATCH
-    @Path("/{id}/confirmation/requester")
-    @Consumes(value = {VndType.APPLICATION_CONFIRM_EXCHANGE})
-    public Response confirmExchangeRequest(@PathParam("id") Integer exchangeId,
-                                           @QueryParam("user-id") Long userId,
-                                           ConfirmExchangeDTO confirmExchangeDTO) {
-        exchangeService.confirmRequest(userId, confirmExchangeDTO.getAcceptCode());
-        return Response.noContent().build();
-    }*/
 
     //Screens
 
