@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Path("publications")
@@ -70,8 +71,12 @@ public class PublicationController {
 
         List<GenreWrapper> genresSummary = ps.getMyGenreWrapperList(userId, search, state);
         List<BookStateWrapper> conditionSummary = ps.getBookStateWrapperList(search, genre);
-        response.header("X-genre-summary", SerializationUtils.serializeGenreWrapper(genresSummary));
-        response.header("X-condition-summary", SerializationUtils.serializeConditionWrapper(conditionSummary));
+
+        Map<String, String> genreHeaders = SerializationUtils.serializeGenreWrapper(genresSummary);
+        genreHeaders.forEach(response::header);
+
+        Map<String, String> conditionHeaders = SerializationUtils.serializeConditionWrapper(conditionSummary);
+        conditionHeaders.forEach(response::header);
 
         return PageResponseUtil.getResponse(currentPage, publications.getMetadata().getMaxPage(), uriInfo, response);
     }

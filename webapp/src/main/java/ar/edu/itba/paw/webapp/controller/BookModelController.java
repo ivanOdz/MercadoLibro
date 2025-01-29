@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.List;
+import java.util.Map;
 
 @Path("book_models")
 @Component
@@ -44,7 +45,9 @@ public class BookModelController {
         Response.ResponseBuilder response = Response.ok(new GenericEntity<List<BookModelDTO>>(bookModels) {});
 
         List<GenreWrapper> genresSummary = bookModelService.getGenreWrapperList(search);
-        response.header("X-genre-summary", SerializationUtils.serializeGenreWrapper(genresSummary));
+
+        Map<String, String> genreHeaders = SerializationUtils.serializeGenreWrapper(genresSummary);
+        genreHeaders.forEach(response::header);
 
         return CacheResponseUtil.conditionalCacheResponse(request, new EntityTag(Integer.toString(modelBooks.getData().hashCode())));
     }

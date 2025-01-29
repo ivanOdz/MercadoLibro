@@ -24,6 +24,7 @@ import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -73,9 +74,12 @@ public class BookController {
 
         List<GenreWrapper> genresSummary = bs.getGenreWrapperList(search, state, userId);
         List<BookStateWrapper> conditionSummary = bs.getBookStateWrapperList(search, genre, userId);
-        response.header("X-genre-summary", SerializationUtils.serializeGenreWrapper(genresSummary));
-        response.header("X-condition-summary", SerializationUtils.serializeConditionWrapper(conditionSummary));
 
+        Map<String, String> genreHeaders = SerializationUtils.serializeGenreWrapper(genresSummary);
+        genreHeaders.forEach(response::header);
+
+        Map<String, String> conditionHeaders = SerializationUtils.serializeConditionWrapper(conditionSummary);
+        conditionHeaders.forEach(response::header);
 
         return PageResponseUtil.getResponse(currentPage, paginated.getMetadata().getMaxPage(), uriInfo, response);
     }
