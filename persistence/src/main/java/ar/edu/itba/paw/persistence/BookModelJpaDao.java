@@ -53,7 +53,7 @@ public class BookModelJpaDao implements BookModelDao {
     }
 
     @Override
-    public PaginatedResponse<BookModel, BookModelMetadata> getPaginatedBookModels(String search, boolean isGenreFilterActive, Genre genreFilter, int page, String sortType) {
+    public PaginatedResponse<BookModel, BookModelMetadata> getPaginatedBookModels(String search, Genre genre, int page, String sortType) {
         if (page < 0) {
             page = 0;
         }
@@ -68,16 +68,16 @@ public class BookModelJpaDao implements BookModelDao {
         StringBuilder nativeQueryString = new StringBuilder("SELECT bm.bookModelId FROM book_model bm " +
                                     "WHERE LOWER(bm.title) LIKE LOWER(:search) ESCAPE '\\' ");
 
-        if (isGenreFilterActive) {
-            nativeQueryString.append("AND bm.genre = :genreFilter ");
+        if (genre != null) {
+            nativeQueryString.append("AND bm.genre = :genre ");
         }
 
         Query nativeQuery = em.createNativeQuery(nativeQueryString.toString());
 
         String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
         nativeQuery.setParameter("search", "%" + safeSearch.toLowerCase() + "%");
-        if (isGenreFilterActive) {
-            nativeQuery.setParameter("genreFilter", genreFilter.toString());
+        if (genre != null) {
+            nativeQuery.setParameter("genre", genre.toString());
         }
         nativeQuery.setMaxResults(BOOKS_PAGE_SIZE);
         nativeQuery.setFirstResult(page * BOOKS_PAGE_SIZE);
@@ -111,11 +111,11 @@ public class BookModelJpaDao implements BookModelDao {
         TypedQuery<BookModel> query = em.createQuery(jpqlQuery, BookModel.class);
         query.setParameter("ids", bookModelIds);
 
-        int totalResults = getTotalResultsByBook(safeSearch, isGenreFilterActive, genreFilter);
+        int totalResults = getTotalResultsByBook(safeSearch, genre);
 
         List<BookModel> bookModels = query.getResultList();
 
-        return new PaginatedResponse<>(bookModels, new BookModelMetadata(page, BOOKS_PAGE_SIZE, totalResults, search, isGenreFilterActive, genreFilter, sort, null));
+        return new PaginatedResponse<>(bookModels, new BookModelMetadata(page, BOOKS_PAGE_SIZE, totalResults, search, genre, sort, null));
     }
 
     @Override
@@ -159,21 +159,21 @@ public class BookModelJpaDao implements BookModelDao {
         return bookModel;
     }
 
-    private int getTotalResultsByBook(String search, boolean isGenreFilterActive, Genre genreFilter) {
+    private int getTotalResultsByBook(String search, Genre genre) {
         StringBuilder sqlQuery = new StringBuilder(
                 "SELECT COUNT(*) " +
                         "FROM book_model bm " +
                         "WHERE LOWER(bm.title) LIKE LOWER(:search) ESCAPE '\\' ");
 
-        if (isGenreFilterActive) {
-            sqlQuery.append("AND bm.genre = :genreFilter ");
+        if (genre != null) {
+            sqlQuery.append("AND bm.genre = :genre ");
         }
 
         Query query = em.createNativeQuery(sqlQuery.toString());
         query.setParameter("search", "%" + search.toLowerCase() + "%");
 
-        if (isGenreFilterActive) {
-            query.setParameter("genreFilter", genreFilter.toString());
+        if (genre != null) {
+            query.setParameter("genre", genre.toString());
         }
         return ((Number) query.getSingleResult()).intValue();
     }

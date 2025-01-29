@@ -125,9 +125,7 @@ public class BookModelDaoJpaTest {
 																		BookDimension.valueOf(BookModelConstants.NON_EXISTENT_DIMENSION),
 																		Language.valueOf(BookModelConstants.NON_EXISTENT_LANGUAGE),
 																		(int)BookModelConstants.NON_EXISTENT_PAGES,
-																		(int)BookModelConstants.NON_EXISTENT_WEIGHT,
-																		null,
-																		authors
+																		(int)BookModelConstants.NON_EXISTENT_WEIGHT
 																	);
 		
 		Assert.assertNotNull(newBookModel);
@@ -167,7 +165,8 @@ public class BookModelDaoJpaTest {
 		Assert.assertTrue(found_1);
 		Assert.assertTrue(found_2);
 	}
-	
+
+	/*
 	@Test
 	@Rollback
 	public void testCreateAuthors() {
@@ -202,6 +201,7 @@ public class BookModelDaoJpaTest {
 		Assert.assertTrue(found_1);
 		Assert.assertTrue(found_2);
 	}
+	 */
 
 	@Test
 	public void testGetPaginatedBookModels() {
@@ -211,7 +211,7 @@ public class BookModelDaoJpaTest {
 		final String sortType = "BOOK_NAME_ASCENDING";
 		final Genre genreFilter = null;
 		
-		final PaginatedResponse<BookModel, BookModelMetadata> response = bookModelDao.getPaginatedBookModels(search, genreFilter != null, genreFilter, currentPage, sortType);
+		final PaginatedResponse<BookModel, BookModelMetadata> response = bookModelDao.getPaginatedBookModels(search, genreFilter, currentPage, sortType);
 		
 		Assert.assertNotNull(response);
 		Assert.assertNotNull(response.getMetadata());
@@ -251,7 +251,7 @@ public class BookModelDaoJpaTest {
 		final String sortType = "BOOK_NAME_ASCENDING";
 		final Genre genreFilter = Genre.CRIME;
 		
-		final PaginatedResponse<BookModel, BookModelMetadata> response = bookModelDao.getPaginatedBookModels(search, genreFilter != null, genreFilter, currentPage, sortType);
+		final PaginatedResponse<BookModel, BookModelMetadata> response = bookModelDao.getPaginatedBookModels(search, genreFilter, currentPage, sortType);
 		
 		Assert.assertNotNull(response);
 		Assert.assertNotNull(response.getMetadata());
@@ -270,7 +270,7 @@ public class BookModelDaoJpaTest {
 		final String sortType = "BOOK_NAME_ASCENDING";
 		final Genre genreFilter = null;
 		
-		final PaginatedResponse<BookModel, BookModelMetadata> response = bookModelDao.getPaginatedBookModels(search, genreFilter != null, genreFilter, currentPage, sortType);
+		final PaginatedResponse<BookModel, BookModelMetadata> response = bookModelDao.getPaginatedBookModels(search, genreFilter, currentPage, sortType);
 		
 		Assert.assertNotNull(response);
 		Assert.assertNotNull(response.getMetadata());

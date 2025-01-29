@@ -66,18 +66,18 @@ public class BookModelServiceImpl implements BookModelService {
 
     @Override
     @Transactional(readOnly = true)
-    public PaginatedResponse<BookModel, BookModelMetadata> getPaginatedBookModels(String search, String isGenreFilterActive, String genreFilter, int currentPage, String sortType) {
-        boolean genreFilterActive = "true".equalsIgnoreCase(isGenreFilterActive);
+    public PaginatedResponse<BookModel, BookModelMetadata> getPaginatedBookModels(String search, String genre, int currentPage, String sortType) {
+        boolean genreFilterActive = genre != null;
 
-        Genre genre = DEFAULT_PUBLICATION_GENRE_FILTER;
+        Genre genre_filter = DEFAULT_PUBLICATION_GENRE_FILTER;
         if(genreFilterActive){
-            genre = Genre.fromString(genreFilter);
-            if(genre == null){
+            genre_filter = Genre.fromString(genre);
+            if(genre_filter == null){
                 genreFilterActive = false;
             }
         }
 
-        return bookModelDao.getPaginatedBookModels(search, genreFilterActive, genre, currentPage, sortType);
+        return bookModelDao.getPaginatedBookModels(search, genre_filter, currentPage, sortType);
     }
 
     @Override

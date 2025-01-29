@@ -33,13 +33,12 @@ public class BookModelController {
     @GET
     @Produces(value = {VndType.APPLICATION_BOOK_MODEL})
     public Response getBookModels(@QueryParam("search") @DefaultValue("")final String search,
-                                  @QueryParam("is-genre-filter-active") @DefaultValue("false")final String isGenreFilterActive,
-                                  @QueryParam("genre-filter")final String genreFilter,
+                                  @QueryParam("genre")final String genre,
                                   @QueryParam("page") @DefaultValue("0") final int currentPage,
                                   @QueryParam("sort-type") @DefaultValue("BOOK_NAME_ASCENDING") String sortType,
                                   @Context Request request) {
 
-        PaginatedResponse<BookModel, BookModelMetadata> modelBooks = bookModelService.getPaginatedBookModels(search, isGenreFilterActive, genreFilter, currentPage, sortType);
+        PaginatedResponse<BookModel, BookModelMetadata> modelBooks = bookModelService.getPaginatedBookModels(search, genre, currentPage, sortType);
         List<BookModelDTO> bookModels = modelBooks.getData().stream().map(bm -> BookModelDTO.fromBookModel(uriInfo, bm)).toList();
 
         Response.ResponseBuilder response = Response.ok(new GenericEntity<List<BookModelDTO>>(bookModels) {});
