@@ -24,7 +24,7 @@ public interface ExchangeService {
 
     PaginatedResponse<Exchange, BasicMetadata> getExchanges(URI user, ExchangeState exchangeState, Boolean isOfferer, Boolean isRequester, int currentPage);
 
-    void createMessage(long exchangeId, User user, String message);
+    void createMessage(long exchangeId, URI user, String message);
 
     List<Message> getMessages(long exchangeId);
 

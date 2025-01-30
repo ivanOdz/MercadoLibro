@@ -38,19 +38,18 @@ public class ExchangeServiceImpl implements ExchangeService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExchangeServiceImpl.class);
 
 
-    // FIXME: missing implementation of createPublication
     @Override
     @Transactional
     public Exchange initializeExchange(URI book, URI location, URI offererPub) {
 
-        UrnResolverUtil ur = new UrnResolverUtil(offererPub.getPath()); // /api/publications/{id}
+        UrnResolverUtil ur = new UrnResolverUtil(offererPub.getPath());
         Long offererPubId = ur.nextPath().nextPath().getId();
 
         ur.setUrn(book.getPath());
         Long bookId = ur.nextPath().nextPath().getId();
 
         ur.setUrn(location.getPath());
-        Long locationId = ur.nextPath().nextPath().getId();
+        Long locationId = ur.nextPath().nextPath().nextPath().nextPath().getId();
 
         if(ps.getPublicationByPublicationId(offererPubId).getPublicationState() != PublicationState.CURRENT) {
             LOGGER.warn("Publication with id {} is not in current state", offererPub);
@@ -59,8 +58,7 @@ public class ExchangeServiceImpl implements ExchangeService {
 
     	Book b = bs.getBookById(bookId);
         Long userId = b.getOwner().getUserId();
-        long requesterPubId = ps.createPublication(book, userId, location);
-//        long requesterPubId = ps.createPublication(bookId,  userId, locationId, PublicationState.OFFERED).getPublicationId()*/;
+        long requesterPubId = ps.createPublication(bookId, userId, locationId);
 
         Random random = new Random();
         int acceptCode = Math.abs(random.nextInt());
@@ -239,8 +237,9 @@ public class ExchangeServiceImpl implements ExchangeService {
 
     @Override
     @Transactional
-    public void createMessage(long exchangeId, User user, String message) {
-        exchangeDao.createMessage(getExchangeById(exchangeId), user.getUserId(), message, new Timestamp((new Date()).getTime()));
+    public void createMessage(long exchangeId, URI user, String message) {
+        UrnResolverUtil ur = new UrnResolverUtil(user.getPath());
+        exchangeDao.createMessage(getExchangeById(exchangeId), ur.nextPath().nextPath().getId(), message, new Timestamp((new Date()).getTime()));
     }
 
     @Override

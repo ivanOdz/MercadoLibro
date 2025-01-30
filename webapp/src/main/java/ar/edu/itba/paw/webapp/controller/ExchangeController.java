@@ -12,7 +12,6 @@ import ar.edu.itba.paw.webapp.dto.output.ExchangeDTO;
 import ar.edu.itba.paw.webapp.dto.output.MessageDTO;
 import ar.edu.itba.paw.webapp.mediaTypes.VndType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
@@ -48,7 +47,9 @@ public class ExchangeController {
         return Response.ok(new GenericEntity<List<ExchangeDTO>>(exchangeDTOS) {}).build();
     }
 
+
     @POST
+    @Consumes(value = {VndType.APPLICATION_CREATE_EXCHANGE})
     public Response createExchange(CreateExchangeDTO createExchangeDTO) {
         Exchange exchange = exchangeService.initializeExchange(createExchangeDTO.getBookUrn(), createExchangeDTO.getPublicationUrn(), createExchangeDTO.getLocationUrn());
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(exchange.getExchangeId())).build()).build();
@@ -59,8 +60,7 @@ public class ExchangeController {
     @Path("/{id}/messages")
     @Consumes(value = {VndType.APPLICATION_MESSAGE_INPUT})
     public Response sendMessage(@PathParam("id") long exchangeId, MessageInputDTO messageDTO) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        exchangeService.createMessage(exchangeId, user, messageDTO.getMessage());
+        exchangeService.createMessage(exchangeId, messageDTO.getUserUrn(), messageDTO.getMessage());
         return Response.noContent().build();
     }
 
