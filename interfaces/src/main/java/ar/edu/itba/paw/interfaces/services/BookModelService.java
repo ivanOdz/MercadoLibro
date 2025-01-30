@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.BookModelMetadata;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,5 +23,5 @@ public interface BookModelService {
 
     List<GenreWrapper> getGenreWrapperList(String search);
 
-    BookModel setCover(Long bookModelId, Long imageId);
+    BookModel setCover(Long bookModelId, URI imageUrn);
 }

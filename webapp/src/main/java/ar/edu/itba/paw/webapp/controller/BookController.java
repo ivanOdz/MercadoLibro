@@ -101,6 +101,7 @@ public class BookController {
     }
 
 
+    // TODO: modify, relation endpoint
     @POST
     @Path("/{id}")
     @Consumes(value = {VndType.APPLICATION_ADD_BOOK_IMAGE})

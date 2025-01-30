@@ -3,19 +3,19 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.persistence.BookModelDao;
 import ar.edu.itba.paw.interfaces.services.BookModelService;
 import ar.edu.itba.paw.interfaces.services.ImageService;
-import ar.edu.itba.paw.models.Author;
 import ar.edu.itba.paw.models.BookModel;
 import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.BookModelMetadata;
+import ar.edu.itba.paw.utils.UrnResolverUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -85,11 +85,11 @@ public class BookModelServiceImpl implements BookModelService {
 
     @Transactional
     @Override
-    public BookModel setCover(Long bookModelId, Long imageId) {
+    public BookModel setCover(Long bookModelId, URI imageUrn) {
         Optional<BookModel> bookModel = getBookModelByBookModelId(bookModelId);
         
         if(bookModel.isPresent()) {
-	        Image image = imageService.getImageById(imageId);
+	        Image image = imageService.getImageById(UrnResolverUtil.getImageId(imageUrn));
 	        return bookModelDao.setCover(bookModel.get(), image);
         }
         return null;
