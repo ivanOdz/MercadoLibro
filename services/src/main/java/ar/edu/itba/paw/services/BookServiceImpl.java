@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.exceptions.BookNotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
@@ -92,11 +91,15 @@ public class BookServiceImpl implements BookService {
     public Book createBook(URI bookModelUrn, URI userUrn, BookState bookState, Integer rating){
         LOGGER.info("Creating book for book model ID: {}", bookModelUrn);
 
-        BookModel bm = bookModelService.getBookModelByBookModelId(UrnResolverUtil.getBookModelId(bookModelUrn));
-        User u = userService.findById(UrnResolverUtil.getUserId(userUrn));
-        bookDao.createBookRating(u, bm, rating);
+        Optional<BookModel> maybeBm = bookModelService.getBookModelByBookModelId(UrnResolverUtil.getBookModelId(bookModelUrn));
+        
+        if (maybeBm.isPresent()) {
+            User u = userService.findById(UrnResolverUtil.getUserId(userUrn));
+            bookDao.createBookRating(u, maybeBm.get(), rating);
 
-        return bookDao.createBook(bm, u, bookState);
+            return bookDao.createBook(maybeBm.get(), u, bookState);
+        }
+        return null;
     }
 
     /*
@@ -139,18 +142,11 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    public Book getBookById(long bookId) {
+    public Optional<Book> getBookById(long bookId) {
     	
         LOGGER.info("Attempting to retrieve Book with ID: {}", bookId);
 
-        Optional<Book> book = bookDao.getBookById(bookId);
-        if (book.isEmpty()) {
-            LOGGER.warn("Book with ID: {} not found", bookId);
-            throw new BookNotFoundException("Book not found");
-        }
-
-        LOGGER.info("Book with ID: {} found successfully", bookId);
-        return book.get();
+        return bookDao.getBookById(bookId);
     }
 
     @Override
@@ -266,11 +262,15 @@ public class BookServiceImpl implements BookService {
     @Override
     public void setImage(Long bookId, URI imageUrn) {
         Image image = imageService.getImageById(UrnResolverUtil.getImageId(imageUrn));
-        Book book = getBookById(bookId);
-        BookImage bookImage = new BookImage();
-        bookImage.setImage(image);
-        bookImage.setImageOrder(book.getImages().size());
-        bookImage.setImageDatetime(Timestamp.valueOf(LocalDateTime.now()));
-        bookDao.setImage(book, bookImage);
+        Optional<Book> book = getBookById(bookId);
+        
+        if (book.isPresent()) {
+            BookImage bookImage = new BookImage();
+            bookImage.setImage(image);
+            bookImage.setImageOrder(book.get().getImages().size());
+            bookImage.setImageDatetime(Timestamp.valueOf(LocalDateTime.now()));
+            bookDao.setImage(book.get(), bookImage);
+        }
+
     }
 }

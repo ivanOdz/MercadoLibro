@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.exceptions.BookModelNotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.BookModelDao;
 import ar.edu.itba.paw.interfaces.services.BookModelService;
 import ar.edu.itba.paw.interfaces.services.ImageService;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +31,6 @@ public class BookModelServiceImpl implements BookModelService {
     private ImageService imageService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BookModelServiceImpl.class);
-
 
     @Override
     @Transactional
@@ -52,16 +49,16 @@ public class BookModelServiceImpl implements BookModelService {
 
     @Override
     @Transactional(readOnly = true)
-    public BookModel getBookModelByBookModelId(Long bookModelId) {
+    public Optional<BookModel> getBookModelByBookModelId(Long bookModelId) {
         LOGGER.info("Fetching BookModel with ID: {}", bookModelId);
 
         Optional<BookModel> bookModel = bookModelDao.getBookModelByBookModelId(bookModelId);
-        if(bookModel.isEmpty()){
+        /*if(bookModel.isEmpty()){
             LOGGER.warn("BookModel not found for ID: {}", bookModelId);
             throw new BookModelNotFoundException("Book model not found");
         }
-        LOGGER.info("Successfully retrieved BookModel with ID: {}", bookModelId);
-        return bookModel.get();
+        LOGGER.info("Successfully retrieved BookModel with ID: {}", bookModelId);*/
+        return bookModel;
     }
 
     @Override
@@ -89,8 +86,12 @@ public class BookModelServiceImpl implements BookModelService {
     @Transactional
     @Override
     public BookModel setCover(Long bookModelId, Long imageId) {
-        BookModel bookModel = getBookModelByBookModelId(bookModelId);
-        Image image = imageService.getImageById(imageId);
-        return bookModelDao.setCover(bookModel, image);
+        Optional<BookModel> bookModel = getBookModelByBookModelId(bookModelId);
+        
+        if(bookModel.isPresent()) {
+	        Image image = imageService.getImageById(imageId);
+	        return bookModelDao.setCover(bookModel.get(), image);
+        }
+        return null;
     }
 }

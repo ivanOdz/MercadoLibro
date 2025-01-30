@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.exceptions.ExchangeBadRequestException;
-import ar.edu.itba.paw.interfaces.exceptions.ExchangeNotFoundException;
 import ar.edu.itba.paw.interfaces.exceptions.MessageNotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.ExchangeDao;
 import ar.edu.itba.paw.interfaces.services.*;
@@ -48,13 +47,20 @@ public class ExchangeServiceImpl implements ExchangeService {
 
         Long locationId = UrnResolverUtil.getLocationId(location);
 
-        if(ps.getPublicationByPublicationId(offererPubId).getPublicationState() != PublicationState.CURRENT) {
+        Optional<Publication> publication = ps.getPublicationByPublicationId(offererPubId);
+        if(publication.isPresent() && publication.get().getPublicationState() != PublicationState.CURRENT) {
             LOGGER.warn("Publication with id {} is not in current state", offererPub);
             throw new ExchangeBadRequestException("Publication is not in current state");
         }
 
-    	Book b = bs.getBookById(bookId);
-        Long userId = b.getOwner().getUserId();
+    	Optional<Book> b = bs.getBookById(bookId);
+    	
+    	if(b.isEmpty()) {
+            LOGGER.warn("Book with id {} is not existent", bookId);
+            throw new ExchangeBadRequestException("Book not existent");
+    	}
+    	
+        Long userId = b.get().getOwner().getUserId();
         long requesterPubId = ps.createPublication(bookId, userId, locationId);
 
         Random random = new Random();
@@ -139,7 +145,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         LOGGER.info("Found exchange with ID: {} for acceptCode: {}", exchange.getExchangeId(), acceptCode);
 
         if(exchange.getOfferer().getBook().getOwner().getUserId() == userId) {
-            exchangeDao.confirmOfferer(getExchangeByAcceptCode(acceptCode), acceptCode);
+            exchangeDao.confirmOfferer(getExchangeByAcceptCode(acceptCode).get(), acceptCode);
             exchangeCompleted(acceptCode, exchange);
             LOGGER.info("Confirmed offerer for acceptCode: {}", acceptCode);
         }
@@ -180,32 +186,20 @@ public class ExchangeServiceImpl implements ExchangeService {
 
     @Override
     @Transactional(readOnly = true)
-    public Exchange getExchangeByAcceptCode(int acceptCode) {
+    public Optional<Exchange> getExchangeByAcceptCode(int acceptCode) {
     	
         LOGGER.info("Searching for exchange with acceptCode: {}", acceptCode);
 
-        Optional<Exchange> exchange = exchangeDao.findByAcceptCode(acceptCode);
-        if (exchange.isEmpty()) {
-            LOGGER.warn("Exchange not found for acceptCode: {}", acceptCode);
-            throw new ExchangeNotFoundException("Exchange not found");
-        }
-        LOGGER.info("Exchange found for acceptCode: {}", acceptCode);
-        return exchange.get();
+        return exchangeDao.findByAcceptCode(acceptCode);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Exchange getExchangeById(long exchangeId) {
+    public Optional<Exchange> getExchangeById(long exchangeId) {
     	
         LOGGER.info("Searching for exchange with exchangeId: {}", exchangeId);
 
-        Optional<Exchange> exchange = exchangeDao.getExchangeById(exchangeId);
-        if (exchange.isEmpty()) {
-            LOGGER.warn("Exchange not found for exchangeId: {}", exchangeId);
-            throw new ExchangeNotFoundException("Exchange not found");
-        }
-        LOGGER.info("Exchange found for exchangeId: {}", exchangeId);
-        return exchange.get();
+        return exchangeDao.getExchangeById(exchangeId);
     }
 
     // exchanges where user is the publication owner
@@ -236,14 +230,17 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Transactional
     public void createMessage(long exchangeId, URI user, String message) {
         UrnResolverUtil ur = new UrnResolverUtil(user.getPath());
-        exchangeDao.createMessage(getExchangeById(exchangeId), ur.nextPath().nextPath().getId(), message, new Timestamp((new Date()).getTime()));
+        exchangeDao.createMessage(getExchangeById(exchangeId).get(), ur.nextPath().nextPath().getId(), message, new Timestamp((new Date()).getTime()));
     }
 
     @Override
     @Transactional
     public List<Message> getMessages(long exchangeId) {
-        Exchange e = getExchangeById(exchangeId);
-        return e.getChat();
+        Optional<Exchange> e = getExchangeById(exchangeId);
+        if (e.isEmpty()) {
+        	return new ArrayList<Message>();
+        }
+        return e.get().getChat();
     }
 
     @Override
@@ -259,14 +256,14 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Transactional
     @Override
     public void updateExchange(Integer acceptCode, Boolean accepted, Boolean requester) {
-        Exchange e = getExchangeByAcceptCode(acceptCode);
+        Optional<Exchange> e = getExchangeByAcceptCode(acceptCode);
         if (accepted != null) {
             exchange(acceptCode,accepted);
-        } else if (requester != null) {
+        } else if (requester != null && e.isPresent()) {
             if (requester) {
-                confirmRequest(e.getRequester().getBook().getOwner().getUserId(), acceptCode);
+                confirmRequest(e.get().getRequester().getBook().getOwner().getUserId(), acceptCode);
             } else {
-                confirmOffer(e.getOfferer().getBook().getOwner().getUserId(), acceptCode);
+                confirmOffer(e.get().getOfferer().getBook().getOwner().getUserId(), acceptCode);
             }
         } else {
             LOGGER.warn("Invalid parameters for updateExchange");
