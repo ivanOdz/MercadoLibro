@@ -87,9 +87,9 @@ public class UserController {
 
     // No necesita autenticacion
     @PATCH
-    @Path("/{password-token}")
+    @Path("/{password_token}")
     @Consumes(value = {VndType.APPLICATION_USER_PASSWORD})
-    public Response updatePassword(@PathParam("password-token") final int code,
+    public Response updatePassword(@PathParam("password_token") final int code,
                                    @Valid final PasswordChangeRequest request) {
         us.changePassword(code, request.getNewPassword());
         return Response.noContent().build();
