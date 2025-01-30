@@ -57,8 +57,8 @@ public class UserController {
     @GET
     @Path("/{id}")
     @Produces(value = {VndType.APPLICATION_USER})
-    public Response getUser(@PathParam("id") final String username) {
-        User user = us.findByUsername(username).orElseThrow(() -> new UserNotFoundException("No such user"));
+    public Response getUser(@PathParam("id") final Long user_id) {
+        User user = us.findById(user_id).orElseThrow(() -> new UserNotFoundException("No such user"));
         Rating userRating = userReviewService.getUserRatingEarned(user.getUserId());
 
         UserDTO dto = UserDTO.fromUser(uriInfo, user, userRating);
