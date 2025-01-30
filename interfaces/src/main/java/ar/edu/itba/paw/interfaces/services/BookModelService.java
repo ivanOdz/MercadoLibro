@@ -16,7 +16,7 @@ public interface BookModelService {
     BookModel createBookModel(String isbn, String title, String publisher, String description, Genre genre, int edition,
                                         Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension, Language language, int pages, int weight, List<String> authors);
 
-    Optional<BookModel> getBookModelByBookModelId(Long bookModelId);
+    BookModel getBookModelByBookModelId(Long bookModelId);
 
     PaginatedResponse<BookModel, BookModelMetadata> getPaginatedBookModels(String search, String genre, int currentPage, String sortType);
 

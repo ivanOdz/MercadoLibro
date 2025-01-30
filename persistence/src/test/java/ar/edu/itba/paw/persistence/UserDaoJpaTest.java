@@ -49,7 +49,7 @@ public class UserDaoJpaTest {
 	
 	@Test
 	public void testFindById() {
-		/*
+		
 		Optional<User> maybeUser = userDao.findById(UserConstants.ID_1);
 		
 		Assert.assertTrue(maybeUser.isPresent());
@@ -60,9 +60,9 @@ public class UserDaoJpaTest {
 		Assert.assertEquals(UserConstants.PASSWORD_1, maybeUser.get().getPassword());
 		Assert.assertEquals(UserConstants.LANGUAGE_1, maybeUser.get().getLanguage());
 		
-		Assert.assertNotEquals(UserConstants.NON_EXISTING_ID, maybeUser.get().getLanguage());*/
+		Assert.assertNotEquals(UserConstants.NON_EXISTING_ID, maybeUser.get().getLanguage());
 	}
-	/*
+	
 	@Test
 	public void testFindByIdNonExistent() {
 		
@@ -131,5 +131,5 @@ public class UserDaoJpaTest {
 		
 		Assert.assertEquals(locationsSize + 1, user.getUserLocations().size());
 		Assert.assertTrue(user.getUserLocations().contains(newLocation));
-	}*/
+	}
 }

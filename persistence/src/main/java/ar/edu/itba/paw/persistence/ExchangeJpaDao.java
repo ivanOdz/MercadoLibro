@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.exceptions.ExchangeNotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.ExchangeDao;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.ExchangeState;
@@ -68,7 +69,7 @@ public class ExchangeJpaDao implements ExchangeDao {
     }
 
     @Override
-    public Optional<Exchange> findByAcceptCode(int acceptCode) {
+    public Optional<Exchange> findByAcceptCode(int acceptCode) throws ExchangeNotFoundException {
         TypedQuery<Exchange> exchange = em.createQuery("FROM Exchange e WHERE e.acceptCode = :acceptCode", Exchange.class);
         exchange.setParameter("acceptCode", acceptCode);
         return Optional.ofNullable(exchange.getSingleResult());

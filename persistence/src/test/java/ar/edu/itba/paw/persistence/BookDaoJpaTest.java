@@ -57,7 +57,7 @@ public class BookDaoJpaTest {
 	
 	@Test
 	public void testGetBookById() {
-		/*
+		
 		Optional<Book> maybeBook = bookDao.getBookById(BookConstants.ID_1);
 		
 		Assert.assertTrue(maybeBook.isPresent());
@@ -66,13 +66,12 @@ public class BookDaoJpaTest {
 		Assert.assertEquals(BookConstants.AVAILABLE_1, maybeBook.get().isAvailable());
 		Assert.assertEquals(BookState.valueOf(BookConstants.BOOK_STATE_1), maybeBook.get().getBookState());
 		Assert.assertEquals((int)BookConstants.EXCHANGE_QTY_1, maybeBook.get().getExchangesQty());
-		**/
 	}
 	
 	@Test
 	@Rollback
 	public void testCreateBook() {
-		/*
+		
 		final Author author = em.merge(new Author(AuthorConstants.ID_8, AuthorConstants.NAME_8));
 		final List<Author> authors = new ArrayList<Author>();
 		authors.add(author);
@@ -88,13 +87,12 @@ public class BookDaoJpaTest {
 		Assert.assertEquals(bookState, newBook.getBookState());
 		Assert.assertEquals(bookModel, newBook.getBookModel());
 		Assert.assertEquals(user, newBook.getOwner());
-		*/
 	}
 	
 	@Test
 	@Rollback
 	public void testCreateBookRating() {
-		/*
+		
 		final Author author = em.merge(new Author(AuthorConstants.ID_2, AuthorConstants.NAME_2));
 		final List<Author> authors = new ArrayList<Author>();
 		authors.add(author);
@@ -106,13 +104,12 @@ public class BookDaoJpaTest {
 		em.flush();
 		
 		Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "book_rating", "userId = " + user.getUserId() + " AND bookModelId = '" + bookModel.getBookModelId() + "' AND rating = 4"));
-	*/
 	}
 
 	@Test
 	@Rollback
 	public void testSetOwner() {
-		/*
+		
 		final Author author = em.merge(new Author(AuthorConstants.ID_2, AuthorConstants.NAME_2));
 		final List<Author> authors = new ArrayList<Author>();
 		authors.add(author);
@@ -126,5 +123,5 @@ public class BookDaoJpaTest {
 		em.flush();
 		
 		Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "book", "ownerId = " + newOwner.getUserId() + " AND bookModelId = " + bookModel.getBookModelId()));
-	*/}
+	}
 }

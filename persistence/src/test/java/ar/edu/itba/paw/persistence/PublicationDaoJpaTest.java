@@ -61,7 +61,7 @@ public class PublicationDaoJpaTest {
 	
 	@Test
 	public void testGetPublicationByPublicationId() {
-		/*
+		
 		Optional<Publication> maybePublication = publicationDao.getPublicationByPublicationId(PublicationConstants.ID_1);
 		
 		Assert.assertTrue(maybePublication.isPresent());
@@ -98,9 +98,9 @@ public class PublicationDaoJpaTest {
 		
 		Assert.assertFalse(found_3);
 		Assert.assertTrue(found_1);
-		Assert.assertTrue(found_2);*/
+		Assert.assertTrue(found_2);
 	}
-	/*
+	
 	@Test
 	@Rollback
 	public void testTerminatePublication() {
@@ -265,7 +265,7 @@ public class PublicationDaoJpaTest {
 		}
 		
 		Assert.assertTrue(foundPublication);
-	}*/
+	}
 	
 // PaginatedResponse<Publication, BasicMetadata> getFavoritePublications(User user, String currentPage);
 }

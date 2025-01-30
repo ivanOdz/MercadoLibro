@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.exceptions.LocationNotFoundException;
+import ar.edu.itba.paw.interfaces.exceptions.PublicationNotFoundException;
 import ar.edu.itba.paw.interfaces.exceptions.UserNotUnauthorizedException;
 import ar.edu.itba.paw.interfaces.services.BookService;
 import ar.edu.itba.paw.interfaces.services.LocationService;
@@ -41,12 +41,12 @@ public class PublicationServiceImpl implements PublicationService {
     @Override
     @Transactional
     public Publication createPublication(long bookId, User user, long locationId) {
-        Optional<Book> book = bookService.getBookById(bookId);
+        Book book = bookService.getBookById(bookId);
         Location location = locationService.findById(locationId);
         List<Location> locations = new ArrayList<>();
         locations.add(location);
 
-        Publication publication = pubDao.createPublication(book.get(), user, locations, PublicationState.CURRENT);
+        Publication publication = pubDao.createPublication(book, user, locations, PublicationState.CURRENT);
         // In case create publication fails, this log wont appear as it will throw an exception.
         LOGGER.info("Publication of id {} successfully created", publication.getPublicationId());
 
@@ -70,8 +70,13 @@ public class PublicationServiceImpl implements PublicationService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Publication> getPublicationByPublicationId(long publicationId) {
-        return pubDao.getPublicationByPublicationId(publicationId);
+    public Publication getPublicationByPublicationId(long publicationId) {
+        Optional<Publication> publication = pubDao.getPublicationByPublicationId(publicationId);
+        if (publication.isEmpty()) {
+            LOGGER.warn("Publication of id {} not found", publicationId);
+            throw new PublicationNotFoundException("Publication not found");
+        }
+        return publication.get();
     }
 
     @Override
@@ -102,16 +107,13 @@ public class PublicationServiceImpl implements PublicationService {
     @Transactional
     public void addLocation(Long publicationId, Long locationId, User user) {
         Location location = locationService.findById(locationId);
-        Optional<Publication> publication = getPublicationByPublicationId(publicationId);
+        Publication publication = getPublicationByPublicationId(publicationId);
 
-        if (publication.isEmpty()) {
-        	return; // TODO: deberia devolver un boleano
-        }
-        else if (!Objects.equals(publication.get().getUser().getUserId(), user.getUserId())) {
+        if (!Objects.equals(publication.getUser().getUserId(), user.getUserId())) {
             LOGGER.error("User with ID {} is not the owner of the publication with ID {}", user.getUserId(), publicationId);
             throw new UserNotUnauthorizedException("User is not the owner of the publication");
         }
-        pubDao.addLocation(publication.get(), location);
+        pubDao.addLocation(publication, location);
         LOGGER.info("Location with ID {} successfully added to publication with ID {}", locationId, publicationId);
     }
 
@@ -144,9 +146,9 @@ public class PublicationServiceImpl implements PublicationService {
     @Override
     @Transactional
     public void deletePublication(long userId, long publicationId) {
-        Optional<Publication> p = getPublicationByPublicationId(publicationId);
-        if(p.isPresent() && p.get().getUser().getUserId() == userId) {
-            p.get().getBook().setAvailable(true);
+        Publication p = getPublicationByPublicationId(publicationId);
+        if(p.getUser().getUserId() == userId) {
+            p.getBook().setAvailable(true);
             pubDao.deletePublication(publicationId);
             LOGGER.info("Publication with ID {} deleted successfully, Book marked as available", publicationId);
         }
@@ -232,7 +234,7 @@ public class PublicationServiceImpl implements PublicationService {
     }
 
     @Override
-    public Optional<Publication> getActivePublication(User user, long publicationId) {
+    public Publication getActivePublication(User user, long publicationId) {
         return pubDao.getActivePublicationById(user, publicationId);
     }
 }

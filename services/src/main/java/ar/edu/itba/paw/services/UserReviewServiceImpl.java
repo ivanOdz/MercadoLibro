@@ -47,30 +47,25 @@ public class UserReviewServiceImpl implements UserReviewService {
 	@Override
 	@Transactional
 	public UserReview createUserReview(URI exchangeUrn, Long targetUserId, String description, int rating) {
-		Optional<Exchange> exchange = exchangeService.getExchangeById(UrnResolverUtil.getExchangeId(exchangeUrn));
+		Exchange exchange = exchangeService.getExchangeById(UrnResolverUtil.getExchangeId(exchangeUrn));
 
-		if (exchange.isEmpty()) {
-			LOGGER.warn("Exchange ID {} not found", UrnResolverUtil.getExchangeId(exchangeUrn));
-			return null;
-		}
-		
 		if(targetUserId == null) {
 			LOGGER.warn("The provided userId: {} cannot be null", targetUserId);
 			return null;
 		}
 
-		long offererId = exchange.get().getOfferer().getUser().getUserId();
-		long requesterId = exchange.get().getRequester().getUser().getUserId();
+		long offererId = exchange.getOfferer().getUser().getUserId();
+		long requesterId = exchange.getRequester().getUser().getUserId();
 
 		if (targetUserId != offererId && targetUserId != requesterId) {
-			LOGGER.warn("The provided userId: {} does not match the offerer or requester for exchange ID: {}", targetUserId, exchange.get().getExchangeId());
+			LOGGER.warn("The provided userId: {} does not match the offerer or requester for exchange ID: {}", targetUserId, exchange.getExchangeId());
 			return null;
 		}
 
 		long reviewerId = (targetUserId != offererId) ? offererId : requesterId;
 
-		LOGGER.info("Creating or updating user review for exchange ID: {} and user ID: {}", exchange.get().getExchangeId(), targetUserId);
-		UserReview userReview = userReviewDao.createOrUpdateUserReview(exchange.get().getExchangeId(), reviewerId, targetUserId, description, rating);
+		LOGGER.info("Creating or updating user review for exchange ID: {} and user ID: {}", exchange.getExchangeId(), targetUserId);
+		UserReview userReview = userReviewDao.createOrUpdateUserReview(exchange.getExchangeId(), reviewerId, targetUserId, description, rating);
 
 		LOGGER.info("User review created/updated for user ID: {} on exchange ID: {}", targetUserId, exchangeUrn);
 

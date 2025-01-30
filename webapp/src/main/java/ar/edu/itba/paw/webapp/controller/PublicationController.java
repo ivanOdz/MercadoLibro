@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.exceptions.PublicationNotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
@@ -27,7 +28,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Path("publications")
@@ -96,8 +96,12 @@ public class PublicationController {
     @Produces(value = {VndType.APPLICATION_PUBLICATION})
     public Response getPublication(@PathParam("publication_id") Long publicationId) throws PublicationNotFoundException {
         User loggeduser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        
-        Optional<Publication> publication = ps.getActivePublication(loggeduser, publicationId).orElseThrow(PublicationNotFoundException);
+        Publication publication;
+        try {
+            publication = ps.getActivePublication(loggeduser, publicationId);
+        } catch (PublicationNotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
 
         PublicationDTO dto = PublicationDTO.fromPublication(uriInfo, publication);
         GenericEntity<PublicationDTO> genericEntity = new GenericEntity<PublicationDTO>(dto) {};

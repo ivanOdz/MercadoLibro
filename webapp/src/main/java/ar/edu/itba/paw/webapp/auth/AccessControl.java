@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 import javax.servlet.http.HttpServletRequest;
 
 
@@ -49,55 +47,41 @@ public class AccessControl {
     public Boolean modifyBookAccess(HttpServletRequest request, Long id) {
         long userId = getUser().getUserId();
 
-        Optional<Book> b = bookService.getBookById(id);
-        if (b.isPresent()) {
-        	return b.get().getOwner().getUserId().equals(userId);
-        }
-        return false;
+        Book b = bookService.getBookById(id);
+        return b.getOwner().getUserId().equals(userId);
     }
 
     // FIXME: id in endpoint should be uri
     public Boolean exchangeAccess(HttpServletRequest request) {
         long exchangeId = Long.parseLong(request.getParameter("id"));
-        Optional<Exchange> e = exchangeService.getExchangeById(exchangeId);
+        Exchange e = exchangeService.getExchangeById(exchangeId);
 
         long userId = getUser().getUserId();
 
         // userId matches requester or offerer id
-        if (e.isPresent()) {
-        	return e.get().getRequester().getUser().getUserId().equals(userId) || e.get().getOfferer().getUser().getUserId().equals(userId);
-        }
-        return false;
+        return e.getRequester().getUser().getUserId().equals(userId) || e.getOfferer().getUser().getUserId().equals(userId);
     }
 
     // FIXME: ids in endpoint should be uri
     public Boolean createExchangeAccess(HttpServletRequest request) {
         // user must be the owner of the book
-        Optional<Book> b = bookService.getBookById(Long.parseLong(request.getParameter("book")));
+        Book b = bookService.getBookById(Long.parseLong(request.getParameter("book")));
 
         // location must be in the user's locations
-        Optional<Location> l = locationService.findById(Long.parseLong(request.getParameter("location")));
-        
-        if (b.isPresent() && l.isPresent()) {
-            return b.get().getOwner().getUserId().equals(getUser().getUserId()) &&
-                    l.get().getUsers().contains(getUser());
-        }
-        return false;
+        Location l = locationService.findById(Long.parseLong(request.getParameter("location")));
 
+        return b.getOwner().getUserId().equals(getUser().getUserId()) &&
+                l.getUsers().contains(getUser());
     }
 
     public Boolean exchangeUpdateAccess(HttpServletRequest request, Long id) {
-        Optional<Exchange> e = exchangeService.getExchangeById(id);
+        Exchange e = exchangeService.getExchangeById(id);
         User lu = getUser();
 
         Boolean requester = Boolean.parseBoolean(request.getParameter("requester"));
         Boolean accepted = Boolean.parseBoolean(request.getParameter("accepted"));
 
-        if (e.isEmpty()) {
-        	return null;
-        }
-        
-        if(accepted != null ){
+        if(accepted != null){
             return getUser().getUserId().equals(e.getOfferer().getUser().getUserId());
         }
 

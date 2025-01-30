@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
+import ar.edu.itba.paw.interfaces.exceptions.ExchangeNotFoundException;
 import ar.edu.itba.paw.models.Exchange;
 import ar.edu.itba.paw.models.Message;
 import ar.edu.itba.paw.models.PaginatedResponse;
@@ -25,7 +26,7 @@ public interface ExchangeDao {
 
     void updateExchangeStatus(Exchange exchange, int acceptCode, ExchangeState newStatus);
 
-    Optional<Exchange> findByAcceptCode(int acceptCode);
+    Optional<Exchange> findByAcceptCode(int acceptCode) throws ExchangeNotFoundException;
 
     Optional<Exchange> getExchangeById(long exchangeId);
 
