@@ -19,6 +19,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,24 +33,25 @@ public class ExchangeController {
     @Context
     private UriInfo uriInfo;
 
+    // NOTE
     @GET
     @Produces(value = {VndType.APPLICATION_EXCHANGE})
-    public Response getExchanges(@QueryParam("id") final long userId,
+    public Response getExchanges(@QueryParam("user") final URI userUrn,
                                  @QueryParam("state") final ExchangeState state,
                                  @QueryParam("isOfferer") @DefaultValue("false") final Boolean isOfferer,
                                  @QueryParam("isRequester") @DefaultValue("false") final Boolean isRequester,
                                  @QueryParam("page") final Integer page) {
-        PaginatedResponse<Exchange, BasicMetadata> exchanges = exchangeService.getExchanges(userId, state, isOfferer, isRequester, page);
+        PaginatedResponse<Exchange, BasicMetadata> exchanges = exchangeService.getExchanges(userUrn, state, isOfferer, isRequester, page);
 
         List<ExchangeDTO> exchangeDTOS = exchanges.getData().stream().map(exchange -> ExchangeDTO.fromExchange(uriInfo, exchange)).toList();
 
         return Response.ok(new GenericEntity<List<ExchangeDTO>>(exchangeDTOS) {}).build();
     }
 
-
+    // NOTE
     @POST
-    public Response createExchange(@QueryParam("book") final Integer bookId, @QueryParam("publication") final Integer pubId, @QueryParam("location") final Integer locationId) {
-        Exchange exchange = exchangeService.initializeExchange(bookId, locationId, pubId);
+    public Response createExchange(@QueryParam("book") final URI bookUrn, @QueryParam("publication") final URI publicationUrn, @QueryParam("location") final URI locationUrn) {
+        Exchange exchange = exchangeService.initializeExchange(bookUrn, publicationUrn, locationUrn);
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(exchange.getExchangeId())).build()).build();
     }
 
@@ -82,6 +84,14 @@ public class ExchangeController {
     }
 
     // IMPLEMENT: GET /exchanges/{id}
+    @GET
+    @Path("/{id}")
+    @Produces(value = {VndType.APPLICATION_EXCHANGE})
+    public Response getExchange(@PathParam("id") final Long exchangeId) {
+        Exchange exchange = exchangeService.getExchangeById(exchangeId);
+        ExchangeDTO exchangeDTO = ExchangeDTO.fromExchange(uriInfo, exchange);
+        return Response.ok(new GenericEntity<ExchangeDTO>(exchangeDTO) {}).build();
+    }
 
     @PATCH
     @Path("/{id}")
