@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.dto.input;
 
-public class MessageDTO {
+public class MessageInputDTO {
     private String message;
 
     public String getMessage() {

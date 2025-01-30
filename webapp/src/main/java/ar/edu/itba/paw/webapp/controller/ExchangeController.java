@@ -5,10 +5,11 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 
-import ar.edu.itba.paw.webapp.dto.input.MessageDTO;
+import ar.edu.itba.paw.webapp.dto.input.CreateExchangeDTO;
+import ar.edu.itba.paw.webapp.dto.input.MessageInputDTO;
 import ar.edu.itba.paw.webapp.dto.input.UpdateExchangeDTO;
 import ar.edu.itba.paw.webapp.dto.output.ExchangeDTO;
-import ar.edu.itba.paw.webapp.dto.output.MessagesDTO;
+import ar.edu.itba.paw.webapp.dto.output.MessageDTO;
 import ar.edu.itba.paw.webapp.mediaTypes.VndType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,7 +34,6 @@ public class ExchangeController {
     @Context
     private UriInfo uriInfo;
 
-    // NOTE
     @GET
     @Produces(value = {VndType.APPLICATION_EXCHANGE})
     public Response getExchanges(@QueryParam("user") final URI userUrn,
@@ -48,19 +48,17 @@ public class ExchangeController {
         return Response.ok(new GenericEntity<List<ExchangeDTO>>(exchangeDTOS) {}).build();
     }
 
-    // NOTE
     @POST
-    public Response createExchange(@QueryParam("book") final URI bookUrn, @QueryParam("publication") final URI publicationUrn, @QueryParam("location") final URI locationUrn) {
-        Exchange exchange = exchangeService.initializeExchange(bookUrn, publicationUrn, locationUrn);
+    public Response createExchange(CreateExchangeDTO createExchangeDTO) {
+        Exchange exchange = exchangeService.initializeExchange(createExchangeDTO.getBookUrn(), createExchangeDTO.getPublicationUrn(), createExchangeDTO.getLocationUrn());
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(exchange.getExchangeId())).build()).build();
     }
 
 
-    // CHECK: application message same output and input
     @POST
     @Path("/{id}/messages")
-    @Consumes(value = {VndType.APPLICATION_MESSAGE})
-    public Response sendMessage(@PathParam("id") long exchangeId, MessageDTO messageDTO) {
+    @Consumes(value = {VndType.APPLICATION_MESSAGE_INPUT})
+    public Response sendMessage(@PathParam("id") long exchangeId, MessageInputDTO messageDTO) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         exchangeService.createMessage(exchangeId, user, messageDTO.getMessage());
         return Response.noContent().build();
@@ -71,19 +69,19 @@ public class ExchangeController {
     @Produces(value = {VndType.APPLICATION_MESSAGE})
     public Response getMessages(@PathParam("id") long exchangeId) {
         List<Message> m = exchangeService.getMessages(exchangeId);
-        List<MessagesDTO> messages = m.stream().map(message -> MessagesDTO.fromMessage(uriInfo, message)).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<MessagesDTO>>(messages) {}).build();
+        List<MessageDTO> messages = m.stream().map(message -> MessageDTO.fromMessage(uriInfo, message)).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<MessageDTO>>(messages) {}).build();
     }
 
     @GET
     @Path("/{id}/messages/{message_id}")
+    @Produces(value = {VndType.APPLICATION_MESSAGE})
     public Response getMessage(@PathParam("id") long exchangeId, @PathParam("message_id") long messageId) {
         Message m = exchangeService.getMessage(messageId);
-        MessagesDTO message = MessagesDTO.fromMessage(uriInfo, m);
-        return Response.ok(new GenericEntity<MessagesDTO>(message) {}).build();
+        MessageDTO message = MessageDTO.fromMessage(uriInfo, m);
+        return Response.ok(new GenericEntity<MessageDTO>(message) {}).build();
     }
 
-    // IMPLEMENT: GET /exchanges/{id}
     @GET
     @Path("/{id}")
     @Produces(value = {VndType.APPLICATION_EXCHANGE})

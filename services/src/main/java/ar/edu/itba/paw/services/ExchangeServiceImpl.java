@@ -9,12 +9,14 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
+import ar.edu.itba.paw.utils.UrnResolverUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.URI;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -39,16 +41,26 @@ public class ExchangeServiceImpl implements ExchangeService {
     // FIXME: missing implementation of createPublication
     @Override
     @Transactional
-    public Exchange initializeExchange(long bookId, long locationId, long offererPubId) {
+    public Exchange initializeExchange(URI book, URI location, URI offererPub) {
+
+        UrnResolverUtil ur = new UrnResolverUtil(offererPub.getPath()); // /api/publications/{id}
+        Long offererPubId = ur.nextPath().nextPath().getId();
+
+        ur.setUrn(book.getPath());
+        Long bookId = ur.nextPath().nextPath().getId();
+
+        ur.setUrn(location.getPath());
+        Long locationId = ur.nextPath().nextPath().getId();
 
         if(ps.getPublicationByPublicationId(offererPubId).getPublicationState() != PublicationState.CURRENT) {
-            LOGGER.warn("Publication with id {} is not in current state", offererPubId);
+            LOGGER.warn("Publication with id {} is not in current state", offererPub);
             throw new ExchangeBadRequestException("Publication is not in current state");
         }
 
-    	Book book = bs.getBookById(bookId);
-        Long userId = book.getOwner().getUserId();
-        long requesterPubId = 0/*ps.createPublication(bookId,  userId, locationId, PublicationState.OFFERED).getPublicationId()*/;
+    	Book b = bs.getBookById(bookId);
+        Long userId = b.getOwner().getUserId();
+        long requesterPubId = ps.createPublication(book, userId, location);
+//        long requesterPubId = ps.createPublication(bookId,  userId, locationId, PublicationState.OFFERED).getPublicationId()*/;
 
         Random random = new Random();
         int acceptCode = Math.abs(random.nextInt());
@@ -69,7 +81,7 @@ public class ExchangeServiceImpl implements ExchangeService {
             emailService.sendExchangeRequestEmail(requester, offerer, bookRequested, bookOffered, ex.getAcceptCode());
         }
         else {
-            LOGGER.warn("Could not initialize exchange for book id {}", bookId);
+            LOGGER.warn("Could not initialize exchange for book id {}", book);
         }
         return ex;
     }
@@ -217,7 +229,11 @@ public class ExchangeServiceImpl implements ExchangeService {
 
 
     @Override
-    public PaginatedResponse<Exchange, BasicMetadata> getExchanges(long userId, ExchangeState exchangeState, Boolean isOfferer, Boolean isRequester, int currentPage) {
+    public PaginatedResponse<Exchange, BasicMetadata> getExchanges(URI user, ExchangeState exchangeState, Boolean isOfferer, Boolean isRequester, int currentPage) {
+        // extract userId from urn
+        UrnResolverUtil ur = new UrnResolverUtil(user.getPath());
+        Long userId = ur.nextPath().nextPath().getId();
+
         return exchangeDao.getAllExchangesByUserId(userId, exchangeState, currentPage, isOfferer, isRequester);
     }
 
