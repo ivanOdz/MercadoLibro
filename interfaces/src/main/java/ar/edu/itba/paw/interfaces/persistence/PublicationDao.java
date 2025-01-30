@@ -37,5 +37,5 @@ public interface PublicationDao {
 
     List<Publication> getActivePublicationsByUser(User user);
 
-    Publication getActivePublicationById(User user, long publicationId);
+    Optional<Publication> getActivePublicationById(User user, long publicationId);
 }

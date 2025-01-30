@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PublicationService {
 
@@ -17,7 +18,7 @@ public interface PublicationService {
 
     void terminatePublication(Publication publication);
 
-    Publication getPublicationByPublicationId(long publicationId);
+    Optional<Publication> getPublicationByPublicationId(long publicationId);
 
     PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, String state, String genre, String sortType, int currentPage, long userId);
 
@@ -43,5 +44,5 @@ public interface PublicationService {
 
     PaginatedResponse<Publication, BasicMetadata> getFavoritePublications(User user, int currentPage);
 
-    Publication getActivePublication(User user, long publicationId);
+    Optional<Publication> getActivePublication(User user, long publicationId);
 }

@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.exceptions.PublicationNotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.PublicationDao;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
@@ -380,7 +379,10 @@ public class PublicationJpaDao implements PublicationDao {
     }
 
     @Override
-    public Publication getActivePublicationById(User user, long publicationId) {
+    public Optional<Publication> getActivePublicationById(User user, long publicationId) {
+    	
+    	return getPublicationByPublicationId(publicationId);
+    	/*
         Optional<Publication> maybePub = getPublicationByPublicationId(publicationId);
         if(user == null) {
             if(maybePub.get().getPublicationState() == PublicationState.CURRENT) {
@@ -393,7 +395,7 @@ public class PublicationJpaDao implements PublicationDao {
                 (maybePub.get().getPublicationState() == PublicationState.OFFERED && Objects.equals(maybePub.get().getUser().getUserId(), user.getUserId())))) {
                 return maybePub.get();
         }
-        throw new PublicationNotFoundException("Publication not found");
+        throw new PublicationNotFoundException("Publication not found");*/
     }
 
     private void setIsLikedByUser(User user, Publication publication) {

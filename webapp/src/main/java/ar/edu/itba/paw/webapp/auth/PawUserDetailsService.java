@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.auth;
 
-import ar.edu.itba.paw.interfaces.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +32,7 @@ public class PawUserDetailsService implements UserDetailsService {
         return new PawUserDetails(user, authorities);
     }
 
-    public UserDetails loadUserById(long userId) throws UserNotFoundException {
+    public UserDetails loadUserById(long userId) {
         User user = us.findById(userId);
 
         Collection<SimpleGrantedAuthority> authorities = Collections.emptySet();

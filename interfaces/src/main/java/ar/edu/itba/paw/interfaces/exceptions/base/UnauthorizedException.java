@@ -1,17 +1,13 @@
 package ar.edu.itba.paw.interfaces.exceptions.base;
 
-import org.springframework.web.client.HttpClientErrorException;
 
-import static ar.edu.itba.paw.interfaces.exceptions.base.ExceptionErrorCode.UNAUTHORIZED;
-
-public class UnauthorizedException extends ApplicationRuntimeException{
+public class UnauthorizedException extends ApplicationRuntimeException {
+	
     public UnauthorizedException() {
-        super(UNAUTHORIZED);
+        super(ExceptionErrorCode.UNAUTHORIZED);
     }
 
     public UnauthorizedException(String message) {
-        super(UNAUTHORIZED, message);
+        super(ExceptionErrorCode.UNAUTHORIZED, message);
     }
-
-
 }

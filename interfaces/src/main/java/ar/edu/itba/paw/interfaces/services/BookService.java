@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public interface BookService {
@@ -24,7 +25,7 @@ public interface BookService {
 
     void exchangeOwnership(Book b1, Book b2);
 
-    Book getBookById(long bookId);
+    Optional<Book> getBookById(long bookId);
 
     PaginatedResponse<Book, ItemFilterMetadata> getPaginatedBooks(String search, String state, String genre, int currentPage, URI userUrn, String sortType);
 

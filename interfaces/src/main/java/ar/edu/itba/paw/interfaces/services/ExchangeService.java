@@ -9,14 +9,15 @@ import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 public interface ExchangeService {
 
     Exchange initializeExchange(URI book, URI location, URI offererPub);
 
-    Exchange getExchangeByAcceptCode(int acceptCode);
+    Optional<Exchange> getExchangeByAcceptCode(int acceptCode);
     
-    Exchange getExchangeById(long exchangeId);
+    Optional<Exchange> getExchangeById(long exchangeId);
     
 //    PaginatedResponse<Exchange, BasicMetadata> getExchangeOffererListByUserId(long userId, int currentPage, ExchangeState exchangeState);
 //
