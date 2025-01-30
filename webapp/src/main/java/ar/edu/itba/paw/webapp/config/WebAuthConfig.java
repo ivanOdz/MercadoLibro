@@ -64,6 +64,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     private static final String PUBLICATIONS_POST_ACCESS = "@accessControl.publicationsPostAccess(request, #publication_id)";
     private static final String PUBLICATION_MODIFY_ACCESS = "@accessControl.publicationsModifyAccess(request, #publication_id)";
     private static final String PUBLICATIONS_GENERAL_ACCESS = "@accessControl.publicationsGeneralAccess(request, #publication_id)";
+    private static final String USER_ACCESS = "@accessControl.userAccess(request, #id)";
+    private static final String REVIEW_ACCESS = "@accessControl.reviewAccess(request, #id, #ur_id)";
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -110,81 +112,124 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
         .authorizeRequests()
 
-        /*
-         * Book controller
-         **/
-        .antMatchers(HttpMethod.GET,"/api/books")
-            .access(BOOKS_ACCESS)
+                /*
+                 * Book controller
+                 **/
 
-        // CHECK: book post passes security checks. SecurityContextHolder returns null on controller layer but then it does not fail on service layer
+                .antMatchers(HttpMethod.GET,"/api/books")
+                    .access(BOOKS_ACCESS)
 
-        .antMatchers(HttpMethod.PATCH, "/api/books/{id:\\d+}/state")
-            .access(BOOK_MODIFY_ACCESS)
+                // CHECK: book post passes security checks. SecurityContextHolder returns null on controller layer but then it does not fail on service layer
 
-        .antMatchers(HttpMethod.PATCH, "/api/books/{id:\\d+}}/images")
-            .access(BOOK_MODIFY_ACCESS)
+                .antMatchers(HttpMethod.PATCH, "/api/books/{id:\\d+}/state")
+                    .access(BOOK_MODIFY_ACCESS)
 
-        /*
-         * Book Model controller
-         */
-        .antMatchers("/api/book-models")
-            .authenticated()
-
-        .antMatchers("/api/book-models/**")
-            .authenticated()
-        /*
-         * Exchange controller
-         */
-
-        .antMatchers(HttpMethod.GET, "/api/exchanges")
-            .access(EXCHANGES_USER_ACCESS)
-
-        .antMatchers(HttpMethod.POST, "/api/exchanges")
-            .access(CREATE_EXCHANGE_ACCESS)
-
-        .antMatchers(HttpMethod.POST, "/api/exchanges/{id:\\d+}/messages")
-            .access(EXCHANGES_ACCESS)
-
-        .antMatchers(HttpMethod.GET, "/api/exchanges/{id:\\d+}/messages")
-            .access(EXCHANGES_ACCESS)
-
-
-        .antMatchers(HttpMethod.PATCH, "/api/exchanges/{id:\\d+}")
-            .access(EXCHANGES_UPDATE_ACCESS)
-
-        /*
-         * Publication controller
-         */
-
-        .antMatchers(HttpMethod.GET, "/api/publications")
-            .access(PUBLICATIONS_GENERAL_ACCESS)
-
-
-        .antMatchers(HttpMethod.POST, "/api/publications")
-            .access(PUBLICATIONS_POST_ACCESS)
-
-        //  NOTE: useful for favorite publications
-        .antMatchers(HttpMethod.GET, "/api/publications/{publication_id:\\d+}")
-            .access(PUBLICATION_ACCESS)
-
-        .antMatchers(HttpMethod.DELETE, "/api/publications/{publication_id:\\d+}")
-            .access(PUBLICATION_MODIFY_ACCESS)
-
-        // CHECK: location does not belong to user should return bad request or not found, this just checks if the user can modify publication
-        .antMatchers(HttpMethod.PATCH, "/api/publications/{publication_id:\\d+}/locations")
-                .access(PUBLICATION_MODIFY_ACCESS)
-
-
-        // POST /publications/{id}/favorite -> marcar como favorita
-        // DELETE /publications/{id}/favorite -> desmarcar como favorita
+                .antMatchers(HttpMethod.PATCH, "/api/books/{id:\\d+}}/images")
+                    .access(BOOK_MODIFY_ACCESS)
 
                 /*
-         * User controller
-         */
+                 * Book Model controller
+                 */
+                .antMatchers("/api/book-models")
+                    .authenticated()
 
-        // IMPLEMENT: UserController
+                .antMatchers("/api/book-models/**")
+                    .authenticated()
+                /*
+                 * Exchange controller
+                 */
 
-        .antMatchers("/api/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/exchanges")
+                    .access(EXCHANGES_USER_ACCESS)
+
+                .antMatchers(HttpMethod.POST, "/api/exchanges")
+                    .access(CREATE_EXCHANGE_ACCESS)
+
+                .antMatchers(HttpMethod.POST, "/api/exchanges/{id:\\d+}/messages")
+                    .access(EXCHANGES_ACCESS)
+
+                .antMatchers(HttpMethod.GET, "/api/exchanges/{id:\\d+}/messages")
+                    .access(EXCHANGES_ACCESS)
+
+
+                .antMatchers(HttpMethod.PATCH, "/api/exchanges/{id:\\d+}")
+                    .access(EXCHANGES_UPDATE_ACCESS)
+
+                /*
+                 * Publication controller
+                 */
+
+                .antMatchers(HttpMethod.GET, "/api/publications")
+                    .access(PUBLICATIONS_GENERAL_ACCESS)
+
+
+                .antMatchers(HttpMethod.POST, "/api/publications")
+                    .access(PUBLICATIONS_POST_ACCESS)
+
+                //  NOTE: useful for favorite publications
+                .antMatchers(HttpMethod.GET, "/api/publications/{publication_id:\\d+}")
+                    .access(PUBLICATION_ACCESS)
+
+                .antMatchers(HttpMethod.DELETE, "/api/publications/{publication_id:\\d+}")
+                    .access(PUBLICATION_MODIFY_ACCESS)
+
+                // CHECK: location does not belong to user should return bad request or not found, this just checks if the user can modify publication
+                .antMatchers(HttpMethod.PATCH, "/api/publications/{publication_id:\\d+}/locations")
+                        .access(PUBLICATION_MODIFY_ACCESS)
+
+
+                // POST /publications/{id}/favorite -> marcar como favorita
+                // DELETE /publications/{id}/favorite -> desmarcar como favorita
+
+                /*
+                 * User controller
+                 */
+
+                .antMatchers(HttpMethod.GET, "/api/users/{id:\\d+}")
+                    .authenticated()
+                .antMatchers(HttpMethod.GET, "/api/users/{id:\\d+}")
+                    .access(USER_ACCESS)
+
+                .antMatchers(HttpMethod.PATCH, "/api/users/{id:\\d+}")
+                    .authenticated()
+                .antMatchers(HttpMethod.PATCH, "/api/users/{id:\\d+}")
+                    .access(USER_ACCESS)
+
+                .antMatchers(HttpMethod.POST, "/api/users/{id:\\d+}/locations")
+                    .authenticated()
+                .antMatchers(HttpMethod.POST, "/api/users/{id:\\d+}/locations")
+                    .access(USER_ACCESS)
+
+                .antMatchers(HttpMethod.GET, "/api/users/{id:\\d+}/locations")
+                    .authenticated()
+                .antMatchers(HttpMethod.GET, "/api/users/{id:\\d+}/locations")
+                    .access(USER_ACCESS)
+
+                .antMatchers(HttpMethod.GET, "/api/users/{id:\\d+}/locations/{location_id:\\d+}")
+                    .authenticated()
+                .antMatchers(HttpMethod.GET, "/api/users/{id:\\d+}/locations/{location_id:\\d+}")
+                    .access(USER_ACCESS)
+
+                .antMatchers(HttpMethod.DELETE, "/api/users/{id:\\d+}/locations/{location_id:\\d+}")
+                    .authenticated()
+                .antMatchers(HttpMethod.DELETE, "/api/users/{id:\\d+}/locations/{location_id:\\d+}")
+                    .access(USER_ACCESS)
+
+                .antMatchers(HttpMethod.POST, "/api/users/{id:\\d+}/reviews")
+                    .authenticated()
+
+                .antMatchers(HttpMethod.GET, "/api/users/{id:\\d+}/reviews")
+                    .authenticated()
+                .antMatchers(HttpMethod.GET, "/api/users/{id:\\d+}/reviews")
+                    .access(USER_ACCESS)
+
+                .antMatchers(HttpMethod.GET, "/api/users/{id:\\d+}/reviews/{ur_id:\\d+}")
+                    .authenticated()
+                .antMatchers(HttpMethod.GET, "/api/users/{id:\\d+}/reviews/{ur_id:\\d+}")
+                    .access(REVIEW_ACCESS)
+
+
+                .antMatchers("/api/**").permitAll()
 
 //                 IMPLEMENT: Exceptions controller missing
 //                 IMPLEMENT: Image controller missing

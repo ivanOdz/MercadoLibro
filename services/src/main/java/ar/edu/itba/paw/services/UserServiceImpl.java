@@ -56,8 +56,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User updateUser(String username, String language, String newUsername) {
-        User user = userDao.findByUsername(username).orElseThrow(() -> new UserNotFoundException("No such user"));
+    public User updateUser(Long id, String language, String newUsername) {
+        User user = userDao.findById(id).orElseThrow(() -> new UserNotFoundException("No such user"));
         if(language != null){
             user = setUserLanguage(user.getUserId(), language);
         }

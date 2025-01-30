@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.webapp.auth;
 
-import ar.edu.itba.paw.interfaces.services.BookService;
-import ar.edu.itba.paw.interfaces.services.ExchangeService;
-import ar.edu.itba.paw.interfaces.services.LocationService;
-import ar.edu.itba.paw.interfaces.services.PublicationService;
+import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.PublicationState;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +27,9 @@ public class AccessControl {
 
     @Autowired
     private LocationService locationService;
+
+    @Autowired
+    private UserReviewService userReviewService;
 
 
     // FIXME: id in endpoint should be uri
@@ -128,6 +128,15 @@ public class AccessControl {
 
     }
 
+    public Boolean userAccess(HttpServletRequest request, Long id) {
+        return getUser().getUserId().equals(id);
+    }
+
+
+    public Boolean reviewAccess(HttpServletRequest request, Long id, Long userReviewId) {
+        UserReview ur = userReviewService.findUserReviewById(id, userReviewId);
+        return getUser().getUserId().equals(ur.getReviewer().getUserId());
+    }
 
     private User getUser(){
         return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

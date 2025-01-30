@@ -10,6 +10,7 @@ import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.UserReview;
 import ar.edu.itba.paw.models.utils.Rating;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
+import ar.edu.itba.paw.utils.UrnResolverUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.net.URI;
 import java.util.Optional;
 
 @Service
@@ -44,8 +46,8 @@ public class UserReviewServiceImpl implements UserReviewService {
 
 	@Override
 	@Transactional
-	public UserReview createUserReview(long exchangeId, Long targetUserId, String description, int rating) {
-		Exchange exchange = exchangeService.getExchangeById(exchangeId);
+	public UserReview createUserReview(URI exchangeUrn, Long targetUserId, String description, int rating) {
+		Exchange exchange = exchangeService.getExchangeById(UrnResolverUtil.getExchangeId(exchangeUrn));
 
 		if(targetUserId == null) {
 			LOGGER.warn("The provided userId: {} cannot be null", targetUserId);
@@ -56,16 +58,16 @@ public class UserReviewServiceImpl implements UserReviewService {
 		long requesterId = exchange.getRequester().getUser().getUserId();
 
 		if (targetUserId != offererId && targetUserId != requesterId) {
-			LOGGER.warn("The provided userId: {} does not match the offerer or requester for exchange ID: {}", targetUserId, exchangeId);
+			LOGGER.warn("The provided userId: {} does not match the offerer or requester for exchange ID: {}", targetUserId, exchange.getExchangeId());
 			return null;
 		}
 
 		long reviewerId = (targetUserId != offererId) ? offererId : requesterId;
 
-		LOGGER.info("Creating or updating user review for exchange ID: {} and user ID: {}", exchangeId, targetUserId);
-		UserReview userReview = userReviewDao.createOrUpdateUserReview(exchangeId, reviewerId, targetUserId, description, rating);
+		LOGGER.info("Creating or updating user review for exchange ID: {} and user ID: {}", exchange.getExchangeId(), targetUserId);
+		UserReview userReview = userReviewDao.createOrUpdateUserReview(exchange.getExchangeId(), reviewerId, targetUserId, description, rating);
 
-		LOGGER.info("User review created/updated for user ID: {} on exchange ID: {}", targetUserId, exchangeId);
+		LOGGER.info("User review created/updated for user ID: {} on exchange ID: {}", targetUserId, exchangeUrn);
 
 		return userReview;
 	}

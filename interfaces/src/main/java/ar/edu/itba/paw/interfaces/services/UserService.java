@@ -12,7 +12,7 @@ public interface UserService {
 
     User createUser(String username, String mail, String password, String language);
 
-    User updateUser(String username, String language, String newUsername);
+    User updateUser(Long id, String language, String newUsername);
 
     Optional<User> findByUsername(String username);
 
