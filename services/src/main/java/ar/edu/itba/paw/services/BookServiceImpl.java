@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.interfaces.persistence.BookDao;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
+import ar.edu.itba.paw.utils.UrnResolverUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.net.URI;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -33,6 +35,9 @@ public class BookServiceImpl implements BookService {
 
     @Autowired
     private ImageService imageService;
+
+    @Autowired
+    private UserService userService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BookServiceImpl.class);
 
@@ -84,13 +89,14 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public Book createBook(Long bookModelId, User user, BookState bookState, Integer rating){
-        LOGGER.info("Creating book for book model ID: {}", bookModelId);
+    public Book createBook(URI bookModelUrn, URI userUrn, BookState bookState, Integer rating){
+        LOGGER.info("Creating book for book model ID: {}", bookModelUrn);
 
-        BookModel bm = bookModelService.getBookModelByBookModelId(bookModelId);
-        bookDao.createBookRating(user, bm, rating);
+        BookModel bm = bookModelService.getBookModelByBookModelId(UrnResolverUtil.getBookModelId(bookModelUrn));
+        User u = userService.findById(UrnResolverUtil.getUserId(userUrn));
+        bookDao.createBookRating(u, bm, rating);
 
-        return bookDao.createBook(bookModelService.getBookModelByBookModelId(bookModelId), user, bookState);
+        return bookDao.createBook(bm, u, bookState);
     }
 
     /*
@@ -149,7 +155,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    public PaginatedResponse<Book, ItemFilterMetadata> getPaginatedBooks(String search, String state, String genre, int currentPage, long userId, String sortType) {
+    public PaginatedResponse<Book, ItemFilterMetadata> getPaginatedBooks(String search, String state, String genre, int currentPage, URI userUrn, String sortType) {
 
         boolean bookStateFilterActive = state != null;
         boolean genreFilterActive = genre != null;
@@ -170,7 +176,7 @@ public class BookServiceImpl implements BookService {
             }
         }
 
-        return bookDao.getPaginatedBooks(search, state_filter, genre_filter, currentPage, userId, sortType);
+        return bookDao.getPaginatedBooks(search, state_filter, genre_filter, currentPage, UrnResolverUtil.getUserId(userUrn), sortType);
     }
 
     private List<MultipartFile> arrangeImages(List<MultipartFile> images, int bookCoverIndex) {
@@ -207,7 +213,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<GenreWrapper> getGenreWrapperList(String search, String state, long userId) {
+    public List<GenreWrapper> getGenreWrapperList(String search, String state, URI userUrn) {
     	
         boolean bookStateFilterActive = state != null;
 
@@ -220,12 +226,12 @@ public class BookServiceImpl implements BookService {
             }
         }
 
-        return bookDao.getGenreQtyByBook(search, state_filter, userId);
+        return bookDao.getGenreQtyByBook(search, state_filter, UrnResolverUtil.getUserId(userUrn));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<BookStateWrapper> getBookStateWrapperList(String serach, String genre, long userId) {
+    public List<BookStateWrapper> getBookStateWrapperList(String serach, String genre, URI userUrn) {
     	
         boolean genreFilterActive = genre != null;
 
@@ -237,12 +243,12 @@ public class BookServiceImpl implements BookService {
             }
         }
 
-        return bookDao.getBookStateQtyByBook(serach, genre_filter, userId);
+        return bookDao.getBookStateQtyByBook(serach, genre_filter, UrnResolverUtil.getUserId(userUrn));
     }
 
     @Override
     @Transactional
-    public Book updateBookState(Long bookId, String bookState) {
+    public Book updateBook(Long bookId, String bookState) {
     	
         LOGGER.info("Attempting to update the state of Book with ID: {} to state: {}", bookId, bookState);
 
@@ -258,8 +264,8 @@ public class BookServiceImpl implements BookService {
 
     @Transactional
     @Override
-    public void setImage(Long bookId, Long imageId) {
-        Image image = imageService.getImageById(imageId);
+    public void setImage(Long bookId, URI imageUrn) {
+        Image image = imageService.getImageById(UrnResolverUtil.getImageId(imageUrn));
         Book book = getBookById(bookId);
         BookImage bookImage = new BookImage();
         bookImage.setImage(image);

@@ -9,6 +9,7 @@ public class UrnResolverUtil {
         this.urn = urn;
     }
 
+
     /**
      * Returns the next path in the URN. If "/publication/1" is the URN, it will return "/1".
      * @return the class itself if there is a next path, null otherwise.
@@ -68,7 +69,7 @@ public class UrnResolverUtil {
 
     /**
      * Expects a path as "/api/publications/{id}".
-     * @return The expected exchange id. If the URN is not in the expected format, it will return null.
+     * @return The expected publication id. If the URN is not in the expected format, it will return null.
      */
     public static Long getPublicationId(URI path) {
         UrnResolverUtil ur = new UrnResolverUtil(path.getPath());
@@ -78,9 +79,39 @@ public class UrnResolverUtil {
 
     /**
      * Expects a path as "/api/books/{id}".
-     * @return The expected exchange id. If the URN is not in the expected format, it will return null.
+     * @return The expected book id. If the URN is not in the expected format, it will return null.
      */
     public static Long getBookId(URI path) {
+        UrnResolverUtil ur = new UrnResolverUtil(path.getPath());
+        ur.cutUrn(2);
+        return ur.getId();
+    }
+
+    /**
+     * Expects a path as "/api/users/{id}".
+     * @return The expected user id. If the URN is not in the expected format, it will return null.
+     */
+    public static Long getUserId(URI path) {
+        UrnResolverUtil ur = new UrnResolverUtil(path.getPath());
+        ur.cutUrn(2);
+        return ur.getId();
+    }
+
+    /**
+     * Expects a path as "/api/book_models/{id}".
+     * @return The expected book model id. If the URN is not in the expected format, it will return null.
+     */
+    public static Long getBookModelId(URI path) {
+        UrnResolverUtil ur = new UrnResolverUtil(path.getPath());
+        ur.cutUrn(2);
+        return ur.getId();
+    }
+
+    /**
+     * Expects a path as "/api/images/{id}".
+     * @return The expected image id. If the URN is not in the expected format, it will return null.
+     */
+    public static Long getImageId(URI path) {
         UrnResolverUtil ur = new UrnResolverUtil(path.getPath());
         ur.cutUrn(2);
         return ur.getId();

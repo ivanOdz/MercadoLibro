@@ -3,18 +3,17 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Book;
 import ar.edu.itba.paw.models.PaginatedResponse;
-import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.models.utils.BookStateWrapper;
 import ar.edu.itba.paw.models.utils.GenreWrapper;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
-import ar.edu.itba.paw.webapp.dto.input.BookDTO;
-import ar.edu.itba.paw.webapp.dto.input.BookStateDTO;
+import ar.edu.itba.paw.webapp.dto.input.BookImageDTO;
+import ar.edu.itba.paw.webapp.dto.input.BookInputDTO;
+import ar.edu.itba.paw.webapp.dto.output.BookDTO;
 import ar.edu.itba.paw.webapp.mediaTypes.VndType;
 import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
 import ar.edu.itba.paw.webapp.utils.SerializationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
@@ -23,6 +22,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -62,18 +62,18 @@ public class BookController {
 
     @GET
     @Produces(value = {VndType.APPLICATION_BOOK})
-    public Response getBooks(@QueryParam("owner") final long userId,
+    public Response getBooks(@QueryParam("owner") final URI userUrn,
                              @QueryParam("search") @DefaultValue("")final String search,
                              @QueryParam("sort_type") @DefaultValue("BOOK_NAME_ASCENDING") final String sortType,
                              @QueryParam("state") String state,
                              @QueryParam("genre") final String genre,
                              @QueryParam("page") @DefaultValue("0")final int currentPage) {
-        PaginatedResponse<Book, ItemFilterMetadata> paginated = bs.getPaginatedBooks(search, state, genre, currentPage, userId, sortType);
+        PaginatedResponse<Book, ItemFilterMetadata> paginated = bs.getPaginatedBooks(search, state, genre, currentPage, userUrn, sortType);
         final List<BookDTO> books = paginated.getData().stream().map(book -> BookDTO.fromBook(uriInfo, book)).collect(Collectors.toList());
         Response.ResponseBuilder response = Response.ok(new GenericEntity<List<BookDTO>>(books) {});
 
-        List<GenreWrapper> genresSummary = bs.getGenreWrapperList(search, state, userId);
-        List<BookStateWrapper> conditionSummary = bs.getBookStateWrapperList(search, genre, userId);
+        List<GenreWrapper> genresSummary = bs.getGenreWrapperList(search, state, userUrn);
+        List<BookStateWrapper> conditionSummary = bs.getBookStateWrapperList(search, genre, userUrn);
 
         Map<String, String> genreHeaders = SerializationUtils.serializeGenreWrapper(genresSummary);
         genreHeaders.forEach(response::header);
@@ -84,28 +84,28 @@ public class BookController {
         return PageResponseUtil.getResponse(currentPage, paginated.getMetadata().getMaxPage(), uriInfo, response);
     }
 
+
     @POST
-    @Consumes(value = {VndType.APPLICATION_BOOK})
-    public Response postBook(final BookDTO bookDTO, @QueryParam("bookModel") final long bookModelId, @QueryParam("rating") final Integer rating) {
-        User loggedUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Book book = bs.createBook(bookModelId, loggedUser, BookState.valueOf(bookDTO.getState()), rating);
+    @Consumes(value = {VndType.APPLICATION_BOOK_INPUT})
+    public Response postBook(final BookInputDTO bookDTO) {
+        Book book = bs.createBook(bookDTO.getBookModelUrn(), bookDTO.getUserUrn(), BookState.valueOf(bookDTO.getCondition()), bookDTO.getRating());
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(book.getBookId())).build()).build();
     }
 
-    // CHECK: state is not an object
     @PATCH
-    @Path("/{id}/state")
-    @Consumes(value = {VndType.APPLICATION_BOOK_STATE})
-    public Response updateBookState(@PathParam("id") final long bookId, @Valid final BookStateDTO bookState) {
-        bs.updateBookState(bookId, bookState.getBookState());
+    @Path("/{id}")
+    @Consumes(value = {VndType.APPLICATION_BOOK})
+    public Response updateBook(@PathParam("id") final long bookId, @Valid final BookDTO book) {
+        bs.updateBook(bookId, book.getState());
         return Response.noContent().build();
     }
 
 
-    @PATCH
-    @Path("/{id}/images")
-    public Response setImages(@PathParam("id") final long bookId, @QueryParam("image_id") final long imageId) {
-        bs.setImage(bookId, imageId);
+    @POST
+    @Path("/{id}")
+    @Consumes(value = {VndType.APPLICATION_ADD_BOOK_IMAGE})
+    public Response addImages(@PathParam("id") final long bookId, final BookImageDTO bookImageDTO) {
+        bs.setImage(bookId,bookImageDTO.getImageUrn());
         return Response.noContent().build();
     }
 
