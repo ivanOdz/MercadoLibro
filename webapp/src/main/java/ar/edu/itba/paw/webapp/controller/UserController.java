@@ -71,8 +71,8 @@ public class UserController {
     @PATCH
     @Path("/{id}")
     @Consumes(value = {VndType.APPLICATION_USER})
-    public Response updateUser(@PathParam("id") final String username, @Valid final UserUpdateDTO request) {
-        us.updateUser(username, request.getLanguage(), request.getNewUsername());
+    public Response updateUser(@PathParam("id") final Long user_id, @Valid final UserUpdateDTO request) {
+        us.updateUser(user_id, request.getLanguage(), request.getNewUsername());
 
         return Response.noContent().build();
     }
