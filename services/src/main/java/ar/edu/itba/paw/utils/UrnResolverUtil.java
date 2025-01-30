@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.utils;
 
+import java.net.URI;
+
 public class UrnResolverUtil {
     private String urn;
 
@@ -42,6 +44,15 @@ public class UrnResolverUtil {
             }
         }
         return null;
+    }
+
+    /**
+     * Expects a path as "/api/exchanges/{id}".
+     * @return The expected exchange id. If the URN is not in the expected format, it will return null.
+     */
+    public static Long getExchangeId(URI path) {
+        UrnResolverUtil ur = new UrnResolverUtil(path.getPath());
+        return ur.nextPath().nextPath().getId();
     }
 
     public String getUrn() {
