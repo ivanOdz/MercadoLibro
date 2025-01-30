@@ -106,7 +106,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public User findById(long id) {
+    public Optional<User> findById(long id) {
         LOGGER.info("Searching for user with ID: {}", id);
 
         Optional<User> user = userDao.findById(id);
@@ -116,7 +116,7 @@ public class UserServiceImpl implements UserService {
         }
 
         LOGGER.info("User with ID {} found", id);
-        return user.get();
+        return user;
     }
 
     @Override
