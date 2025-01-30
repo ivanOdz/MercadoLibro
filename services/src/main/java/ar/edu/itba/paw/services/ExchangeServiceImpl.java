@@ -42,14 +42,11 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Transactional
     public Exchange initializeExchange(URI book, URI location, URI offererPub) {
 
-        UrnResolverUtil ur = new UrnResolverUtil(offererPub.getPath());
-        Long offererPubId = ur.nextPath().nextPath().getId();
+        Long offererPubId = UrnResolverUtil.getPublicationId(offererPub);
 
-        ur.setUrn(book.getPath());
-        Long bookId = ur.nextPath().nextPath().getId();
+        Long bookId = UrnResolverUtil.getBookId(book);
 
-        ur.setUrn(location.getPath());
-        Long locationId = ur.nextPath().nextPath().nextPath().nextPath().getId();
+        Long locationId = UrnResolverUtil.getLocationId(location);
 
         if(ps.getPublicationByPublicationId(offererPubId).getPublicationState() != PublicationState.CURRENT) {
             LOGGER.warn("Publication with id {} is not in current state", offererPub);
