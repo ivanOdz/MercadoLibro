@@ -202,18 +202,19 @@ public class UserServiceImpl implements UserService {
     public User setUserLanguage(long userId, String language) {
         LOGGER.info("Initiating language update for user with ID: {}", userId);
 
-        User user = findById(userId);
-        userDao.setUserLanguage(user, language);
+        Optional<User> user = findById(userId);
+        userDao.setUserLanguage(user.get(), language);
 
-        LOGGER.info("Language {} successfully updated for user with ID: {}", language, user.getUserId());
-        return user;
+        LOGGER.info("Language {} successfully updated for user with ID: {}", language, user.get().getUserId());
+        return user.get();
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Location> getLocations(long userId, Integer publicationId) {
         if(publicationId == null){
-            return findById(userId).getUserLocations().stream().toList();
+            Optional<User> user = findById(userId);
+            return user.get().getUserLocations().stream().toList();
         }
 
         return locationService.getLocationByPublicationId(publicationId);
@@ -232,7 +233,7 @@ public class UserServiceImpl implements UserService {
     public Location addLocation(Long userId, String locationString) {
         LOGGER.info("Attempting to add a location for user with ID: {}", userId);
 
-        User user = findById(userId);
+        User user = findById(userId).get();
 
         if(user.getUserLocations().size() >= MAX_LOCATIONS_PER_USER){
             LOGGER.warn("Location could not be added. Maximum amount of location for user {} reached.", userId);
@@ -255,7 +256,7 @@ public class UserServiceImpl implements UserService {
 
         Location location = locationService.findById(locationId);
         if (location != null) {
-            userDao.removeUserLocation(findById(userId), location);
+            userDao.removeUserLocation(findById(userId).get(), location);
             LOGGER.info("Location with ID: {} successfully removed for user with ID: {}", locationId, userId);
         } else {
             LOGGER.warn("Location with ID: {} not found for removal for user with ID: {}", locationId, userId);
