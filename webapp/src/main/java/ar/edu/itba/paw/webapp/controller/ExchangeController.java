@@ -19,7 +19,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -35,12 +34,12 @@ public class ExchangeController {
 
     @GET
     @Produces(value = {VndType.APPLICATION_EXCHANGE})
-    public Response getExchanges(@QueryParam("user") final URI userUrn,
+    public Response getExchanges(@QueryParam("user-id") final long userId,
                                  @QueryParam("state") final ExchangeState state,
-                                 @QueryParam("isOfferer") @DefaultValue("false") final Boolean isOfferer,
-                                 @QueryParam("isRequester") @DefaultValue("false") final Boolean isRequester,
+                                 @QueryParam("is-offerer") @DefaultValue("false") final Boolean isOfferer,
+                                 @QueryParam("is-requester") @DefaultValue("false") final Boolean isRequester,
                                  @QueryParam("page") final Integer page) {
-        PaginatedResponse<Exchange, BasicMetadata> exchanges = exchangeService.getExchanges(userUrn, state, isOfferer, isRequester, page);
+        PaginatedResponse<Exchange, BasicMetadata> exchanges = exchangeService.getExchanges(userId, state, isOfferer, isRequester, page);
 
         List<ExchangeDTO> exchangeDTOS = exchanges.getData().stream().map(exchange -> ExchangeDTO.fromExchange(uriInfo, exchange)).toList();
 
@@ -60,8 +59,8 @@ public class ExchangeController {
     @Path("/{id}/messages")
     @Consumes(value = {VndType.APPLICATION_MESSAGE_INPUT})
     public Response sendMessage(@PathParam("id") long exchangeId, MessageInputDTO messageDTO) {
-        exchangeService.createMessage(exchangeId, messageDTO.getUserUrn(), messageDTO.getMessage());
-        return Response.noContent().build();
+        Message m = exchangeService.createMessage(exchangeId, messageDTO.getUserUrn(), messageDTO.getMessage());
+        return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(m.getMessageId())).build()).build();
     }
 
     @GET
@@ -86,8 +85,8 @@ public class ExchangeController {
     @Path("/{id}")
     @Produces(value = {VndType.APPLICATION_EXCHANGE})
     public Response getExchange(@PathParam("id") final Long exchangeId) {
-        Optional<Exchange> exchange = exchangeService.getExchangeById(exchangeId);
-        ExchangeDTO exchangeDTO = ExchangeDTO.fromExchange(uriInfo, exchange.get());
+        Exchange exchange = exchangeService.getExchangeById(exchangeId);
+        ExchangeDTO exchangeDTO = ExchangeDTO.fromExchange(uriInfo, exchange);
         return Response.ok(new GenericEntity<ExchangeDTO>(exchangeDTO) {}).build();
     }
 

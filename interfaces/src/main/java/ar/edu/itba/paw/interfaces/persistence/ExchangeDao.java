@@ -31,7 +31,7 @@ public interface ExchangeDao {
 
     PaginatedResponse<Exchange, BasicMetadata> getAllExchangesByUserId(long anUserId, ExchangeState exchangeState, int currentPage, boolean isOfferer, boolean isRequester);
 
-    void createMessage(Exchange exchange, long userId, String message, Timestamp time);
+    Message createMessage(Exchange exchange, long userId, String message, Timestamp time);
 
     Optional<Message> getMessageById(long messageId);
 }

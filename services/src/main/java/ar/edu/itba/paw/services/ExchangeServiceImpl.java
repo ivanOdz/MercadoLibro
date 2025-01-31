@@ -53,14 +53,9 @@ public class ExchangeServiceImpl implements ExchangeService {
             throw new ExchangeBadRequestException("Publication is not in current state");
         }
 
-    	Optional<Book> b = bs.getBookById(bookId);
+    	Book b = bs.getBookById(bookId);
     	
-    	if(b.isEmpty()) {
-            LOGGER.warn("Book with id {} is not existent", bookId);
-            throw new ExchangeBadRequestException("Book not existent");
-    	}
-    	
-        Long userId = b.get().getOwner().getUserId();
+        Long userId = b.getOwner().getUserId();
         long requesterPubId = ps.createPublication(bookId, userId, locationId).getPublicationId();
 
         Random random = new Random();
@@ -194,11 +189,16 @@ public class ExchangeServiceImpl implements ExchangeService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Exchange> getExchangeById(long exchangeId) {
+    public Exchange getExchangeById(long exchangeId) {
     	
         LOGGER.info("Searching for exchange with exchangeId: {}", exchangeId);
 
-        return exchangeDao.getExchangeById(exchangeId);
+        Optional<Exchange> e = exchangeDao.getExchangeById(exchangeId);
+        if (e.isEmpty()) {
+            LOGGER.warn("Exchange not found for exchangeId: {}", exchangeId);
+            throw new ExchangeBadRequestException("Exchange not found");
+        }
+        return e.get();
     }
 
     // exchanges where user is the publication owner
@@ -217,29 +217,21 @@ public class ExchangeServiceImpl implements ExchangeService {
 
 
     @Override
-    public PaginatedResponse<Exchange, BasicMetadata> getExchanges(URI user, ExchangeState exchangeState, Boolean isOfferer, Boolean isRequester, int currentPage) {
-        // extract userId from urn
-        UrnResolverUtil ur = new UrnResolverUtil(user.getPath());
-        Long userId = ur.nextPath().nextPath().getId();
-
+    public PaginatedResponse<Exchange, BasicMetadata> getExchanges(long userId, ExchangeState exchangeState, Boolean isOfferer, Boolean isRequester, int currentPage) {
         return exchangeDao.getAllExchangesByUserId(userId, exchangeState, currentPage, isOfferer, isRequester);
     }
 
     @Override
     @Transactional
-    public void createMessage(long exchangeId, URI user, String message) {
+    public Message createMessage(long exchangeId, URI user, String message) {
         UrnResolverUtil ur = new UrnResolverUtil(user.getPath());
-        exchangeDao.createMessage(getExchangeById(exchangeId).get(), ur.nextPath().nextPath().getId(), message, new Timestamp((new Date()).getTime()));
+        return exchangeDao.createMessage(getExchangeById(exchangeId), ur.nextPath().nextPath().getId(), message, new Timestamp((new Date()).getTime()));
     }
 
     @Override
     @Transactional
     public List<Message> getMessages(long exchangeId) {
-        Optional<Exchange> e = getExchangeById(exchangeId);
-        if (e.isEmpty()) {
-        	return new ArrayList<Message>();
-        }
-        return e.get().getChat();
+        return getExchangeById(exchangeId).getChat();
     }
 
     @Override
