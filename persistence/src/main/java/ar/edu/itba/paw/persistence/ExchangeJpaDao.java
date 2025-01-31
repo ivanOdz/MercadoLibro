@@ -13,6 +13,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +31,7 @@ public class ExchangeJpaDao implements ExchangeDao {
     	
         Publication offerer = em.find(Publication.class, offererPubId);
         Publication requester = em.find(Publication.class, requesterPubId);
-        final Exchange exchange = new Exchange(null, offerer, requester, ExchangeState.PENDING, acceptCode, false, false, startDate, null, new ArrayList<>());
+        final Exchange exchange = new Exchange(null, offerer, requester, ExchangeState.PENDING, acceptCode, false, false, new Timestamp(startDate.getTime()), null, new ArrayList<>());
         
         em.persist(exchange);
         

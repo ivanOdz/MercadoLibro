@@ -86,8 +86,8 @@ public class ExchangeController {
     @Path("/{id}")
     @Produces(value = {VndType.APPLICATION_EXCHANGE})
     public Response getExchange(@PathParam("id") final Long exchangeId) {
-        Exchange exchange = exchangeService.getExchangeById(exchangeId);
-        ExchangeDTO exchangeDTO = ExchangeDTO.fromExchange(uriInfo, exchange);
+        Optional<Exchange> exchange = exchangeService.getExchangeById(exchangeId);
+        ExchangeDTO exchangeDTO = ExchangeDTO.fromExchange(uriInfo, exchange.get());
         return Response.ok(new GenericEntity<ExchangeDTO>(exchangeDTO) {}).build();
     }
 

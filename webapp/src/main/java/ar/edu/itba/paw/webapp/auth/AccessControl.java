@@ -100,11 +100,11 @@ public class AccessControl {
         }
         
         if(accepted != null ){
-            return getUser().getUserId().equals(e.getOfferer().getUser().getUserId());
+            return getUser().getUserId().equals(e.get().getOfferer().getUser().getUserId());
         }
 
         if(requester != null){
-            return requester ? lu.getUserId().equals(e.getRequester().getUser().getUserId()) : lu.getUserId().equals(e.getOfferer().getUser().getUserId());
+            return requester ? lu.getUserId().equals(e.get().getRequester().getUser().getUserId()) : lu.getUserId().equals(e.get().getOfferer().getUser().getUserId());
         }
 
         return false;
@@ -112,13 +112,13 @@ public class AccessControl {
 
     // CHECK: publication access could be different if accessed from library
     public Boolean publicationAccess(HttpServletRequest request, Long id) {
-        Publication p = publicationService.getPublicationByPublicationId(id);
+        Optional<Publication> p = publicationService.getPublicationByPublicationId(id);
         User lu = getUser();
 
-        if(p.getPublicationState() == PublicationState.CURRENT){
+        if(p.get().getPublicationState() == PublicationState.CURRENT){
             return true;
         }
-        return p.getUser().getUserId().equals(lu.getUserId());
+        return p.get().getUser().getUserId().equals(lu.getUserId());
     }
 
     // FIXME: user id in endpoint should be sent as an uri
@@ -129,8 +129,8 @@ public class AccessControl {
     }
 
     public Boolean publicationsModifyAccess(HttpServletRequest request, Long publicationId) {
-        Publication p = publicationService.getPublicationByPublicationId(publicationId);
-        return getUser().getUserId().equals(p.getUser().getUserId());
+        Optional<Publication> p = publicationService.getPublicationByPublicationId(publicationId);
+        return getUser().getUserId().equals(p.get().getUser().getUserId());
     }
 
     // FIXME: user id in endpoint should be sent as an uri
