@@ -60,12 +60,13 @@ public class BookModelController {
     }
 
     // TODO: modify, relation object
+    // FIXME: PATCH NO PUEDE DEVOLVER UN CREATED, PENSAR EN POST?
     @PATCH
     @Path("{id}") // /book_models/{id}/cover
     @Consumes(value = {VndType.APPLICATION_BOOK_MODEL})
     public Response setBookCover(@PathParam("id") Long bookModelId, final BookModelDTO bookModelDTO) {
-        BookModel bookModel = bookModelService.setCover(bookModelId, bookModelDTO.getCover());
-        return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(bookModel.getBookModelId())).build()).build();
+        bookModelService.setCover(bookModelId, bookModelDTO.getCover());
+        return Response.noContent().build();
     }
 
 

@@ -19,8 +19,6 @@ public class UserDTO {
 
 	private URI self;
 
-	private URI image;
-
 	private URI favoriteLocation;
 
 	private URI locations;
@@ -43,7 +41,6 @@ public class UserDTO {
 
 		// links
 		dto.self = uriInfo.getBaseUriBuilder().path("users").path(user.getUserId().toString()).build();
-		dto.image = uriInfo.getBaseUriBuilder().path("image").path(String.valueOf(user.getImageId())).build();
 		dto.locations = uriInfo.getBaseUriBuilder().path("users").path(user.getUserId().toString()).path("locations").build();
 		dto.favoriteLocation = uriInfo.getBaseUriBuilder().path("users").path(user.getUserId().toString()).
 				path("locations").path(String.valueOf(user.getFavoriteLocation().getLocationId())).build();
@@ -96,10 +93,6 @@ public class UserDTO {
         this.self = self;
     }
 
-    public void setImage(URI image) {
-    	this.image = image;
-    }
-    
     public void setFavoriteLocation(URI favoriteLocation) {
     	this.favoriteLocation = favoriteLocation;
     }
@@ -119,11 +112,7 @@ public class UserDTO {
     public URI getSelf() {
     	return self;
     }
-    
-    public URI getImage() {
-    	return image;
-    }
-    
+
     public URI getFavoriteLocation() {
     	return favoriteLocation;
     }

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.exceptions.BookModelNotFound;
 import ar.edu.itba.paw.interfaces.persistence.BookModelDao;
 import ar.edu.itba.paw.interfaces.services.BookModelService;
 import ar.edu.itba.paw.interfaces.services.ImageService;
@@ -19,7 +20,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
-import static ar.edu.itba.paw.models.utils.Constants.DEFAULT_PUBLICATION_GENRE_FILTER;
+import static ar.edu.itba.paw.models.utils.Constants.DEFAULT_BOOK_GENRE_FILTER;
 
 @Service
 public class BookModelServiceImpl implements BookModelService {
@@ -64,17 +65,10 @@ public class BookModelServiceImpl implements BookModelService {
     @Override
     @Transactional(readOnly = true)
     public PaginatedResponse<BookModel, BookModelMetadata> getPaginatedBookModels(String search, String genre, int currentPage, String sortType) {
-        boolean genreFilterActive = genre != null;
+        Genre genreFilter = Genre.fromString(genre);
+        genreFilter = genreFilter == null ? DEFAULT_BOOK_GENRE_FILTER : genreFilter;
 
-        Genre genre_filter = DEFAULT_PUBLICATION_GENRE_FILTER;
-        if(genreFilterActive){
-            genre_filter = Genre.fromString(genre);
-            if(genre_filter == null){
-                genreFilterActive = false;
-            }
-        }
-
-        return bookModelDao.getPaginatedBookModels(search, genre_filter, currentPage, sortType);
+        return bookModelDao.getPaginatedBookModels(search, genreFilter, currentPage, sortType);
     }
 
     @Override
@@ -83,15 +77,17 @@ public class BookModelServiceImpl implements BookModelService {
         return bookModelDao.getGenreQtyByBookModel(search);
     }
 
-    @Transactional
     @Override
+    @Transactional
     public BookModel setCover(Long bookModelId, URI imageUrn) {
         Optional<BookModel> bookModel = getBookModelByBookModelId(bookModelId);
-        
-        if(bookModel.isPresent()) {
-	        Image image = imageService.getImageById(UrnResolverUtil.getImageId(imageUrn));
-	        return bookModelDao.setCover(bookModel.get(), image);
+
+        if(bookModel.isEmpty()){
+            LOGGER.warn("BookModel with ID: {} not found", bookModelId);
+            throw new BookModelNotFound("Book model not found");
         }
-        return null;
+
+        Image image = imageService.getImageById(UrnResolverUtil.getImageId(imageUrn));
+        return bookModelDao.setCover(bookModel.get(), image);
     }
 }
