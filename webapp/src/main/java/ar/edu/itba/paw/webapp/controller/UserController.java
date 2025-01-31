@@ -112,6 +112,8 @@ public class UserController {
                 .build();
     }
 
+    // LOCATIONS
+
     // Autentication required
     /** {id} debe coincidir con el usuario logueado **/
     @POST
@@ -155,6 +157,8 @@ public class UserController {
     	return Response.noContent().build();
     }
 
+    // REVIEWS
+
     // Autentication required
     /**
      * El usuario autenticado debe participar del intercambio con el usuario {id} para hacer un POST aca.
@@ -173,20 +177,6 @@ public class UserController {
 
     // TODO: Falta cache control
     // Autentication required
-    /** {id} debe coincidir con el id del usuario logueado para acceder al endpoint.**/
-    @GET
-    @Path("{id}/reviews")
-    @Produces(value = {VndType.APPLICATION_LIST_USER_REVIEW})
-    public Response getReviews(@PathParam("id") final Long targetId, @QueryParam("page") int page){
-        PaginatedResponse<UserReview, BasicMetadata> reviews = userReviewService.getReviewsEarnedByUserId(targetId, page);
-        List<ReviewDTO> reviewDTOS = reviews.getData().stream().map(review -> ReviewDTO.fromUserReview(uriInfo, review)).toList();
-        Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ReviewDTO>>(reviewDTOS) {});
-
-        return PageResponseUtil.getResponse(page, reviews.getMetadata().getMaxPage(), uriInfo, response);
-    }
-
-    // TODO: Falta cache control
-    // Autentication required
     /**
      * @GET /users/{id}/reviews/{ur_id} -> Si el usuario de logueado es participe de la review {ur_id},
      * entonces se retorna la review. Caso contrario, 403 - Forbidden (Access Control)
@@ -200,6 +190,20 @@ public class UserController {
         final ReviewDTO userReviewDTO = ReviewDTO.fromUserReview(uriInfo, userReviewService.findUserReviewById(targetId, reviewId));
 
         return Response.ok(new GenericEntity<ReviewDTO>(userReviewDTO) {}).build();
+    }
+
+    // TODO: Falta cache control
+    // Autentication required
+    /** {id} debe coincidir con el id del usuario logueado para acceder al endpoint.**/
+    @GET
+    @Path("{id}/reviews")
+    @Produces(value = {VndType.APPLICATION_LIST_USER_REVIEW})
+    public Response getReviews(@PathParam("id") final Long targetId, @QueryParam("page") int page){
+        PaginatedResponse<UserReview, BasicMetadata> reviews = userReviewService.getReviewsEarnedByUserId(targetId, page);
+        List<ReviewDTO> reviewDTOS = reviews.getData().stream().map(review -> ReviewDTO.fromUserReview(uriInfo, review)).toList();
+        Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ReviewDTO>>(reviewDTOS) {});
+
+        return PageResponseUtil.getResponse(page, reviews.getMetadata().getMaxPage(), uriInfo, response);
     }
 }
 
