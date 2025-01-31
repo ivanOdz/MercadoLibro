@@ -30,14 +30,9 @@ public class BookDTO {
         dto.bookModel = uriInfo.getBaseUriBuilder().path("book_models")
                 .path(String.valueOf(book.getBookModel().getBookModelId())).build();
 
-        dto.images = book.getImages().stream().map(new Function<BookImage, URI>() {
-            @Override
-            public URI apply(BookImage bookImage) {
-                return uriInfo.getBaseUriBuilder()
-                        .path("images")
-                        .path(String.valueOf(bookImage.getBookImageId())).build();
-            }
-        }).collect(Collectors.toList());
+        dto.images = book.getImages().stream()
+                .map(i -> uriInfo.getBaseUriBuilder().path("images").path(String.valueOf(i.getImage().getImageId())).build())
+                .collect(Collectors.toList());
 
         return dto;
     }
