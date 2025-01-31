@@ -43,7 +43,7 @@ public class PublicationController {
     @GET
     @Produces(value = {VndType.APPLICATION_PUBLICATION})
     public Response getPublications(@QueryParam("search") @DefaultValue("")final String search,
-                                       @QueryParam("sort_type") @DefaultValue("DEFAULT_PUBLICATION_SORT_TYPE") final String sortType,
+                                       @QueryParam("sort") @DefaultValue("DEFAULT_PUBLICATION_SORT_TYPE") final String sortType,
                                        @QueryParam("state") String state,
                                        @QueryParam("genre") final String genre,
                                        @QueryParam("page") @DefaultValue("0")final int currentPage,
