@@ -61,14 +61,13 @@ public class ExchangeServiceImpl implements ExchangeService {
     	}
     	
         Long userId = b.get().getOwner().getUserId();
-        long requesterPubId = ps.createPublication(bookId, userId, locationId);
+        long requesterPubId = ps.createPublication(bookId, userId, locationId).getPublicationId();
 
         Random random = new Random();
         int acceptCode = Math.abs(random.nextInt());
-        Date date = new Date();
-        Timestamp timestamp = new Timestamp(date.getTime());
+        Date now = new Date();
 
-        Exchange ex = exchangeDao.createExchange(offererPubId, requesterPubId, acceptCode, timestamp);
+        Exchange ex = exchangeDao.createExchange(offererPubId, requesterPubId, acceptCode, new Timestamp(now.getTime()));
         
         if (ex != null) {
         	

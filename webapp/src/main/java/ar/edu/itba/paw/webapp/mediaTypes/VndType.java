@@ -24,6 +24,7 @@ public class VndType {
     public static final String APPLICATION_GENRE = "application/vnd.books.book_models.genres.v1+json";
     public static final String APPLICATION_BOOK_STATE = "application/vnd.books.state.S.v1+json";
     public static final String APPLICATION_PUBLICATION = "application/vnd.publications.v1+json";
+    public static final String APPLICATION_FAVORITE_PUBLICATION = "application/vnd.favorite.publication.v1+json";
     public static final String APPLICATION_EXCHANGE = "application/vnd.exchanges.v1+json";
     public static final String APPLICATION_CREATE_EXCHANGE = "application/vnd.exchanges.create.v1+json";
     public static final String APPLICATION_UPDATE_EXCHANGE = "application/vnd.exchanges.update.v1+json";

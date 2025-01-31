@@ -64,7 +64,7 @@ public class BookController {
     @Produces(value = {VndType.APPLICATION_BOOK})
     public Response getBooks(@QueryParam("owner") final URI userUrn,
                              @QueryParam("search") @DefaultValue("")final String search,
-                             @QueryParam("sort_type") @DefaultValue("BOOK_NAME_ASCENDING") final String sortType,
+                             @QueryParam("sort") @DefaultValue("BOOK_NAME_ASCENDING") final String sortType,
                              @QueryParam("state") String state,
                              @QueryParam("genre") final String genre,
                              @QueryParam("page") @DefaultValue("0")final int currentPage) {

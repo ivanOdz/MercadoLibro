@@ -51,7 +51,7 @@ public class UrnResolverUtil {
      * Expects a path as "/api/exchanges/{id}".
      * @return The expected exchange id. If the URN is not in the expected format, it will return null.
      */
-    public static Long getExchangeId(URI path) {
+    static public Long getExchangeId(URI path) {
         UrnResolverUtil ur = new UrnResolverUtil(path.getPath());
         ur.cutUrn(2);
         return ur.getId();
@@ -61,7 +61,7 @@ public class UrnResolverUtil {
      * Expects a path as "/api/users/{id}/locations/{id}".
      * @return The expected location id. If the URN is not in the expected format, it will return null.
      */
-    public static Long getLocationId(URI path) {
+     static public Long getLocationId(URI path) {
         UrnResolverUtil ur = new UrnResolverUtil(path.getPath());
         ur.cutUrn(4);
         return ur.getId();
@@ -71,7 +71,7 @@ public class UrnResolverUtil {
      * Expects a path as "/api/publications/{id}".
      * @return The expected publication id. If the URN is not in the expected format, it will return null.
      */
-    public static Long getPublicationId(URI path) {
+     static public Long getPublicationId(URI path) {
         UrnResolverUtil ur = new UrnResolverUtil(path.getPath());
         ur.cutUrn(2);
         return ur.getId();
@@ -81,7 +81,7 @@ public class UrnResolverUtil {
      * Expects a path as "/api/books/{id}".
      * @return The expected book id. If the URN is not in the expected format, it will return null.
      */
-    public static Long getBookId(URI path) {
+    static public Long getBookId(URI path) {
         UrnResolverUtil ur = new UrnResolverUtil(path.getPath());
         ur.cutUrn(2);
         return ur.getId();
@@ -91,7 +91,7 @@ public class UrnResolverUtil {
      * Expects a path as "/api/users/{id}".
      * @return The expected user id. If the URN is not in the expected format, it will return null.
      */
-    public static Long getUserId(URI path) {
+     static public Long getUserId(URI path) {
         UrnResolverUtil ur = new UrnResolverUtil(path.getPath());
         ur.cutUrn(2);
         return ur.getId();
@@ -101,7 +101,7 @@ public class UrnResolverUtil {
      * Expects a path as "/api/book_models/{id}".
      * @return The expected book model id. If the URN is not in the expected format, it will return null.
      */
-    public static Long getBookModelId(URI path) {
+     static public Long getBookModelId(URI path) {
         UrnResolverUtil ur = new UrnResolverUtil(path.getPath());
         ur.cutUrn(2);
         return ur.getId();
@@ -111,7 +111,7 @@ public class UrnResolverUtil {
      * Expects a path as "/api/images/{id}".
      * @return The expected image id. If the URN is not in the expected format, it will return null.
      */
-    public static Long getImageId(URI path) {
+     static public Long getImageId(URI path) {
         UrnResolverUtil ur = new UrnResolverUtil(path.getPath());
         ur.cutUrn(2);
         return ur.getId();

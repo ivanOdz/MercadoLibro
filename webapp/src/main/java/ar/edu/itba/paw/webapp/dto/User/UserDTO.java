@@ -29,7 +29,8 @@ public class UserDTO {
 
 	private URI books;
 
-	private URI likes;
+	private URI favorites;
+
 
 	public static UserDTO fromUser(final UriInfo uriInfo, final User user, Rating userRating) {
 		
@@ -46,10 +47,22 @@ public class UserDTO {
 		dto.locations = uriInfo.getBaseUriBuilder().path("users").path(user.getUserId().toString()).path("locations").build();
 		dto.favoriteLocation = uriInfo.getBaseUriBuilder().path("users").path(user.getUserId().toString()).
 				path("locations").path(String.valueOf(user.getFavoriteLocation().getLocationId())).build();
-		dto.reviews = uriInfo.getBaseUriBuilder().path("users").path(user.getUserId().toString()).path("reviews").queryParam("page", 0).build();
-		dto.books = uriInfo.getBaseUriBuilder().path("books").queryParam("owner", user.getUserId()).queryParam("page", 0).build();
+		dto.reviews = uriInfo.getBaseUriBuilder().path("users").path(user.getUserId().toString()).path("reviews").build();
+		dto.books = uriInfo.getBaseUriBuilder().path("books").queryParam("owner", user.getUserId()).build();
+
+		// publications?userId=xxx?favorite=true
+		dto.favorites = uriInfo.getBaseUriBuilder().path("users").path(user.getUserId().toString()).path("favorite").build();
 		return dto;
 	}
+
+	public URI getFavorites() {
+		return favorites;
+	}
+
+	public void setFavorites(URI favorites) {
+		this.favorites = favorites;
+	}
+
 
 	public URI getReviews() {
 		return reviews;
@@ -69,14 +82,6 @@ public class UserDTO {
 
 	public void setLocations(URI locations) {
 		this.locations = locations;
-	}
-
-	public URI getLikes() {
-		return likes;
-	}
-
-	public void setLikes(URI likes) {
-		this.likes = likes;
 	}
 
 	public void setUsername(String username) {

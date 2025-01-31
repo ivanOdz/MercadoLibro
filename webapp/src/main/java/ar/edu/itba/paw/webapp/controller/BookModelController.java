@@ -36,7 +36,7 @@ public class BookModelController {
     public Response getBookModels(@QueryParam("search") @DefaultValue("")final String search,
                                   @QueryParam("genre")final String genre,
                                   @QueryParam("page") @DefaultValue("0") final int currentPage,
-                                  @QueryParam("sort-type") @DefaultValue("BOOK_NAME_ASCENDING") String sortType,
+                                  @QueryParam("sort") @DefaultValue("BOOK_NAME_ASCENDING") String sortType,
                                   @Context Request request) {
 
         PaginatedResponse<BookModel, BookModelMetadata> modelBooks = bookModelService.getPaginatedBookModels(search, genre, currentPage, sortType);
