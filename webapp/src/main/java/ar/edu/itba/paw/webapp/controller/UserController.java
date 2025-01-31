@@ -124,13 +124,12 @@ public class UserController {
     @GET
     @Path("/{id}/locations")
     @Produces(value = {VndType.APPLICATION_LIST_LOCATION})
-    public Response getLocations(@PathParam("id") final long userId, @QueryParam("publication_id") final Integer publicationId) {
-        final List<LocationDTO> locations = us.getLocations(userId, publicationId).stream()
+    public Response getLocations(@PathParam("id") final long userId, final LocationsByPublicationDTO dto) {
+        final List<LocationDTO> locations = us.getLocations(userId, dto.getPublicationURN()).stream()
                 .map(location -> LocationDTO.fromLocation(uriInfo, userId, location)).collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<LocationDTO>>(locations) {}).build();
     }
-
 
     @DELETE
     @Path("/{id}/locations/{location_id}")

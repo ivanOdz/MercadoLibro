@@ -3,6 +3,7 @@ package ar.edu.itba.paw.interfaces.services;
 import ar.edu.itba.paw.models.Location;
 import ar.edu.itba.paw.models.User;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,8 +31,10 @@ public interface UserService {
 
     Location getLocation(long locationId);
 
-    List<Location> getLocations(long userId, Integer publicationId);
-    
+    List<Location> getLocations(Long userId, Long publicationId);
+
+    List<Location> getLocations(Long userId, URI publicationURN);
+
     Location addLocation(Long userId, String locationString);
     
     void removeLocation(Long userId, Long locationId);

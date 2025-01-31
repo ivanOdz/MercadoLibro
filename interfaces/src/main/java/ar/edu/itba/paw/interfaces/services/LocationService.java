@@ -9,5 +9,5 @@ public interface LocationService {
 
     Location findById(Long locationId);
 
-    List<Location> getLocationByPublicationId(Integer publicationId);
+    List<Location> getLocationByPublicationId(Long publicationId);
 }
