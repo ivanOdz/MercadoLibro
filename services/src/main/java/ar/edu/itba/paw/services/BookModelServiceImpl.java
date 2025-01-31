@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.exceptions.BookModelNotFound;
+import ar.edu.itba.paw.interfaces.exceptions.BookModelNotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.BookModelDao;
 import ar.edu.itba.paw.interfaces.services.BookModelService;
 import ar.edu.itba.paw.interfaces.services.ImageService;
@@ -54,11 +54,11 @@ public class BookModelServiceImpl implements BookModelService {
         LOGGER.info("Fetching BookModel with ID: {}", bookModelId);
 
         Optional<BookModel> bookModel = bookModelDao.getBookModelByBookModelId(bookModelId);
-        /*if(bookModel.isEmpty()){
+        if(bookModel.isEmpty()){
             LOGGER.warn("BookModel not found for ID: {}", bookModelId);
             throw new BookModelNotFoundException("Book model not found");
         }
-        LOGGER.info("Successfully retrieved BookModel with ID: {}", bookModelId);*/
+        LOGGER.info("Successfully retrieved BookModel with ID: {}", bookModelId);
         return bookModel;
     }
 
@@ -84,7 +84,7 @@ public class BookModelServiceImpl implements BookModelService {
 
         if(bookModel.isEmpty()){
             LOGGER.warn("BookModel with ID: {} not found", bookModelId);
-            throw new BookModelNotFound("Book model not found");
+            throw new BookModelNotFoundException("Book model not found");
         }
 
         Image image = imageService.getImageById(UrnResolverUtil.getImageId(imageUrn));
