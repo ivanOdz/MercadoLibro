@@ -55,11 +55,11 @@ export const getLocationByIdRequest = ({ id, location_id }) => {
 }
 
 //getLocations
-export const getLocationsRequest = ({ id, publication_id }) => {
+export const getLocationsRequest = ({ id, publicationURN }) => {
   return axios.get(`/users/${id}/locations`,
     {
       params: {
-        publication_id: publication_id,
+        publicationURN: publicationURN,
       },
     });
 };
