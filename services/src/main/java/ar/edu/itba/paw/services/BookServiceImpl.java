@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.exceptions.BookBadRequestException;
 import ar.edu.itba.paw.interfaces.exceptions.BookNotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
@@ -92,7 +93,11 @@ public class BookServiceImpl implements BookService {
     public Book createBook(URI bookModelUrn, URI userUrn, BookState bookState, Integer rating){
         LOGGER.info("Creating book for book model ID: {}", bookModelUrn);
 
-        // TODO: bad request if userUrn does not match the logged user
+
+        // CHECK: userId compared with current user
+        if (!UrnResolverUtil.getUserId(userUrn).equals(userService.getCurrentUser().getUserId())){
+            throw new BookBadRequestException("Book creation request is invalid");
+        }
 
         Optional<BookModel> maybeBm = bookModelService.getBookModelByBookModelId(UrnResolverUtil.getBookModelId(bookModelUrn));
         
