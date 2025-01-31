@@ -35,4 +35,6 @@ public interface UserService {
     Location addLocation(Long userId, String locationString);
     
     void removeLocation(Long userId, Long locationId);
+
+    User getCurrentUser();
 }
