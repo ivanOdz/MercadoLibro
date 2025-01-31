@@ -29,13 +29,18 @@ public interface PublicationDao {
 
     void deletePublication(long publicationId);
 
-    void likePublication(long publicationId, long userId);
+    FavoritePublication markFavoritePublication(long publicationId, long userId);
 
-    PaginatedResponse<Publication, BasicMetadata> getFavoritePublications(User user, int currentPage);
+    void unmarkFavoritePublication(long favPubId);
+
+    PaginatedResponse<Publication, ItemFilterMetadata> getFavoritePublications(String search, BookState state, Genre genre, String sortType, int currentPage, User currentUser);
 
     void addLocation(Publication publication, Location location);
 
     List<Publication> getActivePublicationsByUser(User user);
 
-    Optional<Publication> getActivePublicationById(User user, long publicationId);
+    Optional<FavoritePublication> getFavoritePublicationById(long fpId);
+
+    Optional<FavoritePublication> getFavoritePublicationFromUser(long publicationId, long userId);
+
 }

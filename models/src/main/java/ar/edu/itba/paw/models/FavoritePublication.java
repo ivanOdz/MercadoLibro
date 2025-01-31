@@ -52,6 +52,14 @@ public class FavoritePublication {
         this.favoritepublicationId = favoritepublicationId;
     }
 
+    public Timestamp getLikedAt() {
+        return likedAt;
+    }
+
+    public void setLikedAt(Timestamp likedAt) {
+        this.likedAt = likedAt;
+    }
+
     public void setPublication(Publication publicationId) {
         this.publication = publicationId;
     }
