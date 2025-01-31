@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.exceptions.BookNotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
@@ -90,6 +91,8 @@ public class BookServiceImpl implements BookService {
     @Transactional
     public Book createBook(URI bookModelUrn, URI userUrn, BookState bookState, Integer rating){
         LOGGER.info("Creating book for book model ID: {}", bookModelUrn);
+
+        // TODO: bad request if userUrn does not match the logged user
 
         Optional<BookModel> maybeBm = bookModelService.getBookModelByBookModelId(UrnResolverUtil.getBookModelId(bookModelUrn));
         
@@ -254,7 +257,7 @@ public class BookServiceImpl implements BookService {
             return updatedBook.get();
         } else {
             LOGGER.warn("Book with ID: {} not found, state update failed", bookId);
-            return null;  // Return null if the book wasn't found or update failed
+            throw new BookNotFoundException("Book not found");
         }
     }
 

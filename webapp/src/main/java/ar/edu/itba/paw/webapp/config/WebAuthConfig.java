@@ -115,17 +115,21 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 /*
                  * Book controller
                  **/
-
+                .antMatchers(HttpMethod.GET,"/api/books")
+                    .authenticated()
                 .antMatchers(HttpMethod.GET,"/api/books")
                     .access(BOOKS_ACCESS)
 
-                // CHECK: book post passes security checks. SecurityContextHolder returns null on controller layer but then it does not fail on service layer
+                // TODO: bad request if logged user does not match the user urn
+                .antMatchers(HttpMethod.POST,"/api/books")
+                    .authenticated()
 
-                .antMatchers(HttpMethod.PATCH, "/api/books/{id:\\d+}/state")
+                .antMatchers(HttpMethod.PATCH, "/api/books/{id:\\d+}")
+                    .authenticated()
+                .antMatchers(HttpMethod.PATCH, "/api/books/{id:\\d+}")
                     .access(BOOK_MODIFY_ACCESS)
 
-                .antMatchers(HttpMethod.PATCH, "/api/books/{id:\\d+}}/images")
-                    .access(BOOK_MODIFY_ACCESS)
+                // IMPLEMENT: /api/books/{id} for images (relation endpoint)
 
                 /*
                  * Book Model controller

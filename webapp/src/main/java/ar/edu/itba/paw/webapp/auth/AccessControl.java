@@ -33,6 +33,24 @@ public class AccessControl {
     @Autowired
     private UserReviewService userReviewService;
 
+    // Book
+
+    public Boolean booksAccess(HttpServletRequest request) {
+        long userId = Long.parseLong(request.getParameter("owner"));
+        return getUser().getUserId().equals(userId);
+    }
+
+    //#
+    public Boolean modifyBookAccess(HttpServletRequest request, Long id) {
+        long userId = getUser().getUserId();
+        Optional<Book> b = bookService.getBookById(id);
+
+        return b.map(book -> book.getOwner().getUserId().equals(userId)).orElse(true);
+    }
+
+    // Book model
+
+
 
     // FIXME: id in endpoint should be uri
     public Boolean exchangeUserAccess(HttpServletRequest request) {
@@ -40,21 +58,8 @@ public class AccessControl {
         return getUser().getUserId().equals(userId);
     }
 
-    // FIXME: id in endpoint should be uri
-    public Boolean booksAccess(HttpServletRequest request) {
-        long userId = Long.parseLong(request.getParameter("owner"));
-        return getUser().getUserId().equals(userId);
-    }
 
-    public Boolean modifyBookAccess(HttpServletRequest request, Long id) {
-        long userId = getUser().getUserId();
 
-        Optional<Book> b = bookService.getBookById(id);
-        if (b.isPresent()) {
-        	return b.get().getOwner().getUserId().equals(userId);
-        }
-        return false;
-    }
 
     // FIXME: id in endpoint should be uri
     public Boolean exchangeAccess(HttpServletRequest request) {
@@ -76,13 +81,10 @@ public class AccessControl {
         Optional<Book> b = bookService.getBookById(Long.parseLong(request.getParameter("book")));
 
         // location must be in the user's locations
-        Optional<Location> l = locationService.findById(Long.parseLong(request.getParameter("location")));
-        
-        if (b.isPresent() && l.isPresent()) {
-            return b.get().getOwner().getUserId().equals(getUser().getUserId()) &&
-                    l.get().getUsers().contains(getUser());
-        }
-        return false;
+        Location l = locationService.findById(Long.parseLong(request.getParameter("location")));
+
+        return b.filter(book -> book.getOwner().getUserId().equals(getUser().getUserId()) &&
+                l.getUsers().contains(getUser())).isPresent();
 
     }
 

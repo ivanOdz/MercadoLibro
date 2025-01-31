@@ -84,7 +84,7 @@ public class BookController {
         return PageResponseUtil.getResponse(currentPage, paginated.getMetadata().getMaxPage(), uriInfo, response);
     }
 
-
+    // TODO: bad request if logged user does not match the user urn
     @POST
     @Consumes(value = {VndType.APPLICATION_BOOK_INPUT})
     public Response postBook(final BookInputDTO bookDTO) {
