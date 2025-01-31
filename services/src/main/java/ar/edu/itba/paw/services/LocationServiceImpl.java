@@ -55,7 +55,7 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Location> getLocationByPublicationId(Integer publicationId) {
+    public List<Location> getLocationByPublicationId(Long publicationId) {
         LOGGER.info("Searching for locations of publication of ID: {}", publicationId);
 
         return locationDao.getLocationByPublicationId(publicationId).stream().toList();

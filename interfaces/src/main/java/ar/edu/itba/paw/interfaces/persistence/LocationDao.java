@@ -9,7 +9,7 @@ public interface LocationDao {
 
 	Optional<Location> findById(long locationId);
 	
-    Set<Location> getLocationByPublicationId(long pubId);
+    Set<Location> getLocationByPublicationId(Long pubId);
 
     Location newLocation(String location);
 }

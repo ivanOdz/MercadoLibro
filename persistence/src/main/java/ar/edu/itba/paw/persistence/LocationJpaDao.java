@@ -23,7 +23,7 @@ public class LocationJpaDao implements LocationDao {
     }
     
     @Override
-    public Set<Location> getLocationByPublicationId(long pubId) {
+    public Set<Location> getLocationByPublicationId(Long pubId) {
         TypedQuery<Location> query = em.createQuery(
                 "SELECT l FROM Location l JOIN l.publications p WHERE p.publicationId = :pubId", Location.class);
         query.setParameter("pubId", pubId);
