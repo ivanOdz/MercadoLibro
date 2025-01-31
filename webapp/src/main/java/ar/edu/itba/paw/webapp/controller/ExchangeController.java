@@ -94,10 +94,8 @@ public class ExchangeController {
     @Path("/{id}")
     @Consumes(value = {VndType.APPLICATION_UPDATE_EXCHANGE})
     public Response updateExchange(@PathParam("id") final Long exchangeId,
-                                   @QueryParam("accepted") final Boolean accepted,
-                                   @QueryParam("confirm") final Boolean requester,
                                    UpdateExchangeDTO updateExchangeDTO) {
-        exchangeService.updateExchange(updateExchangeDTO.getAcceptCode(), accepted, requester);
+        exchangeService.updateExchange(updateExchangeDTO.getAcceptCode(), updateExchangeDTO.getAccepted(), updateExchangeDTO.getRequester());
         return Response.noContent().build();
     }
 
