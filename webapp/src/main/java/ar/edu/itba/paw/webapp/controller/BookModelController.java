@@ -60,7 +60,6 @@ public class BookModelController {
     }
 
     // TODO: modify, relation object
-    // FIXME: PATCH NO PUEDE DEVOLVER UN CREATED, PENSAR EN POST?
     @PATCH
     @Path("{id}") // /book_models/{id}/cover
     @Consumes(value = {VndType.APPLICATION_BOOK_MODEL})
