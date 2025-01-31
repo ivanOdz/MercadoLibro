@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.Location;
 import ar.edu.itba.paw.models.User;
@@ -44,7 +43,6 @@ public class UserController {
     @Context
     private UriInfo uriInfo;
 
-    // No necesita autenticacion
     @POST
     @Consumes(value = {VndType.APPLICATION_USER})
     public Response createUser(@Valid @NotNull final RegisterForm registerForm) {
@@ -52,13 +50,11 @@ public class UserController {
         return Response.created(uriInfo.getAbsolutePathBuilder().path(user.getUserId().toString()).build()).build();
     }
 
-    // Autentication required
-    /** {id} debe coincidir con el usuario logueado **/
     @GET
     @Path("/{id}")
     @Produces(value = {VndType.APPLICATION_USER})
-    public Response getUser(@PathParam("id") final Long user_id) {
-        User user = us.findById(user_id).orElseThrow(() -> new UserNotFoundException("No such user"));
+    public Response getUser(@PathParam("id") final Long id) {
+        User user = us.findById(id);
         Rating userRating = userReviewService.getUserRatingEarned(user.getUserId());
 
         UserDTO dto = UserDTO.fromUser(uriInfo, user, userRating);
@@ -66,18 +62,15 @@ public class UserController {
         return Response.ok(genericEntity).build();
     }
 
-    // Autentication required
-    /** {id} debe coincidir con el usuario logueado **/
     @PATCH
     @Path("/{id}")
     @Consumes(value = {VndType.APPLICATION_USER})
-    public Response updateUser(@PathParam("id") final Long user_id, @Valid final UserUpdateDTO request) {
-        us.updateUser(user_id, request.getLanguage(), request.getNewUsername());
+    public Response updateUser(@PathParam("id") final Long id, @Valid final UserUpdateDTO request) {
+        us.updateUser(id, request.getLanguage(), request.getNewUsername());
 
         return Response.noContent().build();
     }
 
-    // No necesita autenticacion
     @POST
     @Consumes(value = {VndType.APPLICATION_USER_EMAIL})
     public Response createPasswordCode(@Valid EmailDTO emailDTO) {
@@ -85,7 +78,6 @@ public class UserController {
         return Response.noContent().build();
     }
 
-    // No necesita autenticacion
     @PATCH
     @Path("/{password_token}")
     @Consumes(value = {VndType.APPLICATION_USER_PASSWORD})
@@ -97,7 +89,6 @@ public class UserController {
 
 
     // TODO: Manejar en los filtros el caso que la cuenta no esta verificada.
-    // No necesita autenticacion ????
     @POST
     @Consumes(value = {VndType.APPLICATION_VERIFICATION_CODE})
     public Response verifyUser(final int verificationCode) {
@@ -114,8 +105,6 @@ public class UserController {
 
     // LOCATIONS
 
-    // Autentication required
-    /** {id} debe coincidir con el usuario logueado **/
     @POST
     @Path("/{id}/locations")
     @Consumes(value = {VndType.APPLICATION_LOCATION})
@@ -125,8 +114,6 @@ public class UserController {
         return Response.created(uriInfo.getAbsolutePathBuilder().path(location.getLocationId().toString()).build()).build();
     }
 
-    // Autentication required
-    /** {id} debe coincidir con el usuario logueado **/
     @GET
     @Path("/{id}/locations/{location_id}")
     @Produces(value = {VndType.APPLICATION_LOCATION})
@@ -147,8 +134,6 @@ public class UserController {
     }
 
 
-    // Autentication required
-    /** {id} debe coincidir con el usuario logueado **/
     @DELETE
     @Path("/{id}/locations/{location_id}")
     public Response removeLocation(@PathParam("id") final long userId, @PathParam("location_id") final long locationId) {
@@ -159,27 +144,23 @@ public class UserController {
 
     // REVIEWS
 
-    // Autentication required
     /**
      * El usuario autenticado debe participar del intercambio con el usuario {id} para hacer un POST aca.
      * No deberia de permitir auto-hacerme una review. Es decir, targetId != id del usuario autenticado.
      * */
+    // TODO: comment needs to be verified in service
     @POST
     @Path("{id}/reviews")
     @Consumes(value = {VndType.APPLICATION_USER_REVIEW})
     public Response createReview(@PathParam("id") final Long targetId,
-                                 @QueryParam("exchange_id") final Integer exchangeId,
                                  ReviewInputDTO reviewInputDTO) {
-        UserReview ur = userReviewService.createUserReview(exchangeId, targetId, reviewInputDTO.getDescription(), reviewInputDTO.getRating());
+        UserReview ur = userReviewService.createUserReview(reviewInputDTO.getExchangeUrn(), targetId, reviewInputDTO.getDescription(), reviewInputDTO.getRating());
 
         return Response.created(uriInfo.getAbsolutePathBuilder().path(ur.getUserReviewId().toString()).build()).build();
     }
 
     // TODO: Falta cache control
-    // Autentication required
     /**
-     * @GET /users/{id}/reviews/{ur_id} -> Si el usuario de logueado es participe de la review {ur_id},
-     * entonces se retorna la review. Caso contrario, 403 - Forbidden (Access Control)
      * @GET /users/{id}/reviews/{ur_id} -> Si el usuario de id {id} es participe de la review {ur_id},
      * entonces se retorna la review. Caso contrario, 404 - Not Found (Service)
      **/
@@ -193,8 +174,6 @@ public class UserController {
     }
 
     // TODO: Falta cache control
-    // Autentication required
-    /** {id} debe coincidir con el id del usuario logueado para acceder al endpoint.**/
     @GET
     @Path("{id}/reviews")
     @Produces(value = {VndType.APPLICATION_LIST_USER_REVIEW})

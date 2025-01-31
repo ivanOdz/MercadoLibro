@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
@@ -101,15 +102,15 @@ public class ExchangeDaoJpaTest {
 	public void testCreateExchange() {
 		
 		final int newAcceptCode = 123654789;
-		final Timestamp newTimeStamp = Timestamp.valueOf(LocalDateTime.now());
+		Date now = new Date();
 		
-		Exchange newExchange = exchangeDao.createExchange(PublicationConstants.ID_5, PublicationConstants.ID_6, newAcceptCode, newTimeStamp);
+		Exchange newExchange = exchangeDao.createExchange(PublicationConstants.ID_5, PublicationConstants.ID_6, newAcceptCode, new Timestamp(now.getTime()));
 		
 		Assert.assertNotNull(newExchange);
 		Assert.assertEquals(PublicationConstants.ID_5, newExchange.getOfferer().getPublicationId());
 		Assert.assertEquals(PublicationConstants.ID_6, newExchange.getRequester().getPublicationId());
 		Assert.assertEquals(newAcceptCode, newExchange.getAcceptCode());
-		Assert.assertEquals(newTimeStamp, newExchange.getExchangeStartDate());
+		Assert.assertEquals(now, newExchange.getExchangeStartDate());
 	}
 	
 	@Test

@@ -1,7 +1,18 @@
 package ar.edu.itba.paw.webapp.dto.input;
 
-public class MessageDTO {
+import java.net.URI;
+
+public class MessageInputDTO {
     private String message;
+    private URI userUrn;
+
+    public URI getUserUrn() {
+        return userUrn;
+    }
+
+    public void setUserUrn(URI userUrn) {
+        this.userUrn = userUrn;
+    }
 
     public String getMessage() {
         return message;

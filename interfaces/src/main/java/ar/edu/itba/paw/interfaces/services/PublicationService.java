@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces.services;
 
+import ar.edu.itba.paw.models.FavoritePublication;
 import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.models.User;
@@ -7,19 +8,35 @@ import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 
+import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 public interface PublicationService {
 
-    Publication createPublication(long bookId, User user, long locationId);
+    Publication createPublication(URI bookURN, URI userURN, URI locationURN);
 
-    void createPublicationIfNeeded(boolean publish, long bookId, long userId, long locationId, PublicationState publicationState);
+    Publication createPublication(Long bookId, Long userId, Long locationId);
+
+    void deletePublication(long publicationId);
+
+    Optional<Publication> getPublicationByPublicationId(long publicationId);
+
+    PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, String state, String genre, String sortType, int currentPage, long userId, boolean favorites);
+
+    PaginatedResponse<Publication, ItemFilterMetadata> getFavoritePublications(User user, int currentPage);
+
+    Publication getActivePublication(long publicationId);
+
+    void deleteFavoritePublication(long publicationId);
+
+    FavoritePublication getFavoritePublicationById(Long favoritePublicationId);
+
+    FavoritePublication getFavoritePublicationFromUser(Long publicationId, Long userId);
+
+
 
     void terminatePublication(Publication publication);
-
-    Publication getPublicationByPublicationId(long publicationId);
-
-    PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, String state, String genre, String sortType, int currentPage, long userId);
 
     int getPublicationCountByUserId(long userId);
 
@@ -27,11 +44,9 @@ public interface PublicationService {
 
     List<Publication> getActivePublicationsByUser(User user);
 
-    //PaginatedResponse<Publication, ItemFilterMetadata> getMyPaginatedPublications(long userId, String search, String state, String genre, String sortType, int currentPage);
 
-    void deletePublication(long userId, long publicationId);
+    FavoritePublication likePublication(Long publicationId, URI userURN);
 
-    void likePublication(long publicationId, long userId);
 
     List<GenreWrapper> getGenreWrapperList(String search, String state);
 
@@ -41,7 +56,5 @@ public interface PublicationService {
 
     List<BookStateWrapper> getMyBookStateWrapperList(long userId, String search, String genre);
 
-    PaginatedResponse<Publication, BasicMetadata> getFavoritePublications(User user, int currentPage);
 
-    Publication getActivePublication(User user, long publicationId);
 }

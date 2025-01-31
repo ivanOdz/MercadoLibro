@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.exceptions.ExchangeBadRequestException;
-import ar.edu.itba.paw.interfaces.exceptions.ExchangeNotFoundException;
 import ar.edu.itba.paw.interfaces.exceptions.MessageNotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.ExchangeDao;
 import ar.edu.itba.paw.interfaces.services.*;
@@ -9,12 +8,14 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
+import ar.edu.itba.paw.utils.UrnResolverUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.URI;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -36,26 +37,37 @@ public class ExchangeServiceImpl implements ExchangeService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExchangeServiceImpl.class);
 
 
-    // FIXME: missing implementation of createPublication
     @Override
     @Transactional
-    public Exchange initializeExchange(long bookId, long locationId, long offererPubId) {
+    public Exchange initializeExchange(URI book, URI location, URI offererPub) {
 
-        if(ps.getPublicationByPublicationId(offererPubId).getPublicationState() != PublicationState.CURRENT) {
-            LOGGER.warn("Publication with id {} is not in current state", offererPubId);
+        Long offererPubId = UrnResolverUtil.getPublicationId(offererPub);
+
+        Long bookId = UrnResolverUtil.getBookId(book);
+
+        Long locationId = UrnResolverUtil.getLocationId(location);
+
+        Optional<Publication> publication = ps.getPublicationByPublicationId(offererPubId);
+        if(publication.isPresent() && publication.get().getPublicationState() != PublicationState.CURRENT) {
+            LOGGER.warn("Publication with id {} is not in current state", offererPub);
             throw new ExchangeBadRequestException("Publication is not in current state");
         }
 
-    	Book book = bs.getBookById(bookId);
-        Long userId = book.getOwner().getUserId();
-        long requesterPubId = 0/*ps.createPublication(bookId,  userId, locationId, PublicationState.OFFERED).getPublicationId()*/;
+    	Optional<Book> b = bs.getBookById(bookId);
+    	
+    	if(b.isEmpty()) {
+            LOGGER.warn("Book with id {} is not existent", bookId);
+            throw new ExchangeBadRequestException("Book not existent");
+    	}
+    	
+        Long userId = b.get().getOwner().getUserId();
+        long requesterPubId = ps.createPublication(bookId, userId, locationId).getPublicationId();
 
         Random random = new Random();
         int acceptCode = Math.abs(random.nextInt());
-        Date date = new Date();
-        Timestamp timestamp = new Timestamp(date.getTime());
+        Date now = new Date();
 
-        Exchange ex = exchangeDao.createExchange(offererPubId, requesterPubId, acceptCode, timestamp);
+        Exchange ex = exchangeDao.createExchange(offererPubId, requesterPubId, acceptCode, new Timestamp(now.getTime()));
         
         if (ex != null) {
         	
@@ -69,7 +81,7 @@ public class ExchangeServiceImpl implements ExchangeService {
             emailService.sendExchangeRequestEmail(requester, offerer, bookRequested, bookOffered, ex.getAcceptCode());
         }
         else {
-            LOGGER.warn("Could not initialize exchange for book id {}", bookId);
+            LOGGER.warn("Could not initialize exchange for book id {}", book);
         }
         return ex;
     }
@@ -132,7 +144,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         LOGGER.info("Found exchange with ID: {} for acceptCode: {}", exchange.getExchangeId(), acceptCode);
 
         if(exchange.getOfferer().getBook().getOwner().getUserId() == userId) {
-            exchangeDao.confirmOfferer(getExchangeByAcceptCode(acceptCode), acceptCode);
+            exchangeDao.confirmOfferer(getExchangeByAcceptCode(acceptCode).get(), acceptCode);
             exchangeCompleted(acceptCode, exchange);
             LOGGER.info("Confirmed offerer for acceptCode: {}", acceptCode);
         }
@@ -173,32 +185,20 @@ public class ExchangeServiceImpl implements ExchangeService {
 
     @Override
     @Transactional(readOnly = true)
-    public Exchange getExchangeByAcceptCode(int acceptCode) {
+    public Optional<Exchange> getExchangeByAcceptCode(int acceptCode) {
     	
         LOGGER.info("Searching for exchange with acceptCode: {}", acceptCode);
 
-        Optional<Exchange> exchange = exchangeDao.findByAcceptCode(acceptCode);
-        if (exchange.isEmpty()) {
-            LOGGER.warn("Exchange not found for acceptCode: {}", acceptCode);
-            throw new ExchangeNotFoundException("Exchange not found");
-        }
-        LOGGER.info("Exchange found for acceptCode: {}", acceptCode);
-        return exchange.get();
+        return exchangeDao.findByAcceptCode(acceptCode);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Exchange getExchangeById(long exchangeId) {
+    public Optional<Exchange> getExchangeById(long exchangeId) {
     	
         LOGGER.info("Searching for exchange with exchangeId: {}", exchangeId);
 
-        Optional<Exchange> exchange = exchangeDao.getExchangeById(exchangeId);
-        if (exchange.isEmpty()) {
-            LOGGER.warn("Exchange not found for exchangeId: {}", exchangeId);
-            throw new ExchangeNotFoundException("Exchange not found");
-        }
-        LOGGER.info("Exchange found for exchangeId: {}", exchangeId);
-        return exchange.get();
+        return exchangeDao.getExchangeById(exchangeId);
     }
 
     // exchanges where user is the publication owner
@@ -217,21 +217,29 @@ public class ExchangeServiceImpl implements ExchangeService {
 
 
     @Override
-    public PaginatedResponse<Exchange, BasicMetadata> getExchanges(long userId, ExchangeState exchangeState, Boolean isOfferer, Boolean isRequester, int currentPage) {
+    public PaginatedResponse<Exchange, BasicMetadata> getExchanges(URI user, ExchangeState exchangeState, Boolean isOfferer, Boolean isRequester, int currentPage) {
+        // extract userId from urn
+        UrnResolverUtil ur = new UrnResolverUtil(user.getPath());
+        Long userId = ur.nextPath().nextPath().getId();
+
         return exchangeDao.getAllExchangesByUserId(userId, exchangeState, currentPage, isOfferer, isRequester);
     }
 
     @Override
     @Transactional
-    public void createMessage(long exchangeId, User user, String message) {
-        exchangeDao.createMessage(getExchangeById(exchangeId), user.getUserId(), message, new Timestamp((new Date()).getTime()));
+    public void createMessage(long exchangeId, URI user, String message) {
+        UrnResolverUtil ur = new UrnResolverUtil(user.getPath());
+        exchangeDao.createMessage(getExchangeById(exchangeId).get(), ur.nextPath().nextPath().getId(), message, new Timestamp((new Date()).getTime()));
     }
 
     @Override
     @Transactional
     public List<Message> getMessages(long exchangeId) {
-        Exchange e = getExchangeById(exchangeId);
-        return e.getChat();
+        Optional<Exchange> e = getExchangeById(exchangeId);
+        if (e.isEmpty()) {
+        	return new ArrayList<Message>();
+        }
+        return e.get().getChat();
     }
 
     @Override
@@ -247,14 +255,14 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Transactional
     @Override
     public void updateExchange(Integer acceptCode, Boolean accepted, Boolean requester) {
-        Exchange e = getExchangeByAcceptCode(acceptCode);
+        Optional<Exchange> e = getExchangeByAcceptCode(acceptCode);
         if (accepted != null) {
             exchange(acceptCode,accepted);
-        } else if (requester != null) {
+        } else if (requester != null && e.isPresent()) {
             if (requester) {
-                confirmRequest(e.getRequester().getBook().getOwner().getUserId(), acceptCode);
+                confirmRequest(e.get().getRequester().getBook().getOwner().getUserId(), acceptCode);
             } else {
-                confirmOffer(e.getOfferer().getBook().getOwner().getUserId(), acceptCode);
+                confirmOffer(e.get().getOfferer().getBook().getOwner().getUserId(), acceptCode);
             }
         } else {
             LOGGER.warn("Invalid parameters for updateExchange");

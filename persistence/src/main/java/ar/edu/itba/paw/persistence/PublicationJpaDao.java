@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.exceptions.PublicationNotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.PublicationDao;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
@@ -56,10 +55,7 @@ public class PublicationJpaDao implements PublicationDao {
         }
 
         SortType sort = SortType.fromString(sortType);
-        if(sort == null){
-            sort = DEFAULT_PUBLICATION_SORT_TYPE;
-        }
-
+        sort = sort == null ? DEFAULT_PUBLICATION_SORT_TYPE : sort;
 
         StringBuilder nativeQueryString = new StringBuilder(
                 "SELECT p.publicationid " +
@@ -159,13 +155,7 @@ public class PublicationJpaDao implements PublicationDao {
 
         int totalResults = getTotalResultsByBook(userId, safeSearch, genre, state);
 
-        PaginatedResponse<Publication, ItemFilterMetadata> paginatedResponse = new PaginatedResponse<>(query.getResultList(), new ItemFilterMetadata(page, PUBLICATIONS_PAGE_SIZE, totalResults, search, genre, sort, null,  state, null));
-
-        for(Publication publication : paginatedResponse.getData()){
-            setIsLikedByUser(currentUser, publication);
-        }
-
-        return paginatedResponse;
+        return new PaginatedResponse<>(query.getResultList(), new ItemFilterMetadata(page, PUBLICATIONS_PAGE_SIZE, totalResults, search, genre, sort, null,  state, null));
     }
 
     @Override
@@ -320,7 +310,7 @@ public class PublicationJpaDao implements PublicationDao {
     }
 
     @Override
-    public PaginatedResponse<Publication, BasicMetadata> getFavoritePublications(User user, int page) {
+    public PaginatedResponse<Publication, ItemFilterMetadata> getFavoritePublications(String search, BookState state, Genre genre, String sortType, int page, User currentUser) {
         if (page < 0) {
             page = 0;
         }
@@ -331,7 +321,7 @@ public class PublicationJpaDao implements PublicationDao {
                 "ORDER BY liked_at DESC";
 
         Query nativeQuery = em.createNativeQuery(nativeQueryString);
-        nativeQuery.setParameter("userId", user.getUserId());
+        nativeQuery.setParameter("userId", currentUser.getUserId());
         nativeQuery.setMaxResults(PUBLICATIONS_PAGE_SIZE);
         nativeQuery.setFirstResult(page * PUBLICATIONS_PAGE_SIZE);
 
@@ -339,7 +329,7 @@ public class PublicationJpaDao implements PublicationDao {
         List<Long> favoritePublicationIds = nativeQuery.getResultList().stream().mapToLong(n -> ((Number) n).longValue()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
 
         if (favoritePublicationIds.isEmpty()) {
-            return new PaginatedResponse<>(Collections.emptyList(), new BasicMetadata(page, 0, PUBLICATIONS_PAGE_SIZE));
+           // return new PaginatedResponse<>(Collections.emptyList(), new ItemFilterMetadata(page, PUBLICATIONS_PAGE_SIZE, 0, search, genre, sort, null, state, null));
         }
 
         String jpqlQuery = """
@@ -353,15 +343,12 @@ public class PublicationJpaDao implements PublicationDao {
 
         TypedQuery<Publication> query = em.createQuery(jpqlQuery, Publication.class);
         query.setParameter("ids",favoritePublicationIds);
-        query.setParameter("userId", user.getUserId());
+        query.setParameter("userId", currentUser.getUserId());
 
         List<Publication> favoritePublications = query.getResultList();
 
-        for(Publication publication : favoritePublications){
-            setIsLikedByUser(user, publication);
-        }
-
-        return new PaginatedResponse<>(favoritePublications, new BasicMetadata(page, favoritePublications.size(), PUBLICATIONS_PAGE_SIZE));
+        //return new PaginatedResponse<>(favoritePublications, new ItemFilterMetadata());
+        return new PaginatedResponse<>(null, null);
     }
 
     @Override
@@ -380,58 +367,30 @@ public class PublicationJpaDao implements PublicationDao {
     }
 
     @Override
-    public Publication getActivePublicationById(User user, long publicationId) {
-        Optional<Publication> maybePub = getPublicationByPublicationId(publicationId);
-        if(user == null) {
-            if(maybePub.get().getPublicationState() == PublicationState.CURRENT) {
-                return maybePub.get();
-            } else {
-                throw new PublicationNotFoundException("Publication not found");
-            }
-        }
-        if (maybePub.isPresent() && (maybePub.get().getPublicationState() == PublicationState.CURRENT ||
-                (maybePub.get().getPublicationState() == PublicationState.OFFERED && Objects.equals(maybePub.get().getUser().getUserId(), user.getUserId())))) {
-                return maybePub.get();
-        }
-        throw new PublicationNotFoundException("Publication not found");
+    public Optional<FavoritePublication> getFavoritePublicationById(long fpId) {
+        return Optional.ofNullable(em.find(FavoritePublication.class, fpId));
     }
 
-    private void setIsLikedByUser(User user, Publication publication) {
-        if(user == null){
-            publication.setLikedByUser(false);
-            return;
-        }
-        Query query = em.createQuery("SELECT COUNT(*) FROM FavoritePublication fp WHERE fp.publication.publicationId = :publicationId AND fp.user.userId = :userId");
-        query.setParameter("publicationId", publication.getPublicationId());
-        query.setParameter("userId", user.getUserId());
-        publication.setLikedByUser(((Number) query.getSingleResult()).intValue() > 0);
+    @Override
+    public Optional<FavoritePublication> getFavoritePublicationFromUser(long publicationId, long userId) {
+        TypedQuery<FavoritePublication> query = em.createQuery("FROM FavoritePublication fp WHERE fp.user.id = :userId AND fp.publication.id = :publicationId", FavoritePublication.class);
+        query.setParameter("publicationId", publicationId);
+        query.setParameter("userId", userId);
+        return Optional.ofNullable(query.getSingleResult());
     }
 
-    @Transactional
-    public void likePublication(long publicationId, long userId) {
+    @Override
+    public FavoritePublication markFavoritePublication(long publicationId, long userId) {
         User user = em.find(User.class, userId);
         Publication publication = em.find(Publication.class, publicationId);
+        FavoritePublication newFavorite = new FavoritePublication(publication, user, Timestamp.valueOf(LocalDateTime.now()));
+        em.persist(newFavorite);
+        return newFavorite;
+    }
 
-        /*if (user == null || publication == null) {
-            throw new IllegalArgumentException("User or Publication not found");
-        }*/
-
-        TypedQuery<FavoritePublication> query = em.createQuery(
-                "SELECT fp FROM FavoritePublication fp WHERE fp.publication = :publication AND fp.user = :user",
-                FavoritePublication.class
-        );
-        query.setParameter("publication", publication);
-        query.setParameter("user", user);
-
-        List<FavoritePublication> favoritePublications = query.getResultList();
-
-        if (!favoritePublications.isEmpty()) {
-            em.remove(favoritePublications.get(0));
-            publication.setLikedByUser(false);
-        } else {
-            FavoritePublication newFavorite = new FavoritePublication(publication, user, Timestamp.valueOf(LocalDateTime.now()));
-            em.persist(newFavorite);
-            publication.setLikedByUser(true);
-        }
+    @Override
+    public void unmarkFavoritePublication(long favPubId) {
+        FavoritePublication favoritePublication = em.find(FavoritePublication.class, favPubId);
+        em.remove(favoritePublication);
     }
 }

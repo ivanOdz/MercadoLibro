@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.exceptions.ExchangeNotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.ExchangeDao;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.ExchangeState;
@@ -14,6 +13,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +31,7 @@ public class ExchangeJpaDao implements ExchangeDao {
     	
         Publication offerer = em.find(Publication.class, offererPubId);
         Publication requester = em.find(Publication.class, requesterPubId);
-        final Exchange exchange = new Exchange(null, offerer, requester, ExchangeState.PENDING, acceptCode, false, false, startDate, null, new ArrayList<>());
+        final Exchange exchange = new Exchange(null, offerer, requester, ExchangeState.PENDING, acceptCode, false, false, new Timestamp(startDate.getTime()), null, new ArrayList<>());
         
         em.persist(exchange);
         
@@ -69,7 +69,7 @@ public class ExchangeJpaDao implements ExchangeDao {
     }
 
     @Override
-    public Optional<Exchange> findByAcceptCode(int acceptCode) throws ExchangeNotFoundException {
+    public Optional<Exchange> findByAcceptCode(int acceptCode) {
         TypedQuery<Exchange> exchange = em.createQuery("FROM Exchange e WHERE e.acceptCode = :acceptCode", Exchange.class);
         exchange.setParameter("acceptCode", acceptCode);
         return Optional.ofNullable(exchange.getSingleResult());

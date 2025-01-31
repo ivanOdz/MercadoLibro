@@ -8,11 +8,11 @@ import java.util.Optional;
 
 public interface UserService {
 
-    Optional<User> findById(long id);
+    User findById(long id);
 
     User createUser(String username, String mail, String password, String language);
 
-    User updateUser(long userId, String language, String newUsername);
+    User updateUser(Long id, String language, String newUsername);
 
     Optional<User> findByUsername(String username);
 
@@ -35,4 +35,6 @@ public interface UserService {
     Location addLocation(Long userId, String locationString);
     
     void removeLocation(Long userId, Long locationId);
+
+    User getCurrentUser();
 }

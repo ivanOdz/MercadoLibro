@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,8 +57,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User updateUser(long userId, String language, String newUsername) {
-        User user = userDao.findById(userId).orElseThrow(() -> new UserNotFoundException("No such user"));
+    public User updateUser(Long id, String language, String newUsername) {
+        User user = userDao.findById(id).orElseThrow(() -> new UserNotFoundException("No such user"));
         if(language != null){
             user = setUserLanguage(user.getUserId(), language);
         }
@@ -106,7 +107,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<User> findById(long id) {
+    public User findById(long id) {
         LOGGER.info("Searching for user with ID: {}", id);
 
         Optional<User> user = userDao.findById(id);
@@ -116,7 +117,7 @@ public class UserServiceImpl implements UserService {
         }
 
         LOGGER.info("User with ID {} found", id);
-        return user;
+        return user.get();
     }
 
     @Override
@@ -202,19 +203,18 @@ public class UserServiceImpl implements UserService {
     public User setUserLanguage(long userId, String language) {
         LOGGER.info("Initiating language update for user with ID: {}", userId);
 
-        Optional<User> user = findById(userId);
-        userDao.setUserLanguage(user.get(), language);
+        User user = findById(userId);
+        userDao.setUserLanguage(user, language);
 
-        LOGGER.info("Language {} successfully updated for user with ID: {}", language, user.get().getUserId());
-        return user.get();
+        LOGGER.info("Language {} successfully updated for user with ID: {}", language, user.getUserId());
+        return user;
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Location> getLocations(long userId, Integer publicationId) {
         if(publicationId == null){
-            Optional<User> user = findById(userId);
-            return user.get().getUserLocations().stream().toList();
+            return findById(userId).getUserLocations().stream().toList();
         }
 
         return locationService.getLocationByPublicationId(publicationId);
@@ -233,7 +233,7 @@ public class UserServiceImpl implements UserService {
     public Location addLocation(Long userId, String locationString) {
         LOGGER.info("Attempting to add a location for user with ID: {}", userId);
 
-        User user = findById(userId).get();
+        User user = findById(userId);
 
         if(user.getUserLocations().size() >= MAX_LOCATIONS_PER_USER){
             LOGGER.warn("Location could not be added. Maximum amount of location for user {} reached.", userId);
@@ -256,11 +256,16 @@ public class UserServiceImpl implements UserService {
 
         Location location = locationService.findById(locationId);
         if (location != null) {
-            userDao.removeUserLocation(findById(userId).get(), location);
+            userDao.removeUserLocation(findById(userId), location);
             LOGGER.info("Location with ID: {} successfully removed for user with ID: {}", locationId, userId);
         } else {
             LOGGER.warn("Location with ID: {} not found for removal for user with ID: {}", locationId, userId);
         }
+    }
+
+    @Override
+    public User getCurrentUser(){
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
 }

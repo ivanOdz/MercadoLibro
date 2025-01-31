@@ -46,8 +46,6 @@ public class Publication {
     @Formula("(SELECT COUNT(fp.publicationid) FROM favorite_publication fp WHERE fp.publicationid = publicationid)")
     private Integer likes;
 
-    private Boolean isLikedByUser = false;
-
     public Publication() {
         // only for JPA
     }
@@ -71,14 +69,6 @@ public class Publication {
 
     public User getUser() {
         return user;
-    }
-
-    public Boolean getLikedByUser() {
-        return isLikedByUser;
-    }
-
-    public void setLikedByUser(Boolean likedByUser) {
-        isLikedByUser = likedByUser;
     }
 
     public Long getPublicationId() {

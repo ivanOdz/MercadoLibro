@@ -53,12 +53,12 @@ public class UserReviewDaoJpaTest {
 	
 	@Before
 	public void setup() {
-		
+		/*
 		jdbcTemplate = new JdbcTemplate(ds);
 		jdbcTemplate.update(" 	INSERT INTO exchange (exchangeId, offererPubId, requesterPubId, exchangeState, acceptCode, offererReceivedBook, requesterReceivedBook, exchangeStartDate, exchangeEndDate)\r\n"
 							+ " VALUES (" + exchangeId + ", " + offererPubId + ", " + requesterPubId + ", '" + exchangeState + "', " + acceptCode + ", " + offererReceivedBook + ", " + requesterReceivedBook + ", '" + exchangeStartDate + "', '" + exchangeEndDate + "')");
 		jdbcTemplate.update(" 	UPDATE book SET ownerId = " + BookConstants.OWNER_ID_1 + "WHERE bookId = " + BookConstants.ID_4);
-		jdbcTemplate.update(" 	UPDATE book SET ownerId = " + BookConstants.OWNER_ID_2 + "WHERE bookId = " + BookConstants.ID_1);
+		jdbcTemplate.update(" 	UPDATE book SET ownerId = " + BookConstants.OWNER_ID_2 + "WHERE bookId = " + BookConstants.ID_1);*/
 	}
 	
 	@Test

@@ -3,43 +3,31 @@ package ar.edu.itba.paw.webapp.utils;
 import ar.edu.itba.paw.models.utils.BookStateWrapper;
 import ar.edu.itba.paw.models.utils.GenreWrapper;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SerializationUtils {
 
-    public static String serializeGenreWrapper(List<GenreWrapper> genreWrappers) {
-        StringBuilder rta = new StringBuilder();
-        rta.append("[");
-        for (int i = 0; i < genreWrappers.size(); i++) {
-            GenreWrapper genreWrapper = genreWrappers.get(i);
-            if (i > 0) {
-                rta.append(", ");
-            }
-            rta.append("{\"genre\": \"")
-                    .append(genreWrapper.getGenre().toString())
-                    .append("\", \"amount\": ")
-                    .append(genreWrapper.getResultByGenre())
-                    .append("}");
+    public static Map<String, String> serializeGenreWrapper(List<GenreWrapper> genreWrappers) {
+        Map<String, String> headers = new HashMap<>();
+
+        for (GenreWrapper genre : genreWrappers) {
+            String headerKey = "X-Genre-" + genre.getGenre().getValue();
+            String headerValue = genre.getGenre().getValue() + "=" + genre.getResultByGenre();
+            headers.put(headerKey, headerValue);
         }
-        rta.append("]");
-        return rta.toString();
+        return headers;
     }
 
-    public static String serializeConditionWrapper(List<BookStateWrapper> bookStateWrappers) {
-        StringBuilder rta = new StringBuilder();
-        rta.append("[");
-        for (int i = 0; i < bookStateWrappers.size(); i++) {
-            BookStateWrapper bookStateWrapper = bookStateWrappers.get(i);
-            if (i > 0) {
-                rta.append(", ");
-            }
-            rta.append("{\"state\": \"")
-                    .append(bookStateWrapper.getBookState().toString())
-                    .append("\", \"amount\": ")
-                    .append(bookStateWrapper.getResultByState())
-                    .append("}");
+    public static  Map<String, String> serializeConditionWrapper(List<BookStateWrapper> bookStateWrappers) {
+        Map<String, String> headers = new HashMap<>();
+
+        for (BookStateWrapper condition : bookStateWrappers) {
+            String headerKey = "X-Condition-" + condition.getBookState().getValue();
+            String headerValue = condition.getBookState().getValue() + "=" + condition.getResultByState();
+            headers.put(headerKey, headerValue);
         }
-        rta.append("]");
-        return rta.toString();
+        return headers;
     }
 }

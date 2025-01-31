@@ -1,14 +1,13 @@
 package ar.edu.itba.paw.webapp.auth;
 
-import ar.edu.itba.paw.interfaces.services.BookService;
-import ar.edu.itba.paw.interfaces.services.ExchangeService;
-import ar.edu.itba.paw.interfaces.services.LocationService;
-import ar.edu.itba.paw.interfaces.services.PublicationService;
+import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.PublicationState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -31,6 +30,27 @@ public class AccessControl {
     @Autowired
     private LocationService locationService;
 
+    @Autowired
+    private UserReviewService userReviewService;
+
+    // Book
+
+    public Boolean booksAccess(HttpServletRequest request) {
+        long userId = Long.parseLong(request.getParameter("owner"));
+        return getUser().getUserId().equals(userId);
+    }
+
+    //#
+    public Boolean modifyBookAccess(HttpServletRequest request, Long id) {
+        long userId = getUser().getUserId();
+        Optional<Book> b = bookService.getBookById(id);
+
+        return b.map(book -> book.getOwner().getUserId().equals(userId)).orElse(true);
+    }
+
+    // Book model
+
+
 
     // FIXME: id in endpoint should be uri
     public Boolean exchangeUserAccess(HttpServletRequest request) {
@@ -38,55 +58,53 @@ public class AccessControl {
         return getUser().getUserId().equals(userId);
     }
 
-    // FIXME: id in endpoint should be uri
-    public Boolean booksAccess(HttpServletRequest request) {
-        long userId = Long.parseLong(request.getParameter("owner"));
-        return getUser().getUserId().equals(userId);
-    }
 
-    public Boolean modifyBookAccess(HttpServletRequest request, Long id) {
-        long userId = getUser().getUserId();
 
-        Book b = bookService.getBookById(id);
-        return b.getOwner().getUserId().equals(userId);
-    }
 
     // FIXME: id in endpoint should be uri
     public Boolean exchangeAccess(HttpServletRequest request) {
         long exchangeId = Long.parseLong(request.getParameter("id"));
-        Exchange e = exchangeService.getExchangeById(exchangeId);
+        Optional<Exchange> e = exchangeService.getExchangeById(exchangeId);
 
         long userId = getUser().getUserId();
 
         // userId matches requester or offerer id
-        return e.getRequester().getUser().getUserId().equals(userId) || e.getOfferer().getUser().getUserId().equals(userId);
+        if (e.isPresent()) {
+        	return e.get().getRequester().getUser().getUserId().equals(userId) || e.get().getOfferer().getUser().getUserId().equals(userId);
+        }
+        return false;
     }
 
     // FIXME: ids in endpoint should be uri
     public Boolean createExchangeAccess(HttpServletRequest request) {
         // user must be the owner of the book
-        Book b = bookService.getBookById(Long.parseLong(request.getParameter("book")));
+        Optional<Book> b = bookService.getBookById(Long.parseLong(request.getParameter("book")));
 
         // location must be in the user's locations
         Location l = locationService.findById(Long.parseLong(request.getParameter("location")));
 
-        return b.getOwner().getUserId().equals(getUser().getUserId()) &&
-                l.getUsers().contains(getUser());
+        return b.filter(book -> book.getOwner().getUserId().equals(getUser().getUserId()) &&
+                l.getUsers().contains(getUser())).isPresent();
+
     }
 
     public Boolean exchangeUpdateAccess(HttpServletRequest request, Long id) {
-        Exchange e = exchangeService.getExchangeById(id);
+        Optional<Exchange> e = exchangeService.getExchangeById(id);
         User lu = getUser();
 
         Boolean requester = Boolean.parseBoolean(request.getParameter("requester"));
         Boolean accepted = Boolean.parseBoolean(request.getParameter("accepted"));
 
-        if(accepted != null){
-            return getUser().getUserId().equals(e.getOfferer().getUser().getUserId());
+        if (e.isEmpty()) {
+        	return null;
+        }
+        
+        if(accepted != null ){
+            return getUser().getUserId().equals(e.get().getOfferer().getUser().getUserId());
         }
 
         if(requester != null){
-            return requester ? lu.getUserId().equals(e.getRequester().getUser().getUserId()) : lu.getUserId().equals(e.getOfferer().getUser().getUserId());
+            return requester ? lu.getUserId().equals(e.get().getRequester().getUser().getUserId()) : lu.getUserId().equals(e.get().getOfferer().getUser().getUserId());
         }
 
         return false;
@@ -94,13 +112,13 @@ public class AccessControl {
 
     // CHECK: publication access could be different if accessed from library
     public Boolean publicationAccess(HttpServletRequest request, Long id) {
-        Publication p = publicationService.getPublicationByPublicationId(id);
+        Optional<Publication> p = publicationService.getPublicationByPublicationId(id);
         User lu = getUser();
 
-        if(p.getPublicationState() == PublicationState.CURRENT){
+        if(p.get().getPublicationState() == PublicationState.CURRENT){
             return true;
         }
-        return p.getUser().getUserId().equals(lu.getUserId());
+        return p.get().getUser().getUserId().equals(lu.getUserId());
     }
 
     // FIXME: user id in endpoint should be sent as an uri
@@ -111,8 +129,8 @@ public class AccessControl {
     }
 
     public Boolean publicationsModifyAccess(HttpServletRequest request, Long publicationId) {
-        Publication p = publicationService.getPublicationByPublicationId(publicationId);
-        return getUser().getUserId().equals(p.getUser().getUserId());
+        Optional<Publication> p = publicationService.getPublicationByPublicationId(publicationId);
+        return getUser().getUserId().equals(p.get().getUser().getUserId());
     }
 
     // FIXME: user id in endpoint should be sent as an uri
@@ -128,6 +146,15 @@ public class AccessControl {
 
     }
 
+    public Boolean userAccess(HttpServletRequest request, Long id) {
+        return getUser().getUserId().equals(id);
+    }
+
+
+    public Boolean reviewAccess(HttpServletRequest request, Long id, Long userReviewId) {
+        UserReview ur = userReviewService.findUserReviewById(id, userReviewId);
+        return getUser().getUserId().equals(ur.getReviewer().getUserId());
+    }
 
     private User getUser(){
         return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

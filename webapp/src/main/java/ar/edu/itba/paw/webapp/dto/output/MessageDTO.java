@@ -6,7 +6,7 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.sql.Timestamp;
 
-public class MessagesDTO {
+public class MessageDTO {
     private String message;
     private Timestamp time;
 
@@ -14,11 +14,11 @@ public class MessagesDTO {
     private URI user;
     private URI exchange;
 
-    public MessagesDTO() {
+    public MessageDTO() {
     }
 
-    static public MessagesDTO fromMessage(UriInfo uriInfo, Message message){
-        MessagesDTO dto = new MessagesDTO();
+    static public MessageDTO fromMessage(UriInfo uriInfo, Message message){
+        MessageDTO dto = new MessageDTO();
         dto.message = message.getMessage();
         dto.time = message.getMessageTime();
         dto.self = uriInfo.getBaseUriBuilder().path("exchange").path(String.valueOf(message.getExchange().getExchangeId())).path("messages").path(String.valueOf(message.getMessageId())).build();

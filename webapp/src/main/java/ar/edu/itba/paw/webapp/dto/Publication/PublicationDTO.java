@@ -5,16 +5,15 @@ import ar.edu.itba.paw.models.utils.PublicationState;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
-import java.sql.Timestamp;
+import java.util.Date;
 
 public class PublicationDTO {
     private URI book;
     private PublicationState publicationState;
-    private Timestamp publicationDatetime;
-    private URI locations; //maybe List<LocationDTO> ?
+    private Date publicationDatetime;
+    private URI locations;
     private URI user;
-    private Integer likes;
-    private Boolean isLikedByUser;
+    private URI favoriteEndpoint;
 
     private URI self;
 
@@ -24,16 +23,24 @@ public class PublicationDTO {
 
         dto.publicationState = publication.getPublicationState();
         dto.publicationDatetime = publication.getPublicationDatetime();
-        dto.likes = publication.getLikes();
-        dto.isLikedByUser = publication.getLikedByUser();
 
         dto.self = uriInfo.getBaseUriBuilder().path("publications").path(String.valueOf(publication.getPublicationId())).build();
         dto.book = uriInfo.getBaseUriBuilder().path("books").path(String.valueOf(publication.getBook().getBookId())).build();
-        dto.user = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(publication.getUser())).build();
+        dto.user = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(publication.getUser().getUserId())).build();
 
-        // TODO : locations
+        dto.locations = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(publication.getUser().getUserId()))
+                .path("locations").queryParam("publication_id", publication.getPublicationId()).build();
+        dto.favoriteEndpoint = uriInfo.getBaseUriBuilder().path("publications").path(String.valueOf(publication.getPublicationId())).path("favorite").build();
 
         return dto;
+    }
+
+    public URI getFavoriteEndpoint() {
+        return favoriteEndpoint;
+    }
+
+    public void setFavoriteEndpoint(URI favoriteEndpoint) {
+        this.favoriteEndpoint = favoriteEndpoint;
     }
 
     public URI getBook() {
@@ -44,7 +51,7 @@ public class PublicationDTO {
         return publicationState;
     }
 
-    public Timestamp getPublicationDatetime() {
+    public Date getPublicationDatetime() {
         return publicationDatetime;
     }
 
@@ -56,13 +63,6 @@ public class PublicationDTO {
         return user;
     }
 
-    public Integer getLikes() {
-        return likes;
-    }
-
-    public Boolean getLikedByUser() {
-        return isLikedByUser;
-    }
 
     public URI getSelf() {
         return self;
@@ -76,7 +76,7 @@ public class PublicationDTO {
         this.publicationState = publicationState;
     }
 
-    public void setPublicationDatetime(Timestamp publicationDatetime) {
+    public void setPublicationDatetime(Date publicationDatetime) {
         this.publicationDatetime = publicationDatetime;
     }
 
@@ -86,14 +86,6 @@ public class PublicationDTO {
 
     public void setUser(URI user) {
         this.user = user;
-    }
-
-    public void setLikes(Integer likes) {
-        this.likes = likes;
-    }
-
-    public void setLikedByUser(Boolean likedByUser) {
-        isLikedByUser = likedByUser;
     }
 
     public void setSelf(URI self) {
