@@ -84,11 +84,11 @@ public class BookController {
         return PageResponseUtil.getResponse(currentPage, paginated.getMetadata().getMaxPage(), uriInfo, response);
     }
 
-    // TODO: bad request if logged user does not match the user urn
+    // CHECK: bad request is returned if the userId does not match logged user
     @POST
     @Consumes(value = {VndType.APPLICATION_BOOK_INPUT})
     public Response postBook(final BookInputDTO bookDTO) {
-        Book book = bs.createBook(bookDTO.getBookModelUrn(), bookDTO.getUserUrn(), BookState.valueOf(bookDTO.getCondition()), bookDTO.getRating());
+        Book book = bs.createBook(bookDTO.getBookModelUrn(), bookDTO.getUserUrn(), BookState.valueOf(bookDTO.getCondition()), bookDTO.getRating(), bookDTO.getImagesUrns());
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(book.getBookId())).build()).build();
     }
 
@@ -97,16 +97,6 @@ public class BookController {
     @Consumes(value = {VndType.APPLICATION_BOOK})
     public Response updateBook(@PathParam("id") final long bookId, @Valid final BookDTO book) {
         bs.updateBook(bookId, book.getState());
-        return Response.noContent().build();
-    }
-
-
-    // TODO: modify, relation endpoint
-    @POST
-    @Path("/{id}")
-    @Consumes(value = {VndType.APPLICATION_ADD_BOOK_IMAGE})
-    public Response addImages(@PathParam("id") final long bookId, final BookImageDTO bookImageDTO) {
-        bs.setImage(bookId,bookImageDTO.getImageUrn());
         return Response.noContent().build();
     }
 

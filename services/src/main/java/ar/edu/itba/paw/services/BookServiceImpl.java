@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.exceptions.BookBadRequestException;
+import ar.edu.itba.paw.interfaces.exceptions.BookModelNotFound;
 import ar.edu.itba.paw.interfaces.exceptions.BookNotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
@@ -90,44 +91,33 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public Book createBook(URI bookModelUrn, URI userUrn, BookState bookState, Integer rating){
+    public Book createBook(URI bookModelUrn, URI userUrn, BookState bookState, Integer rating, List<URI> imageUrns){
         LOGGER.info("Creating book for book model ID: {}", bookModelUrn);
 
+        User u = userService.findById(UrnResolverUtil.getUserId(userUrn));
 
         // CHECK: userId compared with current user
-        if (!UrnResolverUtil.getUserId(userUrn).equals(userService.getCurrentUser().getUserId())){
+        if (!u.getUserId().equals(userService.getCurrentUser().getUserId())){
             throw new BookBadRequestException("Book creation request is invalid");
         }
 
         Optional<BookModel> maybeBm = bookModelService.getBookModelByBookModelId(UrnResolverUtil.getBookModelId(bookModelUrn));
-        
-        if (maybeBm.isPresent()) {
-            User u = userService.findById(UrnResolverUtil.getUserId(userUrn));
-            bookDao.createBookRating(u, maybeBm.get(), rating);
 
-            return bookDao.createBook(maybeBm.get(), u, bookState);
+        if (maybeBm.isEmpty()) {
+            LOGGER.warn("Book model with ID: {} not found, book creation failed", UrnResolverUtil.getBookModelId(bookModelUrn));
+            throw new BookModelNotFound("Book model not found");
         }
-        return null;
+
+        bookDao.createBookRating(u, maybeBm.get(), rating);
+
+        Book book =  bookDao.createBook(maybeBm.get(), u, bookState);
+
+        for (URI imgUrn : imageUrns) {
+            setImage(book, imgUrn);
+        }
+
+        return book;
     }
-
-    /*
-    @Override
-    @Transactional
-    public Book createNewBook(String isbn, String title, List<String> authors, String publisher, String description, Genre genre, int edition,
-                                  Short publicationYear, boolean isHardcover, boolean isPocketEdition, BookDimension dimension,
-                                  Language language, int pages, int weight, BookState bookState, int rating, List<MultipartFile> imageFiles, int bookCoverIndex, User user){
-        LOGGER.info("Starting creation of new book with ISBN: {}", isbn);
-
-        LOGGER.info("Saving images for the new book.");
-        List<Image> images = imageService.saveImage(arrangeImages(imageFiles, bookCoverIndex));
-
-        BookModel bookModel = bookModelService.createBookModel(isbn, title, authors, publisher, description, genre, edition,
-                publicationYear, isHardcover, isPocketEdition, dimension, language, pages, weight);
-
-
-        return createBook(bookModel.getBookModelId(), bookState, rating, imageFiles, bookCoverIndex, images, user, true);
-    }
-    */
 
     @Override
     @Transactional
@@ -181,23 +171,6 @@ public class BookServiceImpl implements BookService {
         }
 
         return bookDao.getPaginatedBooks(search, state_filter, genre_filter, currentPage, UrnResolverUtil.getUserId(userUrn), sortType);
-    }
-
-    private List<MultipartFile> arrangeImages(List<MultipartFile> images, int bookCoverIndex) {
-    	
-        if (bookCoverIndex == 0) {
-            return images;
-        }
-        
-        List<MultipartFile> toReturn = new ArrayList<>();
-        toReturn.add(images.get(bookCoverIndex));
-        
-        for (MultipartFile image : images) {
-            if (images.indexOf(image) != bookCoverIndex){
-                toReturn.add(image);
-            }
-        }
-        return toReturn;
     }
 
     @Override
@@ -266,19 +239,16 @@ public class BookServiceImpl implements BookService {
         }
     }
 
-    @Transactional
-    @Override
-    public void setImage(Long bookId, URI imageUrn) {
+    private void setImage(Book book, URI imageUrn) {
         Image image = imageService.getImageById(UrnResolverUtil.getImageId(imageUrn));
-        Optional<Book> book = getBookById(bookId);
-        
-        if (book.isPresent()) {
-            BookImage bookImage = new BookImage();
-            bookImage.setImage(image);
-            bookImage.setImageOrder(book.get().getImages().size());
-            bookImage.setImageDatetime(Timestamp.valueOf(LocalDateTime.now()));
-            bookDao.setImage(book.get(), bookImage);
-        }
+
+        BookImage bookImage = new BookImage();
+        bookImage.setImage(image);
+
+        // IMPLEMENT: set image order
+        bookImage.setImageOrder(book.getImages().size());
+        bookImage.setImageDatetime(Timestamp.valueOf(LocalDateTime.now()));
+        bookDao.setImage(book, bookImage);
 
     }
 }
