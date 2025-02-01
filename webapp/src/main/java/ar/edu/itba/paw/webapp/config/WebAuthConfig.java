@@ -61,8 +61,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     private static final String PUBLICATIONS_POST_ACCESS = "@accessControl.publicationsPostAccess(request, #publication_id)";
     private static final String PUBLICATION_MODIFY_ACCESS = "@accessControl.publicationsModifyAccess(request, #publication_id)";
     private static final String PUBLICATIONS_GENERAL_ACCESS = "@accessControl.publicationsGeneralAccess(request, #publication_id)";
-    private static final String USER_ACCESS = "@accessControl.userAccess(request, #id)";
-    private static final String REVIEW_ACCESS = "@accessControl.reviewAccess(request, #id, #ur_id)";
+    private static final String USER_ACCESS = "@accessControl.userAccess(#id)";
+    private static final String REVIEW_ACCESS = "@accessControl.reviewAccess(#id, #ur_id)";
+    private static final String REVIEW_LIST_ACCESS = "@accessControl.reviewListAccess(#id)";
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -171,48 +172,22 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                  * User controller
                  */
 
-                .antMatchers(HttpMethod.GET, "/api/users/{id:\\d+}")
+                .antMatchers("/api/users/{id:\\d+}", "/api/users/{id:\\d+}",
+                        "/api/users/{id:\\d+}/locations", "/api/users/{id:\\d+}/locations",
+                        "/api/users/{id:\\d+}/locations/{location_id:\\d+}", "/api/users/{id:\\d+}/locations/{location_id:\\d+}",
+                        "/api/users/{id:\\d+}/reviews", "/api/users/{id:\\d+}/reviews/{ur_id:\\d+}")
                     .authenticated()
-                .antMatchers(HttpMethod.GET, "/api/users/{id:\\d+}")
+
+                .antMatchers("/api/users/{id:\\d+}","/api/users/{id:\\d+}",
+                        "/api/users/{id:\\d+}/locations","/api/users/{id:\\d+}/locations",
+                        "/api/users/{id:\\d+}/locations/{location_id:\\d+}","/api/users/{id:\\d+}/locations/{location_id:\\d+}")
                     .access(USER_ACCESS)
 
-                .antMatchers(HttpMethod.PATCH, "/api/users/{id:\\d+}")
-                    .authenticated()
-                .antMatchers(HttpMethod.PATCH, "/api/users/{id:\\d+}")
-                    .access(USER_ACCESS)
-
-                .antMatchers(HttpMethod.POST, "/api/users/{id:\\d+}/locations")
-                    .authenticated()
-                .antMatchers(HttpMethod.POST, "/api/users/{id:\\d+}/locations")
-                    .access(USER_ACCESS)
-
-                .antMatchers(HttpMethod.GET, "/api/users/{id:\\d+}/locations")
-                    .authenticated()
-                .antMatchers(HttpMethod.GET, "/api/users/{id:\\d+}/locations")
-                    .access(USER_ACCESS)
-
-                .antMatchers(HttpMethod.GET, "/api/users/{id:\\d+}/locations/{location_id:\\d+}")
-                    .authenticated()
-                .antMatchers(HttpMethod.GET, "/api/users/{id:\\d+}/locations/{location_id:\\d+}")
-                    .access(USER_ACCESS)
-
-                .antMatchers(HttpMethod.DELETE, "/api/users/{id:\\d+}/locations/{location_id:\\d+}")
-                    .authenticated()
-                .antMatchers(HttpMethod.DELETE, "/api/users/{id:\\d+}/locations/{location_id:\\d+}")
-                    .access(USER_ACCESS)
-
-                .antMatchers(HttpMethod.POST, "/api/users/{id:\\d+}/reviews")
-                    .authenticated()
-
-                .antMatchers(HttpMethod.GET, "/api/users/{id:\\d+}/reviews")
-                    .authenticated()
-                .antMatchers(HttpMethod.GET, "/api/users/{id:\\d+}/reviews")
-                    .access(USER_ACCESS)
-
-                .antMatchers(HttpMethod.GET, "/api/users/{id:\\d+}/reviews/{ur_id:\\d+}")
-                    .authenticated()
                 .antMatchers(HttpMethod.GET, "/api/users/{id:\\d+}/reviews/{ur_id:\\d+}")
                     .access(REVIEW_ACCESS)
+
+                .antMatchers(HttpMethod.GET, "/api/users/{id:\\d+}/reviews")
+                    .access(REVIEW_LIST_ACCESS)
 
 
                 .antMatchers("/api/**").permitAll()

@@ -3,10 +3,7 @@ package ar.edu.itba.paw.webapp.auth;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.PublicationState;
-import ar.edu.itba.paw.webapp.dto.input.BookInputDTO;
-import ar.edu.itba.paw.webapp.dto.input.CreateExchangeDTO;
-import ar.edu.itba.paw.webapp.dto.input.MessageInputDTO;
-import ar.edu.itba.paw.webapp.dto.input.UpdateExchangeDTO;
+import ar.edu.itba.paw.webapp.dto.input.*;
 import ar.edu.itba.paw.webapp.dto.output.BookDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -167,15 +164,45 @@ public class AccessControl {
 
     }
 
-    public Boolean userAccess(HttpServletRequest request, Long id) {
+    // Users
+
+    // GET {base_path}/users/{id}
+    // PATCH {base_path}/users/{id}
+    // GET {base_path}/users/{id}/locations
+    // POST {base_path}/users/{id}/locations
+    // GET {base_path}/users/{id}/locations/{location_id}
+    // DELETE {base_path}/users/{id}/locations/{location_id}
+    public Boolean userAccess(Long id) {
+        return getUser().getUserId().equals(id);
+    }
+    
+    // POST {base_path}/users/{id}/reviews
+    public Boolean createReviewAccess(Long id, ReviewInputDTO reviewInputDTO) {
+        Exchange e = exchangeService.getExchangeById(reviewInputDTO.getExchangeId());
+        Long luId = getUser().getUserId();
+
+        // logged user is a participant of the exchange
+        boolean exchangeAccess = e.getRequester().getUser().getUserId().equals(luId) ||
+                e.getOfferer().getUser().getUserId().equals(luId);
+
+        // exchangeAccess and not self review
+        return !getUser().getUserId().equals(id) &&
+                exchangeAccess;
+    }
+
+    // GET {base_path}/users/{id}/reviews
+    public Boolean reviewListAccess(Long id) {
         return getUser().getUserId().equals(id);
     }
 
-
-    public Boolean reviewAccess(HttpServletRequest request, Long id, Long userReviewId) {
+    // GET {base_path}/users/{id}/reviews/{ur_id}
+    public Boolean reviewAccess(Long id, Long userReviewId) {
         UserReview ur = userReviewService.findUserReviewById(id, userReviewId);
         return getUser().getUserId().equals(ur.getReviewer().getUserId());
     }
+
+
+    // private methods
 
     private User getUser(){
         return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

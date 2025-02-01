@@ -16,6 +16,7 @@ import ar.edu.itba.paw.webapp.mediaTypes.VndType;
 import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -140,18 +141,14 @@ public class UserController {
     	return Response.noContent().build();
     }
 
-    /**
-     * El usuario autenticado debe participar del intercambio con el usuario {id} para hacer un POST aca.
-     * No deberia de permitir auto-hacerme una review. Es decir, targetId != id del usuario autenticado.
-     * */
-    // TODO: comment needs to be verified in service
+
     @POST
     @Path("{id}/reviews")
     @Consumes(value = {VndType.APPLICATION_USER_REVIEW})
+    @PreAuthorize("@accessControl.createReviewAccess(#targetId, #reviewInputDTO)")
     public Response createReview(@PathParam("id") final Long targetId,
                                  ReviewInputDTO reviewInputDTO) {
-        UserReview ur = userReviewService.createUserReview(reviewInputDTO.getExchangeUrn(), targetId, reviewInputDTO.getDescription(), reviewInputDTO.getRating());
-
+        UserReview ur = userReviewService.createUserReview(reviewInputDTO.getExchangeId(), targetId, reviewInputDTO.getDescription(), reviewInputDTO.getRating());
         return Response.created(uriInfo.getAbsolutePathBuilder().path(ur.getUserReviewId().toString()).build()).build();
     }
 
