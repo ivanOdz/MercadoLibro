@@ -8,7 +8,6 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.interfaces.persistence.BookDao;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
-import ar.edu.itba.paw.utils.UrnResolverUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,29 +42,19 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public Book createBook(URI bookModelUrn, URI userUrn, BookState bookState, Integer rating, List<URI> imageUrns){
-        LOGGER.info("Creating book for book model ID: {}", bookModelUrn);
+    public Book createBook(Long bookModelId, Long userId, BookState bookState, Integer rating, List<Long> imageIds){
+        LOGGER.info("Creating book for book model ID: {}", bookModelId);
 
-        User u = userService.findById(UrnResolverUtil.getUserId(userUrn));
+        User u = userService.findById(userId);
 
-        // CHECK: userId compared with current user
-        if (!u.getUserId().equals(userService.getCurrentUser().getUserId())){
-            throw new BookBadRequestException("Book creation request is invalid");
-        }
+        BookModel maybeBm = bookModelService.getBookModelByBookModelId(bookModelId);
 
-        Optional<BookModel> maybeBm = bookModelService.getBookModelByBookModelId(UrnResolverUtil.getBookModelId(bookModelUrn));
+        bookDao.createBookRating(u, maybeBm, rating);
 
-        if (maybeBm.isEmpty()) {
-            LOGGER.warn("Book model with ID: {} not found, book creation failed", UrnResolverUtil.getBookModelId(bookModelUrn));
-            throw new BookModelNotFoundException("Book model not found");
-        }
+        Book book =  bookDao.createBook(maybeBm, u, bookState);
 
-        bookDao.createBookRating(u, maybeBm.get(), rating);
-
-        Book book =  bookDao.createBook(maybeBm.get(), u, bookState);
-
-        for (URI imgUrn : imageUrns) {
-            setImage(book, imgUrn);
+        for (Long imgId : imageIds) {
+            setImage(book, imgId);
         }
 
         return book;
@@ -164,8 +153,8 @@ public class BookServiceImpl implements BookService {
         }
     }
 
-    private void setImage(Book book, URI imageUrn) {
-        Image image = imageService.getImageById(UrnResolverUtil.getImageId(imageUrn));
+    private void setImage(Book book, Long imageId) {
+        Image image = imageService.getImageById(imageId);
 
         BookImage bookImage = new BookImage();
         bookImage.setImage(image);

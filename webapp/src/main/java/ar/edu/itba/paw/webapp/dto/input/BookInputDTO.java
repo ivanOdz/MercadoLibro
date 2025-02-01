@@ -1,36 +1,38 @@
 package ar.edu.itba.paw.webapp.dto.input;
 
+import ar.edu.itba.paw.webapp.utils.UrnResolverUtil;
+
 import java.net.URI;
 import java.util.List;
 
 public class BookInputDTO {
     private String condition;
-    private URI bookModelUrn;
-    private URI userUrn;
-    private List<URI> imagesUrns;
+    private Long bookModelId;
+    private Long userId;
+    private List<Long> imageIds;
 
-    public List<URI> getImagesUrns() {
-        return imagesUrns;
+    public List<Long> getImageIds() {
+        return imageIds;
     }
 
-    public void setImagesUrns(List<URI> imagesUrns) {
-        this.imagesUrns = imagesUrns;
+    public void setImageIds(List<URI> imageIds) {
+        this.imageIds = imageIds.stream().map(UrnResolverUtil::getImageId).toList();
     }
 
-    public URI getUserUrn() {
-        return userUrn;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUserUrn(URI userUrn) {
-        this.userUrn = userUrn;
+    public void setUserId(URI userId) {
+        this.userId = UrnResolverUtil.getUserId(userId);
     }
 
     public void setRating(Integer rating) {
         this.rating = rating;
     }
 
-    public void setBookModelUrn(URI bookModelUrn) {
-        this.bookModelUrn = bookModelUrn;
+    public void setBookModelId(URI bookModelId) {
+        this.bookModelId = UrnResolverUtil.getBookModelId(bookModelId);
     }
 
     public void setCondition(String condition) {
@@ -43,11 +45,12 @@ public class BookInputDTO {
         return condition;
     }
 
-    public URI getBookModelUrn() {
-        return bookModelUrn;
+    public Long getBookModelId() {
+        return bookModelId;
     }
 
     public Integer getRating() {
         return rating;
     }
+
 }

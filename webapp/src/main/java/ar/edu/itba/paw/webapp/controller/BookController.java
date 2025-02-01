@@ -7,13 +7,13 @@ import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.models.utils.BookStateWrapper;
 import ar.edu.itba.paw.models.utils.GenreWrapper;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
-import ar.edu.itba.paw.webapp.dto.input.BookImageDTO;
 import ar.edu.itba.paw.webapp.dto.input.BookInputDTO;
 import ar.edu.itba.paw.webapp.dto.output.BookDTO;
 import ar.edu.itba.paw.webapp.mediaTypes.VndType;
 import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
 import ar.edu.itba.paw.webapp.utils.SerializationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
@@ -22,7 +22,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -62,17 +61,18 @@ public class BookController {
         return PageResponseUtil.getResponse(currentPage, paginated.getMetadata().getMaxPage(), uriInfo, response);
     }
 
-    // CHECK: bad request is returned if the userId does not match logged user
     @POST
     @Consumes(value = {VndType.APPLICATION_BOOK_INPUT})
+    @PreAuthorize("@accessControl.bookCreationAccess(#bookDTO)")
     public Response postBook(final BookInputDTO bookDTO) {
-        Book book = bs.createBook(bookDTO.getBookModelUrn(), bookDTO.getUserUrn(), BookState.valueOf(bookDTO.getCondition()), bookDTO.getRating(), bookDTO.getImagesUrns());
+        Book book = bs.createBook(bookDTO.getBookModelId(), bookDTO.getUserId(), BookState.valueOf(bookDTO.getCondition()), bookDTO.getRating(), bookDTO.getImageIds());
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(book.getBookId())).build()).build();
     }
 
     @PATCH
     @Path("/{id}")
     @Consumes(value = {VndType.APPLICATION_BOOK})
+    @PreAuthorize("@accessControl.modifyBookAccess(#bookId, #book)")
     public Response updateBook(@PathParam("id") final long bookId, @Valid final BookDTO book) {
         bs.updateBook(bookId, book.getState());
         return Response.noContent().build();

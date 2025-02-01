@@ -64,12 +64,11 @@ public class BookModelController {
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(bookModel.getBookModelId())).build()).build();
     }
 
-    // TODO: modify, relation object
     @PATCH
-    @Path("{id}") // /book_models/{id}/cover
+    @Path("{id}")
     @Consumes(value = {VndType.APPLICATION_BOOK_MODEL})
     public Response setBookCover(@PathParam("id") Long bookModelId, final BookModelDTO bookModelDTO) {
-        bookModelService.setCover(bookModelId, bookModelDTO.getCover());
+        bookModelService.setCover(bookModelId, bookModelDTO.getCoverId());
         return Response.noContent().build();
     }
 

@@ -3,9 +3,11 @@ package ar.edu.itba.paw.webapp.auth;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.PublicationState;
+import ar.edu.itba.paw.webapp.dto.input.BookInputDTO;
 import ar.edu.itba.paw.webapp.dto.input.CreateExchangeDTO;
 import ar.edu.itba.paw.webapp.dto.input.MessageInputDTO;
 import ar.edu.itba.paw.webapp.dto.input.UpdateExchangeDTO;
+import ar.edu.itba.paw.webapp.dto.output.BookDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -38,17 +40,24 @@ public class AccessControl {
 
     // Books
 
+    // GET {base_path}/books?owner={id}
     public Boolean booksAccess(HttpServletRequest request) {
         long userId = Long.parseLong(request.getParameter("owner"));
         return getUser().getUserId().equals(userId);
     }
 
-    // CHECK
-    public Boolean modifyBookAccess(Long id) {
+    // POST {base_path}/books  body: bookInputDTO
+    public Boolean bookCreationAccess(BookInputDTO bookInputDTO) {
+        return getUser().getUserId().equals(bookInputDTO.getUserId());
+    }
+
+    // PATCH {base_path}/books/{id} body: bookDTO
+    public Boolean modifyBookAccess(Long id, BookDTO bookDTO) {
         long userId = getUser().getUserId();
         Book b = bookService.getBookById(id);
 
-        return b.getOwner().getUserId().equals(userId);
+        return b.getOwner().getUserId().equals(userId) &&
+                bookDTO.getOwnerId().equals(userId);
     }
 
     // Exchanges
@@ -120,7 +129,7 @@ public class AccessControl {
     }
 
 
-    // Publication
+    // Publications
 
     // CHECK: publication access could be different if accessed from library
     public Boolean publicationAccess(HttpServletRequest request, Long id) {

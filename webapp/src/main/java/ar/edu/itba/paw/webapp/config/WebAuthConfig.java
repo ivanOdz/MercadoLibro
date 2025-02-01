@@ -55,10 +55,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
      * Access control methods
      */
     private static final String BOOKS_ACCESS = "@accessControl.booksAccess(request)";
-    private static final String BOOK_MODIFY_ACCESS = "@accessControl.modifyBookAccess(request, #id)";
     private static final String EXCHANGES_USER_ACCESS = "@accessControl.exchangeUserAccess(request)";
     private static final String EXCHANGES_ACCESS = "@accessControl.exchangeAccess(#id, #message_id)";
-    private static final String EXCHANGES_UPDATE_ACCESS = "@accessControl.exchangeUpdateAccess(request, #id)";
     private static final String PUBLICATION_ACCESS = "@accessControl.publicationAccess(request, #publication_id)";
     private static final String PUBLICATIONS_POST_ACCESS = "@accessControl.publicationsPostAccess(request, #publication_id)";
     private static final String PUBLICATION_MODIFY_ACCESS = "@accessControl.publicationsModifyAccess(request, #publication_id)";
@@ -114,21 +112,11 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 /*
                  * Book controller
                  **/
-                .antMatchers(HttpMethod.GET,"/api/books")
+                .antMatchers("/api/books", "/api/books/**")
                     .authenticated()
+
                 .antMatchers(HttpMethod.GET,"/api/books")
                     .access(BOOKS_ACCESS)
-
-                // TODO: bad request if logged user does not match the user urn
-                .antMatchers(HttpMethod.POST,"/api/books")
-                    .authenticated()
-
-                .antMatchers(HttpMethod.PATCH, "/api/books/{id:\\d+}")
-                    .authenticated()
-                .antMatchers(HttpMethod.PATCH, "/api/books/{id:\\d+}")
-                    .access(BOOK_MODIFY_ACCESS)
-
-                // IMPLEMENT: /api/books/{id} for images (relation endpoint)
 
                 /*
                  * Book Model controller
@@ -136,8 +124,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers("/api/book_models", "/api/book_models/**")
                     .authenticated()
-
-                // CHECK: /api/book_models/{id} for cover relation -> might not be necessary to do additional checks
 
                 /*
                  * Exchange controller
@@ -154,11 +140,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers(HttpMethod.GET, "/api/exchanges/{id:\\d+}/messages", "/api/exchanges/{id:\\d+}/messages/**")
                     .access(EXCHANGES_ACCESS)
-
-                ///////
-
-                .antMatchers(HttpMethod.PATCH, "/api/exchanges/{id:\\d+}")
-                    .access(EXCHANGES_UPDATE_ACCESS)
 
                 /*
                  * Publication controller

@@ -6,7 +6,6 @@ import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 import org.springframework.stereotype.Service;
 
-import java.net.URI;
 import java.util.List;
 
 @Service
@@ -15,7 +14,7 @@ public interface BookService {
 //    Book createBook(Long bookModelId, BookState bookState, int rating, List<MultipartFile> imageFiles, int bookCoverIndex, List<Image> imageList,
 //                    User user, boolean newBook);
 
-    Book createBook(URI bookModelUrn,URI userUrn, BookState bookState, Integer rating, List<URI> imageUrn);
+    Book createBook(Long bookModelId,Long userId, BookState bookState, Integer rating, List<Long> imageIds);
 
 
 //    Book createNewBook(String isbn, String title, List<String> authors, String publisher, String description, Genre genre, int edition,
