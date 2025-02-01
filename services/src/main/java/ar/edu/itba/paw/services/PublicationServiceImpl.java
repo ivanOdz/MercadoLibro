@@ -10,7 +10,6 @@ import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
-import ar.edu.itba.paw.utils.UrnResolverUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,16 +40,11 @@ public class PublicationServiceImpl implements PublicationService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PublicationServiceImpl.class);
 
-    @Override
-    @Transactional
-    // TODO: Parsear las URI´s para obtener el ID.
-    public Publication createPublication(URI bookURN, URI userURN, URI locationURN) {
-        return createPublication(UrnResolverUtil.getBookId(bookURN), UrnResolverUtil.getUserId(userURN), UrnResolverUtil.getLocationId(locationURN));
-    }
 
     @Override
+    @Transactional
     public Publication createPublication(Long bookId, Long userId, Long locationId) {
-        Book book = bookService.getBookById(bookId).orElseThrow(() -> new BookBadRequest("Invalid book urn"));
+        Book book = bookService.getBookById(bookId);
         User user = userService.findById(userId);
         Location location = locationService.findById(locationId);
 
@@ -96,7 +90,8 @@ public class PublicationServiceImpl implements PublicationService {
 
     @Override
     @Transactional(readOnly = true)
-    public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, String state, String genre, String sortType, int currentPage, long userId, boolean favorites) {
+    public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, String state, String genre, String sortType, int currentPage, Long userId, Boolean favorites, Long locationId) {
+
 
         User currentUser = userService.findById(userId);
 
@@ -174,10 +169,10 @@ public class PublicationServiceImpl implements PublicationService {
 
     @Override
     @Transactional
-    public FavoritePublication likePublication(Long publicationId, URI userURN) {
+    public FavoritePublication likePublication(Long publicationId, Long userId) {
         Publication publication = pubDao.getPublicationByPublicationId(publicationId).
                 orElseThrow(() -> new PublicationBadRequestException("Invalid Publication URN"));
-        User user = userService.findById(UrnResolverUtil.getUserId(userURN));
+        User user = userService.findById(userId);
 
         FavoritePublication fp = pubDao.markFavoritePublication(publicationId, user.getUserId());
         LOGGER.info("User with ID {} liked Publication with ID {}", publicationId, user.getUserId());

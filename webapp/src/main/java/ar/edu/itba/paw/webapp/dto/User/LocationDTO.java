@@ -11,14 +11,25 @@ public class LocationDTO {
 
     private URI self;
 
-    static public LocationDTO fromLocation(UriInfo uriInfo, long userId, Location location) {
+    private URI publications;  // GET -> publications?locationId=3
+
+    public static LocationDTO fromLocation(UriInfo uriInfo, long userId, Location location) {
         LocationDTO dto = new LocationDTO();
 
         dto.location = location.getLocationString();
 
         dto.self = uriInfo.getBaseUriBuilder().path("users").path(Long.toString(userId)).path("locations").path(Long.toString(location.getLocationId())).build();
+        dto.publications =  uriInfo.getBaseUriBuilder().path("publications").queryParam("locationId", location.getLocationId()).build();
 
         return dto;
+    }
+
+    public URI getPublications() {
+        return publications;
+    }
+
+    public void setPublications(URI publications) {
+        this.publications = publications;
     }
 
     public String getLocation() {

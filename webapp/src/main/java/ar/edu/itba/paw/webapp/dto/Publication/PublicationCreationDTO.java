@@ -1,36 +1,39 @@
 package ar.edu.itba.paw.webapp.dto.Publication;
 
+import ar.edu.itba.paw.webapp.utils.UrnResolverUtil;
+
 import java.net.URI;
 
 public class PublicationCreationDTO {
 
-    private URI userURN;
+    private Long userId;
 
-    private URI bookURN;
+    private Long bookId;
 
-    private URI locationURN;
+    private Long locationId;
 
-    public void setUserURN(URI userURN) {
-        this.userURN = userURN;
+
+    public void setUserId(URI userURN) {
+        this.userId = UrnResolverUtil.getUserId(userURN);
     }
 
-    public void setBookURN(URI bookURN) {
-        this.bookURN = bookURN;
+    public void setBookId(URI bookURN) {
+        this.bookId = UrnResolverUtil.getBookId(bookURN);
     }
 
-    public void setLocationURN(URI locationURN) {
-        this.locationURN = locationURN;
+    public void setLocationId(URI locationURN) {
+        this.locationId = UrnResolverUtil.getLocationId(locationURN);
     }
 
-    public URI getUserURN() {
-        return userURN;
+    public Long getUserId() {
+        return userId;
     }
 
-    public URI getBookURN() {
-        return bookURN;
+    public Long getBookId() {
+        return bookId;
     }
 
-    public URI getLocationURN() {
-        return locationURN;
+    public Long getLocationId() {
+        return locationId;
     }
 }

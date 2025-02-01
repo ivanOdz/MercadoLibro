@@ -1,5 +1,8 @@
 package ar.edu.itba.paw.webapp.dto.input;
 
+import ar.edu.itba.paw.webapp.utils.UrnResolverUtil;
+import org.glassfish.jersey.server.Uri;
+
 import javax.ws.rs.QueryParam;
 import java.net.URI;
 
@@ -9,8 +12,8 @@ public class ReviewInputDTO {
 
     private URI exchangeUrn;
 
-    public URI getExchangeUrn() {
-        return exchangeUrn;
+    public Long getExchangeUrn() {
+        return UrnResolverUtil.getExchangeId(exchangeUrn);
     }
 
     public void setExchangeUrn(URI exchangeUrn) {

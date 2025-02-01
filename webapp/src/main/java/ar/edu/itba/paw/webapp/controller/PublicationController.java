@@ -21,7 +21,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Path("publications")
@@ -40,6 +39,7 @@ public class PublicationController {
     // Authorization required
     // If favorites=true & userId == null -> 403 Forbidden ????
     // TODO: Hacer los filtros para las publicaciones favoritas.
+    // La ubicacion debe ser del usuario logueado.
     @GET
     @Produces(value = {VndType.APPLICATION_PUBLICATION})
     public Response getPublications(@QueryParam("search") @DefaultValue("")final String search,
@@ -48,11 +48,12 @@ public class PublicationController {
                                        @QueryParam("genre") final String genre,
                                        @QueryParam("page") @DefaultValue("0")final int currentPage,
                                        @QueryParam("size") @DefaultValue("0") Integer size,
-                                       @QueryParam("user-id") long userId,
-                                       @QueryParam("favorites") @DefaultValue("false") boolean favorites) {
+                                       @QueryParam("user_id") Long userId,
+                                       @QueryParam("location_id") Long locationId,
+                                       @QueryParam("favorites") @DefaultValue("false") Boolean favorites) {
 
         PaginatedResponse<Publication, ItemFilterMetadata> publications = ps.getPaginatedPublications(search,
-                state, genre, sortType, currentPage, userId, favorites);
+                state, genre, sortType, currentPage, userId, favorites, locationId);
 
         List<PublicationDTO> publicationDTOList = publications.getData().stream()
                 .map(publication -> PublicationDTO.fromPublication(uriInfo, publication)).collect(Collectors.toList());;
@@ -77,7 +78,7 @@ public class PublicationController {
     @POST
     @Consumes(value = {VndType.APPLICATION_PUBLICATION})
     public Response postPublication(final PublicationCreationDTO publicationDTO) {
-        Publication publication = ps.createPublication(publicationDTO.getBookURN(), publicationDTO.getUserURN(), publicationDTO.getLocationURN());
+        Publication publication = ps.createPublication(publicationDTO.getBookId(), publicationDTO.getUserId(), publicationDTO.getLocationId());
         return Response.created(uriInfo.getAbsolutePathBuilder().path(publication.getPublicationId().toString()).build()).build();
     }
 

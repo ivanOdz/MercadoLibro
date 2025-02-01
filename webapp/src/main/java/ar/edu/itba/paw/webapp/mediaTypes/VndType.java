@@ -10,13 +10,6 @@ public class VndType {
     public static final String APPLICATION_USER_PASSWORD = "application/vnd.users.password.v1+json";
     public static final String APPLICATION_USER_EMAIL = "application/vnd.users.email.v1+json";
     public static final String APPLICATION_LOCATION = "application/vnd.location.v1+json";
-
-    // Lists
-    public static final String APPLICATION_LIST_LOCATION = "application/vnd.list.locations.v1+json";
-    public static final String APPLICATION_LIST_USER_REVIEW = "application/vnd.list.user.review.v1+json";
-
-    //public static final String USER_LANGUAGE = "application/vnd.users.language.v1+json";
-    //public static final String USER_USERNAME = "application/vnd.users.username.v1+json";
     public static final String APPLICATION_BOOK = "application/vnd.books.v1+json";
     public static final String APPLICATION_BOOK_MODEL = "application/vnd.book_models.v1+json";
     public static final String APPLICATION_BOOK_COVER = "application/vnd.book_models.covers.v1+json";

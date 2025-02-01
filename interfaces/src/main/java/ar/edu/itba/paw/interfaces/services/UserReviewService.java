@@ -12,7 +12,7 @@ public interface UserReviewService {
 
 	UserReview findUserReviewById(long targetId, long reviewId);
 
-	UserReview createUserReview(URI exchangeUrn, Long targetId, String description, int rating);
+	UserReview createUserReview(Long exchangeId, Long targetId, String description, int rating);
 
 	PaginatedResponse<UserReview, BasicMetadata> getReviewsEarnedByUserId(long userId, int currentPage);
 	

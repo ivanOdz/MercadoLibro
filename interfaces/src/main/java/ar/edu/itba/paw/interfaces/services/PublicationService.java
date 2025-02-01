@@ -14,15 +14,13 @@ import java.util.Optional;
 
 public interface PublicationService {
 
-    Publication createPublication(URI bookURN, URI userURN, URI locationURN);
-
     Publication createPublication(Long bookId, Long userId, Long locationId);
 
     void deletePublication(long publicationId);
 
     Optional<Publication> getPublicationByPublicationId(long publicationId);
 
-    PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, String state, String genre, String sortType, int currentPage, long userId, boolean favorites);
+    PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, String state, String genre, String sortType, int currentPage, Long userId, Boolean favorites, Long locationId);
 
     PaginatedResponse<Publication, ItemFilterMetadata> getFavoritePublications(User user, int currentPage);
 
@@ -45,7 +43,7 @@ public interface PublicationService {
     List<Publication> getActivePublicationsByUser(User user);
 
 
-    FavoritePublication likePublication(Long publicationId, URI userURN);
+    FavoritePublication likePublication(Long publicationId, Long userId);
 
 
     List<GenreWrapper> getGenreWrapperList(String search, String state);

@@ -117,15 +117,16 @@ public class UserController {
     @Produces(value = {VndType.APPLICATION_LOCATION})
     public Response getLocation(@PathParam("id") final long userId, @PathParam("location_id") final long locationId) {
         Location location = us.getLocation(locationId);
+        LocationDTO locationDTO = LocationDTO.fromLocation(uriInfo, userId, location);
 
-        return Response.ok(new GenericEntity<Location>(location) {}).build();
+        return Response.ok(new GenericEntity<LocationDTO>(locationDTO) {}).build();
     }
 
     @GET
     @Path("/{id}/locations")
-    @Produces(value = {VndType.APPLICATION_LIST_LOCATION})
-    public Response getLocations(@PathParam("id") final long userId, final LocationsByPublicationDTO dto) {
-        final List<LocationDTO> locations = us.getLocations(userId, dto.getPublicationURN()).stream()
+    @Produces(value = {VndType.APPLICATION_LOCATION})
+    public Response getLocations(@PathParam("id") final long userId, @QueryParam("publication_id") final Long publicationId) {
+        final List<LocationDTO> locations = us.getLocations(userId, publicationId).stream()
                 .map(location -> LocationDTO.fromLocation(uriInfo, userId, location)).collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<LocationDTO>>(locations) {}).build();
@@ -157,7 +158,7 @@ public class UserController {
     // TODO: Falta cache control
     @GET
     @Path("{id}/reviews")
-    @Produces(value = {VndType.APPLICATION_LIST_USER_REVIEW})
+    @Produces(value = {VndType.APPLICATION_USER_REVIEW})
     public Response getReviews(@PathParam("id") final Long targetId, @QueryParam("page") int page){
         PaginatedResponse<UserReview, BasicMetadata> reviews = userReviewService.getReviewsEarnedByUserId(targetId, page);
         List<ReviewDTO> reviewDTOS = reviews.getData().stream().map(review -> ReviewDTO.fromUserReview(uriInfo, review)).toList();

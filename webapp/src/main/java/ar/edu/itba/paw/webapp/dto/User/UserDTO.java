@@ -6,6 +6,7 @@ import java.util.List;
 import javax.ws.rs.core.UriInfo;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.utils.Rating;
+import ar.edu.itba.paw.webapp.utils.UrnResolverUtil;
 
 public class UserDTO {
 	
@@ -109,8 +110,8 @@ public class UserDTO {
     	return mail;
     }
     
-    public URI getSelf() {
-    	return self;
+    public Long getSelf() {
+    	return UrnResolverUtil.getUserId(self);
     }
 
     public URI getFavoriteLocation() {
