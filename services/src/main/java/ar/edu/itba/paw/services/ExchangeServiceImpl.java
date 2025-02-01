@@ -39,8 +39,8 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Transactional
     public Exchange initializeExchange(Long bookId, Long locationId, Long offererPubId) {
 
-        Optional<Publication> publication = ps.getPublicationByPublicationId(offererPubId);
-        if(publication.isPresent() && publication.get().getPublicationState() != PublicationState.CURRENT) {
+        Publication publication = ps.getPublicationByPublicationId(offererPubId);
+        if(publication.getPublicationState() != PublicationState.CURRENT) {
             LOGGER.warn("Publication with id {} is not in current state", offererPubId);
             throw new ExchangeBadRequestException("Publication is not in current state");
         }
@@ -73,7 +73,7 @@ public class ExchangeServiceImpl implements ExchangeService {
         return ex;
     }
 
-    private boolean exchange(int acceptCode, boolean state) {
+    private void exchange(int acceptCode, boolean state) {
     	
         LOGGER.info("Processing exchange for acceptCode: {}", acceptCode);
 
@@ -114,8 +114,8 @@ public class ExchangeServiceImpl implements ExchangeService {
 
         LOGGER.info("Exchange of id: {} processed successfully", exchange.getExchangeId());
 
-        return exchange.getExchangeState() == ExchangeState.ACCEPTED;
     }
+
 
     private void confirmOffer(long userId, int acceptCode) {
     	

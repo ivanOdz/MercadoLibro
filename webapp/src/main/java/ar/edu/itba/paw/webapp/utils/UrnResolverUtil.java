@@ -6,7 +6,6 @@ public class UrnResolverUtil {
     private String urn;
 
     public UrnResolverUtil(String urn) {
-        cutBasePath();
         this.urn = urn;
     }
 
@@ -45,7 +44,13 @@ public class UrnResolverUtil {
                 return null;
             }
         }
-        return null;
+        // path ends with {id}
+        try {
+            return Long.parseLong(this.urn);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+
     }
 
     /**
@@ -150,7 +155,6 @@ public class UrnResolverUtil {
 
 
     private void cutUrn(int n) {
-        cutStart();
         for (int i = 0; i < n; i++) {
             nextPath();
         }
