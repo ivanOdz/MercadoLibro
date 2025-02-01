@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.net.URI;
+
 import java.util.*;
 
 import static ar.edu.itba.paw.models.utils.Constants.*;
@@ -79,13 +79,13 @@ public class PublicationServiceImpl implements PublicationService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Publication> getPublicationByPublicationId(long publicationId) {
+    public Publication getPublicationByPublicationId(long publicationId) {
         Optional<Publication> publication = pubDao.getPublicationByPublicationId(publicationId);
         if (publication.isEmpty()) {
             LOGGER.warn("Publication of id {} not found", publicationId);
             throw new PublicationNotFoundException("Publication not found");
         }
-        return publication;
+        return publication.get();
     }
 
     @Override
@@ -119,13 +119,13 @@ public class PublicationServiceImpl implements PublicationService {
     @Transactional
     public void addLocation(Long publicationId, Long locationId, User user) {
         Location location = locationService.findById(locationId);
-        Optional<Publication> publication = getPublicationByPublicationId(publicationId);
+        Publication publication = getPublicationByPublicationId(publicationId);
 
-        if (!Objects.equals(publication.get().getUser().getUserId(), user.getUserId())) {
+        if (!Objects.equals(publication.getUser().getUserId(), user.getUserId())) {
             LOGGER.error("User with ID {} is not the owner of the publication with ID {}", user.getUserId(), publicationId);
             throw new UserNotUnauthorizedException("User is not the owner of the publication");
         }
-        pubDao.addLocation(publication.get(), location);
+        pubDao.addLocation(publication, location);
         LOGGER.info("Location with ID {} successfully added to publication with ID {}", locationId, publicationId);
     }
 
@@ -214,15 +214,8 @@ public class PublicationServiceImpl implements PublicationService {
     @Override
     @Transactional(readOnly = true)
     public List<GenreWrapper> getGenreWrapperList(String search, String state) {
-        boolean bookStateFilterActive = state != null;
-
-        BookState state_filter = DEFAULT_PUBLICATION_STATE_FILTER;
-        if (bookStateFilterActive) {
-            state_filter = BookState.fromString(state);
-            if (state_filter == null) {
-                bookStateFilterActive = false;
-            }
-        }
+        BookState state_filter = BookState.fromString(state);
+        state_filter = state_filter == null ? DEFAULT_PUBLICATION_STATE_FILTER : state_filter;
 
         return pubDao.getGenreQtyByPublication(null, search, state_filter);
     }
@@ -230,15 +223,8 @@ public class PublicationServiceImpl implements PublicationService {
     @Override
     @Transactional(readOnly = true)
     public List<GenreWrapper> getMyGenreWrapperList(long userId, String search, String state) {
-        boolean bookStateFilterActive = state != null;
-
-        BookState state_filter = DEFAULT_PUBLICATION_STATE_FILTER;
-        if (bookStateFilterActive) {
-            state_filter = BookState.fromString(state);
-            if (state_filter == null) {
-                bookStateFilterActive = false;
-            }
-        }
+        BookState state_filter = BookState.fromString(state);
+        state_filter = state_filter == null ? DEFAULT_PUBLICATION_STATE_FILTER : state_filter;
 
         return pubDao.getGenreQtyByPublication(userId, search, state_filter);
     }
@@ -246,15 +232,9 @@ public class PublicationServiceImpl implements PublicationService {
     @Override
     @Transactional(readOnly = true)
     public List<BookStateWrapper> getBookStateWrapperList(String search, String genre) {
-        boolean genreFilterActive = genre != null;
 
-        Genre genre_filter = DEFAULT_PUBLICATION_GENRE_FILTER;
-        if(genreFilterActive){
-            genre_filter = Genre.fromString(genre);
-            if(genre_filter == null){
-                genreFilterActive = false;
-            }
-        }
+        Genre genre_filter = Genre.fromString(genre);
+        genre_filter = genre_filter == null ? DEFAULT_PUBLICATION_GENRE_FILTER : genre_filter;
 
         return pubDao.getBookStateQtyByPublication(null, search, genre_filter);
     }
@@ -262,15 +242,8 @@ public class PublicationServiceImpl implements PublicationService {
     @Override
     @Transactional(readOnly = true)
     public List<BookStateWrapper> getMyBookStateWrapperList(long userId, String search, String genre) {
-        boolean genreFilterActive = genre != null;
-
-        Genre genre_filter = DEFAULT_PUBLICATION_GENRE_FILTER;
-        if(genreFilterActive){
-            genre_filter = Genre.fromString(genre);
-            if(genre_filter == null){
-                genreFilterActive = false;
-            }
-        }
+        Genre genre_filter = Genre.fromString(genre);
+        genre_filter = genre_filter == null ? DEFAULT_PUBLICATION_GENRE_FILTER : genre_filter;
 
         return pubDao.getBookStateQtyByPublication(userId, search, genre_filter);
     }
@@ -286,10 +259,10 @@ public class PublicationServiceImpl implements PublicationService {
     @Override
     @Transactional(readOnly = true)
     public Publication getActivePublication(long publicationId) {
-        Optional<Publication> publication = getPublicationByPublicationId(publicationId);
-        if(publication.get().getPublicationState().equals(PublicationState.TERMINATED)) {
+        Publication publication = getPublicationByPublicationId(publicationId);
+        if(publication.getPublicationState().equals(PublicationState.TERMINATED)) {
             throw new PublicationNotFoundException("Publication with ID " + publicationId + " not found");
         }
-        return publication.get();
+        return publication;
     }
 }

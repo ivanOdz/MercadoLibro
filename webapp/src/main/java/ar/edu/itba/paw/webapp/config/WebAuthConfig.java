@@ -57,10 +57,11 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     private static final String BOOKS_ACCESS = "@accessControl.booksAccess(request)";
     private static final String EXCHANGES_USER_ACCESS = "@accessControl.exchangeUserAccess(request)";
     private static final String EXCHANGES_ACCESS = "@accessControl.exchangeAccess(#id, #message_id)";
-    private static final String PUBLICATION_ACCESS = "@accessControl.publicationAccess(request, #publication_id)";
-    private static final String PUBLICATIONS_POST_ACCESS = "@accessControl.publicationsPostAccess(request, #publication_id)";
-    private static final String PUBLICATION_MODIFY_ACCESS = "@accessControl.publicationsModifyAccess(request, #publication_id)";
-    private static final String PUBLICATIONS_GENERAL_ACCESS = "@accessControl.publicationsGeneralAccess(request, #publication_id)";
+    private static final String PUBLICATION_ACCESS = "@accessControl.publicationAccess(#publication_id)";
+    private static final String PUBLICATION_MODIFY_ACCESS = "@accessControl.publicationsModifyAccess(#publication_id)";
+    private static final String PUBLICATION_FAVORITE_LIST_ACCESS = "@accessControl.publicationsFavoriteListAccess(#publication_id, #favorite_id)";
+    private static final String PUBLICATION_FAVORITE_ACCESS = "@accessControl.publicationsFavoriteAccess(#request, #publication_id)";
+    private static final String PUBLICATIONS_GENERAL_ACCESS = "@accessControl.publicationsGeneralAccess(request)";
     private static final String USER_ACCESS = "@accessControl.userAccess(#id)";
     private static final String REVIEW_ACCESS = "@accessControl.reviewAccess(#id, #ur_id)";
     private static final String REVIEW_LIST_ACCESS = "@accessControl.reviewListAccess(#id)";
@@ -146,27 +147,30 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                  * Publication controller
                  */
 
+                .antMatchers(HttpMethod.POST, "/api/publications")
+                    .authenticated()
+
                 .antMatchers(HttpMethod.GET, "/api/publications")
                     .access(PUBLICATIONS_GENERAL_ACCESS)
 
-
-                .antMatchers(HttpMethod.POST, "/api/publications")
-                    .access(PUBLICATIONS_POST_ACCESS)
-
-                //  NOTE: useful for favorite publications
-                .antMatchers(HttpMethod.GET, "/api/publications/{publication_id:\\d+}")
-                    .access(PUBLICATION_ACCESS)
-
+                .antMatchers(HttpMethod.DELETE, "/api/publications/{publication_id:\\d+}")
+                    .authenticated()
                 .antMatchers(HttpMethod.DELETE, "/api/publications/{publication_id:\\d+}")
                     .access(PUBLICATION_MODIFY_ACCESS)
 
-                // CHECK: location does not belong to user should return bad request or not found, this just checks if the user can modify publication
-                .antMatchers(HttpMethod.PATCH, "/api/publications/{publication_id:\\d+}/locations")
-                        .access(PUBLICATION_MODIFY_ACCESS)
+                .antMatchers(HttpMethod.GET, "/api/publications/{publication_id:\\d+}")
+                    .access(PUBLICATION_ACCESS)
 
+                .antMatchers( "/api/publications/{publication_id}/favorite", "/api/publications/{publication_id}/favorite/**")
+                    .authenticated()
+                .antMatchers(HttpMethod.GET, "/api/publications/{publication_id:\\d+}/favorite/{favorite_id:\\+}")
+                    .access(PUBLICATION_FAVORITE_LIST_ACCESS)
 
-                // POST /publications/{id}/favorite -> marcar como favorita
-                // DELETE /publications/{id}/favorite -> desmarcar como favorita
+                .antMatchers(HttpMethod.GET, "/api/publications/{publication_id:\\d+}/favorite")
+                    .access(PUBLICATION_FAVORITE_ACCESS)
+
+                // IMPLEMENT: publication location endpoints
+
 
                 /*
                  * User controller

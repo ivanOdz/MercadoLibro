@@ -3,22 +3,19 @@ package ar.edu.itba.paw.webapp.auth;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.PublicationState;
+import ar.edu.itba.paw.webapp.dto.Publication.PublicationCreationDTO;
+import ar.edu.itba.paw.webapp.dto.User.UserDTO;
 import ar.edu.itba.paw.webapp.dto.input.*;
 import ar.edu.itba.paw.webapp.dto.output.BookDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 import javax.servlet.http.HttpServletRequest;
 
 
 @Component
 public class AccessControl {
-
-    @Autowired
-    private PawUserDetailsService pawUserDetailsService;
 
     @Autowired
     private BookService bookService;
@@ -105,6 +102,7 @@ public class AccessControl {
         return exchangeAccess && messageInChat;
     }
 
+    // PATCH {base_path}/exchanges/{id} body: updateExchangeDTO
     public Boolean exchangeUpdateAccess(Long id, UpdateExchangeDTO updateExchangeDTO) {
         Exchange e = exchangeService.getExchangeById(id);
         User lu = getUser();
@@ -128,41 +126,88 @@ public class AccessControl {
 
     // Publications
 
-    // CHECK: publication access could be different if accessed from library
-    public Boolean publicationAccess(HttpServletRequest request, Long id) {
-        Optional<Publication> p = publicationService.getPublicationByPublicationId(id);
+    // GET {base_path}/publications?favorites=true&userId=1
+    // GET {base_path}/publications?favorites=false&userId=1
+    // GET {base_path}/publications?favorites=false&userId=1&locationId=1
+    public Boolean publicationsGeneralAccess(HttpServletRequest request) {
+        boolean favorite = Boolean.parseBoolean(request.getParameter("favorites"));
+        String userString = request.getParameter("user_id");
+
+        String locationString = request.getParameter("location_id");
+
+        // publications filtered by location accessed if location belongs to logged user
+        Location l = locationString == null ? null : locationService.findById(Long.valueOf(locationString));
+        if(l != null){
+            return l.getUsers().contains(getUser());
+        }
+
+        // main page publications with no logged user
+        if(userString.isEmpty() && !favorite) return true;
+
+        Long userId = Long.parseLong(userString);
+        return userId.equals(getUser().getUserId());
+    }
+
+    // POST {base_path}/publications
+    public Boolean publicationsPostAccess(PublicationCreationDTO publicationCreationDTO) {
+        Location l = locationService.findById(publicationCreationDTO.getLocationId());
+        Book b = bookService.getBookById(publicationCreationDTO.getBookId());
+        Long userId = publicationCreationDTO.getUserId();
+        return getUser().getUserId().equals(userId) &&
+                l.getUsers().contains(getUser()) &&
+                b.getOwner().getUserId().equals(userId);
+    }
+
+    // DELETE {base_path}/publications/{publication_id}
+    public Boolean publicationsModifyAccess(Long publicationId) {
+        Publication p = publicationService.getPublicationByPublicationId(publicationId);
+        return getUser().getUserId().equals(p.getUser().getUserId());
+    }
+
+    // GET {base_path}/publications/{publication_id}
+    public Boolean publicationAccess(Long id) {
+        Publication p = publicationService.getPublicationByPublicationId(id);
         User lu = getUser();
 
-        if(p.get().getPublicationState() == PublicationState.CURRENT){
+        if(p.getPublicationState() == PublicationState.CURRENT){
             return true;
         }
-        return p.get().getUser().getUserId().equals(lu.getUserId());
+
+        return p.getUser().getUserId().equals(lu.getUserId());
     }
 
-    // FIXME: user id in endpoint should be sent as an uri
-    public Boolean publicationsPostAccess(HttpServletRequest request, Long publicationId) {
-        // IMPLEMENT:  user id in uri matches logged user id
-        Long userId = Long.parseLong(request.getParameter("user"));
-        return getUser().getUserId().equals(userId);
+    // POST {base_path}/publications/{id}/favorite body: userDTO
+    public Boolean publicationsFavoritePostAccess(Long publicationId, UserDTO userDTO) {
+        Publication p = publicationService.getPublicationByPublicationId(publicationId);
+        return getUser().getUserId().equals(p.getUser().getUserId()) &&
+                userDTO.getSelf().equals(getUser().getUserId());
     }
 
-    public Boolean publicationsModifyAccess(HttpServletRequest request, Long publicationId) {
-        Optional<Publication> p = publicationService.getPublicationByPublicationId(publicationId);
-        return getUser().getUserId().equals(p.get().getUser().getUserId());
+    // GET {base_path}/publications/{publication_id}/favorite/{favorite_id}
+    public Boolean publicationsFavoriteListAccess(Long publicationId, Long favoriteId) {
+        FavoritePublication fp = publicationService.getFavoritePublicationById(favoriteId);
+        Publication p = publicationService.getPublicationByPublicationId(publicationId);
+        Long luId = getUser().getUserId();
+        return luId.equals(fp.getUser().getUserId()) &&
+                luId.equals(p.getUser().getUserId());
     }
 
-    // FIXME: user id in endpoint should be sent as an uri
-    public Boolean publicationsGeneralAccess(HttpServletRequest request, Long publication_id) {
-        boolean favorite = Boolean.parseBoolean(request.getParameter("favorite"));
+    public Boolean publicationsFavoriteAccess(HttpServletRequest request,Long publicationId) {
+        Publication p = publicationService.getPublicationByPublicationId(publicationId);
+        String userIdString = request.getParameter("user_id");
 
-        // IMPLEMENT:  favorite is marked then check if userId matches logged user
+        if (userIdString.isEmpty()) {
+            return false;
+        }
 
-        if(!favorite) return true;
-
-        // ASK : could this be just an .authenticated()?
-        return getUser() != null;
-
+        Long luId = getUser().getUserId();
+        return luId.equals(Long.parseLong(userIdString)) &&
+                luId.equals(p.getUser().getUserId());
     }
+
+
+
+
 
     // Users
 
