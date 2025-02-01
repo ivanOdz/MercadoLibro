@@ -13,6 +13,7 @@ import ar.edu.itba.paw.webapp.dto.input.ReviewInputDTO;
 import ar.edu.itba.paw.webapp.dto.output.ReviewDTO;
 import ar.edu.itba.paw.webapp.mediaTypes.VndType;
 
+import ar.edu.itba.paw.webapp.utils.CacheResponseUtil;
 import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -160,8 +161,8 @@ public class UserController {
         PaginatedResponse<UserReview, BasicMetadata> reviews = userReviewService.getReviewsEarnedByUserId(targetId, page);
         List<ReviewDTO> reviewDTOS = reviews.getData().stream().map(review -> ReviewDTO.fromUserReview(uriInfo, review)).toList();
         Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ReviewDTO>>(reviewDTOS) {});
-
-        return PageResponseUtil.getResponse(page, reviews.getMetadata().getMaxPage(), uriInfo, response);
+        Response paginated_response = PageResponseUtil.getResponse(page, reviews.getMetadata().getMaxPage(), uriInfo, response);
+        return CacheResponseUtil.unconditionalCacheResponse(Response.fromResponse(paginated_response));
     }
 
     // TODO: Falta cache control
@@ -174,8 +175,8 @@ public class UserController {
     @Produces(value = {VndType.APPLICATION_USER_REVIEW})
     public Response getReview(@PathParam("id") final Long targetId, @PathParam("ur_id") final Long reviewId) {
         final ReviewDTO userReviewDTO = ReviewDTO.fromUserReview(uriInfo, userReviewService.findUserReviewById(targetId, reviewId));
-
-        return Response.ok(new GenericEntity<ReviewDTO>(userReviewDTO) {}).build();
+        Response.ResponseBuilder response = Response.ok(new GenericEntity<ReviewDTO>(userReviewDTO) {});
+        return CacheResponseUtil.unconditionalCacheResponse(response);
     }
 }
 
