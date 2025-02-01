@@ -153,7 +153,6 @@ public class UserController {
         return Response.created(uriInfo.getAbsolutePathBuilder().path(ur.getUserReviewId().toString()).build()).build();
     }
 
-    // TODO: Falta cache control
     @GET
     @Path("{id}/reviews")
     @Produces(value = {VndType.APPLICATION_USER_REVIEW})
@@ -165,7 +164,6 @@ public class UserController {
         return CacheResponseUtil.unconditionalCacheResponse(Response.fromResponse(paginated_response));
     }
 
-    // TODO: Falta cache control
     /**
      * @GET /users/{id}/reviews/{ur_id} -> Si el usuario de id {id} es participe de la review {ur_id},
      * entonces se retorna la review. Caso contrario, 404 - Not Found (Service)
