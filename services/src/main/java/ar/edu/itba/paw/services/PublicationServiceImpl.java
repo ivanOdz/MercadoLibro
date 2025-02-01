@@ -105,8 +105,8 @@ public class PublicationServiceImpl implements PublicationService {
             throw new UserMissingBadRequest("UserId is required when filtering favorites");
         }
 
-        return favorites ? pubDao.getFavoritePublications(search, state_filter, genre_filter, sortType, currentPage, currentUser) :
-                pubDao.getPaginatedPublications(search, state_filter, genre_filter, sortType, currentPage, currentUser);
+        return favorites ? pubDao.getFavoritePublications(search, state_filter, genre_filter, sortType, currentPage, currentUser, locationId) :
+                pubDao.getPaginatedPublications(search, state_filter, genre_filter, sortType, currentPage, currentUser, locationId);
     }
 
     @Override

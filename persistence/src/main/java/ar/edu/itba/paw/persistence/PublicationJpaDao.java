@@ -3,7 +3,6 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.persistence.PublicationDao;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
-import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -47,7 +46,7 @@ public class PublicationJpaDao implements PublicationDao {
     }
 
     @Override
-    public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, BookState state, Genre genre, String sortType, int page, User currentUser) {
+    public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, BookState state, Genre genre, String sortType, int page, User currentUser, Long locationId) {
         Long userId = (currentUser != null ? currentUser.getUserId() : null);
 
         if (page < 0) {
@@ -58,11 +57,12 @@ public class PublicationJpaDao implements PublicationDao {
         sort = sort == null ? DEFAULT_PUBLICATION_SORT_TYPE : sort;
 
         StringBuilder nativeQueryString = new StringBuilder(
-                "SELECT p.publicationid " +
+                "SELECT DISTINCT p.publicationid " +
                         "FROM publication p " +
                         "JOIN book b ON p.bookId = b.bookId " +
                         "JOIN book_model bm ON bm.bookModelId = b.bookModelId " +
                         "LEFT JOIN book_rating br ON bm.bookModelId = br.bookModelId " +
+                        "LEFT JOIN publication_location pl ON p.publicationId = pl.publicationId " +
                         "WHERE p.publicationState = :publicationState AND LOWER(bm.title) LIKE LOWER(:safeSearch) ESCAPE '\\' "
         );
 
@@ -76,6 +76,10 @@ public class PublicationJpaDao implements PublicationDao {
 
         if (state != null) {
             nativeQueryString.append("AND b.bookState = :state ");
+        }
+
+        if(locationId != null){
+            nativeQueryString.append("AND pl.locationId = :locationId ");
         }
 
         switch (sort) {
@@ -120,6 +124,10 @@ public class PublicationJpaDao implements PublicationDao {
 
         if(state != null){
             nativeQuery.setParameter("state", state.toString());
+        }
+
+        if(locationId != null){
+            nativeQuery.setParameter("locationId", locationId);
         }
 
         nativeQuery.setMaxResults(PUBLICATIONS_PAGE_SIZE);
@@ -310,7 +318,7 @@ public class PublicationJpaDao implements PublicationDao {
     }
 
     @Override
-    public PaginatedResponse<Publication, ItemFilterMetadata> getFavoritePublications(String search, BookState state, Genre genre, String sortType, int page, User currentUser) {
+    public PaginatedResponse<Publication, ItemFilterMetadata> getFavoritePublications(String search, BookState state, Genre genre, String sortType, int page, User currentUser, Long locationId) {
         if (page < 0) {
             page = 0;
         }
