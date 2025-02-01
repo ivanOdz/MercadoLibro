@@ -6,13 +6,12 @@ import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
 public interface ExchangeService {
 
-    Exchange initializeExchange(URI book, URI location, URI offererPub);
+    Exchange initializeExchange(Long bookId, Long locationId, Long offererPubId);
 
     Optional<Exchange> getExchangeByAcceptCode(int acceptCode);
 
@@ -24,7 +23,7 @@ public interface ExchangeService {
 
     PaginatedResponse<Exchange, BasicMetadata> getExchanges(long userId, ExchangeState exchangeState, Boolean isOfferer, Boolean isRequester, int currentPage);
 
-    Message createMessage(long exchangeId, URI user, String message);
+    Message createMessage(long exchangeId, Long userId, String message);
 
     List<Message> getMessages(long exchangeId);
 

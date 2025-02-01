@@ -3,6 +3,9 @@ package ar.edu.itba.paw.webapp.auth;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.PublicationState;
+import ar.edu.itba.paw.webapp.dto.input.CreateExchangeDTO;
+import ar.edu.itba.paw.webapp.dto.input.MessageInputDTO;
+import ar.edu.itba.paw.webapp.dto.input.UpdateExchangeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -33,82 +36,91 @@ public class AccessControl {
     @Autowired
     private UserReviewService userReviewService;
 
-    // Book
+    // Books
 
     public Boolean booksAccess(HttpServletRequest request) {
         long userId = Long.parseLong(request.getParameter("owner"));
         return getUser().getUserId().equals(userId);
     }
 
-    //#
-    public Boolean modifyBookAccess(HttpServletRequest request, Long id) {
+    // CHECK
+    public Boolean modifyBookAccess(Long id) {
         long userId = getUser().getUserId();
-        Optional<Book> b = bookService.getBookById(id);
+        Book b = bookService.getBookById(id);
 
-        return b.map(book -> book.getOwner().getUserId().equals(userId)).orElse(true);
+        return b.getOwner().getUserId().equals(userId);
     }
 
-    // Book model
+    // Exchanges
 
-
-
-    // FIXME: id in endpoint should be uri
+    // GET {base_path}/exchanges?userId=1
     public Boolean exchangeUserAccess(HttpServletRequest request) {
-        long userId = Long.parseLong(request.getParameter("id"));
+        long userId = Long.parseLong(request.getParameter("user_id"));
         return getUser().getUserId().equals(userId);
     }
 
+    // POST {base_path}/exchanges  body: createExchangeDTO
+    public Boolean createExchangeAccess(CreateExchangeDTO createExchangeDTO) {
+        // user must be the owner of the book
+        Book b = bookService.getBookById(createExchangeDTO.getBookId());
 
+        // location must be in the user's locations
+        Location l = locationService.findById(createExchangeDTO.getLocationId());
 
+        return b.getOwner().getUserId().equals(getUser().getUserId()) &&
+                l.getUsers().contains(getUser());
+    }
 
-    // FIXME: id in endpoint should be uri
-    public Boolean exchangeAccess(HttpServletRequest request) {
-        long exchangeId = Long.parseLong(request.getParameter("id"));
-        Optional<Exchange> e = exchangeService.getExchangeById(exchangeId);
+    // POST {base_path}/exchanges/{id}/messages  body: messageDTO
+    public Boolean createMessageAccess(Long exchangeId, MessageInputDTO messageDTO) {
+        Exchange e = exchangeService.getExchangeById(exchangeId);
+
+        boolean exchangeAccess = e.getRequester().getUser().getUserId().equals(getUser().getUserId()) ||
+                                    e.getOfferer().getUser().getUserId().equals(getUser().getUserId());
+
+        return messageDTO.getUserId().equals(getUser().getUserId()) && exchangeAccess;
+    }
+
+    // GET  {base_path}/api/exchanges/{id:\\d+}"
+    // GET  {base_path}/api/exchanges/{id:\\d+}/messages"
+    // GET  {base_path}/api/exchanges/{id:\\d+}/messages/{message_id:\\d+}"
+    public Boolean exchangeAccess(Long exchangeId, Long messageId) {
+        Exchange e = exchangeService.getExchangeById(exchangeId);
 
         long userId = getUser().getUserId();
 
         // userId matches requester or offerer id
-        if (e.isPresent()) {
-        	return e.get().getRequester().getUser().getUserId().equals(userId) || e.get().getOfferer().getUser().getUserId().equals(userId);
-        }
-        return false;
+        boolean exchangeAccess = e.getRequester().getUser().getUserId().equals(userId) ||
+                e.getOfferer().getUser().getUserId().equals(userId);
+
+        // messageId is in exchange chat or not specified
+        boolean messageInChat = messageId == null || e.getChat().stream().anyMatch(m -> m.getMessageId().equals(messageId));
+
+        return exchangeAccess && messageInChat;
     }
 
-    // FIXME: ids in endpoint should be uri
-    public Boolean createExchangeAccess(HttpServletRequest request) {
-        // user must be the owner of the book
-        Optional<Book> b = bookService.getBookById(Long.parseLong(request.getParameter("book")));
-
-        // location must be in the user's locations
-        Location l = locationService.findById(Long.parseLong(request.getParameter("location")));
-
-        return b.filter(book -> book.getOwner().getUserId().equals(getUser().getUserId()) &&
-                l.getUsers().contains(getUser())).isPresent();
-
-    }
-
-    public Boolean exchangeUpdateAccess(HttpServletRequest request, Long id) {
-        Optional<Exchange> e = exchangeService.getExchangeById(id);
+    public Boolean exchangeUpdateAccess(Long id, UpdateExchangeDTO updateExchangeDTO) {
+        Exchange e = exchangeService.getExchangeById(id);
         User lu = getUser();
 
-        Boolean requester = Boolean.parseBoolean(request.getParameter("requester"));
-        Boolean accepted = Boolean.parseBoolean(request.getParameter("accepted"));
-
-        if (e.isEmpty()) {
-        	return null;
-        }
-        
-        if(accepted != null ){
-            return getUser().getUserId().equals(e.get().getOfferer().getUser().getUserId());
+        // to accept or reject an exchange the user must be the offerer
+        if(updateExchangeDTO.getAccepted() != null ){
+            return getUser().getUserId().equals(e.getOfferer().getUser().getUserId());
         }
 
+        Boolean requester = updateExchangeDTO.getRequester();
+        // to update the exchange as a requester user must be the requester
         if(requester != null){
-            return requester ? lu.getUserId().equals(e.get().getRequester().getUser().getUserId()) : lu.getUserId().equals(e.get().getOfferer().getUser().getUserId());
+            return requester ? lu.getUserId().equals(e.getRequester().getUser().getUserId()) : lu.getUserId().equals(e.getOfferer().getUser().getUserId());
         }
 
-        return false;
+        // ASK : what if none of the fields are present?
+        // bad request checked in service?
+        return true;
     }
+
+
+    // Publication
 
     // CHECK: publication access could be different if accessed from library
     public Boolean publicationAccess(HttpServletRequest request, Long id) {

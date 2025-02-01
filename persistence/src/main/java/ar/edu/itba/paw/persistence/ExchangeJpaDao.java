@@ -13,6 +13,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -135,8 +136,8 @@ public class ExchangeJpaDao implements ExchangeDao {
 
 
     @Override
-    public Message createMessage(Exchange exchange, long userId, String message, Timestamp time) {
-        Message newMessage = new Message(null, exchange ,em.find(User.class, userId), time, message);
+    public Message createMessage(Exchange exchange, long userId, String message, Date time) {
+        Message newMessage = new Message(null, exchange ,em.find(User.class, userId), new Timestamp(time.getTime()), message);
         em.persist(newMessage);
         exchange.getChat().add(newMessage);
         return newMessage;

@@ -57,8 +57,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     private static final String BOOKS_ACCESS = "@accessControl.booksAccess(request)";
     private static final String BOOK_MODIFY_ACCESS = "@accessControl.modifyBookAccess(request, #id)";
     private static final String EXCHANGES_USER_ACCESS = "@accessControl.exchangeUserAccess(request)";
-    private static final String EXCHANGES_ACCESS = "@accessControl.exchangeAccess(request)";
-    private static final String CREATE_EXCHANGE_ACCESS = "@accessControl.createExchangeAccess(request)";
+    private static final String EXCHANGES_ACCESS = "@accessControl.exchangeAccess(#id, #message_id)";
     private static final String EXCHANGES_UPDATE_ACCESS = "@accessControl.exchangeUpdateAccess(request, #id)";
     private static final String PUBLICATION_ACCESS = "@accessControl.publicationAccess(request, #publication_id)";
     private static final String PUBLICATIONS_POST_ACCESS = "@accessControl.publicationsPostAccess(request, #publication_id)";
@@ -134,27 +133,29 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 /*
                  * Book Model controller
                  */
-                .antMatchers("/api/book-models")
+
+                .antMatchers("/api/book_models", "/api/book_models/**")
                     .authenticated()
 
-                .antMatchers("/api/book-models/**")
-                    .authenticated()
+                // CHECK: /api/book_models/{id} for cover relation -> might not be necessary to do additional checks
+
                 /*
                  * Exchange controller
                  */
 
+                .antMatchers("/api/exchanges/**")
+                    .authenticated()
+
                 .antMatchers(HttpMethod.GET, "/api/exchanges")
                     .access(EXCHANGES_USER_ACCESS)
 
-                .antMatchers(HttpMethod.POST, "/api/exchanges")
-                    .access(CREATE_EXCHANGE_ACCESS)
-
-                .antMatchers(HttpMethod.POST, "/api/exchanges/{id:\\d+}/messages")
+                .antMatchers(HttpMethod.GET, "/api/exchanges/{id:\\d+}")
                     .access(EXCHANGES_ACCESS)
 
-                .antMatchers(HttpMethod.GET, "/api/exchanges/{id:\\d+}/messages")
+                .antMatchers(HttpMethod.GET, "/api/exchanges/{id:\\d+}/messages", "/api/exchanges/{id:\\d+}/messages/**")
                     .access(EXCHANGES_ACCESS)
 
+                ///////
 
                 .antMatchers(HttpMethod.PATCH, "/api/exchanges/{id:\\d+}")
                     .access(EXCHANGES_UPDATE_ACCESS)
@@ -236,7 +237,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/**").permitAll()
 
 //                 IMPLEMENT: Exceptions controller missing
-//                 IMPLEMENT: Image controller missing
 
         //
         // .antMatchers("api/users/test").authenticated()

@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Optional;
 
 public interface ExchangeDao {
@@ -31,7 +32,7 @@ public interface ExchangeDao {
 
     PaginatedResponse<Exchange, BasicMetadata> getAllExchangesByUserId(long anUserId, ExchangeState exchangeState, int currentPage, boolean isOfferer, boolean isRequester);
 
-    Message createMessage(Exchange exchange, long userId, String message, Timestamp time);
+    Message createMessage(Exchange exchange, long userId, String message, Date time);
 
     Optional<Message> getMessageById(long messageId);
 }

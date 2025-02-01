@@ -8,14 +8,12 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
-import ar.edu.itba.paw.utils.UrnResolverUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.net.URI;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -39,17 +37,11 @@ public class ExchangeServiceImpl implements ExchangeService {
 
     @Override
     @Transactional
-    public Exchange initializeExchange(URI book, URI location, URI offererPub) {
-
-        Long offererPubId = UrnResolverUtil.getPublicationId(offererPub);
-
-        Long bookId = UrnResolverUtil.getBookId(book);
-
-        Long locationId = UrnResolverUtil.getLocationId(location);
+    public Exchange initializeExchange(Long bookId, Long locationId, Long offererPubId) {
 
         Optional<Publication> publication = ps.getPublicationByPublicationId(offererPubId);
         if(publication.isPresent() && publication.get().getPublicationState() != PublicationState.CURRENT) {
-            LOGGER.warn("Publication with id {} is not in current state", offererPub);
+            LOGGER.warn("Publication with id {} is not in current state", offererPubId);
             throw new ExchangeBadRequestException("Publication is not in current state");
         }
 
@@ -76,7 +68,7 @@ public class ExchangeServiceImpl implements ExchangeService {
             emailService.sendExchangeRequestEmail(requester, offerer, bookRequested, bookOffered, ex.getAcceptCode());
         }
         else {
-            LOGGER.warn("Could not initialize exchange for book id {}", book);
+            LOGGER.warn("Could not initialize exchange for book id {}", bookId);
         }
         return ex;
     }
@@ -223,9 +215,8 @@ public class ExchangeServiceImpl implements ExchangeService {
 
     @Override
     @Transactional
-    public Message createMessage(long exchangeId, URI user, String message) {
-        UrnResolverUtil ur = new UrnResolverUtil(user.getPath());
-        return exchangeDao.createMessage(getExchangeById(exchangeId), ur.nextPath().nextPath().getId(), message, new Timestamp((new Date()).getTime()));
+    public Message createMessage(long exchangeId, Long userId, String message) {
+        return exchangeDao.createMessage(getExchangeById(exchangeId), userId, message, new Date());
     }
 
     @Override
