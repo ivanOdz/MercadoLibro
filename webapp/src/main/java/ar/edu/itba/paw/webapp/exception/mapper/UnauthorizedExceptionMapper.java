@@ -5,7 +5,11 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -20,10 +24,16 @@ public class UnauthorizedExceptionMapper implements ExceptionMapper<Unauthorized
 	@Context
     private UriInfo uriInfo;
 	
+	private static final Logger LOGGER = LoggerFactory.getLogger(UnauthorizedException.class);
+	private static final String DEFAULT_MESSAGE = "Unauthorized.";
+	
 	@Override
 	public Response toResponse(UnauthorizedException exception) {
 		
-		ErrorDTO errorDTO = ErrorDTO.fromErrorDTO(uriInfo, exception.getMessage(), Response.Status.UNAUTHORIZED.getStatusCode());
+		String message = Optional.ofNullable(exception.getExceptionMessage()).filter(msg -> !msg.isEmpty()).orElse(DEFAULT_MESSAGE);
+		LOGGER.error("Exception ({}) : {}", exception.getClass().getName(), message);
+		
+		ErrorDTO errorDTO = ErrorDTO.fromErrorDTO(uriInfo, exception.getExceptionMessage(), exception.getStatusCode());
 		
 		return Response.status(Response.Status.UNAUTHORIZED)
 						.entity(errorDTO)
