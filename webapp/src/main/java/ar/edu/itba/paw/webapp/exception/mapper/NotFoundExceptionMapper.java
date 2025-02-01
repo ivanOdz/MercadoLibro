@@ -23,7 +23,7 @@ public class NotFoundExceptionMapper implements ExceptionMapper<NotFoundExceptio
 	@Override
 	public Response toResponse(NotFoundException exception) {
 		
-		ErrorDTO errorDTO = ErrorDTO.fromErrorDTO(uriInfo, exception.getMessage());
+		ErrorDTO errorDTO = ErrorDTO.fromErrorDTO(uriInfo, exception.getMessage(), Response.Status.NOT_FOUND.getStatusCode());
 		
 		return Response.status(Response.Status.NOT_FOUND)
 						.entity(errorDTO)

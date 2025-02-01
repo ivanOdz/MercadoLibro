@@ -23,7 +23,7 @@ public class BadRequestExceptionMapper implements ExceptionMapper<BadRequestExce
 	@Override
 	public Response toResponse(BadRequestException exception) {
 		
-		ErrorDTO errorDTO = ErrorDTO.fromErrorDTO(uriInfo, exception.getMessage());
+		ErrorDTO errorDTO = ErrorDTO.fromErrorDTO(uriInfo, exception.getMessage(), Response.Status.BAD_REQUEST.getStatusCode());
 		
 		return Response.status(Response.Status.BAD_REQUEST)
 						.entity(errorDTO)

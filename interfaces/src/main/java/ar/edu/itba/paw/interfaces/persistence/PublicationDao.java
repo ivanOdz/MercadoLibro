@@ -32,7 +32,7 @@ public interface PublicationDao {
 
     void unmarkFavoritePublication(long favPubId);
 
-    PaginatedResponse<Publication, ItemFilterMetadata> getFavoritePublications(String search, BookState state, Genre genre, String sortType, int currentPage, User currentUser, Long locationId);
+    PaginatedResponse<Publication, ItemFilterMetadata> getFavoritePublications(String search, BookState state, Genre genre, int currentPage, User currentUser, Long locationId);
 
     void addLocation(Publication publication, Location location);
 
