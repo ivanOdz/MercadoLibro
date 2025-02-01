@@ -8,7 +8,8 @@ import { RouterModule } from '@angular/router';
     <p>
       publications works!
     </p>
-    <a [routerLink]="['/profile']">Profile</a>
+    <a [routerLink]="['/profile']">Go to your profile</a>
+    <a [routerLink]="['/exchanges']">Check out your exchanges bro!</a>
   `,
   styleUrl: './publications.component.css'
 })
