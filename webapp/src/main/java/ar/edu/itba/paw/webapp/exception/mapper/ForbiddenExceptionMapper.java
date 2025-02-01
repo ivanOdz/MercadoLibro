@@ -15,9 +15,9 @@ public class ForbiddenExceptionMapper implements ExceptionMapper<ForbiddenExcept
 	@Override
 	public Response toResponse(ForbiddenException exception) {
 		
-		ErrorDTO errorDTO = ErrorDTO.fromErrorDTO(uriInfo, exception.getMessage());
+		ErrorDTO errorDTO = ErrorDTO.fromErrorDTO(uriInfo, exception.getMessage(), Response.Status.FORBIDDEN.getStatusCode());
 		
-		return Response.status(Response.Status.BAD_REQUEST)
+		return Response.status(Response.Status.FORBIDDEN)
 						.entity(errorDTO)
 						.type(MediaType.APPLICATION_JSON)
 						.build();

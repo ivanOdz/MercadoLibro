@@ -23,7 +23,7 @@ public class UnauthorizedExceptionMapper implements ExceptionMapper<Unauthorized
 	@Override
 	public Response toResponse(UnauthorizedException exception) {
 		
-		ErrorDTO errorDTO = ErrorDTO.fromErrorDTO(uriInfo, exception.getMessage());
+		ErrorDTO errorDTO = ErrorDTO.fromErrorDTO(uriInfo, exception.getMessage(), Response.Status.UNAUTHORIZED.getStatusCode());
 		
 		return Response.status(Response.Status.UNAUTHORIZED)
 						.entity(errorDTO)

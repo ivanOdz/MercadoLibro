@@ -21,7 +21,7 @@ public class GenericExceptionMapper implements ExceptionMapper<Exception> {
 	@Override
 	public Response toResponse(Exception exception) {
 		
-		ErrorDTO errorDTO = ErrorDTO.fromErrorDTO(uriInfo, "Internal Server Error: " + exception.getMessage());
+		ErrorDTO errorDTO = ErrorDTO.fromErrorDTO(uriInfo, "Internal Server Error: " + exception.getMessage(), Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
 		
 		return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
 						.entity(errorDTO)
