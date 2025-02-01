@@ -38,12 +38,8 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Override
     @Transactional
     public Exchange initializeExchange(Long bookId, Long locationId, Long offererPubId) {
-
-        Optional<Publication> publication = ps.getPublicationByPublicationId(offererPubId);
-        if(publication.isPresent() && publication.get().getPublicationState() != PublicationState.CURRENT) {
-            LOGGER.warn("Publication with id {} is not in current state", offererPubId);
-            throw new ExchangeBadRequestException("Publication is not in current state");
-        }
+        // Es necesario esto si es chequeado por el PreAuthorize?
+        Publication publication = ps.getPublicationByPublicationId(offererPubId);
 
     	Book b = bs.getBookById(bookId);
     	
