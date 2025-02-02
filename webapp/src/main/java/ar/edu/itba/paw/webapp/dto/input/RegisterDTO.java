@@ -1,11 +1,11 @@
-package ar.edu.itba.paw.webapp.dto.User;
+package ar.edu.itba.paw.webapp.dto.input;
 
 import ar.edu.itba.paw.webapp.validation.UniqueEmail;
 import ar.edu.itba.paw.webapp.validation.UniqueUsername;
 
 import javax.validation.constraints.*;
 
-public class RegisterForm {
+public class RegisterDTO {
 
     @UniqueUsername
     @Pattern(regexp = "^[a-zA-Z0-9+]+$")

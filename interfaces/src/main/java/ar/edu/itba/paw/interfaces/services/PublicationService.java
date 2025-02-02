@@ -14,8 +14,6 @@ import java.util.Optional;
 
 public interface PublicationService {
 
-    Publication createPublication(URI bookURN, URI userURN, URI locationURN);
-
     Publication createPublication(Long bookId, Long userId, Long locationId);
 
     void deletePublication(long publicationId);

@@ -1,8 +1,8 @@
-package ar.edu.itba.paw.webapp.dto.User;
+package ar.edu.itba.paw.webapp.dto.input;
 
 import javax.validation.constraints.NotEmpty;
 
-public class PasswordChangeRequest {
+public class PasswordChangeDTO {
 
     @NotEmpty
     private String newPassword;

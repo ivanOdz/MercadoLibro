@@ -8,9 +8,10 @@ import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.utils.Rating;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import ar.edu.itba.paw.webapp.auth.JwtTokenUtil;
-import ar.edu.itba.paw.webapp.dto.User.*;
-import ar.edu.itba.paw.webapp.dto.input.ReviewInputDTO;
+import ar.edu.itba.paw.webapp.dto.input.*;
+import ar.edu.itba.paw.webapp.dto.output.LocationDTO;
 import ar.edu.itba.paw.webapp.dto.output.ReviewDTO;
+import ar.edu.itba.paw.webapp.dto.output.UserDTO;
 import ar.edu.itba.paw.webapp.mediaTypes.VndType;
 
 import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
@@ -45,8 +46,8 @@ public class UserController {
 
     @POST
     @Consumes(value = {VndType.APPLICATION_USER})
-    public Response createUser(@Valid @NotNull final RegisterForm registerForm) {
-        User user = us.createUser(registerForm.getUsername(), registerForm.getMail(), registerForm.getPassword(), LocaleContextHolder.getLocale().toLanguageTag());
+    public Response createUser(@Valid @NotNull final RegisterDTO registerDTO) {
+        User user = us.createUser(registerDTO.getUsername(), registerDTO.getMail(), registerDTO.getPassword(), LocaleContextHolder.getLocale().toLanguageTag());
         return Response.created(uriInfo.getAbsolutePathBuilder().path(user.getUserId().toString()).build()).build();
     }
 
@@ -82,7 +83,7 @@ public class UserController {
     @Path("/{password_token}")
     @Consumes(value = {VndType.APPLICATION_USER_PASSWORD})
     public Response updatePassword(@PathParam("password_token") final int code,
-                                   @Valid final PasswordChangeRequest request) {
+                                   @Valid final PasswordChangeDTO request) {
         us.changePassword(code, request.getNewPassword());
         return Response.noContent().build();
     }
@@ -105,11 +106,12 @@ public class UserController {
 
     // LOCATIONS
 
+    // TODO: Chequear si es correcto recibir LocationDTO o si habria que hacer un LocationInputDTO
     @POST
     @Path("/{id}/locations")
     @Consumes(value = {VndType.APPLICATION_LOCATION})
-    public Response createLocation(@PathParam("id") final long userId, String locationString) {
-        Location location = us.addLocation(userId, locationString);
+    public Response createLocation(@PathParam("id") final long userId, LocationDTO locationDTO) {
+        Location location = us.addLocation(userId, locationDTO.getLocation());
 
         return Response.created(uriInfo.getAbsolutePathBuilder().path(location.getLocationId().toString()).build()).build();
     }
@@ -123,11 +125,12 @@ public class UserController {
         return Response.ok(new GenericEntity<Location>(location) {}).build();
     }
 
+    // TODO:  Long no es correcto. Chequear si recibo String o URI, y en caso de recibir URI chequear si es correcto.
     @GET
     @Path("/{id}/locations")
     @Produces(value = {VndType.APPLICATION_LIST_LOCATION})
-    public Response getLocations(@PathParam("id") final long userId, final LocationsByPublicationDTO dto) {
-        final List<LocationDTO> locations = us.getLocations(userId, dto.getPublicationURN()).stream()
+    public Response getLocations(@PathParam("id") final long userId, @QueryParam("publication_urn") final Long publicationURN) {
+        final List<LocationDTO> locations = us.getLocations(userId, publicationURN).stream()
                 .map(location -> LocationDTO.fromLocation(uriInfo, userId, location)).collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<LocationDTO>>(locations) {}).build();

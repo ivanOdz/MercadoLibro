@@ -1,7 +1,6 @@
-package ar.edu.itba.paw.webapp.dto.User;
+package ar.edu.itba.paw.webapp.dto.output;
 
 import java.net.URI;
-import java.util.List;
 
 import javax.ws.rs.core.UriInfo;
 import ar.edu.itba.paw.models.User;

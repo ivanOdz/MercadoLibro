@@ -1,8 +1,10 @@
-package ar.edu.itba.paw.webapp.dto.Publication;
+package ar.edu.itba.paw.webapp.dto.input;
+
+import ar.edu.itba.paw.utils.UrnResolverUtil;
 
 import java.net.URI;
 
-public class PublicationCreationDTO {
+public class PublicationInputDTO {
 
     private URI userURN;
 
@@ -22,15 +24,15 @@ public class PublicationCreationDTO {
         this.locationURN = locationURN;
     }
 
-    public URI getUserURN() {
-        return userURN;
+    public Long getUserURN() {
+        return UrnResolverUtil.getUserId(userURN);
     }
 
-    public URI getBookURN() {
-        return bookURN;
+    public Long getBookURN() {
+        return UrnResolverUtil.getBookId(bookURN);
     }
 
-    public URI getLocationURN() {
-        return locationURN;
+    public Long getLocationURN() {
+        return UrnResolverUtil.getLocationId(locationURN);
     }
 }

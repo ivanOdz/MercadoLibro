@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.dto.Publication;
+package ar.edu.itba.paw.webapp.dto.input;
 
 import java.net.URI;
 

@@ -41,14 +41,9 @@ public class PublicationServiceImpl implements PublicationService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PublicationServiceImpl.class);
 
-    @Override
-    @Transactional
-    // TODO: Parsear las URI´s para obtener el ID.
-    public Publication createPublication(URI bookURN, URI userURN, URI locationURN) {
-        return createPublication(UrnResolverUtil.getBookId(bookURN), UrnResolverUtil.getUserId(userURN), UrnResolverUtil.getLocationId(locationURN));
-    }
 
     @Override
+    @Transactional
     public Publication createPublication(Long bookId, Long userId, Long locationId) {
         Book book = bookService.getBookById(bookId).orElseThrow(() -> new BookBadRequest("Invalid book urn"));
         User user = userService.findById(userId);

@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.dto.Publication;
+package ar.edu.itba.paw.webapp.dto.output;
 
 import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.models.utils.PublicationState;

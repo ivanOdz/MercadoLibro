@@ -5,11 +5,11 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 
-import ar.edu.itba.paw.webapp.dto.Publication.FavoriteDTO;
-import ar.edu.itba.paw.webapp.dto.Publication.PublicationCreationDTO;
-import ar.edu.itba.paw.webapp.dto.Publication.PublicationDTO;
-import ar.edu.itba.paw.webapp.dto.Publication.PublicationUpdateDTO;
-import ar.edu.itba.paw.webapp.dto.User.UserDTO;
+import ar.edu.itba.paw.webapp.dto.output.FavoriteDTO;
+import ar.edu.itba.paw.webapp.dto.input.PublicationInputDTO;
+import ar.edu.itba.paw.webapp.dto.output.PublicationDTO;
+import ar.edu.itba.paw.webapp.dto.input.PublicationUpdateDTO;
+import ar.edu.itba.paw.webapp.dto.output.UserDTO;
 import ar.edu.itba.paw.webapp.mediaTypes.VndType;
 import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
 import ar.edu.itba.paw.webapp.utils.SerializationUtils;
@@ -21,7 +21,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Path("publications")
@@ -76,7 +75,7 @@ public class PublicationController {
     // Usuario debe estar logueado y debe ser dueño del libro y de la location
     @POST
     @Consumes(value = {VndType.APPLICATION_PUBLICATION})
-    public Response postPublication(final PublicationCreationDTO publicationDTO) {
+    public Response postPublication(final PublicationInputDTO publicationDTO) {
         Publication publication = ps.createPublication(publicationDTO.getBookURN(), publicationDTO.getUserURN(), publicationDTO.getLocationURN());
         return Response.created(uriInfo.getAbsolutePathBuilder().path(publication.getPublicationId().toString()).build()).build();
     }
@@ -157,29 +156,14 @@ public class PublicationController {
         return Response.ok(genericEntity).build();
     }
 
-    // TODO: Preguntar cual deberia de ser la forma asociar una location a una publication, si PATCH o POST.
     // Authorization Required
     // El usuario tiene que estar logueado y debe ser dueño de la publicacion
-    // Creo que este metodo se reemplaza por el de la location
-    /*@PATCH
+    @PATCH
     @Path("/{publication_id}")
     @Consumes(value = {VndType.APPLICATION_PUBLICATION})
     public Response updatePublication(@PathParam("publication_id") Long publicationId, PublicationUpdateDTO publicationUpdateDTO) {
-        ps.updatePublication(publicationDTO.getLocations());
+        //ps.updatePublication(publicationUpdateDTO.getLocationURN());
 
         return Response.noContent().build();
     }
-
-
-    // Revisar porque creo que al hacer POST, tengo que devolver donde se crea. No es una location lo que se crea, sino
-    // otra entidad llamada Publication/Location. Por lo tanto al crearla, tengo que poder accederla y eliminarla. Creo.
-    @POST
-    @Path("/{publication_id}/locations")
-    @Consumes(value = {VndType.APPLICATION_LOCATION})
-    public Response addLocationToPublication(@PathParam("publication_id") Long publicationId, @QueryParam("location_id") final long locationId)  {
-
-        ps.addLocation(publicationId, locationId, loggeduser);
-
-        return Response.noContent().build();
-    }*/
 }

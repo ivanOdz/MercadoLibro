@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.dto.User;
+package ar.edu.itba.paw.webapp.dto.input;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;

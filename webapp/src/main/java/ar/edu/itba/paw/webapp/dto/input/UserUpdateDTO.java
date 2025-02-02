@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.dto.User;
+package ar.edu.itba.paw.webapp.dto.input;
 
 import ar.edu.itba.paw.webapp.validation.SupportedLanguage;
 import ar.edu.itba.paw.webapp.validation.UniqueUsername;
