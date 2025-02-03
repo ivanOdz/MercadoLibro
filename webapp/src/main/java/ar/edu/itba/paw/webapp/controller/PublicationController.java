@@ -5,8 +5,8 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 
-import ar.edu.itba.paw.webapp.dto.input.PublicationInputDTO;
 import ar.edu.itba.paw.webapp.dto.output.FavoriteDTO;
+import ar.edu.itba.paw.webapp.dto.input.PublicationInputDTO;
 import ar.edu.itba.paw.webapp.dto.output.PublicationDTO;
 import ar.edu.itba.paw.webapp.dto.output.UserDTO;
 import ar.edu.itba.paw.webapp.mediaTypes.VndType;
