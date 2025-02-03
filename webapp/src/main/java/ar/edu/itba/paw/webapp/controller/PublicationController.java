@@ -5,10 +5,10 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 
-import ar.edu.itba.paw.webapp.dto.Publication.FavoriteDTO;
-import ar.edu.itba.paw.webapp.dto.Publication.PublicationCreationDTO;
-import ar.edu.itba.paw.webapp.dto.Publication.PublicationDTO;
-import ar.edu.itba.paw.webapp.dto.User.UserDTO;
+import ar.edu.itba.paw.webapp.dto.output.FavoriteDTO;
+import ar.edu.itba.paw.webapp.dto.input.PublicationInputDTO;
+import ar.edu.itba.paw.webapp.dto.output.PublicationDTO;
+import ar.edu.itba.paw.webapp.dto.output.UserDTO;
 import ar.edu.itba.paw.webapp.mediaTypes.VndType;
 import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
 import ar.edu.itba.paw.webapp.utils.SerializationUtils;
@@ -73,7 +73,7 @@ public class PublicationController {
     @POST
     @Consumes(value = {VndType.APPLICATION_PUBLICATION})
     @PreAuthorize("@accessControl.publicationsPostAccess(#publicationDTO)")
-    public Response postPublication(final PublicationCreationDTO publicationDTO) {
+    public Response postPublication(final PublicationInputDTO publicationDTO) {
         Publication publication = ps.createPublication(publicationDTO.getBookId(), publicationDTO.getUserId(), publicationDTO.getLocationId());
         return Response.created(uriInfo.getAbsolutePathBuilder().path(publication.getPublicationId().toString()).build()).build();
     }

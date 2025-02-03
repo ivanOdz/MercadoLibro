@@ -14,7 +14,8 @@ import { RouterModule } from '@angular/router';
         </section>
     </main>
   `,
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
+  standalone: true
 })
 export class AppComponent {
   title = 'Mercado Libro';

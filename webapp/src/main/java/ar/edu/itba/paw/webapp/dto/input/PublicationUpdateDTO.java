@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.dto.input;
 
-import ar.edu.itba.paw.utils.UrnResolverUtil;
+
+import ar.edu.itba.paw.webapp.utils.UrnResolverUtil;
 
 import java.net.URI;
 

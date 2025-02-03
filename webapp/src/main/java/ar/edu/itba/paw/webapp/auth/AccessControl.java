@@ -3,10 +3,11 @@ package ar.edu.itba.paw.webapp.auth;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.PublicationState;
-import ar.edu.itba.paw.webapp.dto.Publication.PublicationCreationDTO;
-import ar.edu.itba.paw.webapp.dto.User.UserDTO;
+import ar.edu.itba.paw.webapp.dto.input.PublicationInputDTO;
+import ar.edu.itba.paw.webapp.dto.output.UserDTO;
 import ar.edu.itba.paw.webapp.dto.input.*;
 import ar.edu.itba.paw.webapp.dto.output.BookDTO;
+import ar.edu.itba.paw.webapp.dto.output.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -149,7 +150,7 @@ public class AccessControl {
     }
 
     // POST {base_path}/publications
-    public Boolean publicationsPostAccess(PublicationCreationDTO publicationCreationDTO) {
+    public Boolean publicationsPostAccess(PublicationInputDTO publicationCreationDTO) {
         Location l = locationService.findById(publicationCreationDTO.getLocationId());
         Book b = bookService.getBookById(publicationCreationDTO.getBookId());
         Long userId = publicationCreationDTO.getUserId();
