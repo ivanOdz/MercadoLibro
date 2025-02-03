@@ -1,10 +1,10 @@
-package ar.edu.itba.paw.webapp.dto.Publication;
+package ar.edu.itba.paw.webapp.dto.input;
 
 import ar.edu.itba.paw.webapp.utils.UrnResolverUtil;
 
 import java.net.URI;
 
-public class PublicationCreationDTO {
+public class PublicationInputDTO {
 
     private Long userId;
 

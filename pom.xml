@@ -347,5 +347,6 @@
         <module>interfaces</module>
         <module>persistence</module>
         <module>models</module>
+        <module>frontend</module>
     </modules>
 </project>

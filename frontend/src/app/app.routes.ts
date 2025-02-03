@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
-import { PublicationsComponent } from './publications/publications.component';
-import { ProfileComponent } from './profile/profile.component';
-import { ExchangesComponent } from './exchanges/exchanges.component';
+import { PublicationsComponent } from './features/publications/publications.component';
+import { ProfileComponent } from './features/profile/profile.component';
+import { ExchangesComponent } from './features/exchanges/exchanges.component';
 
 const routeConfig: Routes = [
   {
