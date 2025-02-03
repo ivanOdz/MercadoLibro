@@ -5,12 +5,9 @@ import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.utils.*;
-import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 
-import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 public interface PublicationService {
 
@@ -18,9 +15,9 @@ public interface PublicationService {
 
     void deletePublication(long publicationId);
 
-    Optional<Publication> getPublicationByPublicationId(long publicationId);
+    Publication getPublicationByPublicationId(long publicationId);
 
-    PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, String state, String genre, String sortType, int currentPage, long userId, boolean favorites);
+    PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, String state, String genre, String sortType, int currentPage, Long userId, Boolean favorites, Long locationId);
 
     PaginatedResponse<Publication, ItemFilterMetadata> getFavoritePublications(User user, int currentPage);
 
@@ -43,7 +40,7 @@ public interface PublicationService {
     List<Publication> getActivePublicationsByUser(User user);
 
 
-    FavoritePublication likePublication(Long publicationId, URI userURN);
+    FavoritePublication likePublication(Long publicationId, Long userId);
 
 
     List<GenreWrapper> getGenreWrapperList(String search, String state);

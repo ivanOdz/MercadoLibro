@@ -5,7 +5,6 @@ import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.utils.*;
-import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 
 import java.util.List;
@@ -19,7 +18,7 @@ public interface PublicationDao {
 
     Optional<Publication> getPublicationByPublicationId(long publicationId);
 
-    PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, BookState state, Genre genre, String sortType, int currentPage, User currentUser);
+    PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, BookState state, Genre genre, String sortType, int currentPage, User currentUser, Long locationId);
 
     int getPublicationCountByUserId(long userId);
 
@@ -33,7 +32,7 @@ public interface PublicationDao {
 
     void unmarkFavoritePublication(long favPubId);
 
-    PaginatedResponse<Publication, ItemFilterMetadata> getFavoritePublications(String search, BookState state, Genre genre, String sortType, int currentPage, User currentUser);
+    PaginatedResponse<Publication, ItemFilterMetadata> getFavoritePublications(String search, BookState state, Genre genre, int currentPage, User currentUser, Long locationId);
 
     void addLocation(Publication publication, Location location);
 

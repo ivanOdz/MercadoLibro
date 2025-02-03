@@ -36,7 +36,7 @@ public class BookModelController {
     public Response getBookModels(@QueryParam("search") @DefaultValue("")final String search,
                                   @QueryParam("genre")final String genre,
                                   @QueryParam("page") @DefaultValue("0") final int currentPage,
-                                  @QueryParam("sort-type") @DefaultValue("BOOK_NAME_ASCENDING") String sortType,
+                                  @QueryParam("sort") @DefaultValue("BOOK_NAME_ASCENDING") String sortType,
                                   @Context Request request) {
 
         PaginatedResponse<BookModel, BookModelMetadata> modelBooks = bookModelService.getPaginatedBookModels(search, genre, currentPage, sortType);
@@ -55,17 +55,21 @@ public class BookModelController {
     @POST
     @Consumes(value = {VndType.APPLICATION_BOOK_MODEL})
     public Response postBookModel(final BookModelDTO bookModelDTO, @QueryParam("rating") final Integer rating) {
-        BookModel bookModel = bookModelService.createBookModel(bookModelDTO.getIsbn(), bookModelDTO.getTitle(), bookModelDTO.getEditorial(), bookModelDTO.getDescription(), Genre.valueOf(bookModelDTO.getGenre()), bookModelDTO.getEdition(),bookModelDTO.getPublicationYear(), bookModelDTO.getHardcover(), bookModelDTO.getPocketEdition(), BookDimension.valueOf(bookModelDTO.getDimension()), Language.valueOf(bookModelDTO.getBookLanguage()),bookModelDTO.getPages(),bookModelDTO.getWeight(), bookModelDTO.getAuthors());
+        BookModel bookModel = bookModelService
+                .createBookModel(bookModelDTO.getIsbn(), bookModelDTO.getTitle(), bookModelDTO.getEditorial(),
+                        bookModelDTO.getDescription(), Genre.valueOf(bookModelDTO.getGenre()), bookModelDTO.getEdition(),
+                        bookModelDTO.getPublicationYear(), bookModelDTO.getHardcover(), bookModelDTO.getPocketEdition(),
+                        BookDimension.valueOf(bookModelDTO.getDimension()), Language.valueOf(bookModelDTO.getBookLanguage()),
+                        bookModelDTO.getPages(),bookModelDTO.getWeight(), bookModelDTO.getAuthors());
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(bookModel.getBookModelId())).build()).build();
     }
 
-    // TODO: modify, relation object
     @PATCH
-    @Path("{id}") // /book_models/{id}/cover
+    @Path("{id}")
     @Consumes(value = {VndType.APPLICATION_BOOK_MODEL})
     public Response setBookCover(@PathParam("id") Long bookModelId, final BookModelDTO bookModelDTO) {
-        BookModel bookModel = bookModelService.setCover(bookModelId, bookModelDTO.getCover());
-        return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(bookModel.getBookModelId())).build()).build();
+        bookModelService.setCover(bookModelId, bookModelDTO.getCoverId());
+        return Response.noContent().build();
     }
 
 

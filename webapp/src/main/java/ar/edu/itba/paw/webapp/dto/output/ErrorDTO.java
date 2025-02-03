@@ -11,14 +11,16 @@ public class ErrorDTO {
     private String message;
     private Timestamp time;
     private URI self;
+    private int status;
 
-    public static ErrorDTO fromErrorDTO(UriInfo uriInfo, String message) {
+    public static ErrorDTO fromErrorDTO(UriInfo uriInfo, String message, int status) {
     	
     	ErrorDTO dto = new ErrorDTO();
     	
     	dto.message = message;
     	dto.time = new Timestamp(new Date().getTime());
     	dto.self = uriInfo.getAbsolutePath();
+    	dto.status = status;
     	
     	return dto;
     }
@@ -35,6 +37,10 @@ public class ErrorDTO {
     	this.self = self;
     }
     
+    public void setStatus(int status) {
+    	this.status = status;
+    }
+    
     public String getMessage() {
     	return message;
     }
@@ -45,5 +51,9 @@ public class ErrorDTO {
     
     public URI getSelf() {
     	return self;
+    }
+    
+    public int getStatus() {
+    	return status;
     }
 }

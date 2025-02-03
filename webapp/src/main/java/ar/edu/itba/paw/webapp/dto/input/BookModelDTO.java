@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.dto.input;
 
 import ar.edu.itba.paw.models.Author;
 import ar.edu.itba.paw.models.BookModel;
+import ar.edu.itba.paw.webapp.utils.UrnResolverUtil;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
@@ -191,8 +192,8 @@ public class BookModelDTO {
         this.authors = authors;
     }
 
-    public URI getCover() {
-        return cover;
+    public Long getCoverId() {
+        return UrnResolverUtil.getImageId(cover);
     }
 
     public void setCover(URI cover) {

@@ -8,15 +8,16 @@ import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.utils.Rating;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import ar.edu.itba.paw.webapp.auth.JwtTokenUtil;
-import ar.edu.itba.paw.webapp.dto.input.*;
-import ar.edu.itba.paw.webapp.dto.output.LocationDTO;
+import ar.edu.itba.paw.webapp.dto.User.*;
+import ar.edu.itba.paw.webapp.dto.input.ReviewInputDTO;
 import ar.edu.itba.paw.webapp.dto.output.ReviewDTO;
-import ar.edu.itba.paw.webapp.dto.output.UserDTO;
 import ar.edu.itba.paw.webapp.mediaTypes.VndType;
 
+import ar.edu.itba.paw.webapp.utils.CacheResponseUtil;
 import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -46,8 +47,8 @@ public class UserController {
 
     @POST
     @Consumes(value = {VndType.APPLICATION_USER})
-    public Response createUser(@Valid @NotNull final RegisterDTO registerDTO) {
-        User user = us.createUser(registerDTO.getUsername(), registerDTO.getMail(), registerDTO.getPassword(), LocaleContextHolder.getLocale().toLanguageTag());
+    public Response createUser(@Valid @NotNull final RegisterForm registerForm) {
+        User user = us.createUser(registerForm.getUsername(), registerForm.getMail(), registerForm.getPassword(), LocaleContextHolder.getLocale().toLanguageTag());
         return Response.created(uriInfo.getAbsolutePathBuilder().path(user.getUserId().toString()).build()).build();
     }
 
@@ -80,10 +81,10 @@ public class UserController {
     }
 
     @PATCH
-    @Path("/{password_token}")
+    @Path("/{password-token}")
     @Consumes(value = {VndType.APPLICATION_USER_PASSWORD})
-    public Response updatePassword(@PathParam("password_token") final int code,
-                                   @Valid final PasswordChangeDTO request) {
+    public Response updatePassword(@PathParam("password-token") final int code,
+                                   @Valid final PasswordChangeRequest request) {
         us.changePassword(code, request.getNewPassword());
         return Response.noContent().build();
     }
@@ -104,14 +105,11 @@ public class UserController {
                 .build();
     }
 
-    // LOCATIONS
-
-    // TODO: Chequear si es correcto recibir LocationDTO o si habria que hacer un LocationInputDTO
     @POST
     @Path("/{id}/locations")
     @Consumes(value = {VndType.APPLICATION_LOCATION})
-    public Response createLocation(@PathParam("id") final long userId, LocationDTO locationDTO) {
-        Location location = us.addLocation(userId, locationDTO.getLocation());
+    public Response createLocation(@PathParam("id") final long userId, String locationString) {
+        Location location = us.addLocation(userId, locationString);
 
         return Response.created(uriInfo.getAbsolutePathBuilder().path(location.getLocationId().toString()).build()).build();
     }
@@ -121,16 +119,16 @@ public class UserController {
     @Produces(value = {VndType.APPLICATION_LOCATION})
     public Response getLocation(@PathParam("id") final long userId, @PathParam("location_id") final long locationId) {
         Location location = us.getLocation(locationId);
+        LocationDTO locationDTO = LocationDTO.fromLocation(uriInfo, userId, location);
 
-        return Response.ok(new GenericEntity<Location>(location) {}).build();
+        return Response.ok(new GenericEntity<LocationDTO>(locationDTO) {}).build();
     }
 
-    // TODO:  Long no es correcto. Chequear si recibo String o URI, y en caso de recibir URI chequear si es correcto.
     @GET
     @Path("/{id}/locations")
-    @Produces(value = {VndType.APPLICATION_LIST_LOCATION})
-    public Response getLocations(@PathParam("id") final long userId, @QueryParam("publication_urn") final Long publicationURN) {
-        final List<LocationDTO> locations = us.getLocations(userId, publicationURN).stream()
+    @Produces(value = {VndType.APPLICATION_LOCATION})
+    public Response getLocations(@PathParam("id") final long userId, @QueryParam("publication_id") final Long publicationId) {
+        final List<LocationDTO> locations = us.getLocations(userId, publicationId).stream()
                 .map(location -> LocationDTO.fromLocation(uriInfo, userId, location)).collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<LocationDTO>>(locations) {}).build();
@@ -144,24 +142,28 @@ public class UserController {
     	return Response.noContent().build();
     }
 
-    // REVIEWS
 
-    /**
-     * El usuario autenticado debe participar del intercambio con el usuario {id} para hacer un POST aca.
-     * No deberia de permitir auto-hacerme una review. Es decir, targetId != id del usuario autenticado.
-     * */
-    // TODO: comment needs to be verified in service
     @POST
     @Path("{id}/reviews")
     @Consumes(value = {VndType.APPLICATION_USER_REVIEW})
+    @PreAuthorize("@accessControl.createReviewAccess(#targetId, #reviewInputDTO)")
     public Response createReview(@PathParam("id") final Long targetId,
                                  ReviewInputDTO reviewInputDTO) {
-        UserReview ur = userReviewService.createUserReview(reviewInputDTO.getExchangeUrn(), targetId, reviewInputDTO.getDescription(), reviewInputDTO.getRating());
-
+        UserReview ur = userReviewService.createUserReview(reviewInputDTO.getExchangeId(), targetId, reviewInputDTO.getDescription(), reviewInputDTO.getRating());
         return Response.created(uriInfo.getAbsolutePathBuilder().path(ur.getUserReviewId().toString()).build()).build();
     }
 
-    // TODO: Falta cache control
+    @GET
+    @Path("{id}/reviews")
+    @Produces(value = {VndType.APPLICATION_USER_REVIEW})
+    public Response getReviews(@PathParam("id") final Long targetId, @QueryParam("page") int page){
+        PaginatedResponse<UserReview, BasicMetadata> reviews = userReviewService.getReviewsEarnedByUserId(targetId, page);
+        List<ReviewDTO> reviewDTOS = reviews.getData().stream().map(review -> ReviewDTO.fromUserReview(uriInfo, review)).toList();
+        Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ReviewDTO>>(reviewDTOS) {});
+        Response paginated_response = PageResponseUtil.getResponse(page, reviews.getMetadata().getMaxPage(), uriInfo, response);
+        return CacheResponseUtil.unconditionalCacheResponse(Response.fromResponse(paginated_response));
+    }
+
     /**
      * @GET /users/{id}/reviews/{ur_id} -> Si el usuario de id {id} es participe de la review {ur_id},
      * entonces se retorna la review. Caso contrario, 404 - Not Found (Service)
@@ -171,20 +173,8 @@ public class UserController {
     @Produces(value = {VndType.APPLICATION_USER_REVIEW})
     public Response getReview(@PathParam("id") final Long targetId, @PathParam("ur_id") final Long reviewId) {
         final ReviewDTO userReviewDTO = ReviewDTO.fromUserReview(uriInfo, userReviewService.findUserReviewById(targetId, reviewId));
-
-        return Response.ok(new GenericEntity<ReviewDTO>(userReviewDTO) {}).build();
-    }
-
-    // TODO: Falta cache control
-    @GET
-    @Path("{id}/reviews")
-    @Produces(value = {VndType.APPLICATION_LIST_USER_REVIEW})
-    public Response getReviews(@PathParam("id") final Long targetId, @QueryParam("page") int page){
-        PaginatedResponse<UserReview, BasicMetadata> reviews = userReviewService.getReviewsEarnedByUserId(targetId, page);
-        List<ReviewDTO> reviewDTOS = reviews.getData().stream().map(review -> ReviewDTO.fromUserReview(uriInfo, review)).toList();
-        Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ReviewDTO>>(reviewDTOS) {});
-
-        return PageResponseUtil.getResponse(page, reviews.getMetadata().getMaxPage(), uriInfo, response);
+        Response.ResponseBuilder response = Response.ok(new GenericEntity<ReviewDTO>(userReviewDTO) {});
+        return CacheResponseUtil.unconditionalCacheResponse(response);
     }
 }
 

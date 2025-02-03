@@ -13,7 +13,7 @@ public class SerializationUtils {
         Map<String, String> headers = new HashMap<>();
 
         for (GenreWrapper genre : genreWrappers) {
-            String headerKey = "X-Genre-" + genre.getGenre().getValue();
+            String headerKey = "X-" + genre.getGenre().getValue().replace(".", "-");
             String headerValue = genre.getGenre().getValue() + "=" + genre.getResultByGenre();
             headers.put(headerKey, headerValue);
         }
@@ -24,7 +24,7 @@ public class SerializationUtils {
         Map<String, String> headers = new HashMap<>();
 
         for (BookStateWrapper condition : bookStateWrappers) {
-            String headerKey = "X-Condition-" + condition.getBookState().getValue();
+            String headerKey = "X-" + condition.getBookState().getValue().replace(".", "-");
             String headerValue = condition.getBookState().getValue() + "=" + condition.getResultByState();
             headers.put(headerKey, headerValue);
         }

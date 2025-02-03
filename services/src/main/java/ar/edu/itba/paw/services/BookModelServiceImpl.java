@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.exceptions.BookModelNotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.BookModelDao;
 import ar.edu.itba.paw.interfaces.services.BookModelService;
 import ar.edu.itba.paw.interfaces.services.ImageService;
@@ -8,18 +9,16 @@ import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.BookModelMetadata;
-import ar.edu.itba.paw.utils.UrnResolverUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
-import static ar.edu.itba.paw.models.utils.Constants.DEFAULT_PUBLICATION_GENRE_FILTER;
+import static ar.edu.itba.paw.models.utils.Constants.DEFAULT_BOOK_GENRE_FILTER;
 
 @Service
 public class BookModelServiceImpl implements BookModelService {
@@ -49,32 +48,25 @@ public class BookModelServiceImpl implements BookModelService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<BookModel> getBookModelByBookModelId(Long bookModelId) {
+    public BookModel getBookModelByBookModelId(Long bookModelId) {
         LOGGER.info("Fetching BookModel with ID: {}", bookModelId);
 
         Optional<BookModel> bookModel = bookModelDao.getBookModelByBookModelId(bookModelId);
-        /*if(bookModel.isEmpty()){
+        if(bookModel.isEmpty()){
             LOGGER.warn("BookModel not found for ID: {}", bookModelId);
             throw new BookModelNotFoundException("Book model not found");
         }
-        LOGGER.info("Successfully retrieved BookModel with ID: {}", bookModelId);*/
-        return bookModel;
+        LOGGER.info("Successfully retrieved BookModel with ID: {}", bookModelId);
+        return bookModel.get();
     }
 
     @Override
     @Transactional(readOnly = true)
     public PaginatedResponse<BookModel, BookModelMetadata> getPaginatedBookModels(String search, String genre, int currentPage, String sortType) {
-        boolean genreFilterActive = genre != null;
+        Genre genreFilter = Genre.fromString(genre);
+        genreFilter = genreFilter == null ? DEFAULT_BOOK_GENRE_FILTER : genreFilter;
 
-        Genre genre_filter = DEFAULT_PUBLICATION_GENRE_FILTER;
-        if(genreFilterActive){
-            genre_filter = Genre.fromString(genre);
-            if(genre_filter == null){
-                genreFilterActive = false;
-            }
-        }
-
-        return bookModelDao.getPaginatedBookModels(search, genre_filter, currentPage, sortType);
+        return bookModelDao.getPaginatedBookModels(search, genreFilter, currentPage, sortType);
     }
 
     @Override
@@ -83,15 +75,12 @@ public class BookModelServiceImpl implements BookModelService {
         return bookModelDao.getGenreQtyByBookModel(search);
     }
 
-    @Transactional
     @Override
-    public BookModel setCover(Long bookModelId, URI imageUrn) {
-        Optional<BookModel> bookModel = getBookModelByBookModelId(bookModelId);
-        
-        if(bookModel.isPresent()) {
-	        Image image = imageService.getImageById(UrnResolverUtil.getImageId(imageUrn));
-	        return bookModelDao.setCover(bookModel.get(), image);
-        }
-        return null;
+    @Transactional
+    public BookModel setCover(Long bookModelId, Long imageId) {
+        BookModel bookModel = getBookModelByBookModelId(bookModelId);
+
+        Image image = imageService.getImageById(imageId);
+        return bookModelDao.setCover(bookModel, image);
     }
 }

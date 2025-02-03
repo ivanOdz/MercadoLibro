@@ -136,11 +136,11 @@ public class ExchangeJpaDao implements ExchangeDao {
 
 
     @Override
-    public void createMessage(Exchange exchange, long userId, String message, Timestamp time) {
-    	
-        Message newMessage = new Message(null, exchange ,em.find(User.class, userId), time, message);
+    public Message createMessage(Exchange exchange, long userId, String message, Date time) {
+        Message newMessage = new Message(null, exchange ,em.find(User.class, userId), new Timestamp(time.getTime()), message);
         em.persist(newMessage);
         exchange.getChat().add(newMessage);
+        return newMessage;
     }
 
     @Override

@@ -1,17 +1,19 @@
 package ar.edu.itba.paw.webapp.dto.input;
 
+import ar.edu.itba.paw.webapp.utils.UrnResolverUtil;
+
 import java.net.URI;
 
 public class MessageInputDTO {
     private String message;
-    private URI userUrn;
+    private Long userId;
 
-    public URI getUserUrn() {
-        return userUrn;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUserUrn(URI userUrn) {
-        this.userUrn = userUrn;
+    public void setUserId(URI userUrn) {
+        this.userId = UrnResolverUtil.getUserId(userUrn);
     }
 
     public String getMessage() {

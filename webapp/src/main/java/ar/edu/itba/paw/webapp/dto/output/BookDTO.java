@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.dto.output;
 
 import ar.edu.itba.paw.models.Book;
 import ar.edu.itba.paw.models.BookImage;
+import ar.edu.itba.paw.webapp.utils.UrnResolverUtil;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
@@ -30,14 +31,9 @@ public class BookDTO {
         dto.bookModel = uriInfo.getBaseUriBuilder().path("book_models")
                 .path(String.valueOf(book.getBookModel().getBookModelId())).build();
 
-        dto.images = book.getImages().stream().map(new Function<BookImage, URI>() {
-            @Override
-            public URI apply(BookImage bookImage) {
-                return uriInfo.getBaseUriBuilder()
-                        .path("images")
-                        .path(String.valueOf(bookImage.getBookImageId())).build();
-            }
-        }).collect(Collectors.toList());
+        dto.images = book.getImages().stream()
+                .map(i -> uriInfo.getBaseUriBuilder().path("images").path(String.valueOf(i.getImage().getImageId())).build())
+                .collect(Collectors.toList());
 
         return dto;
     }
@@ -60,6 +56,9 @@ public class BookDTO {
 
     public URI getOwner() {
         return owner;
+    }
+    public Long getOwnerId() {
+        return UrnResolverUtil.getUserId(owner);
     }
 
     public void setOwner(URI owner) {

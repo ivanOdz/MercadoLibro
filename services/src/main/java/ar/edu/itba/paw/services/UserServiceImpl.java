@@ -7,7 +7,6 @@ import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Location;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
-import ar.edu.itba.paw.utils.UrnResolverUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.net.URI;
 import java.util.*;
 
 @Primary
@@ -220,12 +218,6 @@ public class UserServiceImpl implements UserService {
         }
 
         return locationService.getLocationByPublicationId(publicationId);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<Location> getLocations(Long userId, URI publicationURN) {
-        return getLocations(userId, UrnResolverUtil.getPublicationId(publicationURN));
     }
 
     @Override

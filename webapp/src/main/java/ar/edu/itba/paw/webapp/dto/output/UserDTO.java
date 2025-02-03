@@ -5,6 +5,7 @@ import java.net.URI;
 import javax.ws.rs.core.UriInfo;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.utils.Rating;
+import ar.edu.itba.paw.webapp.utils.UrnResolverUtil;
 
 public class UserDTO {
 	
@@ -17,8 +18,6 @@ public class UserDTO {
 	private double ratingAverage;
 
 	private URI self;
-
-	private URI image;
 
 	private URI favoriteLocation;
 
@@ -42,7 +41,6 @@ public class UserDTO {
 
 		// links
 		dto.self = uriInfo.getBaseUriBuilder().path("users").path(user.getUserId().toString()).build();
-		dto.image = uriInfo.getBaseUriBuilder().path("image").path(String.valueOf(user.getImageId())).build();
 		dto.locations = uriInfo.getBaseUriBuilder().path("users").path(user.getUserId().toString()).path("locations").build();
 		dto.favoriteLocation = uriInfo.getBaseUriBuilder().path("users").path(user.getUserId().toString()).
 				path("locations").path(String.valueOf(user.getFavoriteLocation().getLocationId())).build();
@@ -95,10 +93,6 @@ public class UserDTO {
         this.self = self;
     }
 
-    public void setImage(URI image) {
-    	this.image = image;
-    }
-    
     public void setFavoriteLocation(URI favoriteLocation) {
     	this.favoriteLocation = favoriteLocation;
     }
@@ -115,14 +109,10 @@ public class UserDTO {
     	return mail;
     }
     
-    public URI getSelf() {
-    	return self;
+    public Long getSelf() {
+    	return UrnResolverUtil.getUserId(self);
     }
-    
-    public URI getImage() {
-    	return image;
-    }
-    
+
     public URI getFavoriteLocation() {
     	return favoriteLocation;
     }

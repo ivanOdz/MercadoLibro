@@ -33,8 +33,6 @@ public interface UserService {
 
     List<Location> getLocations(Long userId, Long publicationId);
 
-    List<Location> getLocations(Long userId, URI publicationURN);
-
     Location addLocation(Long userId, String locationString);
     
     void removeLocation(Long userId, Long locationId);

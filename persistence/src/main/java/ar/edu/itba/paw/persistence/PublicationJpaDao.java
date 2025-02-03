@@ -3,7 +3,6 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.persistence.PublicationDao;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
-import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -47,7 +46,7 @@ public class PublicationJpaDao implements PublicationDao {
     }
 
     @Override
-    public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, BookState state, Genre genre, String sortType, int page, User currentUser) {
+    public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, BookState state, Genre genre, String sortType, int page, User currentUser, Long locationId) {
         Long userId = (currentUser != null ? currentUser.getUserId() : null);
 
         if (page < 0) {
@@ -58,11 +57,12 @@ public class PublicationJpaDao implements PublicationDao {
         sort = sort == null ? DEFAULT_PUBLICATION_SORT_TYPE : sort;
 
         StringBuilder nativeQueryString = new StringBuilder(
-                "SELECT p.publicationid " +
+                "SELECT DISTINCT p.publicationid " +
                         "FROM publication p " +
                         "JOIN book b ON p.bookId = b.bookId " +
                         "JOIN book_model bm ON bm.bookModelId = b.bookModelId " +
                         "LEFT JOIN book_rating br ON bm.bookModelId = br.bookModelId " +
+                        "LEFT JOIN publication_location pl ON p.publicationId = pl.publicationId " +
                         "WHERE p.publicationState = :publicationState AND LOWER(bm.title) LIKE LOWER(:safeSearch) ESCAPE '\\' "
         );
 
@@ -76,6 +76,10 @@ public class PublicationJpaDao implements PublicationDao {
 
         if (state != null) {
             nativeQueryString.append("AND b.bookState = :state ");
+        }
+
+        if(locationId != null){
+            nativeQueryString.append("AND pl.locationId = :locationId ");
         }
 
         switch (sort) {
@@ -122,6 +126,10 @@ public class PublicationJpaDao implements PublicationDao {
             nativeQuery.setParameter("state", state.toString());
         }
 
+        if(locationId != null){
+            nativeQuery.setParameter("locationId", locationId);
+        }
+
         nativeQuery.setMaxResults(PUBLICATIONS_PAGE_SIZE);
         nativeQuery.setFirstResult(page * PUBLICATIONS_PAGE_SIZE);
 
@@ -153,9 +161,95 @@ public class PublicationJpaDao implements PublicationDao {
         TypedQuery<Publication> query = em.createQuery(jpqlQuery, Publication.class);
         query.setParameter("ids",publicationIds);
 
-        int totalResults = getTotalResultsByBook(userId, safeSearch, genre, state);
+        int totalResults = getTotalResultsByBook(userId, safeSearch, genre, state, locationId);
 
         return new PaginatedResponse<>(query.getResultList(), new ItemFilterMetadata(page, PUBLICATIONS_PAGE_SIZE, totalResults, search, genre, sort, null,  state, null));
+    }
+
+    @Override
+    public PaginatedResponse<Publication, ItemFilterMetadata> getFavoritePublications(String search, BookState state, Genre genre, int page, User currentUser, Long locationId) {
+        Long userId = currentUser.getUserId();
+
+        if (page < 0) {
+            page = 0;
+        }
+
+        StringBuilder nativeQueryString = new StringBuilder("SELECT fp.publicationid " +
+                "FROM favorite_publication fp " +
+                "JOIN publication p ON p.publicationid = fp.publicationid " +
+                "JOIN book b ON p.bookId = b.bookId " +
+                "JOIN book_model bm ON bm.bookModelId = b.bookModelId " +
+                "LEFT JOIN book_rating br ON bm.bookModelId = br.bookModelId " +
+                "LEFT JOIN publication_location pl ON p.publicationId = pl.publicationId " +
+                "WHERE fp.userid = :userId AND p.publicationState = :publicationState AND LOWER(bm.title) LIKE LOWER(:safeSearch) ESCAPE '\\' " +
+                "AND p.userId = :userId "
+                );
+
+//"ORDER BY "
+
+        if (genre != null) {
+            nativeQueryString.append("AND bm.genre = :genre ");
+        }
+
+        if (state != null) {
+            nativeQueryString.append("AND b.bookState = :state ");
+        }
+
+        if(locationId != null){
+            nativeQueryString.append("AND pl.locationId = :locationId ");
+        }
+
+        nativeQueryString.append(" GROUP BY fp.publicationId ORDER BY liked_at DESC ");
+
+        Query nativeQuery = em.createNativeQuery(nativeQueryString.toString());
+
+        nativeQuery.setParameter("publicationState", PublicationState.CURRENT.toString());
+        nativeQuery.setParameter("userId", userId);
+
+        String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
+        nativeQuery.setParameter("safeSearch", "%" + safeSearch.toLowerCase() + "%");
+
+        if(genre != null){
+            nativeQuery.setParameter("genre", genre.toString());
+        }
+
+        if(state != null){
+            nativeQuery.setParameter("state", state.toString());
+        }
+
+        if(locationId != null){
+            nativeQuery.setParameter("locationId", locationId);
+        }
+
+        nativeQuery.setMaxResults(PUBLICATIONS_PAGE_SIZE);
+        nativeQuery.setFirstResult(page * PUBLICATIONS_PAGE_SIZE);
+
+        @SuppressWarnings("unchecked")
+        List<Long> favoritePublicationIds = nativeQuery.getResultList().stream().mapToLong(n -> ((Number) n).longValue()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+
+
+        if (favoritePublicationIds.isEmpty()) {
+            return new PaginatedResponse<>(Collections.emptyList(), new ItemFilterMetadata(page, PUBLICATIONS_PAGE_SIZE, 0, search, genre, null, null, state, null));
+        }
+
+        String jpqlQuery = """
+                SELECT fp.publication
+                FROM FavoritePublication fp
+                WHERE fp.publication.publicationId IN (:ids)
+                AND fp.user.userId = :userId
+                AND fp.publication.publicationState = 'CURRENT'
+                ORDER BY fp.likedAt DESC
+            """;
+
+        TypedQuery<Publication> query = em.createQuery(jpqlQuery, Publication.class);
+        query.setParameter("ids",favoritePublicationIds);
+        query.setParameter("userId", userId);
+
+        List<Publication> favoritePublications = query.getResultList();
+
+        int totalResults = getTotalResultsFavoritePublications(userId, safeSearch, genre, state, locationId);
+
+        return new PaginatedResponse<>(favoritePublications, new ItemFilterMetadata(page, PUBLICATIONS_PAGE_SIZE, totalResults, search, genre, null, null, state, null));
     }
 
     @Override
@@ -260,12 +354,13 @@ public class PublicationJpaDao implements PublicationDao {
     }
 
 
-    private int getTotalResultsByBook(Long userId, String search, Genre genre, BookState state){
+    private int getTotalResultsByBook(Long userId, String search, Genre genre, BookState state, Long locationId) {
         StringBuilder nativeQueryString = new StringBuilder(
                 "SELECT COUNT(*) " +
                         "FROM publication p " +
                         "JOIN book b ON p.bookId = b.bookId " +
                         "JOIN book_model bm ON bm.bookModelId = b.bookModelId " +
+                        "LEFT JOIN publication_location pl ON pl.publicationId = p.publicationId " +
                         "WHERE p.publicationState = :publicationState AND LOWER(bm.title) LIKE LOWER(:safeSearch) ESCAPE '\\' "
         );
 
@@ -279,6 +374,10 @@ public class PublicationJpaDao implements PublicationDao {
 
         if (state != null) {
             nativeQueryString.append("AND b.bookState = :state ");
+        }
+
+        if (locationId != null) {
+            nativeQueryString.append("AND pl.locationId = :locationId ");
         }
 
         Query query = em.createNativeQuery(nativeQueryString.toString());
@@ -300,55 +399,66 @@ public class PublicationJpaDao implements PublicationDao {
             query.setParameter("state", state.toString());
         }
 
+        if (locationId != null) {
+            query.setParameter("locationId", locationId);
+        }
+
+
         return ((Number) query.getSingleResult()).intValue();
     }
+
+    private int getTotalResultsFavoritePublications(Long userId, String search, Genre genre, BookState state, Long locationId) {
+        StringBuilder nativeQueryString = new StringBuilder(
+                "SELECT COUNT(*) " +
+                        "FROM favorite_publication fp " +
+                        "JOIN publication p ON p.publicationId = fp.publicationId " +
+                        "JOIN book b ON p.bookId = b.bookId " +
+                        "JOIN book_model bm ON bm.bookModelId = b.bookModelId " +
+                        "LEFT JOIN publication_location pl ON pl.publicationId = p.publicationId " +
+                        "WHERE p.publicationState = :publicationState AND LOWER(bm.title) LIKE LOWER(:safeSearch) ESCAPE '\\' " );
+
+        nativeQueryString.append("AND p.userId = :userId ");
+
+        if (genre != null) {
+            nativeQueryString.append("AND bm.genre = :genre ");
+        }
+
+        if (state != null) {
+            nativeQueryString.append("AND b.bookState = :state ");
+        }
+
+        if (locationId != null) {
+            nativeQueryString.append("AND pl.locationId = :locationId ");
+        }
+
+        Query query = em.createNativeQuery(nativeQueryString.toString());
+
+        query.setParameter("publicationState", PublicationState.CURRENT.toString());
+
+        query.setParameter("userId", userId);
+        String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
+        query.setParameter("safeSearch", "%" + safeSearch.toLowerCase() + "%");
+
+        if (genre != null) {
+            query.setParameter("genre", genre.toString());
+        }
+
+        if (state != null) {
+            query.setParameter("state", state.toString());
+        }
+
+        if (locationId != null) {
+            query.setParameter("locationId", locationId);
+        }
+
+        return ((Number) query.getSingleResult()).intValue();
+    }
+
 
     @Override
     public void deletePublication(long publicationId) {
         Publication publication = em.find(Publication.class, publicationId);
         em.remove(publication);
-    }
-
-    @Override
-    public PaginatedResponse<Publication, ItemFilterMetadata> getFavoritePublications(String search, BookState state, Genre genre, String sortType, int page, User currentUser) {
-        if (page < 0) {
-            page = 0;
-        }
-
-        String nativeQueryString = "SELECT fp.publicationid " +
-                "FROM favorite_publication fp " +
-                "WHERE fp.userid = :userId  " +
-                "ORDER BY liked_at DESC";
-
-        Query nativeQuery = em.createNativeQuery(nativeQueryString);
-        nativeQuery.setParameter("userId", currentUser.getUserId());
-        nativeQuery.setMaxResults(PUBLICATIONS_PAGE_SIZE);
-        nativeQuery.setFirstResult(page * PUBLICATIONS_PAGE_SIZE);
-
-        @SuppressWarnings("unchecked")
-        List<Long> favoritePublicationIds = nativeQuery.getResultList().stream().mapToLong(n -> ((Number) n).longValue()).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
-
-        if (favoritePublicationIds.isEmpty()) {
-           // return new PaginatedResponse<>(Collections.emptyList(), new ItemFilterMetadata(page, PUBLICATIONS_PAGE_SIZE, 0, search, genre, sort, null, state, null));
-        }
-
-        String jpqlQuery = """
-                SELECT fp.publication
-                FROM FavoritePublication fp
-                WHERE fp.publication.publicationId IN (:ids)
-                AND fp.user.userId = :userId
-                AND fp.publication.publicationState = 'CURRENT'
-                ORDER BY fp.likedAt DESC
-            """;
-
-        TypedQuery<Publication> query = em.createQuery(jpqlQuery, Publication.class);
-        query.setParameter("ids",favoritePublicationIds);
-        query.setParameter("userId", currentUser.getUserId());
-
-        List<Publication> favoritePublications = query.getResultList();
-
-        //return new PaginatedResponse<>(favoritePublications, new ItemFilterMetadata());
-        return new PaginatedResponse<>(null, null);
     }
 
     @Override
