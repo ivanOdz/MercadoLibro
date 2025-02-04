@@ -6,7 +6,7 @@
     background-color: #F8F4E9;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     color: black;
-    height: 90px !important;
+    height: 90px;
 }
 
 :host ::ng-deep .p-menubar-item-label {
@@ -15,22 +15,52 @@
 }
 
 /* Estilos de los ítems de la barra */
-:host ::ng-deep .p-menubar .p-menubar-item {
+:host ::ng-deep .p-menubar .p-menubar-item-link {
     height: 100%; /* Ajusta la altura de los ítems */
     color: #1d0e05; /* Color de texto de los ítems */
     font-size: 16px; /* Tamaño del texto */
-    padding: 15px 20px !important; /* Espaciado interno */
+    padding: 15px 20px; /* Espaciado interno */
 }
 
 /* Estilo del hover en los ítems */
-:host ::ng-deep .p-menubar .p-menubar-item:hover {
+:host ::ng-deep .p-menubar .p-menubar-item-link:hover {
     background-color: #ccc8ba; /* Color de fondo al pasar el mouse */
     border-radius: 6px; /* Bordes redondeados en hover */
 }
 /* Color activo de los ítems */
-:host ::ng-deep .p-menubar .p-menubar-item-active > .p-menubar-item-link {
-    background-color: rgba(200, 193, 176, 0.54); /* Color de fondo cuando está activo */
-    color: #201106; /* Color del texto del ítem activo */
-    font-weight: bold; /* Negrita en el ítem activo */
+:host ::ng-deep .p-menubar-item-link-active {
+    background-color: rgba(200, 194, 182, 0.54); /* Color de fondo cuando está activo */
+    color: #ccc8ba; /* Color del texto del ítem activo */
     border-radius: 6px; /* Bordes redondeados */
+}
+
+:host ::ng-deep .p-inputtext  {
+    background-color: #F8F4E9;
+    color: #1d0e05;
+}
+
+:host ::ng-deep .p-inputgroupaddon   {
+    background-color: #F8F4E9;
+}
+
+:host ::ng-deep .p-component  {
+    background-color: #F8F4E9;
+}
+
+:host ::ng-deep .p-button-text:hover .p-button-secondary:not(:disabled):hover {
+    background-color: rgba(200, 194, 182, 0.54);
+    color: #1d0e05;
+}
+
+:host ::ng-deep .p-inputgroupaddon:hover  {
+    background-color: rgba(200, 194, 182, 0.54);
+    color: #1d0e05;
+}
+
+:host ::ng-deep .p-menubar-start {
+    margin-right: 50px;
+}
+
+:host ::ng-deep .p-inputtext:enabled:focus {
+    border-color: #1d0e05;
 }

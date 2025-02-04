@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {NavbarComponent} from "../../shared/components/navbar/navbar.component";
 import { ButtonModule } from 'primeng/button';
+import {Title} from "@angular/platform-browser";
 
 
 @Component({
@@ -8,8 +9,9 @@ import { ButtonModule } from 'primeng/button';
   templateUrl: `exchanges.component.html`,
   standalone: true,
   styleUrl: './exchanges.component.css',
-  imports: [NavbarComponent, ButtonModule]
+  imports: [ButtonModule]
 })
 export class ExchangesComponent {
 
+  protected readonly Title = "Exchanges";
 }
