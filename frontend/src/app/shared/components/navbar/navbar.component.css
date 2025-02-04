@@ -1,3 +1,36 @@
+/* Personalización de la barra de navegación */
 :host ::ng-deep .p-menubar {
-    background-color: #007bff;
+    display: flex;
+    align-items: center;
+    border: none;
+    background-color: #F8F4E9;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    color: black;
+    height: 90px !important;
+}
+
+:host ::ng-deep .p-menubar-item-label {
+    line-height: 1;
+    color: #2c250a;
+}
+
+/* Estilos de los ítems de la barra */
+:host ::ng-deep .p-menubar .p-menubar-item {
+    height: 100%; /* Ajusta la altura de los ítems */
+    color: #1d0e05; /* Color de texto de los ítems */
+    font-size: 16px; /* Tamaño del texto */
+    padding: 15px 20px !important; /* Espaciado interno */
+}
+
+/* Estilo del hover en los ítems */
+:host ::ng-deep .p-menubar .p-menubar-item:hover {
+    background-color: #ccc8ba; /* Color de fondo al pasar el mouse */
+    border-radius: 6px; /* Bordes redondeados en hover */
+}
+/* Color activo de los ítems */
+:host ::ng-deep .p-menubar .p-menubar-item-active > .p-menubar-item-link {
+    background-color: rgba(200, 193, 176, 0.54); /* Color de fondo cuando está activo */
+    color: #201106; /* Color del texto del ítem activo */
+    font-weight: bold; /* Negrita en el ítem activo */
+    border-radius: 6px; /* Bordes redondeados */
 }
