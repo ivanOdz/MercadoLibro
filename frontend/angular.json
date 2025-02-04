@@ -13,8 +13,14 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/frontend",
-            "index": "src/index.html",
+            "outputPath": {
+              "base": "build",
+              "browser": ""
+            },
+            "index": {
+              "input": "src/index.html",
+              "output": "index/index.html"
+            },
             "browser": "src/main.ts",
             "polyfills": [
               "zone.js"
@@ -22,8 +28,14 @@
             "tsConfig": "tsconfig.app.json",
             "assets": [
               {
-                "glob": "**/*",
-                "input": "src/assets"
+                "glob": "**/*.{jpg,png,ico}",
+                "input": "src/assets",
+                "output": "static"
+              },
+              {
+                "glob": "**/*.{js}",
+                "input": "src/assets",
+                "output": "assets"
               }
             ],
             "styles": [
