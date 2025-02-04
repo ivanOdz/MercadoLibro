@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {NavbarComponent} from "../../shared/components/navbar/navbar.component";
 import { ButtonModule } from 'primeng/button';
 import {Title} from "@angular/platform-browser";
+import {SidebarComponent} from "./components/sidebar.component";
 
 
 @Component({
@@ -9,9 +10,9 @@ import {Title} from "@angular/platform-browser";
   templateUrl: `exchanges.component.html`,
   standalone: true,
   styleUrl: './exchanges.component.css',
-  imports: [ButtonModule]
+  imports: [ButtonModule, SidebarComponent]
 })
 export class ExchangesComponent {
 
-  protected readonly Title = "Exchanges";
+  protected readonly Title = "Activos";
 }

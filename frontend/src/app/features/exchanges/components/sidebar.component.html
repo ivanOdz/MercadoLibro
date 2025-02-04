@@ -1,0 +1,12 @@
+<div class="sidebar">
+    <div class="sidebar-header">
+        <h2 class="sidebar-title">Exchanges</h2>
+    </div>
+    <div class="sidebar-content">
+        <ul class="sidebar-list">
+            <div *ngFor="let item of items" class="sidebar-item">
+                <p-button icon="pi pi-check" label="{{ item.label }}" variant="text" [routerLink]="item.routerLink" routerLinkActive="active"/>
+            </div>
+        </ul>
+    </div>
+</div>
