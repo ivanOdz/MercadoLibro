@@ -1,6 +1,6 @@
 /* Personalización de la barra de navegación */
 :host ::ng-deep .p-menubar {
-    display: flex;
+    display: grid;
     align-items: center;
     border: none;
     background-color: #F8F4E9;
@@ -8,11 +8,18 @@
     color: black;
     height: 9vh;
     width: 100vw;
+    grid-template-columns: 50% 50%;
 }
 
 :host ::ng-deep .p-menubar-item-label {
     line-height: 1;
     color: #2c250a;
+    font-size: larger;
+}
+
+:host ::ng-deep .p-menubar-root-list {
+    justify-content: end;
+    margin-right: 2rem;
 }
 
 /* Estilos de los ítems de la barra */
@@ -60,6 +67,7 @@
 
 :host ::ng-deep .p-inputgroup  {
     width: 30vw;
+    font-size: large;
 }
 
 :host ::ng-deep .p-menubar-start {

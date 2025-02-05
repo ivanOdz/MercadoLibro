@@ -46,7 +46,10 @@
 }
 
 :host ::ng-deep .p-button-label {
-    padding-left: 1rem;}
+    padding-left: 1rem;
+    font-size: large;
+    padding-bottom: 0.5rem;
+}
 
 :host ::ng-deep .p-button-text:active {
     color: #2c250a;
