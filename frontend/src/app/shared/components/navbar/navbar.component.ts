@@ -17,8 +17,8 @@ import {InputText} from "primeng/inputtext";
 })
 export class NavbarComponent {
     items = [
-        { label: 'Exchanges', icon: 'pi pi-home', routerLink: '/exchanges' },
-        { label: 'Profile', icon: 'pi pi-info', routerLink: '/profile' },
+        { label: 'Exchanges', routerLink: '/exchanges' },
+        { label: 'Profile', routerLink: '/profile' },
         { label: 'Publications', routerLink: '/publications' }
     ];
     protected readonly input = input;

@@ -56,7 +56,6 @@ main {
     min-height: 100%;
     display: flex;
     justify-content: start;
-    align-items: center;
     box-sizing: inherit;
     position: relative;
 }

@@ -17,8 +17,8 @@ import {Button} from "primeng/button";
 })
 export class SidebarComponent {
     items = [
-        {label: 'Active', routerLink: '/exchanges'},
-        {label: 'Requests', routerLink: '/exchanges/requests'},
-        {label: 'History', routerLink: '/exchanges/history'},
+        {label: 'Current', routerLink: '/exchanges', icon: 'pi pi-replay'},
+        {label: 'Requests', routerLink: '/exchanges/requests', icon: 'pi pi-bell'},
+        {label: 'History', routerLink: '/exchanges/history', icon: 'pi pi-history'},
     ]
 }

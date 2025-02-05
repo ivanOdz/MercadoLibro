@@ -12,8 +12,14 @@
     background-color: #F8F4E9;
     box-shadow: 0px 20px 15px rgba(0, 0, 0, 0.3);
     padding: 0.5rem;
-    height: 88vh;
+    height: 91vh;
 
+}
+
+.sidebar-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
 }
 
 .content {
@@ -31,11 +37,15 @@
 .sidebar-header {
     padding: 1rem 1rem 1rem 1.5rem;
     color: #2c250a;
+    font-size: 1.5rem;
 }
 
 :host ::ng-deep .p-button {
     color: #2c250a;
 }
+
+:host ::ng-deep .p-button-label {
+    padding-left: 1rem;}
 
 :host ::ng-deep .p-button-text:active {
     color: #2c250a;
@@ -46,16 +56,11 @@
     color: #2c250a;
 }
 
-.sidebar-list {
-    padding: 1rem;
-    margin: 0;
-}
 
 :host ::ng-deep .p-button {
-    width: 100%;
+    width: 90%;
     align-items: start;
     justify-content: start;
-    padding: 1rem;
 }
 
 .card-section {
@@ -114,4 +119,13 @@
     background-color: #fff;
     border: 2px solid #c3afa1;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar-buttons {
+    padding: 1rem;
+}
+
+.static-section-headers {
+    font-size: 1.25rem;
+    color: #2c250a;
 }
