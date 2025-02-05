@@ -4,6 +4,7 @@ import { ButtonModule } from 'primeng/button';
 import {Title} from "@angular/platform-browser";
 import {SidebarComponent} from "./components/sidebar.component";
 import {NgForOf} from "@angular/common";
+import {Paginator, PaginatorState} from "primeng/paginator";
 
 
 @Component({
@@ -11,7 +12,7 @@ import {NgForOf} from "@angular/common";
   templateUrl: `exchanges.component.html`,
   standalone: true,
   styleUrl: './exchanges.component.css',
-  imports: [ButtonModule, SidebarComponent, NavbarComponent, NgForOf]
+  imports: [ButtonModule, SidebarComponent, NavbarComponent, NgForOf, Paginator]
 })
 export class ExchangesComponent {
 
@@ -24,4 +25,17 @@ export class ExchangesComponent {
   }
 
 
+  onPageChange($event: PaginatorState) {
+
+  }
+
+  rows: unknown;
+  totalRecords: unknown;
+  first: number;
+
+
+    constructor(private titleService: Title) {
+        this.titleService.setTitle(this.Title);
+        this.first = 1;
+    }
 }

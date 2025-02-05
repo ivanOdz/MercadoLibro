@@ -12,15 +12,18 @@
             <p-tabpanels>
                 <p-tabpanel value="0">
                     <div class="requests-main-section">
-                        <div class="card-section">
-                            <div
-                                    class="card"
-                                    *ngFor="let card of ['Tarjeta 1', 'Tarjeta 2', 'Tarjeta 3', 'Tarjeta 4', 'Tarjeta 5', 'Tarjeta 6']"
-                                    (click)="selectOfferCard(card)"
-                                    [class.selected]="selectedOffersCard === card"
-                            >
-                                {{ card }}
+                        <div style="grid-column: 1;" class="column-cards">
+                            <div class="card-section">
+                                <div
+                                        class="card"
+                                        *ngFor="let card of ['Tarjeta 1', 'Tarjeta 2', 'Tarjeta 3', 'Tarjeta 4', 'Tarjeta 5', 'Tarjeta 6']"
+                                        (click)="selectOfferCard(card)"
+                                        [class.selected]="selectedOffersCard === card"
+                                >
+                                    {{ card }}
+                                </div>
                             </div>
+                            <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows" [totalRecords]="totalRecords" />
                         </div>
                         <div class="content-panel" id="content-panel-offers">
                             <p class="static-section-headers">Te ofrece</p>
@@ -33,16 +36,19 @@
                     </div>
                 </p-tabpanel>
                 <p-tabpanel value="1">
-                    <div class="main-section">
-                        <div class="card-section">
-                            <div
-                                    class="card"
-                                    *ngFor="let card of ['Tarjeta 1', 'Tarjeta 2', 'Tarjeta 3', 'Tarjeta 4', 'Tarjeta 5', 'Tarjeta 6']"
-                                    (click)="selectRequestCard(card)"
-                                    [class.selected]="selectedRequestsCard === card"
-                            >
-                                {{ card }}
+                    <div class="requests-main-section">
+                        <div style="grid-column: 1;" class="column-cards">
+                            <div class="card-section">
+                                <div
+                                        class="card"
+                                        *ngFor="let card of ['Tarjeta 1', 'Tarjeta 2', 'Tarjeta 3', 'Tarjeta 4', 'Tarjeta 5', 'Tarjeta 6']"
+                                        (click)="selectRequestCard(card)"
+                                        [class.selected]="selectedRequestsCard === card"
+                                >
+                                    {{ card }}
+                                </div>
                             </div>
+                            <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows" [totalRecords]="totalRecords" />
                         </div>
                         <div class="content-panel" id="content-panel-requests">
                             <div class="static-card" id="user-card-requests">{{ selectedRequestsCard || 'Selecciona una tarjeta' }}</div>

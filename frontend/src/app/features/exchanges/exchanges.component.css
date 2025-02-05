@@ -162,3 +162,12 @@
     gap: 2rem;
     height: calc(100vh - 35vh);
 }
+
+:host ::ng-deep .p-paginator {
+    padding: 1rem;
+    background: transparent;
+}
+
+.column-cards {
+    height: calc(100vh - 40vh);
+}

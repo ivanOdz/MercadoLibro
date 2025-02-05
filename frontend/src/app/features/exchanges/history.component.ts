@@ -3,6 +3,7 @@ import {SidebarComponent} from "./components/sidebar.component";
 import {NavbarComponent} from "../../shared/components/navbar/navbar.component";
 import {NgForOf} from "@angular/common";
 import {Tab, TabList, TabPanel, TabPanels, Tabs} from "primeng/tabs";
+import {Paginator} from "primeng/paginator";
 
 @Component({
     selector: 'exchanges-history',
@@ -17,7 +18,8 @@ import {Tab, TabList, TabPanel, TabPanels, Tabs} from "primeng/tabs";
         TabList,
         TabPanel,
         TabPanels,
-        Tabs
+        Tabs,
+        Paginator
     ]
 })
 export class HistoryComponent {
@@ -26,6 +28,9 @@ export class HistoryComponent {
 
     selectedCompletedCard: string | null = null;
     selectedRejectedCard: string | null = null;
+    first: number;
+    rows: unknown;
+    totalRecords: unknown;
 
     selectCompletedCard(cardText: string) {
         this.selectedCompletedCard = cardText;
@@ -33,5 +38,13 @@ export class HistoryComponent {
 
     selectRejectedCard(cardText: string) {
         this.selectedRejectedCard = cardText;
+    }
+    
+    onPageChange($event: any) {
+        console.log($event);
+    }
+    
+    constructor() {
+        this.first = 1;
     }
 }

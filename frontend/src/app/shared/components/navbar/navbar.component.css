@@ -58,6 +58,10 @@
     color: #1d0e05;
 }
 
+:host ::ng-deep .p-inputgroup  {
+    width: 30vw;
+}
+
 :host ::ng-deep .p-menubar-start {
     margin-right: 50px;
 }
@@ -65,6 +69,8 @@
 :host ::ng-deep .p-inputtext:enabled:focus {
     border-color: #1d0e05;
 }
+
+
 
 .sidebar-item:active {
     background-color: rgba(200, 194, 182, 0.54);
