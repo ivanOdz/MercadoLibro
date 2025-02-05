@@ -129,3 +129,35 @@
     font-size: 1.25rem;
     color: #2c250a;
 }
+
+:host ::ng-deep .p-tabpanels {
+    background-color: transparent;
+}
+
+:host ::ng-deep .p-tab{
+    padding-left: 3rem;
+    padding-right: 3rem;
+}
+
+:host ::ng-deep .p-tablist-active-bar {
+    background-color: transparent;
+}
+
+:host ::ng-deep .p-tablist-tab-list {
+    background-color: transparent;
+    justify-content: center;
+    border-color: transparent;
+}
+
+:host ::ng-deep .p-tab-active {
+    background: transparent;
+    border-color: #2c250a;
+    color: #2c250a;
+}
+
+.requests-main-section {
+    display: grid;
+    grid-template-columns: 60% 40%;
+    gap: 2rem;
+    height: calc(100vh - 35vh);
+}

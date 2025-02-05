@@ -13,7 +13,7 @@ import {InputText} from "primeng/inputtext";
     templateUrl: './navbar.component.html',
     styleUrls: ['./navbar.component.css'],
     standalone: true,
-    imports: [MenubarModule, InputGroup, InputGroupAddon, Button, InputText, NgOptimizedImage]
+    imports: [MenubarModule, InputGroup, InputGroupAddon, Button, InputText]
 })
 export class NavbarComponent {
     items = [

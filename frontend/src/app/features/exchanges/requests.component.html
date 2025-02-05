@@ -3,5 +3,57 @@
     <exchanges-sidebar/>
     <div class="content">
         <h1 class="page-title">{{Title}}</h1>
+
+        <p-tabs value="0">
+            <p-tablist>
+                <p-tab value="0">Offers</p-tab>
+                <p-tab value="1">My requests</p-tab>
+            </p-tablist>
+            <p-tabpanels>
+                <p-tabpanel value="0">
+                    <div class="requests-main-section">
+                        <div class="card-section">
+                            <div
+                                    class="card"
+                                    *ngFor="let card of ['Tarjeta 1', 'Tarjeta 2', 'Tarjeta 3', 'Tarjeta 4', 'Tarjeta 5', 'Tarjeta 6']"
+                                    (click)="selectOfferCard(card)"
+                                    [class.selected]="selectedOffersCard === card"
+                            >
+                                {{ card }}
+                            </div>
+                        </div>
+                        <div class="content-panel" id="content-panel-offers">
+                            <p class="static-section-headers">Te ofrece</p>
+                            <div class="static-card" id="user-card-offers">{{ selectedOffersCard || 'Selecciona una tarjeta' }}</div>
+                            <p class="static-section-headers">El libro</p>
+                            <div class="static-card" id="book-theirs-card-offers">Intercambio: {{ selectedOffersCard || 'Selecciona una tarjeta' }}</div>
+                            <p class="static-section-headers">Por tu libro</p>
+                            <div class="static-card" id="book-yours-card-offers">Tu libro: {{ selectedOffersCard || 'Selecciona una tarjeta' }}</div>
+                        </div>
+                    </div>
+                </p-tabpanel>
+                <p-tabpanel value="1">
+                    <div class="main-section">
+                        <div class="card-section">
+                            <div
+                                    class="card"
+                                    *ngFor="let card of ['Tarjeta 1', 'Tarjeta 2', 'Tarjeta 3', 'Tarjeta 4', 'Tarjeta 5', 'Tarjeta 6']"
+                                    (click)="selectRequestCard(card)"
+                                    [class.selected]="selectedRequestsCard === card"
+                            >
+                                {{ card }}
+                            </div>
+                        </div>
+                        <div class="content-panel" id="content-panel-requests">
+                            <div class="static-card" id="user-card-requests">{{ selectedRequestsCard || 'Selecciona una tarjeta' }}</div>
+                            <p class="static-section-headers">El libro</p>
+                            <div class="static-card" id="book-theirs-card-requests">Intercambio: {{ selectedRequestsCard || 'Selecciona una tarjeta' }}</div>
+                            <p class="static-section-headers">Por tu libro</p>
+                            <div class="static-card" id="book-yours-card-requests">Tu libro: {{ selectedRequestsCard || 'Selecciona una tarjeta' }}</div>
+                        </div>
+                    </div>
+                </p-tabpanel>
+            </p-tabpanels>
+        </p-tabs>
     </div>
 </div>
