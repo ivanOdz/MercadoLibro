@@ -8,7 +8,8 @@ import {HistoryComponent} from "./features/exchanges/history.component";
 import {RequestsComponent} from "./features/exchanges/requests.component";
 
 export const routes: Routes = [
-    {
+  {path: '', redirectTo: 'publications', pathMatch: 'full'},
+  {
     path: 'publications',
     component: PublicationsComponent,
     title: 'Home',

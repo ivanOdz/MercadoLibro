@@ -1,12 +1,14 @@
-<p-menubar [model]="items">
-    <ng-template #image #start>
-        <img src="./assets/mercado_libro.png" alt="image" width="250" />
-        <p-inputgroup>
-            <input pInputText placeholder="Search publications" />
-            <p-inputgroup-addon>
-                <p-button icon="pi pi-search" severity="secondary" variant="text"/>
-            </p-inputgroup-addon>
-        </p-inputgroup>
+<p-menubar [model]="items" class="fixed-menubar">
+    <ng-template #start>
+        <div class="flex align-items-center gap-3">
+            <img src="./assets/mercado_libro.png" alt="image" width="200" />
+            <p-inputgroup>
+                <input pInputText placeholder="Search publications" />
+                <p-inputgroup-addon>
+                    <p-button icon="pi pi-search" severity="secondary" variant="text" />
+                </p-inputgroup-addon>
+            </p-inputgroup>
+        </div>
     </ng-template>
     <ng-template #end></ng-template>
 </p-menubar>

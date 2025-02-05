@@ -4,7 +4,15 @@
 body {
     font-family: 'Inter', sans-serif;
     background: #FCFAF8;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
 }
 html {
   background-color: #FCFAF8;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+
 }
