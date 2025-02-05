@@ -1,45 +1,81 @@
 package ar.edu.itba.paw.webapp.auth;
 
-
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationConverter;
 import org.springframework.stereotype.Component;
-import javax.servlet.http.HttpServletResponse;
+import org.springframework.web.filter.OncePerRequestFilter;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Base64;
 
 @Component
-public class BasicAuthTokenIssuerFilter extends BasicAuthenticationFilter {
+public class BasicAuthTokenIssuerFilter extends OncePerRequestFilter {
+
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-    public BasicAuthTokenIssuerFilter(AuthenticationManager authenticationManager, AuthenticationEntryPoint authenticationEntryPoint) {
-        super(authenticationManager, authenticationEntryPoint);
-    }
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private AuthenticationEntryPoint authenticationEntryPoint;
+
+    private final BasicAuthenticationConverter authenticationConverter = new BasicAuthenticationConverter();
 
     @Override
-    protected void onSuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, Authentication authResult) throws IOException {
-        super.onSuccessfulAuthentication(request, response, authResult);
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
 
-        User user = (User) authResult.getPrincipal();
+        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        String accessToken = jwtTokenUtil.createAccessToken(user);
-        String refreshToken = jwtTokenUtil.createRefreshToken(user);
+        if (authHeader != null && authHeader.startsWith("Basic ")) {
+            try {
+                Authentication maybeUser = authenticationConverter.convert(request);
 
-        response.addHeader(JwtTokenUtil.ACCESS_TOKEN_HEADER, accessToken);
-        response.addHeader(JwtTokenUtil.REFRESH_TOKEN_HEADER, refreshToken);
+                if (maybeUser != null) {
+                    String username = maybeUser.getName();
+                    String password = (String) maybeUser.getCredentials();
 
-        response.addHeader("X-User-URI", "users/" + user.getUserId());
+                    final Authentication authentication = authenticationManager.authenticate(
+                            new UsernamePasswordAuthenticationToken(username, password)
+                    );
+
+                    PawUserDetails userDetails = (PawUserDetails) userDetailsService.loadUserByUsername(username);
+
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                    PawUserDetails pawUser = (PawUserDetails) userDetails;
+                    User user = pawUser.getUser();
+
+                    String accessToken = jwtTokenUtil.createAccessToken(user);
+                    String refreshToken = jwtTokenUtil.createRefreshToken(user);
+
+                    response.addHeader(JwtTokenUtil.ACCESS_TOKEN_HEADER, accessToken);
+                    response.addHeader(JwtTokenUtil.REFRESH_TOKEN_HEADER, refreshToken);
+                    response.addHeader("X-User-URI", "users/" + user.getUserId());
+                }
+
+            } catch (Exception e) {
+                authenticationEntryPoint.commence(request, response, null);
+                return;
+            }
+        }
+
+        filterChain.doFilter(request, response);
     }
 }
-
-/*
-    1) Devolver via header al autenticarlo, el endpoint para pedir al usuario -> Podemos usar userid para Enpoints
-    2) Una vez que se tiene los tokens, que angular haga get al /users/{username}
- */

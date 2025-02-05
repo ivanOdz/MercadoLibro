@@ -250,6 +250,7 @@ public class AccessControl {
     // private methods
 
     private User getUser(){
-        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        PawUserDetails pud = (PawUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return pud.getUser();
     }
 }

@@ -19,7 +19,7 @@ public class UserDTO {
 
 	private URI self;
 
-	private URI favoriteLocation;
+	//private URI favoriteLocation;
 
 	private URI locations;
 
@@ -42,8 +42,8 @@ public class UserDTO {
 		// links
 		dto.self = uriInfo.getBaseUriBuilder().path("users").path(user.getUserId().toString()).build();
 		dto.locations = uriInfo.getBaseUriBuilder().path("users").path(user.getUserId().toString()).path("locations").build();
-		dto.favoriteLocation = uriInfo.getBaseUriBuilder().path("users").path(user.getUserId().toString()).
-				path("locations").path(String.valueOf(user.getFavoriteLocation().getLocationId())).build();
+		//dto.favoriteLocation = uriInfo.getBaseUriBuilder().path("users").path(user.getUserId().toString()).
+				//path("locations").path(String.valueOf(user.getFavoriteLocation().getLocationId())).build();
 		dto.reviews = uriInfo.getBaseUriBuilder().path("users").path(user.getUserId().toString()).path("reviews").build();
 		dto.books = uriInfo.getBaseUriBuilder().path("books").queryParam("owner", user.getUserId()).build();
 
@@ -93,10 +93,6 @@ public class UserDTO {
         this.self = self;
     }
 
-    public void setFavoriteLocation(URI favoriteLocation) {
-    	this.favoriteLocation = favoriteLocation;
-    }
-    
     public void setLocation(URI locations) {
     	this.locations = locations;
     }
@@ -113,10 +109,7 @@ public class UserDTO {
     	return UrnResolverUtil.getUserId(self);
     }
 
-    public URI getFavoriteLocation() {
-    	return favoriteLocation;
-    }
-    
+
     public URI getLocations() {
     	return locations;
     }
