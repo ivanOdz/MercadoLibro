@@ -4,53 +4,66 @@ import ar.edu.itba.paw.webapp.utils.UrnResolverUtil;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class BookInputDTO {
     private String condition;
-    private Long bookModelId;
-    private Long userId;
-    private List<Long> imageIds;
+    private URI bookModelURN;
+    private URI userURN;
+    private Integer rating;
+    private List<URI> imageURNS;
 
-    public List<Long> getImageIds() {
-        return imageIds;
-    }
-
-    public void setImageIds(List<URI> imageIds) {
-        this.imageIds = imageIds.stream().map(UrnResolverUtil::getImageId).toList();
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(URI userId) {
-        this.userId = UrnResolverUtil.getUserId(userId);
-    }
-
-    public void setRating(Integer rating) {
-        this.rating = rating;
-    }
-
-    public void setBookModelId(URI bookModelId) {
-        this.bookModelId = UrnResolverUtil.getBookModelId(bookModelId);
+    public String getCondition() {
+        return condition;
     }
 
     public void setCondition(String condition) {
         this.condition = condition;
     }
 
-    private Integer rating;
-
-    public String getCondition() {
-        return condition;
+    public URI getBookModelURN() {
+        return bookModelURN;
     }
 
-    public Long getBookModelId() {
-        return bookModelId;
+    public void setBookModelURN(URI bookModelURN) {
+        this.bookModelURN = bookModelURN;
+    }
+
+    public URI getUserURN() {
+        return userURN;
+    }
+
+    public void setUserURN(URI userURN) {
+        this.userURN = userURN;
     }
 
     public Integer getRating() {
         return rating;
     }
 
+    public void setRating(Integer rating) {
+        this.rating = rating;
+    }
+
+    public List<URI> getImageURNS() {
+        return imageURNS;
+    }
+
+    public void setImageURNS(List<URI> imageURNS) {
+        this.imageURNS = imageURNS;
+    }
+
+    public Long getBookModelId() {
+        return UrnResolverUtil.getBookModelId(bookModelURN);
+    }
+
+    public Long getUserId() {
+        return UrnResolverUtil.getUserId(userURN);
+    }
+
+    public List<Long> getImageIds() {
+        return imageURNS.stream()
+                .map(UrnResolverUtil::getImageId)
+                .collect(Collectors.toList());
+    }
 }
