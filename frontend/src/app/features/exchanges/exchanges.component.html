@@ -1,24 +1,26 @@
+<app-navbar></app-navbar>
 <div class="container">
     <exchanges-sidebar/>
     <div class="content">
         <h1 class="page-title">{{Title}}</h1>
         <div class="main-section">
             <div class="card-section">
-                <div class="card" onclick="showContent('Contenido 1')">Tarjeta 1</div>
-                <div class="card" onclick="showContent('Contenido 2')">Tarjeta 2</div>
-                <div class="card" onclick="showContent('Contenido 3')">Tarjeta 3</div>
-                <div class="card" onclick="showContent('Contenido 1')">Tarjeta 4</div>
-                <div class="card" onclick="showContent('Contenido 1')">Tarjeta 5</div>
-                <div class="card" onclick="showContent('Contenido 1')">Tarjeta 6</div>
+                <div
+                        class="card"
+                        *ngFor="let card of ['Tarjeta 1', 'Tarjeta 2', 'Tarjeta 3', 'Tarjeta 4', 'Tarjeta 5', 'Tarjeta 6']"
+                        (click)="selectCard(card)"
+                        [class.selected]="selectedCard === card"
+                >
+                    {{ card }}
+                </div>
             </div>
             <div class="content-panel" id="content-panel">
-                <div class="static-card">Tarjeta 6</div>
+                <div class="static-card" id="user-card">{{ selectedCard || 'Selecciona una tarjeta' }}</div>
                 <h3>El libro</h3>
-                <div class="static-card">Tarjeta 6</div>
+                <div class="static-card" id="book-theirs-card">Intercambio: {{ selectedCard || 'Selecciona una tarjeta' }}</div>
                 <h3>Por tu libro</h3>
-                <div class="static-card">Tarjeta 6</div>
+                <div class="static-card" id="book-yours-card">Tu libro: {{ selectedCard || 'Selecciona una tarjeta' }}</div>
             </div>
         </div>
     </div>
-
 </div>

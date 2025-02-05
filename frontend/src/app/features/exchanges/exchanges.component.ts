@@ -3,6 +3,7 @@ import {NavbarComponent} from "../../shared/components/navbar/navbar.component";
 import { ButtonModule } from 'primeng/button';
 import {Title} from "@angular/platform-browser";
 import {SidebarComponent} from "./components/sidebar.component";
+import {NgForOf} from "@angular/common";
 
 
 @Component({
@@ -10,18 +11,17 @@ import {SidebarComponent} from "./components/sidebar.component";
   templateUrl: `exchanges.component.html`,
   standalone: true,
   styleUrl: './exchanges.component.css',
-  imports: [ButtonModule, SidebarComponent]
+  imports: [ButtonModule, SidebarComponent, NavbarComponent, NgForOf]
 })
 export class ExchangesComponent {
 
-  protected readonly Title = "Intercambios activos";
+  Title = "Intercambios activos";
 
-  showContent(text: string): void {
-    const contentPanel = document.getElementById("content-panel");
+  selectedCard: string | null = null;
 
-    if (contentPanel) {
-      contentPanel.innerHTML = `<p>${text}</p>`;
-    }
+  selectCard(cardText: string) {
+    this.selectedCard = cardText;
   }
+
 
 }

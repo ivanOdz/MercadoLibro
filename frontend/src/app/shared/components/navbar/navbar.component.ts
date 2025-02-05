@@ -13,13 +13,13 @@ import {InputText} from "primeng/inputtext";
     templateUrl: './navbar.component.html',
     styleUrls: ['./navbar.component.css'],
     standalone: true,
-    imports: [MenubarModule, InputGroup, InputGroupAddon, Button, InputText]
+    imports: [MenubarModule, InputGroup, InputGroupAddon, Button, InputText, NgOptimizedImage]
 })
 export class NavbarComponent {
     items = [
         { label: 'Exchanges', icon: 'pi pi-home', routerLink: '/exchanges' },
         { label: 'Profile', icon: 'pi pi-info', routerLink: '/profile' },
-        { label: 'Publications', routerLink: '' }
+        { label: 'Publications', routerLink: '/publications' }
     ];
     protected readonly input = input;
 }

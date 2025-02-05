@@ -1,16 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import {NavbarComponent} from "../../shared/components/navbar/navbar.component";
 
 @Component({
   selector: 'app-publications',
-  imports: [RouterModule],
-  template: `
-    <p>
-      publications works!
-    </p>
-    <a [routerLink]="['/profile']">Go to your profile</a>
-    <a [routerLink]="['/exchanges']">Check out your exchanges bro!</a>
-  `,
+  imports: [RouterModule, NavbarComponent],
+  templateUrl: `./publications.component.html`,
   standalone: true,
   styleUrl: './publications.component.css'
 })

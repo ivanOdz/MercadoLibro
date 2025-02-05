@@ -6,7 +6,8 @@
     background-color: #F8F4E9;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     color: black;
-    height: 90px;
+    height: 12vh;
+    width: 100vw;
 }
 
 :host ::ng-deep .p-menubar-item-label {
@@ -16,22 +17,22 @@
 
 /* Estilos de los ítems de la barra */
 :host ::ng-deep .p-menubar .p-menubar-item-link {
-    height: 100%; /* Ajusta la altura de los ítems */
-    color: #1d0e05; /* Color de texto de los ítems */
-    font-size: 16px; /* Tamaño del texto */
-    padding: 15px 20px; /* Espaciado interno */
+    height: 100%;
+    color: #1d0e05;
+    font-size: 16px;
+    padding: 15px 20px;
 }
 
 /* Estilo del hover en los ítems */
 :host ::ng-deep .p-menubar .p-menubar-item-link:hover {
-    background-color: #ccc8ba; /* Color de fondo al pasar el mouse */
-    border-radius: 6px; /* Bordes redondeados en hover */
+    background-color: #ccc8ba;
+    border-radius: 6px;
 }
 /* Color activo de los ítems */
 :host ::ng-deep .p-menubar-item-link-active {
-    background-color: rgba(200, 194, 182, 0.54); /* Color de fondo cuando está activo */
-    color: #ccc8ba; /* Color del texto del ítem activo */
-    border-radius: 6px; /* Bordes redondeados */
+    background-color: rgba(200, 194, 182, 0.54);
+    color: #ccc8ba;
+    border-radius: 6px;
 }
 
 :host ::ng-deep .p-inputtext  {
@@ -63,4 +64,10 @@
 
 :host ::ng-deep .p-inputtext:enabled:focus {
     border-color: #1d0e05;
+}
+
+.sidebar-item:active {
+    background-color: rgba(200, 194, 182, 0.54);
+    color: #ccc8ba;
+    border-radius: 6px;
 }

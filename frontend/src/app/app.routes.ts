@@ -33,12 +33,14 @@ export const routes: Routes = [
   {
     path: 'exchanges/requests',
     component: RequestsComponent,
-    title: 'Exchange requests'
+    title: 'Exchange requests',
+    canActivate: [AuthGuard],
   },
   {
     path: 'exchanges/history',
     component: HistoryComponent,
-    title: 'Exchange history'
+    title: 'Exchange history',
+    canActivate: [AuthGuard],
   },
 ];
 

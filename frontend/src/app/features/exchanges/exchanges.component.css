@@ -39,6 +39,7 @@
 
 :host ::ng-deep .p-button-text:active {
     color: #2c250a;
+    background-color: rgba(200, 194, 182, 0.54);
 }
 
 :host ::ng-deep .p-button-text:hover {
@@ -106,4 +107,11 @@
     height: fit-content;
     color: black;
     width: 100%;
+}
+
+
+.card.selected {
+    background-color: #fff;
+    border: 2px solid #c3afa1;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }

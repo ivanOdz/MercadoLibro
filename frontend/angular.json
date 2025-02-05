@@ -26,6 +26,12 @@
             "styles": [
               "src/styles.css"
             ],
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "src/assets"
+              }
+            ],
             "scripts": []
           },
           "configurations": {
@@ -78,7 +84,7 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "src/assets"
               }
             ],
             "styles": [
