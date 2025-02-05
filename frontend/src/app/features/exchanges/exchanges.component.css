@@ -4,7 +4,7 @@
     display: flex;
     justify-content: center;
     align-items: stretch;
-    height: 100vh;
+    height: 80vh;
     width: 98vw;
 }
 
@@ -13,7 +13,7 @@
     background-color: #F8F4E9;
     box-shadow: 0px 20px 15px rgba(0, 0, 0, 0.3);
     padding: 0.5rem;
-    height: 100vh;
+    height: 88vh;
 
 }
 
@@ -56,4 +56,55 @@
     align-items: start;
     justify-content: start;
     padding: 1rem;
+}
+
+.card-section {
+    padding: 20px;
+    overflow-y: auto;
+    height: 100%;
+}
+
+
+.card {
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s;
+    height: 20vh;
+    margin: 0 3rem 1rem 3rem;
+    color: black;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.content-panel {
+    padding: 20px;
+    display: flex;
+    align-items: start;
+    justify-content: start;
+    font-size: 16px;
+    text-align: center;
+    flex-direction: column;
+    color: black;
+}
+
+.main-section {
+    display: grid;
+    grid-template-columns: 60% 40%;
+    gap: 2rem;
+    height: calc(100vh - 30vh);
+}
+
+.static-card {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    height: fit-content;
+    color: black;
+    width: 100%;
 }

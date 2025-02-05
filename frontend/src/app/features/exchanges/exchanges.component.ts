@@ -14,5 +14,14 @@ import {SidebarComponent} from "./components/sidebar.component";
 })
 export class ExchangesComponent {
 
-  protected readonly Title = "Activos";
+  protected readonly Title = "Intercambios activos";
+
+  showContent(text: string): void {
+    const contentPanel = document.getElementById("content-panel");
+
+    if (contentPanel) {
+      contentPanel.innerHTML = `<p>${text}</p>`;
+    }
+  }
+
 }
