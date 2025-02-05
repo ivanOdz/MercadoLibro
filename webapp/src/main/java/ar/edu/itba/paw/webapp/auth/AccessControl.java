@@ -7,7 +7,9 @@ import ar.edu.itba.paw.webapp.dto.input.*;
 import ar.edu.itba.paw.webapp.dto.output.UserDTO;
 import ar.edu.itba.paw.webapp.dto.output.BookDTO;
 import ar.edu.itba.paw.webapp.dto.output.UserDTO;
+import ar.edu.itba.paw.webapp.utils.UrnResolverUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -180,7 +182,7 @@ public class AccessControl {
     public Boolean publicationsFavoritePostAccess(Long publicationId, UserDTO userDTO) {
         Publication p = publicationService.getPublicationByPublicationId(publicationId);
         return getUser().getUserId().equals(p.getUser().getUserId()) &&
-                userDTO.getSelf().equals(getUser().getUserId());
+                userDTO.getSelfId().equals(getUser().getUserId());
     }
 
     // GET {base_path}/publications/{publication_id}/favorite/{favorite_id}
@@ -250,7 +252,8 @@ public class AccessControl {
     // private methods
 
     private User getUser(){
-        PawUserDetails pud = (PawUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return pud.getUser();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        PawUserDetails userDetails = (PawUserDetails) auth.getPrincipal();
+        return userDetails.getUser();
     }
 }
