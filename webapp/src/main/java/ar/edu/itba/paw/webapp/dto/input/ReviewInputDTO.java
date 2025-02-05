@@ -14,8 +14,8 @@ public class ReviewInputDTO {
 
     private URI exchangeUrn;
 
-    public Long getExchangeUrn() {
-        return UrnResolverUtil.getExchangeId(exchangeUrn);
+    public URI getExchangeUrn() {
+        return exchangeUrn;
     }
 
     public Long getExchangeId() {

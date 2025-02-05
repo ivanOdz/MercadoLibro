@@ -24,9 +24,9 @@ public class BookModelDTO {
     private Boolean isHardcover;
     private Integer ratingCount;
     private Double averageRating;
-    private URI self;
     private List<String> authors;
     private URI cover;
+    private URI self;
 
     public static BookModelDTO fromBookModel(final UriInfo uriInfo, final BookModel bookModel){
         final BookModelDTO dto = new BookModelDTO();
@@ -46,13 +46,10 @@ public class BookModelDTO {
         dto.ratingCount = bookModel.getRatingCount();
         dto.averageRating = bookModel.getAverageRating();
 
-        dto.self = uriInfo.getBaseUriBuilder().path("book_models")
-                .path(String.valueOf(bookModel.getBookModelId())).build();
+        dto.self = URI.create("/book_models/" + bookModel.getBookModelId());
 
         dto.authors = bookModel.getAuthors().stream().map(Author::getAuthorName).toList();
-        dto.cover = uriInfo.getBaseUriBuilder()
-                .path("images")
-                .path(String.valueOf(bookModel.getImage().getImageId())).build();
+        dto.cover = URI.create("/images/" + bookModel.getImage().getImageId());
         return dto;
     }
 
@@ -198,5 +195,9 @@ public class BookModelDTO {
 
     public void setCover(URI cover) {
         this.cover = cover;
+    }
+
+    public URI getCover() {
+        return cover;
     }
 }

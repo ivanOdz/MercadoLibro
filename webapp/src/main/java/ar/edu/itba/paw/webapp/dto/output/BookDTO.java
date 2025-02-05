@@ -24,15 +24,12 @@ public class BookDTO {
         dto.state = book.getBookState().toString();
         dto.available = book.getAvailable();
 
-        dto.self = uriInfo.getBaseUriBuilder().path("books")
-                .path(String.valueOf(book.getBookId())).build();
-        dto.owner = uriInfo.getBaseUriBuilder().path("users")
-                .path(String.valueOf(book.getOwner().getUserId())).build();
-        dto.bookModel = uriInfo.getBaseUriBuilder().path("book_models")
-                .path(String.valueOf(book.getBookModel().getBookModelId())).build();
+        dto.self = URI.create("/books/" + book.getBookId());
+        dto.owner = URI.create("/users/" + book.getOwner().getUserId());
+        dto.bookModel = URI.create("/book_models/" + book.getBookModel().getBookModelId());
 
         dto.images = book.getImages().stream()
-                .map(i -> uriInfo.getBaseUriBuilder().path("images").path(String.valueOf(i.getImage().getImageId())).build())
+                .map(i -> URI.create("/images/" + i.getImage().getImageId()))
                 .collect(Collectors.toList());
 
         return dto;

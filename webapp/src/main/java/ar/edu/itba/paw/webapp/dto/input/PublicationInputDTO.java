@@ -6,34 +6,45 @@ import java.net.URI;
 
 public class PublicationInputDTO {
 
-    private Long userId;
+    private URI userURN;
 
-    private Long bookId;
+    private URI bookURN;
 
-    private Long locationId;
-
-
-    public void setUserId(URI userURN) {
-        this.userId = UrnResolverUtil.getUserId(userURN);
-    }
-
-    public void setBookId(URI bookURN) {
-        this.bookId = UrnResolverUtil.getBookId(bookURN);
-    }
-
-    public void setLocationId(URI locationURN) {
-        this.locationId = UrnResolverUtil.getLocationId(locationURN);
-    }
+    private URI locationURN;
 
     public Long getUserId() {
-        return userId;
+        return UrnResolverUtil.getUserId(userURN);
     }
 
     public Long getBookId() {
-        return bookId;
+        return UrnResolverUtil.getBookId(bookURN);
     }
 
     public Long getLocationId() {
-        return locationId;
+        return UrnResolverUtil.getLocationId(locationURN);
+    }
+
+    public URI getUserURN() {
+        return userURN;
+    }
+
+    public void setUserURN(URI userURN) {
+        this.userURN = userURN;
+    }
+
+    public URI getBookURN() {
+        return bookURN;
+    }
+
+    public void setBookURN(URI bookURN) {
+        this.bookURN = bookURN;
+    }
+
+    public URI getLocationURN() {
+        return locationURN;
+    }
+
+    public void setLocationURN(URI locationURN) {
+        this.locationURN = locationURN;
     }
 }

@@ -41,6 +41,11 @@ public class BasicAuthTokenIssuerFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
+        if (SecurityContextHolder.getContext().getAuthentication() != null) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (authHeader != null && authHeader.startsWith("Basic ")) {
@@ -51,23 +56,27 @@ public class BasicAuthTokenIssuerFilter extends OncePerRequestFilter {
                     String username = maybeUser.getName();
                     String password = (String) maybeUser.getCredentials();
 
-                    final Authentication authentication = authenticationManager.authenticate(
+                    Authentication authentication = authenticationManager.authenticate(
                             new UsernamePasswordAuthenticationToken(username, password)
                     );
 
                     PawUserDetails userDetails = (PawUserDetails) userDetailsService.loadUserByUsername(username);
 
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    Authentication authenticationSuccessfull = new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            password,
+                            userDetails.getAuthorities()
+                    );
 
-                    PawUserDetails pawUser = (PawUserDetails) userDetails;
-                    User user = pawUser.getUser();
-
+                    User user = userDetails.getUser();
                     String accessToken = jwtTokenUtil.createAccessToken(user);
                     String refreshToken = jwtTokenUtil.createRefreshToken(user);
 
                     response.addHeader(JwtTokenUtil.ACCESS_TOKEN_HEADER, accessToken);
                     response.addHeader(JwtTokenUtil.REFRESH_TOKEN_HEADER, refreshToken);
                     response.addHeader("X-User-URI", "users/" + user.getUserId());
+
+                    SecurityContextHolder.getContext().setAuthentication(authenticationSuccessfull);
                 }
 
             } catch (Exception e) {

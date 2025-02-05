@@ -21,10 +21,42 @@ public class MessageDTO {
         MessageDTO dto = new MessageDTO();
         dto.message = message.getMessage();
         dto.time = message.getMessageTime();
-        dto.self = uriInfo.getBaseUriBuilder().path("exchange").path(String.valueOf(message.getExchange().getExchangeId())).path("messages").path(String.valueOf(message.getMessageId())).build();
-        dto.user = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(message.getUser().getUserId())).build();
-        dto.exchange = uriInfo.getBaseUriBuilder().path("exchange").path(String.valueOf(message.getExchange().getExchangeId())).build();
+        dto.self = URI.create("/exchange/" + message.getExchange().getExchangeId() + "/messages/" + message.getMessageId());
+        dto.user = URI.create("/users/" + message.getUser().getUserId());
+        dto.exchange = URI.create("/exchange/" + message.getExchange().getExchangeId());
         return dto;
+    }
+
+    public Timestamp getTime() {
+        return time;
+    }
+
+    public void setTime(Timestamp time) {
+        this.time = time;
+    }
+
+    public URI getSelf() {
+        return self;
+    }
+
+    public void setSelf(URI self) {
+        this.self = self;
+    }
+
+    public URI getUser() {
+        return user;
+    }
+
+    public void setUser(URI user) {
+        this.user = user;
+    }
+
+    public URI getExchange() {
+        return exchange;
+    }
+
+    public void setExchange(URI exchange) {
+        this.exchange = exchange;
     }
 
     public String getMessage() {

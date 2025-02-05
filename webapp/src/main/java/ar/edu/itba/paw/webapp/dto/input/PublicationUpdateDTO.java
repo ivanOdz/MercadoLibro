@@ -9,7 +9,10 @@ public class PublicationUpdateDTO {
 
     private URI locationURN;
 
-    public Long getLocationURN() {
+    public URI getLocationURN() {
+        return locationURN;
+    }
+    public Long getLocationId() {
         return UrnResolverUtil.getLocationId(locationURN);
     }
 
