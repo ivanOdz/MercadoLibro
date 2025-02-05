@@ -1,4 +1,37 @@
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=edit" />
 <app-navbar></app-navbar>
-<p>
-    profile works!
-</p>
+<div class="container">
+
+  <div class="left">
+    <div class="box">
+      <h2>Mi Perfil</h2>
+      <div class="profile-content">
+        <img src="assets/profile.png" alt="Profile Image">
+        <div class="profile-details">
+          <span>Usuario: <span class="material-symbols-outlined">edit</span></span>
+          <span>Email: </span>
+          <span>Idioma: </span>
+        </div>
+      </div>
+    </div>
+    <div class="box">
+      <h2>Mis Ubicaciones</h2>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="right">
+    <div class="box">
+      <h2>Reviews</h2>
+      <div class="review-section">
+        <div class="review"
+             *ngFor="let review of ['review 1', 'review 2', 'review 3', 'review 4', 'review 5', 'review 6','review 1', 'review 2', 'review 3', 'review 4', 'review 5', 'review 6']"
+        >
+          {{ review }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
