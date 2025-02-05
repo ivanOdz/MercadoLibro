@@ -22,9 +22,10 @@ public class ReviewDTO {
         dto.reviewDate = review.getReviewDate();
         dto.rating = review.getReviewRating();
 
-        dto.reviewer = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(review.getReviewer().getUserId())).build();
-        dto.subject = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(review.getSubject().getUserId())).build();
-        dto.self = uriInfo.getBaseUriBuilder().path("user").path(String.valueOf(review.getSubject().getUserId())).path("reviews").build();
+        dto.reviewer = URI.create("/users/" + review.getReviewer().getUserId());
+        dto.subject = URI.create("/users/" + review.getSubject().getUserId());
+        dto.self = URI.create("/users/" + review.getSubject().getUserId() + "/reviews");
+        dto.exchange = URI.create("/exchanges/" + review.getExchange().getExchangeId());
 
         return dto;
     }

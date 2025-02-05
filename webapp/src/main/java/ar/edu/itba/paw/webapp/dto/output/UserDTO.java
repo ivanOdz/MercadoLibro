@@ -40,15 +40,12 @@ public class UserDTO {
 		dto.ratingAverage = userRating.getRating();
 
 		// links
-		dto.self = uriInfo.getBaseUriBuilder().path("users").path(user.getUserId().toString()).build();
-		dto.locations = uriInfo.getBaseUriBuilder().path("users").path(user.getUserId().toString()).path("locations").build();
-		//dto.favoriteLocation = uriInfo.getBaseUriBuilder().path("users").path(user.getUserId().toString()).
-				//path("locations").path(String.valueOf(user.getFavoriteLocation().getLocationId())).build();
-		dto.reviews = uriInfo.getBaseUriBuilder().path("users").path(user.getUserId().toString()).path("reviews").build();
-		dto.books = uriInfo.getBaseUriBuilder().path("books").queryParam("owner", user.getUserId()).build();
-
-		// publications?userId=xxx?favorite=true
-		dto.favorites = uriInfo.getBaseUriBuilder().path("users").path(user.getUserId().toString()).path("favorite").build();
+		dto.self = URI.create("/users/" + user.getUserId());
+		dto.locations = URI.create("/users/" + user.getUserId() + "/locations");
+		//dto.favoriteLocation = URI.create("/users/" + user.getUserId() + "/locations/" + user.getFavoriteLocation().getLocationId());
+		dto.reviews = URI.create("/users/" + user.getUserId() + "/reviews");
+		dto.books = URI.create("/books?owner=" + user.getUserId());
+		dto.favorites = URI.create("/users/" + user.getUserId() + "/favorite");
 		return dto;
 	}
 
@@ -105,9 +102,13 @@ public class UserDTO {
     	return mail;
     }
     
-    public Long getSelf() {
-    	return UrnResolverUtil.getUserId(self);
+    public URI getSelf() {
+    	return self;
     }
+
+	public Long getSelfId() {
+		return UrnResolverUtil.getUserId(self);
+	}
 
 
     public URI getLocations() {

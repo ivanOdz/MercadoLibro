@@ -6,21 +6,25 @@ import java.net.URI;
 
 public class MessageInputDTO {
     private String message;
-    private Long userId;
+    private URI userURN;
 
     public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(URI userUrn) {
-        this.userId = UrnResolverUtil.getUserId(userUrn);
+        return UrnResolverUtil.getUserId(userURN);
     }
 
     public String getMessage() {
         return message;
     }
 
+    public URI getUserURN() {
+        return userURN;
+    }
+
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public void setUserURN(URI userURN) {
+        this.userURN = userURN;
     }
 }

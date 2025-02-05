@@ -5,31 +5,43 @@ import ar.edu.itba.paw.webapp.utils.UrnResolverUtil;
 import java.net.URI;
 
 public class CreateExchangeDTO {
-    private Long bookId;
-    private Long locationId;
-    private Long publicationId;
-
-    public void setPublicationUrn(URI publicationUrn) {
-        this.publicationId = UrnResolverUtil.getPublicationId(publicationUrn);
-    }
-
-    public void setLocationUrn(URI locationUrn) {
-        this.locationId = UrnResolverUtil.getLocationId(locationUrn);
-    }
-
-    public void setBookUrn(URI bookUrn) {
-        this.bookId = UrnResolverUtil.getBookId(bookUrn);
-    }
+    private URI bookURN;
+    private URI locationURN;
+    private URI publicationURN;
 
     public Long getBookId() {
-        return bookId;
+        return UrnResolverUtil.getBookId(bookURN);
     }
 
     public Long getLocationId() {
-        return locationId;
+        return UrnResolverUtil.getLocationId(locationURN);
     }
 
     public Long getPublicationId() {
-        return publicationId;
+        return UrnResolverUtil.getPublicationId(publicationURN);
+    }
+
+    public URI getBookURN() {
+        return bookURN;
+    }
+
+    public void setBookURN(URI bookURN) {
+        this.bookURN = bookURN;
+    }
+
+    public URI getLocationURN() {
+        return locationURN;
+    }
+
+    public void setLocationURN(URI locationURN) {
+        this.locationURN = locationURN;
+    }
+
+    public URI getPublicationURN() {
+        return publicationURN;
+    }
+
+    public void setPublicationURN(URI publicationURN) {
+        this.publicationURN = publicationURN;
     }
 }

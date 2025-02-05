@@ -20,11 +20,10 @@ public class FavoriteDTO {
     public static FavoriteDTO fromFavoritePublication(final UriInfo uriInfo, final FavoritePublication fp) {
         final FavoriteDTO dto = new FavoriteDTO();
 
-        dto.publication = uriInfo.getBaseUriBuilder().path("publications").path(fp.getPublication().getPublicationId().toString()).build();;
-        dto.user = uriInfo.getBaseUriBuilder().path("users").path((fp.getUser().getUserId().toString())).build();
+        dto.publication = URI.create("/publications/" + fp.getPublication().getPublicationId());
+        dto.user = URI.create("/users/" + fp.getUser().getUserId());
         dto.likedAt = fp.getLikedAt();
-        dto.self = uriInfo.getBaseUriBuilder().path("publications").path(fp.getPublication().getPublicationId().toString())
-                .path("favorite").path(fp.getFavoritepublicationId().toString()).build();
+        dto.self = URI.create("/publications/" + fp.getPublication().getPublicationId() + "/favorite/" + fp.getFavoritepublicationId());
 
         return dto;
     }

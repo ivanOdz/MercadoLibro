@@ -24,13 +24,12 @@ public class PublicationDTO {
         dto.publicationState = publication.getPublicationState();
         dto.publicationDatetime = publication.getPublicationDatetime();
 
-        dto.self = uriInfo.getBaseUriBuilder().path("publications").path(String.valueOf(publication.getPublicationId())).build();
-        dto.book = uriInfo.getBaseUriBuilder().path("books").path(String.valueOf(publication.getBook().getBookId())).build();
-        dto.user = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(publication.getUser().getUserId())).build();
+        dto.self = URI.create("/publications/" + publication.getPublicationId());
+        dto.book = URI.create("/books/" + publication.getBook().getBookId());
+        dto.user = URI.create("/users/" + publication.getUser().getUserId());
 
-        dto.locations = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(publication.getUser().getUserId()))
-                .path("locations").queryParam("publication_id", publication.getPublicationId()).build();
-        dto.favoriteEndpoint = uriInfo.getBaseUriBuilder().path("publications").path(String.valueOf(publication.getPublicationId())).path("favorite").build();
+        dto.locations = URI.create("/users/" + publication.getUser().getUserId() + "/locations?publication_id=" + publication.getPublicationId());
+        dto.favoriteEndpoint = URI.create("/publications/" + publication.getPublicationId() + "/favorite");
 
         return dto;
     }
