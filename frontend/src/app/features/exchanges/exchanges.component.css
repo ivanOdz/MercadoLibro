@@ -81,7 +81,7 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     transition: transform 0.2s;
-    height: 20vh;
+    height: 25vh;
     margin: 0 3rem 1rem 3rem;
     color: black;
     display: grid;
@@ -180,7 +180,23 @@
 .active-card-first-column {
     grid-column: 1;
     display: grid;
-    grid-template-columns: 50% 50%;
+    grid-template-columns: 35% 6% 35%;
+    gap: 5%;
+    align-content: center;
+    padding: 1rem;
+    justify-content: center;
+}
+
+.active-card-first-column-book-first {
+    grid-column: 1;
+    text-align: center;
+    font-size: 16px;
+}
+
+.active-card-first-column-book-second {
+    grid-column: 3;
+    text-align: center;
+    font-size: 16px;
 }
 
 .active-card-second-column {
@@ -232,4 +248,18 @@
 
 :host ::ng-deep .p-button-label .confirm-button-label {
     font-size: medium;
+}
+
+
+.book-image {
+    border-radius: 5px;
+    height: 13vh;
+    background-color: darkgray;
+    width: 6vw;
+    justify-self: center;
+}
+
+.icon-card-active {
+    text-align: center;
+    align-content: center;
 }

@@ -13,7 +13,15 @@
                             [class.selected]="selectedCard === card"
                     >
                         <div class="active-card-first-column">
-<!--                            books fotos and titles-->
+                            <div class="active-card-first-column-book-first">
+                                <div class="book-image"></div>
+                                <p style="margin-bottom: 0">Book title wrapped</p>
+                            </div>
+                            <i class="pi pi-arrow-right-arrow-left icon-card-active"></i>
+                            <div class="active-card-first-column-book-second">
+                                <div class="book-image"></div>
+                                <p style="margin-bottom: 0">Book title wrapped</p>
+                            </div>
                         </div>
                         <div class="active-card-second-column">
                             <p-steps [model]="steps" [readonly]="true" />
