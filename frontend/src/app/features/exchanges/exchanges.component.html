@@ -12,7 +12,13 @@
                             (click)="selectCard(card)"
                             [class.selected]="selectedCard === card"
                     >
-                        {{ card }}
+                        <div class="active-card-first-column">
+<!--                            books fotos and titles-->
+                        </div>
+                        <div class="active-card-second-column">
+                            <p-steps [model]="steps" [readonly]="true" />
+                            <p-button class="confirm-button" styleClass="confirm-button" label="confirmar" (click)="confirmExchange(card)" />
+                        </div>
                     </div>
                 </div>
                 <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows" [totalRecords]="totalRecords" />

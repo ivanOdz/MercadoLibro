@@ -84,6 +84,8 @@
     height: 20vh;
     margin: 0 3rem 1rem 3rem;
     color: black;
+    display: grid;
+    grid-template-columns: 50% 50%;
 }
 
 .card:hover {
@@ -173,4 +175,61 @@
 
 .column-cards {
     height: calc(100vh - 40vh);
+}
+
+.active-card-first-column {
+    grid-column: 1;
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+
+.active-card-second-column {
+    grid-column: 2;
+    padding: 1rem;
+    align-content: center;
+    text-align: center;
+}
+
+:host ::ng-deep .p-steps-item-active .p-steps-item-number {
+    color: #2c250a;
+}
+
+:host ::ng-deep .p-steps-item-active .p-steps-item-label {
+    color: #2c250a;
+}
+:host ::ng-deep  .p-steps-item-label {
+    text-wrap: auto;
+    text-align: center;
+    width: 5.5rem;
+    font-size: small;
+}
+
+:host ::ng-deep  .p-steps-list {
+    margin: 1rem
+}
+
+:host ::ng-deep .confirm-button {
+    background: #e6d8c9;
+    border-radius: 10px;
+    font-size: smaller;
+    border: none;
+    width: auto;
+}
+
+:host ::ng-deep .confirm-button:hover {
+    background: #c3afa1;
+    border: none;
+
+}
+
+:host ::ng-deep .p-button-label {
+    font-size: medium;
+    padding: 0;
+    color: #2c250a;
+    font-variant: none;
+
+}
+
+:host ::ng-deep .p-button-label .confirm-button-label {
+    font-size: medium;
 }
