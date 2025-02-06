@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, NgIterable} from '@angular/core';
 import {NavbarComponent} from "../../shared/components/navbar/navbar.component";
 import { ButtonModule } from 'primeng/button';
 import {Title} from "@angular/platform-browser";
@@ -7,6 +7,10 @@ import {NgForOf} from "@angular/common";
 import {Paginator, PaginatorState} from "primeng/paginator";
 import {Steps} from "primeng/steps";
 import {MenuItem} from "primeng/api";
+import {Rating} from "primeng/rating";
+import {FormsModule} from "@angular/forms";
+import {Dialog} from "primeng/dialog";
+import {InputText} from "primeng/inputtext";
 
 
 @Component({
@@ -14,13 +18,15 @@ import {MenuItem} from "primeng/api";
   templateUrl: `exchanges.component.html`,
   standalone: true,
   styleUrl: './exchanges.component.css',
-  imports: [ButtonModule, SidebarComponent, NavbarComponent, NgForOf, Paginator, Steps]
+  imports: [ButtonModule, SidebarComponent, NavbarComponent, NgForOf, Paginator, Steps, Rating, FormsModule, Dialog, InputText]
 })
 export class ExchangesComponent {
 
   Title = "Intercambios activos";
 
   selectedCard: string | null = null;
+
+  displayModal: boolean = false;
 
   selectCard(cardText: string) {
     this.selectedCard = cardText;
@@ -39,6 +45,9 @@ export class ExchangesComponent {
     { label: 'Esperando confirmacion' },
     { label: 'Finalizado' }
   ];
+  value: any;
+  newMessage: any;
+  messages: (NgIterable<unknown> & NgIterable<any>) | undefined | null = [ { sender: 'You', message: 'Hello' }, { sender: 'Other', message: 'Hi' } ];
 
     constructor(private titleService: Title) {
         this.titleService.setTitle(this.Title);
@@ -47,6 +56,14 @@ export class ExchangesComponent {
 
 
   confirmExchange(card: string) {
+
+  }
+
+  openChat() {
+    this.displayModal = true;
+  }
+
+  sendMessage() {
 
   }
 }

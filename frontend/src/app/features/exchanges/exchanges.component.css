@@ -19,7 +19,8 @@
 .sidebar-list {
     list-style-type: none;
     padding: 0;
-    margin: 0;
+    margin-left: 1rem;
+    margin-right: 1rem;
 }
 
 .content {
@@ -35,21 +36,21 @@
     margin-bottom: 0;
 }
 
-.sidebar-header {
-    padding: 1rem 1rem 1rem 1.5rem;
-    color: #2c250a;
-    font-size: 1.5rem;
-}
+.sidebar-title {
+    font-size: larger;
+    padding: 1rem;
+    margin: 1rem;}
 
 :host ::ng-deep .p-button {
-    color: #2c250a;
-    margin-bottom: 1rem;
+    width: 100%;
+    text-align: start;
+    justify-content: start;
 }
 
-:host ::ng-deep .p-button-label {
-    padding-left: 1rem;
-    font-size: large;
-    padding-bottom: 0.5rem;
+:host ::ng-deep .p-button-text {
+    color: #2c250a;
+    justify-content: start;
+    margin-bottom: 0.5rem;
 }
 
 :host ::ng-deep .p-button-text:active {
@@ -62,7 +63,7 @@
 }
 
 
-:host ::ng-deep .p-button {
+:host ::ng-deep .p-button .sidebar-buttons {
     width: 90%;
     align-items: start;
     justify-content: start;
@@ -70,6 +71,7 @@
 
 .card-section {
     padding: 20px;
+
     overflow-y: auto;
     height: 100%;
 }
@@ -263,4 +265,29 @@
 .icon-card-active {
     text-align: center;
     align-content: center;
+}
+
+#user-card {
+    display: grid;
+    grid-template-columns: 25% 40% 20%;
+    gap: 5%;
+    height: auto;
+    padding: 2rem;
+}
+
+.user-card-name {
+    font-size: x-large;
+    margin-bottom: 0;
+    margin-top: 0.5rem;
+}
+
+.user-card-email {
+    font-size: medium;
+}
+
+.user-card-image {
+    border-radius: 10vh;
+    background-color: darkgray;
+    height: 12vh;
+    width: 12vh;
 }

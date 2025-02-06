@@ -4,8 +4,8 @@
     </div>
     <div class="sidebar-content">
         <ul class="sidebar-list">
-            <div *ngFor="let item of items" class="sidebar-item" routerLinkActive="active">
-                <p-button class="sidebar-buttons" icon="{{ item.icon }}" label="{{ item.label }}" variant="text" [routerLink]="item.routerLink"/>
+            <div *ngFor="let item of items"  class="sidebar-item" routerLinkActive="active">
+                <p-button styleClass="sidebar-buttons" icon="{{ item.icon }}" label="{{ item.label }}" variant="text" [routerLink]="item.routerLink"/>
             </div>
         </ul>
     </div>

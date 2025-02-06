@@ -33,7 +33,19 @@
             </div>
 
             <div class="content-panel" id="content-panel">
-                <div class="static-card" id="user-card">{{ selectedCard || 'Selecciona una tarjeta' }}</div>
+                <div class="static-card" id="user-card">
+                    <div style="grid-column: 1">
+                        <div class="user-card-image"></div>
+                    </div>
+                    <div style="grid-column: 2; text-align: start;">
+                        <p class="user-card-name">Nombre de usuario</p>
+                        <p class="user-card-email">usuario&#64;mail.com</p>
+                        <p-rating [(ngModel)]="value" [disabled]="true" />
+                    </div>
+                    <div style="grid-column: 3; align-content: center;text-align: end;">
+                        <i style="font-size: xx-large;font-weight: lighter;cursor: pointer" class="pi pi-comment icon-card-active" (click)="openChat()"></i>
+                    </div>
+                </div>
                 <p class="static-section-headers">El libro</p>
                 <div class="static-card" id="book-theirs-card">Intercambio: {{ selectedCard || 'Selecciona una tarjeta' }}</div>
                 <p class="static-section-headers">Por tu libro</p>
@@ -42,3 +54,24 @@
         </div>
     </div>
 </div>
+
+<p-dialog header="Chat" [modal]="true" [(visible)]="displayModal" [style]="{ width: '25rem' }">
+    <div class="chat-container">
+        <div class="chat-messages">
+            <div class="message" *ngFor="let message of messages">
+                <div class="message-content">
+                    <p>{{ message }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="chat-input p-inputgroup">
+            <input
+                    pInputText
+                    placeholder="Escribe un mensaje..."
+                    [(ngModel)]="newMessage"
+                    (keydown.enter)="sendMessage()"
+            />
+            <button pButton icon="pi pi-send" (click)="sendMessage()"></button>
+        </div>
+    </div>
+</p-dialog>
