@@ -219,6 +219,12 @@
     align-content: center;
     text-align: center;
 }
+.requests-second-column {
+    grid-column: 2;
+    padding: 1rem;
+    align-content: center;
+    text-align: center;
+}
 
 :host ::ng-deep .p-steps-item-active .p-steps-item-number {
     color: #939291;
@@ -408,4 +414,28 @@
 }
 .book-card-description {
     font-size: small;
+}
+
+
+.exchange-solicited-span {
+    background: #cdd7ce;
+    padding: 1rem;
+    border-radius: 2rem;
+    font-size: 1rem;
+}
+
+:host ::ng-deep .p-button.exchange-reject-button {
+    width: auto;
+    background: #a38686;
+    border: none;
+    color: white;
+    margin: 2rem;
+}
+
+:host ::ng-deep .p-button.exchange-accept-button {
+    width: auto;
+    background: #97ad85;
+    border: none;
+    color: white;
+    margin: 2rem;
 }

@@ -6,6 +6,7 @@ import {NgForOf} from "@angular/common";
 import {Paginator, PaginatorState} from "primeng/paginator";
 import {Rating} from "primeng/rating";
 import {FormsModule} from "@angular/forms";
+import {Button} from "primeng/button";
 
 @Component({
     selector: 'exchanges-requests',
@@ -23,7 +24,8 @@ import {FormsModule} from "@angular/forms";
         NgForOf,
         Paginator,
         Rating,
-        FormsModule
+        FormsModule,
+        Button
     ]
 })
 export class RequestsComponent {

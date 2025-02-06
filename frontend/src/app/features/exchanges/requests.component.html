@@ -20,7 +20,21 @@
                                         (click)="selectOfferCard(card)"
                                         [class.selected]="selectedOffersCard === card"
                                 >
-                                    {{ card }}
+                                    <div class="active-card-first-column">
+                                        <div class="active-card-first-column-book-first">
+                                            <div class="book-image"></div>
+                                            <p style="margin-bottom: 0">Book title wrapped</p>
+                                        </div>
+                                        <i class="pi pi-arrow-right-arrow-left icon-card-active"></i>
+                                        <div class="active-card-first-column-book-second">
+                                            <div class="book-image"></div>
+                                            <p style="margin-bottom: 0">Book title wrapped</p>
+                                        </div>
+                                    </div>
+                                    <div class="requests-second-column">
+                                        <p-button styleClass="exchange-reject-button">Rechazar</p-button>
+                                        <p-button styleClass="exchange-accept-button">Aceptar</p-button>
+                                    </div>
                                 </div>
                             </div>
                             <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows" [totalRecords]="totalRecords" />
@@ -83,7 +97,20 @@
                                         (click)="selectRequestCard(card)"
                                         [class.selected]="selectedRequestsCard === card"
                                 >
-                                    {{ card }}
+                                    <div class="active-card-first-column">
+                                        <div class="active-card-first-column-book-first">
+                                            <div class="book-image"></div>
+                                            <p style="margin-bottom: 0">Book title wrapped</p>
+                                        </div>
+                                        <i class="pi pi-arrow-right-arrow-left icon-card-active"></i>
+                                        <div class="active-card-first-column-book-second">
+                                            <div class="book-image"></div>
+                                            <p style="margin-bottom: 0">Book title wrapped</p>
+                                        </div>
+                                    </div>
+                                    <div class="requests-second-column">
+                                        <span class="exchange-solicited-span">Intercambio solicitado</span>
+                                    </div>
                                 </div>
                             </div>
                             <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows" [totalRecords]="totalRecords" />
