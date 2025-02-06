@@ -7,6 +7,9 @@ import {Paginator} from "primeng/paginator";
 import {Rating} from "primeng/rating";
 import {FormsModule} from "@angular/forms";
 import {Button} from "primeng/button";
+import {Textarea} from "primeng/textarea";
+import {Popover} from "primeng/popover";
+import {StyleClass} from "primeng/styleclass";
 
 @Component({
     selector: 'exchanges-history',
@@ -25,7 +28,10 @@ import {Button} from "primeng/button";
         Paginator,
         Rating,
         FormsModule,
-        Button
+        Button,
+        Textarea,
+        Popover,
+        StyleClass
     ]
 })
 export class HistoryComponent {
@@ -38,6 +44,14 @@ export class HistoryComponent {
     rows: unknown;
     totalRecords: unknown;
     value: any = 5;
+    showContent = false;
+
+    reviewText: string = '';
+    reviewValue: number = 0;
+
+    toggleReviewContent() {
+        this.showContent = !this.showContent;
+    }
 
     selectCompletedCard(cardText: string) {
         this.selectedCompletedCard = cardText;
@@ -53,5 +67,9 @@ export class HistoryComponent {
     
     constructor() {
         this.first = 1;
+    }
+
+    confirmReview() {
+
     }
 }

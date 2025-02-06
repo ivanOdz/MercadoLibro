@@ -11,6 +11,10 @@ import {Rating} from "primeng/rating";
 import {FormsModule} from "@angular/forms";
 import {Dialog} from "primeng/dialog";
 import {InputText} from "primeng/inputtext";
+import {Exchange} from "../../core/models/exchange.model";
+import {ExchangesService} from "../../core/services/exchanges.service";
+import {UserService} from "../../core/services/user.service";
+import {Observable} from "rxjs";
 
 type message = { sender: number, message: string, date: Date };
 
@@ -19,7 +23,7 @@ type message = { sender: number, message: string, date: Date };
   templateUrl: `exchanges.component.html`,
   standalone: true,
   styleUrl: './exchanges.component.css',
-  imports: [ButtonModule, SidebarComponent, NavbarComponent, NgForOf, Paginator, Steps, Rating, FormsModule, Dialog, InputText, NgIf, NgClass, DatePipe]
+  imports: [ButtonModule, SidebarComponent, NavbarComponent, NgForOf, Paginator, Steps, Rating, FormsModule, Dialog, InputText, NgIf, NgClass]
 })
 export class ExchangesComponent {
 
@@ -29,8 +33,12 @@ export class ExchangesComponent {
 
   monthNames: string[] = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
+  activeExchanges: any[] = [];
+
   displayModal: boolean = false;
   private changeDetectorRef: any;
+
+
 
   selectCard(cardText: string) {
     this.selectedCard = cardText;
@@ -43,7 +51,7 @@ export class ExchangesComponent {
 
   rows: unknown;
   totalRecords: unknown;
-  first: number;
+  currentPage: number;
   steps: MenuItem[] = [
     { label: 'Aceptado' },
     { label: 'Esperando confirmacion' },
@@ -54,11 +62,21 @@ export class ExchangesComponent {
   messages: message[] = [ { sender: 1, message: 'Hello', date: new Date('2025-02-04') }, { sender: 2, message: 'Hi', date: new Date()} ];
   lastDate: Date = new Date('2025-02-04');
 
-    constructor(private titleService: Title) {
-        this.titleService.setTitle(this.Title);
-        this.first = 1;
-    }
+  constructor(private titleService: Title, private es: ExchangesService, private us: UserService) {
+      this.titleService.setTitle(this.Title);
+      this.currentPage = 1;
+  }
 
+  ngOnInit(): void {
+    this.loadExchanges();
+  }
+
+  private loadExchanges(): void {
+    // traigo el usuario actual
+    this.es.getActiveExchanges('/exchanges?user_id=1',this.currentPage).subscribe((exchanges: Exchange[]) => {
+      this.activeExchanges = exchanges;
+    });
+  }
 
   confirmExchange(card: string) {
 

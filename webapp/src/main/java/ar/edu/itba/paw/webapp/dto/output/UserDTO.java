@@ -29,6 +29,8 @@ public class UserDTO {
 
 	private URI favorites;
 
+	private URI exchanges;
+
 
 	public static UserDTO fromUser(final UriInfo uriInfo, final User user, Rating userRating) {
 		
@@ -46,6 +48,7 @@ public class UserDTO {
 		dto.reviews = URI.create("/users/" + user.getUserId() + "/reviews");
 		dto.books = URI.create("/books?owner=" + user.getUserId());
 		dto.favorites = URI.create("/users/" + user.getUserId() + "/favorite");
+		dto.exchanges = URI.create("/exchanges?user_id=" + user.getUserId());
 		return dto;
 	}
 
@@ -129,6 +132,14 @@ public class UserDTO {
 
 	public void setRatingAverage(double ratingAverage) {
 		this.ratingAverage = ratingAverage;
+	}
+
+	public URI getExchanges() {
+		return exchanges;
+	}
+
+	public void setExchanges(URI exchanges) {
+		this.exchanges = exchanges;
 	}
 }
 
