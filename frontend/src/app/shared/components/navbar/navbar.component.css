@@ -6,9 +6,10 @@
     background-color: #F8F4E9;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     color: black;
-    height: 9vh;
+/*     height: 9vh; */
     width: 100vw;
     grid-template-columns: 50% 50%;
+    overflow: inherit;
 }
 
 :host ::ng-deep .p-menubar-item-label {
