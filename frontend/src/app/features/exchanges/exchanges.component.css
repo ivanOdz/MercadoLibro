@@ -29,7 +29,7 @@
 .page-title {
     text-align: center;
     font-family: 'Inter', sans-serif;
-    font-size: 2.5rem;
+    font-size: 2rem;
     color: #2c250a;
     padding: 2rem;
     margin-bottom: 0;
@@ -95,7 +95,6 @@
 }
 
 .content-panel {
-    padding: 20px;
     display: flex;
     align-items: start;
     justify-content: start;
@@ -134,8 +133,9 @@
 }
 
 .static-section-headers {
-    font-size: 1.25rem;
+    font-size: 1rem;
     color: #2c250a;
+    margin: 0.75rem
 }
 
 :host ::ng-deep .p-tabpanels {
@@ -164,6 +164,18 @@
 }
 
 .requests-main-section {
+    display: grid;
+    grid-template-columns: 60% 40%;
+    gap: 2rem;
+    height: calc(100vh - 35vh);
+}
+.rejected-main-section {
+    display: grid;
+    grid-template-columns: 60% 40%;
+    gap: 2rem;
+    height: calc(100vh - 35vh);
+}
+.completed-main-section {
     display: grid;
     grid-template-columns: 60% 40%;
     gap: 2rem;
@@ -209,7 +221,8 @@
 }
 
 :host ::ng-deep .p-steps-item-active .p-steps-item-number {
-    color: #2c250a;
+    color: #939291;
+    border-color: #939291;
 }
 
 :host ::ng-deep .p-steps-item-active .p-steps-item-label {
@@ -266,12 +279,12 @@
     align-content: center;
 }
 
-#user-card {
+.user-card {
     display: grid;
     grid-template-columns: 25% 40% 20%;
     gap: 5%;
     height: auto;
-    padding: 2rem;
+    padding: 1rem;
 }
 
 .user-card-name {
@@ -287,8 +300,8 @@
 .user-card-image {
     border-radius: 10vh;
     background-color: darkgray;
-    height: 12vh;
-    width: 12vh;
+    height: 10vh;
+    width: 5vw;
 }
 
 :host ::ng-deep .chat-input {
@@ -362,4 +375,37 @@
 
 .chat-messages {
     text-align: start;
+}
+
+.book-theirs-card   {
+    display: grid;
+    grid-template-columns: 25% 75%;
+    gap: 5%;
+    height: auto;
+}
+
+.book-yours-card {
+    display: grid;
+    grid-template-columns: 25% 75%;
+    gap: 5%;
+    height: auto;
+}
+
+.book-image-static {
+    height: 19vh;
+    background: darkgray;
+    border-radius: 0.5rem;
+    width: 7vw;
+}
+
+.book-card-title {
+    font-size: x-large;
+    margin-bottom: 0;
+    margin-top: 0.5rem;
+}
+.book-card-author {
+    font-size: medium;
+}
+.book-card-description {
+    font-size: small;
 }

@@ -4,6 +4,8 @@ import {NavbarComponent} from "../../shared/components/navbar/navbar.component";
 import {Tab, TabList, TabPanel, TabPanels, Tabs} from "primeng/tabs";
 import {NgForOf} from "@angular/common";
 import {Paginator, PaginatorState} from "primeng/paginator";
+import {Rating} from "primeng/rating";
+import {FormsModule} from "@angular/forms";
 
 @Component({
     selector: 'exchanges-requests',
@@ -19,7 +21,9 @@ import {Paginator, PaginatorState} from "primeng/paginator";
         TabPanels,
         TabPanel,
         NgForOf,
-        Paginator
+        Paginator,
+        Rating,
+        FormsModule
     ]
 })
 export class RequestsComponent {
@@ -30,6 +34,7 @@ export class RequestsComponent {
     first: number;
     rows: unknown;
     totalRecords: unknown;
+    value: any;
     
     constructor() {
         this.first = 1;
