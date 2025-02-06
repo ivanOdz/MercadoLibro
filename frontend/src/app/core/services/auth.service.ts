@@ -13,20 +13,59 @@ export class AuthService {
   // Usamos un BehaviorSubject para mantener al usuario logueado
   private _loggedUser = new BehaviorSubject<User | null>(null);
   loggedUser$ = this._loggedUser.asObservable();
+  private rememberMe = false;
+
 
   constructor(
       private http: HttpClient,
       private route: ActivatedRoute,
       private router: Router,
-      private us: UserService
-  ) {}
+      private userService: UserService
+  ) {
+    this.loadRememberMe();
+  }
+
+  private loadRememberMe() {
+    const hasLocalTokens = localStorage.getItem('accessToken') && localStorage.getItem('refreshToken');
+    const hasSessionTokens = sessionStorage.getItem('accessToken') && sessionStorage.getItem('refreshToken');
+
+    if (hasLocalTokens) {
+      this.rememberMe = true;
+    } else if (hasSessionTokens) {
+      this.rememberMe = false;
+    }
+  }
 
   // El getter de loggedUser ahora devuelve el observable del BehaviorSubject
-  get loggedUser() {
+  getloggedUser() {
     return this._loggedUser.asObservable();
   }
 
+  setLoggedUser(user: User | null) {
+    this._loggedUser.next(user);
+  }
+
+  storeTokens(accessToken: string, refreshToken: string) {
+    if (this.rememberMe) {
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
+    } else {
+      sessionStorage.setItem('accessToken', accessToken);
+      sessionStorage.setItem('refreshToken', refreshToken);
+    }
+  }
+
+  fetchAndSetUser(tokenUri: string) {
+    this.userService.getUser(tokenUri).subscribe({
+      next: (user) => this.setLoggedUser(user),
+      error: () => this.setLoggedUser(null),
+    });
+  }
+
+
   login(username: string, password: string, rememberMe: boolean = false) {
+    this.rememberMe = rememberMe;
+
     const authHeader = `Basic ${btoa(`${username}:${password}`)}`;
     const headers = new HttpHeaders({
       Authorization: authHeader,
@@ -35,40 +74,12 @@ export class AuthService {
 
     this.http.head('http://localhost:8080/api/book_models', { headers, observe: 'response' }).subscribe({
       next: (headResponse) => {
-        const accessToken = headResponse.headers.get('X-Access-Token');
-        const refreshToken = headResponse.headers.get('X-Refresh-Token');
-
-        if (accessToken && refreshToken) {
-          // Guardamos el token según la preferencia de "remember me"
-          if (rememberMe) {
-            localStorage.setItem('accessToken', accessToken);
-            localStorage.setItem('refreshToken', refreshToken);
-          } else {
-            sessionStorage.setItem('accessToken', accessToken);
-            sessionStorage.setItem('refreshToken', refreshToken);
-          }
-
-          const tokenUri = headResponse.headers.get('X-User-Uri');
-          if (tokenUri) {
-            // Obtenemos el usuario usando el tokenUri y lo asignamos a _loggedUser
-            this.us.getUser(tokenUri).subscribe({
-              next: (user) => {
-                this._loggedUser.next(user);  // Actualiza el usuario logueado
-              },
-              error: () => {
-                // Manejo de error en caso de que falle la obtención del usuario
-                this._loggedUser.next(null);
-              },
-            });
-          }
-
-          this.isAuthenticated.next(true);  // Marcamos como autenticado
-          const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-          this.router.navigateByUrl(returnUrl);
-        }
+        this.isAuthenticated.next(true);
+        const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+        this.router.navigateByUrl(returnUrl);
       },
       error: () => {
-        this.isAuthenticated.next(false);  // Marcamos como no autenticado en caso de error
+        this.isAuthenticated.next(false);
       },
     });
   }
@@ -81,5 +92,10 @@ export class AuthService {
 
     this._loggedUser.next(null);  // Limpiamos el usuario logueado
     this.isAuthenticated.next(false);  // Marcamos como no autenticado
+  }
+
+  register(username: string, password: string, email: string) {
+    this.userService.registerUser(email, username, password);
+
   }
 }
