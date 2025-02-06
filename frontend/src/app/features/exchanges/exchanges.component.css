@@ -13,7 +13,6 @@
     box-shadow: 0px 20px 15px rgba(0, 0, 0, 0.3);
     padding: 0.5rem;
     height: 91vh;
-
 }
 
 .sidebar-list {
@@ -290,4 +289,73 @@
     background-color: darkgray;
     height: 12vh;
     width: 12vh;
+}
+
+:host ::ng-deep .chat-input {
+    width: auto;
+    padding: 0.75rem;
+}
+
+:host(::ng-deep) .p-inputtext:enabled:focus {
+    border-color: #a7a096;
+}
+
+:host ::ng-deep .p-button-icon-only.chat-send{
+    width: auto;
+    padding: 0.75rem;
+    background: #b6ab89;
+    border: none;
+}
+
+:host ::ng-deep .chat-send.p-button-icon-only:hover{
+    width: auto;
+    padding: 0.75rem;
+    background: #b6ab89;
+    border: none;
+}
+
+
+
+.message {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    word-break: break-all;
+    margin-top: 3%;
+}
+
+.incoming {
+    background-color: #e1e1e1;
+    margin-right: 5%;
+    text-align: start;
+}
+
+.outgoing {
+    background-color: #f2f2f2;
+    text-align: right;
+    margin-left: 5%;
+
+}
+
+.message p {
+    font-size: 14px;
+    color: #333;
+    margin: 0;
+}
+
+.message-time {
+    font-size: 10px;
+    color: #666;
+    position: relative;
+    bottom: 5px;
+    right: 10px;
+    left: 3px;
+    top: 5px;
+}
+
+.date-separator {
+    text-align: center;
+    font-size: 12px;
+    color: #666;
+    margin: 10px 0;
 }

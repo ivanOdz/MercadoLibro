@@ -59,8 +59,12 @@
     <div class="chat-container">
         <div class="chat-messages">
             <div class="message" *ngFor="let message of messages">
-                <div class="message-content">
-                    <p>{{ message }}</p>
+                <div *ngIf="message.date !== lastDate">
+                    <span class="date-separator">{{ message.date.getDay() }} de {{getMonthName(message.date.getMonth())}}</span>
+                </div>
+                <div [ngClass]="message.sender == 1 ? 'outgoing' : 'incoming'" class="message">
+                    <p>{{ message.message }}</p>
+                    <span class="message-time">{{ message.date.getHours() }} : {{ message.date.getMinutes() }}</span>
                 </div>
             </div>
         </div>
@@ -71,7 +75,7 @@
                     [(ngModel)]="newMessage"
                     (keydown.enter)="sendMessage()"
             />
-            <button pButton icon="pi pi-send" (click)="sendMessage()"></button>
+            <button class="chat-send" pButton icon="pi pi-send" (click)="sendMessage()"></button>
         </div>
     </div>
 </p-dialog>
