@@ -424,6 +424,20 @@
     font-size: 1rem;
 }
 
+.exchange-completed-span {
+    background: #efe9d5;
+    padding: 1rem;
+    border-radius: 2rem;
+    font-size: 1rem;
+}
+
+.exchange-rejected-span {
+    background: #b2b2b2;
+    padding: 1rem;
+    border-radius: 2rem;
+    font-size: 1rem;
+}
+
 :host ::ng-deep .p-button.exchange-reject-button {
     width: auto;
     background: #a38686;

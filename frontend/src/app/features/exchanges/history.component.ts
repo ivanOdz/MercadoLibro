@@ -6,6 +6,7 @@ import {Tab, TabList, TabPanel, TabPanels, Tabs} from "primeng/tabs";
 import {Paginator} from "primeng/paginator";
 import {Rating} from "primeng/rating";
 import {FormsModule} from "@angular/forms";
+import {Button} from "primeng/button";
 
 @Component({
     selector: 'exchanges-history',
@@ -23,7 +24,8 @@ import {FormsModule} from "@angular/forms";
         Tabs,
         Paginator,
         Rating,
-        FormsModule
+        FormsModule,
+        Button
     ]
 })
 export class HistoryComponent {
