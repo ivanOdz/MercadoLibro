@@ -16,19 +16,25 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         });
     }
 
-    const handleTokenStorage = (response: HttpResponse<any>) => {
+    const handleResponse = (response: HttpResponse<any>) => {
         const newAccessToken = response.headers.get('X-Access-Token');
         const newRefreshToken = response.headers.get('X-Refresh-Token');
 
         if (newAccessToken && newRefreshToken) {
             authService.storeTokens(newAccessToken, newRefreshToken);
         }
+
+        const tokenUri = response.headers.get('X-User-Uri');
+        if (tokenUri) {
+            authService.fetchAndSetUser(tokenUri);
+        }
+
     };
 
     return next(req).pipe(
         tap(response => {
             if (response instanceof HttpResponse) {
-                handleTokenStorage(response);
+                handleResponse(response);
             }
         }),
         catchError((error) => {
@@ -43,7 +49,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
                     return next(refreshedReq).pipe(
                         tap(refreshResponse => {
                             if (refreshResponse instanceof HttpResponse) {
-                                handleTokenStorage(refreshResponse);
+                                handleResponse(refreshResponse);
                             }
                         }),
                         catchError((refreshError) => {

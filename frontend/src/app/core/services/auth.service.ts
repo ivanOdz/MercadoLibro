@@ -20,7 +20,7 @@ export class AuthService {
       private http: HttpClient,
       private route: ActivatedRoute,
       private router: Router,
-      private us: UserService
+      private userService: UserService
   ) {
     this.loadRememberMe();
   }
@@ -41,6 +41,10 @@ export class AuthService {
     return this._loggedUser.asObservable();
   }
 
+  setLoggedUser(user: User | null) {
+    this._loggedUser.next(user);
+  }
+
   storeTokens(accessToken: string, refreshToken: string) {
     if (this.rememberMe) {
       localStorage.setItem('accessToken', accessToken);
@@ -49,6 +53,13 @@ export class AuthService {
       sessionStorage.setItem('accessToken', accessToken);
       sessionStorage.setItem('refreshToken', refreshToken);
     }
+  }
+
+  fetchAndSetUser(tokenUri: string) {
+    this.userService.getUser(tokenUri).subscribe({
+      next: (user) => this.setLoggedUser(user),
+      error: () => this.setLoggedUser(null),
+    });
   }
 
 
@@ -63,33 +74,12 @@ export class AuthService {
 
     this.http.head('http://localhost:8080/api/book_models', { headers, observe: 'response' }).subscribe({
       next: (headResponse) => {
-        const accessToken = headResponse.headers.get('X-Access-Token');
-        const refreshToken = headResponse.headers.get('X-Refresh-Token');
-
-        if (accessToken && refreshToken) {
-          this.storeTokens(accessToken, refreshToken); // Guardamos los tokens
-
-          const tokenUri = headResponse.headers.get('X-User-Uri');
-          if (tokenUri) {
-            // Obtenemos el usuario usando el tokenUri y lo asignamos a _loggedUser
-            this.us.getUser(tokenUri).subscribe({
-              next: (user) => {
-                this._loggedUser.next(user);  // Actualiza el usuario logueado
-              },
-              error: () => {
-                // Manejo de error en caso de que falle la obtención del usuario
-                this._loggedUser.next(null);
-              },
-            });
-          }
-
-          this.isAuthenticated.next(true);  // Marcamos como autenticado
-          const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-          this.router.navigateByUrl(returnUrl);
-        }
+        this.isAuthenticated.next(true);
+        const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+        this.router.navigateByUrl(returnUrl);
       },
       error: () => {
-        this.isAuthenticated.next(false);  // Marcamos como no autenticado en caso de error
+        this.isAuthenticated.next(false);
       },
     });
   }
@@ -105,7 +95,7 @@ export class AuthService {
   }
 
   register(username: string, password: string, email: string) {
-    this.us.registerUser(email, username, password);
+    this.userService.registerUser(email, username, password);
 
   }
 }
