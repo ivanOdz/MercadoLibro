@@ -13,13 +13,13 @@
     box-shadow: 0px 20px 15px rgba(0, 0, 0, 0.3);
     padding: 0.5rem;
     height: 91vh;
-
 }
 
 .sidebar-list {
     list-style-type: none;
     padding: 0;
-    margin: 0;
+    margin-left: 1rem;
+    margin-right: 1rem;
 }
 
 .content {
@@ -29,26 +29,27 @@
 .page-title {
     text-align: center;
     font-family: 'Inter', sans-serif;
-    font-size: 2.5rem;
+    font-size: 2rem;
     color: #2c250a;
     padding: 2rem;
     margin-bottom: 0;
 }
 
-.sidebar-header {
-    padding: 1rem 1rem 1rem 1.5rem;
-    color: #2c250a;
-    font-size: 1.5rem;
-}
+.sidebar-title {
+    font-size: larger;
+    padding: 1rem;
+    margin: 1rem;}
 
 :host ::ng-deep .p-button {
-    color: #2c250a;
+    width: 100%;
+    text-align: start;
+    justify-content: start;
 }
 
-:host ::ng-deep .p-button-label {
-    padding-left: 1rem;
-    font-size: large;
-    padding-bottom: 0.5rem;
+:host ::ng-deep .p-button-text {
+    color: #2c250a;
+    justify-content: start;
+    margin-bottom: 0.5rem;
 }
 
 :host ::ng-deep .p-button-text:active {
@@ -61,7 +62,7 @@
 }
 
 
-:host ::ng-deep .p-button {
+:host ::ng-deep .p-button .sidebar-buttons {
     width: 90%;
     align-items: start;
     justify-content: start;
@@ -69,6 +70,7 @@
 
 .card-section {
     padding: 20px;
+
     overflow-y: auto;
     height: 100%;
 }
@@ -93,7 +95,6 @@
 }
 
 .content-panel {
-    padding: 20px;
     display: flex;
     align-items: start;
     justify-content: start;
@@ -132,8 +133,9 @@
 }
 
 .static-section-headers {
-    font-size: 1.25rem;
+    font-size: 1rem;
     color: #2c250a;
+    margin: 0.75rem
 }
 
 :host ::ng-deep .p-tabpanels {
@@ -162,6 +164,18 @@
 }
 
 .requests-main-section {
+    display: grid;
+    grid-template-columns: 60% 40%;
+    gap: 2rem;
+    height: calc(100vh - 35vh);
+}
+.rejected-main-section {
+    display: grid;
+    grid-template-columns: 60% 40%;
+    gap: 2rem;
+    height: calc(100vh - 35vh);
+}
+.completed-main-section {
     display: grid;
     grid-template-columns: 60% 40%;
     gap: 2rem;
@@ -205,9 +219,16 @@
     align-content: center;
     text-align: center;
 }
+.requests-second-column {
+    grid-column: 2;
+    padding: 1rem;
+    align-content: center;
+    text-align: center;
+}
 
 :host ::ng-deep .p-steps-item-active .p-steps-item-number {
-    color: #2c250a;
+    color: #939291;
+    border-color: #939291;
 }
 
 :host ::ng-deep .p-steps-item-active .p-steps-item-label {
@@ -262,4 +283,173 @@
 .icon-card-active {
     text-align: center;
     align-content: center;
+}
+
+.user-card {
+    display: grid;
+    grid-template-columns: 25% 40% 20%;
+    gap: 5%;
+    height: auto;
+    padding: 1rem;
+}
+
+.user-card-name {
+    font-size: x-large;
+    margin-bottom: 0;
+    margin-top: 0.5rem;
+}
+
+.user-card-email {
+    font-size: medium;
+}
+
+.user-card-image {
+    border-radius: 10vh;
+    background-color: darkgray;
+    height: 10vh;
+    width: 5vw;
+}
+
+:host ::ng-deep .chat-input {
+    width: auto;
+    padding: 0.75rem;
+}
+
+:host(::ng-deep) .p-inputtext:enabled:focus {
+    border-color: #a7a096;
+}
+
+:host ::ng-deep .p-button-icon-only.chat-send{
+    width: auto;
+    padding: 0.75rem;
+    background: #b6ab89;
+    border: none;
+}
+
+:host ::ng-deep .chat-send.p-button-icon-only:hover{
+    width: auto;
+    padding: 0.75rem;
+    background: #b6ab89;
+    border: none;
+}
+
+
+
+.message {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    word-break: break-all;
+    margin-top: 3%;
+}
+
+.incoming {
+    background-color: #e1e1e1;
+    margin-right: 5%;
+    text-align: start;
+}
+
+.outgoing {
+    background-color: #f2f2f2;
+    text-align: right;
+    margin-left: 5%;
+
+}
+
+.message p {
+    font-size: 14px;
+    color: #333;
+    margin: 0;
+}
+
+.message-time {
+    font-size: 10px;
+    color: #666;
+    position: relative;
+    bottom: 5px;
+    right: 10px;
+    left: 3px;
+    top: 5px;
+}
+
+.date-separator {
+    text-align: center;
+    font-size: 12px;
+    color: #666;
+    margin: 10px 0;
+}
+
+.chat-messages {
+    text-align: start;
+}
+
+.book-theirs-card   {
+    display: grid;
+    grid-template-columns: 25% 75%;
+    gap: 5%;
+    height: auto;
+}
+
+.book-yours-card {
+    display: grid;
+    grid-template-columns: 25% 75%;
+    gap: 5%;
+    height: auto;
+}
+
+.book-image-static {
+    height: 19vh;
+    background: darkgray;
+    border-radius: 0.5rem;
+    width: 7vw;
+}
+
+.book-card-title {
+    font-size: x-large;
+    margin-bottom: 0;
+    margin-top: 0.5rem;
+}
+.book-card-author {
+    font-size: medium;
+}
+.book-card-description {
+    font-size: small;
+}
+
+
+.exchange-solicited-span {
+    background: #cdd7ce;
+    padding: 1rem;
+    border-radius: 2rem;
+    font-size: 1rem;
+}
+
+.exchange-completed-span {
+    background: #efe9d5;
+    padding: 1rem;
+    border-radius: 2rem;
+    font-size: 1rem;
+}
+
+.exchange-rejected-span {
+    background: #b2b2b2;
+    padding: 1rem;
+    border-radius: 2rem;
+    font-size: 1rem;
+}
+
+:host ::ng-deep .p-button.exchange-reject-button {
+    width: auto;
+    background: #a38686;
+    border: none;
+    color: white;
+    margin: 2rem;
+}
+
+:host ::ng-deep .p-button.exchange-accept-button {
+    width: auto;
+    background: #97ad85;
+    border: none;
+    color: white;
+    margin: 2rem;
 }

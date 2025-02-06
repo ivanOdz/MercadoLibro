@@ -4,6 +4,9 @@ import {NavbarComponent} from "../../shared/components/navbar/navbar.component";
 import {NgForOf} from "@angular/common";
 import {Tab, TabList, TabPanel, TabPanels, Tabs} from "primeng/tabs";
 import {Paginator} from "primeng/paginator";
+import {Rating} from "primeng/rating";
+import {FormsModule} from "@angular/forms";
+import {Button} from "primeng/button";
 
 @Component({
     selector: 'exchanges-history',
@@ -19,7 +22,10 @@ import {Paginator} from "primeng/paginator";
         TabPanel,
         TabPanels,
         Tabs,
-        Paginator
+        Paginator,
+        Rating,
+        FormsModule,
+        Button
     ]
 })
 export class HistoryComponent {
@@ -31,6 +37,7 @@ export class HistoryComponent {
     first: number;
     rows: unknown;
     totalRecords: unknown;
+    value: any = 5;
 
     selectCompletedCard(cardText: string) {
         this.selectedCompletedCard = cardText;
