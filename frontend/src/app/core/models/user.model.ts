@@ -10,6 +10,7 @@ export class User {
     reviews: string;
     books: string;
     favorites: string;
+    exchanges: string;
 
     constructor(data: any) {
         this.username = data.username;
@@ -23,5 +24,6 @@ export class User {
         this.reviews = data.reviews;
         this.books = data.books;
         this.favorites = data.favorites;
+        this.exchanges = data.exchanges;
     }
 }
