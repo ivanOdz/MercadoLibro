@@ -11,9 +11,8 @@
             </p-tablist>
             <p-tabpanels>
                 <p-tabpanel value="0">
-                    <div class="requests-main-section">
+                    <div class="rejected-main-section">
                         <div style="grid-column: 1;" class="column-cards">
-
                             <div class="card-section">
                                 <div
                                         class="card"
@@ -21,23 +20,74 @@
                                         (click)="selectCompletedCard(card)"
                                         [class.selected]="selectedCompletedCard === card"
                                 >
-                                    {{ card }}
+                                    <div class="active-card-first-column">
+                                        <div class="active-card-first-column-book-first">
+                                            <div class="book-image"></div>
+                                            <p style="margin-bottom: 0">Book title wrapped</p>
+                                        </div>
+                                        <i class="pi pi-arrow-right-arrow-left icon-card-active"></i>
+                                        <div class="active-card-first-column-book-second">
+                                            <div class="book-image"></div>
+                                            <p style="margin-bottom: 0">Book title wrapped</p>
+                                        </div>
+                                    </div>
+                                    <div class="requests-second-column">
+                                        <span class="exchange-completed-span">Intercambio completado</span>
+                                    </div>
                                 </div>
                             </div>
                             <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows" [totalRecords]="totalRecords" />
                         </div>
-                        <div class="content-panel" id="content-panel-offers">
-                            <p class="static-section-headers">Te cambió</p>
-                            <div class="static-card" id="user-card-offers">{{ selectedCompletedCard || 'Selecciona una tarjeta' }}</div>
+                        <div class="content-panel" id="content-panel-completed">
+                            <div class="static-card user-card" id="user-card-completed">
+                                <div style="grid-column: 1; justify-items: center;">
+                                    <div class="user-card-image"></div>
+                                </div>
+                                <div style="grid-column: 2; text-align: start;">
+                                    <p class="user-card-name">Nombre de usuario</p>
+                                    <p class="user-card-email">usuario&#64;mail.com</p>
+                                    <p-rating [(ngModel)]="value" [disabled]="true" />
+                                </div>
+                            </div>
                             <p class="static-section-headers">El libro</p>
-                            <div class="static-card" id="book-theirs-card-offers">Intercambio: {{ selectedCompletedCard || 'Selecciona una tarjeta' }}</div>
+                            <div class="static-card book-theirs-card" id="book-theirs-card-completed">
+                                <div style="grid-column: 1;justify-items: center;">
+                                    <div class="book-image-static"></div>
+                                </div>
+                                <div style="grid-column: 2; text-align: start;">
+                                    <p class="book-card-title">Título del libro</p>
+                                    <p class="book-card-author">Autor del libro</p>
+                                    <p class="book-card-description">
+                                        feogmpwo4ngpeangwpvp om3fpnenopgnopvwnvwpoewnvwev
+                                        ewnonpwvownenovpewvneoneopnbeobneopbneonbe
+                                        beboenbeopbneoneboneoneobneobnoebneobneb
+                                        ebneobnebnebnebononboebnenboenbeobnobneb
+                                        neonbeobebneobnebnoenbeobeonboenn
+                                    </p>
+                                </div>
+                            </div>
                             <p class="static-section-headers">Por tu libro</p>
-                            <div class="static-card" id="book-yours-card-offers">Tu libro: {{ selectedCompletedCard || 'Selecciona una tarjeta' }}</div>
+                            <div class="static-card book-yours-card" id="book-yours-card-completed">
+                                <div style="grid-column: 1;justify-items: center;">
+                                    <div class="book-image-static"></div>
+                                </div>
+                                <div style="grid-column: 2; text-align: start;">
+                                    <p class="book-card-title">Título del libro</p>
+                                    <p class="book-card-author">Autor del libro</p>
+                                    <p class="book-card-description">
+                                        feogmpwo4ngpeangwpvp om3fpnenopgnopvwnvwpoewnvwev
+                                        ewnonpwvownenovpewvneoneopnbeobneopbneonbe
+                                        beboenbeopbneoneboneoneobneobnoebneobneb
+                                        ebneobnebnebnebononboebnenboenbeobnobneb
+                                        neonbeobebneobnebnoenbeobeonboenn
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </p-tabpanel>
                 <p-tabpanel value="1">
-                    <div class="requests-main-section">
+                    <div class="completed-main-section">
                         <div style="grid-column: 1;" class="column-cards">
                             <div class="card-section">
                                 <div
@@ -46,17 +96,69 @@
                                         (click)="selectRejectedCard(card)"
                                         [class.selected]="selectedRejectedCard === card"
                                 >
-                                    {{ card }}
+                                    <div class="active-card-first-column">
+                                        <div class="active-card-first-column-book-first">
+                                            <div class="book-image"></div>
+                                            <p style="margin-bottom: 0">Book title wrapped</p>
+                                        </div>
+                                        <i class="pi pi-arrow-right-arrow-left icon-card-active"></i>
+                                        <div class="active-card-first-column-book-second">
+                                            <div class="book-image"></div>
+                                            <p style="margin-bottom: 0">Book title wrapped</p>
+                                        </div>
+                                    </div>
+                                    <div class="requests-second-column">
+                                        <span class="exchange-rejected-span">Intercambio rechazado</span>
+                                    </div>
                                 </div>
                             </div>
                             <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows" [totalRecords]="totalRecords" />
                         </div>
-                        <div class="content-panel" id="content-panel-requests">
-                            <div class="static-card" id="user-card-requests">{{ selectedRejectedCard || 'Selecciona una tarjeta' }}</div>
+                        <div class="content-panel" id="content-panel-rejected">
+                            <div class="static-card user-card" id="user-card-rejected">
+                                <div style="grid-column: 1; justify-items: center;">
+                                    <div class="user-card-image"></div>
+                                </div>
+                                <div style="grid-column: 2; text-align: start;">
+                                    <p class="user-card-name">Nombre de usuario</p>
+                                    <p class="user-card-email">usuario&#64;mail.com</p>
+                                    <p-rating [(ngModel)]="value" [disabled]="true" />
+                                </div>
+                            </div>
                             <p class="static-section-headers">El libro</p>
-                            <div class="static-card" id="book-theirs-card-requests">Intercambio: {{ selectedRejectedCard || 'Selecciona una tarjeta' }}</div>
+                            <div class="static-card book-theirs-card" id="book-theirs-card-rejected">
+                                <div style="grid-column: 1;justify-items: center;">
+                                    <div class="book-image-static"></div>
+                                </div>
+                                <div style="grid-column: 2; text-align: start;">
+                                    <p class="book-card-title">Título del libro</p>
+                                    <p class="book-card-author">Autor del libro</p>
+                                    <p class="book-card-description">
+                                        feogmpwo4ngpeangwpvp om3fpnenopgnopvwnvwpoewnvwev
+                                        ewnonpwvownenovpewvneoneopnbeobneopbneonbe
+                                        beboenbeopbneoneboneoneobneobnoebneobneb
+                                        ebneobnebnebnebononboebnenboenbeobnobneb
+                                        neonbeobebneobnebnoenbeobeonboenn
+                                    </p>
+                                </div>
+                            </div>
                             <p class="static-section-headers">Por tu libro</p>
-                            <div class="static-card" id="book-yours-card-requests">Tu libro: {{ selectedRejectedCard || 'Selecciona una tarjeta' }}</div>
+                            <div class="static-card book-yours-card" id="book-yours-card-rejected">
+                                <div style="grid-column: 1;justify-items: center;">
+                                    <div class="book-image-static"></div>
+                                </div>
+                                <div style="grid-column: 2; text-align: start;">
+                                    <p class="book-card-title">Título del libro</p>
+                                    <p class="book-card-author">Autor del libro</p>
+                                    <p class="book-card-description">
+                                        feogmpwo4ngpeangwpvp om3fpnenopgnopvwnvwpoewnvwev
+                                        ewnonpwvownenovpewvneoneopnbeobneopbneonbe
+                                        beboenbeopbneoneboneoneobneobnoebneobneb
+                                        ebneobnebnebnebononboebnenboenbeobnobneb
+                                        neonbeobebneobnebnoenbeobeonboenn
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </p-tabpanel>

@@ -104,7 +104,7 @@ public class PublicationController {
     @Consumes(value = {VndType.APPLICATION_USER})
     @PreAuthorize("@accessControl.publicationsFavoritePostAccess(#publicationId,#userDTO)")
     public Response createFavoritePublication(@PathParam("publication_id") Long publicationId, final UserDTO userDTO){
-        FavoritePublication fp = ps.likePublication(publicationId, userDTO.getSelf());
+        FavoritePublication fp = ps.likePublication(publicationId, userDTO.getSelfId());
         return Response.created(uriInfo.getAbsolutePathBuilder().path(fp.getFavoritepublicationId().toString()).build()).build();
     }
 
