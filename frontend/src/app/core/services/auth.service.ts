@@ -13,20 +13,48 @@ export class AuthService {
   // Usamos un BehaviorSubject para mantener al usuario logueado
   private _loggedUser = new BehaviorSubject<User | null>(null);
   loggedUser$ = this._loggedUser.asObservable();
+  private rememberMe = false;
+
 
   constructor(
       private http: HttpClient,
       private route: ActivatedRoute,
       private router: Router,
       private us: UserService
-  ) {}
+  ) {
+    this.loadRememberMe();
+  }
+
+  private loadRememberMe() {
+    const hasLocalTokens = localStorage.getItem('accessToken') && localStorage.getItem('refreshToken');
+    const hasSessionTokens = sessionStorage.getItem('accessToken') && sessionStorage.getItem('refreshToken');
+
+    if (hasLocalTokens) {
+      this.rememberMe = true;
+    } else if (hasSessionTokens) {
+      this.rememberMe = false;
+    }
+  }
 
   // El getter de loggedUser ahora devuelve el observable del BehaviorSubject
-  get loggedUser() {
+  getloggedUser() {
     return this._loggedUser.asObservable();
   }
 
+  storeTokens(accessToken: string, refreshToken: string) {
+    if (this.rememberMe) {
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
+    } else {
+      sessionStorage.setItem('accessToken', accessToken);
+      sessionStorage.setItem('refreshToken', refreshToken);
+    }
+  }
+
+
   login(username: string, password: string, rememberMe: boolean = false) {
+    this.rememberMe = rememberMe;
+
     const authHeader = `Basic ${btoa(`${username}:${password}`)}`;
     const headers = new HttpHeaders({
       Authorization: authHeader,
@@ -39,14 +67,7 @@ export class AuthService {
         const refreshToken = headResponse.headers.get('X-Refresh-Token');
 
         if (accessToken && refreshToken) {
-          // Guardamos el token según la preferencia de "remember me"
-          if (rememberMe) {
-            localStorage.setItem('accessToken', accessToken);
-            localStorage.setItem('refreshToken', refreshToken);
-          } else {
-            sessionStorage.setItem('accessToken', accessToken);
-            sessionStorage.setItem('refreshToken', refreshToken);
-          }
+          this.storeTokens(accessToken, refreshToken); // Guardamos los tokens
 
           const tokenUri = headResponse.headers.get('X-User-Uri');
           if (tokenUri) {
@@ -81,5 +102,10 @@ export class AuthService {
 
     this._loggedUser.next(null);  // Limpiamos el usuario logueado
     this.isAuthenticated.next(false);  // Marcamos como no autenticado
+  }
+
+  register(username: string, password: string, email: string) {
+    this.us.registerUser(email, username, password);
+
   }
 }
