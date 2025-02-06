@@ -19,7 +19,7 @@ type message = { sender: number, message: string, date: Date };
   templateUrl: `exchanges.component.html`,
   standalone: true,
   styleUrl: './exchanges.component.css',
-  imports: [ButtonModule, SidebarComponent, NavbarComponent, NgForOf, Paginator, Steps, Rating, FormsModule, Dialog, InputText, NgIf, NgClass, DatePipe]
+  imports: [ButtonModule, SidebarComponent, NavbarComponent, NgForOf, Paginator, Steps, Rating, FormsModule, Dialog, InputText, NgIf, NgClass]
 })
 export class ExchangesComponent {
 
@@ -31,6 +31,8 @@ export class ExchangesComponent {
 
   displayModal: boolean = false;
   private changeDetectorRef: any;
+
+
 
   selectCard(cardText: string) {
     this.selectedCard = cardText;

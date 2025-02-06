@@ -48,7 +48,12 @@
                                     <p class="user-card-email">usuario&#64;mail.com</p>
                                     <p-rating [(ngModel)]="value" [disabled]="true" />
                                 </div>
+                                <div style="grid-column: 3;text-align: start;align-content: center;justify-items: center;">
+                                    <p class="user-card-review" style="text-align: center;">Deja una reseña</p>
+                                    <i style="font-size: large;font-weight: lighter;cursor: pointer" class="pi pi-chevron-up icon-card-active" (click)="op.toggle($event)"></i>
+                                </div>
                             </div>
+
                             <p class="static-section-headers">El libro</p>
                             <div class="static-card book-theirs-card" id="book-theirs-card-completed">
                                 <div style="grid-column: 1;justify-items: center;">
@@ -166,3 +171,12 @@
         </p-tabs>
     </div>
 </div>
+
+<p-popover #op>
+        <div style="padding: 1rem;">
+            <p style="margin: 0">Deja tu reseña</p>
+            <p-rating [(ngModel)]="reviewValue" style="margin-bottom: 1rem;margin-top: 1rem" />
+            <textarea pTextarea [(ngModel)]="reviewText"></textarea>
+            <p-button label="Enviar" (click)="confirmReview()" />
+        </div>
+</p-popover>

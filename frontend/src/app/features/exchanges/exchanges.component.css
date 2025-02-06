@@ -453,3 +453,12 @@
     color: white;
     margin: 2rem;
 }
+
+
+:host ::ng-deep .p-popover  {
+    width: 18vw;
+}
+
+:host ::ng-deep .p-textarea {
+    width: 100%;
+}
