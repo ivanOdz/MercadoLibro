@@ -29,7 +29,7 @@ public class JwtTokenUtil {
 
     public static final String REFRESH_TOKEN_HEADER = "X-Refresh-Token";
 
-    private static final int REFRESH_TOKEN_EXPIRATION_TIME = 7 * 24 * 60 * 60 ; //1 week (in seconds)
+    private static final int REFRESH_TOKEN_EXPIRATION_TIME = 7 * 24 * 60 * 60 * 1000; //1 week (in seconds)
 
     private static final int ACCESS_TOKEN_EXPIRATION_TIME = 60 * 60 * 1000; // 1h
 
