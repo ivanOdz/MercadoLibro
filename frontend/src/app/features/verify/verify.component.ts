@@ -6,17 +6,19 @@ import {Card} from "primeng/card";
 import {Button} from "primeng/button";
 import {Message} from "primeng/message";
 import {PrimeTemplate} from "primeng/api";
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-verify',
   standalone: true,
-  imports: [
-    ProgressSpinner,
-    Card,
-    Button,
-    Message,
-    PrimeTemplate
-  ],
+    imports: [
+        ProgressSpinner,
+        Card,
+        Button,
+        Message,
+        PrimeTemplate,
+        NgIf
+    ],
   templateUrl: './verify.component.html',
   styleUrl: './verify.component.css'
 })
