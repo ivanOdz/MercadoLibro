@@ -12,7 +12,7 @@
                 <div class="card-section">
                     <div
                             class="card"
-                            *ngFor="let card of ['Tarjeta 1', 'Tarjeta 2', 'Tarjeta 3', 'Tarjeta 4', 'Tarjeta 5', 'Tarjeta 6']"
+                            *ngFor="let card of activeExchanges"
                             (click)="selectCard(card)"
                             [class.selected]="selectedCard === card"
                     >

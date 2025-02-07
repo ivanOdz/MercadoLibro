@@ -5,7 +5,7 @@ import {Observable, tap} from "rxjs";
 import {Injectable} from "@angular/core";
 
 @Injectable({ providedIn: 'root' })
-export class ExchangesService {
+export class ExchangeService {
     baseUrl = 'http://localhost:8080/api';
 
     constructor(private http: HttpClient) { }

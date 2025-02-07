@@ -5,10 +5,11 @@ import { map } from "rxjs/operators";
 import { catchError, EMPTY, Observable, tap, throwError } from "rxjs";
 import { Location } from "../models/location.model";
 import {Review} from "../models/review.model";
+import {Exchange} from "../models/exchange.model";
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-    baseUrl = 'http://localhost:8080/api/';
+    baseUrl = 'http://localhost:8080/api';
 
     constructor(private http: HttpClient) {
 
@@ -126,6 +127,14 @@ export class UserService {
         return this.http.get<any[]>('${this.baseUrl}${reviewsUrl}', { headers }).pipe(
             map((reviewsData: any[]) => reviewsData.map(review => new Review(review)))
         );
+    }
+
+
+    getLocationsInPublication(publicationLocationUrl: string): Observable<Location[]> {
+        const headers = new HttpHeaders({ 'Accept': 'application/vnd.location.v1+json' });
+
+        return this.http.get<any[]>(`${this.baseUrl}${publicationLocationUrl}`, { headers }).pipe(
+            map((l) => l.map((l: any) => new Location(l))));
     }
 
 
