@@ -55,10 +55,10 @@ export class UserService {
         );
     }
 
-    changePasswordRequest(mail: string): Observable<string | null> {
+    changePasswordRequest(email: string): Observable<string | null> {
         const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.users.email.v1+json' });
 
-        return this.http.post<any>(`${this.baseUrl}/users`, { mail }, { headers }).pipe(
+        return this.http.post<any>(`${this.baseUrl}/users`, { email }, { headers }).pipe(
             catchError(error => {
                 if (error.status === 404) {
                     return EMPTY;
@@ -68,7 +68,7 @@ export class UserService {
         );
     }
 
-    changePassword(passwordToken: number, newPassword: string): Observable<void> {
+    changePassword(passwordToken: number | undefined, newPassword: string): Observable<void> {
         const headers = new HttpHeaders({'Content-Type': 'application/vnd.users.password.v1+json'});
 
         return this.http.patch<void>(`${this.baseUrl}/users/${passwordToken}`, {newPassword}, {headers}).pipe(

@@ -9,6 +9,7 @@ import {RequestsComponent} from "./features/exchanges/requests.component";
 import {RegisterComponent} from "./features/register/register.component";
 import {VerifyComponent} from "./features/verify/verify.component";
 import {ChangePasswordComponent} from "./features/change-password/change-password.component";
+import {ForgotPasswordComponent} from "./features/forgot-password/forgot-password.component";
 
 export const routes: Routes = [
   {path: '', redirectTo: 'publications', pathMatch: 'full'},
@@ -39,9 +40,14 @@ export const routes: Routes = [
     title: 'Verify'
   },
   {
+    path: 'auth/request-change-password',
+    component: ForgotPasswordComponent,
+    title: 'Request Password Change'
+  },
+  {
     path: 'auth/change-password',
     component: ChangePasswordComponent,
-    title: 'Verify'
+    title: 'Change Password'
   },
   {
     path: 'exchanges',
