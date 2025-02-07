@@ -6,8 +6,6 @@ import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.webapp.dto.input.*;
 import ar.edu.itba.paw.webapp.dto.output.UserDTO;
 import ar.edu.itba.paw.webapp.dto.output.BookDTO;
-import ar.edu.itba.paw.webapp.dto.output.UserDTO;
-import ar.edu.itba.paw.webapp.utils.UrnResolverUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

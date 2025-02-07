@@ -33,6 +33,7 @@ public class ExchangeController {
     @Context
     private UriInfo uriInfo;
 
+
     @GET
     @Produces(value = {VndType.APPLICATION_EXCHANGE})
     public Response getExchanges(@QueryParam("user_id") final long userId,

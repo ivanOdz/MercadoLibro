@@ -3,7 +3,11 @@
     <exchanges-sidebar/>
     <div class="content">
         <p class="page-title">{{Title}}</p>
-        <div class="main-section">
+        <div *ngIf="activeExchanges.length === 0" class="card-section-empty">
+            <p class="text-empty">No tienes intercambios activos</p>
+            <p-button styleClass="empty-button" label="Ver publicaciones" icon="pi pi-search" (click)="redirectToPublications()" />
+        </div>
+        <div  *ngIf="activeExchanges.length != 0"  class="main-section">
             <div style="grid-column: 1;" class="column-cards">
                 <div class="card-section">
                     <div

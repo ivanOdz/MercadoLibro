@@ -7,7 +7,6 @@ import { Location } from "../models/location.model";
 import {Review} from "../models/review.model";
 
 @Injectable({ providedIn: 'root' })
-
 export class UserService {
     baseUrl = 'http://localhost:8080/api/';
 

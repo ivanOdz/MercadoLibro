@@ -141,4 +141,12 @@ public class ExchangeDTO {
     public void setRequesterReview(URI requesterReview) {
         this.requesterReview = requesterReview;
     }
+
+    public Boolean getConfirmed() {
+        return isConfirmed;
+    }
+
+    public void setConfirmed(Boolean confirmed) {
+        isConfirmed = confirmed;
+    }
 }

@@ -1,29 +1,29 @@
 import {Exchange} from "../models/exchange.model";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {map} from "rxjs/operators";
-import {Observable} from "rxjs";
+import {Observable, tap} from "rxjs";
+import {Injectable} from "@angular/core";
 
+@Injectable({ providedIn: 'root' })
 export class ExchangesService {
-    baseUrl = 'http://localhost:8080/api/';
+    baseUrl = 'http://localhost:8080/api';
 
     constructor(private http: HttpClient) { }
 
     //  /exchanges?user_id=123546789&state=accepted&isRequester=true&isOfferer=true&page=1
     //  exchangesUrl: /exchanges?user_id=123546789
-    getActiveExchanges(exchangesUrl: string, page: number):Observable<Exchange[]>{
-        const headers = new HttpHeaders({ 'Accept': 'application/vnd.exchanges.v1+json'});
+    getActiveExchanges(exchangesUrl: string, page: number): Observable<Exchange[]> {
+        const headers = new HttpHeaders({ 'Accept': 'application/vnd.exchanges.v1+json' });
 
-        console.log(headers);
+        let params = new HttpParams()
+            .set('state', 'ACCEPTED')
+            .set('is_offerer', 'true')
+            .set('is_requester', 'true')
+            .set('page', page.toString());
 
-        return this.http.get<any>( this.baseUrl + exchangesUrl
-            + '&' + 'state=accepted'
-            + '&' + 'isOfferer=true'
-            + '&' + 'isRequester=true'
-            + '&' + 'page=' + page
-            , { headers }).pipe(
-            map((e) => {
-                return e.map((exchange: any) => new Exchange(exchange));
-            })
+        return this.http.get<any>(`${this.baseUrl}${exchangesUrl}`, { headers, params }).pipe(
+            tap((e) => console.log("Respuesta de la API:", e)),
+            map((e) => e.map((exchange: any) => new Exchange(exchange)))
         );
     }
 

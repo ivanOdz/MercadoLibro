@@ -176,14 +176,12 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                  * User controller
                  */
 
-                .antMatchers("/api/users/{id:\\d+}", "/api/users/{id:\\d+}",
-                        "/api/users/{id:\\d+}/locations", "/api/users/{id:\\d+}/locations",
+                .antMatchers("/api/users/{id:\\d+}/locations", "/api/users/{id:\\d+}/locations",
                         "/api/users/{id:\\d+}/locations/{location_id:\\d+}", "/api/users/{id:\\d+}/locations/{location_id:\\d+}",
                         "/api/users/{id:\\d+}/reviews", "/api/users/{id:\\d+}/reviews/{ur_id:\\d+}")
                     .authenticated()
 
-                .antMatchers("/api/users/{id:\\d+}","/api/users/{id:\\d+}",
-                        "/api/users/{id:\\d+}/locations","/api/users/{id:\\d+}/locations",
+                .antMatchers("/api/users/{id:\\d+}/locations","/api/users/{id:\\d+}/locations",
                         "/api/users/{id:\\d+}/locations/{location_id:\\d+}","/api/users/{id:\\d+}/locations/{location_id:\\d+}")
                     .access(USER_ACCESS)
 
