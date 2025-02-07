@@ -11,6 +11,7 @@ export class User {
     books: string;
     favorites: string;
     exchanges: string;
+    language: string;
 
     constructor(data: any) {
         this.username = data.username;
@@ -25,5 +26,6 @@ export class User {
         this.books = data.books;
         this.favorites = data.favorites;
         this.exchanges = data.exchanges;
+        this.language = data.language;
     }
 }
