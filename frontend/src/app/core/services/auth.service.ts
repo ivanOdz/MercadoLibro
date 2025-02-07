@@ -15,6 +15,8 @@ export class AuthService {
   loggedUser$ = this._loggedUser.asObservable();
   private rememberMe = false;
 
+  private readySubject = new BehaviorSubject<boolean>(false);
+  ready$ = this.readySubject.asObservable();
 
   constructor(
       private http: HttpClient,
@@ -23,6 +25,7 @@ export class AuthService {
       private userService: UserService
   ) {
     this.loadRememberMe();
+    this.restoreUser();
   }
 
   private loadRememberMe() {
@@ -36,6 +39,16 @@ export class AuthService {
     }
   }
 
+  private restoreUser() {
+    const userUrn = localStorage.getItem('userUrn') || sessionStorage.getItem('userUrn');
+    if (userUrn) {
+      this.fetchAndSetUser(userUrn);
+    } else {
+      this.readySubject.next(true);
+    }
+  }
+
+
   // El getter de loggedUser ahora devuelve el observable del BehaviorSubject
   getloggedUser() {
     return this._loggedUser.asObservable();
@@ -45,23 +58,31 @@ export class AuthService {
     this._loggedUser.next(user);
   }
 
-  storeTokens(accessToken: string, refreshToken: string) {
-    if (this.rememberMe) {
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('refreshToken', refreshToken);
-    } else {
-      sessionStorage.setItem('accessToken', accessToken);
-      sessionStorage.setItem('refreshToken', refreshToken);
+  storeTokens(accessToken: string, refreshToken: string, userUrn: string | null) {
+    const storage = this.rememberMe ? localStorage : sessionStorage;
+    storage.setItem('accessToken', accessToken);
+    storage.setItem('refreshToken', refreshToken);
+    if(userUrn !== null) {
+      storage.setItem('userUrn', userUrn);
     }
   }
 
-  fetchAndSetUser(tokenUri: string) {
+  fetchAndSetUser(tokenUri: string | null) {
+    if(!tokenUri) {
+      this.readySubject.next(true);
+      return;
+    }
+
     this.userService.getUser(tokenUri).subscribe({
       next: (user) => {
         this.setLoggedUser(user);
         this.isAuthenticated.next(true);
+        this.readySubject.next(true);
       },
-      error: () => this.logout()
+      error: () => {
+        this.logout();
+        this.readySubject.next(true);
+        }
     });
   }
 
@@ -90,11 +111,14 @@ export class AuthService {
   logout() {
     sessionStorage.removeItem('accessToken');
     sessionStorage.removeItem('refreshToken');
+    sessionStorage.removeItem('loggedUser');
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
+    localStorage.removeItem('loggedUser');
 
-    this._loggedUser.next(null);  // Limpiamos el usuario logueado
-    this.isAuthenticated.next(false);  // Marcamos como no autenticado
+    this._loggedUser.next(null);
+    this.isAuthenticated.next(false);
+    this.readySubject.next(true);
   }
 
   register(email: string, username: string, password: string): Observable<string | null> {
