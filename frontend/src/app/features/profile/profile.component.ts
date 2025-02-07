@@ -8,6 +8,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { Location } from '../../core/models/location.model';
 import { ReviewComponent } from './review/review.component';
+import { Review } from '../../core/models/review.model';
 
 @Component({
   selector: 'app-profile',
@@ -22,9 +23,78 @@ export class ProfileComponent implements OnInit{
 
   loggedUser: User | null = null;
   newUsername = '';
-  locations: Location[] = [];
+  locations: Location[] = [
+    {
+      "location": "Buenos Aires, Argentina",
+      "publications": "/publications?location=1",
+      "self": "/locations/1"
+    },
+    {
+      "location": "Madrid, España",
+      "publications": "/publications?location=2",
+      "self": "/locations/2"
+    },
+    {
+      "location": "Ciudad de México, México",
+      "publications": "/publications?location=3",
+      "self": "/locations/3"
+    },
+    {
+      "location": "Bogotá, Colombia",
+      "publications": "/publications?location=4",
+      "self": "/locations/4"
+    },
+    {
+      "location": "Santiago, Chile",
+      "publications": "/publications?location=5",
+      "self": "/locations/5"
+    }
+  ];
+
+  reviews: Review[] = [
+    {
+      "description": "Excelente intercambio, el libro estaba en perfectas condiciones.",
+      "reviewDate": "2024-02-07T10:30:00Z",
+      "rating": 5,
+      "self": "/reviews/1",
+      "subject": "/users/2",
+      "reviewer": "/users/5",
+      "exchange": "/exchanges/12"
+    },
+    {
+      "description": "El libro tenía algunas marcas pero en general todo bien.",
+      "reviewDate": "2024-02-06T15:45:00Z",
+      "rating": 4,
+      "self": "/reviews/2",
+      "subject": "/users/3",
+      "reviewer": "/users/7",
+      "exchange": "/exchanges/15"
+    },
+    {
+      "description": "Hubo demoras en la entrega, pero el libro estaba bien.",
+      "reviewDate": "2024-02-05T18:20:00Z",
+      "rating": 3,
+      "self": "/reviews/3",
+      "subject": "/users/8",
+      "reviewer": "/users/4",
+      "exchange": "/exchanges/20"
+    },
+    {
+      "description": "Excelente intercambio, el libro estaba en perfectas condiciones.",
+      "reviewDate": "2024-02-07T10:30:00Z",
+      "rating": 5,
+      "self": "/reviews/1",
+      "subject": "/users/2",
+      "reviewer": "/users/5",
+      "exchange": "/exchanges/12"
+    },
+
+  ];
 
   isModalOpen = false;
+  isRemoveModalOpen = false;
+  locationToRemove: Location | null = null;
+
 
 
   constructor(private authService: AuthService, private http: HttpClient) {}
@@ -74,9 +144,21 @@ export class ProfileComponent implements OnInit{
     }
   }
 
-  removeLocation(location: Location) {
+  openRemoveModal(location: Location) {
+    this.locationToRemove = location;
+    this.isRemoveModalOpen = true;
+  }
+
+  closeRemoveModal() {
+    this.isRemoveModalOpen = false;
+    this.locationToRemove = null;
+  }
+
+  removeLocation(location: Location | null) {
     if (this.loggedUser) {
-      this.userService.removeLocation(this.loggedUser, location);
+      if(location) {
+        this.userService.removeLocation(this.loggedUser, location);
+      }
     }
   }
 
@@ -85,7 +167,6 @@ export class ProfileComponent implements OnInit{
       console.log("Usuario recibido:", user);
       if (user) {
         this.loggedUser = user;
-        this.getLocations();
       }
     });
 

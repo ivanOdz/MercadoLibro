@@ -151,4 +151,10 @@ select:focus {
   background: gray;
   cursor: not-allowed;
 }
-
+.review-section {
+  display: flex;
+  flex-direction: column;
+  max-height: 420px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}

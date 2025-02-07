@@ -34,7 +34,7 @@
         <div class="locations">
           <span *ngFor="let loc of locations" class="location">
             {{ loc.location }}
-            <span class="remove-icon" (click)="removeLocation(loc)">✖</span>
+            <span class="remove-icon" (click)="openRemoveModal(loc)">✖</span>
           </span>
         </div>
 
@@ -51,7 +51,7 @@
     <div class="box">
       <h2>Reviews</h2>
       <div class="review-section">
-        <app-review></app-review>
+        <app-review *ngFor="let review of reviews" [review]="review"></app-review>
       </div>
     </div>
   </div>
@@ -64,6 +64,17 @@
       <div class="modal-buttons">
         <button (click)="closeModal()">Cancelar</button>
         <button (click)="updateUsername()">Aceptar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Remove Location Modal -->
+  <div class="modal-overlay" *ngIf="isRemoveModalOpen">
+    <div class="modal">
+      <h3>¿Estás seguro que querés borrar la ubicación "{{ locationToRemove?.location }}"?</h3>
+      <div class="modal-buttons">
+        <button (click)="closeRemoveModal()">Cancelar</button>
+        <button (click)="removeLocation(locationToRemove)">Aceptar</button>
       </div>
     </div>
   </div>
