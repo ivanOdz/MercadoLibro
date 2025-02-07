@@ -18,10 +18,14 @@
             <div class="flex align-items-center justify-content-between mb-4">
                 <p-checkbox id="remember" binary="true" [(ngModel)]="rememberMe" name="rememberMe"/>
                 <label for="remember" class="ml-2">Recuérdame</label>
-                <a href="#" class="text-primary">¿Olvidaste tu contraseña?</a>
+                <a href="/auth/change-password" class="text-primary">¿Olvidaste tu contraseña?</a>
             </div>
 
             <button pButton type="submit" [disabled]="!loginForm.valid" class="w-full">Iniciar Sesión</button>
         </form>
+        <div class="mt-2">
+            No tienes cuenta aun?
+            <a href="/auth/register" class="text-primary">Registrate</a>
+        </div>
     </div>
 </div>

@@ -6,6 +6,9 @@ import {ExchangesComponent} from "./features/exchanges/exchanges.component";
 import {AuthGuard} from "./core/guards/auth.guard";
 import {HistoryComponent} from "./features/exchanges/history.component";
 import {RequestsComponent} from "./features/exchanges/requests.component";
+import {RegisterComponent} from "./features/register/register.component";
+import {VerifyComponent} from "./features/verify/verify.component";
+import {ChangePasswordComponent} from "./features/change-password/change-password.component";
 
 export const routes: Routes = [
   {path: '', redirectTo: 'publications', pathMatch: 'full'},
@@ -24,6 +27,21 @@ export const routes: Routes = [
     path: 'auth/login',
     component: AuthComponent,
     title: 'Login'
+  },
+  {
+    path: 'auth/register',
+    component: RegisterComponent,
+    title: 'Register'
+  },
+  {
+    path: 'auth/verify',
+    component: VerifyComponent,
+    title: 'Verify'
+  },
+  {
+    path: 'auth/change-password',
+    component: ChangePasswordComponent,
+    title: 'Verify'
   },
   {
     path: 'exchanges',

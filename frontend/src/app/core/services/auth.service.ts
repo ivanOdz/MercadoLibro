@@ -94,8 +94,7 @@ export class AuthService {
     this.isAuthenticated.next(false);  // Marcamos como no autenticado
   }
 
-  register(username: string, password: string, email: string) {
-    this.userService.registerUser(email, username, password);
-
+  register(email: string, username: string, password: string): Observable<string | null> {
+    return this.userService.registerUser(email, username, password);
   }
 }
