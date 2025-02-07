@@ -9,11 +9,11 @@ import { Observable } from "rxjs";
 
 
 export class UserService {
-
-
-    constructor(private http: HttpClient) { }
-
     baseUrl = 'http://localhost:8080/api/';
+
+    constructor(private http: HttpClient) {
+
+    }
 
     getUser(userUrl: string): Observable<User> {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.users.v1+json'});
@@ -25,5 +25,37 @@ export class UserService {
                 return new User(userData);
             })
         );
+    }
+
+    getLocations(user: User): any {
+        return this.http.get(this.baseUrl + user.locations).subscribe((locations) => {
+            console.log(locations);
+        });
+    }
+
+    updateUsername(user: User, newUsername: string): Observable<void> {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.users.v1+json' });
+
+        const body = {
+            newUsername: newUsername,
+            language: null
+        };
+
+        console.log(body);
+
+        return this.http.patch<void>(this.baseUrl + user.self, body, { headers });
+    }
+
+    updateLanguage(user: User, language: string): Observable<void> {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.users.v1+json' });
+
+        const body = {
+            newUsername: null,
+            language: language
+        };
+
+        console.log(body);
+
+        return this.http.patch<void>(this.baseUrl + user.self, body, { headers });
     }
 }

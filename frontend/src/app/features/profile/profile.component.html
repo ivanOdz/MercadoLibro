@@ -8,9 +8,22 @@
       <div class="profile-content">
         <img src="assets/profile.png" alt="Profile Image">
         <div class="profile-details">
-          <span>Usuario: <span class="material-symbols-outlined">edit</span></span>
-          <span>Email: </span>
-          <span>Idioma: </span>
+
+          <span>
+            Usuario: {{ loggedUser?.username }}
+
+            <span *ngIf="loggedUser !== null" class="material-symbols-outlined" (click)="openModal()">edit</span>
+          </span>
+
+          <span>Email: {{ loggedUser?.mail }}</span>
+          <div class="language-select">
+            <span>Idioma: </span>
+            <select id="language-select" (change)="updateLanguage($event)">
+              <option value="es">Español</option>
+              <option value="en">English</option>
+            </select>
+          </div>
+
         </div>
       </div>
     </div>
@@ -30,6 +43,18 @@
         >
           {{ review }}
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" *ngIf="isModalOpen">
+    <div class="modal">
+      <h3>Editar Username</h3>
+      <input type="text" [(ngModel)]="newUsername" placeholder="Nuevo username">
+      <div class="modal-buttons">
+        <button (click)="closeModal()">Cancelar</button>
+        <button (click)="updateUsername()">Aceptar</button>
       </div>
     </div>
   </div>
