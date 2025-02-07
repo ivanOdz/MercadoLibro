@@ -28,7 +28,20 @@
       </div>
     </div>
     <div class="box">
-      <h2>Mis Ubicaciones</h2>
+      <div class="locations-container">
+        <h2>Mis Ubicaciones</h2>
+
+        <div class="locations">
+          <span *ngFor="let loc of locations" class="location">
+            {{ loc.location }}
+            <span class="remove-icon" (click)="removeLocation(loc)">✖</span>
+          </span>
+        </div>
+
+        <!--<button class="add-button" (click)="addLocation()" [disabled]="loggedUser?.locations.length >= 5">
+          + Agregar +
+        </button>-->
+      </div>
     </div>
   </div>
 
@@ -38,16 +51,12 @@
     <div class="box">
       <h2>Reviews</h2>
       <div class="review-section">
-        <div class="review"
-             *ngFor="let review of ['review 1', 'review 2', 'review 3', 'review 4', 'review 5', 'review 6','review 1', 'review 2', 'review 3', 'review 4', 'review 5', 'review 6']"
-        >
-          {{ review }}
-        </div>
+        <app-review></app-review>
       </div>
     </div>
   </div>
 
-  <!-- Modal -->
+  <!-- Username Modal -->
   <div class="modal-overlay" *ngIf="isModalOpen">
     <div class="modal">
       <h3>Editar Username</h3>

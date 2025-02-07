@@ -6,20 +6,25 @@ import { UserService } from '../../core/services/user.service';
 import { HttpClient } from "@angular/common/http";
 import { AuthService } from '../../core/services/auth.service';
 import { FormsModule } from '@angular/forms';
+import { Location } from '../../core/models/location.model';
+import { ReviewComponent } from './review/review.component';
 
 @Component({
   selector: 'app-profile',
-  imports: [NavbarComponent, NgForOf, FormsModule, CommonModule],
+  imports: [NavbarComponent, NgForOf, FormsModule, CommonModule, ReviewComponent],
   standalone: true,
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
 })
 export class ProfileComponent implements OnInit{
-  loggedUser: User | null = null;
-  isModalOpen = false;
-  newUsername = '';
-  userServices: UserService = inject(UserService);
   url = 'http://localhost:8080/api'
+  userService: UserService = inject(UserService);
+
+  loggedUser: User | null = null;
+  newUsername = '';
+  locations: Location[] = [];
+
+  isModalOpen = false;
 
 
   constructor(private authService: AuthService, private http: HttpClient) {}
@@ -38,7 +43,7 @@ export class ProfileComponent implements OnInit{
   updateUsername() {
     if (this.newUsername.trim()) {
       if(this.loggedUser) {
-        this.userServices.updateUsername(this.loggedUser, this.newUsername);
+        this.userService.updateUsername(this.loggedUser, this.newUsername);
         console.log("Usuario cambiado a: ", this.newUsername);
      }
     }
@@ -48,8 +53,30 @@ export class ProfileComponent implements OnInit{
   updateLanguage(event: Event) {
     const language = (event.target as HTMLSelectElement).value;
     if (this.loggedUser) {
-      this.userServices.updateLanguage(this.loggedUser, language);
+      this.userService.updateLanguage(this.loggedUser, language);
       console.log("Idioma cambiado a: ", language);
+    }
+  }
+
+  getLocations() {
+    if (this.loggedUser) {
+      this.userService.getLocations(this.loggedUser).subscribe(locations => {
+        this.locations = locations;
+      });
+    } else {
+      console.log("el usuario no está definido, no se pueden cargar las ubicaciones");
+    }
+  }
+
+  addLocation(location: string) {
+    if (this.loggedUser && this.loggedUser.locations.length < 5) {
+      this.userService.addLocation(this.loggedUser, location);
+    }
+  }
+
+  removeLocation(location: Location) {
+    if (this.loggedUser) {
+      this.userService.removeLocation(this.loggedUser, location);
     }
   }
 
@@ -58,8 +85,10 @@ export class ProfileComponent implements OnInit{
       console.log("Usuario recibido:", user);
       if (user) {
         this.loggedUser = user;
+        this.getLocations();
       }
     });
+
   }
 
 }

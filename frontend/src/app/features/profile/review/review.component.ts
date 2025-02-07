@@ -1,12 +1,13 @@
 import { Component, Input } from '@angular/core';
 import { Review } from '../../../core/models/review.model';
-import { NgClass } from '@angular/common';
+import { NgClass, NgForOf } from '@angular/common';
 
 @Component({
   selector: 'app-review',
   templateUrl: './review.component.html',
   imports: [
-    NgClass
+    NgClass,
+    NgForOf
   ],
   styleUrls: ['./review.component.css']
 })

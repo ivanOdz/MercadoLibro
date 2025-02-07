@@ -3,6 +3,8 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { User } from "../models/user.model";
 import { map } from "rxjs/operators";
 import { catchError, EMPTY, Observable, tap, throwError } from "rxjs";
+import { Location } from "../models/location.model";
+import {Review} from "../models/review.model";
 
 @Injectable({ providedIn: 'root' })
 
@@ -79,12 +81,6 @@ export class UserService {
         );
     }
 
-    getLocations(user: User): any {
-        return this.http.get(this.baseUrl + user.locations).subscribe((locations) => {
-            console.log(locations);
-        });
-    }
-
     updateUsername(user: User, newUsername: string): Observable<void> {
         const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.users.v1+json' });
 
@@ -110,4 +106,28 @@ export class UserService {
 
         return this.http.patch<void>(this.baseUrl + user.self, body, { headers });
     }
+
+    getLocations(user: User): Observable<Location[]> {
+        return this.http.get<Location[]>(this.baseUrl + user.locations).pipe(
+            map((locationsData: any[]) => locationsData.map(location => new Location(location)))
+        );
+    }
+
+    addLocation(user: User, location: string) {
+        return this.http.post<void>(this.baseUrl + user.locations, { location });
+    }
+
+    removeLocation(user: User, location: Location) {
+        return this.http.delete<void>(this.baseUrl + location.self);
+    }
+
+    getReviews(reviewsUrl: string): Observable<Review[]> {
+        const headers = new HttpHeaders({ 'Accept': 'application/vnd.reviews.v1+json' });
+
+        return this.http.get<any[]>('${this.baseUrl}${reviewsUrl}', { headers }).pipe(
+            map((reviewsData: any[]) => reviewsData.map(review => new Review(review)))
+        );
+    }
+
+
 }

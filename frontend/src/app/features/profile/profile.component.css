@@ -104,8 +104,7 @@
 select {
   padding: 10px;
   font-size: 16px;
-  border: 2px solid #007bff;
-  border-radius: 5px;
+  border-radius: 1px;
   cursor: pointer;
   transition: 0.3s;
 }
@@ -115,5 +114,41 @@ select:hover {
 select:focus {
   outline: none;
   border-color: #0056b3;
+}
+.locations-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.locations {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.location {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid black;
+  padding: 8px 12px;
+  border-radius: 15px;
+  font-size: 14px;
+}
+.remove-icon {
+  margin-left: 5px;
+  cursor: pointer;
+}
+.add-button {
+  background: #b4f7b4;
+  border: 1px solid green;
+  padding: 8px 12px;
+  border-radius: 15px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.add-button:disabled {
+  background: gray;
+  cursor: not-allowed;
 }
 
