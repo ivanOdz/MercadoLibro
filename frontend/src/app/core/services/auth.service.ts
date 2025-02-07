@@ -57,8 +57,11 @@ export class AuthService {
 
   fetchAndSetUser(tokenUri: string) {
     this.userService.getUser(tokenUri).subscribe({
-      next: (user) => this.setLoggedUser(user),
-      error: () => this.setLoggedUser(null),
+      next: (user) => {
+        this.setLoggedUser(user);
+        this.isAuthenticated.next(true);
+      },
+      error: () => this.logout()
     });
   }
 

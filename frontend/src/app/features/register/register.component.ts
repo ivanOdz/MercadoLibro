@@ -6,6 +6,7 @@ import {InputText} from "primeng/inputtext";
 import {Password} from "primeng/password";
 import {AuthService} from "../../core/services/auth.service";
 import {UserService} from "../../core/services/user.service";
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-register',
@@ -16,7 +17,8 @@ import {UserService} from "../../core/services/user.service";
     FormsModule,
     InputText,
     Password,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgIf
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
@@ -27,15 +29,14 @@ export class RegisterComponent {
   username: string = '';
   password: string = '';
   repeatPassword: string = '';
+  isRegistered = false;
 
   constructor(private authService: AuthService) {}
 
   register() {
     this.authService.register(this.email, this.username, this.password).subscribe({
-      next: (location) => {
-        if (location) {
-          console.log('Registro exitoso, redirigiendo a:', location);
-        }
+      next: () => {
+        this.isRegistered = true;
       },
       error: (err) => {
         console.error('Error al registrar:', err);
