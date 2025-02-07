@@ -1,6 +1,6 @@
 export class Review {
   description: string;
-  reviewDate: Date; // Date
+  reviewDate: string; // Date
   rating: number;
   self: string;
   subject: string;
