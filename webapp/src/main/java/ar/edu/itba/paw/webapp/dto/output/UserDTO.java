@@ -6,6 +6,7 @@ import javax.ws.rs.core.UriInfo;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.utils.Rating;
 import ar.edu.itba.paw.webapp.utils.UrnResolverUtil;
+import ar.edu.itba.paw.webapp.validation.SupportedLanguage;
 
 public class UserDTO {
 	
@@ -31,6 +32,9 @@ public class UserDTO {
 
 	private URI exchanges;
 
+	@SupportedLanguage
+	private String language;
+
 
 	public static UserDTO fromUser(final UriInfo uriInfo, final User user, Rating userRating) {
 		
@@ -40,6 +44,7 @@ public class UserDTO {
 		dto.mail = user.getMail();
 		dto.ratingCount = userRating.getRatingCount();
 		dto.ratingAverage = userRating.getRating();
+		dto.language = user.getLanguage();
 
 		// links
 		dto.self = URI.create("/users/" + user.getUserId());
@@ -140,6 +145,14 @@ public class UserDTO {
 
 	public void setExchanges(URI exchanges) {
 		this.exchanges = exchanges;
+	}
+
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
 	}
 }
 

@@ -1,17 +1,19 @@
-import {Injectable} from "@angular/core";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {User} from "../models/user.model";
-import {map} from "rxjs/operators";
-import {catchError, EMPTY, Observable, tap, throwError} from "rxjs";
+import { Injectable } from "@angular/core";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { User } from "../models/user.model";
+import { map } from "rxjs/operators";
+import { catchError, EMPTY, Observable, tap, throwError } from "rxjs";
+import { Location } from "../models/location.model";
+import {Review} from "../models/review.model";
 
 @Injectable({ providedIn: 'root' })
 
 export class UserService {
+    baseUrl = 'http://localhost:8080/api/';
 
+    constructor(private http: HttpClient) {
 
-    constructor(private http: HttpClient) { }
-
-    baseUrl = 'http://localhost:8080/api';
+    }
 
     getUser(userUrl: string): Observable<User> {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.users.v1+json'});
@@ -78,4 +80,54 @@ export class UserService {
             })
         );
     }
+
+    updateUsername(user: User, newUsername: string): Observable<void> {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.users.v1+json' });
+
+        const body = {
+            newUsername: newUsername,
+            language: null
+        };
+
+        console.log(body);
+
+        return this.http.patch<void>(this.baseUrl + user.self, body, { headers });
+    }
+
+    updateLanguage(user: User, language: string): Observable<void> {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.users.v1+json' });
+
+        const body = {
+            newUsername: null,
+            language: language
+        };
+
+        console.log(body);
+
+        return this.http.patch<void>(this.baseUrl + user.self, body, { headers });
+    }
+
+    getLocations(user: User): Observable<Location[]> {
+        return this.http.get<Location[]>(this.baseUrl + user.locations).pipe(
+            map((locationsData: any[]) => locationsData.map(location => new Location(location)))
+        );
+    }
+
+    addLocation(user: User, location: string) {
+        return this.http.post<void>(this.baseUrl + user.locations, { location });
+    }
+
+    removeLocation(user: User, location: Location) {
+        return this.http.delete<void>(this.baseUrl + location.self);
+    }
+
+    getReviews(reviewsUrl: string): Observable<Review[]> {
+        const headers = new HttpHeaders({ 'Accept': 'application/vnd.reviews.v1+json' });
+
+        return this.http.get<any[]>('${this.baseUrl}${reviewsUrl}', { headers }).pipe(
+            map((reviewsData: any[]) => reviewsData.map(review => new Review(review)))
+        );
+    }
+
+
 }

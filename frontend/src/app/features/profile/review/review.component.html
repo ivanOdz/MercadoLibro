@@ -1,0 +1,15 @@
+<div class="review-container">
+  <div class="review-header">
+    <span class="review-date">{{ formattedDate }}</span>
+    <div class="review-rating">
+      <ng-container *ngFor="let star of starArray">
+        <i
+          class="star-icon"
+          [ngClass]="star <= review.rating ? 'filled-star' : 'empty-star'">
+        </i>
+      </ng-container>
+      <span class="rating-number">({{ review.rating.toFixed(1) }})</span>
+    </div>
+  </div>
+  <p class="review-description">{{ review.description }}</p>
+</div>
