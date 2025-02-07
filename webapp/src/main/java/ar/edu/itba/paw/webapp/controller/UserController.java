@@ -8,12 +8,9 @@ import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.utils.Rating;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import ar.edu.itba.paw.webapp.auth.JwtTokenUtil;
-import ar.edu.itba.paw.webapp.dto.input.EmailDTO;
-import ar.edu.itba.paw.webapp.dto.input.UserUpdateDTO;
-import ar.edu.itba.paw.webapp.dto.input.PasswordChangeDTO;
+import ar.edu.itba.paw.webapp.dto.input.*;
 import ar.edu.itba.paw.webapp.dto.output.*;
 import ar.edu.itba.paw.webapp.dto.input.UserUpdateDTO;
-import ar.edu.itba.paw.webapp.dto.input.ReviewInputDTO;
 import ar.edu.itba.paw.webapp.dto.output.ReviewDTO;
 import ar.edu.itba.paw.webapp.form.UserForm;
 import ar.edu.itba.paw.webapp.dto.output.UserDTO;
@@ -54,8 +51,8 @@ public class UserController {
 
     @POST
     @Consumes(value = {VndType.APPLICATION_USER})
-    public Response createUser(@Valid @NotNull final UserForm registerForm) {
-        User user = us.createUser(registerForm.getUsername(), registerForm.getMail(), registerForm.getPassword(), LocaleContextHolder.getLocale().toLanguageTag());
+    public Response createUser(@Valid @NotNull final RegisterDTO registerDTO) {
+        User user = us.createUser(registerDTO.getUsername(), registerDTO.getMail(), registerDTO.getPassword(), LocaleContextHolder.getLocale().toLanguageTag());
         return Response.created(uriInfo.getAbsolutePathBuilder().path(user.getUserId().toString()).build()).build();
     }
 
@@ -100,13 +97,14 @@ public class UserController {
     // TODO: Manejar en los filtros el caso que la cuenta no esta verificada.
     @POST
     @Consumes(value = {VndType.APPLICATION_VERIFICATION_CODE})
-    public Response verifyUser(final int verificationCode) {
-        User user = us.verifyUser(verificationCode);
+    public Response verifyUser(final VerificationDTO verificationDTO) {
+        User user = us.verifyUser(verificationDTO.getVerificationCode());
 
         String accessToken = jwtTokenUtil.createAccessToken(user);
         String refreshToken = jwtTokenUtil.createRefreshToken(user);
 
         return Response.noContent()
+                .header("X-User-Uri", "/users/" + user.getUserId())
                 .header(JwtTokenUtil.ACCESS_TOKEN_HEADER, accessToken) // access token
                 .header(JwtTokenUtil.REFRESH_TOKEN_HEADER, refreshToken)  // refresh token
                 .build();

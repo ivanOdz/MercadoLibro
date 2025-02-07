@@ -102,7 +102,7 @@ public class EmailServiceImpl implements EmailService {
     public void sendVerificationEmail(User user) {
         Map<String, Object> variables = new HashMap<>();
         variables.put("username", user.getUsername());
-        variables.put("validationUrl", webappUrl + "/verification?verification_code=" + user.getVerificationCode());
+        variables.put("validationUrl", webappUrl + "/auth/verify?verification_code=" + user.getVerificationCode());
 
         sendEmail(user.getMail(), variables, "verification", messageSource.getMessage("email.subject.verification", null, Locale.forLanguageTag(user.getLanguage())), user.getLanguage());
     }
@@ -110,7 +110,7 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void sendPasswordChangeEmail(User user) {
         Map<String, Object> variables = new HashMap<>();
-        variables.put("validationUrl", webappUrl +"/change_password?verification_code=" + user.getVerificationCode());
+        variables.put("validationUrl", webappUrl +"/auth/change-password?verification_code=" + user.getVerificationCode());
 
         String locale = user.getLanguage() != null ? user.getLanguage() : Locale.getDefault().getLanguage();
 
