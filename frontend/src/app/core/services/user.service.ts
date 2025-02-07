@@ -19,7 +19,7 @@ export class UserService {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.users.v1+json'});
 
         // userUrl = '/users/{id}'
-        return this.http.get<any>(`${this.baseUrl}${userUrl}`, { headers }).pipe(
+        return this.http.get<any>(`${this.baseUrl}/${userUrl}`, { headers }).pipe(
             map((userData) => {
                 return new User(userData);
             })
