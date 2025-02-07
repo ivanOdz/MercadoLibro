@@ -144,7 +144,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> user = userDao.findByVerificationCode(verificationCode);
         if (user.isEmpty()) {
             LOGGER.warn("User verification failed: no user found for provided verification code.");
-            throw new UserVerificationBadRequestException("User verification failed");
+            throw new UserNotFoundException("User verification failed");
         }
 
         LOGGER.info("User of ID {} found for verification. Proceeding with verification.", user.get().getUserId());

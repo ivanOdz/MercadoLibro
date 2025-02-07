@@ -18,9 +18,6 @@ public class UserForm {
     @NotBlank
     private String password;
 
-    @NotBlank
-    private String repeatedPassword;
-
     public void setUsername(String username) {
         this.username = username;
     }
@@ -33,15 +30,6 @@ public class UserForm {
         this.password = password;
     }
 
-    public void setRepeatedPassword(String repeatedPassword) {
-        this.repeatedPassword = repeatedPassword;
-    }
-
-    @AssertTrue(message = "{userForm.passwords.mismatch}")
-    public boolean isPasswordsMatching() {
-        return password != null && password.equals(repeatedPassword);
-    }
-
     public String getUsername() {
         return username;
     }
@@ -52,11 +40,6 @@ public class UserForm {
 
     public String getPassword() {
         return password;
-    }
-
-    public String getRepeatedPassword() {
-        return repeatedPassword;
-
     }
 }
 

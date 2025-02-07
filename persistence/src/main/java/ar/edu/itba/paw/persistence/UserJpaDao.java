@@ -56,7 +56,9 @@ public class UserJpaDao implements UserDao {
     public Optional<User> findByVerificationCode(int verificationCode) {
         final TypedQuery<User> query = em.createQuery("FROM User as u where u.verificationCode = :verificationCode", User.class);
         query.setParameter("verificationCode", verificationCode);
-        return Optional.ofNullable(query.getSingleResult());
+
+        List<User> results = query.getResultList();
+        return results.isEmpty() ? Optional.empty() : Optional.of(results.getFirst());
     }
 
     @Override
