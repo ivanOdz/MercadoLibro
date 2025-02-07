@@ -19,12 +19,12 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     const handleResponse = (response: HttpResponse<any>) => {
         const newAccessToken = response.headers.get('X-Access-Token');
         const newRefreshToken = response.headers.get('X-Refresh-Token');
+        const tokenUri = response.headers.get('X-User-URI');
 
         if (newAccessToken && newRefreshToken) {
-            authService.storeTokens(newAccessToken, newRefreshToken);
+            authService.storeTokens(newAccessToken, newRefreshToken, tokenUri);
         }
 
-        const tokenUri = response.headers.get('X-User-Uri');
         if (tokenUri) {
             authService.fetchAndSetUser(tokenUri);
         }
