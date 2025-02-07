@@ -4,29 +4,29 @@
 
 <!-- Mensaje de éxito -->
 @if (verificationSuccess) {
-    <p-card class="success-card">
+    <p-card class="flex align-items-center justify-content-center w-full h-full success-card">
         <ng-template pTemplate="title">
             <i class="pi pi-check-circle text-green-500 text-3xl"></i>
             ¡Verificación exitosa!
         </ng-template>
         <ng-template pTemplate="content">
             <p>Tu cuenta ha sido verificada con éxito. Ahora puedes acceder a todas las funcionalidades.</p>
-            <p-button label="Ir al Inicio" icon="pi pi-home" (click)="goToHome()" class="p-button-success w-full"></p-button>
+            <p-button label="Ir al Inicio" icon="pi pi-home" (click)="goToHome()" class="flex justify-content-center w-full"></p-button>
         </ng-template>
     </p-card>
 }
 
 <!-- Mensaje de error -->
 @if (verificationFailed) {
-    <p-card class="error-card">
+    <p-card class="flex align-items-center justify-content-center w-full h-full error-card">
         <ng-template pTemplate="title">
             <i class="pi pi-times-circle text-red-500 text-3xl"></i>
             Error en la verificación
         </ng-template>
         <ng-template pTemplate="content">
             <p-message severity="error" [text]="errorMessage"></p-message>
-            <p>Si el problema persiste, por favor contacta al soporte.</p>
-            <p-button label="Ir al Inicio" icon="pi pi-home" (click)="goToHome()" class="p-button-danger w-full"></p-button>
+            <p>Por favor, chequee que el token de verificacion sea correcto</p>
+            <p-button label="Ir al Inicio" icon="pi pi-home" (click)="goToHome()" class="flex justify-content-center w-full"></p-button>
         </ng-template>
     </p-card>
 }

@@ -5,6 +5,7 @@ import {ProgressSpinner} from "primeng/progressspinner";
 import {Card} from "primeng/card";
 import {Button} from "primeng/button";
 import {Message} from "primeng/message";
+import {PrimeTemplate} from "primeng/api";
 
 @Component({
   selector: 'app-verify',
@@ -13,7 +14,8 @@ import {Message} from "primeng/message";
     ProgressSpinner,
     Card,
     Button,
-    Message
+    Message,
+    PrimeTemplate
   ],
   templateUrl: './verify.component.html',
   styleUrl: './verify.component.css'
