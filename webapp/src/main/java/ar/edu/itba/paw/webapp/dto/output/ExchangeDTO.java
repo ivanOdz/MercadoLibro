@@ -4,7 +4,7 @@ import ar.edu.itba.paw.models.Exchange;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
-import java.sql.Timestamp;
+import java.util.Date;
 
 public class ExchangeDTO {
     private String state;
@@ -12,8 +12,8 @@ public class ExchangeDTO {
     private Boolean offerer_received;
     private Boolean requester_received;
     private Boolean isConfirmed;
-    private Timestamp start_date;
-    private Timestamp end_date;
+    private Date start_date;
+    private Date end_date;
 
     private URI self;
     private URI offerer;
@@ -30,8 +30,8 @@ public class ExchangeDTO {
         dto.accept_code = exchange.getAcceptCode();
         dto.offerer_received = exchange.isOffererReceivedBook();
         dto.requester_received = exchange.isRequesterReceivedBook();
-        dto.start_date = exchange.getExchangeStartDate();
-        dto.end_date = exchange.getExchangeEndDate();
+        dto.start_date = exchange.getExchangeStartDate() != null ? new Date(exchange.getExchangeStartDate().getTime()) : null;
+        dto.end_date = exchange.getExchangeEndDate() != null ? new Date(exchange.getExchangeEndDate().getTime()) : null;
         dto.isConfirmed = exchange.isConfirmed();
 
         dto.self = URI.create("/exchanges/" + exchange.getExchangeId());
@@ -78,19 +78,19 @@ public class ExchangeDTO {
         this.requester_received = requester_received;
     }
 
-    public Timestamp getStart_date() {
+    public java.util.Date getStart_date() {
         return start_date;
     }
 
-    public void setStart_date(Timestamp start_date) {
+    public void setStart_date(Date start_date) {
         this.start_date = start_date;
     }
 
-    public Timestamp getEnd_date() {
+    public Date getEnd_date() {
         return end_date;
     }
 
-    public void setEnd_date(Timestamp end_date) {
+    public void setEnd_date(Date end_date) {
         this.end_date = end_date;
     }
 
@@ -148,5 +148,13 @@ public class ExchangeDTO {
 
     public void setConfirmed(Boolean confirmed) {
         isConfirmed = confirmed;
+    }
+
+    public Long getAccept_code() {
+        return accept_code;
+    }
+
+    public void setAccept_code(Long accept_code) {
+        this.accept_code = accept_code;
     }
 }

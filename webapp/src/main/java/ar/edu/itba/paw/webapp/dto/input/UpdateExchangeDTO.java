@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.webapp.dto.input;
 
-import javax.ws.rs.QueryParam;
-
 public class UpdateExchangeDTO {
     private Integer acceptCode;
     private Boolean accepted;
@@ -30,4 +28,6 @@ public class UpdateExchangeDTO {
     public void setAcceptCode(Integer acceptCode) {
         this.acceptCode = acceptCode;
     }
+
+
 }

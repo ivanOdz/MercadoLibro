@@ -35,10 +35,10 @@
                         </div>
                         <div class="active-card-second-column">
                             <p-steps [model]="steps" [activeIndex]="1" [readonly]="true" />
-                            <div *ngIf="loggedUser === card.offeredPub.book.owner? !card.exchange.offerer_received : !card.exchange.requester_received">
-                                <p-button class="confirm-button" styleClass="confirm-button" label="confirmar" (click)="confirmExchange(card)" />
+                            <div *ngIf="isRequester(card)? !card.exchange.requester_received : !card.exchange.offerer_received">
+                                <p-button class="confirm-button" styleClass="confirm-button" label="confirmar" (click)="confirmExchange(card, isRequester(card))" />
                             </div>
-                            <div *ngIf="loggedUser === card.offeredPub.book.owner? card.exchange.offerer_received : card.exchange.requester_received">
+                            <div *ngIf="isRequester(card)? card.exchange.requester_received : card.exchange.offerer_received">
                                 <span style="margin-top: 1rem;font-size: 12px;padding: 0.5rem;background: lightgray" class="exchange-completed-span" >Ya has confirmado</span>
                             </div>
                         </div>

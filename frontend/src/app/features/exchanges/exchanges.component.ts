@@ -27,6 +27,7 @@ import {appConfig} from "../../app.config";
 import {environment} from "../../../environments/environment";
 import {ProgressSpinner} from "primeng/progressspinner";
 import {Message} from "../../core/models/message.model";
+import {Toast} from "primeng/toast";
 
 type message = { sender: number, message: string, date: Date };
 
@@ -39,7 +40,7 @@ type BookData = {owner: User | null, image: string | null, model: BookModel | nu
   templateUrl: `exchanges.component.html`,
   standalone: true,
   styleUrl: './exchanges.component.css',
-    imports: [ButtonModule, SidebarComponent, NavbarComponent, NgForOf, Paginator, Steps, Rating, FormsModule, Dialog, InputText, NgIf, NgClass, NgOptimizedImage, ProgressSpinner, NgStyle]
+    imports: [ButtonModule, SidebarComponent, NavbarComponent, NgForOf, Paginator, Steps, Rating, FormsModule, Dialog, InputText, NgIf, NgClass, NgOptimizedImage, ProgressSpinner, NgStyle, Toast]
 })
 export class ExchangesComponent implements OnInit {
     loggedUser: User | null = null;
@@ -63,6 +64,10 @@ export class ExchangesComponent implements OnInit {
     // ##################  Api calls  ##################
 
     private loadExchanges(): void {
+            this.activeExchanges = [];
+            this.isLoading = true;
+
+
             this.as.loggedUser$.pipe(
             filter((user: User | null) => !!user),
                 switchMap((user: User) =>
@@ -152,6 +157,22 @@ export class ExchangesComponent implements OnInit {
             );
     }
 
+
+    confirmExchange(card: ExchangeData, requester: boolean) {
+        if (!card.exchange) {
+            console.error("No se puede confirmar el intercambio sin datos.");
+            return;
+        }
+
+        this.es.confirmExchange(card.exchange.self, card.exchange.accept_code, requester).subscribe(
+            () => {
+                console.log("Intercambio confirmado:", card.exchange.self);
+                this.loadExchanges();
+            },
+            (error) => console.error("Error al confirmar el intercambio:", error))
+    }
+
+
     //##################  Html functions  ##################
     isLoading = true;
 
@@ -197,9 +218,6 @@ export class ExchangesComponent implements OnInit {
 
 
 
-    confirmExchange(card: ExchangeData) {
-
-    }
 
     openChat() {
         this.displayModal = true;
