@@ -11,6 +11,7 @@ import ar.edu.itba.paw.webapp.dto.input.UpdateExchangeDTO;
 import ar.edu.itba.paw.webapp.dto.output.ExchangeDTO;
 import ar.edu.itba.paw.webapp.dto.output.MessageDTO;
 import ar.edu.itba.paw.webapp.mediaTypes.VndType;
+import ar.edu.itba.paw.webapp.utils.SerializationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
@@ -45,7 +46,12 @@ public class ExchangeController {
 
         List<ExchangeDTO> exchangeDTOS = exchanges.getData().stream().map(exchange -> ExchangeDTO.fromExchange(uriInfo, exchange)).toList();
 
-        return Response.ok(new GenericEntity<List<ExchangeDTO>>(exchangeDTOS) {}).build();
+        Map<String, String> paginationHeaders = SerializationUtils.serializePaginationHeaders(exchanges.getMetadata());
+
+        Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ExchangeDTO>>(exchangeDTOS) {});
+        paginationHeaders.forEach(response::header);
+
+        return response.build();
     }
 
     @POST

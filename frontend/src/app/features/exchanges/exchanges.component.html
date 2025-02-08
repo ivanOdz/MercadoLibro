@@ -39,7 +39,7 @@
                                 <p-button class="confirm-button" styleClass="confirm-button" label="confirmar" (click)="confirmExchange(card)" />
                             </div>
                             <div *ngIf="loggedUser === card.offeredPub.book.owner? card.exchange.offerer_received : card.exchange.requester_received">
-                                <span style="margin-top: 1rem;font-size: 12px;padding: 0.5rem;" class="exchange-completed-span">Ya has confirmado</span>
+                                <span style="margin-top: 1rem;font-size: 12px;padding: 0.5rem;background: lightgray" class="exchange-completed-span" >Ya has confirmado</span>
                             </div>
                         </div>
                     </div>
@@ -101,8 +101,13 @@
                     </div>
                 </div>
             </div>
+            <div *ngIf="!selectedCard">
+                <div class="emtpy-content-panel">
+                    <p class="text-empty">Selecciona una tarjeta para más detalles</p>
+                </div>
+            </div>
         </div>
-        <div *ngIf="activeExchanges.length === 0" class="card-section-empty">
+        <div *ngIf="activeExchanges.length === 0 && !isLoading" class="card-section-empty">
             <p class="text-empty">No tienes intercambios activos</p>
             <p-button styleClass="empty-button" label="Ver publicaciones" icon="pi pi-search" (click)="redirectToPublications()" />
         </div>

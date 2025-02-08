@@ -13,7 +13,7 @@ import {InputText} from "primeng/inputtext";
 import {Exchange} from "../../core/models/exchange.model";
 import {ExchangeService} from "../../core/services/exchange.service";
 import {UserService} from "../../core/services/user.service";
-import {catchError, filter, finalize, forkJoin, Observable, of, switchMap, tap} from "rxjs";
+import {catchError, filter, forkJoin, of, switchMap, tap} from "rxjs";
 import {User} from "../../core/models/user.model";
 import {AuthService} from "../../core/services/auth.service";
 import {Router} from "@angular/router";
@@ -52,6 +52,8 @@ export class ExchangesComponent implements OnInit {
                 private router: Router) {}
 
     ngOnInit(): void {
+        this.isLoading = true;
+        this.currentPage = 0;
         this.as.loggedUser$.subscribe((user: User | null) => {
             this.loggedUser = user;
             this.loadExchanges();
@@ -62,21 +64,26 @@ export class ExchangesComponent implements OnInit {
 
     private loadExchanges(): void {
             this.as.loggedUser$.pipe(
-            filter((user: User | null) => !!user), // Solo sigue si hay usuario
-            switchMap((user: User) =>
-                this.es.getActiveExchanges(user.exchanges, this.currentPage).pipe(
-                    tap((exchanges) => console.log("Intercambios obtenidos:", exchanges)),
-                    catchError((error) => {
-                        console.error("Error obteniendo intercambios:", error);
-                        return of([]); // Si falla, devolvemos un array vacío para evitar romper el flujo
-                    })
+            filter((user: User | null) => !!user),
+                switchMap((user: User) =>
+                    this.es.getActiveExchanges(user.exchanges, this.currentPage).pipe(
+                        tap((response) => {
+                            this.currentPage = response.pagination.currentPage;
+                            this.totalRecords = response.pagination.totalAmount;
+                            this.rows = response.pagination.totalAmount / response.pagination.maxPage;
+                        }),
+                        map(response => response.exchange),
+                        catchError((error) => {
+                            console.error("Error obteniendo intercambios:", error);
+                            return of([]);
+                        })
+                    )
                 )
-            )
-            ,
-            switchMap((exchanges: Exchange[]) => {
-                if (exchanges.length === 0) {
-                    console.warn("No se encontraron intercambios.");
-                    return of([]); // Si no hay intercambios, evitamos que el código siga innecesariamente
+                ,
+                switchMap((exchanges: Exchange[]) => {
+                    if (exchanges.length === 0) {
+                        console.warn("No se encontraron intercambios.");
+                        return of([]);
                 }
 
                 const exchangeRequests = exchanges.map((exchange) => forkJoin({
@@ -159,6 +166,15 @@ export class ExchangesComponent implements OnInit {
     }
 
 
+    // ##################  Pagination  ##################
+    rows: unknown;
+    totalRecords: unknown;
+    currentPage: number = 0;
+    onPageChange($event: PaginatorState) {
+        this.currentPage = $event.page || 0;
+    }
+
+
     Title = "Intercambios activos";
 
 
@@ -169,49 +185,41 @@ export class ExchangesComponent implements OnInit {
 
     private changeDetectorRef: any;
 
-        onPageChange($event: PaginatorState) {
-
-        }
-
-        rows: unknown;
-        totalRecords: unknown;
-        currentPage: number = 0;
-        steps: MenuItem[] = [
+    steps: MenuItem[] = [
         { label: 'Aceptado' },
         { label: 'Esperando confirmacion' },
         { label: 'Finalizado' }
-        ];
-        value: any;
-        newMessage: any;
-        messages: message[] = [ { sender: 1, message: 'Hello', date: new Date('2025-02-04') }, { sender: 2, message: 'Hi', date: new Date()} ];
-        lastDate: Date = new Date('2025-02-04');
+    ];
+    value: any;
+    newMessage: any;
+    messages: message[] = [ { sender: 1, message: 'Hello', date: new Date('2025-02-04') }, { sender: 2, message: 'Hi', date: new Date()} ];
+    lastDate: Date = new Date('2025-02-04');
 
 
 
-        confirmExchange(card: ExchangeData) {
+    confirmExchange(card: ExchangeData) {
 
+    }
+
+    openChat() {
+        this.displayModal = true;
+    }
+
+    sendMessage() {
+        if (this.newMessage.trim()) {
+            this.messages.push(this.newMessage);
+            this.newMessage = '';
+            this.changeDetectorRef.detectChanges();
         }
+    }
+    getMonthName(month: number) {
+        return this.monthNames[month - 1];
+    }
 
-        openChat() {
-          this.displayModal = true;
-        }
+    redirectToPublications() {
+        this.router.navigate(['/publications']);
+    }
 
-        sendMessage() {
-          if (this.newMessage.trim()) {
-                this.messages.push(this.newMessage);
-                this.newMessage = '';
-                this.changeDetectorRef.detectChanges();
-          }
-        }
-        getMonthName(month: number) {
-          return this.monthNames[month - 1];
-        }
-
-        redirectToPublications() {
-          this.router.navigate(['/publications']);
-        }
-
-    protected readonly appConfig = appConfig;
     protected readonly environment = environment;
 
     getBookImage(book: BookData) {

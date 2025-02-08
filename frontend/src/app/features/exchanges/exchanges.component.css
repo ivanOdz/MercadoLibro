@@ -407,7 +407,7 @@
     display: grid;
     grid-template-columns: 25% 70%;
     gap: 5%;
-    height: auto;
+    height: 23vh;
 }
 
 .book-yours-card {
@@ -434,8 +434,8 @@
 }
 .book-card-description {
     font-size: small;
-    overflow-y: scroll;
-    height: 12vh;
+    overflow-y: auto;
+    height: 10vh;
 }
 
 
