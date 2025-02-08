@@ -90,4 +90,6 @@ public class PublicationDTO {
     public void setSelf(URI self) {
         this.self = self;
     }
+
+
 }

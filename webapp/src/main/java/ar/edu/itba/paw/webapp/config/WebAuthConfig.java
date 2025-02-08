@@ -159,7 +159,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .access(PUBLICATION_MODIFY_ACCESS)
 
                 .antMatchers(HttpMethod.GET, "/api/publications/{publication_id:\\d+}")
-                    .access(PUBLICATION_ACCESS)
+                    .authenticated()
 
                 .antMatchers( "/api/publications/{publication_id}/favorite", "/api/publications/{publication_id}/favorite/**")
                     .authenticated()
@@ -181,8 +181,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         "/api/users/{id:\\d+}/reviews", "/api/users/{id:\\d+}/reviews/{ur_id:\\d+}")
                     .authenticated()
 
-                .antMatchers("/api/users/{id:\\d+}/locations","/api/users/{id:\\d+}/locations",
-                        "/api/users/{id:\\d+}/locations/{location_id:\\d+}","/api/users/{id:\\d+}/locations/{location_id:\\d+}")
+                .antMatchers("/api/users/{id:\\d+}/locations/{location_id:\\d+}","/api/users/{id:\\d+}/locations/{location_id:\\d+}")
                     .access(USER_ACCESS)
 
                 .antMatchers(HttpMethod.GET, "/api/users/{id:\\d+}/reviews/{ur_id:\\d+}")

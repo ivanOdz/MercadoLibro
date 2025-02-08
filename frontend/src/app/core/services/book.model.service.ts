@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {Observable, tap} from "rxjs";
 import {Publication} from "../models/publication.model";
 import {BookModel} from "../models/bookModel.model";
 
@@ -11,6 +11,9 @@ export class BookModelService {
     constructor(private http: HttpClient) {}
 
     getBookModel(bookModelUrl: string) : Observable<BookModel> {
-        return this.http.get<any>(`${this.baseUrl}${bookModelUrl}`);
+        const headers = new HttpHeaders({ 'Accept': 'application/vnd.book_models.v1+json'});
+        return this.http.get<any>(`${this.baseUrl}${bookModelUrl}`, {headers}).pipe(
+            tap((r) => console.log("Respuesta de la API:", r))
+        );
     }
 }

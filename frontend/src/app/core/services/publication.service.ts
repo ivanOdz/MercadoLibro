@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {Observable, tap} from "rxjs";
 import {Publication} from "../models/publication.model";
 
 @Injectable({ providedIn: 'root' })
@@ -10,10 +10,16 @@ export class PublicationService {
     constructor(private http: HttpClient) {}
 
     getPublication(publicationUrl: string) : Observable<Publication> {
-        return this.http.get<any>(`${this.baseUrl}${publicationUrl}`);
+        const headers = new HttpHeaders({ 'Accept': 'application/vnd.publications.v1+json'});
+
+        return this.http.get<any>(`${this.baseUrl}${publicationUrl}`, {headers}).pipe(
+            tap((r) => console.log("Respuesta de la API con publications:", r))
+        );
     }
 
     getLocation(locationUrl: string) : Observable<Location[]> {
-        return this.http.get<any>(`${this.baseUrl}${locationUrl}`);
+        return this.http.get<any>(`${this.baseUrl}${locationUrl}`).pipe(
+            tap((r) => console.log("Respuesta de la API:", r))
+        );
     }
 }

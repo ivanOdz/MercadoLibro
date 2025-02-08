@@ -9,7 +9,7 @@ import {Exchange} from "../models/exchange.model";
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-    baseUrl = 'http://localhost:8080/api';
+    baseUrl = 'http://localhost:8080/api/';
 
     constructor(private http: HttpClient) {
 
@@ -19,7 +19,8 @@ export class UserService {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.users.v1+json'});
 
         // userUrl = '/users/{id}'
-        return this.http.get<any>(`${this.baseUrl}/${userUrl}`, { headers }).pipe(
+        return this.http.get<any>(`${this.baseUrl}${userUrl}`, { headers }).pipe(
+            tap((userData) => console.log('Respuesta de la API:', userData)),
             map((userData) => {
                 return new User(userData);
             })

@@ -71,20 +71,9 @@ export class ExchangesComponent implements OnInit {
                     return of([]); // Si no hay intercambios, evitamos que el código siga innecesariamente
                 }
 
-                const exchangeRequests = exchanges.map((exchange) =>
-                    forkJoin({
-                        offererPub: this.ps.getPublication(exchange.offerer).pipe(
-                            catchError((err) => {
-                                console.error("Error obteniendo publicación del oferente:", err);
-                                return of(null);
-                            })
-                        ),
-                        requesterPub: this.ps.getPublication(exchange.requester).pipe(
-                            catchError((err) => {
-                                console.error("Error obteniendo publicación del solicitante:", err);
-                                return of(null);
-                            })
-                        ),
+                const exchangeRequests = exchanges.map((exchange) => forkJoin({
+                        offererPub: this.ps.getPublication(exchange.offerer),
+                        requesterPub: this.ps.getPublication(exchange.requester),
                     }).pipe(
                         switchMap(({ offererPub, requesterPub }) => {
                             if (!offererPub || !requesterPub) return of(null); // Si alguna publicación falló, evitamos errores
