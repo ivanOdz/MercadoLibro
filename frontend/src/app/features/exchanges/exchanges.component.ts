@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {NavbarComponent} from "../../shared/components/navbar/navbar.component";
 import { ButtonModule } from 'primeng/button';
 import {SidebarComponent} from "./components/sidebar.component";
-import { NgClass, NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
+import {NgClass, NgForOf, NgIf, NgOptimizedImage, NgStyle} from "@angular/common";
 import {Paginator, PaginatorState} from "primeng/paginator";
 import {Steps} from "primeng/steps";
 import {MenuItem} from "primeng/api";
@@ -13,7 +13,7 @@ import {InputText} from "primeng/inputtext";
 import {Exchange} from "../../core/models/exchange.model";
 import {ExchangeService} from "../../core/services/exchange.service";
 import {UserService} from "../../core/services/user.service";
-import {catchError, filter, forkJoin, Observable, of, switchMap, tap} from "rxjs";
+import {catchError, filter, finalize, forkJoin, Observable, of, switchMap, tap} from "rxjs";
 import {User} from "../../core/models/user.model";
 import {AuthService} from "../../core/services/auth.service";
 import {Router} from "@angular/router";
@@ -25,10 +25,12 @@ import {Location} from "../../core/models/location.model";
 import {map} from "rxjs/operators";
 import {appConfig} from "../../app.config";
 import {environment} from "../../../environments/environment";
+import {ProgressSpinner} from "primeng/progressspinner";
+import {Message} from "../../core/models/message.model";
 
 type message = { sender: number, message: string, date: Date };
 
-type ExchangeData = {exchange: Exchange, offeredPub: PublicationData, requestedPub: PublicationData};
+type ExchangeData = {exchange: Exchange, offeredPub: PublicationData, requestedPub: PublicationData/*, messages: Message[]*/};
 type PublicationData = {book: BookData, locations: Location[]};
 type BookData = {owner: User | null, image: string | null, model: BookModel | null};
 
@@ -37,7 +39,7 @@ type BookData = {owner: User | null, image: string | null, model: BookModel | nu
   templateUrl: `exchanges.component.html`,
   standalone: true,
   styleUrl: './exchanges.component.css',
-    imports: [ButtonModule, SidebarComponent, NavbarComponent, NgForOf, Paginator, Steps, Rating, FormsModule, Dialog, InputText, NgIf, NgClass, NgOptimizedImage]
+    imports: [ButtonModule, SidebarComponent, NavbarComponent, NgForOf, Paginator, Steps, Rating, FormsModule, Dialog, InputText, NgIf, NgClass, NgOptimizedImage, ProgressSpinner, NgStyle]
 })
 export class ExchangesComponent implements OnInit {
     loggedUser: User | null = null;
@@ -55,7 +57,8 @@ export class ExchangesComponent implements OnInit {
             this.loadExchanges();
         });
     }
-        // ##################  Api calls  ##################
+
+    // ##################  Api calls  ##################
 
     private loadExchanges(): void {
             this.as.loggedUser$.pipe(
@@ -81,7 +84,7 @@ export class ExchangesComponent implements OnInit {
                         requesterPub: this.ps.getPublication(exchange.requester),
                     }).pipe(
                         switchMap(({ offererPub, requesterPub }) => {
-                            if (!offererPub || !requesterPub) return of(null); // Si alguna publicación falló, evitamos errores
+                            if (!offererPub || !requesterPub) return of(null);
 
                             return forkJoin({
                                 offererUser: this.us.getUser(offererPub.user).pipe(catchError(() => of(null))),
@@ -119,7 +122,7 @@ export class ExchangesComponent implements OnInit {
                                                     image: requesterBook?.images?.[0] || null,
                                                 },
                                                 locations: requesterLocations,
-                                            },
+                                            }
                                         }))
                                     );
                                 })
@@ -135,14 +138,26 @@ export class ExchangesComponent implements OnInit {
             ).subscribe(
                 (activeExchanges) => {
                     this.activeExchanges = activeExchanges;
+                    this.isLoading = false;
                     console.log("Intercambios cargados:", this.activeExchanges);
                 },
                 (error) => console.error("Error en la carga de intercambios:", error)
             );
     }
 
-        //##################  Html functions  ##################
+    //##################  Html functions  ##################
+    isLoading = true;
+
     selectedCard: ExchangeData | null = null;
+
+    selectCard(cardText: ExchangeData) {
+        this.selectedCard = cardText;
+    }
+
+    get selectedUserRating() {
+        return this.isRequester(this.selectedCard) ? this.selectedCard?.offeredPub?.book?.owner?.ratingAverage : this.selectedCard?.requestedPub?.book?.owner?.ratingAverage;
+    }
+
 
     Title = "Intercambios activos";
 
@@ -151,11 +166,6 @@ export class ExchangesComponent implements OnInit {
 
 
     displayModal: boolean = false;
-
-
-        selectCard(cardText: ExchangeData) {
-          this.selectedCard = cardText;
-        }
 
     private changeDetectorRef: any;
 
@@ -208,5 +218,9 @@ export class ExchangesComponent implements OnInit {
         return this.loggedUser === book.owner ?
             (book.image || 'assets/book.jpg') :
             (book.image || 'assets/book.jpg');
+    }
+
+    isRequester(selectedCard: ExchangeData | null) {
+        return this.loggedUser === selectedCard?.requestedPub.book.owner;
     }
 }

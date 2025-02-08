@@ -109,6 +109,21 @@
     color: black;
 }
 
+.emtpy-content-panel {
+    display: flex;
+    font-size: 16px;
+    text-align: center;
+    flex-direction: column;
+    color: black;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    height: 90%;
+    align-items: center;
+    justify-content: center
+}
+
 .main-section {
     display: grid;
     grid-template-columns: 60% 40%;
@@ -419,6 +434,8 @@
 }
 .book-card-description {
     font-size: small;
+    overflow-y: scroll;
+    height: 12vh;
 }
 
 

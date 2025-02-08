@@ -3,13 +3,12 @@
     <exchanges-sidebar/>
     <div class="content">
         <p class="page-title">{{Title}}</p>
-        <div *ngIf="activeExchanges.length === 0" class="card-section-empty">
-            <p class="text-empty">No tienes intercambios activos</p>
-            <p-button styleClass="empty-button" label="Ver publicaciones" icon="pi pi-search" (click)="redirectToPublications()" />
-        </div>
         <div  *ngIf="activeExchanges.length != 0"  class="main-section">
             <div style="grid-column: 1;" class="column-cards">
-                <div class="card-section">
+                <div class="card-section" style="align-content: center;text-align: center" *ngIf="isLoading">
+                    <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
+                </div>
+                <div class="card-section" *ngIf="!isLoading">
                     <div
                             class="card"
                             *ngFor="let card of activeExchanges"
@@ -48,15 +47,22 @@
                 <p-paginator (onPageChange)="onPageChange($event)" [first]="currentPage" [rows]="rows" [totalRecords]="totalRecords" />
             </div>
 
-            <div class="content-panel" id="content-panel">
+            <div class="content-panel" style="align-content: center;text-align: center" *ngIf="isLoading">
+                <div class="emtpy-content-panel">
+                    <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
+                </div>
+            </div>
+            <div *ngIf="selectedCard" class="content-panel" id="content-panel">
                 <div class="static-card user-card" id="user-card">
                     <div style="grid-column: 1">
                         <div class="user-card-image"></div>
                     </div>
                     <div style="grid-column: 2; text-align: start;">
-                        <p class="user-card-name">Nombre de usuario</p>
-                        <p class="user-card-email">usuario&#64;mail.com</p>
-                        <p-rating [(ngModel)]="value" [disabled]="true" />
+                        <p class="user-card-name">{{ isRequester(selectedCard) ? selectedCard?.offeredPub?.book?.owner?.username :
+                            selectedCard?.requestedPub?.book?.owner?.username }}</p>
+                        <p class="user-card-email">{{ isRequester(selectedCard) ? selectedCard?.offeredPub?.book?.owner?.username :
+                            selectedCard?.requestedPub?.book?.owner?.mail }}</p>
+                        <p-rating [(ngModel)]="selectedUserRating" [disabled]="true" />
                     </div>
                     <div style="grid-column: 3; align-content: center;text-align: end;">
                         <i style="font-size: xx-large;font-weight: lighter;cursor: pointer" class="pi pi-comment icon-card-active" (click)="openChat()"></i>
@@ -68,14 +74,13 @@
                         <div class="book-image-static"></div>
                     </div>
                     <div style="grid-column: 2; text-align: start;">
-                        <p class="book-card-title">Título del libro</p>
-                        <p class="book-card-author">Autor del libro</p>
+                        <p class="book-card-title">{{ isRequester(selectedCard) ? selectedCard?.offeredPub?.book?.model?.title :
+                            selectedCard?.requestedPub?.book?.model?.title }}</p>
+                        <p class="book-card-author">{{ isRequester(selectedCard) ? selectedCard?.offeredPub?.book?.model?.authors :
+                            selectedCard?.requestedPub?.book?.model?.authors }}</p>
                         <p class="book-card-description">
-                            feogmpwo4ngpeangwpvp om3fpnenopgnopvwnvwpoewnvwev
-                            ewnonpwvownenovpewvneoneopnbeobneopbneonbe
-                            beboenbeopbneoneboneoneobneobnoebneobneb
-                            ebneobnebnebnebononboebnenboenbeobnobneb
-                            neonbeobebneobnebnoenbeobeonboenn
+                            {{ isRequester(selectedCard) ? selectedCard?.offeredPub?.book?.model?.description :
+                            selectedCard?.requestedPub?.book?.model?.description }}
                         </p>
                     </div>
                 </div>
@@ -85,18 +90,21 @@
                         <div class="book-image-static"></div>
                     </div>
                     <div style="grid-column: 2; text-align: start;">
-                        <p class="book-card-title">Título del libro</p>
-                        <p class="book-card-author">Autor del libro</p>
+                        <p class="book-card-title">{{ isRequester(selectedCard) ? selectedCard?.requestedPub?.book?.model?.title :
+                            selectedCard?.offeredPub?.book?.model?.title }}</p>
+                        <p class="book-card-author">{{ isRequester(selectedCard) ? selectedCard?.requestedPub?.book?.model?.authors :
+                            selectedCard?.offeredPub?.book?.model?.authors }}</p>
                         <p class="book-card-description">
-                            feogmpwo4ngpeangwpvp om3fpnenopgnopvwnvwpoewnvwev
-                            ewnonpwvownenovpewvneoneopnbeobneopbneonbe
-                            beboenbeopbneoneboneoneobneobnoebneobneb
-                            ebneobnebnebnebononboebnenboenbeobnobneb
-                            neonbeobebneobnebnoenbeobeonboenn
+                            {{ isRequester(selectedCard) ? selectedCard?.requestedPub?.book?.model?.description :
+                            selectedCard?.offeredPub?.book?.model?.description }}
                         </p>
                     </div>
                 </div>
             </div>
+        </div>
+        <div *ngIf="activeExchanges.length === 0" class="card-section-empty">
+            <p class="text-empty">No tienes intercambios activos</p>
+            <p-button styleClass="empty-button" label="Ver publicaciones" icon="pi pi-search" (click)="redirectToPublications()" />
         </div>
     </div>
 </div>

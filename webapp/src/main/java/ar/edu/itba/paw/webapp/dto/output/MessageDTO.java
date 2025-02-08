@@ -5,10 +5,11 @@ import ar.edu.itba.paw.models.Message;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.sql.Timestamp;
+import java.util.Date;
 
 public class MessageDTO {
     private String message;
-    private Timestamp time;
+    private Date time;
 
     private URI self;
     private URI user;
@@ -27,7 +28,7 @@ public class MessageDTO {
         return dto;
     }
 
-    public Timestamp getTime() {
+    public Date getTime() {
         return time;
     }
 

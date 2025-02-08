@@ -10,6 +10,12 @@ export class ExchangeService {
 
     constructor(private http: HttpClient) { }
 
+
+    getMessages(messagesUrl: string): Observable<any> {
+        const headers = new HttpHeaders({ 'Accept': 'application/vnd.message.v1+json' });
+        return this.http.get<any>(`${this.baseUrl}${messagesUrl}`, { headers });
+    }
+
     //  /exchanges?user_id=123546789&state=accepted&isRequester=true&isOfferer=true&page=1
     //  exchangesUrl: /exchanges?user_id=123546789
     getActiveExchanges(exchangesUrl: string, page: number): Observable<Exchange[]> {
