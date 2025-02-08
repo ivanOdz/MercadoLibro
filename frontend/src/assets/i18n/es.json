@@ -1,0 +1,26 @@
+{
+  "LOGIN": {
+    "TITLE": "Iniciar Sesión",
+    "USERNAME": "Usuario",
+    "PASSWORD": "Contraseña",
+    "REMEMBER_ME": "Recuérdame",
+    "FORGOT_PASSWORD": "¿Olvidaste tu contraseña?",
+    "BUTTON": "Iniciar Sesión",
+    "NO_ACCOUNT": "¿No tienes cuenta aún?",
+    "REGISTER": "Regístrate"
+  },
+  "LANGUAGES": {
+    "ENGLISH": "Inglés",
+    "SPANISH": "Español"
+  },
+  "NAVBAR": {
+    "EXCHANGES": "Intercambios",
+    "PUBLICATIONS": "Publicaciones",
+    "PROFILE": "Perfil",
+    "MY_BOOKS": "Mis Libros",
+    "MY_PUBLICATIONS": "Mis Publicaciones",
+    "FAVORITES": "Favoritos",
+    "LOGOUT": "Cerrar sesión",
+    "SEARCH": "Buscar publicaciones"
+  }
+}

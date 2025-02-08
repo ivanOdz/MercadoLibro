@@ -1,12 +1,33 @@
-<p-menubar [model]="items">
-    <ng-template #image #start>
-        <img src="./assets/mercado_libro.png" alt="image" width="80" style="margin-right: 5rem"/>
-        <p-inputgroup>
-            <input pInputText placeholder="Search publications" />
-            <p-inputgroup-addon>
-                <p-button icon="pi pi-search" severity="secondary" variant="text"/>
-            </p-inputgroup-addon>
-        </p-inputgroup>
+<p-menubar>
+    <ng-template pTemplate="start">
+        <div class="p-menubar-start">
+            <a routerLink="/publications">
+                <img ngSrc="./assets/mercado_libro.png" alt="image" width="80" height="80"/>
+            </a>
+
+            <p-inputgroup>
+                <input pInputText placeholder="{{ 'NAVBAR.SEARCH' | translate }}" />
+                <p-inputgroup-addon>
+                    <p-button icon="pi pi-search" severity="secondary" variant="text"/>
+                </p-inputgroup-addon>
+            </p-inputgroup>
+        </div>
     </ng-template>
-    <ng-template #end></ng-template>
+
+    <ng-template pTemplate="end">
+        <div class="p-menubar-end">
+            <p-button label="{{ 'NAVBAR.PUBLICATIONS' | translate }}" routerLink="/publications"></p-button>
+            <p-button label="{{ 'NAVBAR.EXCHANGES' | translate }}"  routerLink="/exchanges"></p-button>
+
+            <p-button
+                    label="{{ 'NAVBAR.PROFILE' | translate }}"
+                    icon="pi pi-user"
+                    (click)="toggleProfileMenu($event)">
+            </p-button>
+
+            <p-tieredMenu #profileMenu [model]="profileItems" [popup]="true"></p-tieredMenu>
+
+            <app-language-switcher></app-language-switcher>
+        </div>
+    </ng-template>
 </p-menubar>

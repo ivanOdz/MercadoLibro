@@ -119,6 +119,7 @@ export class AuthService {
     this._loggedUser.next(null);
     this.isAuthenticated.next(false);
     this.readySubject.next(true);
+    this.router.navigateByUrl('/publications');
   }
 
   register(email: string, username: string, password: string): Observable<string | null> {

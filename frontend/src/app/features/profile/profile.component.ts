@@ -9,10 +9,11 @@ import { FormsModule } from '@angular/forms';
 import { Location } from '../../core/models/location.model';
 import { ReviewComponent } from './review/review.component';
 import { Review } from '../../core/models/review.model';
+import {LanguageSwitcherComponent} from "../../shared/components/language-switcher/language-switcher.component";
 
 @Component({
   selector: 'app-profile',
-  imports: [NavbarComponent, NgForOf, FormsModule, CommonModule, ReviewComponent],
+  imports: [NavbarComponent, NgForOf, FormsModule, CommonModule, ReviewComponent, LanguageSwitcherComponent],
   standalone: true,
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'

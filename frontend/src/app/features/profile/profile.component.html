@@ -18,10 +18,7 @@
           <span>Email: {{ loggedUser?.mail }}</span>
           <div class="language-select">
             <span>Idioma: </span>
-            <select id="language-select" (change)="updateLanguage($event)">
-              <option value="es">Español</option>
-              <option value="en">English</option>
-            </select>
+            <app-language-switcher/>
           </div>
 
         </div>

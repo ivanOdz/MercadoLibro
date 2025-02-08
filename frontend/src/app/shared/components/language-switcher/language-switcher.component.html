@@ -1,0 +1,14 @@
+<p-dropdown
+        [options]="languages"
+        [(ngModel)]="selectedLanguage"
+        optionLabel="name"
+        [style]="{ width: '150px' }"
+        (onChange)="changeLanguage(selectedLanguage.code)"
+        placeholder="Select Language"
+>
+    <ng-template let-item pTemplate="item">
+        <div class="language-item">
+            <i [ngClass]="item.icon"></i> {{ item.name }}
+        </div>
+    </ng-template>
+</p-dropdown>

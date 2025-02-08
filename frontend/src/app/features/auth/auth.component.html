@@ -1,31 +1,32 @@
 <div class="flex align-items-center justify-content-center w-full h-full">
     <div class="surface-card p-4 shadow-2 border-round w-full sm:w-25rem">
         <div class="text-center mb-4">
-            <h2 class="text-900">Iniciar Sesión</h2>
+            <h2 class="text-900">{{ 'LOGIN.TITLE' | translate }}</h2>
         </div>
 
         <form #loginForm="ngForm" (ngSubmit)="login()">
             <div class="field">
-                <label for="username" class="block text-900 font-medium mb-2">Usuario</label>
+                <label for="username" class="block text-900 font-medium mb-2">{{ 'LOGIN.USERNAME' | translate }}</label>
                 <input id="username" type="text" pInputText [(ngModel)]="username" class="w-full" name="username" required />
             </div>
 
             <div class="field">
-                <label for="password" class="block text-900 font-medium mb-2">Contraseña</label>
+                <label for="password" class="block text-900 font-medium mb-2">{{ 'LOGIN.PASSWORD' | translate }}</label>
                 <p-password [fluid]="true" [feedback]="false" [toggleMask]="true" id="password" [(ngModel)]="password" name="password" required />
             </div>
 
             <div class="flex align-items-center justify-content-between mb-4">
                 <p-checkbox id="remember" binary="true" [(ngModel)]="rememberMe" name="rememberMe"/>
-                <label for="remember" class="ml-2">Recuérdame</label>
-                <a href="/auth/request-change-password" class="text-primary">¿Olvidaste tu contraseña?</a>
+                <label for="remember" class="ml-2">{{ 'LOGIN.REMEMBER_ME' | translate }}</label>
+                <a href="/auth/request-change-password" class="text-primary">{{ 'LOGIN.FORGOT_PASSWORD' | translate }}</a>
             </div>
 
-            <button pButton type="submit" [disabled]="!loginForm.valid" class="w-full">Iniciar Sesión</button>
+            <button pButton type="submit" [disabled]="!loginForm.valid" class="w-full">{{ 'LOGIN.BUTTON' | translate }}</button>
         </form>
+
         <div class="mt-2">
-            No tienes cuenta aun?
-            <a href="/auth/register" class="text-primary">Registrate</a>
+            {{ 'LOGIN.NO_ACCOUNT' | translate }}
+            <a href="/auth/register" class="text-primary">{{ 'LOGIN.REGISTER' | translate }}</a>
         </div>
     </div>
 </div>
