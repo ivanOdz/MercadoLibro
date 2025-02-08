@@ -5,6 +5,8 @@
     justify-content: space-between;
     padding: 0 1rem;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: #F8F4E9;
+    color: #000000;
 }
 
 .p-menubar-start, .p-menubar-end {
@@ -13,7 +15,69 @@
     gap: 1rem;
 }
 
+:host ::ng-deep .p-button {
+    color: #374151 !important;
+}
+
 /* 📌 Asegura que el menú desplegable no se corte */
 .p-tieredmenu {
     z-index: 1000;
+}
+
+/* Estilos de los ítems de la barra */
+:host ::ng-deep .p-menubar .p-menubar-item-link {
+    height: 100%;
+    color: black;
+    font-size: 16px;
+    padding: 15px 20px;
+}
+
+/* Estilo del hover en los ítems */
+:host ::ng-deep .p-menubar .p-menubar-item-link:hover {
+    background-color: #ccc8ba;
+    border-radius: 6px;
+}
+
+/* Color activo de los ítems */
+:host ::ng-deep .p-menubar-item-link-active {
+    background-color: rgba(200, 194, 182, 0.54);
+    color: #000000;
+    border-radius: 6px;
+}
+
+:host ::ng-deep .p-inputtext  {
+    background-color: #F8F4E9;
+    color: #000000;
+}
+
+:host ::ng-deep .p-inputgroupaddon   {
+    background-color: #F8F4E9;
+}
+
+:host ::ng-deep .p-component  {
+    background-color: #F8F4E9;
+}
+
+:host ::ng-deep .p-inputgroupaddon:hover  {
+    background-color: rgba(200, 194, 182, 0.54);
+    color: #000000;
+}
+
+:host ::ng-deep .p-inputgroup  {
+    width: 30vw;
+    font-size: large;
+}
+
+:host ::ng-deep .p-menubar-start {
+    margin-right: 50px;
+}
+
+:host ::ng-deep .p-inputtext:enabled:focus {
+    border-color: #000000;
+}
+
+.sidebar-item:active {
+    background-color: rgba(200, 194, 182, 0.54);
+    color: #000000;
+    border-radius: 6px;
 }
