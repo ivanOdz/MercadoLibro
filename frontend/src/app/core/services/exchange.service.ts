@@ -1,13 +1,14 @@
 import {Exchange} from "../models/exchange.model";
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {map} from "rxjs/operators";
-import {Observable, tap} from "rxjs";
+import {catchError, Observable, tap, throwError} from "rxjs";
 import {Injectable} from "@angular/core";
 import {Pagination} from "../models/pagination";
 
 @Injectable({ providedIn: 'root' })
 export class ExchangeService {
     baseUrl = 'http://localhost:8080/api';
+    states = ['ACCEPTED', 'PENDING', 'COMPLETED', 'REJECTED'];
 
     constructor(private http: HttpClient) { }
 
@@ -17,9 +18,7 @@ export class ExchangeService {
         return this.http.get<any>(`${this.baseUrl}${messagesUrl}`, { headers });
     }
 
-    //  /exchanges?user_id=123546789&state=accepted&isRequester=true&isOfferer=true&page=1
-    //  exchangesUrl: /exchanges?user_id=123546789
-    getActiveExchanges(exchangesUrl: string, page: number): Observable< {exchange: Exchange[], pagination: Pagination}> {
+    private getExchanges(exchangesUrl: string, page: number, state: string,  is_offerer: boolean, is_requester: boolean): Observable< {exchange: Exchange[], pagination: Pagination}> {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.exchanges.v1+json' });
 
         let params = new HttpParams()
@@ -37,75 +36,54 @@ export class ExchangeService {
             }));
     }
 
+    //  /exchanges?user_id=123546789&state=accepted&isRequester=true&isOfferer=true&page=1
+    //  exchangesUrl: /exchanges?user_id=123546789
+    getActiveExchanges(exchangesUrl: string, page: number): Observable< {exchange: Exchange[], pagination: Pagination}> {
+        return this.getExchanges(exchangesUrl, page, 'ACCEPTED', true, true);
+    }
+
     // /exchanges?user_id=12345678state=pending&isOfferer=false&isRequester=true
-    getSolicitedExchanges(exchangesUrl: string, page:number): Observable<Exchange[]> {
-        const headers = new HttpHeaders({ 'Accept': 'application/vnd.exchanges.v1+json'});
-
-        console.log(headers);
-
-        return this.http.get<any>( this.baseUrl + exchangesUrl
-            + '&' + 'state=pending'
-            + '&' + 'isOfferer=false'
-            + '&' + 'isRequester=true'
-            + '&' + 'page=' + page
-            , { headers }).pipe(
-            map((e) => {
-                return e.map((exchange: any) => new Exchange(exchange));
-            })
-        );
+    getSolicitedExchanges(exchangesUrl: string, page:number): Observable< {exchange: Exchange[], pagination: Pagination}> {
+        return this.getExchanges(exchangesUrl, page, 'PENDING', false, true);
     }
 
     // /exchanges?user_id=12345678state=pending&isOfferer=true&isRequester=false
-    getExchangesOffers(exchangesUrl: string, page:number): Observable<Exchange[]> {
-        const headers = new HttpHeaders({ 'Accept': 'application/vnd.exchanges.v1+json'});
-
-        console.log(headers);
-
-        return this.http.get<any>( this.baseUrl + exchangesUrl
-            + '&' + 'state=pending'
-            + '&' + 'isOfferer=true'
-            + '&' + 'isRequester=false'
-            + '&' + 'page=' + page
-            , { headers }).pipe(
-            map((e) => {
-                return e.map((exchange: any) => new Exchange(exchange));
-            })
-        );
+    getExchangesOffers(exchangesUrl: string, page: number): Observable< {exchange: Exchange[], pagination: Pagination}> {
+        return this.getExchanges(exchangesUrl, page, 'PENDING', true, false);
     }
+
 
     // /exchanges?user_id=12345678&state=completed&isOfferer=true&isRequester=true&page=1
-    getCompletedExchanges(exchangesUrl: string, page:number):Observable<Exchange[]>{
-        const headers = new HttpHeaders({ 'Accept': 'application/vnd.exchanges.v1+json'});
-
-        console.log(headers);
-
-        return this.http.get<any>( this.baseUrl + exchangesUrl
-            + '&' + 'state=completed'
-            + '&' + 'isOfferer=true'
-            + '&' + 'isRequester=true'
-            + '&' + 'page=' + page
-            , { headers }).pipe(
-            map((e) => {
-                return e.map((exchange: any) => new Exchange(exchange));
-            })
-        );
+    getCompletedExchanges(exchangesUrl: string, page: number): Observable< {exchange: Exchange[], pagination: Pagination}> {
+        return this.getExchanges(exchangesUrl, page, 'COMPLETED', true, true);
     }
+
     // /exchanges?user_id=12345678&state=rejected&isOfferer=true&isRequester=true&page=1
-    getRejectedExchanges(exchangesUrl: string, page:number):Observable<Exchange[]>{
-        const headers = new HttpHeaders({ 'Accept': 'application/vnd.exchanges.v1+json'});
+    getRejectedExchanges(exchangesUrl: string, page:number):Observable< {exchange: Exchange[], pagination: Pagination}>{
+        return this.getExchanges(exchangesUrl, page, 'REJECTED', true, true);
+    }
 
-        console.log(headers);
+    confirmExchange(exchangeUrl: string, acceptCode: number, requester: boolean): Observable<any> {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/vnd.exchanges.update.v1+json'
+        });
 
-        return this.http.get<any>( this.baseUrl + exchangesUrl
-            + '&' + 'state=rejected'
-            + '&' + 'isOfferer=true'
-            + '&' + 'isRequester=true'
-            + '&' + 'page=' + page
-            , { headers }).pipe(
-            map((e) => {
-                return e.map((exchange: any) => new Exchange(exchange));
+        const body: any = {
+            acceptCode: acceptCode,
+            requester: requester,
+            accepted: null
+        };
+
+        console.log("URL final:", `${this.baseUrl}${exchangeUrl}`);
+        console.log("Body enviado:", body);
+
+        return this.http.patch<void>(`${this.baseUrl}${exchangeUrl}`, body, { headers }).pipe(
+            catchError((error) => {
+                console.error("Error al actualizar el intercambio:", error);
+                return throwError(() => error);
             })
         );
     }
+
 
 }
