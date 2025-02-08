@@ -11,7 +11,7 @@
             </p-tablist>
             <p-tabpanels>
                 <p-tabpanel value="0">
-                    <div class="requests-main-section">
+                    <div *ngIf="offeredExchanges.length != 0 && !isLoading" class="requests-main-section">
                         <div style="grid-column: 1;" class="column-cards">
                             <div class="card-section" style="align-content: center;text-align: center" *ngIf="isLoading">
                                 <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
@@ -67,7 +67,7 @@
                                 </div>
                             </div>
                             <p class="static-section-headers">El libro</p>
-                            <div class="static-card user-card " id="book-theirs-card-offers">
+                            <div class="static-card book-theirs-card " id="book-theirs-card-offers">
                                 <div style="grid-column: 1;justify-items: center;">
                                     <div class="book-image-static"></div>
                                 </div>
@@ -83,7 +83,7 @@
                                 </div>
                             </div>
                             <p class="static-section-headers">Por tu libro</p>
-                            <div class="static-card user-card " id="book-yours-card-offers">
+                            <div class="static-card book-theirs-card " id="book-yours-card-offers">
                                 <div style="grid-column: 1;justify-items: center;">
                                     <div class="book-image-static"></div>
                                 </div>
@@ -111,7 +111,7 @@
                     </div>
                 </p-tabpanel>
                 <p-tabpanel value="1">
-                    <div class="requests-main-section">
+                    <div *ngIf="requestedExchanges.length != 0 && !isLoading" class="requests-main-section">
                         <div style="grid-column: 1;" class="column-cards">
                             <div class="card-section" style="align-content: center;text-align: center" *ngIf="isLoading">
                                 <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
@@ -166,7 +166,7 @@
                                 </div>
                             </div>
                             <p class="static-section-headers">El libro</p>
-                            <div class="static-card user-card " id="book-theirs-card-requests">
+                            <div class="static-card book-theirs-card " id="book-theirs-card-requests">
                                 <div style="grid-column: 1;justify-items: center;">
                                     <div class="book-image-static"></div>
                                 </div>
@@ -182,7 +182,7 @@
                                 </div>
                             </div>
                             <p class="static-section-headers">Por tu libro</p>
-                            <div class="static-card user-card " id="book-yours-card-requests">
+                            <div class="static-card book-theirs-card " id="book-yours-card-requests">
                                 <div style="grid-column: 1;justify-items: center;">
                                     <div class="book-image-static"></div>
                                 </div>
@@ -213,3 +213,30 @@
         </p-tabs>
     </div>
 </div>
+
+<p-dialog [(visible)]="acceptExchangeDialogVisible" [modal]="true" [style]="{ width: '25rem' }">
+    <ng-template #header>
+        <div class="inline-flex items-center justify-center gap-2">
+            <span class="font-bold whitespace-nowrap">Accept exchange</span>
+        </div>
+    </ng-template>
+    <span class="text-surface-500 dark:text-surface-400 block">Are you sure you want to accept an exchange?</span>
+    <ng-template #footer>
+        <p-button label="Cancel" [raised]="true" severity="secondary" (click)="acceptExchangeDialogVisible = false" />
+        <p-button label="Start" [raised]="true" severity="success" (click)="acceptExchange()" />
+
+    </ng-template>
+</p-dialog>
+
+<p-dialog [(visible)]="rejectExchangeDialogVisible" [modal]="true" [style]="{ width: '25rem' }">
+    <ng-template #header>
+        <div class="inline-flex items-center justify-center gap-2">
+            <span class="font-bold whitespace-nowrap">Confirm exchange</span>
+        </div>
+    </ng-template>
+    <span class="text-surface-500 dark:text-surface-400 block">Are you sure you want to confirm that you received your book</span>
+    <ng-template #footer>
+        <p-button label="Cancel" [raised]="true" severity="secondary" (click)="rejectExchangeDialogVisible = false" />
+        <p-button label="Reject" [raised]="true" severity="danger" (click)="rejectExchange()" />
+    </ng-template>
+</p-dialog>

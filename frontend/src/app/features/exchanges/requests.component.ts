@@ -15,12 +15,12 @@ import {BookService} from "../../core/services/book.service";
 import {BookmodelService} from "../../core/services/bookmodel.service";
 import {AuthService} from "../../core/services/auth.service";
 import {Router} from "@angular/router";
-import {ConfirmationService} from "primeng/api";
-import {catchError, filter, forkJoin, Observable, of, switchMap, tap} from "rxjs";
+import {catchError, filter, forkJoin, Observable, of, switchMap} from "rxjs";
 import {map} from "rxjs/operators";
 import {Exchange} from "../../core/models/exchange.model";
 import {BookData, ExchangeData} from "./exchanges.component";
 import {ProgressSpinner} from "primeng/progressspinner";
+import {Dialog} from "primeng/dialog";
 
 @Component({
     selector: 'exchanges-requests',
@@ -41,7 +41,8 @@ import {ProgressSpinner} from "primeng/progressspinner";
         FormsModule,
         Button,
         NgIf,
-        ProgressSpinner
+        ProgressSpinner,
+        Dialog
     ]
 })
 export class RequestsComponent {
@@ -161,22 +162,40 @@ export class RequestsComponent {
         );
     }
 
+    acceptExchange(){
+        this.acceptExchangeDialogVisible = false;
 
-    confirmExchange(card: ExchangeData, requester: boolean) {
-        this.confirmExchangeDialogVisible = false;
 
-        if (!card.exchange) {
+        if (!this.exchangeData) {
             console.error("No se puede confirmar el intercambio sin datos.");
             return;
         }
 
         this.isLoading = true;
-        this.es.confirmExchange(card.exchange.self, card.exchange.accept_code, requester).subscribe(
+        this.es.acceptExchange(this.exchangeData.exchange.self, this.exchangeData.exchange.accept_code, null).subscribe(
             () => {
-                console.log("Intercambio confirmado:", card.exchange.self);
+                console.log("Intercambio aceptado:", this.exchangeData?.exchange.self);
                 this.loadExchanges();
             },
-            (error) => console.error("Error al confirmar el intercambio:", error))
+            (error) => console.error("Error al aceptar el intercambio:", error))
+    }
+
+    rejectExchange(){
+        this.rejectExchangeDialogVisible = false;
+
+
+        if (!this.exchangeData) {
+            console.error("No se puede confirmar el intercambio sin datos.");
+            return;
+        }
+
+        this.isLoading = true;
+        this.es.acceptExchange(this.exchangeData.exchange.self, this.exchangeData.exchange.accept_code, null).subscribe(
+            () => {
+                console.log("Intercambio rechazado:", this.exchangeData?.exchange.self);
+                this.loadExchanges();
+            },
+            (error) => console.error("Error al rechazar el intercambio:", error))
     }
 
 
@@ -219,15 +238,19 @@ export class RequestsComponent {
 
     /*** Dialogs ***/
 
-    confirmExchangeDialogVisible: boolean = false;
+    acceptExchangeDialogVisible: boolean = false;
+    rejectExchangeDialogVisible: boolean = false;
 
-    confirmData: {card: ExchangeData, requester: boolean} = {card: null as unknown as ExchangeData, requester: false};
+    exchangeData: ExchangeData | null = null;
 
+    showRejectDialog(card: ExchangeData) {
+        this.rejectExchangeDialogVisible = true;
+        this.exchangeData = card;
+    }
 
-    showConfirmExchangeDialog(card: ExchangeData, b: boolean) {
-        this.confirmExchangeDialogVisible = true;
-        this.confirmData.card = card;
-        this.confirmData.requester = b;
+    showAcceptDialog(card: ExchangeData) {
+        this.acceptExchangeDialogVisible = true;
+        this.exchangeData = card;
     }
 
     /***  Pagination ***/
@@ -255,13 +278,7 @@ export class RequestsComponent {
 
     value: any;
 
-    showRejectDialog(card: ExchangeData) {
 
-    }
-
-    showAcceptDialog(card: ExchangeData) {
-
-    }
 
     onRequestedPageChange($event: PaginatorState) {
 

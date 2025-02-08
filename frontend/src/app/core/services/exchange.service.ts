@@ -1,7 +1,7 @@
 import {Exchange} from "../models/exchange.model";
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {map} from "rxjs/operators";
-import {catchError, Observable, tap, throwError} from "rxjs";
+import {catchError, Observable, throwError} from "rxjs";
 import {Injectable} from "@angular/core";
 import {Pagination} from "../models/pagination";
 
@@ -22,9 +22,9 @@ export class ExchangeService {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.exchanges.v1+json' });
 
         let params = new HttpParams()
-            .set('state', 'ACCEPTED')
-            .set('is_offerer', 'true')
-            .set('is_requester', 'true')
+            .set('state', state)
+            .set('is_offerer', is_offerer ? 'true' : 'false')
+            .set('is_requester', is_requester ? 'true' : 'false')
             .set('page', (page !== undefined && page !== null) ? page.toString() : '0');
 
         return this.http.get<any>(`${this.baseUrl}${exchangesUrl}`, { headers, params, observe: 'response' }).pipe(
@@ -63,7 +63,8 @@ export class ExchangeService {
         return this.getExchanges(exchangesUrl, page, 'REJECTED', true, true);
     }
 
-    confirmExchange(exchangeUrl: string, acceptCode: number, requester: boolean): Observable<any> {
+
+    private updateExchange(exchangeUrl: string, acceptCode: number, requester: boolean | null, accepted: boolean | null): Observable<any> {
         const headers = new HttpHeaders({
             'Content-Type': 'application/vnd.exchanges.update.v1+json'
         });
@@ -71,7 +72,7 @@ export class ExchangeService {
         const body: any = {
             acceptCode: acceptCode,
             requester: requester,
-            accepted: null
+            accepted: accepted
         };
 
         console.log("URL final:", `${this.baseUrl}${exchangeUrl}`);
@@ -83,6 +84,19 @@ export class ExchangeService {
                 return throwError(() => error);
             })
         );
+    }
+
+    confirmExchange(exchangeUrl: string, acceptCode: number, requester: boolean): Observable<any> {
+        return this.updateExchange(exchangeUrl, acceptCode, requester, null);
+    }
+
+
+    acceptExchange(exchangeUrl: string, acceptCode: number, requester: null | boolean): Observable<any> {
+        return this.updateExchange(exchangeUrl, acceptCode, requester, true);
+    }
+
+    rejectExchange(exchangeUrl: string, acceptCode: number, requester: boolean): Observable<any> {
+        return this.updateExchange(exchangeUrl, acceptCode, requester, false);
     }
 
 
