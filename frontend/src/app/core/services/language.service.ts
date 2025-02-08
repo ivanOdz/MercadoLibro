@@ -3,6 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from './auth.service';
 import { filter, switchMap, map } from 'rxjs/operators';
 import { BehaviorSubject, Observable } from 'rxjs';
+import {UserService} from "./user.service";
 
 @Injectable({
     providedIn: 'root'
@@ -11,7 +12,7 @@ export class LanguageService {
     private currentLanguageSubject = new BehaviorSubject<string>('en');
     currentLanguage$: Observable<string> = this.currentLanguageSubject.asObservable();
 
-    constructor(private translate: TranslateService, private authService: AuthService) {
+    constructor(private translate: TranslateService, private authService: AuthService, private userService: UserService) {
         this.translate.addLangs(['en', 'es']);
 
         this.authService.ready$.pipe(
@@ -28,6 +29,7 @@ export class LanguageService {
         // Suscribirse a cambios de idioma dentro de TranslateService
         this.translate.onLangChange.subscribe(({ lang }) => {
             this.currentLanguageSubject.next(lang);
+            this.updateUserLanguage(lang);
         });
     }
 
@@ -39,6 +41,17 @@ export class LanguageService {
     setLanguage(lang: string) {
         this.translate.use(lang);
         this.currentLanguageSubject.next(lang);
+        this.updateUserLanguage(lang);
+    }
+
+    private updateUserLanguage(language: string) {
+        this.authService.loggedUser$.pipe(
+            filter(user => user != null), // Asegurarse de que el usuario está logueado
+            switchMap(user => this.userService.updateLanguage(user, language))
+        ).subscribe({
+            next: () => console.log(`Language updated to ${language}`),
+            error: (err) => console.error('Error updating language', err)
+        });
     }
 
     getCurrentLanguage(): string {
