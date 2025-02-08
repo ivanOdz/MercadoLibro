@@ -30,11 +30,11 @@ import {ProgressSpinner} from "primeng/progressspinner";
 import { ConfirmationService } from 'primeng/api';
 import {Toast} from "primeng/toast";
 
-type message = { sender: number, message: string, date: Date };
+export type message = { sender: number, message: string, date: Date };
 
-type ExchangeData = {exchange: Exchange, offeredPub: PublicationData, requestedPub: PublicationData/*, messages: Message[]*/};
-type PublicationData = {book: BookData, locations: Location[]};
-type BookData = {owner: User | null, image: string | null, model: BookModel | null};
+export type ExchangeData = {exchange: Exchange, offeredPub: PublicationData, requestedPub: PublicationData/*, messages: Message[]*/};
+export type PublicationData = {book: BookData, locations: Location[]};
+export type BookData = {owner: User | null, image: string | null, model: BookModel | null};
 
 @Component({
     selector: 'app-exchanges',
@@ -54,7 +54,7 @@ export class ExchangesComponent implements OnInit {
 
     constructor(private es: ExchangeService, private us: UserService, private ps: PublicationService,
                 private bs: BookService, private bms: BookmodelService, private as: AuthService,
-                private router: Router, private cs: ConfirmationService) {}
+                private router: Router) {}
 
     ngOnInit(): void {
         this.isLoading = true;
@@ -180,7 +180,8 @@ export class ExchangesComponent implements OnInit {
     }
 
 
-    //##################  Html functions  ##################
+    /***  Html functions  ***/
+
     isLoading = true;
 
     selectedCard: ExchangeData | null = null;
@@ -192,6 +193,21 @@ export class ExchangesComponent implements OnInit {
     get selectedUserRating() {
         return this.isRequester(this.selectedCard) ? this.selectedCard?.offeredPub?.book?.owner?.ratingAverage : this.selectedCard?.requestedPub?.book?.owner?.ratingAverage;
     }
+
+    redirectToPublications() {
+        this.router.navigate(['/publications']);
+    }
+
+    isRequester(selectedCard: ExchangeData | null) {
+        return this.loggedUser?.username == selectedCard?.requestedPub.book.owner?.username;
+    }
+
+    getBookImage(book: BookData) {
+        return this.loggedUser === book.owner ?
+            (book.image || 'assets/book.jpg') :
+            (book.image || 'assets/book.jpg');
+    }
+
 
     /*** Dialogs ***/
 
@@ -255,21 +271,13 @@ export class ExchangesComponent implements OnInit {
         return this.monthNames[month - 1];
     }
 
-    redirectToPublications() {
-        this.router.navigate(['/publications']);
-    }
+
 
     protected readonly environment = environment;
 
-    getBookImage(book: BookData) {
-        return this.loggedUser === book.owner ?
-            (book.image || 'assets/book.jpg') :
-            (book.image || 'assets/book.jpg');
-    }
 
-    isRequester(selectedCard: ExchangeData | null) {
-        return this.loggedUser === selectedCard?.requestedPub.book.owner;
-    }
+
+
 
 
 
