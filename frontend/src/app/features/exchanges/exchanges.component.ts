@@ -6,6 +6,7 @@ import {NgClass, NgForOf, NgIf, NgOptimizedImage, NgStyle} from "@angular/common
 import {Paginator, PaginatorState} from "primeng/paginator";
 import {Steps} from "primeng/steps";
 import {MenuItem} from "primeng/api";
+import {ConfirmDialogModule} from "primeng/confirmdialog";
 import {Rating} from "primeng/rating";
 import {FormsModule} from "@angular/forms";
 import {Dialog} from "primeng/dialog";
@@ -26,7 +27,7 @@ import {map} from "rxjs/operators";
 import {appConfig} from "../../app.config";
 import {environment} from "../../../environments/environment";
 import {ProgressSpinner} from "primeng/progressspinner";
-import {Message} from "../../core/models/message.model";
+import { ConfirmationService } from 'primeng/api';
 import {Toast} from "primeng/toast";
 
 type message = { sender: number, message: string, date: Date };
@@ -36,11 +37,14 @@ type PublicationData = {book: BookData, locations: Location[]};
 type BookData = {owner: User | null, image: string | null, model: BookModel | null};
 
 @Component({
-  selector: 'app-exchanges',
-  templateUrl: `exchanges.component.html`,
-  standalone: true,
-  styleUrl: './exchanges.component.css',
-    imports: [ButtonModule, SidebarComponent, NavbarComponent, NgForOf, Paginator, Steps, Rating, FormsModule, Dialog, InputText, NgIf, NgClass, NgOptimizedImage, ProgressSpinner, NgStyle, Toast]
+    selector: 'app-exchanges',
+    templateUrl: `exchanges.component.html`,
+    standalone: true,
+    styleUrl: './exchanges.component.css',
+    providers: [ConfirmationService],
+    imports: [ButtonModule, SidebarComponent, NavbarComponent, NgForOf, Paginator,
+        Steps, Rating, FormsModule, Dialog, InputText, NgIf, NgClass, NgOptimizedImage,
+        ProgressSpinner, NgStyle, Toast, ConfirmDialogModule]
 })
 export class ExchangesComponent implements OnInit {
     loggedUser: User | null = null;
@@ -50,7 +54,7 @@ export class ExchangesComponent implements OnInit {
 
     constructor(private es: ExchangeService, private us: UserService, private ps: PublicationService,
                 private bs: BookService, private bms: BookmodelService, private as: AuthService,
-                private router: Router) {}
+                private router: Router, private cs: ConfirmationService) {}
 
     ngOnInit(): void {
         this.isLoading = true;
@@ -159,11 +163,14 @@ export class ExchangesComponent implements OnInit {
 
 
     confirmExchange(card: ExchangeData, requester: boolean) {
+        this.confirmExchangeDialogVisible = false;
+
         if (!card.exchange) {
             console.error("No se puede confirmar el intercambio sin datos.");
             return;
         }
 
+        this.isLoading = true;
         this.es.confirmExchange(card.exchange.self, card.exchange.accept_code, requester).subscribe(
             () => {
                 console.log("Intercambio confirmado:", card.exchange.self);
@@ -186,8 +193,22 @@ export class ExchangesComponent implements OnInit {
         return this.isRequester(this.selectedCard) ? this.selectedCard?.offeredPub?.book?.owner?.ratingAverage : this.selectedCard?.requestedPub?.book?.owner?.ratingAverage;
     }
 
+    /*** Dialogs ***/
 
-    // ##################  Pagination  ##################
+    confirmExchangeDialogVisible: boolean = false;
+
+    confirmData: {card: ExchangeData, requester: boolean} = {card: null as unknown as ExchangeData, requester: false};
+
+
+    showConfirmExchangeDialog(card: ExchangeData, b: boolean) {
+        this.confirmExchangeDialogVisible = true;
+        this.confirmData.card = card;
+        this.confirmData.requester = b;
+    }
+
+
+    /***  Pagination ***/
+
     rows: unknown;
     totalRecords: unknown;
     currentPage: number = 0;
@@ -249,4 +270,8 @@ export class ExchangesComponent implements OnInit {
     isRequester(selectedCard: ExchangeData | null) {
         return this.loggedUser === selectedCard?.requestedPub.book.owner;
     }
+
+
+
+
 }
