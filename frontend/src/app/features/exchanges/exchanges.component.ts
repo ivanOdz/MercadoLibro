@@ -1,9 +1,8 @@
-import {Component, NgIterable, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {NavbarComponent} from "../../shared/components/navbar/navbar.component";
 import { ButtonModule } from 'primeng/button';
-import {Title} from "@angular/platform-browser";
 import {SidebarComponent} from "./components/sidebar.component";
-import {DatePipe, NgClass, NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
+import { NgClass, NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
 import {Paginator, PaginatorState} from "primeng/paginator";
 import {Steps} from "primeng/steps";
 import {MenuItem} from "primeng/api";
@@ -18,10 +17,8 @@ import {catchError, filter, forkJoin, Observable, of, switchMap, tap} from "rxjs
 import {User} from "../../core/models/user.model";
 import {AuthService} from "../../core/services/auth.service";
 import {Router} from "@angular/router";
-import {Publication} from "../../core/models/publication.model";
 import {BookModel} from "../../core/models/bookModel.model";
 import {PublicationService} from "../../core/services/publication.service";
-import {Book} from "../../core/models/book.model";
 import {BookmodelService} from "../../core/services/bookmodel.service";
 import {BookService} from "../../core/services/book.service";
 import {Location} from "../../core/models/location.model";
@@ -53,7 +50,10 @@ export class ExchangesComponent implements OnInit {
                 private router: Router) {}
 
     ngOnInit(): void {
-        this.loadExchanges();
+        this.as.loggedUser$.subscribe((user: User | null) => {
+            this.loggedUser = user;
+            this.loadExchanges();
+        });
     }
         // ##################  Api calls  ##################
 
@@ -203,4 +203,10 @@ export class ExchangesComponent implements OnInit {
 
     protected readonly appConfig = appConfig;
     protected readonly environment = environment;
+
+    getBookImage(book: BookData) {
+        return this.loggedUser === book.owner ?
+            (book.image || 'assets/book.jpg') :
+            (book.image || 'assets/book.jpg');
+    }
 }
