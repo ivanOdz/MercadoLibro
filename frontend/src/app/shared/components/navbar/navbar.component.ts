@@ -1,25 +1,53 @@
-import {Component, input} from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { MenubarModule } from 'primeng/menubar';
-import {NgIf, NgOptimizedImage} from "@angular/common";
-import {Ripple} from "primeng/ripple";
-import {Badge} from "primeng/badge";
-import {InputGroup} from "primeng/inputgroup";
-import {InputGroupAddon} from "primeng/inputgroupaddon";
-import {Button} from "primeng/button";
-import {InputText} from "primeng/inputtext";
+import { TieredMenuModule } from 'primeng/tieredmenu';
+import { ButtonModule } from 'primeng/button';
+import { InputGroup } from 'primeng/inputgroup';
+import { InputGroupAddon } from 'primeng/inputgroupaddon';
+import { InputText } from 'primeng/inputtext';
+import { MenuItem } from 'primeng/api';
+import { LanguageSwitcherComponent } from '../language-switcher/language-switcher.component';
+import { TieredMenu } from 'primeng/tieredmenu';
+import {RouterLink} from "@angular/router";
+import {TranslatePipe} from "@ngx-translate/core";
+import {AuthService} from "../../../core/services/auth.service";
 
 @Component({
     selector: 'app-navbar',
     templateUrl: './navbar.component.html',
     styleUrls: ['./navbar.component.css'],
     standalone: true,
-    imports: [MenubarModule, InputGroup, InputGroupAddon, Button, InputText]
+    imports: [
+        MenubarModule,
+        TieredMenuModule,
+        ButtonModule,
+        InputGroup,
+        InputGroupAddon,
+        InputText,
+        LanguageSwitcherComponent,
+        RouterLink,
+        TranslatePipe
+    ]
 })
 export class NavbarComponent {
-    items = [
-        { label: 'Exchanges', routerLink: '/exchanges' },
-        { label: 'Profile', routerLink: '/profile' },
-        { label: 'Publications', routerLink: '/publications' }
+
+    constructor(private authService: AuthService) {}
+    @ViewChild('profileMenu') profileMenu!: TieredMenu;
+
+    profileItems: MenuItem[] = [
+        { label: 'Profile',  routerLink: '/profile' },
+        { label: 'My Books',  routerLink: '/my-books' },
+        { label: 'My Publications',  routerLink: '/my-publications' },
+        { label: 'Favorites',  routerLink: '/favorites' },
+        { separator: true },
+        { label: 'Logout', icon: 'pi pi-sign-out', command: () => this.logout() }
     ];
-    protected readonly input = input;
+
+    toggleProfileMenu(event: Event) {
+        this.profileMenu.toggle(event);
+    }
+
+    logout() {
+        this.authService.logout();
+    }
 }

@@ -1,88 +1,19 @@
-/* Personalización de la barra de navegación */
 :host ::ng-deep .p-menubar {
-    display: grid;
+    width: 100vw; /* 📌 Ocupa todo el ancho */
+    max-width: none;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 1rem;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.p-menubar-start, .p-menubar-end {
+    display: flex;
     align-items: center;
-    border: none;
-    background-color: #F8F4E9;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    color: black;
-/*     height: 9vh; */
-    width: 100vw;
-    grid-template-columns: 50% 50%;
-    overflow: inherit;
+    gap: 1rem;
 }
 
-:host ::ng-deep .p-menubar-item-label {
-    line-height: 1;
-    color: #2c250a;
-    font-size: larger;
-}
-
-:host ::ng-deep .p-menubar-root-list {
-    justify-content: end;
-    margin-right: 2rem;
-}
-
-/* Estilos de los ítems de la barra */
-:host ::ng-deep .p-menubar .p-menubar-item-link {
-    height: 100%;
-    color: #1d0e05;
-    font-size: 16px;
-    padding: 15px 20px;
-}
-
-/* Estilo del hover en los ítems */
-:host ::ng-deep .p-menubar .p-menubar-item-link:hover {
-    background-color: #ccc8ba;
-    border-radius: 6px;
-}
-/* Color activo de los ítems */
-:host ::ng-deep .p-menubar-item-link-active {
-    background-color: rgba(200, 194, 182, 0.54);
-    color: #ccc8ba;
-    border-radius: 6px;
-}
-
-:host ::ng-deep .p-inputtext  {
-    background-color: #F8F4E9;
-    color: #1d0e05;
-}
-
-:host ::ng-deep .p-inputgroupaddon   {
-    background-color: #F8F4E9;
-}
-
-:host ::ng-deep .p-component  {
-    background-color: #F8F4E9;
-}
-
-:host ::ng-deep .p-button-text:hover .p-button-secondary:not(:disabled):hover {
-    background-color: rgba(200, 194, 182, 0.54);
-    color: #1d0e05;
-}
-
-:host ::ng-deep .p-inputgroupaddon:hover  {
-    background-color: rgba(200, 194, 182, 0.54);
-    color: #1d0e05;
-}
-
-:host ::ng-deep .p-inputgroup  {
-    width: 30vw;
-    font-size: large;
-}
-
-:host ::ng-deep .p-menubar-start {
-    margin-right: 50px;
-}
-
-:host ::ng-deep .p-inputtext:enabled:focus {
-    border-color: #1d0e05;
-}
-
-
-
-.sidebar-item:active {
-    background-color: rgba(200, 194, 182, 0.54);
-    color: #ccc8ba;
-    border-radius: 6px;
+/* 📌 Asegura que el menú desplegable no se corte */
+.p-tieredmenu {
+    z-index: 1000;
 }

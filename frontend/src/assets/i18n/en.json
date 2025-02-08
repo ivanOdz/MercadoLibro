@@ -1,0 +1,27 @@
+{
+  "LOGIN": {
+    "TITLE": "Login",
+    "USERNAME": "Username",
+    "PASSWORD": "Password",
+    "REMEMBER_ME": "Remember me",
+    "FORGOT_PASSWORD": "Forgot your password?",
+    "BUTTON": "Login",
+    "NO_ACCOUNT": "Don't have an account yet?",
+    "REGISTER": "Sign up"
+  },
+  "LANGUAGES": {
+    "ENGLISH": "English",
+    "SPANISH": "Español"
+  },
+
+  "NAVBAR": {
+    "EXCHANGES": "Exchanges",
+    "PUBLICATIONS": "Publications",
+    "PROFILE": "Profile",
+    "MY_BOOKS": "My Books",
+    "MY_PUBLICATIONS": "My Publications",
+    "FAVORITES": "Favorites",
+    "LOGOUT": "Logout",
+    "SEARCH": "Search publications"
+  }
+}
