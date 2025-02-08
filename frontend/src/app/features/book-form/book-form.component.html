@@ -1,0 +1,73 @@
+<app-navbar></app-navbar>
+
+<div class="form-container">
+  <h2>Agregar Libro</h2>
+
+  <form [formGroup]="bookForm" (ngSubmit)="submitForm()">
+    <div class="form-grid">
+
+      <div class="column">
+        <label>ISBN:</label>
+        <input type="text" formControlName="isbn" />
+
+        <label>Título:</label>
+        <input type="text" formControlName="title" />
+
+        <label>Editorial:</label>
+        <input type="text" formControlName="editorial" />
+
+        <label>Descripción:</label>
+        <textarea formControlName="description"></textarea>
+
+        <label>Género:</label>
+        <input type="text" formControlName="genre" />
+
+        <label>Edición:</label>
+        <input type="number" formControlName="edition" />
+
+        <label>Peso (kg):</label>
+        <input type="number" formControlName="weight" />
+
+        <label>Páginas:</label>
+        <input type="number" formControlName="pages" />
+      </div>
+
+      <div class="column">
+        <label>Idioma:</label>
+        <input type="text" formControlName="bookLanguage" />
+
+        <label>Dimensiones:</label>
+        <input type="text" formControlName="dimension" />
+
+        <label>Año de Publicación:</label>
+        <input type="number" formControlName="publicationYear" />
+
+		<div align="left">
+	        <label>¿Edición de Bolsillo?</label>
+	        <input type="checkbox" formControlName="isPocketEdition" />
+        </div>
+
+		<div align="left">
+		        <label>¿Tapa Dura?</label>
+       			<input type="checkbox" formControlName="isHardcover" />
+		</div>
+
+        <label>Calificación Promedio:</label>
+        <input type="number" formControlName="averageRating" step="0.1" />
+
+        <label>Autores:</label>
+        <div formArrayName="authors">
+          <div *ngFor="let author of authors.controls; let i = index" class="author-row">
+            <input type="text" [formControlName]="i" />
+            <button type="button" (click)="removeAuthor(i)">❌</button>
+          </div>
+        </div>
+        <button type="button" (click)="addAuthor()" class="add-author">➕ Agregar Autor</button>
+      </div>
+    </div>
+
+    <div class="button-group">
+      <button type="submit" [disabled]="bookForm.invalid" class="submit-button">Guardar Libro</button>
+    </div>
+  </form>
+</div>
