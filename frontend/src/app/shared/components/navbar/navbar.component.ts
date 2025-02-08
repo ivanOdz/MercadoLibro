@@ -11,6 +11,7 @@ import { TieredMenu } from 'primeng/tieredmenu';
 import {RouterLink} from "@angular/router";
 import {TranslatePipe} from "@ngx-translate/core";
 import {AuthService} from "../../../core/services/auth.service";
+import {NgOptimizedImage} from "@angular/common";
 
 @Component({
     selector: 'app-navbar',
@@ -26,7 +27,8 @@ import {AuthService} from "../../../core/services/auth.service";
         InputText,
         LanguageSwitcherComponent,
         RouterLink,
-        TranslatePipe
+        TranslatePipe,
+        NgOptimizedImage
     ]
 })
 export class NavbarComponent {

@@ -1,7 +1,9 @@
 <p-menubar>
     <ng-template pTemplate="start">
         <div class="p-menubar-start">
-            <img src="./assets/mercado_libro.png" alt="image" width="80"/>
+            <a routerLink="/publications">
+                <img ngSrc="./assets/mercado_libro.png" alt="image" width="80" height="80"/>
+            </a>
 
             <p-inputgroup>
                 <input pInputText placeholder="{{ 'NAVBAR.SEARCH' | translate }}" />
