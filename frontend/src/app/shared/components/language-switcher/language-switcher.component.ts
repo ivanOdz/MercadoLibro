@@ -3,7 +3,8 @@ import { LanguageService } from "../../../core/services/language.service";
 import { DropdownModule } from "primeng/dropdown";
 import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
-import {translate} from "@angular/localize/tools";
+import { Observable } from 'rxjs';
+import {map} from "rxjs/operators";
 
 @Component({
   selector: 'app-language-switcher',
@@ -22,13 +23,15 @@ export class LanguageSwitcherComponent {
     { label: 'Español', value: 'es' }
   ];
 
-  selectedLanguage: { label: string, value: string };
+  selectedLanguage$!: Observable<{ label: string, value: string }>;
 
-  constructor(private translate: LanguageService) {
-    this.selectedLanguage = this.translate.getCurrentLanguage() === 'en' ? this.languages[0] : this.languages[1];
+  constructor(private languageService: LanguageService) {
+    this.selectedLanguage$ = this.languageService.currentLanguage$.pipe(
+        map(lang => this.languages.find(l => l.value === lang) || this.languages[0])
+    );
   }
 
   changeLanguage(selectedLanguage: { label: string, value: string }) {
-    this.translate.changeLanguage(selectedLanguage.value);
+    this.languageService.setLanguage(selectedLanguage.value);
   }
 }

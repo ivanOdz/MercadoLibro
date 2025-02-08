@@ -8,7 +8,7 @@ import { routes } from './app.routes';
 import { MyPreset } from "../styles";
 import { HttpClient, provideHttpClient, withInterceptors } from "@angular/common/http";
 import { authInterceptor } from "./core/interceptors/auth.interceptor";
-import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
+import {TranslateLoader, TranslateModule, TranslateService} from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 
 
@@ -31,6 +31,6 @@ export const appConfig: ApplicationConfig = {
                       }
                   })
               ),
-			]
+      TranslateService]
 };
 

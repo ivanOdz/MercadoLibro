@@ -1,8 +1,8 @@
 <p-dropdown
         [options]="languages"
-        [(ngModel)]="selectedLanguage"
+        [ngModel]="selectedLanguage$ | async"
+        (ngModelChange)="changeLanguage($event)"
         optionLabel="label"
-        (onChange)="changeLanguage($event.value)"
         placeholder="Select a language"
 >
     <ng-template let-item pTemplate="selectedItem">

@@ -10,7 +10,6 @@ export class AuthService {
   private isAuthenticated = new BehaviorSubject<boolean>(false);
   isAuthenticated$ = this.isAuthenticated.asObservable();
 
-  // Usamos un BehaviorSubject para mantener al usuario logueado
   private _loggedUser = new BehaviorSubject<User | null>(null);
   loggedUser$ = this._loggedUser.asObservable();
   private rememberMe = false;
