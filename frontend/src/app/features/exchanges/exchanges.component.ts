@@ -3,7 +3,7 @@ import {NavbarComponent} from "../../shared/components/navbar/navbar.component";
 import { ButtonModule } from 'primeng/button';
 import {Title} from "@angular/platform-browser";
 import {SidebarComponent} from "./components/sidebar.component";
-import {DatePipe, NgClass, NgForOf, NgIf} from "@angular/common";
+import {DatePipe, NgClass, NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
 import {Paginator, PaginatorState} from "primeng/paginator";
 import {Steps} from "primeng/steps";
 import {MenuItem} from "primeng/api";
@@ -22,15 +22,17 @@ import {Publication} from "../../core/models/publication.model";
 import {BookModel} from "../../core/models/bookModel.model";
 import {PublicationService} from "../../core/services/publication.service";
 import {Book} from "../../core/models/book.model";
-import {BookModelService} from "../../core/services/book.model.service";
+import {BookmodelService} from "../../core/services/bookmodel.service";
 import {BookService} from "../../core/services/book.service";
 import {Location} from "../../core/models/location.model";
 import {map} from "rxjs/operators";
+import {appConfig} from "../../app.config";
+import {environment} from "../../../environments/environment";
 
 type message = { sender: number, message: string, date: Date };
 
-type ExchangeData = {exchange: Exchange | null, offeredPub: PublicationData | null, requestedPub: PublicationData | null};
-type PublicationData = {book: BookData | null, locations: Location[]  | null};
+type ExchangeData = {exchange: Exchange, offeredPub: PublicationData, requestedPub: PublicationData};
+type PublicationData = {book: BookData, locations: Location[]};
 type BookData = {owner: User | null, image: string | null, model: BookModel | null};
 
 @Component({
@@ -38,22 +40,25 @@ type BookData = {owner: User | null, image: string | null, model: BookModel | nu
   templateUrl: `exchanges.component.html`,
   standalone: true,
   styleUrl: './exchanges.component.css',
-  imports: [ButtonModule, SidebarComponent, NavbarComponent, NgForOf, Paginator, Steps, Rating, FormsModule, Dialog, InputText, NgIf, NgClass]
+    imports: [ButtonModule, SidebarComponent, NavbarComponent, NgForOf, Paginator, Steps, Rating, FormsModule, Dialog, InputText, NgIf, NgClass, NgOptimizedImage]
 })
 export class ExchangesComponent implements OnInit {
-  activeExchanges: ExchangeData[] = [];
-  constructor(private es: ExchangeService,private us: UserService,private ps: PublicationService,
-              private bs: BookService, private bms: BookModelService, private as: AuthService,
-              private router: Router) {}
+    loggedUser: User | null = null;
 
-  ngOnInit(): void {
-    this.loadExchanges();
-  }
-  // ##################  Api calls  ##################
+    activeExchanges: ExchangeData[] = [];
+
+
+    constructor(private es: ExchangeService, private us: UserService, private ps: PublicationService,
+                private bs: BookService, private bms: BookmodelService, private as: AuthService,
+                private router: Router) {}
+
+    ngOnInit(): void {
+        this.loadExchanges();
+    }
+        // ##################  Api calls  ##################
 
     private loadExchanges(): void {
             this.as.loggedUser$.pipe(
-            tap((user) => console.log("Usuario logueado:", user)),
             filter((user: User | null) => !!user), // Solo sigue si hay usuario
             switchMap((user: User) =>
                 this.es.getActiveExchanges(user.exchanges, this.currentPage).pipe(
@@ -90,8 +95,12 @@ export class ExchangesComponent implements OnInit {
                                     if (!offererBook || !requesterBook) return of(null);
 
                                     return forkJoin({
-                                        offererBookModel: this.bms.getBookModel(offererBook.bookModelUri).pipe(catchError(() => of(null))),
-                                        requesterBookModel: this.bms.getBookModel(requesterBook.bookModelUri).pipe(catchError(() => of(null))),
+                                        offererBookModel: this.bms.getBookModel(offererBook.bookModel).pipe(
+                                            tap((r) => console.log("Respuesta de la API de book model:", r)),
+                                            catchError(() => of(null))),
+                                        requesterBookModel: this.bms.getBookModel(requesterBook.bookModel).pipe(
+                                            tap((r) => console.log("Respuesta de la API de book model:", r)),
+                                            catchError(() => of(null))),
                                     }).pipe(
                                         map(({ offererBookModel, requesterBookModel }) => ({
                                             exchange,
@@ -99,7 +108,7 @@ export class ExchangesComponent implements OnInit {
                                                 book: {
                                                     owner: offererUser,
                                                     model: offererBookModel,
-                                                    image: offererBook?.imagesUri?.[0] || null,
+                                                    image: offererBook?.images?.[0] || null,
                                                 },
                                                 locations: offererLocations,
                                             },
@@ -107,7 +116,7 @@ export class ExchangesComponent implements OnInit {
                                                 book: {
                                                     owner: requesterUser,
                                                     model: requesterBookModel,
-                                                    image: requesterBook?.imagesUri?.[0] || null,
+                                                    image: requesterBook?.images?.[0] || null,
                                                 },
                                                 locations: requesterLocations,
                                             },
@@ -123,73 +132,75 @@ export class ExchangesComponent implements OnInit {
                     map((result) => result.filter((item) => item !== null)) // Eliminamos nulos
                 );
             })
-        ).subscribe(
-            (activeExchanges) => {
-                this.activeExchanges = activeExchanges;
-                console.log("Intercambios cargados:", this.activeExchanges);
-            },
-            (error) => console.error("Error en la carga de intercambios:", error)
-        );
+            ).subscribe(
+                (activeExchanges) => {
+                    this.activeExchanges = activeExchanges;
+                    console.log("Intercambios cargados:", this.activeExchanges);
+                },
+                (error) => console.error("Error en la carga de intercambios:", error)
+            );
     }
 
-  //##################  Html functions  ##################
-  selectedCard: ExchangeData | null = null;
+        //##################  Html functions  ##################
+    selectedCard: ExchangeData | null = null;
 
-  Title = "Intercambios activos";
-
-
-  monthNames: string[] = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    Title = "Intercambios activos";
 
 
-  displayModal: boolean = false;
-  private changeDetectorRef: any;
+    monthNames: string[] = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
 
-  selectCard(cardText: ExchangeData) {
-    this.selectedCard = cardText;
-  }
+    displayModal: boolean = false;
 
 
-  onPageChange($event: PaginatorState) {
+        selectCard(cardText: ExchangeData) {
+          this.selectedCard = cardText;
+        }
 
-  }
+    private changeDetectorRef: any;
 
-  rows: unknown;
-  totalRecords: unknown;
-  currentPage: number = 0;
-  steps: MenuItem[] = [
-    { label: 'Aceptado' },
-    { label: 'Esperando confirmacion' },
-    { label: 'Finalizado' }
-  ];
-  value: any;
-  newMessage: any;
-  messages: message[] = [ { sender: 1, message: 'Hello', date: new Date('2025-02-04') }, { sender: 2, message: 'Hi', date: new Date()} ];
-  lastDate: Date = new Date('2025-02-04');
+        onPageChange($event: PaginatorState) {
+
+        }
+
+        rows: unknown;
+        totalRecords: unknown;
+        currentPage: number = 0;
+        steps: MenuItem[] = [
+        { label: 'Aceptado' },
+        { label: 'Esperando confirmacion' },
+        { label: 'Finalizado' }
+        ];
+        value: any;
+        newMessage: any;
+        messages: message[] = [ { sender: 1, message: 'Hello', date: new Date('2025-02-04') }, { sender: 2, message: 'Hi', date: new Date()} ];
+        lastDate: Date = new Date('2025-02-04');
 
 
 
-  confirmExchange(card: ExchangeData) {
+        confirmExchange(card: ExchangeData) {
 
-  }
+        }
 
-  openChat() {
-    this.displayModal = true;
-  }
+        openChat() {
+          this.displayModal = true;
+        }
 
-  sendMessage() {
-    if (this.newMessage.trim()) {
-      this.messages.push(this.newMessage);
-      this.newMessage = '';
-      this.changeDetectorRef.detectChanges();
-    }
-  }
+        sendMessage() {
+          if (this.newMessage.trim()) {
+                this.messages.push(this.newMessage);
+                this.newMessage = '';
+                this.changeDetectorRef.detectChanges();
+          }
+        }
+        getMonthName(month: number) {
+          return this.monthNames[month - 1];
+        }
 
-  getMonthName(month: number) {
-    return this.monthNames[month - 1];
-  }
+        redirectToPublications() {
+          this.router.navigate(['/publications']);
+        }
 
-  redirectToPublications() {
-    this.router.navigate(['/publications']);
-  }
+    protected readonly appConfig = appConfig;
+    protected readonly environment = environment;
 }

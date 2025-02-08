@@ -80,7 +80,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public Book getBookById(long bookId) {
     	
         LOGGER.info("Attempting to retrieve Book with ID: {}", bookId);

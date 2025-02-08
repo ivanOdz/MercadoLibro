@@ -47,7 +47,7 @@ public class BookModelServiceImpl implements BookModelService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public BookModel getBookModelByBookModelId(Long bookModelId) {
         LOGGER.info("Fetching BookModel with ID: {}", bookModelId);
 

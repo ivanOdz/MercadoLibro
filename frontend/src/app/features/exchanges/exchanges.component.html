@@ -18,13 +18,22 @@
                     >
                         <div class="active-card-first-column">
                             <div class="active-card-first-column-book-first">
+<!--                                <img [src]="loggedUser === card.offeredPub.book.owner ? environment.apiUrl + card.offeredPub.book.image : environment.apiUrl + card.requestedPub.book.image"-->
+<!--                                     alt="Book Image"-->
+<!--                                     class="book-image"/>-->
+
                                 <div class="book-image"></div>
-                                <p style="margin-bottom: 0">Book title wrapped</p>
+                                <p style="margin-bottom: 0">
+                                    {{ loggedUser === card.offeredPub.book.owner ? card.offeredPub.book.model?.title : card.requestedPub.book.model?.title }}
+                                </p>
                             </div>
                             <i class="pi pi-arrow-right-arrow-left icon-card-active"></i>
                             <div class="active-card-first-column-book-second">
+<!--                                <img ngSrc="{{ loggedUser === card.requestedPub.book.owner ? environment.apiUrl + card.offeredPub.book.image : environment.apiUrl + card.requestedPub.book.image }}" alt="Book Image" class="book-image" fill/>-->
                                 <div class="book-image"></div>
-                                <p style="margin-bottom: 0">Book title wrapped</p>
+                                <p style="margin-bottom: 0">
+                                    {{ loggedUser === card.requestedPub.book.owner ? card.offeredPub.book.model?.title : card.requestedPub.book.model?.title }}
+                                </p>
                             </div>
                         </div>
                         <div class="active-card-second-column">

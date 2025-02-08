@@ -22,7 +22,7 @@ export class ExchangeService {
             .set('page', page.toString());
 
         return this.http.get<any>(`${this.baseUrl}${exchangesUrl}`, { headers, params }).pipe(
-            tap((e) => console.log("Respuesta de la API:", e)),
+            tap((e) => console.log("Respuesta de la API de exchanges:", e)),
             map((e) => e.map((exchange: any) => new Exchange(exchange)))
         );
     }
