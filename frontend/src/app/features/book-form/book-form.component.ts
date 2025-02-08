@@ -35,8 +35,10 @@ export class BookFormComponent {
 													authors: this.formBuilder.array([]),
 												});
 		this.translate.setDefaultLang('en');
-//		this.translate.use('en');
-//		this.translate.reloadLang('en');
+		this.translate.use('en');
+		this.translate.reloadLang('en');
+		
+		console.log(this.translate.instant('BOOK-FORM.TITLE'));
 	}
 
 	get authors(): FormArray {
