@@ -1,19 +1,21 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
+//import { TranslateModule } from '@ngx-translate/core';
 import { NavbarComponent } from "../../shared/components/navbar/navbar.component";
 
 @Component({
 	selector: 'app-book-form',
 	standalone: true,
-	imports: [CommonModule, ReactiveFormsModule, NavbarComponent],
+	imports: [CommonModule, ReactiveFormsModule, NavbarComponent, TranslatePipe],
 	templateUrl: './book-form.component.html',
 	styleUrls: ['./book-form.component.css'],
 })
 export class BookFormComponent {
 	bookForm: FormGroup;
 	
-	constructor(private formBuilder: FormBuilder) {
+	constructor(private translate: TranslateService, private formBuilder: FormBuilder) {
 		this.bookForm = this.formBuilder.group({
 													isbn: ['', Validators.required],
 													title: ['', Validators.required],
@@ -32,6 +34,9 @@ export class BookFormComponent {
 													averageRating: [0, [Validators.min(0), Validators.max(5)]],
 													authors: this.formBuilder.array([]),
 												});
+		this.translate.setDefaultLang('en');
+//		this.translate.use('en');
+//		this.translate.reloadLang('en');
 	}
 
 	get authors(): FormArray {

@@ -13,7 +13,6 @@
     "ENGLISH": "English",
     "SPANISH": "Español"
   },
-
   "NAVBAR": {
     "EXCHANGES": "Exchanges",
     "PUBLICATIONS": "Publications",
@@ -23,5 +22,22 @@
     "FAVORITES": "Favorites",
     "LOGOUT": "Logout",
     "SEARCH": "Search publications"
+  },
+  "BOOK_FORM": {
+  	"TITLE": "Add new book",
+  	"BOOK_TITLE": "Title",
+  	"EDITORIAL": "Editorial",
+  	"DESCRIPTION": "Description",
+  	"GENRE": "Genre",
+  	"EDITION": "Edition",
+  	"WEIGHT": "Weight (grams)",
+  	"PAGES": "Pages",
+  	"LANGUAGE": "Language",
+  	"DIMENSIONS": "Size",
+  	"PUBLICATION_YEAR": "Publication year",
+  	"IS_POCKET_EDITION": "Pocket Edition?",
+  	"IS_HARDCOVER:": "Hardcover?",
+  	"RATING": "Rating",
+  	"AUTHORS": "Authors"
   }
 }
