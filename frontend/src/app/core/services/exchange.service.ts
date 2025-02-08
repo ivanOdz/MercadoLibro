@@ -30,15 +30,6 @@ export class ExchangeService {
 
         return this.http.get<any>(`${this.baseUrl}${exchangesUrl}`, { headers, params, observe: 'response' }).pipe(
             map(response => {
-                console.log("Headers recibidos:", response.headers);
-                if (response.headers) {
-                    const totalItems = response.headers.get('X-Total-Count');
-                    console.log("Total de elementos:", totalItems);
-                    const totalPages = response.headers.get('X-Total-Pages');
-                    console.log("Total de elementos:", totalPages);
-                    const currentPage = response.headers.get('X-Current-Page');
-                    console.log("Total de elementos:", currentPage);
-                }
                 let totalRecords: Pagination = new Pagination(Number(response.headers.get('X-Total-Count')), Number(response.headers.get('X-Total-Pages')), Number(response.headers.get('X-Current-Page')));
 
                 const exchanges: Exchange[] = response.body.map((exchange: any) => new Exchange(exchange));
