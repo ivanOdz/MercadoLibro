@@ -91,15 +91,20 @@ public class PublicationServiceImpl implements PublicationService {
     @Override
     @Transactional(readOnly = true)
     public PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, String state, String genre, String sortType, int currentPage, Long userId, Boolean favorites, Long locationId) {
-
-
-        User currentUser = userService.findById(userId);
+        User currentUser = null;
+        if(userId != null) {
+            currentUser = userService.findById(userId);
+        }
 
         BookState state_filter = BookState.fromString(state);
-        state_filter = state_filter == null ? DEFAULT_PUBLICATION_STATE_FILTER : state_filter;
+        if(state != null && state_filter == null){
+            state_filter = DEFAULT_PUBLICATION_STATE_FILTER;
+        }
 
         Genre genre_filter = Genre.fromString(genre);
-        genre_filter = genre_filter == null ? DEFAULT_PUBLICATION_GENRE_FILTER : genre_filter;
+        if(genre != null && genre_filter == null){
+            genre_filter = DEFAULT_PUBLICATION_GENRE_FILTER;
+        }
 
         if(favorites && currentUser == null){
             throw new UserMissingBadRequest("UserId is required when filtering favorites");
@@ -222,10 +227,10 @@ public class PublicationServiceImpl implements PublicationService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<GenreWrapper> getMyGenreWrapperList(long userId, String search, String state) {
+    public List<GenreWrapper> getMyGenreWrapperList(Long userId, String search, String state) {
+        // if genre != null, return Collections.emptyList();
         BookState state_filter = BookState.fromString(state);
         state_filter = state_filter == null ? DEFAULT_PUBLICATION_STATE_FILTER : state_filter;
-
         return pubDao.getGenreQtyByPublication(userId, search, state_filter);
     }
 

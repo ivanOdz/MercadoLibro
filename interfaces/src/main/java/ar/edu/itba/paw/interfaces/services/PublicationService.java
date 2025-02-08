@@ -47,7 +47,7 @@ public interface PublicationService {
 
     List<BookStateWrapper> getBookStateWrapperList(String search, String genre);
 
-    List<GenreWrapper> getMyGenreWrapperList(long userId, String search, String state);
+    List<GenreWrapper> getMyGenreWrapperList(Long userId, String search, String state);
 
     List<BookStateWrapper> getMyBookStateWrapperList(long userId, String search, String genre);
 
