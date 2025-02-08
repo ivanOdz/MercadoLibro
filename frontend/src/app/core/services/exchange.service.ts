@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {map} from "rxjs/operators";
 import {Observable, tap} from "rxjs";
 import {Injectable} from "@angular/core";
+import {Pagination} from "../models/pagination";
 
 @Injectable({ providedIn: 'root' })
 export class ExchangeService {
@@ -10,21 +11,30 @@ export class ExchangeService {
 
     constructor(private http: HttpClient) { }
 
+
+    getMessages(messagesUrl: string): Observable<any> {
+        const headers = new HttpHeaders({ 'Accept': 'application/vnd.message.v1+json' });
+        return this.http.get<any>(`${this.baseUrl}${messagesUrl}`, { headers });
+    }
+
     //  /exchanges?user_id=123546789&state=accepted&isRequester=true&isOfferer=true&page=1
     //  exchangesUrl: /exchanges?user_id=123546789
-    getActiveExchanges(exchangesUrl: string, page: number): Observable<Exchange[]> {
+    getActiveExchanges(exchangesUrl: string, page: number): Observable< {exchange: Exchange[], pagination: Pagination}> {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.exchanges.v1+json' });
 
         let params = new HttpParams()
             .set('state', 'ACCEPTED')
             .set('is_offerer', 'true')
             .set('is_requester', 'true')
-            .set('page', page.toString());
+            .set('page', (page !== undefined && page !== null) ? page.toString() : '0');
 
-        return this.http.get<any>(`${this.baseUrl}${exchangesUrl}`, { headers, params }).pipe(
-            tap((e) => console.log("Respuesta de la API:", e)),
-            map((e) => e.map((exchange: any) => new Exchange(exchange)))
-        );
+        return this.http.get<any>(`${this.baseUrl}${exchangesUrl}`, { headers, params, observe: 'response' }).pipe(
+            map(response => {
+                let totalRecords: Pagination = new Pagination(Number(response.headers.get('X-Total-Count')), Number(response.headers.get('X-Total-Pages')), Number(response.headers.get('X-Current-Page')));
+
+                const exchanges: Exchange[] = response.body.map((exchange: any) => new Exchange(exchange));
+                return {exchange: exchanges, pagination: totalRecords };
+            }));
     }
 
     // /exchanges?user_id=12345678state=pending&isOfferer=false&isRequester=true

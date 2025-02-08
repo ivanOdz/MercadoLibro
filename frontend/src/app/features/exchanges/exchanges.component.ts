@@ -1,9 +1,8 @@
-import {Component, NgIterable, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {NavbarComponent} from "../../shared/components/navbar/navbar.component";
 import { ButtonModule } from 'primeng/button';
-import {Title} from "@angular/platform-browser";
 import {SidebarComponent} from "./components/sidebar.component";
-import {DatePipe, NgClass, NgForOf, NgIf} from "@angular/common";
+import {NgClass, NgForOf, NgIf, NgOptimizedImage, NgStyle} from "@angular/common";
 import {Paginator, PaginatorState} from "primeng/paginator";
 import {Steps} from "primeng/steps";
 import {MenuItem} from "primeng/api";
@@ -14,23 +13,25 @@ import {InputText} from "primeng/inputtext";
 import {Exchange} from "../../core/models/exchange.model";
 import {ExchangeService} from "../../core/services/exchange.service";
 import {UserService} from "../../core/services/user.service";
-import {catchError, filter, forkJoin, Observable, of, switchMap, tap} from "rxjs";
+import {catchError, filter, forkJoin, of, switchMap, tap} from "rxjs";
 import {User} from "../../core/models/user.model";
 import {AuthService} from "../../core/services/auth.service";
 import {Router} from "@angular/router";
-import {Publication} from "../../core/models/publication.model";
 import {BookModel} from "../../core/models/bookModel.model";
 import {PublicationService} from "../../core/services/publication.service";
-import {Book} from "../../core/models/book.model";
-import {BookModelService} from "../../core/services/book.model.service";
+import {BookmodelService} from "../../core/services/bookmodel.service";
 import {BookService} from "../../core/services/book.service";
 import {Location} from "../../core/models/location.model";
 import {map} from "rxjs/operators";
+import {appConfig} from "../../app.config";
+import {environment} from "../../../environments/environment";
+import {ProgressSpinner} from "primeng/progressspinner";
+import {Message} from "../../core/models/message.model";
 
 type message = { sender: number, message: string, date: Date };
 
-type ExchangeData = {exchange: Exchange | null, offeredPub: PublicationData | null, requestedPub: PublicationData | null};
-type PublicationData = {book: BookData | null, locations: Location[]  | null};
+type ExchangeData = {exchange: Exchange, offeredPub: PublicationData, requestedPub: PublicationData/*, messages: Message[]*/};
+type PublicationData = {book: BookData, locations: Location[]};
 type BookData = {owner: User | null, image: string | null, model: BookModel | null};
 
 @Component({
@@ -38,37 +39,51 @@ type BookData = {owner: User | null, image: string | null, model: BookModel | nu
   templateUrl: `exchanges.component.html`,
   standalone: true,
   styleUrl: './exchanges.component.css',
-  imports: [ButtonModule, SidebarComponent, NavbarComponent, NgForOf, Paginator, Steps, Rating, FormsModule, Dialog, InputText, NgIf, NgClass]
+    imports: [ButtonModule, SidebarComponent, NavbarComponent, NgForOf, Paginator, Steps, Rating, FormsModule, Dialog, InputText, NgIf, NgClass, NgOptimizedImage, ProgressSpinner, NgStyle]
 })
 export class ExchangesComponent implements OnInit {
-  activeExchanges: ExchangeData[] = [];
-  constructor(private es: ExchangeService,private us: UserService,private ps: PublicationService,
-              private bs: BookService, private bms: BookModelService, private as: AuthService,
-              private router: Router) {}
+    loggedUser: User | null = null;
 
-  ngOnInit(): void {
-    this.loadExchanges();
-  }
-  // ##################  Api calls  ##################
+    activeExchanges: ExchangeData[] = [];
+
+
+    constructor(private es: ExchangeService, private us: UserService, private ps: PublicationService,
+                private bs: BookService, private bms: BookmodelService, private as: AuthService,
+                private router: Router) {}
+
+    ngOnInit(): void {
+        this.isLoading = true;
+        this.currentPage = 0;
+        this.as.loggedUser$.subscribe((user: User | null) => {
+            this.loggedUser = user;
+            this.loadExchanges();
+        });
+    }
+
+    // ##################  Api calls  ##################
 
     private loadExchanges(): void {
             this.as.loggedUser$.pipe(
-            tap((user) => console.log("Usuario logueado:", user)),
-            filter((user: User | null) => !!user), // Solo sigue si hay usuario
-            switchMap((user: User) =>
-                this.es.getActiveExchanges(user.exchanges, this.currentPage).pipe(
-                    tap((exchanges) => console.log("Intercambios obtenidos:", exchanges)),
-                    catchError((error) => {
-                        console.error("Error obteniendo intercambios:", error);
-                        return of([]); // Si falla, devolvemos un array vacío para evitar romper el flujo
-                    })
+            filter((user: User | null) => !!user),
+                switchMap((user: User) =>
+                    this.es.getActiveExchanges(user.exchanges, this.currentPage).pipe(
+                        tap((response) => {
+                            this.currentPage = response.pagination.currentPage;
+                            this.totalRecords = response.pagination.totalAmount;
+                            this.rows = response.pagination.totalAmount / response.pagination.maxPage;
+                        }),
+                        map(response => response.exchange),
+                        catchError((error) => {
+                            console.error("Error obteniendo intercambios:", error);
+                            return of([]);
+                        })
+                    )
                 )
-            )
-            ,
-            switchMap((exchanges: Exchange[]) => {
-                if (exchanges.length === 0) {
-                    console.warn("No se encontraron intercambios.");
-                    return of([]); // Si no hay intercambios, evitamos que el código siga innecesariamente
+                ,
+                switchMap((exchanges: Exchange[]) => {
+                    if (exchanges.length === 0) {
+                        console.warn("No se encontraron intercambios.");
+                        return of([]);
                 }
 
                 const exchangeRequests = exchanges.map((exchange) => forkJoin({
@@ -76,7 +91,7 @@ export class ExchangesComponent implements OnInit {
                         requesterPub: this.ps.getPublication(exchange.requester),
                     }).pipe(
                         switchMap(({ offererPub, requesterPub }) => {
-                            if (!offererPub || !requesterPub) return of(null); // Si alguna publicación falló, evitamos errores
+                            if (!offererPub || !requesterPub) return of(null);
 
                             return forkJoin({
                                 offererUser: this.us.getUser(offererPub.user).pipe(catchError(() => of(null))),
@@ -90,8 +105,12 @@ export class ExchangesComponent implements OnInit {
                                     if (!offererBook || !requesterBook) return of(null);
 
                                     return forkJoin({
-                                        offererBookModel: this.bms.getBookModel(offererBook.bookModelUri).pipe(catchError(() => of(null))),
-                                        requesterBookModel: this.bms.getBookModel(requesterBook.bookModelUri).pipe(catchError(() => of(null))),
+                                        offererBookModel: this.bms.getBookModel(offererBook.bookModel).pipe(
+                                            tap((r) => console.log("Respuesta de la API de book model:", r)),
+                                            catchError(() => of(null))),
+                                        requesterBookModel: this.bms.getBookModel(requesterBook.bookModel).pipe(
+                                            tap((r) => console.log("Respuesta de la API de book model:", r)),
+                                            catchError(() => of(null))),
                                     }).pipe(
                                         map(({ offererBookModel, requesterBookModel }) => ({
                                             exchange,
@@ -99,7 +118,7 @@ export class ExchangesComponent implements OnInit {
                                                 book: {
                                                     owner: offererUser,
                                                     model: offererBookModel,
-                                                    image: offererBook?.imagesUri?.[0] || null,
+                                                    image: offererBook?.images?.[0] || null,
                                                 },
                                                 locations: offererLocations,
                                             },
@@ -107,10 +126,10 @@ export class ExchangesComponent implements OnInit {
                                                 book: {
                                                     owner: requesterUser,
                                                     model: requesterBookModel,
-                                                    image: requesterBook?.imagesUri?.[0] || null,
+                                                    image: requesterBook?.images?.[0] || null,
                                                 },
                                                 locations: requesterLocations,
-                                            },
+                                            }
                                         }))
                                     );
                                 })
@@ -123,73 +142,93 @@ export class ExchangesComponent implements OnInit {
                     map((result) => result.filter((item) => item !== null)) // Eliminamos nulos
                 );
             })
-        ).subscribe(
-            (activeExchanges) => {
-                this.activeExchanges = activeExchanges;
-                console.log("Intercambios cargados:", this.activeExchanges);
-            },
-            (error) => console.error("Error en la carga de intercambios:", error)
-        );
+            ).subscribe(
+                (activeExchanges) => {
+                    this.activeExchanges = activeExchanges;
+                    this.isLoading = false;
+                    console.log("Intercambios cargados:", this.activeExchanges);
+                },
+                (error) => console.error("Error en la carga de intercambios:", error)
+            );
     }
 
-  //##################  Html functions  ##################
-  selectedCard: ExchangeData | null = null;
+    //##################  Html functions  ##################
+    isLoading = true;
 
-  Title = "Intercambios activos";
+    selectedCard: ExchangeData | null = null;
 
-
-  monthNames: string[] = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-
-
-  displayModal: boolean = false;
-  private changeDetectorRef: any;
-
-
-  selectCard(cardText: ExchangeData) {
-    this.selectedCard = cardText;
-  }
-
-
-  onPageChange($event: PaginatorState) {
-
-  }
-
-  rows: unknown;
-  totalRecords: unknown;
-  currentPage: number = 0;
-  steps: MenuItem[] = [
-    { label: 'Aceptado' },
-    { label: 'Esperando confirmacion' },
-    { label: 'Finalizado' }
-  ];
-  value: any;
-  newMessage: any;
-  messages: message[] = [ { sender: 1, message: 'Hello', date: new Date('2025-02-04') }, { sender: 2, message: 'Hi', date: new Date()} ];
-  lastDate: Date = new Date('2025-02-04');
-
-
-
-  confirmExchange(card: ExchangeData) {
-
-  }
-
-  openChat() {
-    this.displayModal = true;
-  }
-
-  sendMessage() {
-    if (this.newMessage.trim()) {
-      this.messages.push(this.newMessage);
-      this.newMessage = '';
-      this.changeDetectorRef.detectChanges();
+    selectCard(cardText: ExchangeData) {
+        this.selectedCard = cardText;
     }
-  }
 
-  getMonthName(month: number) {
-    return this.monthNames[month - 1];
-  }
+    get selectedUserRating() {
+        return this.isRequester(this.selectedCard) ? this.selectedCard?.offeredPub?.book?.owner?.ratingAverage : this.selectedCard?.requestedPub?.book?.owner?.ratingAverage;
+    }
 
-  redirectToPublications() {
-    this.router.navigate(['/publications']);
-  }
+
+    // ##################  Pagination  ##################
+    rows: unknown;
+    totalRecords: unknown;
+    currentPage: number = 0;
+    onPageChange($event: PaginatorState) {
+        this.currentPage = $event.page || 0;
+    }
+
+
+    Title = "Intercambios activos";
+
+
+    monthNames: string[] = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+
+    displayModal: boolean = false;
+
+    private changeDetectorRef: any;
+
+    steps: MenuItem[] = [
+        { label: 'Aceptado' },
+        { label: 'Esperando confirmacion' },
+        { label: 'Finalizado' }
+    ];
+    value: any;
+    newMessage: any;
+    messages: message[] = [ { sender: 1, message: 'Hello', date: new Date('2025-02-04') }, { sender: 2, message: 'Hi', date: new Date()} ];
+    lastDate: Date = new Date('2025-02-04');
+
+
+
+    confirmExchange(card: ExchangeData) {
+
+    }
+
+    openChat() {
+        this.displayModal = true;
+    }
+
+    sendMessage() {
+        if (this.newMessage.trim()) {
+            this.messages.push(this.newMessage);
+            this.newMessage = '';
+            this.changeDetectorRef.detectChanges();
+        }
+    }
+    getMonthName(month: number) {
+        return this.monthNames[month - 1];
+    }
+
+    redirectToPublications() {
+        this.router.navigate(['/publications']);
+    }
+
+    protected readonly environment = environment;
+
+    getBookImage(book: BookData) {
+        return this.loggedUser === book.owner ?
+            (book.image || 'assets/book.jpg') :
+            (book.image || 'assets/book.jpg');
+    }
+
+    isRequester(selectedCard: ExchangeData | null) {
+        return this.loggedUser === selectedCard?.requestedPub.book.owner;
+    }
 }

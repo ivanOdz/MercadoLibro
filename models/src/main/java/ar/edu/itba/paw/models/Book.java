@@ -38,7 +38,7 @@ public class Book {
 	@Column(name = "available")
 	private Boolean available;   // indica si se encuentra en un intercambio en progreso
 
-	@OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	private List<BookImage> images;
 
 

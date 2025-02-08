@@ -1,17 +1,17 @@
 export class Book {
 	state: string;
-	isAvailable: boolean;
-	selfUri: string;
-	ownerUri: string;
-	bookModelUri: string;
-	imagesUri: string[];
-	
+	available: boolean;
+	self: string;
+	owner: string;
+	bookModel: string;
+	images: string[];
+
 	constructor(data: any) {
 		this.state = data.state;
-		this.isAvailable = data.isAvailable;
-		this.selfUri = data.selfUri;
-		this.ownerUri = data.ownerUri;
-		this.bookModelUri = data.bookModelUri;
-		this.imagesUri = data.imagesUri;
+		this.available = data.available;
+		this.self = data.self;
+		this.owner = data.owner;
+		this.bookModel = data.bookModel;
+		this.images = data.images;
 	}
 }

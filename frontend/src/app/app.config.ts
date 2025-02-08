@@ -1,4 +1,4 @@
-import {ApplicationConfig, importProvidersFrom, provideZoneChangeDetection} from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
@@ -6,10 +6,10 @@ import { providePrimeNG } from 'primeng/config';
 
 import { routes } from './app.routes';
 import { MyPreset } from "../styles";
-import {HttpClient, provideHttpClient, withInterceptors} from "@angular/common/http";
-import {authInterceptor} from "./core/interceptors/auth.interceptor";
-import {TranslateLoader, TranslateModule, TranslateService} from "@ngx-translate/core";
-import {TranslateHttpLoader} from "@ngx-translate/http-loader";
+import { HttpClient, provideHttpClient, withInterceptors } from "@angular/common/http";
+import { authInterceptor } from "./core/interceptors/auth.interceptor";
+import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
+import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -31,6 +31,6 @@ export const appConfig: ApplicationConfig = {
                       }
                   })
               ),
-              TranslateService]
+			]
 };
 

@@ -7,7 +7,8 @@ import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 //import javax.validation.constraints.Digits;
-import java.util.List;
+import java.util.Set;
+import java.util.Set;
 
 @Entity
 @Table(name = "book_model")
@@ -62,12 +63,12 @@ public class BookModel {
     @JoinColumn(name = "imageid")
     private Image image;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "book_author",
             joinColumns = @JoinColumn(name = "bookmodelid"),
             inverseJoinColumns = @JoinColumn(name = "authorid"))
-    private List<Author> authors;
+    private Set<Author> authors;
 
     @Formula("(SELECT COALESCE(ROUND(AVG(br.rating), 1), 0.0) FROM book_rating br WHERE br.bookmodelid = bookmodelid)")
     private Double averageRating;
@@ -80,7 +81,7 @@ public class BookModel {
     }
 
     public BookModel(Long bookModelId, String isbn, String title, String editorial, String description, Genre genre, int edition, int weight, int pages, Language bookLanguage,
-                     BookDimension dimension, short publicationYear, boolean isPocketEdition, boolean isHardcover, List<Author> authors, Image image) {
+                     BookDimension dimension, short publicationYear, boolean isPocketEdition, boolean isHardcover, Set<Author> authors, Image image) {
         this.bookModelId = bookModelId;
         this.isbn = isbn;
         this.title = title;
@@ -99,7 +100,7 @@ public class BookModel {
         this.image = image;
     }
 
-    public List<Author> getAuthors() {
+    public Set<Author> getAuthors() {
         return authors;
     }
 
@@ -222,7 +223,7 @@ public class BookModel {
     public void setImage(Image image) {
         this.image = image;
     }
-    public void setAuthors(List<Author> authors) {
+    public void setAuthors(Set<Author> authors) {
         this.authors = authors;
     }
     public Double getAverageRating() {

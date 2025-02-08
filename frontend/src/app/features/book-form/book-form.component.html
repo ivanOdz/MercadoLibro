@@ -1,0 +1,73 @@
+<app-navbar></app-navbar>
+
+<div class="form-container">
+  <h2>{{ 'BOOK_FORM.TITLE' | translate }}</h2>
+
+  <form [formGroup]="bookForm" (ngSubmit)="submitForm()">
+    <div class="form-grid">
+
+      <div class="column">
+        <label>ISBN:</label>
+        <input type="text" formControlName="isbn" />
+
+        <label>{{ 'BOOK_FORM.BOOK_TITLE' | translate }}:</label>
+        <input type="text" formControlName="title" />
+
+        <label>{{ 'BOOK_FORM.EDITORIAL' | translate }}:</label>
+        <input type="text" formControlName="editorial" />
+
+        <label>{{ 'BOOK_FORM.DESCRIPTION' | translate }}:</label>
+        <textarea formControlName="description"></textarea>
+
+        <label>{{ 'BOOK_FORM.GENRE' | translate }}:</label>
+        <input type="text" formControlName="genre" />
+
+        <label>{{ 'BOOK_FORM.EDITION' | translate }}:</label>
+        <input type="number" formControlName="edition" />
+
+        <label>{{ 'BOOK_FORM.WEIGHT' | translate }}:</label>
+        <input type="number" formControlName="weight" />
+
+        <label>{{ 'BOOK_FORM.PAGES' | translate }}:</label>
+        <input type="number" formControlName="pages" />
+      </div>
+
+      <div class="column">
+        <label>{{ 'BOOK_FORM.LANGUAGE' | translate }}:</label>
+        <input type="text" formControlName="bookLanguage" />
+
+        <label>{{ 'BOOK_FORM.DIMENSION' | translate }}:</label>
+        <input type="text" formControlName="dimension" />
+
+        <label>{{ 'BOOK_FORM.PUBLICATION_YEAR' | translate }}:</label>
+        <input type="number" formControlName="publicationYear" />
+
+		<div align="left">
+	        <label>{{ 'BOOK_FORM.IS_POCKET_EDITION' | translate }}:</label>
+	        <input type="checkbox" formControlName="isPocketEdition" />
+        </div>
+
+		<div align="left">
+		        <label>{{ 'BOOK_FORM.IS_HARDCOVER' | translate }}:</label>
+       			<input type="checkbox" formControlName="isHardcover" />
+		</div>
+
+        <label>{{ 'BOOK_FORM.RATING' | translate }}:</label>
+        <input type="number" formControlName="averageRating" step="0.1" />
+
+        <label>{{ 'BOOK_FORM.AUTHORS' | translate }}:</label>
+        <div formArrayName="authors">
+          <div *ngFor="let author of authors.controls; let i = index" class="author-row">
+            <input type="text" [formControlName]="i" />
+            <button type="button" (click)="removeAuthor(i)">❌</button>
+          </div>
+        </div>
+        <button type="button" (click)="addAuthor()" class="add-author">➕ Agregar Autor</button>
+      </div>
+    </div>
+
+    <div class="button-group">
+      <button type="submit" [disabled]="bookForm.invalid" class="submit-button">Guardar Libro</button>
+    </div>
+  </form>
+</div>

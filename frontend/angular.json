@@ -28,10 +28,7 @@
               "src/styles.css"
             ],
             "assets": [
-              {
-                "glob": "**/*",
-                "input": "src/assets"
-              }
+              "src/assets"
             ],
             "scripts": []
           },
@@ -71,10 +68,7 @@
             ],
             "tsConfig": "tsconfig.spec.json",
             "assets": [
-              {
-                "glob": "**/*",
-                "input": "src/assets"
-              }
+              "src/assets"
             ],
             "styles": [
               "node_modules/primeicons/primeicons.css",

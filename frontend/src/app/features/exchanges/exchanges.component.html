@@ -3,13 +3,12 @@
     <exchanges-sidebar/>
     <div class="content">
         <p class="page-title">{{Title}}</p>
-        <div *ngIf="activeExchanges.length === 0" class="card-section-empty">
-            <p class="text-empty">No tienes intercambios activos</p>
-            <p-button styleClass="empty-button" label="Ver publicaciones" icon="pi pi-search" (click)="redirectToPublications()" />
-        </div>
         <div  *ngIf="activeExchanges.length != 0"  class="main-section">
             <div style="grid-column: 1;" class="column-cards">
-                <div class="card-section">
+                <div class="card-section" style="align-content: center;text-align: center" *ngIf="isLoading">
+                    <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
+                </div>
+                <div class="card-section" *ngIf="!isLoading">
                     <div
                             class="card"
                             *ngFor="let card of activeExchanges"
@@ -18,33 +17,52 @@
                     >
                         <div class="active-card-first-column">
                             <div class="active-card-first-column-book-first">
-                                <div class="book-image"></div>
-                                <p style="margin-bottom: 0">Book title wrapped</p>
+                                <img [src]="loggedUser === card.offeredPub.book.owner ? getBookImage(card.offeredPub.book) : getBookImage(card.requestedPub.book)"
+                                     alt="Book Image"
+                                     class="book-image"/>
+
+                                <p style="margin-bottom: 0">
+                                    {{ loggedUser === card.offeredPub.book.owner ? card.offeredPub.book.model?.title : card.requestedPub.book.model?.title }}
+                                </p>
                             </div>
                             <i class="pi pi-arrow-right-arrow-left icon-card-active"></i>
                             <div class="active-card-first-column-book-second">
-                                <div class="book-image"></div>
-                                <p style="margin-bottom: 0">Book title wrapped</p>
+                                <img [src]="loggedUser === card.offeredPub.book.owner ? getBookImage(card.requestedPub.book) : getBookImage(card.offeredPub.book)" alt="Book Image" class="book-image" fill/>
+                                <p style="margin-bottom: 0">
+                                    {{ loggedUser === card.offeredPub.book.owner ? card.requestedPub.book.model?.title : card.offeredPub.book.model?.title }}
+                                </p>
                             </div>
                         </div>
                         <div class="active-card-second-column">
-                            <p-steps [model]="steps" [readonly]="true" />
-                            <p-button class="confirm-button" styleClass="confirm-button" label="confirmar" (click)="confirmExchange(card)" />
+                            <p-steps [model]="steps" [activeIndex]="1" [readonly]="true" />
+                            <div *ngIf="loggedUser === card.offeredPub.book.owner? !card.exchange.offerer_received : !card.exchange.requester_received">
+                                <p-button class="confirm-button" styleClass="confirm-button" label="confirmar" (click)="confirmExchange(card)" />
+                            </div>
+                            <div *ngIf="loggedUser === card.offeredPub.book.owner? card.exchange.offerer_received : card.exchange.requester_received">
+                                <span style="margin-top: 1rem;font-size: 12px;padding: 0.5rem;background: lightgray" class="exchange-completed-span" >Ya has confirmado</span>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <p-paginator (onPageChange)="onPageChange($event)" [first]="currentPage" [rows]="rows" [totalRecords]="totalRecords" />
             </div>
 
-            <div class="content-panel" id="content-panel">
+            <div class="content-panel" style="align-content: center;text-align: center" *ngIf="isLoading">
+                <div class="emtpy-content-panel">
+                    <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
+                </div>
+            </div>
+            <div *ngIf="selectedCard" class="content-panel" id="content-panel">
                 <div class="static-card user-card" id="user-card">
                     <div style="grid-column: 1">
                         <div class="user-card-image"></div>
                     </div>
                     <div style="grid-column: 2; text-align: start;">
-                        <p class="user-card-name">Nombre de usuario</p>
-                        <p class="user-card-email">usuario&#64;mail.com</p>
-                        <p-rating [(ngModel)]="value" [disabled]="true" />
+                        <p class="user-card-name">{{ isRequester(selectedCard) ? selectedCard?.offeredPub?.book?.owner?.username :
+                            selectedCard?.requestedPub?.book?.owner?.username }}</p>
+                        <p class="user-card-email">{{ isRequester(selectedCard) ? selectedCard?.offeredPub?.book?.owner?.username :
+                            selectedCard?.requestedPub?.book?.owner?.mail }}</p>
+                        <p-rating [(ngModel)]="selectedUserRating" [disabled]="true" />
                     </div>
                     <div style="grid-column: 3; align-content: center;text-align: end;">
                         <i style="font-size: xx-large;font-weight: lighter;cursor: pointer" class="pi pi-comment icon-card-active" (click)="openChat()"></i>
@@ -56,14 +74,13 @@
                         <div class="book-image-static"></div>
                     </div>
                     <div style="grid-column: 2; text-align: start;">
-                        <p class="book-card-title">Título del libro</p>
-                        <p class="book-card-author">Autor del libro</p>
+                        <p class="book-card-title">{{ isRequester(selectedCard) ? selectedCard?.offeredPub?.book?.model?.title :
+                            selectedCard?.requestedPub?.book?.model?.title }}</p>
+                        <p class="book-card-author">{{ isRequester(selectedCard) ? selectedCard?.offeredPub?.book?.model?.authors :
+                            selectedCard?.requestedPub?.book?.model?.authors }}</p>
                         <p class="book-card-description">
-                            feogmpwo4ngpeangwpvp om3fpnenopgnopvwnvwpoewnvwev
-                            ewnonpwvownenovpewvneoneopnbeobneopbneonbe
-                            beboenbeopbneoneboneoneobneobnoebneobneb
-                            ebneobnebnebnebononboebnenboenbeobnobneb
-                            neonbeobebneobnebnoenbeobeonboenn
+                            {{ isRequester(selectedCard) ? selectedCard?.offeredPub?.book?.model?.description :
+                            selectedCard?.requestedPub?.book?.model?.description }}
                         </p>
                     </div>
                 </div>
@@ -73,18 +90,26 @@
                         <div class="book-image-static"></div>
                     </div>
                     <div style="grid-column: 2; text-align: start;">
-                        <p class="book-card-title">Título del libro</p>
-                        <p class="book-card-author">Autor del libro</p>
+                        <p class="book-card-title">{{ isRequester(selectedCard) ? selectedCard?.requestedPub?.book?.model?.title :
+                            selectedCard?.offeredPub?.book?.model?.title }}</p>
+                        <p class="book-card-author">{{ isRequester(selectedCard) ? selectedCard?.requestedPub?.book?.model?.authors :
+                            selectedCard?.offeredPub?.book?.model?.authors }}</p>
                         <p class="book-card-description">
-                            feogmpwo4ngpeangwpvp om3fpnenopgnopvwnvwpoewnvwev
-                            ewnonpwvownenovpewvneoneopnbeobneopbneonbe
-                            beboenbeopbneoneboneoneobneobnoebneobneb
-                            ebneobnebnebnebononboebnenboenbeobnobneb
-                            neonbeobebneobnebnoenbeobeonboenn
+                            {{ isRequester(selectedCard) ? selectedCard?.requestedPub?.book?.model?.description :
+                            selectedCard?.offeredPub?.book?.model?.description }}
                         </p>
                     </div>
                 </div>
             </div>
+            <div *ngIf="!selectedCard">
+                <div class="emtpy-content-panel">
+                    <p class="text-empty">Selecciona una tarjeta para más detalles</p>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="activeExchanges.length === 0 && !isLoading" class="card-section-empty">
+            <p class="text-empty">No tienes intercambios activos</p>
+            <p-button styleClass="empty-button" label="Ver publicaciones" icon="pi pi-search" (click)="redirectToPublications()" />
         </div>
     </div>
 </div>

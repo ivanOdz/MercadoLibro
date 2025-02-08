@@ -22,5 +22,23 @@
     "FAVORITES": "Favoritos",
     "LOGOUT": "Cerrar sesión",
     "SEARCH": "Buscar publicaciones"
+  },
+  "BOOK_FORM": {
+  	"TITLE": "Agregar un libro",
+  	"BOOK_TITLE": "Título",
+  	"EDITORIAL": "Editorial",
+  	"DESCRIPTION": "Descripción",
+  	"GENRE": "Género",
+  	"EDITION": "Edición",
+  	"WEIGHT": "Peso (gramos)",
+  	"PAGES": "Páginas",
+  	"LANGUAGE": "Lenguaje",
+  	"DIMENSIONS": "Tamaño",
+  	"PUBLICATION_YEAR": "Año de publición",
+  	"POCKET_EDITION": "¿Es de bolsillo?",
+  	"HARDCOVER:": "¿Es con tapa dura?",
+  	"RATING": "Calificación",
+  	"AUTHORS": "Autores"
   }
+  
 }

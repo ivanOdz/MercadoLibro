@@ -72,7 +72,7 @@ export class AuthService {
       return;
     }
 
-    this.userService.getUser(tokenUri).subscribe({
+    this.userService.getUser('/' + tokenUri).subscribe({
       next: (user) => {
         this.setLoggedUser(user);
         this.isAuthenticated.next(true);
