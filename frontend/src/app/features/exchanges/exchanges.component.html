@@ -17,19 +17,19 @@
                     >
                         <div class="active-card-first-column">
                             <div class="active-card-first-column-book-first">
-                                <img [src]="loggedUser === card.offeredPub.book.owner ? getBookImage(card.offeredPub.book) : getBookImage(card.requestedPub.book)"
+                                <img [src]="!isRequester(card)? getBookImage(card.offeredPub.book) : getBookImage(card.requestedPub.book)"
                                      alt="Book Image"
                                      class="book-image"/>
 
                                 <p style="margin-bottom: 0">
-                                    {{ loggedUser === card.offeredPub.book.owner ? card.offeredPub.book.model?.title : card.requestedPub.book.model?.title }}
+                                    {{ !isRequester(card) ? card.offeredPub.book.model?.title : card.requestedPub.book.model?.title }}
                                 </p>
                             </div>
                             <i class="pi pi-arrow-right-arrow-left icon-card-active"></i>
                             <div class="active-card-first-column-book-second">
-                                <img [src]="loggedUser === card.offeredPub.book.owner ? getBookImage(card.requestedPub.book) : getBookImage(card.offeredPub.book)" alt="Book Image" class="book-image" fill/>
+                                <img [src]="!isRequester(card) ? getBookImage(card.requestedPub.book) : getBookImage(card.offeredPub.book)" alt="Book Image" class="book-image" fill/>
                                 <p style="margin-bottom: 0">
-                                    {{ loggedUser === card.offeredPub.book.owner ? card.requestedPub.book.model?.title : card.offeredPub.book.model?.title }}
+                                    {{ !isRequester(card) ? card.requestedPub.book.model?.title : card.offeredPub.book.model?.title }}
                                 </p>
                             </div>
                         </div>
@@ -60,7 +60,7 @@
                     <div style="grid-column: 2; text-align: start;">
                         <p class="user-card-name">{{ isRequester(selectedCard) ? selectedCard?.offeredPub?.book?.owner?.username :
                             selectedCard?.requestedPub?.book?.owner?.username }}</p>
-                        <p class="user-card-email">{{ isRequester(selectedCard) ? selectedCard?.offeredPub?.book?.owner?.username :
+                        <p class="user-card-email">{{ isRequester(selectedCard) ? selectedCard?.offeredPub?.book?.owner?.mail :
                             selectedCard?.requestedPub?.book?.owner?.mail }}</p>
                         <p-rating [(ngModel)]="selectedUserRating" [disabled]="true" />
                     </div>

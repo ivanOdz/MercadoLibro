@@ -48,7 +48,7 @@ export class RequestsComponent {
     loggedUser: User | null = null;
 
     offeredExchanges: ExchangeData[] = [];
-    requesterExchanges: ExchangeData[] = [];
+    requestedExchanges: ExchangeData[] = [];
 
 
     constructor(private es: ExchangeService, private us: UserService, private ps: PublicationService,
@@ -65,7 +65,7 @@ export class RequestsComponent {
 
     // ##################  Api calls  ##################
     private loadExchanges(): void {
-        this.requesterExchanges = [];
+        this.requestedExchanges = [];
         this.offeredExchanges = [];
         this.isLoading = true;
 
@@ -90,10 +90,10 @@ export class RequestsComponent {
                 });
             })
         ).subscribe(({ requesterExchanges, offeredExchanges }) => {
-            this.requesterExchanges = requesterExchanges;
+            this.requestedExchanges = requesterExchanges;
             this.offeredExchanges = offeredExchanges;
             this.isLoading = false;
-            console.log("Requester Exchanges:", this.requesterExchanges);
+            console.log("Requester Exchanges:", this.requestedExchanges);
             console.log("Offered Exchanges:", this.offeredExchanges);
         }, (error) => {
             this.isLoading = false;
@@ -208,7 +208,7 @@ export class RequestsComponent {
     }
 
     isRequester(selectedCard: ExchangeData | null) {
-        return this.loggedUser === selectedCard?.requestedPub.book.owner;
+        return this.loggedUser?.username == selectedCard?.requestedPub.book.owner?.username;
     }
 
     getBookImage(book: BookData) {
