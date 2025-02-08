@@ -52,6 +52,16 @@ public class BookModelController {
         return CacheResponseUtil.conditionalCacheResponse(request, new EntityTag(Integer.toString(modelBooks.getData().hashCode())));
     }
 
+
+    // IMPLEMENT
+    @GET
+    @Path("/{id}")
+    @Produces(value = {VndType.APPLICATION_BOOK_MODEL})
+    public Response getBookModel(@PathParam("id") Long bookModelId) {
+        BookModel bookModel = bookModelService.getBookModelByBookModelId(bookModelId);
+        return Response.ok(BookModelDTO.fromBookModel(uriInfo, bookModel)).build();
+    }
+
     @POST
     @Consumes(value = {VndType.APPLICATION_BOOK_MODEL})
     public Response postBookModel(final BookModelDTO bookModelDTO, @QueryParam("rating") final Integer rating) {

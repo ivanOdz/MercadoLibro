@@ -91,7 +91,7 @@ public class PublicationController {
     @Path("/{publication_id}")
     @Produces(value = {VndType.APPLICATION_PUBLICATION})
     public Response getPublication(@PathParam("publication_id") Long publicationId) {
-        Publication publication = ps.getActivePublication(publicationId);
+        Publication publication = ps.getPublicationByPublicationId(publicationId);
         PublicationDTO dto = PublicationDTO.fromPublication(uriInfo, publication);
         GenericEntity<PublicationDTO> genericEntity = new GenericEntity<PublicationDTO>(dto) {};
 

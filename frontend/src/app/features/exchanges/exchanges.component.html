@@ -3,12 +3,16 @@
     <exchanges-sidebar/>
     <div class="content">
         <p class="page-title">{{Title}}</p>
-        <div class="main-section">
+        <div *ngIf="activeExchanges.length === 0" class="card-section-empty">
+            <p class="text-empty">No tienes intercambios activos</p>
+            <p-button styleClass="empty-button" label="Ver publicaciones" icon="pi pi-search" (click)="redirectToPublications()" />
+        </div>
+        <div  *ngIf="activeExchanges.length != 0"  class="main-section">
             <div style="grid-column: 1;" class="column-cards">
                 <div class="card-section">
                     <div
                             class="card"
-                            *ngFor="let card of ['Tarjeta 1', 'Tarjeta 2', 'Tarjeta 3', 'Tarjeta 4', 'Tarjeta 5', 'Tarjeta 6']"
+                            *ngFor="let card of activeExchanges"
                             (click)="selectCard(card)"
                             [class.selected]="selectedCard === card"
                     >

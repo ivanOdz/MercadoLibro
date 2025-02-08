@@ -61,6 +61,15 @@ public class BookController {
         return PageResponseUtil.getResponse(currentPage, paginated.getMetadata().getMaxPage(), uriInfo, response);
     }
 
+    // IMPLEMENT
+    @GET
+    @Path("/{id}")
+    @Produces(value = {VndType.APPLICATION_BOOK})
+    public Response getBook(@PathParam("id") final long bookId) {
+        final Book book = bs.getBookById(bookId);
+        return Response.ok(BookDTO.fromBook(uriInfo, book)).build();
+    }
+
     @POST
     @Consumes(value = {VndType.APPLICATION_BOOK_INPUT})
     @PreAuthorize("@accessControl.bookCreationAccess(#bookDTO)")
