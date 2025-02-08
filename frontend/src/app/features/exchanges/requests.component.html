@@ -13,41 +13,57 @@
                 <p-tabpanel value="0">
                     <div class="requests-main-section">
                         <div style="grid-column: 1;" class="column-cards">
-                            <div class="card-section">
+                            <div class="card-section" style="align-content: center;text-align: center" *ngIf="isLoading">
+                                <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
+                            </div>
+                            <div *ngIf="offeredExchanges.length != 0 && !isLoading" class="card-section">
                                 <div
                                         class="card"
-                                        *ngFor="let card of ['Tarjeta 1', 'Tarjeta 2', 'Tarjeta 3', 'Tarjeta 4', 'Tarjeta 5', 'Tarjeta 6']"
-                                        (click)="selectOfferCard(card)"
+                                        *ngFor="let card of offeredExchanges"
+                                        (click)="selectOfferedCard(card)"
                                         [class.selected]="selectedOffersCard === card"
                                 >
                                     <div class="active-card-first-column">
                                         <div class="active-card-first-column-book-first">
-                                            <div class="book-image"></div>
-                                            <p style="margin-bottom: 0">Book title wrapped</p>
+                                            <img [src]="loggedUser === card.offeredPub.book.owner ? getBookImage(card.offeredPub.book) : getBookImage(card.requestedPub.book)"
+                                                 alt="Book Image"
+                                                 class="book-image"/>
+                                            <p style="margin-bottom: 0">
+                                            {{ loggedUser === card.offeredPub.book.owner ? card.offeredPub.book.model?.title : card.requestedPub.book.model?.title }}
+                                            </p>
                                         </div>
                                         <i class="pi pi-arrow-right-arrow-left icon-card-active"></i>
                                         <div class="active-card-first-column-book-second">
-                                            <div class="book-image"></div>
-                                            <p style="margin-bottom: 0">Book title wrapped</p>
+                                            <img [src]="loggedUser === card.offeredPub.book.owner ? getBookImage(card.requestedPub.book) : getBookImage(card.offeredPub.book)" alt="Book Image" class="book-image" fill/>
+                                            <p style="margin-bottom: 0">
+                                                {{ loggedUser === card.offeredPub.book.owner ? card.requestedPub.book.model?.title : card.offeredPub.book.model?.title }}
+                                            </p>
                                         </div>
                                     </div>
                                     <div class="requests-second-column">
-                                        <p-button styleClass="exchange-reject-button">Rechazar</p-button>
-                                        <p-button styleClass="exchange-accept-button">Aceptar</p-button>
+                                        <p-button styleClass="exchange-reject-button" (click)="showRejectDialog(card)">Rechazar</p-button>
+                                        <p-button styleClass="exchange-accept-button" (click)="showAcceptDialog(card)">Aceptar</p-button>
                                     </div>
                                 </div>
                             </div>
-                            <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows" [totalRecords]="totalRecords" />
+                            <p-paginator (onPageChange)="onOfferredPageChange($event)" [first]="currentOfferedPage" [rows]="rows" [totalRecords]="totalRecords" />
                         </div>
-                        <div class="content-panel" id="content-panel-offers">
+                        <div class="content-panel" style="align-content: center;text-align: center" *ngIf="isLoading">
+                            <div class="emtpy-content-panel">
+                                <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
+                            </div>
+                        </div>
+                        <div class="content-panel" id="content-panel-offers" *ngIf="selectedOffersCard && !isLoading">
                             <div class="static-card user-card " id="user-card-offers">
                                 <div style="grid-column: 1; justify-items: center;">
                                     <div class="user-card-image"></div>
                                 </div>
                                 <div style="grid-column: 2; text-align: start;">
-                                    <p class="user-card-name">Nombre de usuario</p>
-                                    <p class="user-card-email">usuario&#64;mail.com</p>
-                                    <p-rating [(ngModel)]="value" [disabled]="true" />
+                                    <p class="user-card-name">{{ isRequester(selectedOffersCard) ? selectedOffersCard?.offeredPub?.book?.owner?.username :
+                                        selectedOffersCard?.requestedPub?.book?.owner?.username }}</p>
+                                    <p class="user-card-email">{{ isRequester(selectedOffersCard) ? selectedOffersCard?.offeredPub?.book?.owner?.username :
+                                        selectedOffersCard?.requestedPub?.book?.owner?.mail }}</p>
+                                    <p-rating [(ngModel)]="selectedUserRatingOffered" [disabled]="true" />
                                 </div>
                             </div>
                             <p class="static-section-headers">El libro</p>
@@ -56,14 +72,13 @@
                                     <div class="book-image-static"></div>
                                 </div>
                                 <div style="grid-column: 2; text-align: start;">
-                                    <p class="book-card-title">Título del libro</p>
-                                    <p class="book-card-author">Autor del libro</p>
+                                    <p class="book-card-title">{{ isRequester(selectedOffersCard) ? selectedOffersCard?.offeredPub?.book?.model?.title :
+                                        selectedOffersCard?.requestedPub?.book?.model?.title }}</p>
+                                    <p class="book-card-author">{{ isRequester(selectedOffersCard) ? selectedOffersCard?.offeredPub?.book?.model?.authors :
+                                        selectedOffersCard?.requestedPub?.book?.model?.authors }}</p>
                                     <p class="book-card-description">
-                                        feogmpwo4ngpeangwpvp om3fpnenopgnopvwnvwpoewnvwev
-                                        ewnonpwvownenovpewvneoneopnbeobneopbneonbe
-                                        beboenbeopbneoneboneoneobneobnoebneobneb
-                                        ebneobnebnebnebononboebnenboenbeobnobneb
-                                        neonbeobebneobnebnoenbeobeonboenn
+                                        {{ isRequester(selectedOffersCard) ? selectedOffersCard?.offeredPub?.book?.model?.description :
+                                        selectedOffersCard?.requestedPub?.book?.model?.description }}
                                     </p>
                                 </div>
                             </div>
@@ -73,18 +88,26 @@
                                     <div class="book-image-static"></div>
                                 </div>
                                 <div style="grid-column: 2; text-align: start;">
-                                    <p class="book-card-title">Título del libro</p>
-                                    <p class="book-card-author">Autor del libro</p>
+                                    <p class="book-card-title">{{ isRequester(selectedOffersCard) ? selectedOffersCard?.requestedPub?.book?.model?.title :
+                                        selectedOffersCard?.offeredPub?.book?.model?.title }}</p>
+                                    <p class="book-card-author">{{ isRequester(selectedOffersCard) ? selectedOffersCard?.requestedPub?.book?.model?.authors :
+                                        selectedOffersCard?.offeredPub?.book?.model?.authors }}</p>
                                     <p class="book-card-description">
-                                        feogmpwo4ngpeangwpvp om3fpnenopgnopvwnvwpoewnvwev
-                                        ewnonpwvownenovpewvneoneopnbeobneopbneonbe
-                                        beboenbeopbneoneboneoneobneobnoebneobneb
-                                        ebneobnebnebnebononboebnenboenbeobnobneb
-                                        neonbeobebneobnebnoenbeobeonboenn
+                                        {{ isRequester(selectedOffersCard) ? selectedOffersCard?.requestedPub?.book?.model?.description :
+                                        selectedOffersCard?.offeredPub?.book?.model?.description }}
                                     </p>
                                 </div>
                             </div>
                         </div>
+                        <div *ngIf="!selectedOffersCard && !isLoading">
+                            <div class="emtpy-content-panel">
+                                <p class="text-empty">Selecciona una tarjeta para más detalles</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="offeredExchanges.length === 0 && !isLoading" class="card-section-empty">
+                        <p class="text-empty">No tienes intercambios activos</p>
+                        <p-button styleClass="empty-button" label="Ver publicaciones" icon="pi pi-search" (click)="redirectToPublications()" />
                     </div>
                 </p-tabpanel>
                 <p-tabpanel value="1">
@@ -94,7 +117,7 @@
                                 <div
                                         class="card"
                                         *ngFor="let card of ['Tarjeta 1', 'Tarjeta 2', 'Tarjeta 3', 'Tarjeta 4', 'Tarjeta 5', 'Tarjeta 6']"
-                                        (click)="selectRequestCard(card)"
+                                        (click)="selectRequesterCard(card)"
                                         [class.selected]="selectedRequestsCard === card"
                                 >
                                     <div class="active-card-first-column">
