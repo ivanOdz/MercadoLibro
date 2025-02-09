@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, FormArray, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule, Location } from '@angular/common';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { NavbarComponent } from "../../shared/components/navbar/navbar.component";
+import { BookModel } from "../../core/models/bookModel.model";
+import { BookmodelService } from "../../core/services/bookmodel.service";
 
 @Component({
 	
@@ -15,7 +17,9 @@ import { NavbarComponent } from "../../shared/components/navbar/navbar.component
 })
 export class BookFormComponent {
 	
-	bookForm: FormGroup;
+	url: string = "http://localhost:8080/api/book_models";
+	bookModelService: BookmodelService = inject(BookmodelService);
+	bookModelForm: FormGroup;
 	rating: number = 1;
 	imagePreview: string | ArrayBuffer | null = null;
 	uploadProgress = 0;
@@ -25,7 +29,8 @@ export class BookFormComponent {
 			];
 	
 	constructor(private formBuilder: FormBuilder, private translate: TranslateService, private location: Location, private router: Router) {
-		this.bookForm = this.formBuilder.group({
+		
+		this.bookModelForm = this.formBuilder.group({
 													isbn: ['978', [Validators.required, Validators.pattern(/^(97[89])\d{1,5}\d{1,7}\d{1,7}\d$/)]],
 													title: ['', Validators.required],
 													editorial: ['', [Validators.required, Validators.pattern('^(?!\\d+$).+')]],
@@ -42,7 +47,7 @@ export class BookFormComponent {
 													rating: [1, [Validators.min(1), Validators.max(5)]],
 													authors: this.formBuilder.array([""]),
 												});
-		this.translate.setDefaultLang('en');
+		this.translate.setDefaultLang(this.translate.getBrowserLang() || 'en');
 	}
 	
 	goBack() {
@@ -56,38 +61,45 @@ export class BookFormComponent {
 	}
 	
 	get authors(): FormArray {
-		return this.bookForm.get('authors') as FormArray;
+		
+		return this.bookModelForm.get('authors') as FormArray;
 	}
 	
 	addAuthor() {
+		
 		this.authors.push(this.formBuilder.control(''));
 	}
 	
 	removeAuthor(index: number) {
+		
 		this.authors.removeAt(index);
 	}
 	
 	setRating(value: number): void {
+		
 		this.rating = value;
-		this.bookForm.get('rating')?.setValue(value);
+		this.bookModelForm.get('rating')?.setValue(value);
 	}
 	
 	onImageSelected(event: Event): void {
+		
 		const file = (event.target as HTMLInputElement).files?.[0];
 		
 		if (file) {
+			
 			const reader = new FileReader();
 			reader.onload = () => {
 				this.imagePreview = reader.result;
-				this.bookForm.patchValue({ image: file });
+				this.bookModelForm.patchValue({ image: file });
 			};
 			reader.readAsDataURL(file);
 		}
 	}
 
 	removeImage(): void {
+		
 		this.imagePreview = null;
-		this.bookForm.patchValue({ image: null });
+		this.bookModelForm.patchValue({ image: null });
 	}
 
 	submitForm() {
@@ -101,10 +113,22 @@ export class BookFormComponent {
 			});
 		}
 		
-		if (this.bookForm.valid) {
-			console.log('New book:', this.bookForm.value);
+		if (this.bookModelForm.valid) {
 			
+			console.log('New book:', this.bookModelForm.value);
 			
+			const bookData = new BookModel(this.bookModelForm.value);
+			const rating = this.bookModelForm.value.rating;
+			
+			this.bookModelService.uploadBookModel(this.url, bookData, rating).subscribe({
+				
+				next: (response) => {
+					console.log('Upload of Book Model successful :)');
+				},
+				error: (error) => {
+					console.error('Upload of Book Model failed', error);
+				}
+			});
 		}
 	}
 }
