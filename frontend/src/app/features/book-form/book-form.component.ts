@@ -17,6 +17,12 @@ export class BookFormComponent {
 	
 	bookForm: FormGroup;
 	rating: number = 1;
+	imagePreview: string | ArrayBuffer | null = null;
+	uploadProgress = 0;
+	genres = [	'fiction', 'non.fiction', 'mystery', 'thriller', 'science.fiction', 'fantasy', 'romance', 'historical.fiction', 'horror', 'biography', 'autobiography', 'memoir',
+				'young.adult', 'childrens.literature',  'graphic.novel' ,'classic', 'adventure', 'dystopian', 'self.help', 'poetry', 'literary.fiction', 'crime', 'western',
+				'contemporary', 'religious.spiritual', 'philosophy', 'science', 'travel', 'true.crime', 'historical.non.fiction', 'other'
+			];
 	
 	constructor(private formBuilder: FormBuilder, private translate: TranslateService, private location: Location, private router: Router) {
 		this.bookForm = this.formBuilder.group({
@@ -66,6 +72,24 @@ export class BookFormComponent {
 		this.bookForm.get('rating')?.setValue(value);
 	}
 	
+	onImageSelected(event: Event): void {
+		const file = (event.target as HTMLInputElement).files?.[0];
+		
+		if (file) {
+			const reader = new FileReader();
+			reader.onload = () => {
+				this.imagePreview = reader.result;
+				this.bookForm.patchValue({ image: file });
+			};
+			reader.readAsDataURL(file);
+		}
+	}
+
+	removeImage(): void {
+		this.imagePreview = null;
+		this.bookForm.patchValue({ image: null });
+	}
+
 	submitForm() {
 		
 		if (this.authors.length > 1)

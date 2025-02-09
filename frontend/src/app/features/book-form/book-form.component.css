@@ -163,3 +163,50 @@ select.ng-invalid.ng-touched {
 	border-color: red;
 	background-color: #ffcccc;
 }
+
+.image-upload-container {
+	text-align: center;
+	margin-top: 20px;
+}
+
+.image-upload-label {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	cursor: pointer;
+	padding: 10px;
+	border: 2px dashed #aaa;
+	border-radius: 8px;
+	transition: 0.3s;
+}
+
+.image-upload-label:hover {
+	border-color: #007bff;
+}
+
+.upload-text {
+	margin-top: 5px;
+}
+
+.image-preview {
+	margin-top: 15px;
+	position: relative;
+	display: inline-block;
+}
+
+.image-preview img {
+	max-width: 20rem;
+	max-height: 20rem;
+	border-radius: 5px;
+}
+
+.image-preview button {
+	position: absolute;
+	top: -5px;
+	right: -5px;
+	background: red;
+	color: white;
+	border: none;
+	border-radius: 50%;
+	cursor: pointer;
+}

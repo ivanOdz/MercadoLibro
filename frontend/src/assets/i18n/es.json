@@ -24,6 +24,7 @@
     "SEARCH": "Buscar publicaciones"
   },
   "BOOK_FORM": {
+  	"BACK": "← Regresar",
   	"TITLE": "Agregar un libro",
   	"BOOK_TITLE": "Título",
   	"EDITORIAL": "Editorial",
@@ -35,10 +36,21 @@
   	"LANGUAGE": "Lenguaje",
   	"DIMENSIONS": "Tamaño",
   	"PUBLICATION_YEAR": "Año de publición",
-  	"POCKET_EDITION": "¿Es de bolsillo?",
-  	"HARDCOVER:": "¿Es con tapa dura?",
+  	"IS_POCKET_EDITION": "¿Es de bolsillo?",
+  	"IS_HARDCOVER": "¿Es con tapa dura?",
   	"RATING": "Calificación",
-  	"AUTHORS": "Autores"
+  	"AUTHORS": "Autores",
+  	"SAVE": "Guardar Libro",
+  	"ADD_AUTHOR": "Agregar Autor",
+  	"NUMBER_OUT_OF_RANGE": "Fuera de rango.",
+  	"YEAR_OUT_OF_RANGE": "El año no puede ser superior al actual.",
+  	"FORMAT_ERROR": "Formato incorrecto.",
+  	"ISBN_IS_OBLIGATORY": "El ISBN es obligatorio.",
+  	"TITLE_IS_OBLIGATORY": "El título es obligatorio.",
+  	"EDITORIAL_IS_OBLIGATORY": "La editorial es obligatoria.",
+  	"NUMERIC_FIELD_IS_OBLIGATORY": "Este campo es numérico y obligatorio.",
+  	"SELECT_GENRE": "Seleccione un género",
+  	"ADD_IMAGE": "Agregar imagen"
   },
   "genre": {
     "fiction": "Ficción",
