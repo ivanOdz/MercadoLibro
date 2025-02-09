@@ -39,6 +39,48 @@
   	"HARDCOVER:": "¿Es con tapa dura?",
   	"RATING": "Calificación",
   	"AUTHORS": "Autores"
-  }
-  
+  },
+  "genre": {
+    "fiction": "Ficción",
+    "non.fiction": "No ficción",
+    "mystery": "Misterio",
+    "thriller": "Suspenso",
+    "science.fiction": "Ciencia Ficción",
+    "fantasy": "Fantasía",
+    "romance": "Romance",
+    "historical.fiction": "Ficción Histórica",
+    "horror": "Terror",
+    "biography": "Biografía",
+    "autobiography": "Autobiografía",
+    "memoir": "Memorias",
+    "young.adult": "Juvenil",
+    "childrens.literature": "Literatura Infantil",
+    "graphic.novel": "Novela Gráfica",
+    "classic": "Clásico",
+    "adventure": "Aventura",
+    "dystopian": "Distopía",
+    "self.help": "Autoayuda",
+    "poetry": "Poesía",
+    "literary.fiction": "Ficción Literaria",
+    "crime": "Crimen",
+    "western": "Western",
+    "contemporary": "Contemporáneo",
+    "religious.spiritual": "Religioso y Espiritual",
+    "philosophy": "Filosofía",
+    "science": "Ciencia",
+    "travel": "Viajes",
+    "true.crime": "Crimen Real",
+    "historical.non.fiction": "Historia No Ficción",
+    "other": "Otro"
+  },
+  "bookstate": {
+    "new": "Nuevo",
+    "like.new": "Como Nuevo",
+    "very.good": "Muy Bueno",
+    "good": "Bueno",
+    "acceptable": "Aceptable",
+    "worn": "Desgastado"
+  },
+  "CONDITION": "Condición",
+  "GENRE" : "Género"
 }

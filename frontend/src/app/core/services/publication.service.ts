@@ -5,9 +5,17 @@ import {Publication} from "../models/publication.model";
 
 @Injectable({ providedIn: 'root' })
 export class PublicationService {
-    baseUrl = 'http://localhost:8080/api';
+    baseUrl = 'http://localhost:8080/api/publications';
 
     constructor(private http: HttpClient) {}
+
+    getPublications(queryParams: string) : Observable<Publication[]> {
+        const headers = new HttpHeaders({ 'Accept': 'application/vnd.publications.v1+json'});
+
+        return this.http.get<any>(`${this.baseUrl}?${queryParams}`, {headers}).pipe(
+            tap((r) => console.log("Respuesta de la API con publications:", r))
+        );
+    }
 
     getPublication(publicationUrl: string) : Observable<Publication> {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.publications.v1+json'});
