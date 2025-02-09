@@ -63,6 +63,10 @@ public class UserServiceImpl implements UserService {
             user = setUserLanguage(user.getUserId(), language);
         }
         if(newUsername != null){
+            User userWithNewUsername = userDao.findByUsername(newUsername).orElse(null);
+            if(userWithNewUsername != null && !userWithNewUsername.getUserId().equals(id)) {
+                return null;
+            }
             user = changeUsername(user.getUserId(), newUsername);
         }
         return user;

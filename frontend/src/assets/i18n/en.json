@@ -103,5 +103,24 @@
     "select": "Sort by"
   },
   "CONDITION": "Condition",
-  "GENRE" : "Genre"
+  "GENRE" : "Genre",
+  "PROFILE": {
+    "MY_PROFILE": "My Profile",
+    "USERNAME": "Username",
+    "EMAIL": "Email",
+    "LANGUAGE": "Language",
+    "MY_LOCATIONS": "My Locations",
+    "REVIEWS": "Reviews",
+    "EDIT_USERNAME": "Edit username",
+    "ACCEPT": "Accept",
+    "CANCEL": "Cancel",
+    "CONFIRM_DELETE_LOCATION": "Are you sure you want to delete location ",
+    "ADD_LOCATION": "Add location",
+    "NEW_USERNAME": "New username",
+    "INSERT_LOCATION": "Insert new location",
+    "USERNAME_ALREADY_EXISTS": "This username is already taken",
+    "UPDATE_ERROR": "Username cannot be updated",
+    "USERNAME_EMPTY": "Username cannot be empty"
+  }
+
 }

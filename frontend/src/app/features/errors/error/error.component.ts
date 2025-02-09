@@ -1,0 +1,21 @@
+import { Component, Input } from '@angular/core';
+import {RouterLink} from '@angular/router';
+import { NavbarComponent } from '../../../shared/components/navbar/navbar.component';
+
+
+@Component({
+  selector: 'app-error',
+  templateUrl: './error.component.html',
+  imports: [
+    NavbarComponent,
+    RouterLink,
+  ],
+  styleUrls: ['./error.component.css'],
+})
+export class ErrorComponent {
+  @Input() title: string = 'Error';
+  @Input() message: string = 'Ha ocurrido un problema.';
+  @Input() buttonText: string = 'Volver al inicio';
+  @Input() redirectUrl: string = '/';
+  @Input() imageSrc: string = 'assets/default-error.png';
+}

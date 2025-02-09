@@ -73,7 +73,9 @@ public class UserController {
     @Consumes(value = {VndType.APPLICATION_USER})
     public Response updateUser(@PathParam("id") final Long id, @Valid final UserUpdateDTO request) {
         User user = us.updateUser(id, request.getLanguage(), request.getNewUsername());
-
+        if(user == null) {
+            return Response.status(Response.Status.CONFLICT).build();
+        }
         return Response.noContent()
                 .header("X-User-Uri", "/api/users/" + user.getUserId())
                 .build();
