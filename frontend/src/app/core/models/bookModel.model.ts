@@ -2,7 +2,7 @@ export class BookModel {
 	isbn: string;
 	title: string;
 	editorial: string;
-	description: string;
+	description?: string;
 	genre: string;
 	edition: number;
 	weight: number;
