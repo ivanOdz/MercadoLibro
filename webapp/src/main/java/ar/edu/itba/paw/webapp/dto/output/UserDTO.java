@@ -14,7 +14,7 @@ public class UserDTO {
 	
 	private String mail;
 	
-	private int ratingCount;
+	private Integer ratingCount;
 
 	private double ratingAverage;
 
@@ -122,11 +122,11 @@ public class UserDTO {
     	return locations;
     }
 
-	public int getRatingCount() {
+	public Integer getRatingCount() {
 		return ratingCount;
 	}
 
-	public void setRatingCount(int ratingCount) {
+	public void setRatingCount(Integer ratingCount) {
 		this.ratingCount = ratingCount;
 	}
 

@@ -93,7 +93,7 @@ input[type="checkbox"] {
 
 .error {
 	color: red;
-	font-size: 9px;
+	font-size: 12px;
 	margin: 0.2%;
 }
 
@@ -219,4 +219,13 @@ select.ng-invalid.ng-touched {
 	border: none;
 	border-radius: 50%;
 	cursor: pointer;
+}
+
+textarea {
+
+	resize: vertical;
+	min-width: 100%;
+	min-height: 5%;
+	max-width: 100%;
+	max-height: 400px;
 }

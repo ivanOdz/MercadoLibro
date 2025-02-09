@@ -66,13 +66,18 @@
 		
 			<div class="column">
 				<label>{{ 'BOOK_FORM.LANGUAGE' | translate }}:</label>
-				<select formControlName="bookLanguage">
-					<option value="es">{{ 'LANGUAGES.SPANISH' | translate }}</option>
-					<option value="en">{{ 'LANGUAGES.ENGLISH' | translate }}</option>
+				<select formControlName="bookLanguage" id="bookLanguage">
+					<option *ngFor="let bookLanguageValue of languages" [value]="bookLanguageValue">
+						{{ ('LANGUAGES.' + (bookLanguageValue | uppercase)) | translate}}
+					</option>
 				</select>
 				
-				<label>{{ 'BOOK_FORM.DIMENSIONS' | translate }}:</label> <!-- ESTE TIENE QUE SER UN SELECCIONABLE-->
-				<input type="text" formControlName="dimension" />
+				<label>{{ 'BOOK_FORM.DIMENSIONS' | translate }}:</label>
+				<select formControlName="dimension" id="dimension">
+					<option *ngFor="let dimensionValue of dimensions" [value]="dimensionValue">
+						{{ ('dimension.' + dimensionValue) | translate}}
+					</option>
+				</select>
 				
 				<label>{{ 'BOOK_FORM.PUBLICATION_YEAR' | translate }}:</label>
 				<input type="number" formControlName="publicationYear" />
