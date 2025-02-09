@@ -18,9 +18,9 @@ import {Router} from "@angular/router";
 import {catchError, filter, forkJoin, Observable, of, switchMap} from "rxjs";
 import {map} from "rxjs/operators";
 import {Exchange} from "../../core/models/exchange.model";
-import {BookData, ExchangeData} from "./exchanges.component";
 import {ProgressSpinner} from "primeng/progressspinner";
 import {Dialog} from "primeng/dialog";
+import {BookData, ExchangeData} from "../../core/models/types";
 
 @Component({
     selector: 'exchanges-requests',

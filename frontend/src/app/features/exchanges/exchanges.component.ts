@@ -18,24 +18,17 @@ import {catchError, filter, forkJoin, of, switchMap, tap} from "rxjs";
 import {User} from "../../core/models/user.model";
 import {AuthService} from "../../core/services/auth.service";
 import {Router} from "@angular/router";
-import {BookModel} from "../../core/models/bookModel.model";
 import {PublicationService} from "../../core/services/publication.service";
 import {BookmodelService} from "../../core/services/bookmodel.service";
 import {BookService} from "../../core/services/book.service";
-import {Location} from "../../core/models/location.model";
 import {map} from "rxjs/operators";
-import {appConfig} from "../../app.config";
 import {environment} from "../../../environments/environment";
 import {ProgressSpinner} from "primeng/progressspinner";
 import { ConfirmationService } from 'primeng/api';
 import {Toast} from "primeng/toast";
-import {Message} from "../../core/models/message.model";
+import {BookData, ExchangeData, message} from "../../core/models/types";
 
-export type message = { sender: number, message: string, date: Date };
 
-export type ExchangeData = {exchange: Exchange, offeredPub: PublicationData, requestedPub: PublicationData, messages: Message[]};
-export type PublicationData = {book: BookData, locations: Location[]};
-export type BookData = {owner: User | null, image: string | null, model: BookModel | null};
 
 @Component({
     selector: 'app-exchanges',

@@ -11,7 +11,6 @@ import {Textarea} from "primeng/textarea";
 import {Popover} from "primeng/popover";
 import {StyleClass} from "primeng/styleclass";
 import {User} from "../../core/models/user.model";
-import {BookData, ExchangeData} from "./exchanges.component";
 import {ExchangeService} from "../../core/services/exchange.service";
 import {UserService} from "../../core/services/user.service";
 import {PublicationService} from "../../core/services/publication.service";
@@ -23,6 +22,7 @@ import {catchError, filter, forkJoin, Observable, of, switchMap} from "rxjs";
 import {Exchange} from "../../core/models/exchange.model";
 import {map} from "rxjs/operators";
 import {ProgressSpinner} from "primeng/progressspinner";
+import {BookData, ExchangeData} from "../../core/models/types";
 
 @Component({
     selector: 'exchanges-history',
