@@ -1,7 +1,6 @@
-package ar.edu.itba.paw.webapp.dto;
+package ar.edu.itba.paw.webapp.dto.output;
 
 import ar.edu.itba.paw.models.Image;
-import org.springframework.web.multipart.MultipartFile;
 
 public class ImageDTO {
     private byte[] image;

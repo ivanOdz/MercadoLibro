@@ -18,8 +18,8 @@ public class LocationDTO {
 
         dto.location = location.getLocationString();
 
-        dto.self = URI.create("/users/" + userId + "/locations/" + location.getLocationId());
-        dto.publications = URI.create("/publications?location_id=" + location.getLocationId());
+        dto.self = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(userId)).path("locations").path(String.valueOf(location.getLocationId())).build();
+        dto.publications = uriInfo.getBaseUriBuilder().path("publications").queryParam("location_id", location.getLocationId()).build();
 
         return dto;
     }

@@ -22,9 +22,9 @@ public class MessageDTO {
         MessageDTO dto = new MessageDTO();
         dto.message = message.getMessage();
         dto.time = message.getMessageTime();
-        dto.self = URI.create("/exchange/" + message.getExchange().getExchangeId() + "/messages/" + message.getMessageId());
-        dto.user = URI.create("/users/" + message.getUser().getUserId());
-        dto.exchange = URI.create("/exchange/" + message.getExchange().getExchangeId());
+        dto.self = uriInfo.getBaseUriBuilder().path("exchange").path(String.valueOf(message.getExchange().getExchangeId())).path("messages").path(String.valueOf(message.getMessageId())).build();
+        dto.user = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(message.getUser().getUserId())).build();
+        dto.exchange = uriInfo.getBaseUriBuilder().path("exchange").path(String.valueOf(message.getExchange().getExchangeId())).build();
         return dto;
     }
 

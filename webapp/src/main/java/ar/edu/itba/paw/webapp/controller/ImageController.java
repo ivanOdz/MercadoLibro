@@ -2,7 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.models.Image;
-import ar.edu.itba.paw.webapp.dto.ImageDTO;
+import ar.edu.itba.paw.webapp.dto.output.ImageDTO;
 import ar.edu.itba.paw.webapp.utils.CacheResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

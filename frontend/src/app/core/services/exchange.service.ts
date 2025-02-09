@@ -7,7 +7,6 @@ import {Pagination} from "../models/pagination";
 
 @Injectable({ providedIn: 'root' })
 export class ExchangeService {
-    baseUrl = 'http://localhost:8080/api';
     states = ['ACCEPTED', 'PENDING', 'COMPLETED', 'REJECTED'];
 
     constructor(private http: HttpClient) { }
@@ -15,7 +14,7 @@ export class ExchangeService {
 
     getMessages(messagesUrl: string): Observable<any> {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.message.v1+json' });
-        return this.http.get<any>(`${this.baseUrl}${messagesUrl}`, { headers });
+        return this.http.get<any>(`${messagesUrl}`, { headers });
     }
 
     private getExchanges(exchangesUrl: string, page: number, state: string,  is_offerer: boolean, is_requester: boolean): Observable< {exchange: Exchange[], pagination: Pagination}> {
@@ -27,7 +26,7 @@ export class ExchangeService {
             .set('is_requester', is_requester ? 'true' : 'false')
             .set('page', (page !== undefined && page !== null) ? page.toString() : '0');
 
-        return this.http.get<any>(`${this.baseUrl}${exchangesUrl}`, { headers, params, observe: 'response' }).pipe(
+        return this.http.get<any>(`${exchangesUrl}`, { headers, params, observe: 'response' }).pipe(
             map(response => {
                 let totalRecords: Pagination = new Pagination(Number(response.headers.get('X-Total-Count')), Number(response.headers.get('X-Total-Pages')), Number(response.headers.get('X-Current-Page')));
 
@@ -75,10 +74,10 @@ export class ExchangeService {
             accepted: accepted
         };
 
-        console.log("URL final:", `${this.baseUrl}${exchangeUrl}`);
+        console.log("URL final:", `${exchangeUrl}`);
         console.log("Body enviado:", body);
 
-        return this.http.patch<void>(`${this.baseUrl}${exchangeUrl}`, body, { headers }).pipe(
+        return this.http.patch<void>(`${exchangeUrl}`, body, { headers }).pipe(
             catchError((error) => {
                 console.error("Error al actualizar el intercambio:", error);
                 return throwError(() => error);

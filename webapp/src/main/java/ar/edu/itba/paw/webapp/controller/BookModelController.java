@@ -1,20 +1,15 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.BookModelService;
-import ar.edu.itba.paw.interfaces.services.BookService;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.BookModelMetadata;
-import ar.edu.itba.paw.webapp.dto.Book.AuthorDTO;
 import ar.edu.itba.paw.webapp.dto.input.BookModelDTO;
-import ar.edu.itba.paw.webapp.dto.output.BookConditionDTO;
-import ar.edu.itba.paw.webapp.dto.output.GenreDTO;
 import ar.edu.itba.paw.webapp.mediaTypes.VndType;
 import ar.edu.itba.paw.webapp.utils.CacheResponseUtil;
 import ar.edu.itba.paw.webapp.utils.SerializationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;

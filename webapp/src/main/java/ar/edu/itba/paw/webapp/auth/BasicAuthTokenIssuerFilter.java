@@ -74,7 +74,7 @@ public class BasicAuthTokenIssuerFilter extends OncePerRequestFilter {
 
                     response.addHeader(JwtTokenUtil.ACCESS_TOKEN_HEADER, accessToken);
                     response.addHeader(JwtTokenUtil.REFRESH_TOKEN_HEADER, refreshToken);
-                    response.addHeader("X-User-URI", "/users/" + user.getUserId());
+                    response.addHeader("X-User-URI", "/api/users/" + user.getUserId());
 
                     SecurityContextHolder.getContext().setAuthentication(authenticationSuccessfull);
                 }

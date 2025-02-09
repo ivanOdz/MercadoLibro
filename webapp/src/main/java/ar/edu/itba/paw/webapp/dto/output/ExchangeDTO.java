@@ -34,14 +34,14 @@ public class ExchangeDTO {
         dto.end_date = exchange.getExchangeEndDate() != null ? new Date(exchange.getExchangeEndDate().getTime()) : null;
         dto.isConfirmed = exchange.isConfirmed();
 
-        dto.self = URI.create("/exchanges/" + exchange.getExchangeId());
-        dto.offerer = URI.create("/publications/" + exchange.getOfferer().getPublicationId());
-        dto.requester = URI.create("/publications/" + exchange.getRequester().getPublicationId());
-        dto.chat = URI.create("/exchanges/" + exchange.getExchangeId() + "/messages");
+        dto.self = uriInfo.getBaseUriBuilder().path("exchanges").path(String.valueOf(exchange.getExchangeId())).build();
+        dto.offerer = uriInfo.getBaseUriBuilder().path("publications").path(String.valueOf(exchange.getOfferer().getPublicationId())).build();
+        dto.requester = uriInfo.getBaseUriBuilder().path("publications").path(String.valueOf(exchange.getRequester().getPublicationId())).build();
+        dto.chat = uriInfo.getBaseUriBuilder().path("exchanges").path(String.valueOf(exchange.getExchangeId())).path("messages").build();
 
 // /users/{offererReview}/reviews/{idReview} o null si no hay hecha una review.
-        dto.offererReview = exchange.getIsReviewable() ? URI.create("/users/" + exchange.getOfferer().getUser().getUserId() + "/reviews/" + exchange.getOfferer().getUser().getUserId()) : null;
-        dto.requesterReview = exchange.getIsReviewable() ? URI.create("/users/" + exchange.getRequester().getUser().getUserId() + "/reviews/" + exchange.getRequester().getUser().getUserId()) : null;
+        dto.offererReview = exchange.getIsReviewable() ? uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(exchange.getOfferer().getUser().getUserId())).path("reviews").path(String.valueOf(exchange.getOfferer().getUser().getUserId())).build() : null;
+        dto.requesterReview = exchange.getIsReviewable() ? uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(exchange.getRequester().getUser().getUserId())).path("reviews").path(String.valueOf(exchange.getRequester().getUser().getUserId())).build() : null;
 
         return dto;
     }

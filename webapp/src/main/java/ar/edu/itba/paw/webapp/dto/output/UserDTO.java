@@ -47,13 +47,12 @@ public class UserDTO {
 		dto.language = user.getLanguage();
 
 		// links
-		dto.self = URI.create("/users/" + user.getUserId());
-		dto.locations = URI.create("/users/" + user.getUserId() + "/locations");
-		//dto.favoriteLocation = URI.create("/users/" + user.getUserId() + "/locations/" + user.getFavoriteLocation().getLocationId());
-		dto.reviews = URI.create("/users/" + user.getUserId() + "/reviews");
-		dto.books = URI.create("/books?owner=" + user.getUserId());
-		dto.favorites = URI.create("/users/" + user.getUserId() + "/favorite");
-		dto.exchanges = URI.create("/exchanges?user_id=" + user.getUserId());
+		dto.self = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(user.getUserId())).build();
+		dto.locations = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(user.getUserId())).path("locations").build();
+		dto.reviews = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(user.getUserId())).path("reviews").build();
+		dto.books = uriInfo.getBaseUriBuilder().path("books").queryParam("owner", user.getUserId()).build();
+		dto.favorites = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(user.getUserId())).path("favorite").build();
+		dto.exchanges = uriInfo.getBaseUriBuilder().path("exchanges").queryParam("user_id", user.getUserId()).build();
 		return dto;
 	}
 

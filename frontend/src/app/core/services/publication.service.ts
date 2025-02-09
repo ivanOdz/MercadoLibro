@@ -5,7 +5,7 @@ import {Publication} from "../models/publication.model";
 
 @Injectable({ providedIn: 'root' })
 export class PublicationService {
-    baseUrl = 'http://localhost:8080/api/publications';
+    baseUrl = 'http://localhost:8080/api';
 
     constructor(private http: HttpClient) {}
 

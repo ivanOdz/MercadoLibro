@@ -19,11 +19,12 @@ export class UserService {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.users.v1+json'});
 
         // userUrl = '/users/{id}'
-        return this.http.get<any>(`${this.baseUrl}${userUrl}`, { headers }).pipe(
+        return this.http.get<any>(`${userUrl}`, { headers }).pipe(
             tap((userData) => console.log('Respuesta de la API de user:', userData)),
             map((userData) => {
                 return new User(userData);
             })
+
         );
     }
 
@@ -105,27 +106,27 @@ export class UserService {
 
         console.log(body);
 
-        return this.http.patch<void>(`${this.baseUrl}${user.self}`, body, { headers });
+        return this.http.patch<void>(`${user.self}`, body, { headers });
     }
 
     getLocations(user: User): Observable<Location[]> {
-        return this.http.get<Location[]>(`${this.baseUrl}${user.locations}`).pipe(
+        return this.http.get<Location[]>(`${user.locations}`).pipe(
             map((locationsData: any[]) => locationsData.map(location => new Location(location)))
         );
     }
 
     addLocation(user: User, location: string) {
-        return this.http.post<void>(`${this.baseUrl}${user.locations}`, { location });
+        return this.http.post<void>(`${user.locations}`, { location });
     }
 
     removeLocation(user: User, location: Location) {
-        return this.http.delete<void>(`${this.baseUrl}${location.self}`);
+        return this.http.delete<void>(`${location.self}`);
     }
 
     getReviews(user: User): Observable<Review[]> {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.reviews.v1+json' });
 
-        return this.http.get<Review[]>(`${this.baseUrl}${user.reviews}`, { headers }).pipe(
+        return this.http.get<Review[]>(`${user.reviews}`, { headers }).pipe(
             map((reviewsData: any[]) => reviewsData.map(review => new Review(review)))
         );
     }
@@ -134,7 +135,7 @@ export class UserService {
     getLocationsInPublication(publicationLocationUrl: string): Observable<Location[]> {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.location.v1+json' });
 
-        return this.http.get<any[]>(`${this.baseUrl}${publicationLocationUrl}`, { headers }).pipe(
+        return this.http.get<any[]>(`${publicationLocationUrl}`, { headers }).pipe(
             map((l) => l.map((l: any) => new Location(l))));
     }
 
