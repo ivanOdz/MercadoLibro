@@ -12,6 +12,7 @@ import {ChangePasswordComponent} from "./features/change-password/change-passwor
 import {ForgotPasswordComponent} from "./features/forgot-password/forgot-password.component";
 import {BookFormComponent} from "./features/book-form/book-form.component";
 import { NotFoundComponent } from './features/errors/not-found/not-found.component';
+import { BookHomeComponent } from './features/book-home/book-home.component';
 
 export const routes: Routes = [
   {path: '', redirectTo: 'publications', pathMatch: 'full'},
@@ -70,9 +71,15 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: 'book/add',
+    path: 'books/add',
     component: BookFormComponent,
     title: 'Add a new book',
+    /*canActivate: [AuthGuard],*/
+  },
+  {
+    path: 'my-books',
+    component: BookHomeComponent,
+    title: 'Books',
     /*canActivate: [AuthGuard],*/
   },
   //Error Pages
