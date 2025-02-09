@@ -7,7 +7,6 @@ import {Pagination} from "../models/pagination";
 
 @Injectable({ providedIn: 'root' })
 export class ExchangeService {
-    states = ['ACCEPTED', 'PENDING', 'COMPLETED', 'REJECTED'];
 
     constructor(private http: HttpClient) { }
 
@@ -54,7 +53,7 @@ export class ExchangeService {
 
     // /exchanges?user_id=12345678&state=completed&isOfferer=true&isRequester=true&page=1
     getCompletedExchanges(exchangesUrl: string, page: number): Observable< {exchange: Exchange[], pagination: Pagination}> {
-        return this.getExchanges(exchangesUrl, page, 'COMPLETED', true, true);
+        return this.getExchanges(exchangesUrl, page, 'TERMINATED', true, true);
     }
 
     // /exchanges?user_id=12345678&state=rejected&isOfferer=true&isRequester=true&page=1
@@ -94,7 +93,7 @@ export class ExchangeService {
         return this.updateExchange(exchangeUrl, acceptCode, requester, true);
     }
 
-    rejectExchange(exchangeUrl: string, acceptCode: number, requester: boolean): Observable<any> {
+    rejectExchange(exchangeUrl: string, acceptCode: number, requester: null | boolean): Observable<any> {
         return this.updateExchange(exchangeUrl, acceptCode, requester, false);
     }
 

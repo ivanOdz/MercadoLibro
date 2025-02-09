@@ -1,4 +1,4 @@
-import {Component} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {SidebarComponent} from "./components/sidebar.component";
 import {NavbarComponent} from "../../shared/components/navbar/navbar.component";
 import {Tab, TabList, TabPanel, TabPanels, Tabs} from "primeng/tabs";
@@ -45,7 +45,7 @@ import {Dialog} from "primeng/dialog";
         Dialog
     ]
 })
-export class RequestsComponent {
+export class RequestsComponent  implements OnInit {
     loggedUser: User | null = null;
 
     offeredExchanges: ExchangeData[] = [];
@@ -191,7 +191,7 @@ export class RequestsComponent {
         }
 
         this.isLoading = true;
-        this.es.acceptExchange(this.exchangeData.exchange.self, this.exchangeData.exchange.accept_code, null).subscribe(
+        this.es.rejectExchange(this.exchangeData.exchange.self, this.exchangeData.exchange.accept_code, null).subscribe(
             () => {
                 console.log("Intercambio rechazado:", this.exchangeData?.exchange.self);
                 this.loadExchanges();

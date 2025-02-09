@@ -204,7 +204,7 @@ export class ExchangesComponent implements OnInit {
     }
 
     isRequester(selectedCard: ExchangeData | null) {
-        return this.loggedUser?.username == selectedCard?.requestedPub.book.owner?.username;
+        return this.loggedUser?.username == selectedCard?.requestedPub?.book.owner?.username;
     }
 
     getBookImage(book: BookData) {

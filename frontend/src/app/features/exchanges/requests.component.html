@@ -231,10 +231,10 @@
 <p-dialog [(visible)]="rejectExchangeDialogVisible" [modal]="true" [style]="{ width: '25rem' }">
     <ng-template #header>
         <div class="inline-flex items-center justify-center gap-2">
-            <span class="font-bold whitespace-nowrap">Confirm exchange</span>
+            <span class="font-bold whitespace-nowrap">Reject exchange</span>
         </div>
     </ng-template>
-    <span class="text-surface-500 dark:text-surface-400 block">Are you sure you want to confirm that you received your book</span>
+    <span class="text-surface-500 dark:text-surface-400 block">Are you sure you want to reject the exchange</span>
     <ng-template #footer>
         <p-button label="Cancel" [raised]="true" severity="secondary" (click)="rejectExchangeDialogVisible = false" />
         <p-button label="Reject" [raised]="true" severity="danger" (click)="rejectExchange()" />

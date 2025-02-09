@@ -1,4 +1,4 @@
-import {Component} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {SidebarComponent} from "./components/sidebar.component";
 import {NavbarComponent} from "../../shared/components/navbar/navbar.component";
 import {NgForOf, NgIf} from "@angular/common";
@@ -49,7 +49,7 @@ import {ProgressSpinner} from "primeng/progressspinner";
         NgIf
     ]
 })
-export class HistoryComponent {
+export class HistoryComponent implements OnInit {
 
     loggedUser: User | null = null;
 
@@ -69,7 +69,8 @@ export class HistoryComponent {
         });
     }
 
-    // ##################  Api calls  ##################
+
+
     private loadExchanges(): void {
         this.rejectedExchanges = [];
         this.completedExchanges = [];
@@ -80,26 +81,26 @@ export class HistoryComponent {
             switchMap((user: User) =>
                 forkJoin({
                     completed: this.es.getCompletedExchanges(user.exchanges, this.currentCompletedPage),
-                    solicited: this.es.getSolicitedExchanges(user.exchanges, this.currentRejectedPage)
+                    rejected: this.es.getRejectedExchanges(user.exchanges, this.currentRejectedPage)
                 })
             ),
-            switchMap(({ completed, solicited }) => {
-                if (!completed.exchange.length && !solicited.exchange.length) {
+            switchMap(({ completed, rejected }) => {
+                if (!completed.exchange.length && !rejected.exchange.length) {
                     console.warn("No se encontraron intercambios.");
                     this.isLoading = false;
-                    return of({ completedExchanges: [], solicitedExchanges: [] });
+                    return of({ rejectedExchanges: [], completedExchanges: [] });
                 }
 
                 return forkJoin({
-                    completedExchanges: this.processExchanges(completed.exchange),
-                    solicitedExchanges: this.processExchanges(solicited.exchange),
+                    rejectedExchanges: this.processExchanges(completed.exchange),
+                    completedExchanges: this.processExchanges(rejected.exchange),
                 });
             })
-        ).subscribe(({ completedExchanges, solicitedExchanges }) => {
-            this.rejectedExchanges = solicitedExchanges;
+        ).subscribe(({ rejectedExchanges, completedExchanges }) => {
+            this.rejectedExchanges = rejectedExchanges;
             this.completedExchanges = completedExchanges;
             this.isLoading = false;
-            console.log("Requester Exchanges:", this.rejectedExchanges);
+            console.log("Rejected Exchanges:", this.rejectedExchanges);
             console.log("Completed Exchanges:", this.completedExchanges);
         }, (error) => {
             this.isLoading = false;
@@ -138,7 +139,7 @@ export class HistoryComponent {
                             }).pipe(
                                 map(({ offererBookModel, requesterBookModel }) => ({
                                     exchange,
-                                    CompletedPub: {
+                                    offeredPub: {
                                         book: {
                                             owner: offererUser,
                                             model: offererBookModel,
@@ -146,7 +147,7 @@ export class HistoryComponent {
                                         },
                                         locations: offererLocations,
                                     },
-                                    RejectedPub: {
+                                    requestedPub: {
                                         book: {
                                             owner: requesterUser,
                                             model: requesterBookModel,
@@ -167,49 +168,15 @@ export class HistoryComponent {
             map((result) => result.filter((item) => item !== null)) // Eliminamos los nulos
         );
     }
-
-    acceptExchange(){
-        this.acceptExchangeDialogVisible = false;
-
-
-        if (!this.exchangeData) {
-            console.error("No se puede confirmar el intercambio sin datos.");
-            return;
-        }
-
-        this.isLoading = true;
-        this.es.acceptExchange(this.exchangeData.exchange.self, this.exchangeData.exchange.accept_code, null).subscribe(
-            () => {
-                console.log("Intercambio aceptado:", this.exchangeData?.exchange.self);
-                this.loadExchanges();
-            },
-            (error) => console.error("Error al aceptar el intercambio:", error))
-    }
-
-    rejectExchange(){
-        this.rejectExchangeDialogVisible = false;
-
-
-        if (!this.exchangeData) {
-            console.error("No se puede confirmar el intercambio sin datos.");
-            return;
-        }
-
-        this.isLoading = true;
-        this.es.acceptExchange(this.exchangeData.exchange.self, this.exchangeData.exchange.accept_code, null).subscribe(
-            () => {
-                console.log("Intercambio rechazado:", this.exchangeData?.exchange.self);
-                this.loadExchanges();
-            },
-            (error) => console.error("Error al rechazar el intercambio:", error))
-    }
-
-
     /***  Html functions  ***/
 
     Title = "History";
 
     isLoading = true;
+
+
+    selectedCompletedCard: ExchangeData | null = null;
+    selectedRejectedCard: ExchangeData | null = null;
 
     selectRejectedCard(card: ExchangeData) {
         this.selectedRejectedCard = card;
@@ -241,23 +208,6 @@ export class HistoryComponent {
             (book.image || 'assets/book.jpg');
     }
 
-    /*** Dialogs ***/
-
-    acceptExchangeDialogVisible: boolean = false;
-    rejectExchangeDialogVisible: boolean = false;
-
-    exchangeData: ExchangeData | null = null;
-
-    showRejectDialog(card: ExchangeData) {
-        this.rejectExchangeDialogVisible = true;
-        this.exchangeData = card;
-    }
-
-    showAcceptDialog(card: ExchangeData) {
-        this.acceptExchangeDialogVisible = true;
-        this.exchangeData = card;
-    }
-
     /***  Pagination ***/
 
     rows: unknown;
@@ -284,8 +234,6 @@ export class HistoryComponent {
     /////////////////////////////////////
 
 
-    selectedCompletedCard: ExchangeData | null = null;
-    selectedRejectedCard: ExchangeData | null = null;
     showContent = false;
 
     reviewText: string = '';

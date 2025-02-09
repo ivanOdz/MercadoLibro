@@ -115,7 +115,7 @@
                     </div>
                 </p-tabpanel>
                 <p-tabpanel value="1">
-                    <div *ngIf="rejectedExchanges.length != 0|| isLoading"  class="completed-main-section">
+                    <div *ngIf="rejectedExchanges.length != 0 || isLoading"  class="completed-main-section">
                         <div style="grid-column: 1;" class="column-cards">
                             <div class="card-section" style="align-content: center;text-align: center" *ngIf="isLoading">
                                 <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
@@ -133,14 +133,14 @@
                                                  alt="Book Image"
                                                  class="book-image"/>
                                             <p style="margin-bottom: 0">
-                                                {{ !isRequester(card) ? card.offeredPub.book.model?.title : card.requestedPub.book.model?.title }}
+                                                {{ !isRequester(card) ? card.offeredPub?.book?.model?.title : card.requestedPub?.book?.model?.title }}
                                             </p>
                                         </div>
                                         <i class="pi pi-arrow-right-arrow-left icon-card-active"></i>
                                         <div class="active-card-first-column-book-second">
                                             <img [src]="!isRequester(card) ? getBookImage(card.requestedPub.book) : getBookImage(card.offeredPub.book)" alt="Book Image" class="book-image" fill/>
                                             <p style="margin-bottom: 0">
-                                                {{ !isRequester(card) ? card.requestedPub.book.model?.title : card.offeredPub.book.model?.title }}
+                                                {{ !isRequester(card) ? card.requestedPub?.book?.model?.title : card.offeredPub?.book?.model?.title }}
                                             </p>
                                         </div>
                                     </div>
@@ -180,8 +180,8 @@
                                     <p class="book-card-author">{{ isRequester(selectedRejectedCard) ? selectedRejectedCard?.offeredPub?.book?.model?.authors :
                                         selectedRejectedCard?.requestedPub?.book?.model?.authors }}</p>
                                     <p class="book-card-description">
-                                        {{ isRequester(selectedRejectedCard) ? selectedRejectedCard?.offeredPub?.book?.model?.description :
-                                        selectedRejectedCard?.requestedPub?.book?.model?.description }}
+                                        {{ isRequester(selectedRejectedCard) ? selectedRejectedCard?.offeredPub?.book?.model?.description ?? '' :
+                                        selectedRejectedCard?.requestedPub?.book?.model?.description ?? '' }}
                                     </p>
                                 </div>
                             </div>
@@ -196,8 +196,8 @@
                                     <p class="book-card-author">{{ isRequester(selectedRejectedCard) ? selectedRejectedCard?.requestedPub?.book?.model?.authors :
                                         selectedRejectedCard?.offeredPub?.book?.model?.authors }}</p>
                                     <p class="book-card-description">
-                                        {{ isRequester(selectedRejectedCard) ? selectedRejectedCard?.requestedPub?.book?.model?.description :
-                                        selectedRejectedCard?.offeredPub?.book?.model?.description }}
+                                        {{ isRequester(selectedRejectedCard) ? selectedRejectedCard?.requestedPub?.book?.model?.description ?? '' :
+                                        selectedRejectedCard?.offeredPub?.book?.model?.description ?? '' }}
                                     </p>
                                 </div>
                             </div>
