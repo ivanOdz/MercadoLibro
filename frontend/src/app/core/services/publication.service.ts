@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
 import {Observable, tap} from "rxjs";
 import {Publication} from "../models/publication.model";
 
@@ -9,7 +9,7 @@ export class PublicationService {
 
     constructor(private http: HttpClient) {}
 
-    getPublications({ state, genre, page, search }: { state: string; genre: string; page: number; search: string }): Observable<Publication[]> {
+    getPublications({ state, genre, page, search }: { state: string; genre: string; page: number; search: string }): Observable<HttpResponse<Publication[]>> {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.publications.v1+json' });
 
         let queryParams = '';
@@ -19,6 +19,7 @@ export class PublicationService {
         }
 
         if (state) {
+            if (queryParams) queryParams += '&';
             queryParams += `state=${state}`;
         }
 
@@ -26,14 +27,19 @@ export class PublicationService {
             if (queryParams) queryParams += '&';
             queryParams += `genre=${genre}`;
         }
+
         if (page !== undefined && page !== null) {
             if (queryParams) queryParams += '&';
             queryParams += `page=${page}`;
         }
+
         const url = `${this.baseUrl}/publications${queryParams ? '?' + queryParams : ''}`;
 
-        return this.http.get<Publication[]>(url, { headers }).pipe(
-            tap((r) => console.log("Respuesta de la API con publications:", r))
+        return this.http.get<Publication[]>(url, {
+            headers,
+            observe: 'response'
+        }).pipe(
+            tap((response) => console.log("Respuesta completa de la API:", response))
         );
     }
 

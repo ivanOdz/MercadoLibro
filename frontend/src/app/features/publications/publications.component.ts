@@ -19,22 +19,9 @@ import { SortComponent } from "../../shared/components/sort/sort.component";
 })
 export class PublicationsComponent implements OnInit {
 
-  conditionHeaders = {
-    "X-bookstate-new": "bookstate.new=5",
-    "X-bookstate-like-new": "bookstate.like.new=2",
-    "X-bookstate-very-good": "bookstate.very.good=8",
-    "X-bookstate-good": "bookstate.good=1",
-    "X-bookstate-acceptable": "bookstate.acceptable=6",
-    "X-bookstate-worn": "bookstate.worn=4"
-  };
+  conditionHeaders: Record<string, string> = {};
+  genreHeaders: Record<string, string> = {};
 
-  genreHeaders = {
-    "X-genre-fiction": "genre.fiction=12",
-    "X-genre-non-fiction": "genre.non.fiction=8",
-    "X-genre-mystery": "genre.mystery=4"
-  };
-
-  // Variables para los filtros y la página
   currentFilters = {
     state: '',
     genre: '',
@@ -61,7 +48,6 @@ export class PublicationsComponent implements OnInit {
   }
 
   fetchPublications() {
-    // Usamos el servicio para obtener las publicaciones con los filtros actuales
     this.publicationService.getPublications({
       state: this.currentFilters.state,
       genre: this.currentFilters.genre,
@@ -69,13 +55,29 @@ export class PublicationsComponent implements OnInit {
       search: this.currentFilters.search
     }).subscribe({
       next: (response) => {
-        console.log('Publicaciones actualizadas:', response);
-        // Aquí podrías hacer algo con la respuesta, como actualizar la vista
-      },
+        console.log('Publicaciones actualizadas:', response.body);
+
+        const newConditionHeaders: Record<string, string> = {};
+        const newGenreHeaders: Record<string, string> = {};
+
+        response.headers.keys().forEach((key: string) => {
+          const value = response.headers.get(key);
+          if (value !== null) {
+            if (key.startsWith("x-bookstate-")) {
+              newConditionHeaders[key] = value;
+            } else if (key.startsWith("x-genre-")) {
+              newGenreHeaders[key] = value;
+            }
+          }
+        });
+
+        this.conditionHeaders = { ...newConditionHeaders };
+        this.genreHeaders = { ...newGenreHeaders };
+
+        },
       error: (err) => {
         console.error('Error al obtener las publicaciones:', err);
       }
     });
   }
-
 }
