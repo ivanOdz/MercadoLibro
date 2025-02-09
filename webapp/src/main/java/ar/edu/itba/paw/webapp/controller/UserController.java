@@ -75,7 +75,7 @@ public class UserController {
         User user = us.updateUser(id, request.getLanguage(), request.getNewUsername());
 
         return Response.noContent()
-                .header("X-User-Uri", "/users/" + user.getUserId())
+                .header("X-User-Uri", "/api/users/" + user.getUserId())
                 .build();
     }
 
@@ -106,7 +106,7 @@ public class UserController {
         String refreshToken = jwtTokenUtil.createRefreshToken(user);
 
         return Response.noContent()
-                .header("X-User-Uri", "/users/" + user.getUserId())
+                .header("X-User-Uri", "/api/users/" + user.getUserId())
                 .header(JwtTokenUtil.ACCESS_TOKEN_HEADER, accessToken) // access token
                 .header(JwtTokenUtil.REFRESH_TOKEN_HEADER, refreshToken)  // refresh token
                 .build();
