@@ -1,0 +1,11 @@
+<app-navbar></app-navbar>
+<div class="error-container">
+  <h1>{{ title }}</h1>
+  <p>{{ message }}</p>
+
+  <a [routerLink]="redirectUrl" class="error-button">
+    {{ buttonText }}
+  </a>
+
+  <img src="{{ imageSrc }}" alt="Error image" class="error-image"/>
+</div>
