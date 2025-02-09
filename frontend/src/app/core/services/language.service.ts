@@ -3,7 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from './auth.service';
 import { filter, switchMap, map } from 'rxjs/operators';
 import { BehaviorSubject, Observable } from 'rxjs';
-import {UserService} from "./user.service";
+import { UserService } from './user.service';
 
 @Injectable({
     providedIn: 'root'
@@ -20,7 +20,7 @@ export class LanguageService {
             switchMap(() => this.authService.loggedUser$),
             map(user => user?.language?.split('-')[0] || this.getBrowserLanguage())
         ).subscribe(lang => {
-            this.setLanguage(lang);
+            this.setLanguage(lang, false);
         });
 
         // Inicializar el idioma desde TranslateService
@@ -29,7 +29,6 @@ export class LanguageService {
         // Suscribirse a cambios de idioma dentro de TranslateService
         this.translate.onLangChange.subscribe(({ lang }) => {
             this.currentLanguageSubject.next(lang);
-            this.updateUserLanguage(lang);
         });
     }
 
@@ -38,10 +37,13 @@ export class LanguageService {
         return browserLang === 'es' ? 'es' : 'en';
     }
 
-    setLanguage(lang: string) {
+    setLanguage(lang: string, updateUser = true) {
         this.translate.use(lang);
         this.currentLanguageSubject.next(lang);
-        this.updateUserLanguage(lang);
+
+        if (updateUser) {
+            this.updateUserLanguage(lang);
+        }
     }
 
     private updateUserLanguage(language: string) {
