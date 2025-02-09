@@ -102,6 +102,11 @@
     "book.name.descending": "Nombre del libro descendente",
     "select": "Ordenar por"
   },
+  "dimension": {
+  	"small": "Pequeño (12cm x 8cm)",
+  	"medium": "Mediano (20cm x 12cm)",
+  	"large": "Grande (32cm x 20cm)"
+  },
   "CONDITION": "Condición",
   "GENRE" : "Género",
   "PROFILE": {

@@ -27,6 +27,8 @@ export class BookFormComponent {
 				'young.adult', 'childrens.literature',  'graphic.novel' ,'classic', 'adventure', 'dystopian', 'self.help', 'poetry', 'literary.fiction', 'crime', 'western',
 				'contemporary', 'religious.spiritual', 'philosophy', 'science', 'travel', 'true.crime', 'historical.non.fiction', 'other'
 			];
+	dimensions = ['small', 'medium', 'large'];
+	languages = ['spanish', 'english'];
 	
 	constructor(private formBuilder: FormBuilder, private translate: TranslateService, private location: Location, private router: Router) {
 		
@@ -39,8 +41,8 @@ export class BookFormComponent {
 													edition: [1, [Validators.required, Validators.min(1), Validators.max(99), Validators.max(99999)]],
 													weight: [300, [Validators.required, Validators.min(1), Validators.max(99999)]],
 													pages: [80, [Validators.min(1), Validators.max(99999)]],
-													bookLanguage: ['es', Validators.required],
-													dimension: [''],
+													bookLanguage: ['spanish', Validators.required],
+													dimension: ['medium'],
 													publicationYear: [new Date().getFullYear(), [Validators.required, Validators.min(999), Validators.pattern('^[0-9]*$'), Validators.max(new Date().getFullYear())]],
 													isPocketEdition: [false],
 													isHardcover: [false],
