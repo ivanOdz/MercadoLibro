@@ -14,6 +14,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.io.ByteArrayInputStream;
 
 @Component
 @Path("images")
@@ -33,12 +34,17 @@ public class ImageController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE, "image/jpg", MediaType.MULTIPART_FORM_DATA_VALUE})
-    public Response getImage(@PathParam("id") long id){
+    @Produces({"image/png"})
+    public Response getImage(@PathParam("id") long id) {
         Image image = imageService.getImageById(id);
-        Response.ResponseBuilder response = Response.ok(new GenericEntity<ImageDTO>(new ImageDTO().fromImageDTO(image)) {});
-        return CacheResponseUtil.unconditionalCacheResponse(response);
+
+        if (image.getIsImageNull()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return CacheResponseUtil
+                .unconditionalCacheResponse(Response.ok(image.getImage()));
     }
+
 
     @POST
     @Consumes(value = {MediaType.MULTIPART_FORM_DATA_VALUE})
