@@ -59,6 +59,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 pawUserDetails.getUser().getPassword(),
                 pawUserDetails.getAuthorities());
 
+        if(jwtTokenUtil.isRefreshToken(header)){
+            String newAccessToken = jwtTokenUtil.createAccessToken(pawUserDetails.getUser());
+            String newRefreshToken = jwtTokenUtil.createRefreshToken(pawUserDetails.getUser());
+
+            response.setHeader(JwtTokenUtil.ACCESS_TOKEN_HEADER, newAccessToken);
+            response.setHeader(JwtTokenUtil.REFRESH_TOKEN_HEADER, newRefreshToken);
+        }
+
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 

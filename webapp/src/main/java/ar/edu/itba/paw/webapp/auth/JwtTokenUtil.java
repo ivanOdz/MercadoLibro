@@ -15,6 +15,7 @@ import org.springframework.util.FileCopyUtils;
 import javax.crypto.SecretKey;
 import javax.ws.rs.core.NewCookie;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.Date;
 
 
@@ -24,6 +25,10 @@ public class JwtTokenUtil {
     private final SecretKey jwtSigningKey;
 
     private static final String BEARER_PREFIX = "Bearer ";
+
+    private static final String ACCESS_TOKEN = "access_token";
+
+    private static final String REFRESH_TOKEN = "refresh_token";
 
     public static final String ACCESS_TOKEN_HEADER = "X-Access-Token";
 
@@ -39,22 +44,19 @@ public class JwtTokenUtil {
     }
 
     public String createAccessToken(User user) {
-        return createToken(user, ACCESS_TOKEN_EXPIRATION_TIME);
+        return createToken(user, ACCESS_TOKEN_EXPIRATION_TIME, ACCESS_TOKEN);
     }
 
     public String createRefreshToken(User user) {
-        return createToken(user, REFRESH_TOKEN_EXPIRATION_TIME);
+        return createToken(user, REFRESH_TOKEN_EXPIRATION_TIME, REFRESH_TOKEN);
     }
 
-    // Authentication userAuth
-    private String createToken(User user, int expirationTime) {
-        //PawUserDetails pud = (PawUserDetails) userAuth.getPrincipal();
-        //User user = pud.getUser();
-
+    private String createToken(User user, int expirationTime, String type) {
         Claims claims = Jwts.claims();
 
         claims.setSubject(user.getUserId().toString());
-        claims.put("name", user.getUsername()); 
+        claims.put("name", user.getUsername());
+        claims.put("type", type);
 
         //claims.put("authorization", user.getRole());
         return Jwts.builder()
@@ -65,12 +67,38 @@ public class JwtTokenUtil {
                 .compact();
     }
 
-    public String parseToken(String header) {
+    private String removePrefix(String header) {
         if (header == null || !header.startsWith(BEARER_PREFIX)) {
             return null;
         }
+        return header.substring(BEARER_PREFIX.length());
+    }
 
-        final String token = header.substring(BEARER_PREFIX.length());   // Remove "Bearer "
+    public boolean isRefreshToken(String header) {
+        final String token = removePrefix(header);
+
+        if(token == null) {
+            return false;
+        }
+
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(jwtSigningKey)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+            return claims.get("type").equals(REFRESH_TOKEN);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public String parseToken(String header) {
+        final String token = removePrefix(header);
+
+        if(token == null) {
+            return null;
+        }
 
         Claims claims;
         try {
@@ -80,13 +108,7 @@ public class JwtTokenUtil {
                     .parseClaimsJws(token)
                     .getBody();
 
-        } catch(ExpiredJwtException e) {
-            // TODO: Analizar refreshToken en HttpOnl Cookie
-            // Si es valida, adjuntar a la response nuevo access token y nuevo refresh token,
-            // caso contrario retorno null
-            return null;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return null;
         }
 
