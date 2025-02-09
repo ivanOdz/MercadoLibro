@@ -93,7 +93,7 @@ export class UserService {
 
         console.log(body);
 
-        return this.http.patch<void>(`${this.baseUrl}${user.self}`, body, { headers });
+        return this.http.patch<void>(`${user.self}`, body, { headers });
     }
 
     updateLanguage(user: User | null, language: string): Observable<void> {
