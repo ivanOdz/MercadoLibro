@@ -95,7 +95,11 @@ export class UserService {
         return this.http.patch<void>(`${this.baseUrl}${user.self}`, body, { headers });
     }
 
-    updateLanguage(user: User, language: string): Observable<void> {
+    updateLanguage(user: User | null, language: string): Observable<void> {
+        if (!user) {
+            return EMPTY;
+        }
+
         const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.users.v1+json' });
 
         const body = {

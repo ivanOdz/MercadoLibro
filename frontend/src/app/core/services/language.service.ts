@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from './auth.service';
-import { filter, switchMap, map } from 'rxjs/operators';
+import {filter, switchMap, map, take} from 'rxjs/operators';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { UserService } from './user.service';
 
@@ -48,7 +48,8 @@ export class LanguageService {
 
     private updateUserLanguage(language: string) {
         this.authService.loggedUser$.pipe(
-            filter(user => user != null), // Asegurarse de que el usuario está logueado
+            take(1),
+            filter(user => user != null && user.language !== language), // Asegurarse de que el usuario está logueado
             switchMap(user => this.userService.updateLanguage(user, language))
         ).subscribe({
             next: () => console.log(`Language updated to ${language}`),
