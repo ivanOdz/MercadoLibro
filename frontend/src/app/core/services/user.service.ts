@@ -1,17 +1,18 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
 import { User } from "../models/user.model";
 import { map } from "rxjs/operators";
 import { catchError, EMPTY, Observable, tap, throwError } from "rxjs";
 import { Location } from "../models/location.model";
 import {Review} from "../models/review.model";
 import {Exchange} from "../models/exchange.model";
+import { TranslateService } from "@ngx-translate/core";
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
     baseUrl = 'http://localhost:8080/api';
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient, private translate: TranslateService) {
 
     }
 
@@ -87,13 +88,22 @@ export class UserService {
         const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.users.v1+json' });
 
         const body = {
-            newUsername: newUsername,
-            language: null
+            language: null,
+            newUsername: newUsername
         };
 
         console.log(body);
 
-        return this.http.patch<void>(`${this.baseUrl}${user.self}`, body, { headers });
+        return this.http.patch<void>(`${user.self}`, body, { headers }).pipe(
+            catchError((error: HttpErrorResponse) => {
+                if (error.status === 409) {
+                    const errorMessage = this.translate.instant("PROFILE.USERNAME_ALREADY_EXISTS");
+                    return throwError(() => new Error(errorMessage));
+                }
+                const genericErrorMessage = this.translate.instant("PROFILE.UPDATE_ERROR");
+                return throwError(() => new Error(genericErrorMessage));
+            })
+        );
     }
 
     updateLanguage(user: User | null, language: string): Observable<void> {
@@ -120,10 +130,23 @@ export class UserService {
     }
 
     addLocation(user: User, location: string) {
-        return this.http.post<void>(`${user.locations}`, { location });
+        const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.location.v1+json', 'Accept': 'application/vnd.location.v1+json' });
+
+        return this.http.post<any>(`${user.locations}`, { location }, { headers, observe: 'response' }).pipe(
+            tap((response) => {
+                if (response.status === 204) {
+                    console.log('Ubicación creada exitosamente');
+                }
+            }),
+            catchError((error) => {
+                console.error('Error en la creación de la ubicación', error);
+                return throwError(() => error);
+            })
+
+        );
     }
 
-    removeLocation(user: User, location: Location) {
+    removeLocation(location: Location) {
         return this.http.delete<void>(`${location.self}`);
     }
 

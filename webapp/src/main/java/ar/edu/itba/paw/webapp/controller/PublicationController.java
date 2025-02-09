@@ -42,10 +42,9 @@ public class PublicationController {
                                        @QueryParam("sort") @DefaultValue("DEFAULT_PUBLICATION_SORT_TYPE") final String sortType,
                                        @QueryParam("state") String state,
                                        @QueryParam("genre") final String genre,
-                                       @QueryParam("page") @DefaultValue("0")final int currentPage,
-                                       @QueryParam("size") @DefaultValue("5") Integer size,
                                        @QueryParam("user_id") Long userId,
                                        @QueryParam("location_id") Long locationId,
+                                       @QueryParam("page") @DefaultValue("0")final int currentPage,
                                        @QueryParam("favorites") @DefaultValue("false") Boolean favorites) {
 
         PaginatedResponse<Publication, ItemFilterMetadata> publications = ps.getPaginatedPublications(search,

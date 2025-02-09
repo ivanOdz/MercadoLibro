@@ -6,9 +6,9 @@
             </a>
 
             <p-inputgroup>
-                <input pInputText placeholder="{{ 'NAVBAR.SEARCH' | translate }}" />
+                <input pInputText [(ngModel)]="searchQuery" (keyup.enter)="search()" placeholder="{{ 'NAVBAR.SEARCH' | translate }}" />
                 <p-inputgroup-addon>
-                    <p-button icon="pi pi-search" severity="secondary" variant="text"/>
+                    <p-button icon="pi pi-search" severity="secondary" variant="text" (click)="search()"/>
                 </p-inputgroup-addon>
             </p-inputgroup>
         </div>

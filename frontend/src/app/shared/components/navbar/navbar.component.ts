@@ -8,10 +8,11 @@ import { InputText } from 'primeng/inputtext';
 import { MenuItem } from 'primeng/api';
 import { LanguageSwitcherComponent } from '../language-switcher/language-switcher.component';
 import { TieredMenu } from 'primeng/tieredmenu';
-import { RouterLink } from "@angular/router";
+import {Router, RouterLink} from "@angular/router";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { AuthService } from "../../../core/services/auth.service";
 import { NgOptimizedImage } from "@angular/common";
+import {FormsModule} from "@angular/forms";
 
 @Component({
     selector: 'app-navbar',
@@ -28,15 +29,17 @@ import { NgOptimizedImage } from "@angular/common";
         LanguageSwitcherComponent,
         RouterLink,
         TranslatePipe,
-        NgOptimizedImage
+        NgOptimizedImage,
+        FormsModule
     ]
 })
 export class NavbarComponent {
+    searchQuery: string = '';
 
     @ViewChild('profileMenu') profileMenu!: TieredMenu;
     profileItems: MenuItem[] = [];
 
-    constructor(private authService: AuthService, private translate: TranslateService) {
+    constructor(private authService: AuthService, private translate: TranslateService, private router: Router) {
         this.translate.onLangChange.subscribe(() => this.loadProfileItems());
         this.loadProfileItems();
     }
@@ -63,4 +66,13 @@ export class NavbarComponent {
     logout() {
         this.authService.logout();
     }
+
+    search() {
+        if (this.searchQuery) {
+            this.router.navigate(['/publications'],
+                { queryParams: { search: this.searchQuery },
+                    queryParamsHandling: 'merge' });
+        }
+    }
+
 }

@@ -2,78 +2,91 @@
 <app-navbar></app-navbar>
 <div class="container">
 
-  <div class="left">
-    <div class="box">
-      <h2>Mi Perfil</h2>
-      <div class="profile-content">
-        <img src="assets/profile.png" alt="Profile Image">
-        <div class="profile-details">
+    <div class="left">
+        <div class="box">
+            <h2>{{ 'PROFILE.MY_PROFILE' | translate }}</h2>
+            <div class="profile-content">
+                <img src="assets/profile.png" alt="Profile Image">
+                <div class="profile-details">
 
           <span>
-            Usuario: {{ loggedUser?.username }}
-
-            <span *ngIf="loggedUser !== null" class="material-symbols-outlined" (click)="openModal()">edit</span>
+            {{ 'PROFILE.USERNAME' | translate }}: <em>{{ loggedUser?.username }}</em>
+            <span *ngIf="loggedUser !== null" class="material-symbols-outlined edit" (click)="openModal()">edit</span>
           </span>
 
-          <span>Email: {{ loggedUser?.mail }}</span>
-          <div class="language-select">
-            <span>Idioma: </span>
-            <app-language-switcher/>
-          </div>
+                    <span>{{ 'PROFILE.EMAIL' | translate }}: <em>{{ loggedUser?.mail }}</em></span>
 
+                    <div class="language-select">
+                        <span>{{ 'PROFILE.LANGUAGE' | translate }}: </span>
+                        <app-language-switcher/>
+                    </div>
+
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-    <div class="box">
-      <div class="locations-container">
-        <h2>Mis Ubicaciones</h2>
+        <div class="box">
+            <div class="locations-container">
+                <h2>{{ 'PROFILE.MY_LOCATIONS' | translate }}</h2>
 
-        <div class="locations">
+                <div class="locations">
           <span *ngFor="let loc of locations" class="location">
             {{ loc.location }}
-            <span class="remove-icon" (click)="openRemoveModal(loc)">✖</span>
+              <span class="remove-icon" (click)="openRemoveModal(loc)">✖</span>
           </span>
+                </div>
+
+                <button class="add-button" (click)="openAddModal()" [disabled]="locations.length >= 5">
+                    + {{ 'PROFILE.ADD_LOCATION' | translate }} +
+                </button>
+            </div>
         </div>
-
-        <!--<button class="add-button" (click)="addLocation()" [disabled]="loggedUser?.locations.length >= 5">
-          + Agregar +
-        </button>-->
-      </div>
     </div>
-  </div>
 
-  <div class="divider"></div>
+    <div class="divider"></div>
 
-  <div class="right">
-    <div class="box">
-      <h2>Reviews</h2>
-      <div class="review-section">
-        <app-review *ngFor="let review of reviews" [review]="review"></app-review>
-      </div>
+    <div class="right">
+        <div class="box">
+            <h2>{{ 'PROFILE.REVIEWS' | translate }}</h2>
+            <div class="review-section">
+                <app-review *ngFor="let review of reviews" [review]="review"></app-review>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- Username Modal -->
-  <div class="modal-overlay" *ngIf="isModalOpen">
-    <div class="modal">
-      <h3>Editar Username</h3>
-      <input type="text" [(ngModel)]="newUsername" placeholder="Nuevo username">
-      <div class="modal-buttons">
-        <button (click)="closeModal()">Cancelar</button>
-        <button (click)="updateUsername()">Aceptar</button>
-      </div>
+    <!-- Username Modal -->
+    <div class="modal-overlay" *ngIf="isModalOpen">
+        <div class="modal">
+            <h3>{{ 'PROFILE.EDIT_USERNAME' | translate }}</h3>
+            <input type="text" [(ngModel)]="newUsername" placeholder="{{ 'PROFILE.NEW_USERNAME' | translate }}" (input)="clearErrorMessage()">
+            <p *ngIf="usernameError" class="error-message">{{ usernameError }}</p>
+            <div class="modal-buttons">
+                <button (click)="closeModal()">{{ 'PROFILE.CANCEL' | translate }}</button>
+                <button (click)="updateUsername()" [disabled]="!isValidUsername()">{{ 'PROFILE.ACCEPT' | translate }}</button>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- Remove Location Modal -->
-  <div class="modal-overlay" *ngIf="isRemoveModalOpen">
-    <div class="modal">
-      <h3>¿Estás seguro que querés borrar la ubicación "{{ locationToRemove?.location }}"?</h3>
-      <div class="modal-buttons">
-        <button (click)="closeRemoveModal()">Cancelar</button>
-        <button (click)="removeLocation(locationToRemove)">Aceptar</button>
-      </div>
+    <!-- Add Location Modal -->
+    <div class="modal-overlay" *ngIf="isAddModalOpen">
+        <div class="modal">
+            <h3>{{ 'PROFILE.ADD_LOCATION' | translate }}</h3>
+            <input type="text" [(ngModel)]="newLocationName" placeholder="{{ 'PROFILE.INSERT_LOCATION' | translate }}" />
+            <div class="modal-buttons">
+                <button (click)="closeAddModal()">{{ 'PROFILE.CANCEL' | translate }}</button>
+                <button (click)="addLocation(newLocationName)">{{ 'PROFILE.ACCEPT' | translate }}</button>
+            </div>
+        </div>
     </div>
-  </div>
+
+    <!-- Remove Location Modal -->
+    <div class="modal-overlay" *ngIf="isRemoveModalOpen">
+        <div class="modal">
+            <h3>{{ 'PROFILE.CONFIRM_DELETE_LOCATION' | translate }}"{{ locationToRemove?.location }}"?</h3>
+            <div class="modal-buttons">
+                <button (click)="closeRemoveModal()">{{ 'PROFILE.CANCEL' | translate }}</button>
+                <button (click)="removeLocation()">{{ 'PROFILE.ACCEPT' | translate }}</button>
+            </div>
+        </div>
+    </div>
 
 </div>

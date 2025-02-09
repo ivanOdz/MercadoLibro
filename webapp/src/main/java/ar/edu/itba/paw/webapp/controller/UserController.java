@@ -73,9 +73,11 @@ public class UserController {
     @Consumes(value = {VndType.APPLICATION_USER})
     public Response updateUser(@PathParam("id") final Long id, @Valid final UserUpdateDTO request) {
         User user = us.updateUser(id, request.getLanguage(), request.getNewUsername());
-
+        if(user == null) {
+            return Response.status(Response.Status.CONFLICT).build();
+        }
         return Response.noContent()
-                .header("X-User-Uri", "/users/" + user.getUserId())
+                .header("X-User-Uri", "/api/users/" + user.getUserId())
                 .build();
     }
 
@@ -106,7 +108,7 @@ public class UserController {
         String refreshToken = jwtTokenUtil.createRefreshToken(user);
 
         return Response.noContent()
-                .header("X-User-Uri", "/users/" + user.getUserId())
+                .header("X-User-Uri", "/api/users/" + user.getUserId())
                 .header(JwtTokenUtil.ACCESS_TOKEN_HEADER, accessToken) // access token
                 .header(JwtTokenUtil.REFRESH_TOKEN_HEADER, refreshToken)  // refresh token
                 .build();
@@ -115,8 +117,8 @@ public class UserController {
     @POST
     @Path("/{id}/locations")
     @Consumes(value = {VndType.APPLICATION_LOCATION})
-    public Response createLocation(@PathParam("id") final long userId, String locationString) {
-        Location location = us.addLocation(userId, locationString);
+    public Response createLocation(@PathParam("id") final long userId, LocationCreation locationCreation) {
+        Location location = us.addLocation(userId, locationCreation.getLocation());
 
         return Response.created(uriInfo.getAbsolutePathBuilder().path(location.getLocationId().toString()).build()).build();
     }

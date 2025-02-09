@@ -9,10 +9,30 @@ export class PublicationService {
 
     constructor(private http: HttpClient) {}
 
-    getPublications(queryParams: string) : Observable<Publication[]> {
-        const headers = new HttpHeaders({ 'Accept': 'application/vnd.publications.v1+json'});
+    getPublications({ state, genre, page, search }: { state: string; genre: string; page: number; search: string }): Observable<Publication[]> {
+        const headers = new HttpHeaders({ 'Accept': 'application/vnd.publications.v1+json' });
 
-        return this.http.get<any>(`${this.baseUrl}?${queryParams}`, {headers}).pipe(
+        let queryParams = '';
+
+        if (search) {
+            queryParams += `search=${search}`;
+        }
+
+        if (state) {
+            queryParams += `state=${state}`;
+        }
+
+        if (genre) {
+            if (queryParams) queryParams += '&';
+            queryParams += `genre=${genre}`;
+        }
+        if (page !== undefined && page !== null) {
+            if (queryParams) queryParams += '&';
+            queryParams += `page=${page}`;
+        }
+        const url = `${this.baseUrl}/publications${queryParams ? '?' + queryParams : ''}`;
+
+        return this.http.get<Publication[]>(url, { headers }).pipe(
             tap((r) => console.log("Respuesta de la API con publications:", r))
         );
     }

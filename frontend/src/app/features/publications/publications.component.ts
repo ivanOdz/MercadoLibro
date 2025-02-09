@@ -1,17 +1,23 @@
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import {NavbarComponent} from "../../shared/components/navbar/navbar.component";
-import {FilterListComponent} from "../../shared/components/filter-list/filter-list.component";
-import {PublicationService} from "../../core/services/publication.service";
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { PublicationService } from '../../core/services/publication.service';
+import { AuthService } from '../../core/services/auth.service';
+import { NavbarComponent } from "../../shared/components/navbar/navbar.component";
+import { FilterListComponent } from "../../shared/components/filter-list/filter-list.component";
+import { SortComponent } from "../../shared/components/sort/sort.component";
 
 @Component({
   selector: 'app-publications',
-  imports: [RouterModule, NavbarComponent, FilterListComponent],
   templateUrl: `./publications.component.html`,
   standalone: true,
-  styleUrl: './publications.component.css'
+  imports: [
+    NavbarComponent,
+    FilterListComponent,
+    SortComponent
+  ],
+  styleUrls: ['./publications.component.css']
 })
-export class PublicationsComponent {
+export class PublicationsComponent implements OnInit {
 
   conditionHeaders = {
     "X-bookstate-new": "bookstate.new=5",
@@ -28,16 +34,48 @@ export class PublicationsComponent {
     "X-genre-mystery": "genre.mystery=4"
   };
 
-  constructor(private publicationService: PublicationService) {
+  // Variables para los filtros y la página
+  currentFilters = {
+    state: '',
+    genre: '',
+    page: 0,
+    search: ''
+  };
 
-  }
+  constructor(
+      private publicationService: PublicationService,
+      private authService: AuthService,
+      private route: ActivatedRoute,
+      private router: Router
+  ) {}
 
-  onFilterSelected(url: string) {
-    this.publicationService.getPublications(url).subscribe({
-      next: (response) => console.log("Response:", response),
-      error: (err) => console.error("Error:", err)
+  ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      this.currentFilters.state = params['state'] || '';
+      this.currentFilters.genre = params['genre'] || '';
+      this.currentFilters.page = params['page'] || 0;
+      this.currentFilters.search = params['search'] || '';
+
+      this.fetchPublications();
     });
   }
 
+  fetchPublications() {
+    // Usamos el servicio para obtener las publicaciones con los filtros actuales
+    this.publicationService.getPublications({
+      state: this.currentFilters.state,
+      genre: this.currentFilters.genre,
+      page: this.currentFilters.page,
+      search: this.currentFilters.search
+    }).subscribe({
+      next: (response) => {
+        console.log('Publicaciones actualizadas:', response);
+        // Aquí podrías hacer algo con la respuesta, como actualizar la vista
+      },
+      error: (err) => {
+        console.error('Error al obtener las publicaciones:', err);
+      }
+    });
+  }
 
 }
