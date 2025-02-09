@@ -94,5 +94,23 @@
     "worn": "Desgastado"
   },
   "CONDITION": "Condición",
-  "GENRE" : "Género"
+  "GENRE" : "Género",
+  "PROFILE": {
+    "MY_PROFILE": "Mi Perfil",
+    "USERNAME": "Usuario",
+    "EMAIL": "Email",
+    "LANGUAGE": "Idioma",
+    "MY_LOCATIONS": "Mis Ubicaciones",
+    "REVIEWS": "Reseñas",
+    "EDIT_USERNAME": "Edit username",
+    "ACCEPT": "Aceptar",
+    "CANCEL": "Cancelar",
+    "CONFIRM_DELETE_LOCATION": "¿Está seguro que quiere borrar la ubicación ",
+    "ADD_LOCATION": "Agregar ubicación",
+    "NEW_USERNAME": "Nuevo nombre de usuario",
+    "INSERT_LOCATION": "Ingrese ubicación",
+    "USERNAME_ALREADY_EXISTS": "Este nombre de usuario ya está en uso",
+    "UPDATE_ERROR": "No se puede cambiar el nombre de usuario",
+    "USERNAME_EMPTY": "El nombre de usuario no puede ser vacío"
+  }
 }
