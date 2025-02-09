@@ -97,12 +97,8 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional(readOnly = true)
     public PaginatedResponse<Book, ItemFilterMetadata> getPaginatedBooks(String search, String state, String genre, int currentPage, long userId, String sortType) {
-
         BookState stateFilter = BookState.fromString(state);
-        stateFilter = stateFilter == null ? DEFAULT_BOOK_STATE_FILTER : stateFilter;
-
         Genre genreFilter = Genre.fromString(genre);
-        genreFilter = genreFilter == null ? DEFAULT_BOOK_GENRE_FILTER : genreFilter;
 
         return bookDao.getPaginatedBooks(search, stateFilter, genreFilter, currentPage, userId, sortType);
     }
@@ -126,7 +122,7 @@ public class BookServiceImpl implements BookService {
     @Transactional(readOnly = true)
     public List<GenreWrapper> getGenreWrapperList(String search, String state, long userId) {
         BookState state_filter = BookState.fromString(state);
-        state_filter = state_filter == null ? DEFAULT_BOOK_STATE_FILTER : state_filter;
+
         return bookDao.getGenreQtyByBook(search, state_filter, userId);
     }
 
@@ -134,7 +130,7 @@ public class BookServiceImpl implements BookService {
     @Transactional(readOnly = true)
     public List<BookStateWrapper> getBookStateWrapperList(String serach, String genre, long userId) {
         Genre genre_filter = Genre.fromString(genre);
-        genre_filter = genre_filter == null ? DEFAULT_BOOK_GENRE_FILTER : genre_filter;
+
         return bookDao.getBookStateQtyByBook(serach, genre_filter, userId);
     }
 

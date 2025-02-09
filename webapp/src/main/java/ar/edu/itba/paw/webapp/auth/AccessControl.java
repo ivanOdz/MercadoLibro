@@ -142,7 +142,7 @@ public class AccessControl {
         }
 
         // main page publications with no logged user
-        if(userString.isEmpty() && !favorite) return true;
+        if(userString == null || (userString.isEmpty() && !favorite)) return true;
 
         Long userId = Long.parseLong(userString);
         return userId.equals(getUser().getUserId());

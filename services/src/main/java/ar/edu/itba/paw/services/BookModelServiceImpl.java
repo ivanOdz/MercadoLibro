@@ -64,7 +64,6 @@ public class BookModelServiceImpl implements BookModelService {
     @Transactional(readOnly = true)
     public PaginatedResponse<BookModel, BookModelMetadata> getPaginatedBookModels(String search, String genre, int currentPage, String sortType) {
         Genre genreFilter = Genre.fromString(genre);
-        genreFilter = genreFilter == null ? DEFAULT_BOOK_GENRE_FILTER : genreFilter;
 
         return bookModelDao.getPaginatedBookModels(search, genreFilter, currentPage, sortType);
     }

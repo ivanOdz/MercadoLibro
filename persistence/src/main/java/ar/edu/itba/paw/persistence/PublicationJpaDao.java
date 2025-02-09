@@ -54,10 +54,12 @@ public class PublicationJpaDao implements PublicationDao {
         }
 
         SortType sort = SortType.fromString(sortType);
-        sort = sort == null ? DEFAULT_PUBLICATION_SORT_TYPE : sort;
+        if(sort == null){
+            sort = DEFAULT_PUBLICATION_SORT_TYPE;
+        }
 
         StringBuilder nativeQueryString = new StringBuilder(
-                "SELECT DISTINCT p.publicationid " +
+                "SELECT p.publicationid " +
                         "FROM publication p " +
                         "JOIN book b ON p.bookId = b.bookId " +
                         "JOIN book_model bm ON bm.bookModelId = b.bookModelId " +
@@ -99,13 +101,13 @@ public class PublicationJpaDao implements PublicationDao {
                 nativeQueryString.append(" GROUP BY p.publicationid, bm.title ");
                 nativeQueryString.append(" ORDER BY bm.title DESC");
                 break;
-            case PUBLICATION_DATE_DESCENDING:
+            case PUBLICATION_DATE_ASCENDING:
                 nativeQueryString.append(" GROUP BY p.publicationid ");
-                nativeQueryString.append(" ORDER BY p.publicationdatetime DESC");
+                nativeQueryString.append(" ORDER BY p.publicationdatetime ASC");
                 break;
             default:
                 nativeQueryString.append(" GROUP BY p.publicationid ");
-                nativeQueryString.append(" ORDER BY p.publicationdatetime ASC");
+                nativeQueryString.append(" ORDER BY p.publicationdatetime DESC");
         }
 
         Query nativeQuery = em.createNativeQuery(nativeQueryString.toString());

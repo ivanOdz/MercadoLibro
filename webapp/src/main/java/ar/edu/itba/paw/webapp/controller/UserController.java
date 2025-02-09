@@ -72,9 +72,11 @@ public class UserController {
     @Path("/{id}")
     @Consumes(value = {VndType.APPLICATION_USER})
     public Response updateUser(@PathParam("id") final Long id, @Valid final UserUpdateDTO request) {
-        us.updateUser(id, request.getLanguage(), request.getNewUsername());
+        User user = us.updateUser(id, request.getLanguage(), request.getNewUsername());
 
-        return Response.noContent().build();
+        return Response.noContent()
+                .header("X-User-Uri", "/users/" + user.getUserId())
+                .build();
     }
 
     @POST

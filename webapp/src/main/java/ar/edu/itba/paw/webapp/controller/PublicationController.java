@@ -43,7 +43,7 @@ public class PublicationController {
                                        @QueryParam("state") String state,
                                        @QueryParam("genre") final String genre,
                                        @QueryParam("page") @DefaultValue("0")final int currentPage,
-                                       @QueryParam("size") @DefaultValue("0") Integer size,
+                                       @QueryParam("size") @DefaultValue("5") Integer size,
                                        @QueryParam("user_id") Long userId,
                                        @QueryParam("location_id") Long locationId,
                                        @QueryParam("favorites") @DefaultValue("false") Boolean favorites) {

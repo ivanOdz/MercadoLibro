@@ -1,0 +1,13 @@
+<p-card>
+    <ng-template pTemplate="title">
+        {{ filterType | uppercase | translate }}
+    </ng-template>
+    <ng-template pTemplate="content">
+        <ul class="filter-list">
+            <li *ngFor="let filter of filters" (click)="onFilterClick(filter.queryParam)">
+                <span class="filter-label">{{ filter.labelKey | translate }}</span>
+                <span class="filter-count">({{ filter.count }})</span>
+            </li>
+        </ul>
+    </ng-template>
+</p-card>

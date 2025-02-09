@@ -1,1 +1,12 @@
 <app-navbar></app-navbar>
+<app-filter-list
+        [headers]="conditionHeaders"
+        filterType="Condition"
+        (filterSelected)="onFilterSelected($event)">
+</app-filter-list>
+
+<app-filter-list
+        [headers]="genreHeaders"
+        filterType="Genre"
+        (filterSelected)="onFilterSelected($event)">
+</app-filter-list>

@@ -38,8 +38,12 @@ public class BookModelDTO {
         dto.edition = bookModel.getEdition();
         dto.weight = bookModel.getWeight();
         dto.pages = bookModel.getPages();
-        dto.bookLanguage = bookModel.getBookLanguage().toString();
-        dto.dimension = bookModel.getDimension().toString();
+        if (bookModel.getBookLanguage() != null) {
+            dto.bookLanguage = bookModel.getBookLanguage().toString();
+        }
+        if (bookModel.getDimension() != null) {
+            dto.dimension = bookModel.getDimension().toString();
+        }
         dto.publicationYear = bookModel.getPublicationYear();
         dto.isPocketEdition = bookModel.getPocketEdition();
         dto.isHardcover = bookModel.getHardcover();
@@ -49,7 +53,10 @@ public class BookModelDTO {
         dto.self = URI.create("/book_models/" + bookModel.getBookModelId());
 
         dto.authors = bookModel.getAuthors().stream().map(Author::getAuthorName).toList();
-        dto.cover = URI.create("/images/" + bookModel.getImage().getImageId());
+
+        if (bookModel.getImage() != null) {
+            dto.cover = URI.create("/images/" + bookModel.getImage().getImageId());
+        }
         return dto;
     }
 
@@ -137,7 +144,7 @@ public class BookModelDTO {
         return publicationYear;
     }
 
-    public void setPublicationYear(Short publicationYear) {
+    public void setPublicationYear(Short publicationYear)    {
         this.publicationYear = publicationYear;
     }
 
