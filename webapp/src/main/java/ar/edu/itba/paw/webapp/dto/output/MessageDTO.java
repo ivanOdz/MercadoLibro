@@ -1,10 +1,10 @@
 package ar.edu.itba.paw.webapp.dto.output;
 
 import ar.edu.itba.paw.models.Message;
+import ar.edu.itba.paw.webapp.utils.UrnResolverUtil;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
-import java.sql.Timestamp;
 import java.util.Date;
 
 public class MessageDTO {
@@ -14,9 +14,6 @@ public class MessageDTO {
     private URI self;
     private URI user;
     private URI exchange;
-
-    public MessageDTO() {
-    }
 
     static public MessageDTO fromMessage(UriInfo uriInfo, Message message){
         MessageDTO dto = new MessageDTO();
@@ -30,10 +27,6 @@ public class MessageDTO {
 
     public Date getTime() {
         return time;
-    }
-
-    public void setTime(Timestamp time) {
-        this.time = time;
     }
 
     public URI getSelf() {
@@ -66,5 +59,13 @@ public class MessageDTO {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Long getUserId() {
+        return UrnResolverUtil.getUserId(user);
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
     }
 }

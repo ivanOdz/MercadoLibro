@@ -6,7 +6,6 @@ import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 
 import ar.edu.itba.paw.webapp.dto.input.CreateExchangeDTO;
-import ar.edu.itba.paw.webapp.dto.input.MessageInputDTO;
 import ar.edu.itba.paw.webapp.dto.input.UpdateExchangeDTO;
 import ar.edu.itba.paw.webapp.dto.output.ExchangeDTO;
 import ar.edu.itba.paw.webapp.dto.output.MessageDTO;
@@ -64,9 +63,9 @@ public class ExchangeController {
 
     @POST
     @Path("/{id}/messages")
-    @Consumes(value = {VndType.APPLICATION_MESSAGE_INPUT})
+    @Consumes(value = {VndType.APPLICATION_MESSAGE})
     @PreAuthorize("@accessControl.createMessageAccess(#exchangeId, #messageDTO)")
-    public Response sendMessage(@PathParam("id") long exchangeId, MessageInputDTO messageDTO) {
+    public Response sendMessage(@PathParam("id") long exchangeId, MessageDTO messageDTO) {
         Message m = exchangeService.createMessage(exchangeId, messageDTO.getUserId(), messageDTO.getMessage());
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(m.getMessageId())).build()).build();
     }

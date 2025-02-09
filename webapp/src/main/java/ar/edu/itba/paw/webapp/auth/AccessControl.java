@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.webapp.dto.input.*;
+import ar.edu.itba.paw.webapp.dto.output.MessageDTO;
 import ar.edu.itba.paw.webapp.dto.output.UserDTO;
 import ar.edu.itba.paw.webapp.dto.output.BookDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,7 +76,7 @@ public class AccessControl {
     }
 
     // POST {base_path}/exchanges/{id}/messages  body: messageDTO
-    public Boolean createMessageAccess(Long exchangeId, MessageInputDTO messageDTO) {
+    public Boolean createMessageAccess(Long exchangeId, MessageDTO messageDTO) {
         Exchange e = exchangeService.getExchangeById(exchangeId);
 
         boolean exchangeAccess = e.getRequester().getUser().getUserId().equals(getUser().getUserId()) ||
