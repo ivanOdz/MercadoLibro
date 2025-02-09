@@ -81,7 +81,7 @@
     <!-- Remove Location Modal -->
     <div class="modal-overlay" *ngIf="isRemoveModalOpen">
         <div class="modal">
-            <h3>{{ 'PROFILE.ACCEPT' | translate }}"{{ locationToRemove?.location }}"?</h3>
+            <h3>{{ 'PROFILE.CONFIRM_DELETE_LOCATION' | translate }}"{{ locationToRemove?.location }}"?</h3>
             <div class="modal-buttons">
                 <button (click)="closeRemoveModal()">{{ 'PROFILE.CANCEL' | translate }}</button>
                 <button (click)="removeLocation()">{{ 'PROFILE.ACCEPT' | translate }}</button>

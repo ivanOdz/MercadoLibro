@@ -130,7 +130,20 @@ export class UserService {
     }
 
     addLocation(user: User, location: string) {
-        return this.http.post<void>(`${user.locations}`, { location });
+        const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.location.v1+json', 'Accept': 'application/vnd.location.v1+json' });
+
+        return this.http.post<any>(`${user.locations}`, { location }, { headers, observe: 'response' }).pipe(
+            tap((response) => {
+                if (response.status === 204) {
+                    console.log('Ubicación creada exitosamente');
+                }
+            }),
+            catchError((error) => {
+                console.error('Error en la creación de la ubicación', error);
+                return throwError(() => error);
+            })
+
+        );
     }
 
     removeLocation(location: Location) {
