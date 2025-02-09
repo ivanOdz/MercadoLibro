@@ -123,7 +123,7 @@ export class UserService {
         return this.http.post<void>(`${user.locations}`, { location });
     }
 
-    removeLocation(user: User, location: Location) {
+    removeLocation(location: Location) {
         return this.http.delete<void>(`${location.self}`);
     }
 

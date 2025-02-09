@@ -130,7 +130,7 @@ export class ProfileComponent implements OnInit{
 
   removeLocation() {
     if (this.locationToRemove && this.loggedUser) {
-      this.userService.removeLocation(this.loggedUser, this.locationToRemove).subscribe(() => {
+      this.userService.removeLocation(this.locationToRemove).subscribe(() => {
         this.locations = this.locations.filter(loc => loc !== this.locationToRemove);
         this.closeRemoveModal();
       });
