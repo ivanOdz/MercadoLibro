@@ -20,13 +20,13 @@ export class PublicationService {
     getPublication(publicationUrl: string) : Observable<Publication> {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.publications.v1+json'});
 
-        return this.http.get<any>(`${this.baseUrl}${publicationUrl}`, {headers}).pipe(
+        return this.http.get<any>(`${publicationUrl}`, {headers}).pipe(
             tap((r) => console.log("Respuesta de la API con publications:", r))
         );
     }
 
     getLocation(locationUrl: string) : Observable<Location[]> {
-        return this.http.get<any>(`${this.baseUrl}${locationUrl}`).pipe(
+        return this.http.get<any>(`${locationUrl}`).pipe(
             tap((r) => console.log("Respuesta de la API:", r))
         );
     }
