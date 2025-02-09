@@ -63,7 +63,7 @@ public class BookModel {
     @JoinColumn(name = "imageid")
     private Image image;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(
             name = "book_author",
             joinColumns = @JoinColumn(name = "bookmodelid"),

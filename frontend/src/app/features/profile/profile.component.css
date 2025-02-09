@@ -162,5 +162,9 @@ select:focus {
   color: red;
   font-size: 12px;
   font-style: italic;
-  margin-left: 10px;
+  margin-top: 5px;
+}
+.edit {
+    cursor: pointer;
+    margin-left: 10px;
 }

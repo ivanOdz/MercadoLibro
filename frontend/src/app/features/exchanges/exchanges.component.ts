@@ -29,10 +29,11 @@ import {environment} from "../../../environments/environment";
 import {ProgressSpinner} from "primeng/progressspinner";
 import { ConfirmationService } from 'primeng/api';
 import {Toast} from "primeng/toast";
+import {Message} from "../../core/models/message.model";
 
 export type message = { sender: number, message: string, date: Date };
 
-export type ExchangeData = {exchange: Exchange, offeredPub: PublicationData, requestedPub: PublicationData/*, messages: Message[]*/};
+export type ExchangeData = {exchange: Exchange, offeredPub: PublicationData, requestedPub: PublicationData, messages: Message[]};
 export type PublicationData = {book: BookData, locations: Location[]};
 export type BookData = {owner: User | null, image: string | null, model: BookModel | null};
 
@@ -120,8 +121,11 @@ export class ExchangesComponent implements OnInit {
                                         requesterBookModel: this.bms.getBookModel(requesterBook.bookModel).pipe(
                                             tap((r) => console.log("Respuesta de la API de book model:", r)),
                                             catchError(() => of(null))),
+                                        messages: this.es.getMessages(exchange.chat).pipe(
+                                            catchError(() => of([]))
+                                        )
                                     }).pipe(
-                                        map(({ offererBookModel, requesterBookModel }) => ({
+                                        map(({ offererBookModel, requesterBookModel, messages }) => ({
                                             exchange,
                                             offeredPub: {
                                                 book: {
@@ -138,7 +142,8 @@ export class ExchangesComponent implements OnInit {
                                                     image: requesterBook?.images?.[0] || null,
                                                 },
                                                 locations: requesterLocations,
-                                            }
+                                            },
+                                            messages
                                         }))
                                     );
                                 })

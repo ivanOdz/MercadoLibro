@@ -153,7 +153,8 @@ export class HistoryComponent {
                                             image: requesterBook?.images?.[0] || null,
                                         },
                                         locations: requesterLocations,
-                                    }
+                                    },
+                                    messages: []
                                 }))
                             );
                         })

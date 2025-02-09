@@ -148,7 +148,8 @@ export class RequestsComponent {
                                             image: requesterBook?.images?.[0] || null,
                                         },
                                         locations: requesterLocations,
-                                    }
+                                    },
+                                    messages: []
                                 }))
                             );
                         })

@@ -105,4 +105,14 @@
   </servlet-mapping>
 
 
+  <filter>
+    <filter-name>openEntityManagerInView</filter-name>
+    <filter-class>org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>openEntityManagerInView</filter-name>
+    <servlet-name>jersey</servlet-name>
+  </filter-mapping>
+
 </web-app>

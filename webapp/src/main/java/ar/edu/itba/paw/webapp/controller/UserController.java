@@ -117,8 +117,8 @@ public class UserController {
     @POST
     @Path("/{id}/locations")
     @Consumes(value = {VndType.APPLICATION_LOCATION})
-    public Response createLocation(@PathParam("id") final long userId, String locationString) {
-        Location location = us.addLocation(userId, locationString);
+    public Response createLocation(@PathParam("id") final long userId, LocationCreation locationCreation) {
+        Location location = us.addLocation(userId, locationCreation.getLocation());
 
         return Response.created(uriInfo.getAbsolutePathBuilder().path(location.getLocationId().toString()).build()).build();
     }
