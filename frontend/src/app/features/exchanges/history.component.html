@@ -11,24 +11,33 @@
             </p-tablist>
             <p-tabpanels>
                 <p-tabpanel value="0">
-                    <div class="rejected-main-section">
+                    <div *ngIf="completedExchanges.length != 0 || isLoading" class="rejected-main-section">
                         <div style="grid-column: 1;" class="column-cards">
-                            <div class="card-section">
+                            <div class="card-section" style="align-content: center;text-align: center" *ngIf="isLoading">
+                                <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
+                            </div>
+                            <div *ngIf="completedExchanges.length != 0 && !isLoading" class="card-section">
                                 <div
                                         class="card"
-                                        *ngFor="let card of ['Tarjeta 1', 'Tarjeta 2', 'Tarjeta 3', 'Tarjeta 4', 'Tarjeta 5', 'Tarjeta 6']"
+                                        *ngFor="let card of completedExchanges"
                                         (click)="selectCompletedCard(card)"
                                         [class.selected]="selectedCompletedCard === card"
                                 >
                                     <div class="active-card-first-column">
                                         <div class="active-card-first-column-book-first">
-                                            <div class="book-image"></div>
-                                            <p style="margin-bottom: 0">Book title wrapped</p>
+                                            <img [src]="!isRequester(card) ? getBookImage(card.offeredPub.book) : getBookImage(card.requestedPub.book)"
+                                                 alt="Book Image"
+                                                 class="book-image"/>
+                                            <p style="margin-bottom: 0">
+                                                {{!isRequester(card) ? card.offeredPub.book.model?.title : card.requestedPub.book.model?.title }}
+                                            </p>
                                         </div>
                                         <i class="pi pi-arrow-right-arrow-left icon-card-active"></i>
                                         <div class="active-card-first-column-book-second">
-                                            <div class="book-image"></div>
-                                            <p style="margin-bottom: 0">Book title wrapped</p>
+                                            <img [src]="!isRequester(card) ? getBookImage(card.requestedPub.book) : getBookImage(card.offeredPub.book)" alt="Book Image" class="book-image" fill/>
+                                            <p style="margin-bottom: 0">
+                                                {{ !isRequester(card) ? card.requestedPub.book.model?.title : card.offeredPub.book.model?.title }}
+                                            </p>
                                         </div>
                                     </div>
                                     <div class="requests-second-column">
@@ -36,17 +45,24 @@
                                     </div>
                                 </div>
                             </div>
-                            <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows" [totalRecords]="totalRecords" />
+                            <p-paginator (onPageChange)="onCompletedPageChange($event)" [first]="currentCompletedPage" [rows]="rows" [totalRecords]="totalRecords" />
                         </div>
-                        <div class="content-panel" id="content-panel-completed">
+                        <div class="content-panel" style="align-content: center;text-align: center" *ngIf="isLoading">
+                            <div class="emtpy-content-panel">
+                                <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
+                            </div>
+                        </div>
+                        <div class="content-panel" id="content-panel-completed" *ngIf="selectedCompletedCard && !isLoading">
                             <div class="static-card user-card" id="user-card-completed">
                                 <div style="grid-column: 1; justify-items: center;">
                                     <div class="user-card-image"></div>
                                 </div>
                                 <div style="grid-column: 2; text-align: start;">
-                                    <p class="user-card-name">Nombre de usuario</p>
-                                    <p class="user-card-email">usuario&#64;mail.com</p>
-                                    <p-rating [(ngModel)]="value" [disabled]="true" />
+                                    <p class="user-card-name">{{ isRequester(selectedCompletedCard) ? selectedCompletedCard?.offeredPub?.book?.owner?.username :
+                                        selectedCompletedCard?.requestedPub?.book?.owner?.username }}</p>
+                                    <p class="user-card-email">{{ isRequester(selectedCompletedCard) ? selectedCompletedCard?.offeredPub?.book?.owner?.mail :
+                                        selectedCompletedCard?.requestedPub?.book?.owner?.mail }}</p>
+                                    <p-rating [(ngModel)]="selectedUserRatingCompleted" [disabled]="true" />
                                 </div>
                                 <div style="grid-column: 3;text-align: start;align-content: center;justify-items: center;">
                                     <p class="user-card-review" style="text-align: center;">Deja una reseña</p>
@@ -60,14 +76,13 @@
                                     <div class="book-image-static"></div>
                                 </div>
                                 <div style="grid-column: 2; text-align: start;">
-                                    <p class="book-card-title">Título del libro</p>
-                                    <p class="book-card-author">Autor del libro</p>
+                                    <p class="book-card-title">{{ isRequester(selectedCompletedCard) ? selectedCompletedCard?.offeredPub?.book?.model?.title :
+                                        selectedCompletedCard?.requestedPub?.book?.model?.title }}</p>
+                                    <p class="book-card-author">{{ isRequester(selectedCompletedCard) ? selectedCompletedCard?.offeredPub?.book?.model?.authors :
+                                        selectedCompletedCard?.requestedPub?.book?.model?.authors }}</p>
                                     <p class="book-card-description">
-                                        feogmpwo4ngpeangwpvp om3fpnenopgnopvwnvwpoewnvwev
-                                        ewnonpwvownenovpewvneoneopnbeobneopbneonbe
-                                        beboenbeopbneoneboneoneobneobnoebneobneb
-                                        ebneobnebnebnebononboebnenboenbeobnobneb
-                                        neonbeobebneobnebnoenbeobeonboenn
+                                        {{ isRequester(selectedCompletedCard) ? selectedCompletedCard?.offeredPub?.book?.model?.description :
+                                        selectedCompletedCard?.requestedPub?.book?.model?.description }}
                                     </p>
                                 </div>
                             </div>
@@ -77,39 +92,56 @@
                                     <div class="book-image-static"></div>
                                 </div>
                                 <div style="grid-column: 2; text-align: start;">
-                                    <p class="book-card-title">Título del libro</p>
-                                    <p class="book-card-author">Autor del libro</p>
+                                    <p class="book-card-title">{{ isRequester(selectedCompletedCard) ? selectedCompletedCard?.requestedPub?.book?.model?.title :
+                                        selectedCompletedCard?.offeredPub?.book?.model?.title }}</p>
+                                    <p class="book-card-author">{{ isRequester(selectedCompletedCard) ? selectedCompletedCard?.requestedPub?.book?.model?.authors :
+                                        selectedCompletedCard?.offeredPub?.book?.model?.authors }}</p>
                                     <p class="book-card-description">
-                                        feogmpwo4ngpeangwpvp om3fpnenopgnopvwnvwpoewnvwev
-                                        ewnonpwvownenovpewvneoneopnbeobneopbneonbe
-                                        beboenbeopbneoneboneoneobneobnoebneobneb
-                                        ebneobnebnebnebononboebnenboenbeobnobneb
-                                        neonbeobebneobnebnoenbeobeonboenn
+                                        {{ isRequester(selectedCompletedCard) ? selectedCompletedCard?.requestedPub?.book?.model?.description :
+                                        selectedCompletedCard?.offeredPub?.book?.model?.description }}
                                     </p>
                                 </div>
                             </div>
                         </div>
+                        <div *ngIf="!selectedCompletedCard && !isLoading">
+                            <div class="emtpy-content-panel">
+                                <p class="text-empty">Selecciona una tarjeta para más detalles</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="completedExchanges.length === 0 && !isLoading" class="card-section-empty">
+                        <p class="text-empty">No tienes intercambios completados</p>
+                        <p-button styleClass="empty-button" label="Ver publicaciones" icon="pi pi-search" (click)="redirectToPublications()" />
                     </div>
                 </p-tabpanel>
                 <p-tabpanel value="1">
-                    <div class="completed-main-section">
+                    <div *ngIf="rejectedExchanges.length != 0|| isLoading"  class="completed-main-section">
                         <div style="grid-column: 1;" class="column-cards">
-                            <div class="card-section">
+                            <div class="card-section" style="align-content: center;text-align: center" *ngIf="isLoading">
+                                <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
+                            </div>
+                            <div *ngIf="rejectedExchanges.length != 0 && !isLoading" class="card-section">
                                 <div
                                         class="card"
-                                        *ngFor="let card of ['Tarjeta 1', 'Tarjeta 2', 'Tarjeta 3', 'Tarjeta 4', 'Tarjeta 5', 'Tarjeta 6']"
+                                        *ngFor="let card of rejectedExchanges"
                                         (click)="selectRejectedCard(card)"
                                         [class.selected]="selectedRejectedCard === card"
                                 >
                                     <div class="active-card-first-column">
                                         <div class="active-card-first-column-book-first">
-                                            <div class="book-image"></div>
-                                            <p style="margin-bottom: 0">Book title wrapped</p>
+                                            <img [src]="!isRequester(card)? getBookImage(card.offeredPub.book) : getBookImage(card.requestedPub.book)"
+                                                 alt="Book Image"
+                                                 class="book-image"/>
+                                            <p style="margin-bottom: 0">
+                                                {{ !isRequester(card) ? card.offeredPub.book.model?.title : card.requestedPub.book.model?.title }}
+                                            </p>
                                         </div>
                                         <i class="pi pi-arrow-right-arrow-left icon-card-active"></i>
                                         <div class="active-card-first-column-book-second">
-                                            <div class="book-image"></div>
-                                            <p style="margin-bottom: 0">Book title wrapped</p>
+                                            <img [src]="!isRequester(card) ? getBookImage(card.requestedPub.book) : getBookImage(card.offeredPub.book)" alt="Book Image" class="book-image" fill/>
+                                            <p style="margin-bottom: 0">
+                                                {{ !isRequester(card) ? card.requestedPub.book.model?.title : card.offeredPub.book.model?.title }}
+                                            </p>
                                         </div>
                                     </div>
                                     <div class="requests-second-column">
@@ -117,17 +149,24 @@
                                     </div>
                                 </div>
                             </div>
-                            <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows" [totalRecords]="totalRecords" />
+                            <p-paginator (onPageChange)="onRejectedPageChange($event)" [first]="currentRejectedPage" [rows]="rows" [totalRecords]="totalRecords" />
                         </div>
-                        <div class="content-panel" id="content-panel-rejected">
+                        <div class="content-panel" style="align-content: center;text-align: center" *ngIf="isLoading">
+                            <div class="emtpy-content-panel">
+                                <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
+                            </div>
+                        </div>
+                        <div class="content-panel" id="content-panel-rejected" *ngIf="selectedRejectedCard && !isLoading">
                             <div class="static-card user-card" id="user-card-rejected">
                                 <div style="grid-column: 1; justify-items: center;">
                                     <div class="user-card-image"></div>
                                 </div>
                                 <div style="grid-column: 2; text-align: start;">
-                                    <p class="user-card-name">Nombre de usuario</p>
-                                    <p class="user-card-email">usuario&#64;mail.com</p>
-                                    <p-rating [(ngModel)]="value" [disabled]="true" />
+                                    <p class="user-card-name">{{ isRequester(selectedRejectedCard) ? selectedRejectedCard?.offeredPub?.book?.owner?.username :
+                                        selectedRejectedCard?.requestedPub?.book?.owner?.username }}</p>
+                                    <p class="user-card-email">{{ isRequester(selectedRejectedCard) ? selectedRejectedCard?.offeredPub?.book?.owner?.mail :
+                                        selectedRejectedCard?.requestedPub?.book?.owner?.mail }}</p>
+                                    <p-rating [(ngModel)]="selectedUserRatingRejected" [disabled]="true" />
                                 </div>
                             </div>
                             <p class="static-section-headers">El libro</p>
@@ -136,14 +175,13 @@
                                     <div class="book-image-static"></div>
                                 </div>
                                 <div style="grid-column: 2; text-align: start;">
-                                    <p class="book-card-title">Título del libro</p>
-                                    <p class="book-card-author">Autor del libro</p>
+                                    <p class="book-card-title">{{ isRequester(selectedRejectedCard) ? selectedRejectedCard?.offeredPub?.book?.model?.title :
+                                        selectedRejectedCard?.requestedPub?.book?.model?.title }}</p>
+                                    <p class="book-card-author">{{ isRequester(selectedRejectedCard) ? selectedRejectedCard?.offeredPub?.book?.model?.authors :
+                                        selectedRejectedCard?.requestedPub?.book?.model?.authors }}</p>
                                     <p class="book-card-description">
-                                        feogmpwo4ngpeangwpvp om3fpnenopgnopvwnvwpoewnvwev
-                                        ewnonpwvownenovpewvneoneopnbeobneopbneonbe
-                                        beboenbeopbneoneboneoneobneobnoebneobneb
-                                        ebneobnebnebnebononboebnenboenbeobnobneb
-                                        neonbeobebneobnebnoenbeobeonboenn
+                                        {{ isRequester(selectedRejectedCard) ? selectedRejectedCard?.offeredPub?.book?.model?.description :
+                                        selectedRejectedCard?.requestedPub?.book?.model?.description }}
                                     </p>
                                 </div>
                             </div>
@@ -153,18 +191,26 @@
                                     <div class="book-image-static"></div>
                                 </div>
                                 <div style="grid-column: 2; text-align: start;">
-                                    <p class="book-card-title">Título del libro</p>
-                                    <p class="book-card-author">Autor del libro</p>
+                                    <p class="book-card-title">{{ isRequester(selectedRejectedCard) ? selectedRejectedCard?.requestedPub?.book?.model?.title :
+                                        selectedRejectedCard?.offeredPub?.book?.model?.title }}</p>
+                                    <p class="book-card-author">{{ isRequester(selectedRejectedCard) ? selectedRejectedCard?.requestedPub?.book?.model?.authors :
+                                        selectedRejectedCard?.offeredPub?.book?.model?.authors }}</p>
                                     <p class="book-card-description">
-                                        feogmpwo4ngpeangwpvp om3fpnenopgnopvwnvwpoewnvwev
-                                        ewnonpwvownenovpewvneoneopnbeobneopbneonbe
-                                        beboenbeopbneoneboneoneobneobnoebneobneb
-                                        ebneobnebnebnebononboebnenboenbeobnobneb
-                                        neonbeobebneobnebnoenbeobeonboenn
+                                        {{ isRequester(selectedRejectedCard) ? selectedRejectedCard?.requestedPub?.book?.model?.description :
+                                        selectedRejectedCard?.offeredPub?.book?.model?.description }}
                                     </p>
                                 </div>
                             </div>
                         </div>
+                        <div *ngIf="!selectedRejectedCard && !isLoading">
+                            <div class="emtpy-content-panel">
+                                <p class="text-empty">Selecciona una tarjeta para más detalles</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="rejectedExchanges.length === 0 && !isLoading" class="card-section-empty">
+                        <p class="text-empty">No tienes ningún intercambio rechazado</p>
+                        <p-button styleClass="empty-button" label="Ver publicaciones" icon="pi pi-search" (click)="redirectToPublications()" />
                     </div>
                 </p-tabpanel>
             </p-tabpanels>

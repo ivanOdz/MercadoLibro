@@ -201,6 +201,9 @@ export class RequestsComponent {
 
     /***  Html functions  ***/
 
+    Title = "Requests";
+
+
     selectedOffersCard: ExchangeData | null = null;
     selectedRequestsCard: ExchangeData | null = null;
 
@@ -273,7 +276,6 @@ export class RequestsComponent {
 
     /////////////////////////////////
 
-    Title = "Requests";
 
 
     value: any;
