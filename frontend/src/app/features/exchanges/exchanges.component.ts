@@ -240,12 +240,39 @@ export class ExchangesComponent implements OnInit {
         return message.id;
     }
 
-    isSameDay(date1: Date, date2: Date | undefined): boolean {
+    isSameDay(date1: any, date2: any): boolean {
+        const date1Obj = new Date(date1);
+        const date2Obj = new Date(date2);
         return (
-            date1.getFullYear() === date2?.getFullYear() &&
-            date1.getMonth() === date2.getMonth() &&
-            date1.getDate() === date2.getDate()
+            date1Obj.getFullYear() === date2Obj.getFullYear() &&
+            date1Obj.getMonth() === date2Obj.getMonth() &&
+            date1Obj.getDate() === date2Obj.getDate()
         );
+    }
+
+    getDay(date: any): string {
+        const dateObj = new Date(date);
+        return dateObj.getDay().toString();
+    }
+
+    getMonth(date: any) {
+        const dateObj = new Date(date);
+        return dateObj.getMonth();
+    }
+
+    getYear(date: any): string {
+        const dateObj = new Date(date);
+        return dateObj.getFullYear().toString();
+    }
+
+    getHour(date: any): string {
+        const dateObj = new Date(date);
+        return (dateObj.getHours() < 10 ? '0' : '') + dateObj.getHours().toString();
+    }
+
+    getMinute(date: any): string {
+        const dateObj = new Date(date);
+        return (dateObj.getMinutes() < 10 ? '0' : '') + dateObj.getMinutes().toString() ;
     }
 
 
@@ -288,8 +315,6 @@ export class ExchangesComponent implements OnInit {
     ];
     value: any;
     newMessage: any;
-    lastDate: Date = new Date('2025-02-04');
-
 
 
 
@@ -307,5 +332,9 @@ export class ExchangesComponent implements OnInit {
     protected readonly environment = environment;
 
 
+    isValidDate(date: any): boolean {
+        console.log("Tipo de message.time:", typeof date, date instanceof Date);
+        return date instanceof Date && !isNaN(date.getTime());
+    }
 
 }
