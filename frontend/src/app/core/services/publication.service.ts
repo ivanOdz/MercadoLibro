@@ -1,13 +1,20 @@
 import {Injectable} from "@angular/core";
 import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
-import {Observable, tap} from "rxjs";
+import {catchError, forkJoin, Observable, of, switchMap, tap} from "rxjs";
 import {Publication} from "../models/publication.model";
+import {BookData2, PublicationData, PublicationData2} from "../models/types";
+import {map} from "rxjs/operators";
+import {BookService} from "./book.service";
+import {UserService} from "./user.service";
+import {BookModel} from "../models/bookModel.model";
+import {BookmodelService} from "./bookmodel.service";
+import {AuthService} from "./auth.service";
 
 @Injectable({ providedIn: 'root' })
 export class PublicationService {
     baseUrl = 'http://localhost:8080/api';
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient, private authService: AuthService, private bookService: BookService, private userService: UserService, private bookModelService: BookmodelService) {}
 
     getPublications({ state, genre, page, search }: { state: string; genre: string; page: number; search: string }): Observable<HttpResponse<Publication[]>> {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.publications.v1+json' });
@@ -54,6 +61,57 @@ export class PublicationService {
     getLocation(locationUrl: string) : Observable<Location[]> {
         return this.http.get<any>(`${locationUrl}`).pipe(
             tap((r) => console.log("Respuesta de la API:", r))
+        );
+    }
+
+    getPublicationsWithDetails({
+                                   state,
+                                   genre,
+                                   page,
+                                   search
+                               }: {
+        state: string;
+        genre: string;
+        page: number;
+        search: string;
+    }): Observable<HttpResponse<PublicationData2[]>> {
+        return this.getPublications({state, genre, page, search}).pipe(
+            switchMap((response) => {
+                const publications = response.body || [];
+
+                const detailsRequests = publications.map((publication) =>
+                    forkJoin({
+                        book: this.bookService.getBook(publication.book),
+                        locations: this.userService.getLocationsInPublication(publication.locations),
+                        user: this.userService.getUser(publication.user),
+                    }).pipe(
+                        switchMap(({book, locations, user}) =>
+                            forkJoin({
+                                bookModel: this.bookModelService.getBookModel(book.bookModel)
+                            }).pipe(
+                                map(({bookModel}) => ({
+                                    book: {...book, bookModel},
+                                    locations,
+                                    user,
+                                    publicationState: publication.publicationState,
+                                    publicationDatetime: publication.publicationDatetime,
+                                    favoriteEndpoint: publication.favoriteEndpoint,
+                                    self: publication.self,
+                                    favoritePublication: null
+                                }))
+                            )
+                        )
+                    )
+                );
+                return forkJoin(detailsRequests).pipe(
+                    map((publicationData: PublicationData2[]) =>
+                        new HttpResponse<PublicationData2[]>({
+                            body: publicationData,
+                            headers: response.headers
+                        })
+                    )
+                );
+            })
         );
     }
 }
