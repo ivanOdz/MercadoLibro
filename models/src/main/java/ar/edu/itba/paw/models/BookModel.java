@@ -100,150 +100,96 @@ public class BookModel {
         this.image = image;
     }
 
-    public Set<Author> getAuthors() {
-        return authors;
-    }
-
-    public Image getImage() {
-        return image;
-    }
-
     public Long getBookModelId() {
         return bookModelId;
-    }
-
-    public String getIsbn() {
-        return isbn;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getEditorial() {
-        return editorial;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public Genre getGenre() {
-        return genre;
-    }
-
-    public int getEdition() {
-        return edition;
-    }
-
-    public int getWeight() {
-        return weight;
-    }
-
-    public int getPages() {
-        return pages;
-    }
-
-    public Language getBookLanguage() {
-        return bookLanguage;
-    }
-
-    public BookDimension getDimension() {
-        return dimension;
-    }
-
-    public short getPublicationYear() {
-        return publicationYear;
-    }
-
-    public boolean isPocketEdition() {
-        return isPocketEdition;
-    }
-
-    public boolean isHardcover() {
-        return isHardcover;
     }
 
     public void setBookModelId(Long bookModelId) {
         this.bookModelId = bookModelId;
     }
 
+    public String getIsbn() {
+        return isbn;
+    }
+
     public void setIsbn(String isbn) {
         this.isbn = isbn;
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
     }
 
+    public String getEditorial() {
+        return editorial;
+    }
+
     public void setEditorial(String editorial) {
         this.editorial = editorial;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
     }
 
+    public Genre getGenre() {
+        return genre;
+    }
+
     public void setGenre(Genre genre) {
         this.genre = genre;
     }
 
-    public void setEdition(int edition) {
-        this.edition = edition;
-    }
-
-    public void setWeight(int weight) {
-        this.weight = weight;
-    }
-
-    public void setPages(int pages) {
-        this.pages = pages;
-    }
-
-    public void setBookLanguage(Language bookLanguage) {
-        this.bookLanguage = bookLanguage;
-    }
-
-    public void setDimension(BookDimension dimension) {
-        this.dimension = dimension;
-    }
-
-    public void setPublicationYear(short publicationYear) {
-        this.publicationYear = publicationYear;
-    }
-
-    public void setPocketEdition(boolean pocketEdition) {
-        isPocketEdition = pocketEdition;
-    }
-
-    public void setHardcover(boolean hardcover) {
-        isHardcover = hardcover;
-    }
-
-    public void setImage(Image image) {
-        this.image = image;
-    }
-    public void setAuthors(Set<Author> authors) {
-        this.authors = authors;
-    }
-    public Double getAverageRating() {
-        return averageRating;
-    }
-
-    public Integer getRatingCount() {
-        return ratingCount;
+    public Integer getEdition() {
+        return edition;
     }
 
     public void setEdition(Integer edition) {
         this.edition = edition;
     }
 
+    public Integer getWeight() {
+        return weight;
+    }
+
     public void setWeight(Integer weight) {
         this.weight = weight;
     }
 
+    public Integer getPages() {
+        return pages;
+    }
+
     public void setPages(Integer pages) {
         this.pages = pages;
+    }
+
+    public Language getBookLanguage() {
+        return bookLanguage;
+    }
+
+    public void setBookLanguage(Language bookLanguage) {
+        this.bookLanguage = bookLanguage;
+    }
+
+    public BookDimension getDimension() {
+        return dimension;
+    }
+
+    public void setDimension(BookDimension dimension) {
+        this.dimension = dimension;
+    }
+
+    public Short getPublicationYear() {
+        return publicationYear;
     }
 
     public void setPublicationYear(Short publicationYear) {
@@ -266,15 +212,35 @@ public class BookModel {
         isHardcover = hardcover;
     }
 
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+    }
+
+    public Set<Author> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(Set<Author> authors) {
+        this.authors = authors;
+    }
+
+    public Double getAverageRating() {
+        return averageRating;
+    }
+
     public void setAverageRating(Double averageRating) {
         this.averageRating = averageRating;
     }
 
-    public void setRatingCount(Integer ratingCount) {
-        this.ratingCount = ratingCount;
+    public Integer getRatingCount() {
+        return ratingCount;
     }
 
-    public boolean getIsImageNull() {
-        return image == null;
+    public void setRatingCount(Integer ratingCount) {
+        this.ratingCount = ratingCount;
     }
 }
