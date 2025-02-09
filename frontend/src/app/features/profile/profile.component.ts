@@ -9,11 +9,12 @@ import { FormsModule } from '@angular/forms';
 import { Location } from '../../core/models/location.model';
 import { ReviewComponent } from './review/review.component';
 import { Review } from '../../core/models/review.model';
-import {LanguageSwitcherComponent} from "../../shared/components/language-switcher/language-switcher.component";
+import { LanguageSwitcherComponent } from "../../shared/components/language-switcher/language-switcher.component";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: 'app-profile',
-  imports: [NavbarComponent, NgForOf, FormsModule, CommonModule, ReviewComponent, LanguageSwitcherComponent],
+  imports: [NavbarComponent, NgForOf, FormsModule, CommonModule, ReviewComponent, LanguageSwitcherComponent, TranslatePipe],
   standalone: true,
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
@@ -24,81 +25,19 @@ export class ProfileComponent implements OnInit{
 
   loggedUser: User | null = null;
   newUsername = '';
-  locations: Location[] = [
-    {
-      "location": "Buenos Aires, Argentina",
-      "publications": "/publications?location=1",
-      "self": "/locations/1"
-    },
-    {
-      "location": "Madrid, España",
-      "publications": "/publications?location=2",
-      "self": "/locations/2"
-    },
-    {
-      "location": "Ciudad de México, México",
-      "publications": "/publications?location=3",
-      "self": "/locations/3"
-    },
-    {
-      "location": "Bogotá, Colombia",
-      "publications": "/publications?location=4",
-      "self": "/locations/4"
-    },
-    {
-      "location": "Santiago, Chile",
-      "publications": "/publications?location=5",
-      "self": "/locations/5"
-    }
-  ];
-
-  reviews: Review[] = [
-    {
-      "description": "Excelente intercambio, el libro estaba en perfectas condiciones.",
-      "reviewDate": "2024-02-07T10:30:00Z",
-      "rating": 5,
-      "self": "/reviews/1",
-      "subject": "/users/2",
-      "reviewer": "/users/5",
-      "exchange": "/exchanges/12"
-    },
-    {
-      "description": "El libro tenía algunas marcas pero en general todo bien.",
-      "reviewDate": "2024-02-06T15:45:00Z",
-      "rating": 4,
-      "self": "/reviews/2",
-      "subject": "/users/3",
-      "reviewer": "/users/7",
-      "exchange": "/exchanges/15"
-    },
-    {
-      "description": "Hubo demoras en la entrega, pero el libro estaba bien.",
-      "reviewDate": "2024-02-05T18:20:00Z",
-      "rating": 3,
-      "self": "/reviews/3",
-      "subject": "/users/8",
-      "reviewer": "/users/4",
-      "exchange": "/exchanges/20"
-    },
-    {
-      "description": "Excelente intercambio, el libro estaba en perfectas condiciones.",
-      "reviewDate": "2024-02-07T10:30:00Z",
-      "rating": 5,
-      "self": "/reviews/1",
-      "subject": "/users/2",
-      "reviewer": "/users/5",
-      "exchange": "/exchanges/12"
-    },
-
-  ];
+  newLocationName: string = "";
+  usernameError: string = '';
+  locations: Location[] = [];
+  reviews: Review[] = [];
 
   isModalOpen = false;
+  isAddModalOpen = false;
   isRemoveModalOpen = false;
   locationToRemove: Location | null = null;
 
 
 
-  constructor(private authService: AuthService, private http: HttpClient) {}
+  constructor(private authService: AuthService, private translate: TranslateService, ) {}
 
   openModal() {
     if (this.loggedUser) {
@@ -108,24 +47,45 @@ export class ProfileComponent implements OnInit{
   }
 
   closeModal() {
+    if (this.loggedUser) {
+      this.newUsername = this.loggedUser.username;
+    }
     this.isModalOpen = false;
   }
 
-  updateUsername() {
-    if (this.newUsername.trim()) {
-      if(this.loggedUser) {
-        this.userService.updateUsername(this.loggedUser, this.newUsername);
-        console.log("Usuario cambiado a: ", this.newUsername);
-     }
-    }
-    this.closeModal();
+  isValidUsername(): boolean {
+    return this.newUsername.trim().length > 0;
   }
 
-  updateLanguage(event: Event) {
-    const language = (event.target as HTMLSelectElement).value;
-    if (this.loggedUser) {
-      this.userService.updateLanguage(this.loggedUser, language);
-      console.log("Idioma cambiado a: ", language);
+  clearErrorMessage() {
+    this.usernameError = '';
+  }
+
+  updateUsername() {
+    if (!this.newUsername.trim()) {
+      this.usernameError = this.translate.instant("PROFILE.USERNAME_EMPTY");
+      return;
+    }
+    if (this.newUsername.trim() && this.loggedUser) {
+      if(this.newUsername === this.loggedUser.username){
+        this.usernameError = '';
+        this.closeModal();
+        return;
+      }
+      this.userService.updateUsername(this.loggedUser, this.newUsername).subscribe({
+        next: () => {
+          if(this.loggedUser){
+            this.loggedUser.username = this.newUsername;
+          }
+          console.log("Usuario cambiado a:", this.newUsername);
+          this.usernameError = '';
+          this.closeModal();
+        },
+        error: (err) => {
+          this.usernameError = err.message;
+          console.log("Usuario en uso:", this.newUsername);
+        }
+      });
     }
   }
 
@@ -139,9 +99,22 @@ export class ProfileComponent implements OnInit{
     }
   }
 
+  openAddModal() {
+    this.newLocationName = "";
+    this.isAddModalOpen = true;
+  }
+
+  closeAddModal() {
+    this.isAddModalOpen = false;
+  }
+
   addLocation(location: string) {
-    if (this.loggedUser && this.loggedUser.locations.length < 5) {
-      this.userService.addLocation(this.loggedUser, location);
+    if (this.loggedUser && location.trim() !== '') {
+      this.userService.addLocation(this.loggedUser, location).subscribe(() => {
+        this.locations.push({ location: location, publications: '', self: '' });
+        this.closeAddModal();
+        this.getLocations();
+      });
     }
   }
 
@@ -155,11 +128,22 @@ export class ProfileComponent implements OnInit{
     this.locationToRemove = null;
   }
 
-  removeLocation(location: Location | null) {
+  removeLocation() {
+    if (this.locationToRemove && this.loggedUser) {
+      this.userService.removeLocation(this.loggedUser, this.locationToRemove).subscribe(() => {
+        this.locations = this.locations.filter(loc => loc !== this.locationToRemove);
+        this.closeRemoveModal();
+      });
+    }
+  }
+
+  getReviews() {
     if (this.loggedUser) {
-      if(location) {
-        this.userService.removeLocation(this.loggedUser, location);
-      }
+      this.userService.getReviews(this.loggedUser).subscribe(reviews => {
+        this.reviews = reviews;
+      });
+    } else {
+      console.log("el usuario no está definido, no se pueden cargar las reseñas");
     }
   }
 
@@ -168,6 +152,8 @@ export class ProfileComponent implements OnInit{
       console.log("Usuario recibido:", user);
       if (user) {
         this.loggedUser = user;
+        this.getLocations();
+        this.getReviews();
       }
     });
 
