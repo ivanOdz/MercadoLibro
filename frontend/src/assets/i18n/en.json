@@ -93,6 +93,15 @@
     "acceptable": "Acceptable",
     "worn": "Worn"
   },
+  "sort": {
+    "rating.ascending": "Worst ratings",
+    "rating.descending": "Best ratings",
+    "publication.date.ascending": "Older publications first",
+    "publication.date.descending": "Newer publications first",
+    "book.name.ascending": "Book name ascending",
+    "book.name.descending": "Book name descending",
+    "select": "Sort by"
+  },
   "CONDITION": "Condition",
   "GENRE" : "Genre"
 }

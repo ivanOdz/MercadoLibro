@@ -93,6 +93,15 @@
     "acceptable": "Aceptable",
     "worn": "Desgastado"
   },
+  "sort": {
+    "rating.ascending": "Más valorados",
+    "rating.descending": "Menos valorados",
+    "publication.date.ascending": "Mas antiguas",
+    "publication.date.descending": "Mas recientes",
+    "book.name.ascending": "Nombre del libro ascendente",
+    "book.name.descending": "Nombre del libro descendente",
+    "select": "Ordenar por"
+  },
   "CONDITION": "Condición",
   "GENRE" : "Género"
 }
