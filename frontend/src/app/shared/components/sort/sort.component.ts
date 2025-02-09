@@ -42,6 +42,6 @@ export class SortComponent {
   }
 
   onSortChange() {
-    this.sortChanged.emit(`sort=${this.selectedSort.value}`);
+    this.sortChanged.emit(this.selectedSort.value);
   }
 }
