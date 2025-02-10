@@ -165,6 +165,7 @@ public class AccessControl {
 
     // DELETE {base_path}/publications/{publication_id}
     public Boolean publicationsModifyAccess(Long publicationId) {
+        if(getUser() == null) return false;
         Publication p = publicationService.getPublicationByPublicationId(publicationId);
         return getUser().getUserId().equals(p.getUser().getUserId());
     }

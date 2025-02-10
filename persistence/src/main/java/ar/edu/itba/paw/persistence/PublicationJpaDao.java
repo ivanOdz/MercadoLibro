@@ -493,6 +493,14 @@ public class PublicationJpaDao implements PublicationDao {
     }
 
     @Override
+    public void updatePublication(Long publicationId, Long locationId) {
+        Location location = em.find(Location.class, locationId);
+        Publication publication = em.find(Publication.class, publicationId);
+        publication.addLocation(location);
+        em.merge(publication);
+    }
+
+    @Override
     public FavoritePublication markFavoritePublication(long publicationId, long userId) {
         User user = em.find(User.class, userId);
         Publication publication = em.find(Publication.class, publicationId);

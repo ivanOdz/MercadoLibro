@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 
+import ar.edu.itba.paw.webapp.dto.input.PublicationUpdateDTO;
 import ar.edu.itba.paw.webapp.dto.output.FavoriteDTO;
 import ar.edu.itba.paw.webapp.dto.input.PublicationInputDTO;
 import ar.edu.itba.paw.webapp.dto.output.PublicationDTO;
@@ -144,14 +145,15 @@ public class PublicationController {
     // Authorization Required
     // El usuario tiene que estar logueado y debe ser dueño de la publicacion
     // Creo que este metodo se reemplaza por el de la location
-   /*@PATCH
+    // Este metodo añade una location existente a una publication
+   @PATCH
     @Path("/{publication_id}")
     @Consumes(value = {VndType.APPLICATION_PUBLICATION})
-    @PreAuthorize("@accessControl.publicationsModifyAccess(#publicationId, #publicationDTO)")
+   @PreAuthorize("@accessControl.publicationsModifyAccess(#publicationId)")
     public Response updatePublication(@PathParam("publication_id") Long publicationId, PublicationUpdateDTO publicationUpdateDTO) {
-        ps.updatePublication(publicationDTO.getLocations());
+        ps.updatePublication(publicationId, publicationUpdateDTO.getLocationId());
 
         return Response.noContent().build();
-    }*/
+    }
 
 }

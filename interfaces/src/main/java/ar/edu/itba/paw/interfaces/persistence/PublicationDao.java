@@ -42,4 +42,6 @@ public interface PublicationDao {
 
     Optional<FavoritePublication> getFavoritePublicationFromUser(long publicationId, long userId);
 
+    void updatePublication(Long publicationId, Long locationId);
+
 }

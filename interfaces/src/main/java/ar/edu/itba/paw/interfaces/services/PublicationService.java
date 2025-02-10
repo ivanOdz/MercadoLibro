@@ -19,8 +19,6 @@ public interface PublicationService {
 
     PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, String state, String genre, String sortType, int currentPage, Long userId, Boolean favorites, Long locationId);
 
-    PaginatedResponse<Publication, ItemFilterMetadata> getFavoritePublications(User user, int currentPage);
-
     Publication getActivePublication(long publicationId);
 
     void deleteFavoritePublication(long publicationId);
@@ -29,7 +27,7 @@ public interface PublicationService {
 
     FavoritePublication getFavoritePublicationFromUser(Long publicationId, Long userId);
 
-
+    void updatePublication(Long publicationId, Long locationId);
 
     void terminatePublication(Publication publication);
 

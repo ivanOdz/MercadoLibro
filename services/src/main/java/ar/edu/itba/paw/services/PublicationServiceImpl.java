@@ -178,11 +178,13 @@ public class PublicationServiceImpl implements PublicationService {
     }
 
     @Override
+    @Transactional
     public void deleteFavoritePublication(long publicationId) {
         pubDao.unmarkFavoritePublication(publicationId);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public FavoritePublication getFavoritePublicationById(Long favoritePublicationId) {
         if(favoritePublicationId == null){
             throw new PublicationBadRequestException("Publication id must not be null");
@@ -199,6 +201,7 @@ public class PublicationServiceImpl implements PublicationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public FavoritePublication getFavoritePublicationFromUser(Long publicationId, Long userId) {
         Publication publication = pubDao.getPublicationByPublicationId(publicationId)
                 .orElseThrow(() -> new PublicationBadRequestException("Invalid publication id"));
@@ -207,6 +210,13 @@ public class PublicationServiceImpl implements PublicationService {
 
         return pubDao.getFavoritePublicationFromUser(publication.getPublicationId(), user.getUserId())
                 .orElseThrow(()-> new FavoritePublicationNotFoundException("No favorite publication found"));
+    }
+
+    @Override
+    @Transactional
+    public void updatePublication(Long publicationId, Long locationId) {
+        locationService.findById(locationId);
+        pubDao.updatePublication(publicationId, locationId);
     }
 
     @Override
@@ -242,13 +252,6 @@ public class PublicationServiceImpl implements PublicationService {
         return pubDao.getBookStateQtyByPublication(userId, search, genre_filter);
     }
 
-    // TODO: Hacer filtros de esto
-    @Override
-    @Transactional(readOnly = true)
-    public PaginatedResponse<Publication, ItemFilterMetadata> getFavoritePublications(User user, int currentPage) {
-        //return pubDao.getFavoritePublications(user.getUserId(), currentPage);
-        return new PaginatedResponse<>(null, null);
-    }
 
     @Override
     @Transactional(readOnly = true)
