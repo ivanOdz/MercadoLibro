@@ -83,4 +83,13 @@ export class BookService {
         );
     }
 
+    updateBookstate(bookUrl: string, state: string): Observable<Book> {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.books.v1+json' });
+        const body = { state };
+
+        return this.http.patch<Book>(`${bookUrl}`, body, { headers }).pipe(
+            //tap((r) => console.log("Respuesta de la API con books:", r))
+        );
+    }
+
 }
