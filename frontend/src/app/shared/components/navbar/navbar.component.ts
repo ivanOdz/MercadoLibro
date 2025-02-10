@@ -48,8 +48,8 @@ export class NavbarComponent {
         this.profileItems = [
             { label: this.translate.instant('NAVBAR.PROFILE'), routerLink: '/profile' },
             { label: this.translate.instant('NAVBAR.MY_BOOKS'), routerLink: '/my-books' },
-            { label: this.translate.instant('NAVBAR.MY_PUBLICATIONS'), routerLink: '/my-publications' },
-            { label: this.translate.instant('NAVBAR.FAVORITES'), routerLink: '/favorites' },
+            { label: this.translate.instant('NAVBAR.MY_PUBLICATIONS'), routerLink: '/publications/mine' },
+            { label: this.translate.instant('NAVBAR.FAVORITES'), routerLink: '/publications/favorites' },
             { separator: true },
             {
                 label: this.translate.instant('NAVBAR.LOGOUT'),

@@ -12,7 +12,7 @@ export class BookService {
     getBook(bookUrn: string) : Observable<Book>  {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.books.v1+json'});
         return this.http.get<any>(`${bookUrn}`, {headers}).pipe(
-            tap((r) => console.log("Respuesta de la API con books:", r))
+            //tap((r) => console.log("Respuesta de la API con books:", r))
         );
     }
 }

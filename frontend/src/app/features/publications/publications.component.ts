@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PublicationService } from '../../core/services/publication.service';
 import { AuthService } from '../../core/services/auth.service';
@@ -20,7 +20,7 @@ import {map, take} from "rxjs/operators";
   ],
   styleUrls: ['./publications.component.css']
 })
-export class PublicationsComponent implements OnInit {
+export class PublicationsComponent implements OnInit, OnDestroy {
 
   conditionHeaders: Record<string, string> = {};
   genreHeaders: Record<string, string> = {};
@@ -50,9 +50,9 @@ export class PublicationsComponent implements OnInit {
           this.currentFilters.page = params['page'] || 0;
           this.currentFilters.search = params['search'] || '';
         }),
-        switchMap(() => this.publicationService.getPublicationsWithDetails(this.currentFilters)), // Obtener publicaciones
+        switchMap(() => this.publicationService.getGeneralPublications(this.currentFilters)),
         tap((response) => {
-          this.publications = response.body || []; // Guardamos las publicaciones obtenidas
+          this.publications = response.body || [];
           this.processHeaders(response.headers);
         }),
         switchMap((response) =>
@@ -72,6 +72,11 @@ export class PublicationsComponent implements OnInit {
     });
   }
 
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+
+
   private processHeaders(headers: any) {
     const newConditionHeaders: Record<string, string> = {};
     const newGenreHeaders: Record<string, string> = {};
@@ -90,5 +95,4 @@ export class PublicationsComponent implements OnInit {
     this.conditionHeaders = { ...newConditionHeaders };
     this.genreHeaders = { ...newGenreHeaders };
   }
-
 }

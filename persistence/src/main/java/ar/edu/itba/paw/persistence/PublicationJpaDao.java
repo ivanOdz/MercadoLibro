@@ -201,7 +201,7 @@ public class PublicationJpaDao implements PublicationDao {
             nativeQueryString.append("AND pl.locationId = :locationId ");
         }
 
-        nativeQueryString.append(" GROUP BY fp.publicationId ORDER BY liked_at DESC ");
+        nativeQueryString.append(" GROUP BY fp.publicationId, fp.liked_at ORDER BY liked_at DESC ");
 
         Query nativeQuery = em.createNativeQuery(nativeQueryString.toString());
 
