@@ -247,6 +247,16 @@ public class AccessControl {
         return getUser().getUserId().equals(ur.getReviewer().getUserId());
     }
 
+    // GET {base_path}/users/{id}/locations?publication_id
+    public Boolean getUserLocationsAccess(Long publication_id) {
+        if(publication_id == null){
+            // needs authentication to access users locations
+            return getUser() != null;
+        }
+        // locations of a publication don't need authentication
+        return true;
+    }
+
 
     // private methods
 
@@ -255,4 +265,6 @@ public class AccessControl {
         PawUserDetails userDetails = (PawUserDetails) auth.getPrincipal();
         return userDetails.getUser();
     }
+
+
 }
