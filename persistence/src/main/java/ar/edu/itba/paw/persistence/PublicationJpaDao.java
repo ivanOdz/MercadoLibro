@@ -488,7 +488,8 @@ public class PublicationJpaDao implements PublicationDao {
         TypedQuery<FavoritePublication> query = em.createQuery("FROM FavoritePublication fp WHERE fp.user.id = :userId AND fp.publication.id = :publicationId", FavoritePublication.class);
         query.setParameter("publicationId", publicationId);
         query.setParameter("userId", userId);
-        return Optional.ofNullable(query.getSingleResult());
+        List<FavoritePublication> results = query.getResultList();
+        return results.isEmpty() ? Optional.empty() : Optional.of(results.getFirst());
     }
 
     @Override

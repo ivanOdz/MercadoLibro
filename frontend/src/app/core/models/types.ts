@@ -26,6 +26,7 @@ export type PublicationData2 = {
     publicationDatetime: Date | null;
     favoriteEndpoint: string | null; // The endpoint in which a POST should be done in order to mark a publication as favorite.
     favoritePublication: FavoritePublication | null // If it is null, this publications it is not favorite for logged user. Manually query this field
+    isFavoriteTemplate: string;
     self: string | null,
 }
 

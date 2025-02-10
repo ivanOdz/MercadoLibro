@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.utils;
+package ar.edu.itba.paw.webapp.exceptionMapper;
 
 import ar.edu.itba.paw.interfaces.exceptions.base.ApplicationRuntimeException;
 import ar.edu.itba.paw.webapp.dto.output.ErrorDTO;

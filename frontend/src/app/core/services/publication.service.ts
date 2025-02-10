@@ -1,8 +1,8 @@
 import {Injectable} from "@angular/core";
 import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
-import {catchError, forkJoin, Observable, of, switchMap, tap} from "rxjs";
+import {catchError, forkJoin, Observable, of, switchMap, tap, throwError} from "rxjs";
 import {Publication} from "../models/publication.model";
-import {BookData2, PublicationData, PublicationData2} from "../models/types";
+import {BookData2, FavoritePublication, PublicationData, PublicationData2} from "../models/types";
 import {map} from "rxjs/operators";
 import {BookService} from "./book.service";
 import {UserService} from "./user.service";
@@ -46,7 +46,7 @@ export class PublicationService {
             headers,
             observe: 'response'
         }).pipe(
-            tap((response) => console.log("Respuesta completa de la API:", response))
+            //tap((response) => console.log("Respuesta completa de la API:", response))
         );
     }
 
@@ -61,6 +61,19 @@ export class PublicationService {
     getLocation(locationUrl: string) : Observable<Location[]> {
         return this.http.get<any>(`${locationUrl}`).pipe(
             tap((r) => console.log("Respuesta de la API:", r))
+        );
+    }
+
+    getFavoritePublication(favoriteUrl: string, userUrl: string): Observable<FavoritePublication | null> {
+        const userId = userUrl.split("/").pop();
+        return this.http.get<FavoritePublication>(`${favoriteUrl.replace("{user_id}", <string>userId)}`).pipe(
+            tap((r) => console.log("Respuesta de la API:", r)),
+            catchError((error) => {
+                if (error.status === 404) {
+                    return of(null);
+                }
+                return throwError(() => error);
+            })
         );
     }
 
@@ -97,7 +110,8 @@ export class PublicationService {
                                     publicationDatetime: publication.publicationDatetime,
                                     favoriteEndpoint: publication.favoriteEndpoint,
                                     self: publication.self,
-                                    favoritePublication: null
+                                    favoritePublication: null,
+                                    isFavoriteTemplate: publication.isFavoriteTemplate
                                 }))
                             )
                         )
@@ -112,6 +126,22 @@ export class PublicationService {
                     )
                 );
             })
+        );
+    }
+
+    setFavoritePublication(userUrl: string, publications: PublicationData2[]): Observable<any> {
+        if (!userUrl || publications.length === 0) {
+            return of();
+        }
+
+        const favoriteRequests = publications.map((publication) =>
+            this.getFavoritePublication(publication.isFavoriteTemplate, userUrl).pipe(
+                tap((favorite) => publication.favoritePublication = favorite)
+            )
+        );
+
+        return forkJoin(favoriteRequests).pipe(
+            tap(() => console.log("Se han actualizado las publicaciones con su estado de favorito"))
         );
     }
 }

@@ -5,7 +5,9 @@ import { AuthService } from '../../core/services/auth.service';
 import { NavbarComponent } from "../../shared/components/navbar/navbar.component";
 import { FilterListComponent } from "../../shared/components/filter-list/filter-list.component";
 import { SortComponent } from "../../shared/components/sort/sort.component";
-import {combineLatest, filter, Subscription, switchMap, tap} from "rxjs";
+import {combineLatest, distinctUntilChanged, filter, of, startWith, Subscription, switchMap, tap} from "rxjs";
+import {PublicationData2} from "../../core/models/types";
+import {map, take} from "rxjs/operators";
 
 @Component({
   selector: 'app-publications',
@@ -25,6 +27,8 @@ export class PublicationsComponent implements OnInit {
 
   private subscription!: Subscription;
 
+  publications: PublicationData2[] = [];
+
   currentFilters = {
     state: '',
     genre: '',
@@ -39,28 +43,33 @@ export class PublicationsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.subscription = combineLatest([
-      this.authService.loggedUser$.pipe(filter(user => !!user)), // Solo se ejecuta si hay usuario logueado
-      this.route.queryParams
-    ])
-        .pipe(
-            tap(([user, params]) => {
-              this.currentFilters.state = params['state'] || '';
-              this.currentFilters.genre = params['genre'] || '';
-              this.currentFilters.page = params['page'] || 0;
-              this.currentFilters.search = params['search'] || '';
-            }),
-            switchMap(() => this.publicationService.getPublicationsWithDetails(this.currentFilters))
+    this.subscription = this.route.queryParams.pipe(
+        tap((params) => {
+          this.currentFilters.state = params['state'] || '';
+          this.currentFilters.genre = params['genre'] || '';
+          this.currentFilters.page = params['page'] || 0;
+          this.currentFilters.search = params['search'] || '';
+        }),
+        switchMap(() => this.publicationService.getPublicationsWithDetails(this.currentFilters)), // Obtener publicaciones
+        tap((response) => {
+          this.publications = response.body || []; // Guardamos las publicaciones obtenidas
+          this.processHeaders(response.headers);
+        }),
+        switchMap((response) =>
+            this.authService.loggedUser$.pipe(
+                distinctUntilChanged(),
+                filter(user => !!user),
+                take(1),
+                tap((user) => {
+                  this.publicationService.setFavoritePublication(user!.self, this.publications).subscribe();
+                })
+            )
         )
-        .subscribe({
-          next: (response) => {
-            console.log('Publicaciones con detalles actualizadas:', response.body);
-            this.processHeaders(response.headers);
-          },
-          error: (err) => {
-            console.error('Error al obtener publicaciones con detalles:', err);
-          }
-        });
+    ).subscribe({
+      error: (err) => {
+        console.error('Error:', err);
+      }
+    });
   }
 
   private processHeaders(headers: any) {
@@ -82,42 +91,4 @@ export class PublicationsComponent implements OnInit {
     this.genreHeaders = { ...newGenreHeaders };
   }
 
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
-  }
-
-
-  fetchPublications() {
-    this.publicationService.getPublications({
-      state: this.currentFilters.state,
-      genre: this.currentFilters.genre,
-      page: this.currentFilters.page,
-      search: this.currentFilters.search
-    }).subscribe({
-      next: (response) => {
-        console.log('Publicaciones actualizadas:', response.body);
-
-        const newConditionHeaders: Record<string, string> = {};
-        const newGenreHeaders: Record<string, string> = {};
-
-        response.headers.keys().forEach((key: string) => {
-          const value = response.headers.get(key);
-          if (value !== null) {
-            if (key.startsWith("x-bookstate-")) {
-              newConditionHeaders[key] = value;
-            } else if (key.startsWith("x-genre-")) {
-              newGenreHeaders[key] = value;
-            }
-          }
-        });
-
-        this.conditionHeaders = { ...newConditionHeaders };
-        this.genreHeaders = { ...newGenreHeaders };
-
-        },
-      error: (err) => {
-        console.error('Error al obtener las publicaciones:', err);
-      }
-    });
-  }
 }
