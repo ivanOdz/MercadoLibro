@@ -130,7 +130,8 @@
   },
   "PUBLICATION_D": {
     "RETURN": "Return to publications",
-    "SOLICIT_BUTTON": "I want it!"
+    "SOLICIT_BUTTON": "I want it!",
+    "ADDITIONAL_DETAILS": "Additional details"
   },
   "BOOK_HOME": {
   	"SEARCH": "Search in my books",
