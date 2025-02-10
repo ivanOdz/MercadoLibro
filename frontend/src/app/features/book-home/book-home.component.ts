@@ -2,13 +2,11 @@ import {Component, OnInit, Input, inject, OnDestroy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NavbarComponent } from "../../shared/components/navbar/navbar.component";
-import { Book } from './../../core/models/book.model';
-import { BookCardComponent } from './../../shared/components/book-card/book-card.component';
+import { BookCardComponent } from '../../shared/components/book-card/book-card.component';
 import { BookModelService } from "../../core/services/bookmodel.service";
 import { BookService } from "../../core/services/book.service";
 import { AuthService } from '../../core/services/auth.service';
 import { FilterListComponent } from "../../shared/components/filter-list/filter-list.component";
-import { SortComponent } from "../../shared/components/sort/sort.component";
 import {Subscription, combineLatest, filter, switchMap, tap, distinctUntilChanged} from "rxjs";
 import {take} from "rxjs/operators";
 import {BookData2} from "../../core/models/types";
@@ -18,7 +16,7 @@ import {BookData2} from "../../core/models/types";
 	templateUrl: './book-home.component.html',
 	styleUrl: './book-home.component.css',
 	standalone: true,
-	imports: [ CommonModule, NavbarComponent, BookCardComponent, FilterListComponent, SortComponent ]
+	imports: [ CommonModule, NavbarComponent, BookCardComponent, FilterListComponent ]
 })
 export class BookHomeComponent implements OnInit, OnDestroy {
 	
