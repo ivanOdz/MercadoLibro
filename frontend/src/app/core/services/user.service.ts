@@ -21,7 +21,7 @@ export class UserService {
 
         // userUrl = '/users/{id}'
         return this.http.get<any>(`${userUrl}`, { headers }).pipe(
-            tap((userData) => console.log('Respuesta de la API de user:', userData)),
+           // tap((userData) => console.log('Respuesta de la API de user:', userData)),
             map((userData) => {
                 return new User(userData);
             })
@@ -151,7 +151,7 @@ export class UserService {
     }
 
     getReviews(user: User): Observable<Review[]> {
-        const headers = new HttpHeaders({ 'Accept': 'application/vnd.reviews.v1+json' });
+        const headers = new HttpHeaders({ 'Accept': 'application/vnd.user.review.v1+json' });
 
         return this.http.get<Review[]>(`${user.reviews}`, { headers }).pipe(
             map((reviewsData: any[]) => reviewsData.map(review => new Review(review)))
