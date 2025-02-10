@@ -168,12 +168,19 @@ public class UserController {
     @Path("{id}/reviews")
     @Produces(value = {VndType.APPLICATION_USER_REVIEW})
     @PreAuthorize("@accessControl.reviewListAccess(#targetId)")
-    public Response getReviews(@PathParam("id") final Long targetId, @QueryParam("page") int page){
+    public Response getReviews(@PathParam("id") final Long targetId,
+                               @QueryParam("page") @DefaultValue("0") int page) {
         PaginatedResponse<UserReview, BasicMetadata> reviews = userReviewService.getReviewsEarnedByUserId(targetId, page);
-        List<ReviewDTO> reviewDTOS = reviews.getData().stream().map(review -> ReviewDTO.fromUserReview(uriInfo, review)).toList();
-        Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ReviewDTO>>(reviewDTOS) {});
-        Response paginated_response = PageResponseUtil.getResponse(page, reviews.getMetadata().getMaxPage(), uriInfo, response);
-        return CacheResponseUtil.unconditionalCacheResponse(Response.fromResponse(paginated_response));
+        List<ReviewDTO> reviewDTOS = reviews.getData().stream()
+                .map(review -> ReviewDTO.fromUserReview(uriInfo, review))
+                .collect(Collectors.toList());
+
+        GenericEntity<List<ReviewDTO>> entity = new GenericEntity<>(reviewDTOS) {};
+        Response.ResponseBuilder responseBuilder = Response.ok(entity);
+        Response paginatedResponse = PageResponseUtil.getResponse(page, reviews.getMetadata().getMaxPage(), uriInfo, responseBuilder);
+        Response.ResponseBuilder finalResponse = Response.status(paginatedResponse.getStatus()).entity(entity);
+        paginatedResponse.getHeaders().forEach((key, values) -> values.forEach(value -> finalResponse.header(key, value)));
+        return CacheResponseUtil.unconditionalCacheResponse(finalResponse);
     }
 
     /**
