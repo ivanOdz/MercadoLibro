@@ -127,5 +127,12 @@
     "UPDATE_ERROR": "No se puede cambiar el nombre de usuario",
     "USERNAME_EMPTY": "El nombre de usuario no puede ser vacío",
     "NO_REVIEWS": "¡Todavía nadie le dejó una reseña!"
+  },
+  "BOOK_HOME": {
+  	"SEARCH": "Buscar en mis libros",
+  	"TITLE": "Mis libros",
+  	"RESULTS": "Resultados totales:",
+  	"NO_BOOKS": "No se ha encontrado ningún libro."
+  	
   }
 }

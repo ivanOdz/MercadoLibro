@@ -1,22 +1,32 @@
-import {Component, OnInit, Input, inject, OnDestroy} from '@angular/core';
+import { Component, OnInit, Input, inject, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { NavbarComponent } from "../../shared/components/navbar/navbar.component";
 import { BookCardComponent } from '../../shared/components/book-card/book-card.component';
 import { BookModelService } from "../../core/services/bookmodel.service";
 import { BookService } from "../../core/services/book.service";
 import { AuthService } from '../../core/services/auth.service';
 import { FilterListComponent } from "../../shared/components/filter-list/filter-list.component";
-import {Subscription, combineLatest, filter, switchMap, tap, distinctUntilChanged} from "rxjs";
-import {take} from "rxjs/operators";
-import {BookData2} from "../../core/models/types";
+import { SortComponent } from "../../shared/components/sort/sort.component";
+import { BookData2 } from "../../core/models/types";
+import { Book } from './../../core/models/book.model';
+import { Subscription, combineLatest, filter, switchMap, tap, distinctUntilChanged } from "rxjs";
+import { take } from "rxjs/operators";
+import { InputGroup } from 'primeng/inputgroup';
+import { InputGroupAddon } from 'primeng/inputgroupaddon';
+import { ButtonModule } from 'primeng/button';
+import { InputText } from 'primeng/inputtext';
 
 @Component({
 	selector: 'app-book-home',
 	templateUrl: './book-home.component.html',
 	styleUrl: './book-home.component.css',
 	standalone: true,
-	imports: [ CommonModule, NavbarComponent, BookCardComponent, FilterListComponent ]
+	imports:	[	CommonModule, TranslatePipe, NavbarComponent, RouterModule, BookCardComponent, FilterListComponent,
+					SortComponent, InputGroup, InputGroupAddon, ButtonModule, InputText, FormsModule	]
+					
 })
 export class BookHomeComponent implements OnInit, OnDestroy {
 	
@@ -28,6 +38,8 @@ export class BookHomeComponent implements OnInit, OnDestroy {
 				private bookService: BookService) {
 	}
 
+	uploadBookModelUrl: string = "/books/add";
+	searchQuery: string = "";
 	conditionHeaders: Record<string, string> = {};
 	genreHeaders: Record<string, string> = {};
 	books: BookData2[] = [];
@@ -73,12 +85,10 @@ export class BookHomeComponent implements OnInit, OnDestroy {
 			}
 		});
 	}
-
-
+	
 	ngOnDestroy() {
 		this.subscription.unsubscribe();
 	}
-
 
 	private processHeaders(headers: any) {
 		const newConditionHeaders: Record<string, string> = {};
@@ -99,22 +109,12 @@ export class BookHomeComponent implements OnInit, OnDestroy {
 		this.conditionHeaders = { ...newConditionHeaders };
 		this.genreHeaders = { ...newGenreHeaders };
 	}
-	
-	/*ngOnInit() {
-		this.subscription = combineLatest([this.authService.loggedUser$.pipe(filter(user => !!user)), this.route.queryParams])
-		.pipe(
-			tap(([user, params]) => {	this.currentFilters.state = params['state'] || '';
-										this.currentFilters.genre = params['genre'] || '';
-										this.currentFilters.page = params['page'] || 0;
-										this.currentFilters.search = params['search'] || ''; })
-			, switchMap(() => this.bookService.getBook("http://localhost:8080/books/1"))
-		).subscribe(
-			{	next: (response) => {	console.log('OK?');
-										this.processHeaders(response.headers);
-									},
-				error: (err) => {	console.error('Error al obtener libros', err); }
-			});
-	}*/
 
-
+	search() {
+		if (this.searchQuery) {
+//			this.router.navigate(['/publications'],
+//			{ queryParams: { search: this.searchQuery },
+//			queryParamsHandling: 'merge' });
+		}
+	}
 }

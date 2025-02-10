@@ -3,19 +3,33 @@
 <div class="book-home">
 
 	<div class="column-filters">
-		<app-filter-list *ngIf="showConditionFilter" [headers]="conditionHeaders" filterType="Condition"></app-filter-list>
-		<app-filter-list *ngIf="showGenreFilter" [headers]="genreHeaders" filterType="Genre"></app-filter-list>
+		<app-filter-list [headers]="conditionHeaders" filterType="Condition"></app-filter-list>
+		<app-filter-list [headers]="genreHeaders" filterType="Genre"></app-filter-list>
 	</div>
 	
 	<div class="column-content">
-<!-- 		<app-book-card *ngFor="let book of books" [book]="book"></app-book-card> -->
-		<p class="page-title">Agregar un libro</p>
+
+		<p class="page-title">{{ 'BOOK_HOME.TITLE' | translate }}</p>
+		<!-- <app-book-card *ngFor="let book of books" [book]="book"></app-book-card> -->
+		<p-inputgroup>
+			<input pInputText [(ngModel)]="searchQuery" (keyup.enter)="search()" placeholder="{{ 'BOOK_HOME.SEARCH' | translate }}" />
+			<p-inputgroup-addon>
+				<p-button icon="pi pi-search" severity="secondary" variant="text" (click)="search()"/>
+			</p-inputgroup-addon>
+		</p-inputgroup>
+		
+		<div class="search-info">
+			<p>{{ 'BOOK_HOME.RESULTS' | translate }}</p>
+			<div>
+				<!-- Acá meter los pendorchitos esos de los filtros por género o condición -->
+			</div>
+			<app-sort></app-sort>
+		</div>
 		
 		<div class="no-books" *ngIf="books.length === 0">
-		    <p>No se ha encontrado el libro.</p>
-		    <p>Si tienes un libro que no tenemos disponible, agrégalo!</p>
-		    <button class="add-book-btn">Nuevo modelo</button>
+		    <p>{{ 'BOOK_HOME.NO_RESULTS' | translate }}</p>
+		    <p>{{ 'BOOK_HOME.ADD_BOOKS' | translate }}Si tienes un libro que no tenemos disponible, agrégalo!</p>
+			<button class="add-book-btn" [routerLink]="uploadBookModelUrl" >Nuevo modelo</button>
 		</div>
 	</div>
 </div>
-

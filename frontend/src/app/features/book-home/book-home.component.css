@@ -1,7 +1,6 @@
 .book-home {
 	display: grid;
 	justify-content: space-between;
-	background-color: #f9f6f1;
 	grid-template-columns: 0.75fr 2fr;
 	gap: 20px;
 }
@@ -21,10 +20,19 @@
 }
 
 .page-title {
-	margin: 10px 10px;
+	margin: 15px 10px;
 	text-align: center;
 	font-family: "Inter", sans-serif;
 	font-size: 28px;
+}
+
+.search-info {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	margin: 10px 10px;
+	padding-left: 4px;
 }
 
 .book-list {
