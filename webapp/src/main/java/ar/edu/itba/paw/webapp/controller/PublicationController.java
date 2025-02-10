@@ -57,8 +57,8 @@ public class PublicationController {
         Response.ResponseBuilder response = Response.ok(new GenericEntity<List<PublicationDTO>>(publicationDTOList) {});
 
 
-        List<GenreWrapper> genresSummary = ps.getMyGenreWrapperList(userId, search, state);
-        List<BookStateWrapper> conditionSummary = ps.getBookStateWrapperList(search, genre);
+        List<GenreWrapper> genresSummary = ps.getGenreWrapperList(userId, search, state, favorites);
+        List<BookStateWrapper> conditionSummary = ps.getBookStateWrapperList(userId, search, genre, favorites);
 
         Map<String, String> genreHeaders = SerializationUtils.serializeGenreWrapper(genresSummary);
         genreHeaders.forEach(response::header);

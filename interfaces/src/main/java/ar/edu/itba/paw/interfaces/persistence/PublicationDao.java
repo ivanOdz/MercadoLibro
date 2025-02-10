@@ -20,11 +20,13 @@ public interface PublicationDao {
 
     PaginatedResponse<Publication, ItemFilterMetadata> getPaginatedPublications(String search, BookState state, Genre genre, String sortType, int currentPage, User currentUser, Long locationId);
 
-    int getPublicationCountByUserId(long userId);
-
     List<BookStateWrapper> getBookStateQtyByPublication(Long userId, String search, Genre genre);
 
     List<GenreWrapper> getGenreQtyByPublication(Long userId, String search, BookState state);
+
+    List<GenreWrapper> getGenreQtyByFavoritePublication(Long userId, String search, BookState genre);
+
+    List<BookStateWrapper> getBookStateQtyByFavoritePublication(Long userId, String search, Genre state);
 
     void deletePublication(long publicationId);
 
@@ -35,8 +37,6 @@ public interface PublicationDao {
     PaginatedResponse<Publication, ItemFilterMetadata> getFavoritePublications(String search, BookState state, Genre genre, int currentPage, User currentUser, Long locationId);
 
     void addLocation(Publication publication, Location location);
-
-    List<Publication> getActivePublicationsByUser(User user);
 
     Optional<FavoritePublication> getFavoritePublicationById(long fpId);
 
