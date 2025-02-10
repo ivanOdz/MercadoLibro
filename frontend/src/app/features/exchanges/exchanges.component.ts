@@ -1,8 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {NavbarComponent} from "../../shared/components/navbar/navbar.component";
 import { ButtonModule } from 'primeng/button';
 import {SidebarComponent} from "./components/sidebar.component";
-import {NgClass, NgForOf, NgIf, NgOptimizedImage, NgStyle} from "@angular/common";
+import {NgClass, NgForOf, NgIf} from "@angular/common";
 import {Paginator, PaginatorState} from "primeng/paginator";
 import {Steps} from "primeng/steps";
 import {MenuItem} from "primeng/api";
@@ -24,14 +24,11 @@ import {BookmodelService} from "../../core/services/bookmodel.service";
 import {BookService} from "../../core/services/book.service";
 import {Location} from "../../core/models/location.model";
 import {map} from "rxjs/operators";
-import {appConfig} from "../../app.config";
 import {environment} from "../../../environments/environment";
 import {ProgressSpinner} from "primeng/progressspinner";
 import { ConfirmationService } from 'primeng/api';
-import {Toast} from "primeng/toast";
 import {Message} from "../../core/models/message.model";
 
-export type message = { sender: number, message: string, date: Date };
 
 export type ExchangeData = {exchange: Exchange, offeredPub: PublicationData, requestedPub: PublicationData, messages: Message[]};
 export type PublicationData = {book: BookData, locations: Location[]};
@@ -44,8 +41,8 @@ export type BookData = {owner: User | null, image: string | null, model: BookMod
     styleUrl: './exchanges.component.css',
     providers: [ConfirmationService],
     imports: [ButtonModule, SidebarComponent, NavbarComponent, NgForOf, Paginator,
-        Steps, Rating, FormsModule, Dialog, InputText, NgIf, NgClass, NgOptimizedImage,
-        ProgressSpinner, NgStyle, Toast, ConfirmDialogModule]
+        Steps, Rating, FormsModule, Dialog, InputText, NgIf, NgClass,
+        ProgressSpinner, ConfirmDialogModule]
 })
 export class ExchangesComponent implements OnInit {
     loggedUser: User | null = null;
@@ -55,7 +52,7 @@ export class ExchangesComponent implements OnInit {
 
     constructor(private es: ExchangeService, private us: UserService, private ps: PublicationService,
                 private bs: BookService, private bms: BookmodelService, private as: AuthService,
-                private router: Router) {}
+                private router: Router, private changeDetectorRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {
         this.isLoading = true;
@@ -184,6 +181,27 @@ export class ExchangesComponent implements OnInit {
             (error) => console.error("Error al confirmar el intercambio:", error))
     }
 
+    sendMessage() {
+        if (this.newMessage.trim() && this.selectedCard?.exchange.chat) {
+            this.es.sendMessage(this.selectedCard?.exchange.chat, this.isRequester(this.selectedCard) ? this.selectedCard.requestedPub.book.owner?.self : this.selectedCard.offeredPub.book.owner?.self, this.newMessage).subscribe(
+                (messageUrn) => {
+                    console.log("Mensaje enviado:", messageUrn);
+                    this.es.getMessage(messageUrn).subscribe(
+                        (message) => {
+                            this.addMessage(message);
+                        },
+                        (error) => console.error("Error al obtener mensajes:", error)
+                    );
+                },
+                (error) => console.error("Error al enviar mensaje:", error)
+            );
+
+
+            this.newMessage = '';
+            this.changeDetectorRef.detectChanges();
+        }
+    }
+
 
     /***  Html functions  ***/
 
@@ -211,6 +229,50 @@ export class ExchangesComponent implements OnInit {
         return this.loggedUser === book.owner ?
             (book.image || 'assets/book.jpg') :
             (book.image || 'assets/book.jpg');
+    }
+
+    addMessage(newMessage: any) {
+        this.selectedCard?.messages.push(newMessage);
+        this.changeDetectorRef.detectChanges();
+    }
+
+    trackByMessage(index: number, message: any): any {
+        return message.id;
+    }
+
+    isSameDay(date1: any, date2: any): boolean {
+        const date1Obj = new Date(date1);
+        const date2Obj = new Date(date2);
+        return (
+            date1Obj.getFullYear() === date2Obj.getFullYear() &&
+            date1Obj.getMonth() === date2Obj.getMonth() &&
+            date1Obj.getDate() === date2Obj.getDate()
+        );
+    }
+
+    getDay(date: any): string {
+        const dateObj = new Date(date);
+        return dateObj.getDay().toString();
+    }
+
+    getMonth(date: any) {
+        const dateObj = new Date(date);
+        return dateObj.getMonth();
+    }
+
+    getYear(date: any): string {
+        const dateObj = new Date(date);
+        return dateObj.getFullYear().toString();
+    }
+
+    getHour(date: any): string {
+        const dateObj = new Date(date);
+        return (dateObj.getHours() < 10 ? '0' : '') + dateObj.getHours().toString();
+    }
+
+    getMinute(date: any): string {
+        const dateObj = new Date(date);
+        return (dateObj.getMinutes() < 10 ? '0' : '') + dateObj.getMinutes().toString() ;
     }
 
 
@@ -246,8 +308,6 @@ export class ExchangesComponent implements OnInit {
 
     displayModal: boolean = false;
 
-    private changeDetectorRef: any;
-
     steps: MenuItem[] = [
         { label: 'Aceptado' },
         { label: 'Esperando confirmacion' },
@@ -255,9 +315,6 @@ export class ExchangesComponent implements OnInit {
     ];
     value: any;
     newMessage: any;
-    messages: message[] = [ { sender: 1, message: 'Hello', date: new Date('2025-02-04') }, { sender: 2, message: 'Hi', date: new Date()} ];
-    lastDate: Date = new Date('2025-02-04');
-
 
 
 
@@ -265,13 +322,7 @@ export class ExchangesComponent implements OnInit {
         this.displayModal = true;
     }
 
-    sendMessage() {
-        if (this.newMessage.trim()) {
-            this.messages.push(this.newMessage);
-            this.newMessage = '';
-            this.changeDetectorRef.detectChanges();
-        }
-    }
+
     getMonthName(month: number) {
         return this.monthNames[month - 1];
     }
@@ -281,10 +332,9 @@ export class ExchangesComponent implements OnInit {
     protected readonly environment = environment;
 
 
-
-
-
-
-
+    isValidDate(date: any): boolean {
+        console.log("Tipo de message.time:", typeof date, date instanceof Date);
+        return date instanceof Date && !isNaN(date.getTime());
+    }
 
 }

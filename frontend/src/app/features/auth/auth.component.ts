@@ -6,13 +6,12 @@ import { Checkbox } from 'primeng/checkbox';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import {LanguageSwitcherComponent} from "../../shared/components/language-switcher/language-switcher.component";
 import {TranslatePipe} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-auth',
   standalone: true,
-  imports: [ButtonModule, InputText, Password, Checkbox, FormsModule, LanguageSwitcherComponent, TranslatePipe],
+  imports: [ButtonModule, InputText, Password, Checkbox, FormsModule, TranslatePipe],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.css',
 })

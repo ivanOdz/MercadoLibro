@@ -4,6 +4,8 @@ import {map} from "rxjs/operators";
 import {catchError, Observable, throwError} from "rxjs";
 import {Injectable} from "@angular/core";
 import {Pagination} from "../models/pagination";
+import {AuthService} from "./auth.service";
+import {Message} from "../models/message.model";
 
 @Injectable({ providedIn: 'root' })
 export class ExchangeService {
@@ -11,9 +13,14 @@ export class ExchangeService {
     constructor(private http: HttpClient) { }
 
 
-    getMessages(messagesUrl: string): Observable<any> {
+    getMessages(messagesUrl: string): Observable<Message[]> {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.message.v1+json' });
         return this.http.get<any>(`${messagesUrl}`, { headers });
+    }
+
+    getMessage(messageUrl: string | null): Observable<Message> {
+        const headers = new HttpHeaders({ 'Accept': 'application/vnd.message.v1+json' });
+        return this.http.get<any>(`${messageUrl}`, { headers });
     }
 
     private getExchanges(exchangesUrl: string, page: number, state: string,  is_offerer: boolean, is_requester: boolean): Observable< {exchange: Exchange[], pagination: Pagination}> {
@@ -98,4 +105,25 @@ export class ExchangeService {
     }
 
 
+    sendMessage(chatUrl: string | undefined, userUrl: string | undefined, newMessage: any) {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/vnd.message.v1+json'
+        });
+
+        const body: any = {
+            message: newMessage,
+            user: userUrl,
+            time: null,
+            self: null,
+            exchange: null
+        };
+
+        return this.http.post<void>(`${chatUrl}`, body, { headers, observe: 'response' }).pipe(
+            map(response => response.headers.get('Location')),
+            catchError((error) => {
+                console.error("Error al actualizar el intercambio:", error);
+                return throwError(() => error);
+            })
+        );
+    }
 }

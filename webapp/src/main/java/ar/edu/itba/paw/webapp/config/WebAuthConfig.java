@@ -82,7 +82,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Collections.singletonList(ALL));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "HEAD"));
         configuration.addAllowedHeader(ALL);
         configuration.setExposedHeaders(Arrays.asList("Authorization", "Link", "Location", "ETag", "Total-Elements"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -114,7 +114,10 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 /*
                  * Book controller
                  **/
-                .antMatchers("/api/books", "/api/books/**")
+                .antMatchers("/api/books")
+                    .authenticated()
+
+                .antMatchers(HttpMethod.PATCH, "/api/books/{id:\\d+}")
                     .authenticated()
 
                 .antMatchers(HttpMethod.GET,"/api/books")
@@ -176,12 +179,15 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                  * User controller
                  */
 
-                .antMatchers("/api/users/{id:\\d+}/locations", "/api/users/{id:\\d+}/locations",
-                        "/api/users/{id:\\d+}/locations/{location_id:\\d+}", "/api/users/{id:\\d+}/locations/{location_id:\\d+}",
+                .antMatchers("/api/users/{id:\\d+}/locations/{location_id:\\d+}", "/api/users/{id:\\d+}/locations/{location_id:\\d+}",
                         "/api/users/{id:\\d+}/reviews", "/api/users/{id:\\d+}/reviews/{ur_id:\\d+}")
                     .authenticated()
 
-                .antMatchers("/api/users/{id:\\d+}/locations/{location_id:\\d+}","/api/users/{id:\\d+}/locations/{location_id:\\d+}")
+                .antMatchers(HttpMethod.POST,"/api/users/{id:\\d+}/locations")
+                    .authenticated()
+
+
+                .antMatchers("/api/users/{id:\\d+}/locations/{location_id:\\d+}")
                     .access(USER_ACCESS)
 
                 .antMatchers(HttpMethod.GET, "/api/users/{id:\\d+}/reviews/{ur_id:\\d+}")

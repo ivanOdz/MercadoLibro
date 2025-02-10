@@ -136,6 +136,7 @@ public class UserController {
     @GET
     @Path("/{id}/locations")
     @Produces(value = {VndType.APPLICATION_LOCATION})
+    @PreAuthorize("@accessControl.getUserLocationsAccess(#publicationId)")
     public Response getLocations(@PathParam("id") final long userId, @QueryParam("publication_id") final Long publicationId) {
         final List<LocationDTO> locations = us.getLocations(userId, publicationId).stream()
                 .map(location -> LocationDTO.fromLocation(uriInfo, userId, location)).collect(Collectors.toList());

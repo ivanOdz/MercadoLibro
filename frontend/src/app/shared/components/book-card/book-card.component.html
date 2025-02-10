@@ -1,0 +1,7 @@
+<div class="book-card">
+	<img *ngIf="book.images.length > 0" [src]="book.images[0]" alt="Book Cover" class="book-image">
+	<h3>{{ book.bookModel }}</h3>
+	<p><strong>Estado:</strong> {{ book.state }}</p>
+	<p><strong>Disponible:</strong> {{ book.available ? 'Sí' : 'No' }}</p>
+	<p><strong>Dueño:</strong> {{ book.owner }}</p>
+</div>

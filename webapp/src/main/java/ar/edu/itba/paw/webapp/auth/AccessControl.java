@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.webapp.dto.input.*;
+import ar.edu.itba.paw.webapp.dto.output.MessageDTO;
 import ar.edu.itba.paw.webapp.dto.output.UserDTO;
 import ar.edu.itba.paw.webapp.dto.output.BookDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,7 +76,7 @@ public class AccessControl {
     }
 
     // POST {base_path}/exchanges/{id}/messages  body: messageDTO
-    public Boolean createMessageAccess(Long exchangeId, MessageInputDTO messageDTO) {
+    public Boolean createMessageAccess(Long exchangeId, MessageDTO messageDTO) {
         Exchange e = exchangeService.getExchangeById(exchangeId);
 
         boolean exchangeAccess = e.getRequester().getUser().getUserId().equals(getUser().getUserId()) ||
@@ -246,6 +247,16 @@ public class AccessControl {
         return getUser().getUserId().equals(ur.getReviewer().getUserId());
     }
 
+    // GET {base_path}/users/{id}/locations?publication_id
+    public Boolean getUserLocationsAccess(Long publication_id) {
+        if(publication_id == null){
+            // needs authentication to access users locations
+            return getUser() != null;
+        }
+        // locations of a publication don't need authentication
+        return true;
+    }
+
 
     // private methods
 
@@ -254,4 +265,6 @@ public class AccessControl {
         PawUserDetails userDetails = (PawUserDetails) auth.getPrincipal();
         return userDetails.getUser();
     }
+
+
 }

@@ -13,7 +13,6 @@ import {NgIf} from "@angular/common";
   standalone: true,
   imports: [
     ButtonDirective,
-    Checkbox,
     FormsModule,
     InputText,
     Password,

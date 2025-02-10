@@ -13,7 +13,9 @@ public class PublicationDTO {
     private Date publicationDatetime;
     private URI locations;
     private URI user;
-    private URI favoriteEndpoint;
+    private URI favoriteEndpoint; // /{publication_id}/favorite -> for POST purposes
+
+    private String isFavoriteTemplate; // /{publication_id}/favorite?user_id={user_id} -> for checking if a publication is favorite for a specific user
 
     private URI self;
 
@@ -31,7 +33,20 @@ public class PublicationDTO {
         dto.locations = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(publication.getUser().getUserId())).path("locations").queryParam("publication_id", publication.getPublicationId()).build();
         dto.favoriteEndpoint = uriInfo.getBaseUriBuilder().path("publications").path(String.valueOf(publication.getPublicationId())).path("favorite").build();
 
+        dto.isFavoriteTemplate = uriInfo.getBaseUriBuilder()
+                .path("publications")
+                .path(String.valueOf(publication.getPublicationId()))
+                .path("favorite")
+                .toTemplate() + "?user_id={user_id}";
         return dto;
+    }
+
+    public String getIsFavoriteTemplate() {
+        return isFavoriteTemplate;
+    }
+
+    public void setIsFavoriteTemplate(String isFavoriteTemplate) {
+        this.isFavoriteTemplate = isFavoriteTemplate;
     }
 
     public URI getFavoriteEndpoint() {

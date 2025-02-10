@@ -7,7 +7,7 @@ export class Message {
 
     constructor(data: any) {
         this.message = data.message;
-        this.time = data.time;
+        this.time = new Date(data.time);
         this.self = data.self;
         this.user = data.user;
         this.exchange = data.exchange;

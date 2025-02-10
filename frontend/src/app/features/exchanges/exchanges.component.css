@@ -356,11 +356,10 @@
 
 
 .message {
-    margin-bottom: 10px;
     padding: 10px;
     border-radius: 5px;
     word-break: break-all;
-    margin-top: 3%;
+    text-align: center;
 }
 
 .incoming {
@@ -401,6 +400,8 @@
 
 .chat-messages {
     text-align: start;
+    overflow-y: scroll;
+    height: 33vh;
 }
 
 .book-theirs-card   {
@@ -501,4 +502,12 @@
 
 :host ::ng-deep .p-dialog-header {
     font-size: 1.5rem;
+}
+
+
+:host ::ng-deep .p-button-text.p-button-secondary {
+    width: 2rem;
+    height: 2rem;
+    align-items: center;
+    justify-content: center;
 }
