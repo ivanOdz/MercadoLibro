@@ -15,6 +15,7 @@ import { NotFoundComponent } from './features/errors/not-found/not-found.compone
 import { BookHomeComponent } from './features/book-home/book-home.component';
 import {MyPublicationsComponent} from "./features/my-publications/my-publications.component";
 import {FavoritePublicationsComponent} from "./features/favorite-publications/favorite-publications.component";
+import {PublicationComponent} from "./features/publication-detail/publication.model";
 
 export const routes: Routes = [
   {path: '', redirectTo: 'publications', pathMatch: 'full'},
@@ -34,6 +35,11 @@ export const routes: Routes = [
     component: FavoritePublicationsComponent,
     title: 'Favorites',
     canActivate: [AuthGuard],
+  },
+  {
+    path: 'publications/:id',
+    component: PublicationComponent,
+    title: 'Publication',
   },
   {
     path: 'profile',

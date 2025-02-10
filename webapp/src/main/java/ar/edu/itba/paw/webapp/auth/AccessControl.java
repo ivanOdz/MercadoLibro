@@ -179,7 +179,7 @@ public class AccessControl {
             return true;
         }
 
-        return p.getUser().getUserId().equals(lu.getUserId());
+        return p.getUser() != null && p.getUser().getUserId().equals(lu.getUserId());
     }
 
     // POST {base_path}/publications/{id}/favorite body: userDTO
@@ -270,8 +270,10 @@ public class AccessControl {
 
     private User getUser(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        PawUserDetails userDetails = (PawUserDetails) auth.getPrincipal();
-        return userDetails.getUser();
+        if (auth.getPrincipal() instanceof PawUserDetails pud) {
+            return pud.getUser();
+        }
+        return null;
     }
 
 

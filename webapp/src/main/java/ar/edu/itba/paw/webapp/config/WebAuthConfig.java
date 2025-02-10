@@ -165,16 +165,17 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/api/publications")
                     .access(PUBLICATIONS_GENERAL_ACCESS)
 
-                .antMatchers(HttpMethod.DELETE, "/api/publications/{publication_id:\\d+}")
-                    .authenticated()
+                //.antMatchers(HttpMethod.DELETE, "/api/publications/{publication_id:\\d+}")
+                //    .authenticated()
                 .antMatchers(HttpMethod.DELETE, "/api/publications/{publication_id:\\d+}")
                     .access(PUBLICATION_MODIFY_ACCESS)
 
                 .antMatchers(HttpMethod.GET, "/api/publications/{publication_id:\\d+}")
-                    .authenticated()
+                    .access(PUBLICATION_ACCESS)
 
                 .antMatchers( "/api/publications/{publication_id}/favorite", "/api/publications/{publication_id}/favorite/**")
                     .authenticated()
+
                 .antMatchers(HttpMethod.GET, "/api/publications/{publication_id:\\d+}/favorite/{favorite_id:\\+}")
                     .access(PUBLICATION_FAVORITE_LIST_ACCESS)
 
