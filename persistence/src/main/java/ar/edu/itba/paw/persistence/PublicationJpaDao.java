@@ -183,9 +183,7 @@ public class PublicationJpaDao implements PublicationDao {
                 "JOIN book_model bm ON bm.bookModelId = b.bookModelId " +
                 "LEFT JOIN book_rating br ON bm.bookModelId = br.bookModelId " +
                 "LEFT JOIN publication_location pl ON p.publicationId = pl.publicationId " +
-                "WHERE fp.userid = :userId AND p.publicationState = :publicationState AND LOWER(bm.title) LIKE LOWER(:safeSearch) ESCAPE '\\' " +
-                "AND p.userId = :userId "
-                );
+                "WHERE fp.userid = :userId AND p.publicationState = :publicationState AND LOWER(bm.title) LIKE LOWER(:safeSearch) ESCAPE '\\' ");
 
 //"ORDER BY "
 
@@ -238,14 +236,11 @@ public class PublicationJpaDao implements PublicationDao {
                 SELECT fp.publication
                 FROM FavoritePublication fp
                 WHERE fp.publication.publicationId IN (:ids)
-                AND fp.user.userId = :userId
-                AND fp.publication.publicationState = 'CURRENT'
                 ORDER BY fp.likedAt DESC
             """;
 
         TypedQuery<Publication> query = em.createQuery(jpqlQuery, Publication.class);
         query.setParameter("ids",favoritePublicationIds);
-        query.setParameter("userId", userId);
 
         List<Publication> favoritePublications = query.getResultList();
 
