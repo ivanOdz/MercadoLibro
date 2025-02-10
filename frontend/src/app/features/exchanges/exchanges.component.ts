@@ -68,9 +68,10 @@ export class ExchangesComponent implements OnInit {
                 switchMap((user: User) =>
                     this.es.getActiveExchanges(user.exchanges, this.currentPage).pipe(
                         tap((response) => {
-                            this.currentPage = response.pagination.currentPage;
-                            this.totalRecords = response.pagination.totalAmount;
-                            this.rows = response.pagination.totalAmount / response.pagination.maxPage;
+                            this.next = response.pagination.next
+                            this.prev = response.pagination.prev
+                            this.last = response.pagination.last
+                            this.first = response.pagination.first
                         }),
                         map(response => response.exchange),
                         catchError((error) => {
@@ -280,6 +281,12 @@ export class ExchangesComponent implements OnInit {
 
 
     /***  Pagination ***/
+
+    private next: string | undefined;
+    private prev: string | undefined;
+    private last: string | undefined;
+    private first: string | undefined;
+
 
     rows: unknown;
     totalRecords: unknown;

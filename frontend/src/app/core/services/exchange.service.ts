@@ -34,10 +34,10 @@ export class ExchangeService {
 
         return this.http.get<any>(`${exchangesUrl}`, { headers, params, observe: 'response' }).pipe(
             map(response => {
-                let totalRecords: Pagination = new Pagination(Number(response.headers.get('X-Total-Count')), Number(response.headers.get('X-Total-Pages')), Number(response.headers.get('X-Current-Page')));
-
+                const linkHeader = response.headers.get('link');
+                let pagination = new Pagination(linkHeader);
                 const exchanges: Exchange[] = response.body.map((exchange: any) => new Exchange(exchange));
-                return {exchange: exchanges, pagination: totalRecords };
+                return {exchange: exchanges, pagination: pagination };
             }));
     }
 
