@@ -16,7 +16,7 @@ export class UserService {
 
     }
 
-    getUser(userUrl: string): Observable<User> {
+    getUser(userUrl: string | undefined): Observable<User> {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.users.v1+json'});
 
         // userUrl = '/users/{id}'
@@ -166,5 +166,21 @@ export class UserService {
             map((l) => l.map((l: any) => new Location(l))));
     }
 
+
+    postReview(reviewsUrn: string | undefined, exchangesUrn: string | undefined, rating: number, description: string): Observable<void> {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.user.review.v1+json' });
+
+        const body: any = {
+            description: description,
+            reviewDate: null,
+            rating: rating,
+            self: null,
+            subject: null,
+            reviewer: null,
+            exchange: exchangesUrn,
+        }
+
+        return this.http.post<void>(`${reviewsUrn}`, body ,{ headers });
+    }
 
 }

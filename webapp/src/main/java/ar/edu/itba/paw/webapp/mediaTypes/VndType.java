@@ -23,7 +23,6 @@ public class VndType {
     public static final String APPLICATION_UPDATE_EXCHANGE = "application/vnd.exchanges.update.v1+json";
     public static final String APPLICATION_MESSAGE = "application/vnd.message.v1+json";
     public static final String APPLICATION_USER_REVIEW = "application/vnd.user.review.v1+json";
-    public static final String APPLICATION_MESSAGE_INPUT = "application/vnd.exchange.message.input.v1+json";
     public static final String APPLICATION_BOOK_INPUT = "application/vnd.books.input.v1+json";
     public static final String APPLICATION_ADD_BOOK_IMAGE = "application/vnd.books.images.v1+json";
 }

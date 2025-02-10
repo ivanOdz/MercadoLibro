@@ -64,7 +64,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     private static final String PUBLICATIONS_GENERAL_ACCESS = "@accessControl.publicationsGeneralAccess(request)";
     private static final String USER_ACCESS = "@accessControl.userAccess(#id)";
     private static final String REVIEW_ACCESS = "@accessControl.reviewAccess(#id, #ur_id)";
-    private static final String REVIEW_LIST_ACCESS = "@accessControl.reviewListAccess(#id)";
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -193,13 +192,12 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/api/users/{id:\\d+}/reviews/{ur_id:\\d+}")
                     .access(REVIEW_ACCESS)
 
-                .antMatchers(HttpMethod.GET, "/api/users/{id:\\d+}/reviews")
-                    .access(REVIEW_LIST_ACCESS)
+//                .antMatchers(HttpMethod.GET, "/api/users/{id:\\d+}/reviews")
+//                    .access(REVIEW_LIST_ACCESS)
 
 
                 .antMatchers("/api/**").permitAll()
 
-//                 IMPLEMENT: Exceptions controller missing
 
         //
         // .antMatchers("api/users/test").authenticated()

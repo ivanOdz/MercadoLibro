@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.dto.output;
 
 import ar.edu.itba.paw.models.UserReview;
+import ar.edu.itba.paw.webapp.utils.UrnResolverUtil;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
@@ -84,5 +85,10 @@ public class ReviewDTO {
 
     public void setExchange(URI exchange) {
         this.exchange = exchange;
+    }
+
+    public Long getExchangeId() {
+        System.out.println("exchange returned:" + UrnResolverUtil.getExchangeId(exchange));
+        return UrnResolverUtil.getExchangeId(exchange);
     }
 }

@@ -158,7 +158,7 @@ public class UserController {
     @Consumes(value = {VndType.APPLICATION_USER_REVIEW})
     @PreAuthorize("@accessControl.createReviewAccess(#targetId, #reviewInputDTO)")
     public Response createReview(@PathParam("id") final Long targetId,
-                                 ReviewInputDTO reviewInputDTO) {
+                                 ReviewDTO reviewInputDTO) {
         UserReview ur = userReviewService.createUserReview(reviewInputDTO.getExchangeId(), targetId, reviewInputDTO.getDescription(), reviewInputDTO.getRating());
         return Response.created(uriInfo.getAbsolutePathBuilder().path(ur.getUserReviewId().toString()).build()).build();
     }
@@ -166,6 +166,7 @@ public class UserController {
     @GET
     @Path("{id}/reviews")
     @Produces(value = {VndType.APPLICATION_USER_REVIEW})
+    @PreAuthorize("@accessControl.reviewListAccess(#targetId)")
     public Response getReviews(@PathParam("id") final Long targetId, @QueryParam("page") int page){
         PaginatedResponse<UserReview, BasicMetadata> reviews = userReviewService.getReviewsEarnedByUserId(targetId, page);
         List<ReviewDTO> reviewDTOS = reviews.getData().stream().map(review -> ReviewDTO.fromUserReview(uriInfo, review)).toList();

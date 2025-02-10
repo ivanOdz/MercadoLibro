@@ -66,7 +66,7 @@
                                 </div>
                                 <div style="grid-column: 3;text-align: start;align-content: center;justify-items: center;">
                                     <p class="user-card-review" style="text-align: center;">Deja una reseña</p>
-                                    <i style="font-size: large;font-weight: lighter;cursor: pointer" class="pi pi-chevron-up icon-card-active" (click)="op.toggle($event)"></i>
+                                    <i style="font-size: large;font-weight: lighter;cursor: pointer" class="pi pi-chevron-up icon-card-active" (click)="toggleReviewContent($event, op)"></i>
                                 </div>
                             </div>
 
@@ -100,6 +100,10 @@
                                         {{ isRequester(selectedCompletedCard) ? selectedCompletedCard.requestedPub.book.model?.description :
                                         selectedCompletedCard.offeredPub.book.model?.description }}
                                     </p>
+                                </div>
+                                <div style="grid-column: 3;text-align: start;align-content: center;justify-items: center;">
+                                    <p class="user-card-review" style="text-align: center;">Deja una reseña</p>
+                                    <i style="font-size: large;font-weight: lighter;cursor: pointer" class="pi pi-chevron-up icon-card-active" (click)="toggleReviewContent($event,op)"></i>
                                 </div>
                             </div>
                         </div>
@@ -223,6 +227,6 @@
             <p style="margin: 0">Deja tu reseña</p>
             <p-rating [(ngModel)]="reviewValue" style="margin-bottom: 1rem;margin-top: 1rem" />
             <textarea pTextarea [(ngModel)]="reviewText"></textarea>
-            <p-button label="Enviar" (click)="confirmReview()" />
+            <p-button label="Enviar" (click)="addUserReview($event,op)" />
         </div>
 </p-popover>
