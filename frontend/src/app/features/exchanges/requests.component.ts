@@ -12,7 +12,7 @@ import {ExchangeService} from "../../core/services/exchange.service";
 import {UserService} from "../../core/services/user.service";
 import {PublicationService} from "../../core/services/publication.service";
 import {BookService} from "../../core/services/book.service";
-import {BookmodelService} from "../../core/services/bookmodel.service";
+import {BookModelService} from "../../core/services/bookmodel.service";
 import {AuthService} from "../../core/services/auth.service";
 import {Router} from "@angular/router";
 import {catchError, filter, forkJoin, Observable, of, switchMap} from "rxjs";
@@ -53,7 +53,7 @@ export class RequestsComponent  implements OnInit {
 
 
     constructor(private es: ExchangeService, private us: UserService, private ps: PublicationService,
-                private bs: BookService, private bms: BookmodelService, private as: AuthService,
+                private bs: BookService, private bms: BookModelService, private as: AuthService,
                 private router: Router) {}
 
     ngOnInit(): void {

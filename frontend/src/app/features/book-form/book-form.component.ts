@@ -5,7 +5,7 @@ import { CommonModule, Location } from '@angular/common';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { NavbarComponent } from "../../shared/components/navbar/navbar.component";
 import { BookModel } from "../../core/models/bookModel.model";
-import { BookmodelService } from "../../core/services/bookmodel.service";
+import { BookModelService } from "../../core/services/bookmodel.service";
 
 @Component({
 	
@@ -18,7 +18,7 @@ import { BookmodelService } from "../../core/services/bookmodel.service";
 export class BookFormComponent {
 	
 	url: string = "http://localhost:8080/api/book_models";
-	bookModelService: BookmodelService = inject(BookmodelService);
+	bookModelService: BookModelService = inject(BookModelService);
 	bookModelForm: FormGroup;
 	rating: number = 1;
 	imagePreview: string | ArrayBuffer | null = null;

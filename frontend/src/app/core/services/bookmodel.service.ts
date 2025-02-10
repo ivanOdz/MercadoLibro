@@ -4,7 +4,7 @@ import { Observable, tap } from "rxjs";
 import { BookModel } from "../models/bookModel.model";
 
 @Injectable({ providedIn: 'root' })
-export class BookmodelService {
+export class BookModelService {
 
     constructor(private http: HttpClient) {}
 
