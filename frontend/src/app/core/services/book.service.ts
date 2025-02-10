@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
-import {forkJoin, Observable, switchMap, tap} from "rxjs";
+import {catchError, forkJoin, Observable, switchMap, tap, throwError} from "rxjs";
 import {Publication} from "../models/publication.model";
 import {Book} from "../models/book.model";
 import {BookData2} from "../models/types";
@@ -83,13 +83,23 @@ export class BookService {
         );
     }
 
-    updateBookstate(bookUrl: string, state: string): Observable<Book> {
-        const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.books.v1+json' });
-        const body = { state };
 
-        return this.http.patch<Book>(`${bookUrl}`, body, { headers }).pipe(
-            //tap((r) => console.log("Respuesta de la API con books:", r))
+    updateBookstate(book: BookData2, newState: string): Observable<void> {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.books.v1+json' });
+        const body = { state: newState };
+
+        return this.http.patch<void>(`${book.self}`, body, { headers }).pipe(
+            tap(() => {
+                book.state = body.state; // Actualizo el estado del libro localmente para que refleje en la card.
+                //console.log('Libro actualizado localmente:', book);
+            }),
+            catchError((error) => {
+                if (error.status === 404) {
+                    console.log("Haciendo redirección a /404");
+                }
+                return throwError(() => new Error(error));
+            })
         );
-    }
+}
 
 }
