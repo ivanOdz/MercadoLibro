@@ -145,6 +145,21 @@ export class PublicationService {
         );
     }
 
+    // favoriteEndpoint -> publication.favoriteEndpoint
+    likePublication(publication: PublicationData2, userUrl: string): Observable<any> {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.users.v1+json'});
+
+        return this.http.post(`${publication.favoriteEndpoint}`, {user_id: userUrl}).pipe(
+            tap(() => console.log("Publicación marcada como favorita"))
+        );
+    }
+
+    unlikePublication(publication: PublicationData2): Observable<any> {
+        return this.http.delete<void>(`${publication.favoritePublication?.self}`).pipe(
+            tap(() => publication.favoritePublication = null) // Después de eliminar, asigna null
+        );
+    }
+
     setFavoritePublication(userUrl: string, publications: PublicationData2[]): Observable<any> {
         if (!userUrl || publications.length === 0) {
             return of();
