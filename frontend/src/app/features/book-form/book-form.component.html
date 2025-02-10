@@ -30,7 +30,7 @@
 				<select formControlName="genre" id="genre">
 					<option value="" disabled selected>{{ 'BOOK_FORM.SELECT_GENRE' | translate }}</option>
 					<option *ngFor="let genreValue of genres" [value]="genreValue">
-						{{ ('genre.' + genreValue) | translate}}
+						{{ ('genre.' + genreValue) | translate }}
 					</option>
 				</select>
 				
@@ -68,14 +68,14 @@
 				<label>{{ 'BOOK_FORM.LANGUAGE' | translate }}:</label>
 				<select formControlName="bookLanguage" id="bookLanguage">
 					<option *ngFor="let bookLanguageValue of languages" [value]="bookLanguageValue">
-						{{ ('LANGUAGES.' + (bookLanguageValue | uppercase)) | translate}}
+						{{ ('LANGUAGES.' + (bookLanguageValue | uppercase)) | translate }}
 					</option>
 				</select>
 				
 				<label>{{ 'BOOK_FORM.DIMENSIONS' | translate }}:</label>
 				<select formControlName="dimension" id="dimension">
 					<option *ngFor="let dimensionValue of dimensions" [value]="dimensionValue">
-						{{ ('dimension.' + dimensionValue) | translate}}
+						{{ ('dimension.' + dimensionValue) | translate }}
 					</option>
 				</select>
 				

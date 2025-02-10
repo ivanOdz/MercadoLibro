@@ -131,8 +131,12 @@
   "BOOK_HOME": {
   	"SEARCH": "Search in my books",
   	"TITLE": "My books",
-  	"RESULTS": "Total results: ",
-  	"NO_BOOKS": "No books founded"
+  	"RESULTS": "Total results",
+  	"NO_RESULTS": "No books founded",
+  	"ADD_BOOKS": "If you have a book that we don't have available, add one!",
+  	"ADD_BOOK_MODEL": "Create book",
+  	"NO_STATE_FILTER": "No state filter",
+  	"NO_GENRE_FILTER": "No genre filter"
   }
 
 }

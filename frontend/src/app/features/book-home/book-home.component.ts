@@ -39,11 +39,10 @@ export class BookHomeComponent implements OnInit, OnDestroy {
 	}
 
 	uploadBookModelUrl: string = "/books/add";
-	searchQuery: string = "";
 	conditionHeaders: Record<string, string> = {};
 	genreHeaders: Record<string, string> = {};
 	books: BookData2[] = [];
-
+	
 	showConditionFilter: boolean = true;
 	showGenreFilter: boolean = true;
 
@@ -59,7 +58,7 @@ export class BookHomeComponent implements OnInit, OnDestroy {
 		this.subscription = this.authService.loggedUser$.pipe(
 			filter(user => !!user),
 			switchMap((user) => {
-				this.currentFilters.user = user.self;
+				this.currentFilters.user = user!.self;
 
 				return this.route.queryParams.pipe(
 					tap((params) => {
@@ -111,10 +110,24 @@ export class BookHomeComponent implements OnInit, OnDestroy {
 	}
 
 	search() {
-		if (this.searchQuery) {
+		if (this.currentFilters.search) {
 //			this.router.navigate(['/publications'],
 //			{ queryParams: { search: this.searchQuery },
 //			queryParamsHandling: 'merge' });
 		}
+	}
+	
+	removeFilter(filterKey: keyof typeof this.currentFilters) {
+//			this.currentFilters[filterKey] = '';
+//			this.fetchBooks();
+console.log('Remove filter:', filterKey);
+	}
+	
+	fetchBooks() {
+		this.bookService.getMyBooks({ ...this.currentFilters }).subscribe((response) => {
+			this.books = response.body || [];
+			console.log('Books:', this.books);
+			this.processHeaders(response.headers);
+		});
 	}
 }
