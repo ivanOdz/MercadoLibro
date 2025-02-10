@@ -132,5 +132,15 @@
     "RETURN": "Regresar a publicaciones",
     "SOLICIT_BUTTON": "Lo quiero!"
 
+  },
+  "BOOK_HOME": {
+  	"SEARCH": "Buscar en mis libros",
+  	"TITLE": "Mis libros",
+  	"RESULTS": "Resultados totales",
+  	"NO_RESULTS": "No se ha encontrado ningún libro.",
+  	"ADD_BOOKS": "Si tienes un libro que no tenemos disponible, agrégalo!",
+  	"ADD_BOOK_MODEL": "Crear libro",
+  	"NO_STATE_FILTER": "Sin filtro de condición",
+  	"NO_GENRE_FILTER": "Sin filtro de género"
   }
 }
