@@ -125,7 +125,8 @@
     "INSERT_LOCATION": "Insert new location",
     "USERNAME_ALREADY_EXISTS": "This username is already taken",
     "UPDATE_ERROR": "Username cannot be updated",
-    "USERNAME_EMPTY": "Username cannot be empty"
+    "USERNAME_EMPTY": "Username cannot be empty",
+    "NO_REVIEWS": "Nobody left a review for you yet!"
   }
 
 }

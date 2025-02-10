@@ -49,6 +49,9 @@
             <h2>{{ 'PROFILE.REVIEWS' | translate }}</h2>
             <div class="review-section">
                 <app-review *ngFor="let review of reviews" [review]="review"></app-review>
+                <p *ngIf="!reviews || reviews.length === 0">
+                    {{ 'PROFILE.NO_REVIEWS' | translate }}
+                </p>
             </div>
         </div>
     </div>
