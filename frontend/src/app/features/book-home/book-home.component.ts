@@ -35,8 +35,9 @@ export class BookHomeComponent implements OnInit, OnDestroy {
 	constructor(private authService: AuthService,
 				private route: ActivatedRoute,
 				private bookModelService: BookModelService,
-				private bookService: BookService) {
-	}
+				private bookService: BookService,
+				private router: Router)
+	{ }
 
 	uploadBookModelUrl: string = "/books/add";
 	conditionHeaders: Record<string, string> = {};
@@ -73,7 +74,6 @@ export class BookHomeComponent implements OnInit, OnDestroy {
 					switchMap(() => this.bookService.getMyBooks({ ...this.currentFilters })),
 					tap((response) => {
 						this.books = response.body || [];
-						console.log('Books:', this.books);
 						this.processHeaders(response.headers);
 					})
 				);
@@ -118,15 +118,25 @@ export class BookHomeComponent implements OnInit, OnDestroy {
 	}
 	
 	removeFilter(filterKey: keyof typeof this.currentFilters) {
-//			this.currentFilters[filterKey] = '';
-//			this.fetchBooks();
-console.log('Remove filter:', filterKey);
+		if (filterKey === 'state') {
+			this.currentFilters.state = '';
+		}	
+		else if (filterKey === 'genre') {
+			this.currentFilters.genre = '';
+		}
+		
+		this.router.navigate([], {
+			relativeTo: this.route,
+			queryParams: { [filterKey]: null },
+			queryParamsHandling: 'merge',
+		});
+		
+		this.fetchBooks();
 	}
 	
 	fetchBooks() {
 		this.bookService.getMyBooks({ ...this.currentFilters }).subscribe((response) => {
 			this.books = response.body || [];
-			console.log('Books:', this.books);
 			this.processHeaders(response.headers);
 		});
 	}
