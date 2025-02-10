@@ -7,14 +7,14 @@ import {map} from "rxjs/operators";
 import {BookService} from "./book.service";
 import {UserService} from "./user.service";
 import {BookModel} from "../models/bookModel.model";
-import {BookmodelService} from "./bookmodel.service";
+import {BookModelService} from "./bookmodel.service";
 import {AuthService} from "./auth.service";
 
 @Injectable({ providedIn: 'root' })
 export class PublicationService {
     baseUrl = 'http://localhost:8080/api';
 
-    constructor(private http: HttpClient, private authService: AuthService, private bookService: BookService, private userService: UserService, private bookModelService: BookmodelService) {}
+    constructor(private http: HttpClient, private authService: AuthService, private bookService: BookService, private userService: UserService, private bookModelService: BookModelService) {}
 
     getPublications({ state, genre, page, search }: { state: string; genre: string; page: number; search: string }): Observable<HttpResponse<Publication[]>> {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.publications.v1+json' });
