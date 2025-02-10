@@ -11,6 +11,7 @@ import { NavbarComponent } from '../../../shared/components/navbar/navbar.compon
     RouterLink,
   ],
   styleUrls: ['./error.component.css'],
+  standalone: true
 })
 export class ErrorComponent {
   @Input() title: string = 'Error';
