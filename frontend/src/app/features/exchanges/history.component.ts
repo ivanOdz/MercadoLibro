@@ -141,7 +141,6 @@ export class HistoryComponent implements OnInit {
                                         book: {
                                             owner: offererUser,
                                             model: offererBookModel,
-                                            image: offererBook?.images?.[0] || null,
                                         },
                                         locations: offererLocations,
                                     },
@@ -149,7 +148,6 @@ export class HistoryComponent implements OnInit {
                                         book: {
                                             owner: requesterUser,
                                             model: requesterBookModel,
-                                            image: requesterBook?.images?.[0] || null,
                                         },
                                         locations: requesterLocations,
                                     },
@@ -202,11 +200,11 @@ export class HistoryComponent implements OnInit {
         this.selectedCompletedCard = card;
     }
 
-    get selectedUserRatingRejected() {
+    selectedUserRatingRejected() {
         return this.isRequester(this.selectedRejectedCard) ? this.selectedRejectedCard?.offeredPub?.book?.owner?.ratingAverage : this.selectedRejectedCard?.requestedPub?.book?.owner?.ratingAverage;
     }
 
-    get selectedUserRatingCompleted() {
+    selectedUserRatingCompleted() {
         return this.isRequester(this.selectedCompletedCard) ? this.selectedCompletedCard?.offeredPub?.book?.owner?.ratingAverage : this.selectedCompletedCard?.requestedPub?.book?.owner?.ratingAverage;
     }
 
@@ -219,9 +217,7 @@ export class HistoryComponent implements OnInit {
     }
 
     getBookImage(book: BookData) {
-        return this.loggedUser === book.owner ?
-            (book.image || 'assets/book.jpg') :
-            (book.image || 'assets/book.jpg');
+        return book.model?.coverUri || 'assets/book.jpg';
     }
 
     reviewText: string = '';

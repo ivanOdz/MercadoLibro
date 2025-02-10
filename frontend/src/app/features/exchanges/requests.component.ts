@@ -137,7 +137,6 @@ export class RequestsComponent  implements OnInit {
                                         book: {
                                             owner: offererUser,
                                             model: offererBookModel,
-                                            image: offererBook?.images?.[0] || null,
                                         },
                                         locations: offererLocations,
                                     },
@@ -145,7 +144,6 @@ export class RequestsComponent  implements OnInit {
                                         book: {
                                             owner: requesterUser,
                                             model: requesterBookModel,
-                                            image: requesterBook?.images?.[0] || null,
                                         },
                                         locations: requesterLocations,
                                     },
@@ -218,11 +216,11 @@ export class RequestsComponent  implements OnInit {
         this.selectedOffersCard = card;
     }
 
-    get selectedUserRatingRequested() {
+    selectedUserRatingRequested() {
         return this.isRequester(this.selectedRequestsCard) ? this.selectedRequestsCard?.offeredPub?.book?.owner?.ratingAverage : this.selectedRequestsCard?.requestedPub?.book?.owner?.ratingAverage;
     }
 
-    get selectedUserRatingOffered() {
+    selectedUserRatingOffered() {
         return this.isRequester(this.selectedOffersCard) ? this.selectedOffersCard?.offeredPub?.book?.owner?.ratingAverage : this.selectedOffersCard?.requestedPub?.book?.owner?.ratingAverage;
     }
 
@@ -235,9 +233,7 @@ export class RequestsComponent  implements OnInit {
     }
 
     getBookImage(book: BookData) {
-        return this.loggedUser === book.owner ?
-            (book.image || 'assets/book.jpg') :
-            (book.image || 'assets/book.jpg');
+        return book.model?.coverUri || 'assets/book.jpg';
     }
 
     /*** Dialogs ***/

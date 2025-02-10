@@ -34,7 +34,7 @@
                                         </div>
                                         <i class="pi pi-arrow-right-arrow-left icon-card-active"></i>
                                         <div class="active-card-first-column-book-second">
-                                            <img [src]="!isRequester(card) ? getBookImage(card.requestedPub.book) : getBookImage(card.offeredPub.book)" alt="Book Image" class="book-image" fill/>
+                                            <img [src]="!isRequester(card) ? getBookImage(card.requestedPub.book) : getBookImage(card.offeredPub.book)" alt="Book Image" class="book-image"/>
                                             <p style="margin-bottom: 0">
                                                 {{ !isRequester(card) ? card.requestedPub.book.model?.title : card.offeredPub.book.model?.title }}
                                             </p>
@@ -69,7 +69,9 @@
                             <p class="static-section-headers">El libro</p>
                             <div class="static-card book-theirs-card " id="book-theirs-card-offers">
                                 <div style="grid-column: 1;justify-items: center;">
-                                    <div class="book-image-static"></div>
+                                    <img [src]="isRequester(selectedOffersCard)? getBookImage(selectedOffersCard.offeredPub.book) : getBookImage(selectedOffersCard.requestedPub.book)"
+                                         alt="Book Image"
+                                         class="book-image-static"/>
                                 </div>
                                 <div style="grid-column: 2; text-align: start;">
                                     <p class="book-card-title">{{ isRequester(selectedOffersCard) ? selectedOffersCard.offeredPub.book.model?.title :
@@ -85,7 +87,9 @@
                             <p class="static-section-headers">Por tu libro</p>
                             <div class="static-card book-theirs-card " id="book-yours-card-offers">
                                 <div style="grid-column: 1;justify-items: center;">
-                                    <div class="book-image-static"></div>
+                                    <img [src]="!isRequester(selectedOffersCard)? getBookImage(selectedOffersCard.offeredPub.book) : getBookImage(selectedOffersCard.requestedPub.book)"
+                                         alt="Book Image"
+                                         class="book-image-static"/>
                                 </div>
                                 <div style="grid-column: 2; text-align: start;">
                                     <p class="book-card-title">{{ isRequester(selectedOffersCard) ? selectedOffersCard.requestedPub.book.model?.title :
@@ -134,7 +138,7 @@
                                         </div>
                                         <i class="pi pi-arrow-right-arrow-left icon-card-active"></i>
                                         <div class="active-card-first-column-book-second">
-                                            <img [src]="!isRequester(card) ? getBookImage(card.requestedPub.book) : getBookImage(card.offeredPub.book)" alt="Book Image" class="book-image" fill/>
+                                            <img [src]="!isRequester(card) ? getBookImage(card.requestedPub.book) : getBookImage(card.offeredPub.book)" alt="Book Image" class="book-image"/>
                                             <p style="margin-bottom: 0">
                                                 {{ !isRequester(card) ? card.requestedPub.book.model?.title : card.offeredPub.book.model?.title }}
                                             </p>
@@ -168,7 +172,9 @@
                             <p class="static-section-headers">El libro</p>
                             <div class="static-card book-theirs-card " id="book-theirs-card-requests">
                                 <div style="grid-column: 1;justify-items: center;">
-                                    <div class="book-image-static"></div>
+                                    <img [src]="isRequester(selectedRequestsCard)? getBookImage(selectedRequestsCard.offeredPub.book) : getBookImage(selectedRequestsCard.requestedPub.book)"
+                                         alt="Book Image"
+                                         class="book-image-static"/>
                                 </div>
                                 <div style="grid-column: 2; text-align: start;">
                                     <p class="book-card-title">{{ isRequester(selectedRequestsCard) ? selectedRequestsCard.offeredPub.book.model?.title :
@@ -184,7 +190,9 @@
                             <p class="static-section-headers">Por tu libro</p>
                             <div class="static-card book-theirs-card " id="book-yours-card-requests">
                                 <div style="grid-column: 1;justify-items: center;">
-                                    <div class="book-image-static"></div>
+                                    <img [src]="!isRequester(selectedRequestsCard)? getBookImage(selectedRequestsCard.offeredPub.book) : getBookImage(selectedRequestsCard.requestedPub.book)"
+                                         alt="Book Image"
+                                         class="book-image-static"/>
                                 </div>
                                 <div style="grid-column: 2; text-align: start;">
                                     <p class="book-card-title">{{ isRequester(selectedRequestsCard) ? selectedRequestsCard.requestedPub.book.model?.title :

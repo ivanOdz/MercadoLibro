@@ -18,21 +18,14 @@ import {catchError, filter, forkJoin, of, switchMap, tap} from "rxjs";
 import {User} from "../../core/models/user.model";
 import {AuthService} from "../../core/services/auth.service";
 import {Router} from "@angular/router";
-import {BookModel} from "../../core/models/bookModel.model";
 import {PublicationService} from "../../core/services/publication.service";
 import {BookModelService} from "../../core/services/bookmodel.service";
 import {BookService} from "../../core/services/book.service";
-import {Location} from "../../core/models/location.model";
 import {map} from "rxjs/operators";
 import {environment} from "../../../environments/environment";
 import {ProgressSpinner} from "primeng/progressspinner";
 import { ConfirmationService } from 'primeng/api';
-import {Message} from "../../core/models/message.model";
-
-
-export type ExchangeData = {exchange: Exchange, offeredPub: PublicationData, requestedPub: PublicationData, messages: Message[]};
-export type PublicationData = {book: BookData, locations: Location[]};
-export type BookData = {owner: User | null, image: string | null, model: BookModel | null};
+import {BookData, ExchangeData} from "../../core/models/types";
 
 @Component({
     selector: 'app-exchanges',
@@ -128,7 +121,6 @@ export class ExchangesComponent implements OnInit {
                                                 book: {
                                                     owner: offererUser,
                                                     model: offererBookModel,
-                                                    image: offererBook?.images?.[0] || null,
                                                 },
                                                 locations: offererLocations,
                                             },
@@ -136,7 +128,6 @@ export class ExchangesComponent implements OnInit {
                                                 book: {
                                                     owner: requesterUser,
                                                     model: requesterBookModel,
-                                                    image: requesterBook?.images?.[0] || null,
                                                 },
                                                 locations: requesterLocations,
                                             },
@@ -213,7 +204,7 @@ export class ExchangesComponent implements OnInit {
         this.selectedCard = cardText;
     }
 
-    get selectedUserRating() {
+    selectedUserRating() {
         return this.isRequester(this.selectedCard) ? this.selectedCard?.offeredPub?.book?.owner?.ratingAverage : this.selectedCard?.requestedPub?.book?.owner?.ratingAverage;
     }
 
@@ -226,9 +217,7 @@ export class ExchangesComponent implements OnInit {
     }
 
     getBookImage(book: BookData) {
-        return this.loggedUser === book.owner ?
-            (book.image || 'assets/book.jpg') :
-            (book.image || 'assets/book.jpg');
+        return book.model?.coverUri || 'assets/book.jpg';
     }
 
     addMessage(newMessage: any) {
