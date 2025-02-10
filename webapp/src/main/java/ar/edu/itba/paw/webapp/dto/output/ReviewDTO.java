@@ -5,11 +5,11 @@ import ar.edu.itba.paw.webapp.utils.UrnResolverUtil;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
-import java.sql.Timestamp;
+import java.util.Date;
 
 public class ReviewDTO {
     private String description;
-    private Timestamp reviewDate;
+    private Date reviewDate;
     private int rating;
 
     private URI self;
@@ -20,7 +20,7 @@ public class ReviewDTO {
     static public ReviewDTO fromUserReview(UriInfo uriInfo, UserReview review){
         ReviewDTO dto = new ReviewDTO();
         dto.description = review.getReviewDescription();
-        dto.reviewDate = review.getReviewDate();
+        dto.reviewDate = review.getReviewDate() != null ? new Date(review.getReviewDate().getTime()) : null;
         dto.rating = review.getReviewRating();
 
         dto.reviewer = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(review.getReviewer().getUserId())).build();
@@ -39,11 +39,11 @@ public class ReviewDTO {
         this.description = description;
     }
 
-    public Timestamp getReviewDate() {
+    public Date getReviewDate() {
         return reviewDate;
     }
 
-    public void setReviewDate(Timestamp reviewDate) {
+    public void setReviewDate(Date reviewDate) {
         this.reviewDate = reviewDate;
     }
 
