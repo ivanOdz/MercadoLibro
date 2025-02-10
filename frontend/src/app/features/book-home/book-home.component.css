@@ -29,7 +29,7 @@
 .filter-badge {
 	background-color: #F8F4E9;
 	color: black;
-	border: 1px solid black;
+	border: 1px solid rgba(235, 130, 55, 1);
 	border-radius: 50px;
 	padding: 12px 20px;
 	font-size: 14px;
@@ -80,23 +80,20 @@
 	padding-left: 4px;
 }
 
-.book-grid {
+.books-grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+	align-self: center;
+	grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
 	gap: 16px;
 	padding: 16px;
-}
-
-.book-list {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 20px;
-	justify-content: center;
 	width: 100%;
+	margin: auto;
+	justify-items: center;
 }
 
 .book-card {
-	width: 260px;
+	width: 100%;
+	max-width: 260px;
 	background: white;
 	border-radius: 12px;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

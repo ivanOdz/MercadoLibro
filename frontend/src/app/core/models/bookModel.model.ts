@@ -20,7 +20,7 @@ export class BookModel {
 	
 	constructor(data: any) {
 		this.isbn = data.isbn;
-		this.title = data.tittle;
+		this.title = data.title;
 		this.editorial = data.editorial;
 		this.description = data.description;
 		this.genre = data.genre;
