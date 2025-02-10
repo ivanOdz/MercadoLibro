@@ -8,13 +8,15 @@ import {take} from "rxjs/operators";
 import {FilterListComponent} from "../../shared/components/filter-list/filter-list.component";
 import {NavbarComponent} from "../../shared/components/navbar/navbar.component";
 import {SortComponent} from "../../shared/components/sort/sort.component";
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-my-publications',
     imports: [
         FilterListComponent,
         NavbarComponent,
-        SortComponent
+        SortComponent,
+        NgIf
     ],
   templateUrl: './my-publications.component.html',
   standalone: true,
@@ -25,7 +27,10 @@ export class MyPublicationsComponent implements OnInit, OnDestroy {
   conditionHeaders: Record<string, string> = {};
   genreHeaders: Record<string, string> = {};
 
-  private subscription!: Subscription;
+    showConditionFilter: boolean = true;
+    showGenreFilter: boolean = true;
+
+    private subscription!: Subscription;
 
   publications: PublicationData2[] = [];
 
@@ -55,6 +60,9 @@ export class MyPublicationsComponent implements OnInit, OnDestroy {
                 this.currentFilters.genre = params['genre'] || '';
                 this.currentFilters.page = params['page'] || 0;
                 this.currentFilters.search = params['search'] || '';
+
+                  this.showConditionFilter = !params['state'];
+                  this.showGenreFilter = !params['genre'];
               }),
               switchMap(() => this.publicationService.getMyPublications({ ...this.currentFilters })),
               tap((response) => {

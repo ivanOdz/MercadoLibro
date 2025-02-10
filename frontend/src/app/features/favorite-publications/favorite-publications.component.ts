@@ -8,43 +8,49 @@ import {take} from "rxjs/operators";
 import {FilterListComponent} from "../../shared/components/filter-list/filter-list.component";
 import {NavbarComponent} from "../../shared/components/navbar/navbar.component";
 import {SortComponent} from "../../shared/components/sort/sort.component";
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-favorite-publications',
-  imports: [
-    FilterListComponent,
-    NavbarComponent,
-    SortComponent
-  ],
+    imports: [
+        FilterListComponent,
+        NavbarComponent,
+        SortComponent,
+        NgIf
+    ],
   templateUrl: './favorite-publications.component.html',
   standalone: true,
   styleUrl: './favorite-publications.component.css'
 })
 export class FavoritePublicationsComponent implements OnInit {
 
+    conditionHeaders: Record<string, string> = {};
+    genreHeaders: Record<string, string> = {};
 
-  conditionHeaders: Record<string, string> = {};
-  genreHeaders: Record<string, string> = {};
 
-  private subscription!: Subscription;
+    showConditionFilter: boolean = true;
+    showGenreFilter: boolean = true;
 
-  publications: PublicationData2[] = [];
 
-  currentFilters = {
+    private subscription!: Subscription;
+
+    publications: PublicationData2[] = [];
+
+    currentFilters = {
     state: '',
     genre: '',
     page: 0,
     search: '',
     user: ''
-  };
+    };
 
-  constructor(
-      private publicationService: PublicationService,
-      private authService: AuthService,
-      private route: ActivatedRoute,
-  ) {}
+    constructor(
+        private publicationService: PublicationService,
+        private authService: AuthService,
+        private route: ActivatedRoute,
+    ) {}
 
-  ngOnInit() {
+    ngOnInit() {
     this.subscription = this.authService.loggedUser$.pipe(
         filter(user => !!user),
         switchMap((user) => {
@@ -56,6 +62,10 @@ export class FavoritePublicationsComponent implements OnInit {
                 this.currentFilters.genre = params['genre'] || '';
                 this.currentFilters.page = params['page'] || 0;
                 this.currentFilters.search = params['search'] || '';
+
+                  this.showConditionFilter = !params['state'];
+                  this.showGenreFilter = !params['genre'];
+
               }),
               switchMap(() => this.publicationService.getFavoritePublications({ ...this.currentFilters })),
               tap((response) => {
@@ -81,7 +91,7 @@ export class FavoritePublicationsComponent implements OnInit {
         console.error('Error:', err);
       }
     });
-  }
+    }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();

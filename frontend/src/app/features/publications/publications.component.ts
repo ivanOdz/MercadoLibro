@@ -8,6 +8,7 @@ import { SortComponent } from "../../shared/components/sort/sort.component";
 import {combineLatest, distinctUntilChanged, filter, of, startWith, Subscription, switchMap, tap} from "rxjs";
 import {PublicationData2} from "../../core/models/types";
 import {map, take} from "rxjs/operators";
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-publications',
@@ -16,7 +17,8 @@ import {map, take} from "rxjs/operators";
   imports: [
     NavbarComponent,
     FilterListComponent,
-    SortComponent
+    SortComponent,
+    NgIf
   ],
   styleUrls: ['./publications.component.css']
 })
@@ -36,6 +38,9 @@ export class PublicationsComponent implements OnInit, OnDestroy {
     search: ''
   };
 
+  showConditionFilter: boolean = true;
+  showGenreFilter: boolean = true;
+
   constructor(
       private publicationService: PublicationService,
       private authService: AuthService,
@@ -49,6 +54,10 @@ export class PublicationsComponent implements OnInit, OnDestroy {
           this.currentFilters.genre = params['genre'] || '';
           this.currentFilters.page = params['page'] || 0;
           this.currentFilters.search = params['search'] || '';
+
+          this.showConditionFilter = !params['state'];
+          this.showGenreFilter = !params['genre'];
+
         }),
         switchMap(() => this.publicationService.getGeneralPublications(this.currentFilters)),
         tap((response) => {

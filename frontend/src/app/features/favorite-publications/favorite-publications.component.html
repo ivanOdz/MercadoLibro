@@ -1,10 +1,14 @@
 <app-navbar></app-navbar>
 <app-filter-list
         [headers]="conditionHeaders"
-        filterType="Condition">
+        filterType="Condition"
+        *ngIf="showConditionFilter">
+
 </app-filter-list>
 
 <app-filter-list
         [headers]="genreHeaders"
-        filterType="Genre">
+        filterType="Genre"
+        *ngIf="showGenreFilter">
 </app-filter-list>
+<app-sort></app-sort>

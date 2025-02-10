@@ -31,7 +31,10 @@ export class BookHomeComponent implements OnInit, OnDestroy {
 	conditionHeaders: Record<string, string> = {};
 	genreHeaders: Record<string, string> = {};
 	books: BookData2[] = [];
-	
+
+	showConditionFilter: boolean = true;
+	showGenreFilter: boolean = true;
+
 	currentFilters = {
 		state: '',
 		genre: '',
@@ -52,6 +55,9 @@ export class BookHomeComponent implements OnInit, OnDestroy {
 						this.currentFilters.genre = params['genre'] || '';
 						this.currentFilters.page = params['page'] || 0;
 						this.currentFilters.search = params['search'] || '';
+
+						this.showConditionFilter = !params['state'];
+						this.showGenreFilter = !params['genre'];
 					}),
 					switchMap(() => this.bookService.getMyBooks({ ...this.currentFilters })),
 					tap((response) => {
