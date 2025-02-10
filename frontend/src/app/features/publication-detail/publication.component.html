@@ -2,12 +2,19 @@
 <div class="container">
     <div class="publication-detail-main-section">
         <div class="publication-detail-header">
-            <p>{{ 'PUBLICATION_D.RETURN' | translate }}</p>
+            <div class="return-button" (click)="goToPublications()">
+                <i class="pi pi-arrow-left return-icon"></i>
+                <p style="margin:0">{{ 'PUBLICATION_D.RETURN' | translate }}</p>
+            </div>
         </div>
         <div class="publication-detail-card-section">
             <div class="publication-detail-card book-card">
                 <div style="grid-column: 1; justify-items: center;">
-                    <div class="book-image"></div>
+                    <p-carousel [value]="bookImages" [numVisible]="1" [numScroll]="1" [circular]="true" autoplayInterval="3000">
+                        <ng-template let-item pTemplate="item">
+                            <img class="book-image" [src]="item" alt="Book Image" />
+                        </ng-template>
+                    </p-carousel>
                 </div>
                 <div style="grid-column: 2">
                     <p class="book-title">Title</p>

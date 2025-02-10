@@ -33,11 +33,13 @@
 
 .book-details-card {
     height: 15vh;
+    grid-template-columns: auto 10% 10% 10% 10%;
+    gap: 3%;
 }
 
 .book-card {
     height: 57vh;
-    grid-template-columns: 24% 45%;
+    grid-template-columns: 32% 45%;
     gap: 5%;
 }
 
@@ -88,4 +90,35 @@
     background-color: #8c7b5f;
     box-shadow: 4px 6px 6px #0000001a;
     border: none;
+}
+
+
+:host ::ng-deep .p-carousel-viewport  {
+    text-align: center;
+}
+
+:host ::ng-deep .p-carousel-item {
+    align-self: center;
+}
+:host ::ng-deep .p-carousel-indicator-active .p-carousel-indicator-button {
+    background: #aca28c;
+}
+
+.return-button {
+    width: 17%;
+    flex-direction: row;
+    display: flex;
+    border-radius: 1rem;
+    padding: 1rem;
+    gap: 9%;
+    cursor: pointer;
+}
+
+.return-button:hover {
+    background: #aca28c29;
+    font-weight: bold;
+}
+
+.return-icon {
+    font-size: medium;
 }
