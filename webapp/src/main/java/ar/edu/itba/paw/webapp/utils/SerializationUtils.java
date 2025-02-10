@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.utils.GenreWrapper;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import ar.edu.itba.paw.models.utils.pagination.Metadata;
 
+import javax.ws.rs.core.UriInfo;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,11 +34,29 @@ public class SerializationUtils {
         return headers;
     }
 
-    public static <P extends Metadata> Map<String, String> serializePaginationHeaders(P metadata) {
+    public static <P extends Metadata> Map<String, String> serializePaginationHeaders(P metadata, String baseUrl) {
         Map<String, String> headers = new HashMap<>();
-        headers.put("X-Total-Count", String.valueOf(metadata.getTotalResults()));
-        headers.put("X-Total-Pages", String.valueOf(metadata.getMaxPage()));
-        headers.put("X-Current-Page", String.valueOf(metadata.getCurrentPage()));
+
+        int currentPage = metadata.getCurrentPage();
+        int maxPage = metadata.getMaxPage();
+
+        StringBuilder linkHeader = new StringBuilder();
+
+        if (currentPage > 1) {
+            linkHeader.append("<").append(baseUrl).append("?page=1>; rel=\"first\", ");
+            linkHeader.append("<").append(baseUrl).append("?page=").append(currentPage - 1).append(">; rel=\"prev\", ");
+        }
+
+        if (currentPage < maxPage) {
+            linkHeader.append("<").append(baseUrl).append("?page=").append(currentPage + 1).append(">; rel=\"next\", ");
+            linkHeader.append("<").append(baseUrl).append("?page=").append(maxPage).append(">; rel=\"last\"");
+        }
+
+        if (!linkHeader.isEmpty()) {
+            headers.put("link", linkHeader.toString());
+        }
+
         return headers;
     }
+
 }

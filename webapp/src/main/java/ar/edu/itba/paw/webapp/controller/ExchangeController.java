@@ -45,7 +45,7 @@ public class ExchangeController {
 
         List<ExchangeDTO> exchangeDTOS = exchanges.getData().stream().map(exchange -> ExchangeDTO.fromExchange(uriInfo, exchange)).toList();
 
-        Map<String, String> paginationHeaders = SerializationUtils.serializePaginationHeaders(exchanges.getMetadata());
+        Map<String, String> paginationHeaders = SerializationUtils.serializePaginationHeaders(exchanges.getMetadata(), uriInfo.getBaseUri().getPath());
 
         Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ExchangeDTO>>(exchangeDTOS) {});
         paginationHeaders.forEach(response::header);
