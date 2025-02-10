@@ -61,7 +61,6 @@ public class BookController {
         return PageResponseUtil.getResponse(currentPage, paginated.getMetadata().getMaxPage(), uriInfo, response);
     }
 
-    // IMPLEMENT
     @GET
     @Path("/{id}")
     @Produces(value = {VndType.APPLICATION_BOOK})
