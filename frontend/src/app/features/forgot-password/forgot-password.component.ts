@@ -4,6 +4,7 @@ import {InputText} from "primeng/inputtext";
 import {ButtonDirective} from "primeng/button";
 import {UserService} from "../../core/services/user.service";
 import {NgIf} from "@angular/common";
+import {LanguageService} from "../../core/services/language.service";
 
 @Component({
   selector: 'app-forgot-password',
@@ -23,7 +24,9 @@ export class ForgotPasswordComponent {
   showConfirmation: boolean = false;
   showForm: boolean = true;
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService,
+              private languageService: LanguageService // DO NOT DELETE! Translation would not work otherwise
+  ) {}
 
   sendRecoveryCode() {
     this.userService.changePasswordRequest(this.email).subscribe({

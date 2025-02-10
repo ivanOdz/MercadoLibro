@@ -7,6 +7,7 @@ import {Button} from "primeng/button";
 import {Message} from "primeng/message";
 import {PrimeTemplate} from "primeng/api";
 import {NgIf} from "@angular/common";
+import {LanguageService} from "../../core/services/language.service";
 
 @Component({
   selector: 'app-verify',
@@ -33,7 +34,8 @@ export class VerifyComponent implements OnInit {
   constructor(
       private route: ActivatedRoute,
       private userService: UserService,
-      private router: Router
+      private router: Router,
+      private languageService: LanguageService // DO NOT DELETE! Translation would not work otherwise
   ) {}
 
   ngOnInit(): void {

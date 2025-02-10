@@ -7,6 +7,7 @@ import {Password} from "primeng/password";
 import {AuthService} from "../../core/services/auth.service";
 import {UserService} from "../../core/services/user.service";
 import {NgIf} from "@angular/common";
+import {LanguageService} from "../../core/services/language.service";
 
 @Component({
   selector: 'app-register',
@@ -30,7 +31,9 @@ export class RegisterComponent {
   repeatPassword: string = '';
   isRegistered = false;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService,
+              private languageService: LanguageService // DO NOT DELETE! Translation would not work otherwise
+  ) {}
 
   register() {
     this.authService.register(this.email, this.username, this.password).subscribe({
