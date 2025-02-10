@@ -13,6 +13,8 @@ import {ForgotPasswordComponent} from "./features/forgot-password/forgot-passwor
 import {BookFormComponent} from "./features/book-form/book-form.component";
 import { NotFoundComponent } from './features/errors/not-found/not-found.component';
 import { BookHomeComponent } from './features/book-home/book-home.component';
+import {MyPublicationsComponent} from "./features/my-publications/my-publications.component";
+import {FavoritePublicationsComponent} from "./features/favorite-publications/favorite-publications.component";
 
 export const routes: Routes = [
   {path: '', redirectTo: 'publications', pathMatch: 'full'},
@@ -20,6 +22,18 @@ export const routes: Routes = [
     path: 'publications',
     component: PublicationsComponent,
     title: 'Home',
+  },
+  {
+    path: 'publications/mine',
+    component: MyPublicationsComponent,
+    title: 'My Publications',
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'publications/favorites',
+    component: FavoritePublicationsComponent,
+    title: 'Favorites',
+    canActivate: [AuthGuard],
   },
   {
     path: 'profile',
@@ -80,7 +94,7 @@ export const routes: Routes = [
     path: 'my-books',
     component: BookHomeComponent,
     title: 'Books',
-    /*canActivate: [AuthGuard],*/
+    canActivate: [AuthGuard],
   },
   //Error Pages
   {

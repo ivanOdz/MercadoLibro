@@ -3,8 +3,8 @@
 <div class="book-home">
 
 	<div class="column-filters">
-		<app-filter-list [headers]="conditionHeaders" filterType="Condition"></app-filter-list>
-		<app-filter-list [headers]="genreHeaders" filterType="Genre"></app-filter-list>
+		<app-filter-list *ngIf="showConditionFilter" [headers]="conditionHeaders" filterType="Condition"></app-filter-list>
+		<app-filter-list *ngIf="showGenreFilter" [headers]="genreHeaders" filterType="Genre"></app-filter-list>
 	</div>
 	
 	<div class="column-content">

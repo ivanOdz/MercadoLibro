@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
-import {catchError, forkJoin, Observable, of, switchMap, tap, throwError} from "rxjs";
+import {catchError, firstValueFrom, forkJoin, Observable, of, switchMap, tap, throwError} from "rxjs";
 import {Publication} from "../models/publication.model";
 import {BookData2, FavoritePublication, PublicationData, PublicationData2} from "../models/types";
 import {map} from "rxjs/operators";
@@ -9,6 +9,7 @@ import {UserService} from "./user.service";
 import {BookModel} from "../models/bookModel.model";
 import {BookModelService} from "./bookmodel.service";
 import {AuthService} from "./auth.service";
+import {User} from "../models/user.model";
 
 @Injectable({ providedIn: 'root' })
 export class PublicationService {
@@ -16,7 +17,7 @@ export class PublicationService {
 
     constructor(private http: HttpClient, private authService: AuthService, private bookService: BookService, private userService: UserService, private bookModelService: BookModelService) {}
 
-    getPublications({ state, genre, page, search }: { state: string; genre: string; page: number; search: string }): Observable<HttpResponse<Publication[]>> {
+    private getPublications({ state, genre, page, search, favorites, user }: { state: string; genre: string; page: number; search: string; favorites: boolean; user: string | null}): Observable<HttpResponse<Publication[]>> {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.publications.v1+json' });
 
         let queryParams = '';
@@ -33,6 +34,16 @@ export class PublicationService {
         if (genre) {
             if (queryParams) queryParams += '&';
             queryParams += `genre=${genre}`;
+        }
+
+        if(favorites){
+            if(queryParams) queryParams += '&';
+            queryParams += `favorites=true`;
+        }
+
+        if(user){
+            if (queryParams) queryParams += '&';
+            queryParams += `user_id=${user}`;
         }
 
         if (page !== undefined && page !== null) {
@@ -77,18 +88,22 @@ export class PublicationService {
         );
     }
 
-    getPublicationsWithDetails({
-                                   state,
-                                   genre,
-                                   page,
-                                   search
-                               }: {
-        state: string;
-        genre: string;
-        page: number;
-        search: string;
-    }): Observable<HttpResponse<PublicationData2[]>> {
-        return this.getPublications({state, genre, page, search}).pipe(
+    getGeneralPublications({state, genre, page, search}: {state: string; genre: string; page: number; search: string;}): Observable<HttpResponse<PublicationData2[]>> {
+        return this.getPublicationsWithDetails({state, genre, page, search, favorites: false, user: null});
+    }
+
+    getMyPublications({state, genre, page, search, user}: {state: string; genre: string; page: number; search: string; user: string}): Observable<HttpResponse<PublicationData2[]>> {
+        const userId = user.split("/").pop();
+        return this.getPublicationsWithDetails({state, genre, page, search, favorites: false, user: userId!});
+    }
+
+    getFavoritePublications({state, genre, page, search, user}: {state: string; genre: string; page: number; search: string; user: string}): Observable<HttpResponse<PublicationData2[]>> {
+        const userId = user.split("/").pop();
+        return this.getPublicationsWithDetails({state, genre, page, search, favorites: true, user: userId!});
+    }
+
+    private getPublicationsWithDetails({state, genre, page, search, favorites, user}: {state: string; genre: string; page: number; search: string; favorites: boolean; user: string | null}): Observable<HttpResponse<PublicationData2[]>> {
+        return this.getPublications({state, genre, page, search, favorites, user}).pipe(
             switchMap((response) => {
                 const publications = response.body || [];
 
@@ -118,15 +133,35 @@ export class PublicationService {
                     )
                 );
                 return forkJoin(detailsRequests).pipe(
-                    map((publicationData: PublicationData2[]) =>
-                        new HttpResponse<PublicationData2[]>({
+                    map((publicationData: PublicationData2[]) =>{
+                        console.log("Publicaciones con detalles:", publicationData);
+                        return new HttpResponse<PublicationData2[]>({
                             body: publicationData,
                             headers: response.headers
                         })
-                    )
+                    })
                 );
             })
         );
+    }
+
+    // favoriteEndpoint -> publication.favoriteEndpoint
+    likePublication(publication: PublicationData2, userUrl: string): Observable<any> {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.users.v1+json'});
+
+        return this.http.post(`${publication.favoriteEndpoint}`, {user_id: userUrl}).pipe(
+            tap(() => console.log("Publicación marcada como favorita"))
+        );
+    }
+
+    unlikePublication(publication: PublicationData2): Observable<any> {
+        return this.http.delete<void>(`${publication.favoritePublication?.self}`).pipe(
+            tap(() => publication.favoritePublication = null) // Después de eliminar, asigna null
+        );
+    }
+
+    deleteMyPublication(publicationSelfUrn: string){
+        return this.http.delete<void>(publicationSelfUrn);
     }
 
     setFavoritePublication(userUrl: string, publications: PublicationData2[]): Observable<any> {

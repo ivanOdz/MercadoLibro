@@ -83,7 +83,20 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         configuration.setAllowedOrigins(Collections.singletonList(ALL));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "HEAD"));
         configuration.addAllowedHeader(ALL);
-        configuration.setExposedHeaders(Arrays.asList("Authorization", "Link", "Location", "ETag", "Total-Elements"));
+        configuration.setExposedHeaders(Arrays.asList(// "ETag", "Total-Elements",
+        	    "Authorization", "Link", "Location", "X-Access-Token", "X-Refresh-Token", "X-User-URI",
+        	    "X-Total-Count", "X-Total-Pages", "X-Current-Page",
+        	    "x-genre-fiction", "x-genre-non-fiction", "x-genre-mystery", "x-genre-thriller",
+        	    "x-genre-science-fiction", "x-genre-fantasy", "x-genre-romance", "x-genre-historical-fiction",
+        	    "x-genre-horror", "x-genre-biography", "x-genre-autobiography", "x-genre-memoir",
+        	    "x-genre-young-adult", "x-genre-childrens-literature", "x-genre-graphic-novel",
+        	    "x-genre-classic", "x-genre-adventure", "x-genre-dystopian", "x-genre-self-help",
+        	    "x-genre-poetry", "x-genre-literary-fiction", "x-genre-crime", "x-genre-western",
+        	    "x-genre-contemporary", "x-genre-religious-spiritual", "x-genre-philosophy", "x-genre-science",
+        	    "x-genre-travel", "x-genre-true-crime", "x-genre-historical-non-fiction", "x-genre-other",
+        	    "x-bookstate-new", "x-bookstate-like-new", "x-bookstate-good", "x-bookstate-acceptable", "x-bookstate-worn"
+        	));
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
@@ -116,9 +129,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/books")
                     .authenticated()
 
-                .antMatchers(HttpMethod.PATCH, "/api/books/{id:\\d+}")
-                    .authenticated()
-
                 .antMatchers(HttpMethod.GET,"/api/books")
                     .access(BOOKS_ACCESS)
 
@@ -126,7 +136,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                  * Book Model controller
                  */
 
-                .antMatchers("/api/book_models", "/api/book_models/**")
+                .antMatchers("/api/book_models")
                     .authenticated()
 
                 /*
@@ -182,19 +192,12 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         "/api/users/{id:\\d+}/reviews", "/api/users/{id:\\d+}/reviews/{ur_id:\\d+}")
                     .authenticated()
 
-                .antMatchers(HttpMethod.POST,"/api/users/{id:\\d+}/locations")
-                    .authenticated()
-
 
                 .antMatchers("/api/users/{id:\\d+}/locations/{location_id:\\d+}")
                     .access(USER_ACCESS)
 
                 .antMatchers(HttpMethod.GET, "/api/users/{id:\\d+}/reviews/{ur_id:\\d+}")
                     .access(REVIEW_ACCESS)
-
-//                .antMatchers(HttpMethod.GET, "/api/users/{id:\\d+}/reviews")
-//                    .access(REVIEW_LIST_ACCESS)
-
 
                 .antMatchers("/api/**").permitAll()
 

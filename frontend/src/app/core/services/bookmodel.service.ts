@@ -11,7 +11,7 @@ export class BookModelService {
     getBookModel(bookModelUrl: string) : Observable<BookModel> {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.book_models.v1+json'});
         return this.http.get<any>(`${bookModelUrl}`, {headers}).pipe(
-            tap((r) => console.log("API response (Get) of Book Model:", r))
+            //tap((r) => console.log("API response (Get) of Book Model:", r))
         );
     }
 

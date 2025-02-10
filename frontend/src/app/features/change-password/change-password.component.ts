@@ -5,6 +5,7 @@ import {Password} from "primeng/password";
 import {FormsModule} from "@angular/forms";
 import {InputText} from "primeng/inputtext";
 import {ButtonDirective} from "primeng/button";
+import {LanguageService} from "../../core/services/language.service";
 
 @Component({
   selector: 'app-change-password',
@@ -24,7 +25,11 @@ export class ChangePasswordComponent implements OnInit {
   confirmPassword: string = '';
   errorMessage: string = '';
 
-  constructor(private userService: UserService, private router: Router, private route: ActivatedRoute) {}
+  constructor(private userService: UserService,
+              private router: Router,
+              private route: ActivatedRoute,
+              private languageService: LanguageService // DO NOT DELETE! Translation would not work otherwise
+  ) {}
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {

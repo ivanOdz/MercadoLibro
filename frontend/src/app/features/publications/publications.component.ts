@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PublicationService } from '../../core/services/publication.service';
 import { AuthService } from '../../core/services/auth.service';
@@ -8,6 +8,7 @@ import { SortComponent } from "../../shared/components/sort/sort.component";
 import {combineLatest, distinctUntilChanged, filter, of, startWith, Subscription, switchMap, tap} from "rxjs";
 import {PublicationData2} from "../../core/models/types";
 import {map, take} from "rxjs/operators";
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-publications',
@@ -16,11 +17,12 @@ import {map, take} from "rxjs/operators";
   imports: [
     NavbarComponent,
     FilterListComponent,
-    SortComponent
+    SortComponent,
+    NgIf
   ],
   styleUrls: ['./publications.component.css']
 })
-export class PublicationsComponent implements OnInit {
+export class PublicationsComponent implements OnInit, OnDestroy {
 
   conditionHeaders: Record<string, string> = {};
   genreHeaders: Record<string, string> = {};
@@ -36,6 +38,9 @@ export class PublicationsComponent implements OnInit {
     search: ''
   };
 
+  showConditionFilter: boolean = true;
+  showGenreFilter: boolean = true;
+
   constructor(
       private publicationService: PublicationService,
       private authService: AuthService,
@@ -49,10 +54,14 @@ export class PublicationsComponent implements OnInit {
           this.currentFilters.genre = params['genre'] || '';
           this.currentFilters.page = params['page'] || 0;
           this.currentFilters.search = params['search'] || '';
+
+          this.showConditionFilter = !params['state'];
+          this.showGenreFilter = !params['genre'];
+
         }),
-        switchMap(() => this.publicationService.getPublicationsWithDetails(this.currentFilters)), // Obtener publicaciones
+        switchMap(() => this.publicationService.getGeneralPublications(this.currentFilters)),
         tap((response) => {
-          this.publications = response.body || []; // Guardamos las publicaciones obtenidas
+          this.publications = response.body || [];
           this.processHeaders(response.headers);
         }),
         switchMap((response) =>
@@ -72,6 +81,11 @@ export class PublicationsComponent implements OnInit {
     });
   }
 
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+
+
   private processHeaders(headers: any) {
     const newConditionHeaders: Record<string, string> = {};
     const newGenreHeaders: Record<string, string> = {};
@@ -90,5 +104,4 @@ export class PublicationsComponent implements OnInit {
     this.conditionHeaders = { ...newConditionHeaders };
     this.genreHeaders = { ...newGenreHeaders };
   }
-
 }

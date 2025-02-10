@@ -3,13 +3,14 @@ import { Review } from '../../../core/models/review.model';
 import { NgClass, NgForOf } from '@angular/common';
 
 @Component({
-  selector: 'app-review',
-  templateUrl: './review.component.html',
-  imports: [
-    NgClass,
-    NgForOf
-  ],
-  styleUrls: ['./review.component.css']
+    selector: 'app-review',
+    templateUrl: './review.component.html',
+    imports: [
+        NgClass,
+        NgForOf
+    ],
+    standalone: true,
+    styleUrls: ['./review.component.css']
 })
 export class ReviewComponent {
   @Input() review!: Review;

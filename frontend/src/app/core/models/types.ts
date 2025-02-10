@@ -44,7 +44,7 @@ export type PublicationData2 = {
 export type BookData2 = {
     state: string | null;
     available: boolean | null;
-    owner: string | null;
+    owner: User | string;
     bookModel: BookModel | null;
     images: string[] | null;
     self: string | null;

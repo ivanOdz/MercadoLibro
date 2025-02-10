@@ -59,17 +59,6 @@ public class PublicationServiceImpl implements PublicationService {
     }
 
 
-    // Hacer funcion que reciba URN y que extraiga el id usando el uri resolver.
-
-
-    /*@Override
-    @Transactional
-    public void createPublicationIfNeeded(boolean publish, long bookId, long userId, long locationId, PublicationState publicationState) {
-        if (publish) {
-            createPublication(bookId, userService.findById(userId), locationId);
-        }
-    }*/
-
     @Override
     @Transactional
     public void terminatePublication(Publication publication) {
@@ -108,12 +97,6 @@ public class PublicationServiceImpl implements PublicationService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public int getPublicationCountByUserId(long userId) {
-        return pubDao.getPublicationCountByUserId(userId);
-    }
-
-    @Override
     @Transactional
     public void addLocation(Long publicationId, Long locationId, User user) {
         Location location = locationService.findById(locationId);
@@ -126,32 +109,6 @@ public class PublicationServiceImpl implements PublicationService {
         pubDao.addLocation(publication, location);
         LOGGER.info("Location with ID {} successfully added to publication with ID {}", locationId, publicationId);
     }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<Publication> getActivePublicationsByUser(User user) {
-        return pubDao.getActivePublicationsByUser(user) ;
-    }
-
-    /*
-    @Override
-    @Transactional(readOnly = true)
-    public PaginatedResponse<Publication, ItemFilterMetadata> getMyPaginatedPublications(long userId, String search, String state, String genre, String sortType, int currentPage) {
-
-        BookState state_filter = DEFAULT_PUBLICATION_STATE_FILTER;
-        if (state != null) {
-            state_filter = BookState.fromString(state);
-        }
-
-        Genre genre_filter = DEFAULT_PUBLICATION_GENRE_FILTER;
-        if(genre != null){
-            genre_filter = Genre.fromString(genre);
-        }
-
-
-        return pubDao.getPaginatedPublications(userId, search, state_filter, genre_filter, sortType, currentPage, null);
-    }
-    */
 
     @Override
     @Transactional
@@ -178,11 +135,13 @@ public class PublicationServiceImpl implements PublicationService {
     }
 
     @Override
+    @Transactional
     public void deleteFavoritePublication(long publicationId) {
         pubDao.unmarkFavoritePublication(publicationId);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public FavoritePublication getFavoritePublicationById(Long favoritePublicationId) {
         if(favoritePublicationId == null){
             throw new PublicationBadRequestException("Publication id must not be null");
@@ -199,6 +158,7 @@ public class PublicationServiceImpl implements PublicationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public FavoritePublication getFavoritePublicationFromUser(Long publicationId, Long userId) {
         Publication publication = pubDao.getPublicationByPublicationId(publicationId)
                 .orElseThrow(() -> new PublicationBadRequestException("Invalid publication id"));
@@ -210,53 +170,27 @@ public class PublicationServiceImpl implements PublicationService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<GenreWrapper> getGenreWrapperList(String search, String state) {
-        BookState state_filter = BookState.fromString(state);
-
-        return pubDao.getGenreQtyByPublication(null, search, state_filter);
+    @Transactional
+    public void updatePublication(Long publicationId, Long locationId) {
+        locationService.findById(locationId);
+        pubDao.updatePublication(publicationId, locationId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<GenreWrapper> getMyGenreWrapperList(Long userId, String search, String state) {
-        // if genre != null, return Collections.emptyList();
-        BookState state_filter = BookState.fromString(state);
+    public List<GenreWrapper> getGenreWrapperList(Long userId, String search, String state, boolean favorites) {
+        BookState stateFilter = BookState.fromString(state);
 
-        return pubDao.getGenreQtyByPublication(userId, search, state_filter);
+        return favorites ? pubDao.getGenreQtyByFavoritePublication(userId, search, stateFilter) :
+                pubDao.getGenreQtyByPublication(userId, search, stateFilter);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<BookStateWrapper> getBookStateWrapperList(String search, String genre) {
-        Genre genre_filter = Genre.fromString(genre);
+    public List<BookStateWrapper> getBookStateWrapperList(Long userId, String search, String genre, boolean favorites) {
+        Genre genreFilter = Genre.fromString(genre);
 
-        return pubDao.getBookStateQtyByPublication(null, search, genre_filter);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<BookStateWrapper> getMyBookStateWrapperList(long userId, String search, String genre) {
-        Genre genre_filter = Genre.fromString(genre);
-
-        return pubDao.getBookStateQtyByPublication(userId, search, genre_filter);
-    }
-
-    // TODO: Hacer filtros de esto
-    @Override
-    @Transactional(readOnly = true)
-    public PaginatedResponse<Publication, ItemFilterMetadata> getFavoritePublications(User user, int currentPage) {
-        //return pubDao.getFavoritePublications(user.getUserId(), currentPage);
-        return new PaginatedResponse<>(null, null);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Publication getActivePublication(long publicationId) {
-        Publication publication = getPublicationByPublicationId(publicationId);
-        if(publication.getPublicationState().equals(PublicationState.TERMINATED)) {
-            throw new PublicationNotFoundException("Publication with ID " + publicationId + " not found");
-        }
-        return publication;
+        return favorites ? pubDao.getBookStateQtyByFavoritePublication(userId, search, genreFilter) :
+                pubDao.getBookStateQtyByPublication(userId, search, genreFilter);
     }
 }
