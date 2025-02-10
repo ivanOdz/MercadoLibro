@@ -160,6 +160,10 @@ export class PublicationService {
         );
     }
 
+    deleteMyPublication(publicationSelfUrn: string){
+        return this.http.delete<void>(publicationSelfUrn);
+    }
+
     setFavoritePublication(userUrl: string, publications: PublicationData2[]): Observable<any> {
         if (!userUrl || publications.length === 0) {
             return of();
