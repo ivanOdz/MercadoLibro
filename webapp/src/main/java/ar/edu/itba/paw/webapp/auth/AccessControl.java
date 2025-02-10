@@ -49,6 +49,9 @@ public class AccessControl {
 
     // PATCH {base_path}/books/{id} body: bookDTO
     public Boolean modifyBookAccess(Long id, BookDTO bookDTO) {
+        if(getUser() == null){
+            return false;
+        }
         long userId = getUser().getUserId();
         Book b = bookService.getBookById(id);
 
@@ -256,6 +259,11 @@ public class AccessControl {
         return true;
     }
 
+    // POST {base_path}/users/{id}/locations
+    public Boolean createLocationAccess(Long userId) {
+        if(getUser() == null) return false;
+        return getUser().getUserId().equals(userId);
+    }
 
     // private methods
 

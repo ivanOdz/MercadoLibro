@@ -141,29 +141,17 @@ public class PublicationController {
         return Response.ok(genericEntity).build();
     }
 
-    // TODO: Preguntar cual deberia de ser la forma asociar una location a una publication, si PATCH o POST.
     // Authorization Required
     // El usuario tiene que estar logueado y debe ser dueño de la publicacion
     // Creo que este metodo se reemplaza por el de la location
-    /*@PATCH
+   /*@PATCH
     @Path("/{publication_id}")
     @Consumes(value = {VndType.APPLICATION_PUBLICATION})
+    @PreAuthorize("@accessControl.publicationsModifyAccess(#publicationId, #publicationDTO)")
     public Response updatePublication(@PathParam("publication_id") Long publicationId, PublicationUpdateDTO publicationUpdateDTO) {
         ps.updatePublication(publicationDTO.getLocations());
 
         return Response.noContent().build();
-    }
-
-
-    // Revisar porque creo que al hacer POST, tengo que devolver donde se crea. No es una location lo que se crea, sino
-    // otra entidad llamada Publication/Location. Por lo tanto al crearla, tengo que poder accederla y eliminarla. Creo.
-    @POST
-    @Path("/{publication_id}/locations")
-    @Consumes(value = {VndType.APPLICATION_LOCATION})
-    public Response addLocationToPublication(@PathParam("publication_id") Long publicationId, @QueryParam("location_id") final long locationId)  {
-
-        ps.addLocation(publicationId, locationId, loggeduser);
-
-        return Response.noContent().build();
     }*/
+
 }

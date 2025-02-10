@@ -6,6 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -62,6 +63,11 @@ public class BasicAuthTokenIssuerFilter extends OncePerRequestFilter {
 
                     PawUserDetails userDetails = (PawUserDetails) userDetailsService.loadUserByUsername(username);
 
+                    if(!userDetails.getUser().isVerified()){
+                        filterChain.doFilter(request, response);
+                        return;
+                    }
+
                     Authentication authenticationSuccessfull = new UsernamePasswordAuthenticationToken(
                             userDetails,
                             password,
@@ -78,9 +84,9 @@ public class BasicAuthTokenIssuerFilter extends OncePerRequestFilter {
 
                     SecurityContextHolder.getContext().setAuthentication(authenticationSuccessfull);
                 }
-
-            } catch (Exception e) {
-                authenticationEntryPoint.commence(request, response, null);
+            } catch (AuthenticationException e) {
+                SecurityContextHolder.clearContext();
+                authenticationEntryPoint.commence(request, response, e);
                 return;
             }
         }

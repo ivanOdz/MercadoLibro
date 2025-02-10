@@ -117,6 +117,7 @@ public class UserController {
     @POST
     @Path("/{id}/locations")
     @Consumes(value = {VndType.APPLICATION_LOCATION})
+    @PreAuthorize("@accessControl.createLocationAccess(#userId)")
     public Response createLocation(@PathParam("id") final long userId, LocationCreation locationCreation) {
         Location location = us.addLocation(userId, locationCreation.getLocation());
 

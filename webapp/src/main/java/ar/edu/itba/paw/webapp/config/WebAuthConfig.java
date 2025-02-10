@@ -116,9 +116,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/books")
                     .authenticated()
 
-                .antMatchers(HttpMethod.PATCH, "/api/books/{id:\\d+}")
-                    .authenticated()
-
                 .antMatchers(HttpMethod.GET,"/api/books")
                     .access(BOOKS_ACCESS)
 
@@ -126,7 +123,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                  * Book Model controller
                  */
 
-                .antMatchers("/api/book_models", "/api/book_models/**")
+                .antMatchers("/api/book_models")
                     .authenticated()
 
                 /*
@@ -182,19 +179,12 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         "/api/users/{id:\\d+}/reviews", "/api/users/{id:\\d+}/reviews/{ur_id:\\d+}")
                     .authenticated()
 
-                .antMatchers(HttpMethod.POST,"/api/users/{id:\\d+}/locations")
-                    .authenticated()
-
 
                 .antMatchers("/api/users/{id:\\d+}/locations/{location_id:\\d+}")
                     .access(USER_ACCESS)
 
                 .antMatchers(HttpMethod.GET, "/api/users/{id:\\d+}/reviews/{ur_id:\\d+}")
                     .access(REVIEW_ACCESS)
-
-//                .antMatchers(HttpMethod.GET, "/api/users/{id:\\d+}/reviews")
-//                    .access(REVIEW_LIST_ACCESS)
-
 
                 .antMatchers("/api/**").permitAll()
 
