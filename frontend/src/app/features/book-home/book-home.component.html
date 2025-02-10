@@ -2,12 +2,20 @@
 
 <div class="book-home">
 
-	<app-book-card *ngFor="let book of books" [book]="book"></app-book-card>
+	<div class="column-filters">
+		<app-filter-list [headers]="conditionHeaders" filterType="Condition"></app-filter-list>
+		<app-filter-list [headers]="genreHeaders" filterType="Genre"></app-filter-list>
+	</div>
 	
-	<div class="no-books" *ngIf="books.length === 0">
-	    <p>No se ha encontrado el libro.</p>
-	    <p>Si tienes un libro que no tenemos disponible, agrégalo!</p>
-	    <button class="add-book-btn">Nuevo modelo</button>
+	<div class="column-content">
+<!-- 		<app-book-card *ngFor="let book of books" [book]="book"></app-book-card> -->
+		<p class="page-title">Agregar un libro</p>
+		
+		<div class="no-books" *ngIf="books.length === 0">
+		    <p>No se ha encontrado el libro.</p>
+		    <p>Si tienes un libro que no tenemos disponible, agrégalo!</p>
+		    <button class="add-book-btn">Nuevo modelo</button>
+		</div>
 	</div>
 </div>
 

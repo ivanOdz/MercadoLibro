@@ -1,10 +1,30 @@
 .book-home {
+	display: grid;
+	justify-content: space-between;
+	background-color: #f9f6f1;
+	grid-template-columns: 0.75fr 2fr;
+	gap: 20px;
+}
+
+.column-filters {
 	display: flex;
 	flex-direction: column;
+	margin: 8% 8%;
+	gap: 20px;
+}
+
+.column-content {
+	display: flex;
 	align-items: center;
-	background-color: #f9f6f1;
-	padding: 20px;
-	min-height: 100vh;
+	flex-direction: column;
+	margin: 0% 5%;
+}
+
+.page-title {
+	margin: 10px 10px;
+	text-align: center;
+	font-family: "Inter", sans-serif;
+	font-size: 28px;
 }
 
 .book-list {
@@ -56,6 +76,7 @@
 
 .no-books {
 	background: white;
+	max-width: 40%;
 	padding: 20px;
 	border-radius: 12px;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
