@@ -10,6 +10,7 @@ import ar.edu.itba.paw.webapp.dto.input.UpdateExchangeDTO;
 import ar.edu.itba.paw.webapp.dto.output.ExchangeDTO;
 import ar.edu.itba.paw.webapp.dto.output.MessageDTO;
 import ar.edu.itba.paw.webapp.mediaTypes.VndType;
+import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
 import ar.edu.itba.paw.webapp.utils.SerializationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -43,14 +44,13 @@ public class ExchangeController {
                                  @QueryParam("page") final Integer page) {
         PaginatedResponse<Exchange, BasicMetadata> exchanges = exchangeService.getExchanges(userId, state, isOfferer, isRequester, page);
 
-        List<ExchangeDTO> exchangeDTOS = exchanges.getData().stream().map(exchange -> ExchangeDTO.fromExchange(uriInfo, exchange)).toList();
-
-        Map<String, String> paginationHeaders = SerializationUtils.serializePaginationHeaders(exchanges.getMetadata(), uriInfo.getBaseUri().getPath());
+        List<ExchangeDTO> exchangeDTOS = exchanges.getData().stream().map(exchange -> ExchangeDTO.fromExchange(uriInfo, exchange)).collect(Collectors.toList());
+        if(exchangeDTOS.isEmpty()) {
+            return Response.noContent().build();
+        }
 
         Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ExchangeDTO>>(exchangeDTOS) {});
-        paginationHeaders.forEach(response::header);
-
-        return response.build();
+        return PageResponseUtil.getResponse(page, exchanges.getMetadata().getMaxPage(), uriInfo, response);
     }
 
     @POST
