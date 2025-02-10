@@ -171,6 +171,11 @@ public class UserController {
     public Response getReviews(@PathParam("id") final Long targetId,
                                @QueryParam("page") @DefaultValue("0") int page) {
         PaginatedResponse<UserReview, BasicMetadata> reviews = userReviewService.getReviewsEarnedByUserId(targetId, page);
+
+        if(reviews.getData().isEmpty()) {
+            return Response.noContent().build();
+        }
+
         List<ReviewDTO> reviewDTOS = reviews.getData().stream()
                 .map(review -> ReviewDTO.fromUserReview(uriInfo, review))
                 .collect(Collectors.toList());
