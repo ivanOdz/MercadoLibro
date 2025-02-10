@@ -94,7 +94,7 @@ export const routes: Routes = [
     path: 'my-books',
     component: BookHomeComponent,
     title: 'Books',
-    /*canActivate: [AuthGuard],*/
+    canActivate: [AuthGuard],
   },
   //Error Pages
   {
