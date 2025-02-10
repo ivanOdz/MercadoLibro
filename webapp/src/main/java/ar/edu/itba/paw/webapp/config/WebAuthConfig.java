@@ -79,13 +79,13 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
+    	CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Collections.singletonList(ALL));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "HEAD"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"));
         configuration.addAllowedHeader(ALL);
         configuration.setExposedHeaders(Arrays.asList(// "ETag", "Total-Elements",
-        	    "Authorization", "Link", "Location", "X-Access-Token", "X-Refresh-Token", "X-User-URI",
-        	    "X-Total-Count", "X-Total-Pages", "X-Current-Page",
+        	    "authorization", "link", "location", "x-access-token", "x-refresh-token", "x-user-uri", "set-cookie",
+        	    "x-total-count", "x-total-pages", "x-current-page",
         	    "x-genre-fiction", "x-genre-non-fiction", "x-genre-mystery", "x-genre-thriller",
         	    "x-genre-science-fiction", "x-genre-fantasy", "x-genre-romance", "x-genre-historical-fiction",
         	    "x-genre-horror", "x-genre-biography", "x-genre-autobiography", "x-genre-memoir",
@@ -96,7 +96,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         	    "x-genre-travel", "x-genre-true-crime", "x-genre-historical-non-fiction", "x-genre-other",
         	    "x-bookstate-new", "x-bookstate-like-new", "x-bookstate-good", "x-bookstate-acceptable", "x-bookstate-worn"
         	));
-
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
