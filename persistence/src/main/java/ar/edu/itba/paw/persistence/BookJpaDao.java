@@ -84,11 +84,11 @@ public class BookJpaDao implements BookDao {
         nativeQuery.setParameter("title", "%" + safeSearch.toLowerCase() + "%");
         
         if (genre != null) {
-            nativeQuery.setParameter("genreFilter", genre.toString());
+            nativeQuery.setParameter("genre", genre.toString());
         }
 
         if (state != null) {
-            nativeQuery.setParameter("bookStateFilter", state.toString());
+            nativeQuery.setParameter("state", state.toString());
         }
 
         nativeQuery.setFirstResult(page * BOOKS_PAGE_SIZE);
@@ -242,7 +242,7 @@ public class BookJpaDao implements BookDao {
                         "WHERE b.ownerId = :userId AND LOWER(bm.title) LIKE LOWER(:title) ");
 
         if (state != null) {
-            sqlQuery.append("AND b.bookState = :bookState ");
+            sqlQuery.append("AND b.bookState = :state ");
         }
 
         if (genre != null) {

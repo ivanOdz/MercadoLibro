@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.webapp.dto.input.*;
 import ar.edu.itba.paw.webapp.dto.output.MessageDTO;
+import ar.edu.itba.paw.webapp.dto.output.ReviewDTO;
 import ar.edu.itba.paw.webapp.dto.output.UserDTO;
 import ar.edu.itba.paw.webapp.dto.output.BookDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,9 @@ public class AccessControl {
 
     // PATCH {base_path}/books/{id} body: bookDTO
     public Boolean modifyBookAccess(Long id, BookDTO bookDTO) {
+        if(getUser() == null){
+            return false;
+        }
         long userId = getUser().getUserId();
         Book b = bookService.getBookById(id);
 
@@ -161,6 +165,7 @@ public class AccessControl {
 
     // DELETE {base_path}/publications/{publication_id}
     public Boolean publicationsModifyAccess(Long publicationId) {
+        if(getUser() == null) return false;
         Publication p = publicationService.getPublicationByPublicationId(publicationId);
         return getUser().getUserId().equals(p.getUser().getUserId());
     }
@@ -222,18 +227,16 @@ public class AccessControl {
         return getUser().getUserId().equals(id);
     }
     
-    // POST {base_path}/users/{id}/reviews
-    public Boolean createReviewAccess(Long id, ReviewInputDTO reviewInputDTO) {
+    // POST {base_path}/users/{id}/reviews   // id 4  yo 2
+    public Boolean createReviewAccess(Long id, ReviewDTO reviewInputDTO) {
         Exchange e = exchangeService.getExchangeById(reviewInputDTO.getExchangeId());
         Long luId = getUser().getUserId();
 
         // logged user is a participant of the exchange
-        boolean exchangeAccess = e.getRequester().getUser().getUserId().equals(luId) ||
-                e.getOfferer().getUser().getUserId().equals(luId);
+        boolean exchangeAccess = e.getRequester().getUser().getUserId().equals(luId) || e.getOfferer().getUser().getUserId().equals(luId);
 
         // exchangeAccess and not self review
-        return !getUser().getUserId().equals(id) &&
-                exchangeAccess;
+        return !luId.equals(id) && exchangeAccess;
     }
 
     // GET {base_path}/users/{id}/reviews
@@ -257,6 +260,11 @@ public class AccessControl {
         return true;
     }
 
+    // POST {base_path}/users/{id}/locations
+    public Boolean createLocationAccess(Long userId) {
+        if(getUser() == null) return false;
+        return getUser().getUserId().equals(userId);
+    }
 
     // private methods
 

@@ -14,7 +14,7 @@ import {ExchangeService} from "../../core/services/exchange.service";
 import {UserService} from "../../core/services/user.service";
 import {PublicationService} from "../../core/services/publication.service";
 import {BookService} from "../../core/services/book.service";
-import {BookmodelService} from "../../core/services/bookmodel.service";
+import {BookModelService} from "../../core/services/bookmodel.service";
 import {AuthService} from "../../core/services/auth.service";
 import {Router} from "@angular/router";
 import {catchError, filter, forkJoin, Observable, of, switchMap} from "rxjs";
@@ -56,7 +56,7 @@ export class HistoryComponent implements OnInit {
 
 
     constructor(private es: ExchangeService, private us: UserService, private ps: PublicationService,
-                private bs: BookService, private bms: BookmodelService, private as: AuthService,
+                private bs: BookService, private bms: BookModelService, private as: AuthService,
                 private router: Router) {}
 
     ngOnInit(): void {
@@ -90,8 +90,8 @@ export class HistoryComponent implements OnInit {
                 }
 
                 return forkJoin({
-                    rejectedExchanges: this.processExchanges(completed.exchange),
-                    completedExchanges: this.processExchanges(rejected.exchange),
+                    rejectedExchanges: this.processExchanges(rejected.exchange),
+                    completedExchanges: this.processExchanges(completed.exchange),
                 });
             })
         ).subscribe(({ rejectedExchanges, completedExchanges }) => {
@@ -166,6 +166,24 @@ export class HistoryComponent implements OnInit {
             map((result) => result.filter((item) => item !== null)) // Eliminamos los nulos
         );
     }
+
+
+    addUserReview($event: any, op:any) {
+        if (!this.reviewText || !this.reviewValue) return;
+        console.log("en add review self" + this.userToReview?.self);
+        console.log("en add review" + this.userToReview);
+
+        this.us.getUser(this.userToReview?.self).subscribe((user: User) => {
+            this.us.postReview(user.reviews, this.selectedCompletedCard?.exchange.self , this.reviewValue, this.reviewText).subscribe(() => {
+                console.log("Reseña creada exitosamente");
+                this.reviewText = '';
+                this.reviewValue = 0;
+                op.toggle($event);
+            });
+        });
+    }
+
+
     /***  Html functions  ***/
 
     Title = "History";
@@ -206,6 +224,18 @@ export class HistoryComponent implements OnInit {
             (book.image || 'assets/book.jpg');
     }
 
+    reviewText: string = '';
+    reviewValue: number = 0;
+
+    userToReview: User | null | undefined = null;
+
+    toggleReviewContent($event:any,op:any) {
+        this.userToReview = this.isRequester(this.selectedCompletedCard) ? this.selectedCompletedCard?.offeredPub?.book?.owner : this.selectedCompletedCard?.requestedPub?.book?.owner;
+        console.log("en toggle review" + this.userToReview);
+        op.toggle($event)
+    }
+
+
     /***  Pagination ***/
 
     rows: unknown;
@@ -232,21 +262,10 @@ export class HistoryComponent implements OnInit {
     /////////////////////////////////////
 
 
-    showContent = false;
 
-    reviewText: string = '';
-    reviewValue: number = 0;
-
-    toggleReviewContent() {
-        this.showContent = !this.showContent;
-    }
 
     onPageChange($event: any) {
         console.log($event);
-    }
-
-    confirmReview() {
-
     }
 
     onCompletedPageChange($event: PaginatorState) {

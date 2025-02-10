@@ -7,7 +7,7 @@ import javax.ws.rs.core.Response;
 
 public class CacheResponseUtil {
 
-    public static final int maxAge = 31536000; // 1 year
+    public static final int MAX_AGE = 31536000; // 1 year
 
     public static Response conditionalCacheResponse(Request request, EntityTag entityTag) {
         CacheControl cc = new CacheControl();
@@ -19,9 +19,9 @@ public class CacheResponseUtil {
         return builder.cacheControl(cc).build();
     }
 
-    public static Response unconditionalCacheResponse(Response.ResponseBuilder response) {
+    public static Response unconditionalCacheResponse(Response.ResponseBuilder responseBuilder) {
         CacheControl cc = new CacheControl();
-        cc.setMaxAge(maxAge);
-        return response.cacheControl(cc).build();
+        cc.setMaxAge(MAX_AGE);
+        return responseBuilder.cacheControl(cc).build();
     }
 }

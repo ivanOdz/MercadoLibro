@@ -183,9 +183,7 @@ public class PublicationJpaDao implements PublicationDao {
                 "JOIN book_model bm ON bm.bookModelId = b.bookModelId " +
                 "LEFT JOIN book_rating br ON bm.bookModelId = br.bookModelId " +
                 "LEFT JOIN publication_location pl ON p.publicationId = pl.publicationId " +
-                "WHERE fp.userid = :userId AND p.publicationState = :publicationState AND LOWER(bm.title) LIKE LOWER(:safeSearch) ESCAPE '\\' " +
-                "AND p.userId = :userId "
-                );
+                "WHERE fp.userid = :userId AND p.publicationState = :publicationState AND LOWER(bm.title) LIKE LOWER(:safeSearch) ESCAPE '\\' ");
 
 //"ORDER BY "
 
@@ -201,7 +199,7 @@ public class PublicationJpaDao implements PublicationDao {
             nativeQueryString.append("AND pl.locationId = :locationId ");
         }
 
-        nativeQueryString.append(" GROUP BY fp.publicationId ORDER BY liked_at DESC ");
+        nativeQueryString.append(" GROUP BY fp.publicationId, fp.liked_at ORDER BY liked_at DESC ");
 
         Query nativeQuery = em.createNativeQuery(nativeQueryString.toString());
 
@@ -238,30 +236,17 @@ public class PublicationJpaDao implements PublicationDao {
                 SELECT fp.publication
                 FROM FavoritePublication fp
                 WHERE fp.publication.publicationId IN (:ids)
-                AND fp.user.userId = :userId
-                AND fp.publication.publicationState = 'CURRENT'
                 ORDER BY fp.likedAt DESC
             """;
 
         TypedQuery<Publication> query = em.createQuery(jpqlQuery, Publication.class);
         query.setParameter("ids",favoritePublicationIds);
-        query.setParameter("userId", userId);
 
         List<Publication> favoritePublications = query.getResultList();
 
         int totalResults = getTotalResultsFavoritePublications(userId, safeSearch, genre, state, locationId);
 
         return new PaginatedResponse<>(favoritePublications, new ItemFilterMetadata(page, PUBLICATIONS_PAGE_SIZE, totalResults, search, genre, null, null, state, null));
-    }
-
-    @Override
-    public int getPublicationCountByUserId(long userId) {
-        StringBuilder query = new StringBuilder("SELECT COUNT(*) FROM publication p WHERE p.userId = :userId");
-
-        Query nativeQuery = em.createNativeQuery(query.toString());
-        nativeQuery.setParameter("userId", userId);
-
-        return ((Number) nativeQuery.getSingleResult()).intValue();
     }
 
     @Override
@@ -309,6 +294,89 @@ public class PublicationJpaDao implements PublicationDao {
         return genreWrappers;
     }
 
+    @Override
+    public List<GenreWrapper> getGenreQtyByFavoritePublication(Long userId, String search, BookState state) {
+        StringBuilder sqlQuery =  new StringBuilder("SELECT bm.genre, COUNT(*) AS genreCount " +
+                "FROM publication p " +
+                "JOIN favorite_publication fp ON p.publicationId = fp.publicationId " +
+                "JOIN book b ON p.bookId = b.bookId " +
+                "JOIN book_model bm ON b.bookModelId = bm.bookModelId " +
+                "WHERE p.publicationState = :publicationState AND LOWER(bm.title) LIKE LOWER(:safeSearch) ESCAPE '\\' ");
+
+        sqlQuery.append("AND fp.userId = :userId ");
+
+        if(state != null){
+            sqlQuery.append("AND b.bookState = :state ");
+        }
+        sqlQuery.append("GROUP BY bm.genre");
+
+        Query query = em.createNativeQuery(sqlQuery.toString());
+        query.setParameter("userId", userId);
+
+        query.setParameter("publicationState", PublicationState.CURRENT.toString());
+        String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
+        query.setParameter("safeSearch", "%" + safeSearch.toLowerCase() + "%");
+
+        if(state != null){
+            query.setParameter("state", state.toString());
+        }
+
+        @SuppressWarnings("unchecked")
+        List<Object[]> results = query.getResultList();
+
+        List<GenreWrapper> genreWrappers = new ArrayList<>();
+        for (Object[] result : results) {
+            String genreValue = result[0].toString();  // bm.genre (STRING)
+            Genre genre = Genre.valueOf(genreValue);
+            int genreCount = ((Number) result[1]).intValue();  // genreCount
+            genreWrappers.add(new GenreWrapper(genre, genreCount));
+        }
+
+        return genreWrappers;
+    }
+
+    @Override
+    public List<BookStateWrapper> getBookStateQtyByFavoritePublication(Long userId, String search, Genre genre) {
+        StringBuilder sqlQuery =  new StringBuilder("SELECT b.bookState, COUNT(*) AS stateCount " +
+                "FROM publication p " +
+                "JOIN favorite_publication fp ON p.publicationId = fp.publicationId " +
+                "JOIN book b ON p.bookId = b.bookId " +
+                "JOIN book_model bm ON b.bookModelId = bm.bookModelId " +
+                "WHERE p.publicationState = :publicationState AND LOWER(bm.title) LIKE LOWER(:safeSearch) ESCAPE '\\' ");
+
+        sqlQuery.append("AND fp.userId = :userId ");
+
+        if(genre != null){
+            sqlQuery.append("AND bm.genre = :genre ");
+        }
+
+        sqlQuery.append("GROUP BY b.bookState");
+
+        Query query = em.createNativeQuery(sqlQuery.toString());
+        query.setParameter("userId", userId);
+
+        query.setParameter("publicationState", PublicationState.CURRENT.toString());
+        String safeSearch = search.replace("%", "\\%").replace("_", "\\_");
+        query.setParameter("safeSearch", "%" + safeSearch.toLowerCase() + "%");
+
+        if(genre != null){
+            query.setParameter("genre", genre.toString());
+        }
+
+        @SuppressWarnings("unchecked")
+        List<Object[]> results = query.getResultList();
+
+        List<BookStateWrapper> bookStateWrappers = new ArrayList<>();
+        for (Object[] result : results) {
+            String bookStateValue = result[0].toString();
+            BookState bookState = BookState.valueOf(bookStateValue);
+            int bookStateCount = ((Number) result[1]).intValue();
+            bookStateWrappers.add(new BookStateWrapper(bookState, bookStateCount));
+        }
+
+        return bookStateWrappers;
+    }
+
 
     @Override
     public List<BookStateWrapper> getBookStateQtyByPublication(Long userId, String search, Genre genre) {
@@ -342,6 +410,7 @@ public class PublicationJpaDao implements PublicationDao {
             query.setParameter("genre", genre.toString());
         }
 
+        @SuppressWarnings("unchecked")
         List<Object[]> results = query.getResultList();
 
         List<BookStateWrapper> bookStateWrappers = new ArrayList<>();
@@ -470,15 +539,6 @@ public class PublicationJpaDao implements PublicationDao {
     }
 
     @Override
-    public List<Publication> getActivePublicationsByUser(User user) {
-        TypedQuery<Publication> query = em.createQuery("FROM Publication p WHERE p.user = :user AND p.publicationState = :publicationState OR p.publicationState =:state", Publication.class);
-        query.setParameter("publicationState", PublicationState.CURRENT);
-        query.setParameter("state", PublicationState.OFFERED);
-        query.setParameter("user", user);
-        return query.getResultList();
-    }
-
-    @Override
     public Optional<FavoritePublication> getFavoritePublicationById(long fpId) {
         return Optional.ofNullable(em.find(FavoritePublication.class, fpId));
     }
@@ -488,7 +548,16 @@ public class PublicationJpaDao implements PublicationDao {
         TypedQuery<FavoritePublication> query = em.createQuery("FROM FavoritePublication fp WHERE fp.user.id = :userId AND fp.publication.id = :publicationId", FavoritePublication.class);
         query.setParameter("publicationId", publicationId);
         query.setParameter("userId", userId);
-        return Optional.ofNullable(query.getSingleResult());
+        List<FavoritePublication> results = query.getResultList();
+        return results.isEmpty() ? Optional.empty() : Optional.of(results.getFirst());
+    }
+
+    @Override
+    public void updatePublication(Long publicationId, Long locationId) {
+        Location location = em.find(Location.class, locationId);
+        Publication publication = em.find(Publication.class, publicationId);
+        publication.addLocation(location);
+        em.merge(publication);
     }
 
     @Override

@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 
+import ar.edu.itba.paw.webapp.dto.input.PublicationUpdateDTO;
 import ar.edu.itba.paw.webapp.dto.output.FavoriteDTO;
 import ar.edu.itba.paw.webapp.dto.input.PublicationInputDTO;
 import ar.edu.itba.paw.webapp.dto.output.PublicationDTO;
@@ -56,8 +57,8 @@ public class PublicationController {
         Response.ResponseBuilder response = Response.ok(new GenericEntity<List<PublicationDTO>>(publicationDTOList) {});
 
 
-        List<GenreWrapper> genresSummary = ps.getMyGenreWrapperList(userId, search, state);
-        List<BookStateWrapper> conditionSummary = ps.getBookStateWrapperList(search, genre);
+        List<GenreWrapper> genresSummary = ps.getGenreWrapperList(userId, search, state, favorites);
+        List<BookStateWrapper> conditionSummary = ps.getBookStateWrapperList(userId, search, genre, favorites);
 
         Map<String, String> genreHeaders = SerializationUtils.serializeGenreWrapper(genresSummary);
         genreHeaders.forEach(response::header);
@@ -141,29 +142,18 @@ public class PublicationController {
         return Response.ok(genericEntity).build();
     }
 
-    // TODO: Preguntar cual deberia de ser la forma asociar una location a una publication, si PATCH o POST.
     // Authorization Required
     // El usuario tiene que estar logueado y debe ser dueño de la publicacion
     // Creo que este metodo se reemplaza por el de la location
-    /*@PATCH
+    // Este metodo añade una location existente a una publication
+   @PATCH
     @Path("/{publication_id}")
     @Consumes(value = {VndType.APPLICATION_PUBLICATION})
+   @PreAuthorize("@accessControl.publicationsModifyAccess(#publicationId)")
     public Response updatePublication(@PathParam("publication_id") Long publicationId, PublicationUpdateDTO publicationUpdateDTO) {
-        ps.updatePublication(publicationDTO.getLocations());
+        ps.updatePublication(publicationId, publicationUpdateDTO.getLocationId());
 
         return Response.noContent().build();
     }
 
-
-    // Revisar porque creo que al hacer POST, tengo que devolver donde se crea. No es una location lo que se crea, sino
-    // otra entidad llamada Publication/Location. Por lo tanto al crearla, tengo que poder accederla y eliminarla. Creo.
-    @POST
-    @Path("/{publication_id}/locations")
-    @Consumes(value = {VndType.APPLICATION_LOCATION})
-    public Response addLocationToPublication(@PathParam("publication_id") Long publicationId, @QueryParam("location_id") final long locationId)  {
-
-        ps.addLocation(publicationId, locationId, loggeduser);
-
-        return Response.noContent().build();
-    }*/
 }

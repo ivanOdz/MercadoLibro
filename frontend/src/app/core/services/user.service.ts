@@ -16,12 +16,12 @@ export class UserService {
 
     }
 
-    getUser(userUrl: string): Observable<User> {
+    getUser(userUrl: string | undefined): Observable<User> {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.users.v1+json'});
 
         // userUrl = '/users/{id}'
         return this.http.get<any>(`${userUrl}`, { headers }).pipe(
-            tap((userData) => console.log('Respuesta de la API de user:', userData)),
+           // tap((userData) => console.log('Respuesta de la API de user:', userData)),
             map((userData) => {
                 return new User(userData);
             })
@@ -151,7 +151,7 @@ export class UserService {
     }
 
     getReviews(user: User): Observable<Review[]> {
-        const headers = new HttpHeaders({ 'Accept': 'application/vnd.reviews.v1+json' });
+        const headers = new HttpHeaders({ 'Accept': 'application/vnd.user.review.v1+json' });
 
         return this.http.get<Review[]>(`${user.reviews}`, { headers }).pipe(
             map((reviewsData: any[]) => reviewsData.map(review => new Review(review)))
@@ -166,5 +166,21 @@ export class UserService {
             map((l) => l.map((l: any) => new Location(l))));
     }
 
+
+    postReview(reviewsUrn: string | undefined, exchangesUrn: string | undefined, rating: number, description: string): Observable<void> {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.user.review.v1+json' });
+
+        const body: any = {
+            description: description,
+            reviewDate: null,
+            rating: rating,
+            self: null,
+            subject: null,
+            reviewer: null,
+            exchange: exchangesUrn,
+        }
+
+        return this.http.post<void>(`${reviewsUrn}`, body ,{ headers });
+    }
 
 }

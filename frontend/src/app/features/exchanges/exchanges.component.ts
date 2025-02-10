@@ -20,7 +20,7 @@ import {AuthService} from "../../core/services/auth.service";
 import {Router} from "@angular/router";
 import {BookModel} from "../../core/models/bookModel.model";
 import {PublicationService} from "../../core/services/publication.service";
-import {BookmodelService} from "../../core/services/bookmodel.service";
+import {BookModelService} from "../../core/services/bookmodel.service";
 import {BookService} from "../../core/services/book.service";
 import {Location} from "../../core/models/location.model";
 import {map} from "rxjs/operators";
@@ -51,7 +51,7 @@ export class ExchangesComponent implements OnInit {
 
 
     constructor(private es: ExchangeService, private us: UserService, private ps: PublicationService,
-                private bs: BookService, private bms: BookmodelService, private as: AuthService,
+                private bs: BookService, private bms: BookModelService, private as: AuthService,
                 private router: Router, private changeDetectorRef: ChangeDetectorRef) {}
 
     ngOnInit(): void {

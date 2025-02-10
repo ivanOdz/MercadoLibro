@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Book } from './../../../core/models/book.model';
+import { Book } from '../../../core/models/book.model';
 import {NgIf} from "@angular/common";
 
 @Component({
