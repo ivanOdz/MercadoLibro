@@ -99,6 +99,11 @@
 	padding-left: 4px;
 }
 
+.search-applied {
+    background-color: #e0f7fa;
+    border: 1px solid #00796b;
+}
+
 .books-grid {
 	display: grid;
 	align-self: center;

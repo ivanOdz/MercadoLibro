@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, inject, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -30,6 +30,7 @@ import { InputText } from 'primeng/inputtext';
 })
 export class BookHomeComponent implements OnInit, OnDestroy {
 	
+	@ViewChild('searchInput') searchInput!: ElementRef;
 	private subscription!: Subscription;
 
 	constructor(private authService: AuthService,
@@ -46,7 +47,9 @@ export class BookHomeComponent implements OnInit, OnDestroy {
 	
 	showConditionFilter: boolean = true;
 	showGenreFilter: boolean = true;
-
+	isSearchActive = false;
+	lastSearchQuery: string | null = null;
+	
 	currentFilters = {
 		state: '',
 		genre: '',
@@ -111,10 +114,24 @@ export class BookHomeComponent implements OnInit, OnDestroy {
 
 	search() {
 		if (this.currentFilters.search) {
-			this.router.navigate([],
-			{ queryParams: { search: this.currentFilters.search },
-			queryParamsHandling: 'merge' });
+			this.isSearchActive = true;
+			this.router.navigate([], { queryParams: { search: this.currentFilters.search }, queryParamsHandling: 'merge' });
 		}
+		else {
+			this.router.navigate([], { queryParams: { search: null }, queryParamsHandling: 'merge' });
+			this.isSearchActive = false;
+		}
+		
+		this.lastSearchQuery = this.currentFilters.search;
+		this.searchInput.nativeElement.blur();
+	}
+
+	onSearchChange() {
+		// Dejo por si la necesito luego
+	}
+
+	onBlur() {
+		this.currentFilters.search = this.lastSearchQuery || '';
 	}
 	
 	removeFilter(filterKey: keyof typeof this.currentFilters) {
