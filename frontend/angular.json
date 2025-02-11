@@ -30,14 +30,15 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "src/paw-2024b-09/assets"
+                "input": "src/assets"
               }
             ],
             "scripts": []
           },
           "configurations": {
             "production": {
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "deployUrl": "/paw-2024b-09/assets/"
             },
             "development": {
               "optimization": false,
