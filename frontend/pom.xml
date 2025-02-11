@@ -47,11 +47,12 @@
                     </execution>
                     <execution>
                         <id>angular build</id>
+                        <phase>package</phase>
                         <goals>
                             <goal>npm</goal>
                         </goals>
                         <configuration>
-                            <arguments>run ng -- build --deploy-url /paw-2024b-09/assets/</arguments>
+                            <arguments>run build</arguments>  <!-- Ejecuta el script build definido en package.json -->
                         </configuration>
                     </execution>
                 </executions>
