@@ -17,6 +17,9 @@ export class BookCardComponent {
 	
 	@Input() book!: BookData2;
 	@Input() showOwner: boolean = false;
+	@Input() showGenre: boolean = true;
+	@Input() showState: boolean = true;
+	
 	
 	ownerName: string = '...';
 	bookImage!: string;
@@ -25,7 +28,7 @@ export class BookCardComponent {
 	constructor(private http: HttpClient) { }
 
 	ngOnInit() {
-		
+		console.log(this.book);
 		this.bookImage = this.getBookImage();
 		
 		if (typeof this.book.owner === 'string') {

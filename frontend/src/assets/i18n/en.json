@@ -55,34 +55,44 @@
   "genre": {
     "fiction": "Fiction",
     "non.fiction": "Non-Fiction",
+    "non_fiction": "Non-Fiction",
     "mystery": "Mystery",
     "thriller": "Thriller",
     "science.fiction": "Science Fiction",
+    "science_fiction": "Science Fiction",
     "fantasy": "Fantasy",
     "romance": "Romance",
     "historical.fiction": "Historical Fiction",
+    "historical_fiction": "Historical Fiction",
     "horror": "Horror",
     "biography": "Biography",
     "autobiography": "Autobiography",
     "memoir": "Memoir",
     "young.adult": "Young Adult",
+    "young_adult": "Young Adult",
     "childrens.literature": "Children's Literature",
+    "childrens_literature": "Children's Literature",
     "graphic.novel": "Graphic Novel",
     "classic": "Classic",
     "adventure": "Adventure",
     "dystopian": "Dystopian",
     "self.help": "Self-Help",
+    "self_help": "Self-Help",
     "poetry": "Poetry",
     "literary.fiction": "Literary Fiction",
+    "literary_fiction": "Literary Fiction",
     "crime": "Crime",
     "western": "Western",
     "contemporary": "Contemporary",
     "religious.spiritual": "Religious & Spiritual",
+    "religious_spiritual": "Religious & Spiritual",
     "philosophy": "Philosophy",
     "science": "Science",
     "travel": "Travel",
     "true.crime": "True Crime",
+    "true_crime": "True Crime",
     "historical.non.fiction": "Historical Non-Fiction",
+    "historical_non_fiction": "Historical Non-Fiction",
     "other": "Other"
   },
   "bookstate": {
@@ -144,6 +154,10 @@
   	"ADD_BOOK_MODEL": "Create book",
   	"NO_STATE_FILTER": "No state filter",
   	"NO_GENRE_FILTER": "No genre filter"
+  },
+  "BOOK_CARD": {
+  	"OWNER": "Owner",
+  	"STATE": "State"
   }
 
 }
