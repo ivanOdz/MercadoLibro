@@ -13,6 +13,8 @@
 .publication-detail-main-section {
     width: 90vw;
     margin: 3rem;
+    position: absolute;
+    height: 82vh;
 }
 
 .publication-detail-card-section {
@@ -170,17 +172,28 @@ p {
     overflow-y: scroll;
 }
 
-.start-exchange-location-section {
+
+.start-exchange-container {
     width: auto;
-    height: 10vh;
-    align-content: center;
-    text-align: center;
+}
+
+
+
+.start-exchange-location-section {
+    display: grid;
+    height: 4vh;
+    grid-template-columns: 50% 50%;
+    justify-content: center;
+    gap: 5%;
+    margin: 3rem;
 }
 
 .start-exchange-book-section {
     width: 100%;
     padding: 1rem;
-    height: 45vh;
+    height: 50vh;
+    grid-template-rows: 10% 90%;
+    display: grid;
 }
 
 .start-exchange-button-section {
@@ -204,5 +217,78 @@ p {
 }
 
 :host ::ng-deep .w-full {
-    width: 25% !important;
+    width: 70% !important;
+}
+
+
+:host ::ng-deep .request-exchange-button {
+    justify-self: center;
+}
+
+
+
+:host ::ng-deep .p-button {
+    text-align: center
+}
+
+
+
+
+.select-book-container {
+    width: auto;
+}
+
+.select-book-title {
+    font-size: medium;
+}
+
+:host ::ng-deep .p-paginator {
+    background: transparent;
+}
+
+
+:host ::ng-deep .p-scrollpanel-content {
+    width: 65vw;
+    justify-self: center;
+}
+
+.book {
+    background: #a9a9a9;
+    border-radius: .5rem;
+    height: 9rem;
+    width: 7rem;
+    cursor: pointer;
+    margin: 1rem;
+    align-self: center;
+    justify-self: center;transition: background-color 0.3s ease;
+}
+
+.book:hover {
+    background-color: #ddd;
+}
+
+.book.selected {
+    background-color: #564c2359;
+}
+
+.select-book-container {
+    display: grid;
+    grid-template-columns: repeat(7, 0.5fr);
+    grid-template-rows: repeat(2, auto);
+    width: 100%;
+    justify-content: center;
+}
+.start-exchange-description {
+    width: auto;
+    font-size: x-large;
+    text-align: start;
+}
+
+
+:host ::ng-deep .p-overlay {
+    top: 64vh;
+}
+
+:host ::ng-deep .p-select-overlay {
+    top: -30vh;
 }

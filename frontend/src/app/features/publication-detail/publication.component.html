@@ -72,26 +72,63 @@
                 <p style="margin:0">{{ 'PUBLICATION_D.RETURN_TO_DETAIL' | translate }}</p>
             </div>
         </div>
-        <p-scrollpanel [style]="{height: '400px'}">
+        <p-scrollpanel [style]="{height: '80vh'}">
+            <div class="start-exchange-description">
+                <p>{{'PUBLICATION_D.START_EXCHANGE_DESCRIPTION' | translate}}</p>
+            </div>
             <div class="start-exchange-user-card">
 
             </div>
             <div class="start-exchange-book-section">
+                <div style="grid-row: 1">
+                    <p class="select-book-title">{{ 'PUBLICATION_D.SUBHEADER_BOOK' | translate}} </p>
+                    <p-divider/>
+                </div>
+                <div style="grid-row: 2">
+                    <div class="select-book-container">
+                        <div
+                            *ngFor="let book of books; let i = index"
+                            class="book"
+                            [class.selected]="selectedBookIndex === i"
+                            (click)="selectBook(i)">
 
+                        </div>
+                    </div>
+                    <p-paginator/>
+                </div>
             </div>
-            <div class="start-exchange-location-section">
-                <p-select [options]="userLocations" [(ngModel)]="selectedLocation" optionLabel="name" [filter]="true" filterBy="name" [showClear]="true" placeholder="Select a Country" class="w-full md:w-56">
-                    <ng-template #selectedItem let-selectedOption>
-                        <div class="flex items-center gap-2">
-                            <div>{{ selectedOption }}</div>
-                        </div>
-                    </ng-template>
-                    <ng-template let-country #item>
-                        <div class="flex items-center gap-2">
-                            <div>{{ country }}</div>
-                        </div>
-                    </ng-template>
-                </p-select>
+            <div class="start-exchange-container">
+                <div style="grid-row: 1; width: 25vw;">
+                    <p class="select-book-title">{{ 'PUBLICATION_D.SUBHEADER_LOCATION' | translate}} </p>
+                    <p-divider/>
+                </div>
+                <div class="start-exchange-location-section" style="grid-row: 2">
+                    <p-select
+                            [options]="userLocations"
+                            [(ngModel)]="selectedLocation"
+                            optionLabel="name"
+                            [filter]="true" filterBy="name"
+                            [showClear]="true" placeholder="Select a Country"
+                            class="w-full md:w-56">
+                        <ng-template #selectedItem let-selectedOption>
+                            <div class="flex items-center gap-2">
+                                <div>{{ selectedOption }}</div>
+                            </div>
+                        </ng-template>
+                        <ng-template let-country #item>
+                            <div class="flex items-center gap-2">
+                                <div>{{ country }}</div>
+                            </div>
+                        </ng-template>
+                    </p-select>
+                    <div style="text-align: center">
+                        <p-button [styleClass]="'i-want-it-button'"
+                                  label="{{ 'PUBLICATION_D.START_EXCHANGE_BUTTON' | translate }}"
+                                  (click)="requestExchange()">
+                        </p-button>
+                    </div>
+                </div>
+
             </div>
             <div class="start-exchange-button-section">
 
