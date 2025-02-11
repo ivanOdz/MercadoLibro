@@ -10,8 +10,8 @@ export class BookModel {
 	bookLanguage: string;
 	dimension: string;
 	publicationYear: number;
-	isPocketEdition: boolean;
-	isHardcover: boolean;
+	pocketEdition: boolean;
+	hardcover: boolean;
 	ratingCount: number;
 	averageRating: number;
 	authors: string[];
@@ -30,8 +30,8 @@ export class BookModel {
 		this.bookLanguage = data.bookLanguage;
 		this.dimension = data.dimension;
 		this.publicationYear = data.publicationYear;
-		this.isPocketEdition = data.isPocketEdition;
-		this.isHardcover = data.isHardcover;
+		this.pocketEdition = data.isPocketEdition;
+		this.hardcover = data.isHardcover;
 		this.ratingCount = data.ratingCount;
 		this.averageRating = data.averageRating;
 		this.authors = data.authors;

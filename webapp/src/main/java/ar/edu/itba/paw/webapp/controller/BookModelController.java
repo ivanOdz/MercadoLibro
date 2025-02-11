@@ -62,9 +62,9 @@ public class BookModelController {
     public Response postBookModel(final BookModelDTO bookModelDTO, @QueryParam("rating") final Integer rating) {
         BookModel bookModel = bookModelService
                 .createBookModel(bookModelDTO.getIsbn(), bookModelDTO.getTitle(), bookModelDTO.getEditorial(),
-                        bookModelDTO.getDescription(), Genre.valueOf(bookModelDTO.getGenre()), bookModelDTO.getEdition(),
+                        bookModelDTO.getDescription(), Genre.fromString("genre." + bookModelDTO.getGenre()), bookModelDTO.getEdition(),
                         bookModelDTO.getPublicationYear(), bookModelDTO.getHardcover(), bookModelDTO.getPocketEdition(),
-                        BookDimension.valueOf(bookModelDTO.getDimension()), Language.valueOf(bookModelDTO.getBookLanguage()),
+                        BookDimension.fromString("dimension." + bookModelDTO.getDimension()), Language.fromString("language." + bookModelDTO.getBookLanguage()),
                         bookModelDTO.getPages(),bookModelDTO.getWeight(), bookModelDTO.getAuthors());
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(bookModel.getBookModelId())).build()).build();
     }

@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -149,6 +151,9 @@ public class BookModelJpaDao implements BookModelDao {
     public BookModel addAuthor(BookModel bookModel, String authorName) {
         Author newAuthor = new Author(null, authorName);
         em.persist(newAuthor);
+        if (bookModel.getAuthors() == null) {
+        	bookModel.setAuthors(new LinkedHashSet<Author>());
+        }
         bookModel.getAuthors().add(newAuthor);
         return bookModel;
     }
