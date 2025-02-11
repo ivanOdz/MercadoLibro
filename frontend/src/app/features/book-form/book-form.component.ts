@@ -106,6 +106,9 @@ export class BookFormComponent {
 
 	submitForm() {
 		
+		this.bookModelForm.markAllAsTouched();
+		console.log('Estoy!');
+		
 		if (this.authors.length > 1)
 		{
 			this.authors.controls.forEach((control, index) => {

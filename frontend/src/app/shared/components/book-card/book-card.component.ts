@@ -20,7 +20,6 @@ export class BookCardComponent {
 	@Input() showGenre: boolean = true;
 	@Input() showState: boolean = true;
 	
-	
 	ownerName: string = '...';
 	bookImage!: string;
 	defaultImage: string = './assets/book.jpg';

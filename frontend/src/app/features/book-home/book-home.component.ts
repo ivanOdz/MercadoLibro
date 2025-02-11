@@ -11,7 +11,6 @@ import { AuthService } from '../../core/services/auth.service';
 import { FilterListComponent } from "../../shared/components/filter-list/filter-list.component";
 import { SortComponent } from "../../shared/components/sort/sort.component";
 import { BookData2 } from "../../core/models/types";
-import { Book } from './../../core/models/book.model';
 import { Subscription, combineLatest, filter, switchMap, tap, distinctUntilChanged } from "rxjs";
 import { take } from "rxjs/operators";
 import { InputGroup } from 'primeng/inputgroup';
@@ -25,7 +24,7 @@ import { InputText } from 'primeng/inputtext';
 	styleUrl: './book-home.component.css',
 	standalone: true,
 	imports:	[	CommonModule, TranslatePipe, NavbarComponent, RouterModule, FilterListComponent,
-					SortComponent, InputGroup, InputGroupAddon, ButtonModule, InputText, FormsModule	]
+					SortComponent, InputGroup, InputGroupAddon, ButtonModule, InputText, FormsModule, BookCardComponent	]
 					
 })
 export class BookHomeComponent implements OnInit, OnDestroy {
