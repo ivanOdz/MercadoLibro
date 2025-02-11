@@ -42,9 +42,31 @@
 }
 
 .book-state {
-	background-color: #f8d7da;
-	color: #721c24;
 	padding: 5px 10px;
 	border-radius: 5px;
 	font-size: 14px;
+}
+
+.book-state-new {
+	background-color: rgba(160, 100, 200, 0.9);
+}
+
+.book-state-like-new {
+	background-color: rgba(0, 200, 200, 0.9);
+}
+
+.book-state-very-good {
+	background-color: rgba(0, 180, 50, 0.9);
+}
+
+ .book-state-good {
+ 	background-color: rgba(80, 140, 80, 0.8);
+ }
+ 
+.book-state-aceptable {
+	background-color: rgba(150, 150, 0, 0.9);
+}
+
+.book-state-worn {
+	background-color: rgba(180, 25, 25, 0.8);
 }

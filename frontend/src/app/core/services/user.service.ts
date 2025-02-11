@@ -11,7 +11,8 @@ import { TranslateService } from "@ngx-translate/core";
 @Injectable({ providedIn: 'root' })
 export class UserService {
     baseUrl = 'http://localhost:8080/api';
-
+	moreBaseUrl = 'http://localhost:8080';
+	
     constructor(private http: HttpClient, private translate: TranslateService) {
 
     }
@@ -19,9 +20,11 @@ export class UserService {
     getUser(userUrl: string | undefined): Observable<User> {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.users.v1+json'});
 
+		userUrl = userUrl?.startsWith('http') ? userUrl : `${this.moreBaseUrl}${userUrl}`;
         // userUrl = '/users/{id}'
         return this.http.get<any>(`${userUrl}`, { headers }).pipe(
-           // tap((userData) => console.log('Respuesta de la API de user:', userData)),
+//           tap((userData) => console.log('Respuesta de la API de user:', userData)),
+		   
             map((userData) => {
                 return new User(userData);
             })

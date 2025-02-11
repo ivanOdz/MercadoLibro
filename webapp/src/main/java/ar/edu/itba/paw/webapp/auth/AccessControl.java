@@ -175,11 +175,13 @@ public class AccessControl {
         Publication p = publicationService.getPublicationByPublicationId(id);
         User lu = getUser();
 
-        if(p.getPublicationState() == PublicationState.CURRENT){
+        PublicationState state = p.getPublicationState();
+        if(state == PublicationState.CURRENT){
+            // public access
             return true;
         }
 
-        return p.getUser().getUserId().equals(lu.getUserId());
+        return lu != null;
     }
 
     // POST {base_path}/publications/{id}/favorite body: userDTO
@@ -270,8 +272,10 @@ public class AccessControl {
 
     private User getUser(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        PawUserDetails userDetails = (PawUserDetails) auth.getPrincipal();
-        return userDetails.getUser();
+        if (auth.getPrincipal() instanceof PawUserDetails pud) {
+            return pud.getUser();
+        }
+        return null;
     }
 
 

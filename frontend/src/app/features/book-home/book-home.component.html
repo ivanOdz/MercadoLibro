@@ -3,19 +3,65 @@
 <div class="book-home">
 
 	<div class="column-filters">
-		<app-filter-list *ngIf="showConditionFilter" [headers]="conditionHeaders" filterType="Condition"></app-filter-list>
-		<app-filter-list *ngIf="showGenreFilter" [headers]="genreHeaders" filterType="Genre"></app-filter-list>
+		<p class="page-filter-text">{{ 'BOOK_HOME.FILTERS' | translate }}</p>
+		<div class="filter-line"></div>
+		<app-filter-list [headers]="conditionHeaders" filterType="Condition"></app-filter-list>
+		<div class="filter-middle-line"></div>
+		<app-filter-list [headers]="genreHeaders" filterType="Genre"></app-filter-list>
+		<div class="filter-middle-line"></div>
+		<div class="fixed-add-book-container">
+			<button icon="pi pi-plus" class="fixed-add-book-btn"  [routerLink]="uploadBookModelUrl" >{{ 'BOOK_HOME.ADD_BOOK_MODEL' | translate }}</button>
+		</div>
 	</div>
 	
 	<div class="column-content">
-<!-- 		<app-book-card *ngFor="let book of books" [book]="book"></app-book-card> -->
-		<p class="page-title">Agregar un libro</p>
+
+		<p class="page-title">{{ 'BOOK_HOME.TITLE' | translate }}</p>
+		<p-inputgroup>
+			<input #searchInput pInputText
+					[(ngModel)]="currentFilters.search"
+					(keyup.enter)="search()"
+					[ngClass]="{ 'search-applied': isSearchActive }"
+					(blur)="onBlur()"
+					(ngModelChange)="onSearchChange()"
+					placeholder="{{ 'BOOK_HOME.SEARCH' | translate }}" />
+			<p-inputgroup-addon>
+				<p-button icon="pi pi-search" severity="secondary" variant="text" (click)="search()"/>
+			</p-inputgroup-addon>
+		</p-inputgroup>
+		
+		<div class="search-info">
+			<p>{{ 'BOOK_HOME.RESULTS' | translate }}: {{ books.length }}</p>
+			<div class="active-filters">
+				<div class="filter-left">
+					<button *ngIf="currentFilters.state" class="filter-badge" (click)="removeFilter('state')">
+						{{ currentFilters.state | translate }} ✕
+					</button>
+					<button *ngIf="!currentFilters.state" class="no-filter-badge">
+						{{ 'BOOK_HOME.NO_STATE_FILTER' | translate }}
+					</button>
+				</div>
+				<div class="filter-right">
+					<button *ngIf="currentFilters.genre" class="filter-badge" (click)="removeFilter('genre')">
+						{{ currentFilters.genre | translate }} ✕
+					</button>
+					<button *ngIf="!currentFilters.genre" class="no-filter-badge">
+						{{ 'BOOK_HOME.NO_GENRE_FILTER' | translate }}
+					</button>
+				</div>
+			</div>
+			<app-sort></app-sort>
+		</div>
+		
+		<div class="books-grid">
+			<app-book-card *ngFor="let book of books" [book]="book" [showOwner]="false" [showGenre]="true" [showState]="true"></app-book-card>
+		</div>
 		
 		<div class="no-books" *ngIf="books.length === 0">
-		    <p>No se ha encontrado el libro.</p>
-		    <p>Si tienes un libro que no tenemos disponible, agrégalo!</p>
-		    <button class="add-book-btn">Nuevo modelo</button>
+		    <p>{{ 'BOOK_HOME.NO_RESULTS' | translate }}</p>
+		    <p>{{ 'BOOK_HOME.ADD_BOOKS' | translate }}</p>
+			<button class="add-book-btn" [routerLink]="uploadBookModelUrl" >{{ 'BOOK_HOME.ADD_BOOK_MODEL' | translate }}</button>
 		</div>
+		
 	</div>
 </div>
-

@@ -14,4 +14,13 @@ public enum BookDimension {
     public String getValue() {
         return this.value;
     }
+    
+	public static BookDimension fromString(String dimensionFilter) {
+		for (BookDimension dimension : BookDimension.values()) {
+			if (dimension.value.equalsIgnoreCase(dimensionFilter)) {
+				return dimension;
+			}
+		}
+		return null;
+	}
 }

@@ -55,40 +55,52 @@
   "genre": {
     "fiction": "Fiction",
     "non.fiction": "Non-Fiction",
+    "non_fiction": "Non-Fiction",
     "mystery": "Mystery",
     "thriller": "Thriller",
     "science.fiction": "Science Fiction",
+    "science_fiction": "Science Fiction",
     "fantasy": "Fantasy",
     "romance": "Romance",
     "historical.fiction": "Historical Fiction",
+    "historical_fiction": "Historical Fiction",
     "horror": "Horror",
     "biography": "Biography",
     "autobiography": "Autobiography",
     "memoir": "Memoir",
     "young.adult": "Young Adult",
+    "young_adult": "Young Adult",
     "childrens.literature": "Children's Literature",
+    "childrens_literature": "Children's Literature",
     "graphic.novel": "Graphic Novel",
     "classic": "Classic",
     "adventure": "Adventure",
     "dystopian": "Dystopian",
     "self.help": "Self-Help",
+    "self_help": "Self-Help",
     "poetry": "Poetry",
     "literary.fiction": "Literary Fiction",
+    "literary_fiction": "Literary Fiction",
     "crime": "Crime",
     "western": "Western",
     "contemporary": "Contemporary",
     "religious.spiritual": "Religious & Spiritual",
+    "religious_spiritual": "Religious & Spiritual",
     "philosophy": "Philosophy",
     "science": "Science",
     "travel": "Travel",
     "true.crime": "True Crime",
+    "true_crime": "True Crime",
     "historical.non.fiction": "Historical Non-Fiction",
+    "historical_non_fiction": "Historical Non-Fiction",
     "other": "Other"
   },
   "bookstate": {
     "new": "New",
     "like.new": "Like New",
     "very.good": "Very Good",
+    "like_new": "Like New",
+    "very_good": "Very Good",
     "good": "Good",
     "acceptable": "Acceptable",
     "worn": "Worn"
@@ -127,6 +139,27 @@
     "UPDATE_ERROR": "Username cannot be updated",
     "USERNAME_EMPTY": "Username cannot be empty",
     "NO_REVIEWS": "Nobody left a review for you yet!"
+  },
+  "PUBLICATION_D": {
+    "RETURN": "Return to publications",
+    "SOLICIT_BUTTON": "I want it!",
+    "ADDITIONAL_DETAILS": "Additional details",
+    "RETURN_TO_DETAIL": "Return to publication"
+  },
+  "BOOK_HOME": {
+  	"SEARCH": "Search in my books",
+  	"TITLE": "My books",
+  	"RESULTS": "Total results",
+  	"NO_RESULTS": "No books founded",
+  	"ADD_BOOKS": "If you have a book that we don't have available, add one!",
+  	"ADD_BOOK_MODEL": "Create book",
+  	"NO_STATE_FILTER": "No state filter",
+  	"NO_GENRE_FILTER": "No genre filter",
+  	"FILTERS": "Filters"
+  },
+  "BOOK_CARD": {
+  	"OWNER": "Owner",
+  	"STATE": "State"
   }
 
 }

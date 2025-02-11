@@ -1,0 +1,208 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    height: 91vh;
+    width: 100vw;
+}
+
+.publication-detail-header {
+    text-align: start;
+}
+
+.publication-detail-main-section {
+    width: 90vw;
+    margin: 3rem;
+}
+
+.publication-detail-card-section {
+    justify-content: center;
+    height: auto;
+}
+
+.publication-detail-card {
+    background-color: #fff;
+    border-radius: 2rem;
+    box-shadow: 4px 6px 6px #0000001a;
+    color: #2c1809;
+    display: grid;
+    padding: 2.5rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.book-details-card {
+    height: 17vh;
+    grid-template-columns: auto 15% 15% 15% 15%;
+    gap: 3%;
+}
+
+.book-card {
+    height: 57vh;
+    grid-template-columns: 32% 45%;
+    gap: 5%;
+}
+
+.book-image {
+    height: 90%;
+    width: 80%;
+    background-color: darkgray;
+    border-radius: 0.75rem;
+}
+
+.book-authors {
+    font-size: larger;
+}
+
+.book-description {
+    font-size: medium;
+    word-wrap: break-word;
+    overflow-y: clip;
+    height: 30vh;
+}
+
+.book-title {
+    font-size: 2.5rem;
+    margin-top: 1rem;
+}
+
+.book-card-third-column {
+    grid-column: 3;
+    align-content: center;
+    text-align: center;
+}
+
+:host ::ng-deep .i-want-it-button {
+    background-color: #aca28c;
+    color: #ffffff;
+    box-shadow: 4px 6px 6px #0000001a;
+    border: none;
+    cursor: pointer;
+}
+
+:host ::ng-deep .i-want-it-button:not(.disabled):hover {
+    background-color: #8c7b5f;
+    transition: transform 0.2s;
+    transform: scale(1.1);
+    border: none;
+}
+:host ::ng-deep .i-want-it-button:not(.disabled):active {
+    background-color: #8c7b5f;
+    box-shadow: 4px 6px 6px #0000001a;
+    border: none;
+}
+
+
+:host ::ng-deep .p-carousel-viewport  {
+    text-align: center;
+}
+
+:host ::ng-deep .p-carousel-item {
+    align-self: center;
+}
+:host ::ng-deep .p-carousel-indicator-active .p-carousel-indicator-button {
+    background: #aca28c;
+}
+
+.return-button {
+    width: 17%;
+    flex-direction: row;
+    display: flex;
+    border-radius: 1rem;
+    padding: 1rem;
+    gap: 9%;
+    cursor: pointer;
+}
+
+.return-to-publication {
+    width: 17%;
+    flex-direction: row;
+    display: flex;
+    border-radius: 1rem;
+    padding: 1rem;
+    gap: 9%;
+    cursor: pointer;
+}
+
+.start-exchange-header {
+    text-align: center;
+    justify-items: center;
+    color: #2c250a;
+}
+
+
+.return-button:hover {
+    background: #aca28c29;
+    font-weight: bold;
+}
+
+.return-icon {
+    font-size: medium;
+}
+
+
+
+.detail-title {
+    display: flex;
+    gap: 5%;
+    padding: 0.5rem;
+    text-align: center;
+    justify-content: center;
+    font-size: large;
+    font-weight: bold;
+}
+
+.detail {
+    font-size: medium;
+    padding: 1rem;
+    text-align: center;
+    word-break: break-word;
+}
+
+p {
+    margin: 0;
+}
+
+
+.form-scroll-section {
+    width: 100%;
+    height: 81vh;
+    overflow-y: scroll;
+}
+
+.start-exchange-location-section {
+    width: auto;
+    height: 10vh;
+    align-content: center;
+    text-align: center;
+}
+
+.start-exchange-book-section {
+    width: 100%;
+    padding: 1rem;
+    height: 45vh;
+}
+
+.start-exchange-button-section {
+    width: auto;
+}
+
+.start-exchange-user-card {
+    width: 100%;
+    background: white;
+    height: 20vh;
+    border-radius: 2rem;
+    box-shadow: 4px 6px 6px #0000001a;
+    padding: 3rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+:host ::ng-deep .p-scrollpanel-content-container {
+    padding: 2rem;
+    height: 81vh;
+}
+
+:host ::ng-deep .w-full {
+    width: 25% !important;
+}
