@@ -11,6 +11,7 @@ import {Router} from "@angular/router";
 import {NgIf} from "@angular/common";
 import {Select} from "primeng/select";
 import {FormsModule} from "@angular/forms";
+import {environment} from "../../../environments/environment";
 
 @Component({
     selector: 'app-publication-detail',
@@ -57,13 +58,13 @@ export class PublicationComponent implements OnInit {
 
 
     bookImages: string[] = [
-        'http://localhost:8080/assets/book.jpg',
-        'http://localhost:8080/assets/book.jpg',
-        'http://localhost:8080/assets/book.jpg',
-        'http://localhost:8080/assets/book.jpg',
-        'http://localhost:8080/assets/book.jpg',
-        'http://localhost:8080/assets/book.jpg',
-        'http://localhost:8080/assets/book.jpg'
+        `${environment.production ? environment.productionUrl : environment.developmentUrl}/assets/book.jpg`,
+        `${environment.production ? environment.productionUrl : environment.developmentUrl}/assets/book.jpg`,
+        `${environment.production ? environment.productionUrl : environment.developmentUrl}/assets/book.jpg`,
+        `${environment.production ? environment.productionUrl : environment.developmentUrl}/assets/book.jpg`,
+        `${environment.production ? environment.productionUrl : environment.developmentUrl}/assets/book.jpg`,
+        `${environment.production ? environment.productionUrl : environment.developmentUrl}/assets/book.jpg`,
+        `${environment.production ? environment.productionUrl : environment.developmentUrl}/assets/book.jpg`,
     ];
 
     protected readonly routes = routes;

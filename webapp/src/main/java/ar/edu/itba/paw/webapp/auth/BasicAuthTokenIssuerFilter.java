@@ -8,7 +8,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationConverter;
@@ -19,7 +18,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Base64;
 
 @Component
 public class BasicAuthTokenIssuerFilter extends OncePerRequestFilter {
@@ -80,7 +78,7 @@ public class BasicAuthTokenIssuerFilter extends OncePerRequestFilter {
 
                     response.addHeader(JwtTokenUtil.ACCESS_TOKEN_HEADER, accessToken);
                     response.addHeader(JwtTokenUtil.REFRESH_TOKEN_HEADER, refreshToken);
-                    response.addHeader("X-User-URI", "/api/users/" + user.getUserId());
+                    response.addHeader("X-User-URI", "/users/" + user.getUserId());
 
                     SecurityContextHolder.getContext().setAuthentication(authenticationSuccessfull);
                 }

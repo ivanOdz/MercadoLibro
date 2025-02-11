@@ -18,7 +18,7 @@ import {environment} from "../../../environments/environment";
 })
 export class BookFormComponent {
 	
-	url: string = environment.production ? environment.productionUrl : environment.developmentUrl + "/book_models";
+	url: string = `${environment.production ? environment.productionUrl : environment.developmentUrl}/book_models`;
 	bookModelService: BookModelService = inject(BookModelService);
 	bookModelForm: FormGroup;
 	rating: number = 1;

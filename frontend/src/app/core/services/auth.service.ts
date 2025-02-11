@@ -73,7 +73,7 @@ export class AuthService {
       return;
     }
 
-    this.userService.getUser(tokenUri).subscribe({
+    this.userService.getUser(`${environment.production ? environment.productionUrl : environment.developmentUrl}${tokenUri}`).subscribe({
       next: (user) => {
         this.setLoggedUser(user);
         this.isAuthenticated.next(true);
@@ -96,7 +96,7 @@ export class AuthService {
       'Accept': 'application/vnd.book_models.v1+json',
     });
 
-    this.http.head(environment.production ? environment.productionUrl : environment.developmentUrl + '/book_models', { headers, observe: 'response' }).subscribe({
+    this.http.head(`${environment.production ? environment.productionUrl : environment.developmentUrl}/book_models`, { headers, observe: 'response' }).subscribe({
       next: (headResponse) => {
         this.isAuthenticated.next(true);
         const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
