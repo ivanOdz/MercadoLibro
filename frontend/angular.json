@@ -30,7 +30,7 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "src/assets"
+                "input": "src/paw-2024b-09/assets"
               }
             ],
             "scripts": []
