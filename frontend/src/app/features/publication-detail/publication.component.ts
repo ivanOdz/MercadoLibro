@@ -32,14 +32,21 @@ import {environment} from "../../../environments/environment";
         trigger('fadeOutUp', [
             transition(':leave', [
                 animate('500ms ease-in', style({ opacity: 0, transform: 'translateY(-20px)' }))
+            ]),
+            transition(':enter', [
+                style({ opacity: 0, transform: 'translateY(20px)' }),
+                animate('500ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
             ])
         ]),
         trigger('fadeOutIn', [
-            transition(':leave', [
-                animate('500ms ease-in', style({ opacity: 0, transform: 'translateY(20px)' }))
-            ])
-        ]),
-
+                transition(':leave', [
+                    animate('500ms ease-in', style({ opacity: 0, transform: 'translateY(20px)' }))
+                ]),
+                transition(':enter', [
+                    style({ opacity: 0, transform: 'translateY(-20px)' }),
+                    animate('500ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+                ]),
+        ])
     ],
     styleUrls: ['./publication.component.css']
 })
