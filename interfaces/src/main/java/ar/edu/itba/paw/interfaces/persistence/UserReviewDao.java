@@ -15,6 +15,8 @@ public interface UserReviewDao {
 
 	PaginatedResponse<UserReview, BasicMetadata> getReviewsEarnedByUserId(long userId, int currentPage);
 
+	int getAllReviewsEarnedByUserId(long userId);
+
 	Optional<Rating> getUserRatingEarned(long userId);
 
 }

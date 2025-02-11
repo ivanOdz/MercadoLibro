@@ -85,8 +85,17 @@ public class UserReviewJpaDao implements UserReviewDao {
         query.setParameter("reviewIds", reviewIds);
 
         List<UserReview> reviews = query.getResultList();
+        int totalResults = getAllReviewsEarnedByUserId(userId);
 
-        return new PaginatedResponse<>(reviews, new BasicMetadata(currentPage, reviews.size(), PROFILE_PAGE_SIZE));
+        return new PaginatedResponse<>(reviews, new BasicMetadata(currentPage, totalResults, PROFILE_PAGE_SIZE));
+    }
+
+    @Override
+    public int getAllReviewsEarnedByUserId(long userId) {
+        StringBuilder stringQuery = new StringBuilder("SELECT COUNT(*) FROM user_review ur WHERE ur.subjectId = (:subject)");
+        Query nativeQuery = em.createNativeQuery(stringQuery.toString());
+        nativeQuery.setParameter("subject", userId);
+        return ((Number) nativeQuery.getSingleResult()).intValue();
     }
 
     private Rating getRatingFromUserId(String stringQuery, long userId) {
