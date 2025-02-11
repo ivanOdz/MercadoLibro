@@ -9,6 +9,9 @@
 		<div class="filter-middle-line"></div>
 		<app-filter-list [headers]="genreHeaders" filterType="Genre"></app-filter-list>
 		<div class="filter-middle-line"></div>
+		<div class="fixed-add-book-container">
+			<button icon="pi pi-plus" class="fixed-add-book-btn"  [routerLink]="uploadBookModelUrl" >{{ 'BOOK_HOME.ADD_BOOK_MODEL' | translate }}</button>
+		</div>
 	</div>
 	
 	<div class="column-content">

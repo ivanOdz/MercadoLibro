@@ -165,3 +165,31 @@
 	background-color: #d5c4a1;
 }
 
+.fixed-add-book-container {
+	margin-top: 15%;
+	text-align: center;
+}
+
+.fixed-add-book-btn {
+	width: 100%;
+	background-color:  #d5c4a1;
+	color: white;
+	font-size: 18px;
+	font-weight: bold;
+	border-radius: 8px;
+	padding: 12px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	transition: background-color 0.3s ease;
+}
+
+.fixed-add-book-btn:hover {
+	background-color: #d5c4a1;
+}
+
+.fixed-add-book-btn:focus {
+	outline: none;
+}
+
+.fixed-add-book-btn .pi-plus {
+	margin-right: 8px;
+}
