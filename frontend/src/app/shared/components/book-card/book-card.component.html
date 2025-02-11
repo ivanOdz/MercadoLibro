@@ -3,7 +3,17 @@
 	  
 	<div class="book-info">
 		<h3 class="book-title">{{ book.bookModel!.title }}</h3>
-		<p *ngIf="showOwner" class="book-owner"><strong>Dueño:</strong> {{ ownerName }}</p>
-		<p class="book-state"><strong>Estado:</strong> {{ ('bookstate.' + (book.state! | lowercase)) | translate }}</p>
+		<p *ngIf="showOwner" class="book-owner"><strong>{{ 'BOOK_CARD.OWNER' | translate }}</strong> {{ ownerName }}</p>
+		<p *ngIf="showGenre" class="book-owner"><strong>{{ 'GENRE' | translate }}:</strong> {{ ('genre.' + (book.bookModel!.genre | lowercase)) | translate }}</p>
+		<p *ngIf="showState" class="book-state" [ngClass]="{
+			'book-state-new': book.state == 'NEW',
+			'book-state-like-new': book.state == 'LIKE_NEW',
+			'book-state-very-good': book.state == 'VERY_GOOD',
+			'book-state-good': book.state == 'GOOD',
+			'book-state-aceptable': book.state == 'ACCEPTABLE',
+			'book-state-worn': book.state == 'WORN'
+		}"> <strong>{{ 'BOOK_CARD.STATE' | translate }}:</strong>
+			{{ ('bookstate.' + (book.state! | lowercase)) | translate }}
+		</p>
 	</div>
 </div>

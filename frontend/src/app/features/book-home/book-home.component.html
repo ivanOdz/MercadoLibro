@@ -3,15 +3,28 @@
 <div class="book-home">
 
 	<div class="column-filters">
+		<p class="page-filter-text">{{ 'BOOK_HOME.FILTERS' | translate }}</p>
+		<div class="filter-line"></div>
 		<app-filter-list [headers]="conditionHeaders" filterType="Condition"></app-filter-list>
+		<div class="filter-middle-line"></div>
 		<app-filter-list [headers]="genreHeaders" filterType="Genre"></app-filter-list>
+		<div class="filter-middle-line"></div>
+		<div class="fixed-add-book-container">
+			<button icon="pi pi-plus" class="fixed-add-book-btn"  [routerLink]="uploadBookModelUrl" >{{ 'BOOK_HOME.ADD_BOOK_MODEL' | translate }}</button>
+		</div>
 	</div>
 	
 	<div class="column-content">
 
 		<p class="page-title">{{ 'BOOK_HOME.TITLE' | translate }}</p>
 		<p-inputgroup>
-			<input pInputText [(ngModel)]="currentFilters.search" (keyup.enter)="search()" placeholder="{{ 'BOOK_HOME.SEARCH' | translate }}" />
+			<input #searchInput pInputText
+					[(ngModel)]="currentFilters.search"
+					(keyup.enter)="search()"
+					[ngClass]="{ 'search-applied': isSearchActive }"
+					(blur)="onBlur()"
+					(ngModelChange)="onSearchChange()"
+					placeholder="{{ 'BOOK_HOME.SEARCH' | translate }}" />
 			<p-inputgroup-addon>
 				<p-button icon="pi pi-search" severity="secondary" variant="text" (click)="search()"/>
 			</p-inputgroup-addon>
