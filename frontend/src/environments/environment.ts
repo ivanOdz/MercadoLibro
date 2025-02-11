@@ -1,4 +1,5 @@
 export const environment = {
     production: false,
-    apiUrl: 'http://localhost:4200/api'
+    productionUrl: 'http://localhost:8080/api',
+    developmentUrl: 'http://pawserver.it.itba.edu.ar/paw-2024b-09/api',
 };

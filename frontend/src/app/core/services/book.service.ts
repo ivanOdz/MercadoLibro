@@ -6,10 +6,11 @@ import {Book} from "../models/book.model";
 import {BookData2} from "../models/types";
 import {BookModelService} from "./bookmodel.service";
 import {map} from "rxjs/operators";
+import {environment} from "../../../environments/environment";
 
 @Injectable({ providedIn: 'root' })
 export class BookService {
-    baseUrl = 'http://localhost:8080/api';
+    baseUrl = environment.production ? environment.productionUrl : environment.developmentUrl;
 
     constructor(private http: HttpClient, private bookModelService: BookModelService) {}
 

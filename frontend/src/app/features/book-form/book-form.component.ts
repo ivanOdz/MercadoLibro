@@ -6,6 +6,7 @@ import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { NavbarComponent } from "../../shared/components/navbar/navbar.component";
 import { BookModel } from "../../core/models/bookModel.model";
 import { BookModelService } from "../../core/services/bookmodel.service";
+import {environment} from "../../../environments/environment";
 
 @Component({
 	
@@ -17,7 +18,7 @@ import { BookModelService } from "../../core/services/bookmodel.service";
 })
 export class BookFormComponent {
 	
-	url: string = "http://localhost:8080/api/book_models";
+	url: string = environment.production ? environment.productionUrl : environment.developmentUrl + "/book_models";
 	bookModelService: BookModelService = inject(BookModelService);
 	bookModelForm: FormGroup;
 	rating: number = 1;
