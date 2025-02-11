@@ -24,7 +24,7 @@ import { InputText } from 'primeng/inputtext';
 	templateUrl: './book-home.component.html',
 	styleUrl: './book-home.component.css',
 	standalone: true,
-	imports:	[	CommonModule, TranslatePipe, NavbarComponent, RouterModule, BookCardComponent, FilterListComponent,
+	imports:	[	CommonModule, TranslatePipe, NavbarComponent, RouterModule, FilterListComponent,
 					SortComponent, InputGroup, InputGroupAddon, ButtonModule, InputText, FormsModule	]
 					
 })

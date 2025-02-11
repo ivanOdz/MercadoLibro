@@ -143,7 +143,8 @@
   "PUBLICATION_D": {
     "RETURN": "Return to publications",
     "SOLICIT_BUTTON": "I want it!",
-    "ADDITIONAL_DETAILS": "Additional details"
+    "ADDITIONAL_DETAILS": "Additional details",
+    "RETURN_TO_DETAIL": "Return to publication"
   },
   "BOOK_HOME": {
   	"SEARCH": "Search in my books",

@@ -1,6 +1,6 @@
 <app-navbar></app-navbar>
 <div class="container">
-    <div class="publication-detail-main-section">
+    <div class="publication-detail-main-section" *ngIf="!exchangeSolicited" @fadeOutUp>
         <div class="publication-detail-header">
             <div class="return-button" (click)="goToPublications()">
                 <i class="pi pi-arrow-left return-icon"></i>
@@ -27,7 +27,7 @@
                     aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>
                 </div>
                 <div class="book-card-third-column">
-                    <p-button [styleClass]="'i-want-it-button'" label="{{ 'PUBLICATION_D.SOLICIT_BUTTON' | translate }}"></p-button>
+                    <p-button (click)="toggleSolicitExchange()" [styleClass]="'i-want-it-button'" label="{{ 'PUBLICATION_D.SOLICIT_BUTTON' | translate }}"></p-button>
                 </div>
             </div>
             <div class="publication-detail-card book-details-card">
@@ -64,5 +64,38 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="publication-detail-main-section" *ngIf="exchangeSolicited" @fadeOutIn>
+        <div class="start-exchange-header">
+            <div class="return-to-publication" (click)="toggleSolicitExchange()">
+                <i class="pi pi-chevron-down return-icon"></i>
+                <p style="margin:0">{{ 'PUBLICATION_D.RETURN_TO_DETAIL' | translate }}</p>
+            </div>
+        </div>
+        <p-scrollpanel [style]="{height: '400px'}">
+            <div class="start-exchange-user-card">
+
+            </div>
+            <div class="start-exchange-book-section">
+
+            </div>
+            <div class="start-exchange-location-section">
+                <p-select [options]="userLocations" [(ngModel)]="selectedLocation" optionLabel="name" [filter]="true" filterBy="name" [showClear]="true" placeholder="Select a Country" class="w-full md:w-56">
+                    <ng-template #selectedItem let-selectedOption>
+                        <div class="flex items-center gap-2">
+                            <div>{{ selectedOption }}</div>
+                        </div>
+                    </ng-template>
+                    <ng-template let-country #item>
+                        <div class="flex items-center gap-2">
+                            <div>{{ country }}</div>
+                        </div>
+                    </ng-template>
+                </p-select>
+            </div>
+            <div class="start-exchange-button-section">
+
+            </div>
+        </p-scrollpanel>
     </div>
 </div>

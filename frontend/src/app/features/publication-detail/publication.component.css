@@ -114,6 +114,23 @@
     cursor: pointer;
 }
 
+.return-to-publication {
+    width: 17%;
+    flex-direction: row;
+    display: flex;
+    border-radius: 1rem;
+    padding: 1rem;
+    gap: 9%;
+    cursor: pointer;
+}
+
+.start-exchange-header {
+    text-align: center;
+    justify-items: center;
+    color: #2c250a;
+}
+
+
 .return-button:hover {
     background: #aca28c29;
     font-weight: bold;
@@ -144,4 +161,48 @@
 
 p {
     margin: 0;
+}
+
+
+.form-scroll-section {
+    width: 100%;
+    height: 81vh;
+    overflow-y: scroll;
+}
+
+.start-exchange-location-section {
+    width: auto;
+    height: 10vh;
+    align-content: center;
+    text-align: center;
+}
+
+.start-exchange-book-section {
+    width: 100%;
+    padding: 1rem;
+    height: 45vh;
+}
+
+.start-exchange-button-section {
+    width: auto;
+}
+
+.start-exchange-user-card {
+    width: 100%;
+    background: white;
+    height: 20vh;
+    border-radius: 2rem;
+    box-shadow: 4px 6px 6px #0000001a;
+    padding: 3rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+:host ::ng-deep .p-scrollpanel-content-container {
+    padding: 2rem;
+    height: 81vh;
+}
+
+:host ::ng-deep .w-full {
+    width: 25% !important;
 }
