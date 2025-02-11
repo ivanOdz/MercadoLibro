@@ -77,7 +77,7 @@ public class UserController {
             return Response.status(Response.Status.CONFLICT).build();
         }
         return Response.noContent()
-                .header("X-User-Uri", "/api/users/" + user.getUserId())
+                .header("X-User-Uri", "/users/" + user.getUserId())
                 .build();
     }
 
@@ -98,7 +98,6 @@ public class UserController {
     }
 
 
-    // TODO: Manejar en los filtros el caso que la cuenta no esta verificada.
     @POST
     @Consumes(value = {VndType.APPLICATION_VERIFICATION_CODE})
     public Response verifyUser(final VerificationDTO verificationDTO) {
@@ -108,7 +107,7 @@ public class UserController {
         String refreshToken = jwtTokenUtil.createRefreshToken(user);
 
         return Response.noContent()
-                .header("X-User-Uri", "/api/users/" + user.getUserId())
+                .header("X-User-Uri", "/users/" + user.getUserId())
                 .header(JwtTokenUtil.ACCESS_TOKEN_HEADER, accessToken) // access token
                 .header(JwtTokenUtil.REFRESH_TOKEN_HEADER, refreshToken)  // refresh token
                 .build();

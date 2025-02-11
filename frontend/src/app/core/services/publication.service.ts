@@ -10,10 +10,11 @@ import {BookModel} from "../models/bookModel.model";
 import {BookModelService} from "./bookmodel.service";
 import {AuthService} from "./auth.service";
 import {User} from "../models/user.model";
+import {environment} from "../../../environments/environment";
 
 @Injectable({ providedIn: 'root' })
 export class PublicationService {
-    baseUrl = 'http://localhost:8080/api';
+    baseUrl = environment.production ? environment.productionUrl : environment.developmentUrl;
 
     constructor(private http: HttpClient, private authService: AuthService, private bookService: BookService, private userService: UserService, private bookModelService: BookModelService) {}
 

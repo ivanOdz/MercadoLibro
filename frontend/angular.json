@@ -37,7 +37,8 @@
           },
           "configurations": {
             "production": {
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "deployUrl": "/paw-2024b-09/assets/"
             },
             "development": {
               "optimization": false,

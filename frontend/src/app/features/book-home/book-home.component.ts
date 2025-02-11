@@ -23,9 +23,9 @@ import { InputText } from 'primeng/inputtext';
 	templateUrl: './book-home.component.html',
 	styleUrl: './book-home.component.css',
 	standalone: true,
-	imports:	[	CommonModule, TranslatePipe, NavbarComponent, RouterModule, FilterListComponent,
-					SortComponent, InputGroup, InputGroupAddon, ButtonModule, InputText, FormsModule, BookCardComponent	]
-					
+    imports: [CommonModule, TranslatePipe, NavbarComponent, RouterModule, FilterListComponent,
+        SortComponent, InputGroup, InputGroupAddon, ButtonModule, InputText, FormsModule, BookCardComponent]
+
 })
 export class BookHomeComponent implements OnInit, OnDestroy {
 	
