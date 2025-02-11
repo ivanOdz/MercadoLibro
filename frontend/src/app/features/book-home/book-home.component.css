@@ -71,6 +71,25 @@
 	font-size: 28px;
 }
 
+.page-filter-text {
+	margin: 0;
+	text-align: center;
+	font-family: "Inter", sans-serif;
+	font-size: 20px;
+}
+
+.filter-line {
+	border-bottom: 2px solid rgba(160, 160, 160, 1);
+	width: 100%;
+	box-shadow: 0 15px 30px rgba(0, 0, 0, 1);
+}
+
+.filter-middle-line {
+	border-bottom: 2px solid rgba(160, 160, 160, 1);
+	width: 100%;
+	box-shadow: 0 0px 30px rgba(0, 0, 0, 1);
+}
+
 .search-info {
 	display: flex;
 	justify-content: space-between;

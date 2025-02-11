@@ -111,9 +111,9 @@ export class BookHomeComponent implements OnInit, OnDestroy {
 
 	search() {
 		if (this.currentFilters.search) {
-//			this.router.navigate(['/publications'],
-//			{ queryParams: { search: this.searchQuery },
-//			queryParamsHandling: 'merge' });
+			this.router.navigate([],
+			{ queryParams: { search: this.currentFilters.search },
+			queryParamsHandling: 'merge' });
 		}
 	}
 	

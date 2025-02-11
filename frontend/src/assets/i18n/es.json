@@ -154,7 +154,8 @@
   	"ADD_BOOKS": "Si tienes un libro que no tenemos disponible, agrégalo!",
   	"ADD_BOOK_MODEL": "Crear libro",
   	"NO_STATE_FILTER": "Sin filtro de condición",
-  	"NO_GENRE_FILTER": "Sin filtro de género"
+  	"NO_GENRE_FILTER": "Sin filtro de género",
+  	"FILTERS": "Filtros"
   },
   "BOOK_CARD": {
   	"OWNER": "Dueño",
