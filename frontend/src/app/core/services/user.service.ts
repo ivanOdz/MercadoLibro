@@ -1,13 +1,14 @@
 import { Injectable } from "@angular/core";
-import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
+import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
 import { User } from "../models/user.model";
 import { map } from "rxjs/operators";
 import { catchError, EMPTY, Observable, tap, throwError } from "rxjs";
 import { Location } from "../models/location.model";
-import {Review} from "../models/review.model";
+import { Review } from "../models/review.model";
 import {Exchange} from "../models/exchange.model";
 import { TranslateService } from "@ngx-translate/core";
-import {environment} from "../../../environments/environment";
+import { Pagination } from "../models/pagination";
+import { environment } from "../../../environments/environment";
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -152,11 +153,22 @@ export class UserService {
         return this.http.delete<void>(`${location.self}`);
     }
 
-    getReviews(user: User): Observable<Review[]> {
+    getReviews(user: User, page: number): Observable<{ reviews: Review[], pagination: Pagination }> {
+        const url = `${user.reviews}?page=${page}`;
+        return this.getReviewsFromUrl(url);
+    }
+
+    getReviewsFromUrl(url: string): Observable<{ reviews: Review[], pagination: Pagination }> {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.user.review.v1+json' });
 
-        return this.http.get<Review[]>(`${user.reviews}`, { headers }).pipe(
-            map((reviewsData: any[]) => reviewsData.map(review => new Review(review)))
+        return this.http.get<Review[]>(url, { headers, observe: 'response' }).pipe(
+            map(response => {
+                const linkHeader = response.headers.get('Link');
+                console.log('Paginación de las reviews, service:', linkHeader);
+                let pagination = new Pagination(linkHeader);
+                const reviews: Review[] = response.body?.map((review: any) => new Review(review)) || [];
+                return { reviews, pagination };
+            })
         );
     }
 
