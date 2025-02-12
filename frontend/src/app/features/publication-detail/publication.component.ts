@@ -3,7 +3,7 @@ import {NavbarComponent} from "../../shared/components/navbar/navbar.component";
 import {TranslatePipe, TranslateService} from "@ngx-translate/core";
 import {Button} from "primeng/button";
 import { Carousel } from 'primeng/carousel';
-import { trigger, state, style, animate, transition } from '@angular/animations';
+import { trigger, style, animate, transition } from '@angular/animations';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import {PrimeTemplate} from "primeng/api";
 import {routes} from "../../app.routes";
@@ -14,7 +14,7 @@ import {FormsModule} from "@angular/forms";
 import {environment} from "../../../environments/environment";
 import {Divider} from "primeng/divider";
 import {Paginator} from "primeng/paginator";
-import {BookData, BookData2, PublicationData2} from "../../core/models/types";
+import { BookData2, PublicationData2} from "../../core/models/types";
 import {PublicationService} from "../../core/services/publication.service";
 import {catchError, filter, forkJoin, of, switchMap, tap} from "rxjs";
 import {map} from "rxjs/operators";
@@ -22,10 +22,10 @@ import {UserService} from "../../core/services/user.service";
 import {BookService} from "../../core/services/book.service";
 import {BookModelService} from "../../core/services/bookmodel.service";
 import {User} from "../../core/models/user.model";
-import {BookModel} from "../../core/models/bookModel.model";
 import {Rating} from "primeng/rating";
 import {AuthService} from "../../core/services/auth.service";
-import {Book} from "../../core/models/book.model";
+import {Tooltip} from "primeng/tooltip";
+import {StyleClass} from "primeng/styleclass";
 
 @Component({
     selector: 'app-publication-detail',
@@ -44,7 +44,8 @@ import {Book} from "../../core/models/book.model";
         Divider,
         Paginator,
         NgForOf,
-        Rating
+        Rating,
+        Tooltip
     ],
     animations: [
         trigger('fadeOutUp', [
@@ -176,47 +177,67 @@ export class PublicationComponent implements OnInit {
         this.exchangeSolicited = !this.exchangeSolicited;
 
         if (this.exchangeSolicited) {
-            this.as.loggedUser$.pipe(
-                filter(user => !!user),
-                switchMap((user: User) => {
-                    return this.bs.getBooks({
-                        booksUrl: user.books,
-                        state: 'AVAILABLE',
-                        genre: '',
-                        search: ''
-                    });
-                }),
-                switchMap(({ books, pagination }) => {
-                    // TODO: manejar la paginación más adelante
-                    return forkJoin(
-                        books.map(book =>
-                            this.bms.getBookModel(book.bookModel).pipe(
-                                map(bookModel => ({
-                                    state: book.state,
-                                    available: book.available,
-                                    owner: book.owner ?? null,
-                                    bookModel: bookModel,
-                                    images: book.images ?? [],
-                                    self: book.self ?? null
-                                }) as unknown as BookData2)
-                            )
-                        )
-                    );
-                })
-            ).subscribe({
-                next: (response) => {
-                    this.userBooks = response;
-                },
-                error: (err) => {
-                    console.error("Error al obtener los libros:", err);
-                }
-            });
+            this.loadBooksData()
+            this.loadUserLocations()
+
         }
+    }
+
+    loadBooksData() {
+        this.as.loggedUser$.pipe(
+            filter(user => !!user),
+            switchMap((user: User) => {
+                return this.bs.getBooks({
+                    booksUrl: user.books,
+                    state: 'AVAILABLE',
+                    genre: '',
+                    search: ''
+                });
+            }),
+            switchMap(({ books, pagination }) => {
+                // TODO: manejar la paginación más adelante
+                return forkJoin(
+                    books.map(book =>
+                        this.bms.getBookModel(book.bookModel).pipe(
+                            map(bookModel => ({
+                                state: book.state,
+                                available: book.available,
+                                owner: book.owner ?? null,
+                                bookModel: bookModel,
+                                images: book.images ?? [],
+                                self: book.self ?? null
+                            }) as unknown as BookData2)
+                        )
+                    )
+                );
+            })
+        ).subscribe({
+            next: (response) => {
+                this.userBooks = response;
+            },
+            error: (err) => {
+                console.error("Error al obtener los libros:", err);
+            }
+        });
+    }
+
+
+    loadUserLocations() {
+        this.as.loggedUser$.pipe(
+            filter(user => !!user),
+            switchMap((user: User) => {
+                return this.us.getLocations(user);
+            })
+        ).subscribe({
+            next: (locations) => {
+                this.userLocations = locations.map(location => location.location);
+            },
+        });
     }
 
 
 
-    userLocations: string[] = ['São Paulo', 'Rio de Janeiro', 'Minas Gerais', 'Bahia', 'Paraná', 'Santa Catarina', 'Rio Grande do Sul', 'Pernambuco', 'Ceará', 'Pará', 'Maranhão', 'Goiás', 'Distrito Federal', 'Espírito Santo', 'Mato Grosso', 'Mato Grosso do Sul', 'Paraíba', 'Rio Grande do Norte', 'Alagoas', 'Sergipe', 'Tocantins', 'Rondônia', 'Acre', 'Amapá', 'Roraima'];
+    userLocations: string[] = [];
     selectedLocation: string = '';
 
     requestExchange() {

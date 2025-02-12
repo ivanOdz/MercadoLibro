@@ -153,7 +153,8 @@
     "PUBLISHER": "Editorial",
     "DATE": "Fecha de la publicación",
     "LOCATION": "Ubicaciones",
-    "BOOK_CONDITION": "Condición"
+    "BOOK_CONDITION": "Condición",
+    "USER": "Usuario"
   },
   "BOOK_HOME": {
     "SEARCH": "Buscar en mis libros",
@@ -165,7 +166,6 @@
     "NO_STATE_FILTER": "Sin filtro de condición",
     "NO_GENRE_FILTER": "Sin filtro de género",
     "FILTERS": "Filtros",
-    "USER": "Usuario"
   },
   "BOOK_CARD": {
     "OWNER": "Dueño",

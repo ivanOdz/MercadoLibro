@@ -98,7 +98,14 @@
                              class="book"
                             [class.selected]="selectedBookIndex === i"
                             (click)="selectBook(i)">
-                            <img class="book-image-select" [src]="getCover()" alt="{{book.bookModel?.title}}"/>
+                            <img class="book-image-select" [pTooltip]="tooltipContent" [src]="getCover()" alt="{{book.bookModel?.title}}"/>
+                            <ng-template #tooltipContent class="book-tooltip">
+                                <div class="book-tooltip">
+                                    <p class="tooltip-title">{{book.bookModel?.title}}</p>
+                                    <p class="tooltip-authors">{{book.bookModel?.authors}}</p>
+                                    <p class="tooltip-description">{{book.bookModel?.description}}<</p>
+                                </div>
+                            </ng-template>
                         </div>
                     </div>
                     <p-paginator/>

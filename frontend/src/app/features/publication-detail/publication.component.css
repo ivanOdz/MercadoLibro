@@ -41,7 +41,7 @@
 
 .book-card {
     height: 57vh;
-    grid-template-columns: 32% 45%;
+    grid-template-columns: 32% 35%;
     gap: 5%;
 }
 
@@ -80,6 +80,8 @@
     box-shadow: 4px 6px 6px #0000001a;
     border: none;
     cursor: pointer;
+    height: 4rem;
+    width: 15rem;
 }
 
 :host ::ng-deep .i-want-it-button:not(.disabled):hover {
@@ -200,6 +202,7 @@ p {
 .book-image-select {
     height: 11rem;
     width: 9rem;
+    border-radius: 0.5rem;
 }
 
 .start-exchange-button-section {
@@ -272,6 +275,7 @@ p {
 
 :host ::ng-deep .w-full {
     width: 70% !important;
+    height: 65%;
 }
 
 
@@ -342,4 +346,24 @@ p {
 
 :host ::ng-deep .custom-select.p-select-overlay {
     top: -30vh;
+    height: 25vh;
+}
+
+.tooltip-description {
+    font-size: small;
+    margin: 1rem;
+    height: 10vh;
+    overflow-y: hidden;
+}
+.tooltip-title {
+    font-size: large;
+    margin: 1rem;
+}
+.tooltip-authors {
+    font-size: medium;
+    margin: 1rem;
+}
+:host ::ng-deep .p-tooltip {
+    max-height: 10vh;
+    background: #aaaaaa;
 }
