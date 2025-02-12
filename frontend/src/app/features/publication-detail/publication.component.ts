@@ -23,6 +23,7 @@ import {BookService} from "../../core/services/book.service";
 import {BookModelService} from "../../core/services/bookmodel.service";
 import {User} from "../../core/models/user.model";
 import {BookModel} from "../../core/models/bookModel.model";
+import {Rating} from "primeng/rating";
 
 @Component({
     selector: 'app-publication-detail',
@@ -40,7 +41,8 @@ import {BookModel} from "../../core/models/bookModel.model";
         FormsModule,
         Divider,
         Paginator,
-        NgForOf
+        NgForOf,
+        Rating
     ],
     animations: [
         trigger('fadeOutUp', [
@@ -180,5 +182,29 @@ export class PublicationComponent implements OnInit {
 
     requestExchange() {
 
+    }
+
+
+    get userRating(): number {
+        return this.publication?.user?.ratingAverage ?? 0;
+    }
+
+    set userRating(value: number) {
+        if (this.publication?.user) {
+            this.publication.user.ratingAverage = value;
+        }
+    }
+
+
+    getImages(){
+        return this.bookImages.length === 0 ? [this.getDefaultImage()] : this.bookImages;
+    }
+
+    getDefaultImage() {
+        return `${environment.production? 'http://pawserver.it.itba.edu.ar/paw-2024b-09'  : 'http://localhost:8080'}/assets/book.jpg`;
+    }
+
+    getCover() {
+        return this.publication?.book?.bookModel?.coverUri || this.getDefaultImage();
     }
 }

@@ -152,7 +152,8 @@
     "PUBLISHER": "Publisher",
     "DATE": "Publication date",
     "LOCATION": "Locations",
-    "BOOK_CONDITION": "Book condition"
+    "BOOK_CONDITION": "Book condition",
+    "USER": "User"
   },
   "BOOK_HOME": {
     "SEARCH": "Search in my books",
