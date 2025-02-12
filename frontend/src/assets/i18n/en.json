@@ -144,7 +144,11 @@
     "RETURN": "Return to publications",
     "SOLICIT_BUTTON": "I want it!",
     "ADDITIONAL_DETAILS": "Additional details",
-    "RETURN_TO_DETAIL": "Return to publication"
+    "RETURN_TO_DETAIL": "Return to publication",
+    "SUBHEADER_BOOK" : "Select one of your books",
+    "START_EXCHANGE_DESCRIPTION": "Request an exchange with this book.",
+    "SUBHEADER_LOCATION": "Select a location",
+    "START_EXCHANGE_BUTTON": "Request exchange"
   },
   "BOOK_HOME": {
   	"SEARCH": "Search in my books",

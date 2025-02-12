@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../models/user.model';
 import { UserService } from './user.service';
+import {environment} from "../../../environments/environment";
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -72,7 +73,7 @@ export class AuthService {
       return;
     }
 
-    this.userService.getUser(tokenUri).subscribe({
+    this.userService.getUser(`${environment.production ? environment.productionUrl : environment.developmentUrl}${tokenUri}`).subscribe({
       next: (user) => {
         this.setLoggedUser(user);
         this.isAuthenticated.next(true);
@@ -95,7 +96,7 @@ export class AuthService {
       'Accept': 'application/vnd.book_models.v1+json',
     });
 
-    this.http.head('http://localhost:8080/api/book_models', { headers, observe: 'response' }).subscribe({
+    this.http.head(`${environment.production ? environment.productionUrl : environment.developmentUrl}/book_models`, { headers, observe: 'response' }).subscribe({
       next: (headResponse) => {
         this.isAuthenticated.next(true);
         const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';

@@ -7,12 +7,12 @@ import { Location } from "../models/location.model";
 import {Review} from "../models/review.model";
 import {Exchange} from "../models/exchange.model";
 import { TranslateService } from "@ngx-translate/core";
+import {environment} from "../../../environments/environment";
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-    baseUrl = 'http://localhost:8080/api';
-	moreBaseUrl = 'http://localhost:8080';
-	
+    baseUrl = environment.production ? environment.productionUrl : environment.developmentUrl;
+
     constructor(private http: HttpClient, private translate: TranslateService) {
 
     }
@@ -20,7 +20,6 @@ export class UserService {
     getUser(userUrl: string | undefined): Observable<User> {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.users.v1+json'});
 
-		userUrl = userUrl?.startsWith('http') ? userUrl : `${this.moreBaseUrl}${userUrl}`;
         // userUrl = '/users/{id}'
         return this.http.get<any>(`${userUrl}`, { headers }).pipe(
 //           tap((userData) => console.log('Respuesta de la API de user:', userData)),

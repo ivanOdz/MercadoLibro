@@ -7,7 +7,7 @@ public final class Constants {
         // restrict instantiation
     }
 
-    public static final int BOOKS_PAGE_SIZE = 15;
+    public static final int BOOKS_PAGE_SIZE = 14;
 
     public static final int PUBLICATIONS_PAGE_SIZE = 5;
 

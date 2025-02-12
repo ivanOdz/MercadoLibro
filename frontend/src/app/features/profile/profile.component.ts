@@ -10,6 +10,7 @@ import { Location } from '../../core/models/location.model';
 import { ReviewComponent } from './review/review.component';
 import { Review } from '../../core/models/review.model';
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-profile',
@@ -19,7 +20,7 @@ import { TranslatePipe, TranslateService } from "@ngx-translate/core";
   styleUrl: './profile.component.css'
 })
 export class ProfileComponent implements OnInit{
-  url = 'http://localhost:8080/api'
+  url = environment.production ? environment.productionUrl : environment.developmentUrl;
   userService: UserService = inject(UserService);
 
   loggedUser: User | null = null;
