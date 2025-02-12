@@ -164,7 +164,6 @@ export class UserService {
         return this.http.get<Review[]>(url, { headers, observe: 'response' }).pipe(
             map(response => {
                 const linkHeader = response.headers.get('Link');
-                console.log('Paginación de las reviews, service:', linkHeader);
                 let pagination = new Pagination(linkHeader);
                 const reviews: Review[] = response.body?.map((review: any) => new Review(review)) || [];
                 return { reviews, pagination };
