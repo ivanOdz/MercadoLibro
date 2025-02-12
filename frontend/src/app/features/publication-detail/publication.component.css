@@ -191,9 +191,15 @@ p {
 .start-exchange-book-section {
     width: 100%;
     padding: 1rem;
-    height: 50vh;
+    height: auto;
     grid-template-rows: 10% 90%;
     display: grid;
+    gap: 5%;
+}
+
+.book-image-select {
+    height: 11rem;
+    width: 9rem;
 }
 
 .start-exchange-button-section {
@@ -301,14 +307,14 @@ p {
 }
 
 .book {
-    background: #a9a9a9;
     border-radius: .5rem;
-    height: 9rem;
-    width: 7rem;
+    height: 12rem;
+    width: 10rem;
     cursor: pointer;
-    margin: 1rem;
-    align-self: center;
-    justify-self: center;transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .book:hover {

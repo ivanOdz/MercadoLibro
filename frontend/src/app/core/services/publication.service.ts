@@ -134,12 +134,26 @@ export class PublicationService {
                     )
                 );
                 return forkJoin(detailsRequests).pipe(
-                    map((publicationData: PublicationData2[]) =>{
-                        console.log("Publicaciones con detalles:", publicationData);
+                    map((publicationData: any[]) => {
+                        const transformedData: PublicationData2[] = publicationData.map(data => ({
+                            book: {
+                                ...data.book,
+                                owner: data.user
+                            },
+                            locations: data.locations,
+                            user: data.user,
+                            publicationState: data.publicationState,
+                            publicationDatetime: data.publicationDatetime,
+                            favoriteEndpoint: data.favoriteEndpoint,
+                            self: data.self,
+                            favoritePublication: null,
+                            isFavoriteTemplate: data.isFavoriteTemplate
+                        }));
+                        console.log("Publicaciones con detalles:", transformedData);
                         return new HttpResponse<PublicationData2[]>({
-                            body: publicationData,
+                            body: transformedData,
                             headers: response.headers
-                        })
+                        });
                     })
                 );
             })

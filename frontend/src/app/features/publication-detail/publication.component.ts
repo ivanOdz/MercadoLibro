@@ -14,9 +14,9 @@ import {FormsModule} from "@angular/forms";
 import {environment} from "../../../environments/environment";
 import {Divider} from "primeng/divider";
 import {Paginator} from "primeng/paginator";
-import {PublicationData2} from "../../core/models/types";
+import {BookData, BookData2, PublicationData2} from "../../core/models/types";
 import {PublicationService} from "../../core/services/publication.service";
-import {catchError, forkJoin, of, switchMap, tap} from "rxjs";
+import {catchError, filter, forkJoin, of, switchMap, tap} from "rxjs";
 import {map} from "rxjs/operators";
 import {UserService} from "../../core/services/user.service";
 import {BookService} from "../../core/services/book.service";
@@ -24,6 +24,8 @@ import {BookModelService} from "../../core/services/bookmodel.service";
 import {User} from "../../core/models/user.model";
 import {BookModel} from "../../core/models/bookModel.model";
 import {Rating} from "primeng/rating";
+import {AuthService} from "../../core/services/auth.service";
+import {Book} from "../../core/models/book.model";
 
 @Component({
     selector: 'app-publication-detail',
@@ -140,6 +142,7 @@ export class PublicationComponent implements OnInit {
                 private route: ActivatedRoute,
                 private ps: PublicationService,
                 private us: UserService,
+                private as: AuthService,
                 private bs: BookService,
                 private bms: BookModelService) {
         this.translate.onLangChange.subscribe(() => this.loadPublicationDetailItems());
@@ -148,14 +151,6 @@ export class PublicationComponent implements OnInit {
     loadPublicationDetailItems() {
         // static data translations
     }
-
-    books = [
-        { title: "Libro 1" }, { title: "Libro 2" }, { title: "Libro 3" },
-        { title: "Libro 4" }, { title: "Libro 5" }, { title: "Libro 6" },
-        { title: "Libro 7" }, { title: "Libro 8" }, { title: "Libro 9" },
-        { title: "Libro 10" }, { title: "Libro 11" }, { title: "Libro 12" },
-        { title: "Libro 13" }, { title: "Libro 14" }
-    ];
 
     selectedBookIndex: number | null = null;
 
@@ -173,9 +168,53 @@ export class PublicationComponent implements OnInit {
 
     exchangeSolicited: boolean = false;
 
+    currentBookPage: number = 0;
+
+    userBooks: BookData2[] = [];
+
     toggleSolicitExchange() {
         this.exchangeSolicited = !this.exchangeSolicited;
+
+        if (this.exchangeSolicited) {
+            this.as.loggedUser$.pipe(
+                filter(user => !!user),
+                switchMap((user: User) => {
+                    return this.bs.getBooks({
+                        booksUrl: user.books,
+                        state: 'AVAILABLE',
+                        genre: '',
+                        search: ''
+                    });
+                }),
+                switchMap(({ books, pagination }) => {
+                    // TODO: manejar la paginación más adelante
+                    return forkJoin(
+                        books.map(book =>
+                            this.bms.getBookModel(book.bookModel).pipe(
+                                map(bookModel => ({
+                                    state: book.state,
+                                    available: book.available,
+                                    owner: book.owner ?? null,
+                                    bookModel: bookModel,
+                                    images: book.images ?? [],
+                                    self: book.self ?? null
+                                }) as unknown as BookData2)
+                            )
+                        )
+                    );
+                })
+            ).subscribe({
+                next: (response) => {
+                    this.userBooks = response;
+                },
+                error: (err) => {
+                    console.error("Error al obtener los libros:", err);
+                }
+            });
+        }
     }
+
+
 
     userLocations: string[] = ['São Paulo', 'Rio de Janeiro', 'Minas Gerais', 'Bahia', 'Paraná', 'Santa Catarina', 'Rio Grande do Sul', 'Pernambuco', 'Ceará', 'Pará', 'Maranhão', 'Goiás', 'Distrito Federal', 'Espírito Santo', 'Mato Grosso', 'Mato Grosso do Sul', 'Paraíba', 'Rio Grande do Norte', 'Alagoas', 'Sergipe', 'Tocantins', 'Rondônia', 'Acre', 'Amapá', 'Roraima'];
     selectedLocation: string = '';

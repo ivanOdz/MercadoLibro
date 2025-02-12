@@ -94,12 +94,11 @@
                 </div>
                 <div style="grid-row: 2">
                     <div class="select-book-container">
-                        <div
-                                *ngFor="let book of books; let i = index"
-                                class="book"
-                                [class.selected]="selectedBookIndex === i"
-                                (click)="selectBook(i)">
-
+                        <div *ngFor="let book of userBooks; let i = index"
+                             class="book"
+                            [class.selected]="selectedBookIndex === i"
+                            (click)="selectBook(i)">
+                            <img class="book-image-select" [src]="getCover()" alt="{{book.bookModel?.title}}"/>
                         </div>
                     </div>
                     <p-paginator/>

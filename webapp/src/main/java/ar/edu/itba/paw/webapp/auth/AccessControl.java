@@ -38,12 +38,18 @@ public class AccessControl {
 
     // GET {base_path}/books?owner={id}
     public Boolean booksAccess(HttpServletRequest request) {
+        if(getUser() == null){
+            return false;
+        }
         long userId = Long.parseLong(request.getParameter("owner"));
         return getUser().getUserId().equals(userId);
     }
 
     // POST {base_path}/books  body: bookInputDTO
     public Boolean bookCreationAccess(BookInputDTO bookInputDTO) {
+        if(getUser() == null){
+            return false;
+        }
         return getUser().getUserId().equals(bookInputDTO.getUserId());
     }
 
@@ -63,12 +69,18 @@ public class AccessControl {
 
     // GET {base_path}/exchanges?userId=1
     public Boolean exchangeUserAccess(HttpServletRequest request) {
+        if(getUser() == null){
+            return false;
+        }
         long userId = Long.parseLong(request.getParameter("user_id"));
         return getUser().getUserId().equals(userId);
     }
 
     // POST {base_path}/exchanges  body: createExchangeDTO
     public Boolean createExchangeAccess(CreateExchangeDTO createExchangeDTO) {
+        if(getUser() == null){
+            return false;
+        }
         // user must be the owner of the book
         Book b = bookService.getBookById(createExchangeDTO.getBookId());
 
@@ -81,6 +93,9 @@ public class AccessControl {
 
     // POST {base_path}/exchanges/{id}/messages  body: messageDTO
     public Boolean createMessageAccess(Long exchangeId, MessageDTO messageDTO) {
+        if(getUser() == null){
+            return false;
+        }
         Exchange e = exchangeService.getExchangeById(exchangeId);
 
         boolean exchangeAccess = e.getRequester().getUser().getUserId().equals(getUser().getUserId()) ||
@@ -93,6 +108,9 @@ public class AccessControl {
     // GET  {base_path}/api/exchanges/{id:\\d+}/messages"
     // GET  {base_path}/api/exchanges/{id:\\d+}/messages/{message_id:\\d+}"
     public Boolean exchangeAccess(Long exchangeId, Long messageId) {
+        if(getUser() == null){
+            return false;
+        }
         Exchange e = exchangeService.getExchangeById(exchangeId);
 
         long userId = getUser().getUserId();
@@ -109,6 +127,9 @@ public class AccessControl {
 
     // PATCH {base_path}/exchanges/{id} body: updateExchangeDTO
     public Boolean exchangeUpdateAccess(Long id, UpdateExchangeDTO updateExchangeDTO) {
+        if(getUser() == null){
+            return false;
+        }
         Exchange e = exchangeService.getExchangeById(id);
         User lu = getUser();
 
@@ -135,6 +156,9 @@ public class AccessControl {
     // GET {base_path}/publications?favorites=false&userId=1
     // GET {base_path}/publications?favorites=false&userId=1&locationId=1
     public Boolean publicationsGeneralAccess(HttpServletRequest request) {
+        if(getUser() == null){
+            return false;
+        }
         boolean favorite = Boolean.parseBoolean(request.getParameter("favorites"));
         String userString = request.getParameter("user_id");
 
@@ -155,6 +179,9 @@ public class AccessControl {
 
     // POST {base_path}/publications
     public Boolean publicationsPostAccess(PublicationInputDTO publicationCreationDTO) {
+        if(getUser() == null){
+            return false;
+        }
         Location l = locationService.findById(publicationCreationDTO.getLocationId());
         Book b = bookService.getBookById(publicationCreationDTO.getBookId());
         Long userId = publicationCreationDTO.getUserId();
@@ -186,6 +213,9 @@ public class AccessControl {
 
     // POST {base_path}/publications/{id}/favorite body: userDTO
     public Boolean publicationsFavoritePostAccess(Long publicationId, UserDTO userDTO) {
+        if(getUser() == null){
+            return false;
+        }
         Publication p = publicationService.getPublicationByPublicationId(publicationId);
         return getUser().getUserId().equals(p.getUser().getUserId()) &&
                 userDTO.getSelfId().equals(getUser().getUserId());
@@ -193,6 +223,9 @@ public class AccessControl {
 
     // GET {base_path}/publications/{publication_id}/favorite/{favorite_id}
     public Boolean publicationsFavoriteListAccess(Long publicationId, Long favoriteId) {
+        if(getUser() == null){
+            return false;
+        }
         FavoritePublication fp = publicationService.getFavoritePublicationById(favoriteId);
         Publication p = publicationService.getPublicationByPublicationId(publicationId);
         Long luId = getUser().getUserId();
@@ -201,6 +234,9 @@ public class AccessControl {
     }
 
     public Boolean publicationsFavoriteAccess(HttpServletRequest request,Long publicationId) {
+        if(getUser() == null){
+            return false;
+        }
         Publication p = publicationService.getPublicationByPublicationId(publicationId);
         String userIdString = request.getParameter("user_id");
 
@@ -226,11 +262,17 @@ public class AccessControl {
     // GET {base_path}/users/{id}/locations/{location_id}
     // DELETE {base_path}/users/{id}/locations/{location_id}
     public Boolean userAccess(Long id) {
+        if(getUser() == null){
+            return false;
+        }
         return getUser().getUserId().equals(id);
     }
     
     // POST {base_path}/users/{id}/reviews   // id 4  yo 2
     public Boolean createReviewAccess(Long id, ReviewDTO reviewInputDTO) {
+        if(getUser() == null){
+            return false;
+        }
         Exchange e = exchangeService.getExchangeById(reviewInputDTO.getExchangeId());
         Long luId = getUser().getUserId();
 
@@ -243,11 +285,17 @@ public class AccessControl {
 
     // GET {base_path}/users/{id}/reviews
     public Boolean reviewListAccess(Long id) {
+        if(getUser() == null){
+            return false;
+        }
         return getUser().getUserId().equals(id);
     }
 
     // GET {base_path}/users/{id}/reviews/{ur_id}
     public Boolean reviewAccess(Long id, Long userReviewId) {
+        if(getUser() == null){
+            return false;
+        }
         UserReview ur = userReviewService.findUserReviewById(id, userReviewId);
         return getUser().getUserId().equals(ur.getReviewer().getUserId());
     }

@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
+import {HttpClient, HttpHeaders, HttpParams, HttpResponse} from "@angular/common/http";
 import {catchError, forkJoin, Observable, switchMap, tap, throwError} from "rxjs";
 import {Publication} from "../models/publication.model";
 import {Book} from "../models/book.model";
@@ -7,6 +7,9 @@ import {BookData2} from "../models/types";
 import {BookModelService} from "./bookmodel.service";
 import {map} from "rxjs/operators";
 import {environment} from "../../../environments/environment";
+import {Pagination} from "../models/pagination";
+import {Exchange} from "../models/exchange.model";
+import {Review} from "../models/review.model";
 
 @Injectable({ providedIn: 'root' })
 export class BookService {
@@ -21,49 +24,27 @@ export class BookService {
         );
     }
 
-    private getBooks({ state, genre, page, search, user }: { state: string; genre: string; page: number; search: string; user: string | null}): Observable<HttpResponse<Book[]>> {
+    getBooks({booksUrl, state, genre, search }: { booksUrl: string;state: string; genre: string; search: string}): Observable<{books: Book[], pagination: Pagination}> {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.books.v1+json' });
 
-        let queryParams = '';
+        let params = new HttpParams()
+            .set('state', state)
+            .set('search', search)
+            .set('genre', genre);
 
-        if (search) {
-            queryParams += `search=${search}`;
-        }
-
-        if (state) {
-            if (queryParams) queryParams += '&';
-            queryParams += `state=${state}`;
-        }
-
-        if (genre) {
-            if (queryParams) queryParams += '&';
-            queryParams += `genre=${genre}`;
-        }
-
-        if(user){
-            if (queryParams) queryParams += '&';
-
-            queryParams += `owner=${user}`;
-        }
-
-        if (page !== undefined && page !== null) {
-            if (queryParams) queryParams += '&';
-            queryParams += `page=${page}`;
-        }
-
-        const url = `${this.baseUrl}/books${queryParams ? '?' + queryParams : ''}`;
-
-        return this.http.get<Book[]>(url, {
-            headers,
-            observe: 'response'
-        }).pipe(
-            //tap((response) => console.log("Respuesta completa de la API:", response))
-        );
+        return this.http.get<Book[]>(`${booksUrl}`, { headers, params, observe: 'response' }).pipe(
+            map(response =>{
+                const linkHeader = response.headers.get('Link');
+                let pagination = new Pagination(linkHeader);
+                const books: Book[] = response.body?.map((book: any) => new Book(book)) || [];
+                return { books, pagination };
+            }
+        ));
     }
 
-    getMyBooks({ state, genre, page, search, user }: { state: string; genre: string; page: number; search: string; user: string }): Observable<HttpResponse<BookData2[]>> {
-        const userId = user.split("/").pop();
-        return this.getBooks({ state, genre, page, search, user: userId! }).pipe(
+    /*
+    getMyBooks({ booksUrl, state, genre, search }: { booksUrl: string; state: string; genre: string; search: string}): Observable<HttpResponse<BookData2[]>> {
+        return this.getBooks( { state, genre, page, search, user: userId! }).pipe(
             switchMap((response) => {
                 const books = response.body || [];
 
@@ -83,7 +64,7 @@ export class BookService {
             })
         );
     }
-
+*/
 
     updateBookstate(book: BookData2, newState: string): Observable<void> {
         const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.books.v1+json' });

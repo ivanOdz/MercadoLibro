@@ -11,12 +11,14 @@ import { AuthService } from '../../core/services/auth.service';
 import { FilterListComponent } from "../../shared/components/filter-list/filter-list.component";
 import { SortComponent } from "../../shared/components/sort/sort.component";
 import { BookData2 } from "../../core/models/types";
-import { Subscription, combineLatest, filter, switchMap, tap, distinctUntilChanged } from "rxjs";
-import { take } from "rxjs/operators";
+import {Subscription, combineLatest, filter, switchMap, tap, distinctUntilChanged, forkJoin} from "rxjs";
+import {map, take} from "rxjs/operators";
 import { InputGroup } from 'primeng/inputgroup';
 import { InputGroupAddon } from 'primeng/inputgroupaddon';
 import { ButtonModule } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
+import {User} from "../../core/models/user.model";
+import {BookModel} from "../../core/models/bookModel.model";
 
 @Component({
 	selector: 'app-book-home',
@@ -27,22 +29,22 @@ import { InputText } from 'primeng/inputtext';
         SortComponent, InputGroup, InputGroupAddon, ButtonModule, InputText, FormsModule, BookCardComponent]
 
 })
-export class BookHomeComponent implements OnInit, OnDestroy {
+export class BookHomeComponent implements OnInit {
 	
 	@ViewChild('searchInput') searchInput!: ElementRef;
 	private subscription!: Subscription;
 
 	constructor(private authService: AuthService,
 				private route: ActivatedRoute,
-				private bookModelService: BookModelService,
 				private bookService: BookService,
-				private router: Router)
+				private router: Router,
+				private bms: BookModelService)
 	{ }
 
 	uploadBookModelUrl: string = "/books/add";
 	conditionHeaders: Record<string, string> = {};
 	genreHeaders: Record<string, string> = {};
-	books: BookData2[] = [];
+
 	
 	showConditionFilter: boolean = true;
 	showGenreFilter: boolean = true;
@@ -50,45 +52,15 @@ export class BookHomeComponent implements OnInit, OnDestroy {
 	lastSearchQuery: string | null = null;
 	
 	currentFilters = {
+		booksUrl: '',
 		state: '',
 		genre: '',
-		page: 0,
 		search: '',
-		user: ''
 	};
 
+	books: BookData2[] = [];
 	ngOnInit() {
-		this.subscription = this.authService.loggedUser$.pipe(
-			filter(user => !!user),
-			switchMap((user) => {
-				this.currentFilters.user = user!.self;
-
-				return this.route.queryParams.pipe(
-					tap((params) => {
-						this.currentFilters.state = params['state'] || '';
-						this.currentFilters.genre = params['genre'] || '';
-						this.currentFilters.page = params['page'] || 0;
-						this.currentFilters.search = params['search'] || '';
-
-						this.showConditionFilter = !params['state'];
-						this.showGenreFilter = !params['genre'];
-					}),
-					switchMap(() => this.bookService.getMyBooks({ ...this.currentFilters })),
-					tap((response) => {
-						this.books = response.body || [];
-						this.processHeaders(response.headers);
-					})
-				);
-			})
-		).subscribe({
-			error: (err) => {
-				console.error('Error:', err);
-			}
-		});
-	}
-	
-	ngOnDestroy() {
-		this.subscription.unsubscribe();
+		this.fetchBooks();
 	}
 
 	private processHeaders(headers: any) {
@@ -151,9 +123,42 @@ export class BookHomeComponent implements OnInit, OnDestroy {
 	}
 	
 	fetchBooks() {
-		this.bookService.getMyBooks({ ...this.currentFilters }).subscribe((response) => {
-			this.books = response.body || [];
-			this.processHeaders(response.headers);
-		});
+		this.authService.loggedUser$.pipe(
+			filter(user => !!user),
+			switchMap((user) => {
+				this.currentFilters.booksUrl = user.books; // Asignamos la URL de los libros del usuario
+
+				return this.route.queryParams.pipe(
+					tap((params) => {
+						this.currentFilters.state = params['state'] || '';
+						this.currentFilters.genre = params['genre'] || '';
+						this.currentFilters.search = params['search'] || '';
+						this.showConditionFilter = !params['state'];
+						this.showGenreFilter = !params['genre'];
+					}),
+					switchMap(() => this.bookService.getBooks({ ...this.currentFilters })),
+					switchMap(({books, pagination}) => {
+						return forkJoin(
+							books.map(book =>
+								this.bms.getBookModel(book.bookModel).pipe(
+									map((bookModel) => ({
+										state: book.state,
+										available: book.available,
+										owner: user,
+										bookModel: bookModel,
+										images: null,
+										self: book.self,
+									}) as BookData2)
+								)
+							)
+						);
+					})
+				);
+			})
+		).subscribe({
+			next: (books) => {
+				this.books = books;
+			}
+		})
 	}
 }
