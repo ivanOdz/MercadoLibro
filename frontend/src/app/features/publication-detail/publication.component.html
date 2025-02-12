@@ -17,14 +17,9 @@
                     </p-carousel>
                 </div>
                 <div style="grid-column: 2">
-                    <p class="book-title">Title</p>
-                    <p class="book-authors">Author</p>
-                    <p class="book-description">roenvronvrievnorvnpvwnronowenopewnvewnvw
-                    rnrovnovnreovnrovnrovnronvrovvnorvnrovnrnvrovnr
-                    rornorvnornonrvornvornvrovnrovnrovnnnnnnnvvvvvvvvvvvvvvvvvvvvvvvvv
-                    aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaquieroterminarestoooooooaaaaaaaaaa
-                    aaaaaaaaaaaaaaaaaaaaaaaaaaaa
-                    aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>
+                    <p class="book-title">{{publication?.book?.bookModel?.title}}</p>
+                    <p class="book-authors">{{publication?.book?.bookModel?.authors}}</p>
+                    <p class="book-description">{{publication?.book?.bookModel?.description}}</p>
                 </div>
                 <div class="book-card-third-column">
                     <p-button (click)="toggleSolicitExchange()" [styleClass]="'i-want-it-button'" label="{{ 'PUBLICATION_D.SOLICIT_BUTTON' | translate }}"></p-button>
@@ -34,33 +29,34 @@
                 <div style="grid-column: 1;align-content: center;padding: 1rem;font-size: larger">
                     <p>{{ 'PUBLICATION_D.ADDITIONAL_DETAILS' | translate}}</p>
                 </div>
+
                 <div style="grid-column: 2">
                     <div class="detail-title">
                         <i class="pi pi-address-book" style="font-size: 1.25rem;"></i>
-                        <p>boo</p>
+                        <p>{{ 'PUBLICATION_D.BOOK_CONDITION' | translate}}</p>
                     </div>
-                    <div class="detail">datazo</div>
+                    <div class="detail">{{ publication?.book?.self }}</div>
                 </div>
                 <div style="grid-column: 3">
                     <div class="detail-title">
-                        <i class="pi pi-address-book" style="font-size: 1.25rem;"></i>
-                        <p>boo</p>
+                        <i class="pi pi-map-marker" style="font-size: 1.25rem;"></i>
+                        <p>{{ 'PUBLICATION_D.LOCATION' | translate}}</p>
                     </div>
-                    <div class="detail">datazo</div>
+                    <div class="detail">{{ publicationLocations }}</div>
                 </div>
                 <div style="grid-column: 4">
                     <div class="detail-title">
-                        <i class="pi pi-address-book" style="font-size: 1.25rem;"></i>
-                        <p>boo</p>
+                        <i class="pi pi-calendar" style="font-size: 1.25rem;"></i>
+                        <p>{{ 'PUBLICATION_D.DATE' | translate}}</p>
                     </div>
-                    <div class="detail">datazo</div>
+                    <div class="detail">{{ publication?.publicationDatetime?.toDateString() }}</div>
                 </div>
                 <div style="grid-column: 5">
                     <div class="detail-title">
-                        <i class="pi pi-address-book" style="font-size: 1.25rem;"></i>
-                        <p>boo</p>
+                        <i class="pi pi-pencil" style="font-size: 1.25rem;"></i>
+                        <p>{{ 'PUBLICATION_D.PUBLISHER' | translate}}</p>
                     </div>
-                    <div class="detail">datazo</div>
+                    <div class="detail">{{ publication?.book?.bookModel?.editorial }}</div>
                 </div>
             </div>
         </div>
@@ -87,10 +83,10 @@
                 <div style="grid-row: 2">
                     <div class="select-book-container">
                         <div
-                            *ngFor="let book of books; let i = index"
-                            class="book"
-                            [class.selected]="selectedBookIndex === i"
-                            (click)="selectBook(i)">
+                                *ngFor="let book of books; let i = index"
+                                class="book"
+                                [class.selected]="selectedBookIndex === i"
+                                (click)="selectBook(i)">
 
                         </div>
                     </div>
