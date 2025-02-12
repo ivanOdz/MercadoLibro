@@ -49,16 +49,24 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
+  gap: 10px;
 }
 .profile-details span {
   text-align: left;
 }
-.material-symbols-outlined {
-  font-variation-settings:
-    'FILL' 0,
-    'wght' 400,
-    'GRAD' 0,
-    'opsz' 24
+.username-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+mat-icon {
+  margin-left: 15px;
+  cursor: pointer;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+mat-icon:hover {
+  transform: scale(1.2);
+  color: #785dc8;
 }
 .modal-overlay {
   position: fixed;
@@ -148,7 +156,8 @@ select:focus {
   cursor: pointer;
 }
 .add-button:disabled {
-  background: gray;
+  background: #b0bec5;
+  border: 1px solid gray;
   cursor: not-allowed;
 }
 .review-section {
@@ -164,7 +173,8 @@ select:focus {
   font-style: italic;
   margin-top: 5px;
 }
-.edit {
-    cursor: pointer;
-    margin-left: 10px;
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }

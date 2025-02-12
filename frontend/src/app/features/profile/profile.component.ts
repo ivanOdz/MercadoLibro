@@ -10,11 +10,14 @@ import { Location } from '../../core/models/location.model';
 import { ReviewComponent } from './review/review.component';
 import { Review } from '../../core/models/review.model';
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
+import { Pagination } from "../../core/models/pagination";
+import { PaginatorComponent } from "../../shared/components/paginator/paginator.component";
+import {MatIcon} from "@angular/material/icon";
 import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-profile',
-  imports: [NavbarComponent, NgForOf, FormsModule, CommonModule, ReviewComponent, TranslatePipe],
+  imports: [NavbarComponent, NgForOf, FormsModule, CommonModule, ReviewComponent, TranslatePipe, PaginatorComponent, MatIcon],
   standalone: true,
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
@@ -34,10 +37,10 @@ export class ProfileComponent implements OnInit{
   isAddModalOpen = false;
   isRemoveModalOpen = false;
   locationToRemove: Location | null = null;
+  pagination: Pagination | null = null;
 
 
-
-  constructor(private authService: AuthService, private translate: TranslateService, ) {}
+  constructor(private authService: AuthService, private translate: TranslateService, private http: HttpClient) {}
 
   openModal() {
     if (this.loggedUser) {
@@ -137,10 +140,12 @@ export class ProfileComponent implements OnInit{
     }
   }
 
-  getReviews() {
+  getReviews(url: string | null = null) {
     if (this.loggedUser) {
-      this.userService.getReviews(this.loggedUser).subscribe(reviews => {
+      const requestUrl = url || `${this.loggedUser.reviews}?page=0`;
+      this.userService.getReviewsFromUrl(requestUrl).subscribe(({ reviews, pagination }) => {
         this.reviews = reviews;
+        this.pagination = pagination;
       });
     } else {
       console.log("el usuario no está definido, no se pueden cargar las reseñas");
