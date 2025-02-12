@@ -1,0 +1,23 @@
+.pagination-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+.pagination-container mat-icon {
+    cursor: pointer;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+.pagination-container mat-icon:hover {
+    transform: scale(1.2);
+    color: #785dc8;
+}
+.pagination-container mat-icon.disabled {
+    cursor: not-allowed;
+    color: #b0bec5;
+    transform: scale(1);
+}
+
+.pagination-container mat-icon.disabled:hover {
+    transform: scale(1);
+    color: #b0bec5;
+}
