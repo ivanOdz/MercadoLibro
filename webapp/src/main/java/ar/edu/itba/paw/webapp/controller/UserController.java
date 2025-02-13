@@ -181,7 +181,7 @@ public class UserController {
 
         GenericEntity<List<ReviewDTO>> entity = new GenericEntity<>(reviewDTOS) {};
         Response.ResponseBuilder responseBuilder = Response.ok(entity);
-        Response paginatedResponse = PageResponseUtil.getResponse(page, reviews.getMetadata().getMaxPage(), uriInfo, responseBuilder);
+        Response paginatedResponse = PageResponseUtil.getResponse(page, reviews.getMetadata().getMaxPage(), uriInfo.getAbsolutePathBuilder(), responseBuilder);
         Response.ResponseBuilder finalResponse = Response.status(paginatedResponse.getStatus()).entity(entity);
         paginatedResponse.getHeaders().forEach((key, values) -> values.forEach(value -> finalResponse.header(key, value)));
         return CacheResponseUtil.unconditionalCacheResponse(finalResponse);
