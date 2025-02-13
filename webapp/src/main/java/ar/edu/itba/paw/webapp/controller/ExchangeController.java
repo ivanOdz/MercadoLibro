@@ -17,10 +17,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -50,7 +47,9 @@ public class ExchangeController {
         }
 
         Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ExchangeDTO>>(exchangeDTOS) {});
-        return PageResponseUtil.getResponse(page, exchanges.getMetadata().getMaxPage(), uriInfo, response);
+        UriBuilder uri = PageResponseUtil.getUriBuilderExchanges(uriInfo.getAbsolutePathBuilder(), userId, state, isOfferer, isRequester);
+
+        return PageResponseUtil.getResponse(page, exchanges.getMetadata().getMaxPage(), uri, response);
     }
 
     @POST
