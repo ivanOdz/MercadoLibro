@@ -115,9 +115,9 @@
     "select": "Sort by"
   },
   "dimension": {
-  	"small": "Small (12cm x 8cm)",
-  	"medium": "Medium (20cm x 12cm)",
-  	"large": "Large (32cm x 20cm)"
+    "small": "Small (12cm x 8cm)",
+    "medium": "Medium (20cm x 12cm)",
+    "large": "Large (32cm x 20cm)"
   },
   "CONDITION": "Condition",
   "GENRE" : "Genre",
@@ -148,22 +148,27 @@
     "SUBHEADER_BOOK" : "Select one of your books",
     "START_EXCHANGE_DESCRIPTION": "Request an exchange with this book.",
     "SUBHEADER_LOCATION": "Select a location",
-    "START_EXCHANGE_BUTTON": "Request exchange"
+    "START_EXCHANGE_BUTTON": "Request exchange",
+    "PUBLISHER": "Publisher",
+    "DATE": "Publication date",
+    "LOCATION": "Locations",
+    "BOOK_CONDITION": "Book condition",
+    "USER": "User"
   },
   "BOOK_HOME": {
-  	"SEARCH": "Search in my books",
-  	"TITLE": "My books",
-  	"RESULTS": "Total results",
-  	"NO_RESULTS": "No books founded",
-  	"ADD_BOOKS": "If you have a book that we don't have available, add one!",
-  	"ADD_BOOK_MODEL": "Create book",
-  	"NO_STATE_FILTER": "No state filter",
-  	"NO_GENRE_FILTER": "No genre filter",
-  	"FILTERS": "Filters"
+    "SEARCH": "Search in my books",
+    "TITLE": "My books",
+    "RESULTS": "Total results",
+    "NO_RESULTS": "No books founded",
+    "ADD_BOOKS": "If you have a book that we don't have available, add one!",
+    "ADD_BOOK_MODEL": "Create book",
+    "NO_STATE_FILTER": "No state filter",
+    "NO_GENRE_FILTER": "No genre filter",
+    "FILTERS": "Filters"
   },
   "BOOK_CARD": {
-  	"OWNER": "Owner",
-  	"STATE": "State"
+    "OWNER": "Owner",
+    "STATE": "State"
   }
 
 }

@@ -41,7 +41,7 @@
 
 .book-card {
     height: 57vh;
-    grid-template-columns: 32% 45%;
+    grid-template-columns: 32% 35%;
     gap: 5%;
 }
 
@@ -80,6 +80,8 @@
     box-shadow: 4px 6px 6px #0000001a;
     border: none;
     cursor: pointer;
+    height: 4rem;
+    width: 15rem;
 }
 
 :host ::ng-deep .i-want-it-button:not(.disabled):hover {
@@ -191,9 +193,16 @@ p {
 .start-exchange-book-section {
     width: 100%;
     padding: 1rem;
-    height: 50vh;
+    height: auto;
     grid-template-rows: 10% 90%;
     display: grid;
+    gap: 5%;
+}
+
+.book-image-select {
+    height: 11rem;
+    width: 9rem;
+    border-radius: 0.5rem;
 }
 
 .start-exchange-button-section {
@@ -203,13 +212,61 @@ p {
 .start-exchange-user-card {
     width: 100%;
     background: white;
-    height: 20vh;
+    height: 25vh;
     border-radius: 2rem;
     box-shadow: 4px 6px 6px #0000001a;
-    padding: 3rem;
+    padding: 1.5rem;
     margin-top: 2rem;
     margin-bottom: 2rem;
+    grid-template-columns: 15% 22% auto;
+    display: grid;
+    gap: 4%;
 }
+
+.user-card-first-column {
+    grid-column: 1;
+    justify-items: center;
+    text-align: center;
+    align-content: center;
+}
+
+.user-card-second-column {
+    grid-column: 2;
+    align-content: center;
+}
+
+.user-card-third-column {
+    grid-column: 3;
+    justify-items: end;
+    align-content: center;
+    margin: 2.5rem;
+}
+
+.book-image-small-card {
+    height: 90%;
+    width: 80%;
+    background-color: darkgray;
+    border-radius: 0.75rem;
+}
+
+.book-authors-small-card {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.book-description-small-card {
+    font-size: small;
+    word-wrap: break-word;
+    overflow-y: clip;
+    height: 5vh;
+}
+
+.book-title-small-card {
+    font-size: xx-large;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
 
 :host ::ng-deep .p-scrollpanel-content-container {
     padding: 2rem;
@@ -218,6 +275,7 @@ p {
 
 :host ::ng-deep .w-full {
     width: 70% !important;
+    height: 65%;
 }
 
 
@@ -253,14 +311,14 @@ p {
 }
 
 .book {
-    background: #a9a9a9;
     border-radius: .5rem;
-    height: 9rem;
-    width: 7rem;
+    height: 12rem;
+    width: 10rem;
     cursor: pointer;
-    margin: 1rem;
-    align-self: center;
-    justify-self: center;transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .book:hover {
@@ -285,10 +343,27 @@ p {
 }
 
 
-:host ::ng-deep .p-overlay {
-    top: 64vh;
+
+:host ::ng-deep .custom-select.p-select-overlay {
+    top: -30vh;
+    height: 25vh;
 }
 
-:host ::ng-deep .p-select-overlay {
-    top: -30vh;
+.tooltip-description {
+    font-size: small;
+    margin: 1rem;
+    height: 10vh;
+    overflow-y: hidden;
+}
+.tooltip-title {
+    font-size: large;
+    margin: 1rem;
+}
+.tooltip-authors {
+    font-size: medium;
+    margin: 1rem;
+}
+:host ::ng-deep .p-tooltip {
+    max-height: 10vh;
+    background: #aaaaaa;
 }
