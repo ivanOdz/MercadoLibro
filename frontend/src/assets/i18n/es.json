@@ -209,6 +209,10 @@
     "SOLICITED_EXCHANGE_TAB": "Intercambio solicitado",
     "COMPLETED": "Finalizado",
     "AWAITING_CONFIRMATION": "Esperando confirmación",
-    "ACCEPTED": "Aceptado"
+    "ACCEPTED": "Aceptado",
+    "HISTORY_SIDEBAR": "Historial",
+    "ACTIVE_SIDEBAR": "Activos",
+    "REQUESTS_SIDEBAR": "Solicitudes",
+    "SIDEBAR_TITLE": "Intercambios"
   }
 }

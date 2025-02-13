@@ -146,6 +146,7 @@
     "ADDITIONAL_DETAILS": "Additional details",
     "RETURN_TO_DETAIL": "Return to publication",
     "SUBHEADER_BOOK" : "Select one of your books",
+    "SOLICITED_EXCHANGE_TAB": "Exchange solicited",
     "START_EXCHANGE_DESCRIPTION": "Request an exchange with this book.",
     "SUBHEADER_LOCATION": "Select a location",
     "START_EXCHANGE_BUTTON": "Request exchange",
@@ -207,7 +208,12 @@
     "REJECT": "Reject",
     "COMPLETED": "Completed",
     "AWAITING_CONFIRMATION": "Awaiting confirmation",
-    "ACCEPTED": "Accepted"
+    "ACCEPTED": "Accepted",
+    "HISTORY_SIDEBAR": "History",
+    "ACTIVE_SIDEBAR": "Current",
+    "REQUESTS_SIDEBAR": "Requests",
+    "SIDEBAR_TITLE": "Exchanges"
+
   }
   
 }
