@@ -13,7 +13,7 @@ import {FormsModule} from "@angular/forms";
 import {environment} from "../../../environments/environment";
 import {Divider} from "primeng/divider";
 import {Paginator} from "primeng/paginator";
-import { BookData2, PublicationData2} from "../../core/models/types";
+import { BookData, PublicationData} from "../../core/models/types";
 import {PublicationService} from "../../core/services/publication.service";
 import {catchError, filter, forkJoin, of, switchMap} from "rxjs";
 import {map} from "rxjs/operators";
@@ -71,13 +71,13 @@ import {Location} from "../../core/models/location.model";
 })
 export class PublicationComponent implements OnInit {
 
-    publication: PublicationData2 | null = null;
+    publication: PublicationData | null = null;
     publicationLocations: string[] = [];
     bookImages: string[] = [];
     selectedBookIndex: number | null = null;
 
 
-    userBooks: BookData2[] = [];
+    userBooks: BookData[] = [];
     userLocations: Location[] = [];
     selectedLocation: Location | null = null;
     exchangeSolicited: boolean = false;
@@ -190,7 +190,7 @@ export class PublicationComponent implements OnInit {
                                 bookModel: bookModel,
                                 images: book.images ?? [],
                                 self: book.self ?? null
-                            }) as unknown as BookData2)
+                            }) as unknown as BookData)
                         )
                     )
                 );
@@ -275,5 +275,19 @@ export class PublicationComponent implements OnInit {
 
     getCover() {
         return this.publication?.book?.bookModel?.coverUri || this.getDefaultImage();
+    }
+
+    getFormattedDate(time: Date | null | undefined) {
+        if (!time) {
+            return "";
+        }
+        const date = new Date(time);
+        switch (this.translate.currentLang) {
+            case 'es':
+                return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
+            case 'en':
+                return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long' }); // en-GB para evitar coma en inglés
+        }
+        return "";
     }
 }

@@ -12,7 +12,7 @@
     background-color: #F8F4E9;
     box-shadow: 0 20px 15px rgba(0, 0, 0, 0.3);
     padding: 0.5rem;
-    height: 89vh;
+    height: 91.3vh;
 }
 
 .sidebar-list {
@@ -160,6 +160,7 @@
 
 :host ::ng-deep .p-tabpanels {
     background-color: transparent;
+    padding: 0;
 }
 
 :host ::ng-deep .p-tab{

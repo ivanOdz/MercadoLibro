@@ -12,16 +12,6 @@ export type ExchangeData = {
     messages: Message[]
 };
 
-export type PublicationData = {
-    book: BookData,
-    locations: Location[]
-};
-
-export type BookData = {
-    owner: User | null,
-    model: BookModel | null
-};
-
 export type FavoritePublication = {
     publication: string | null
     user: string | null;
@@ -29,8 +19,8 @@ export type FavoritePublication = {
     self: string | null;
 }
 
-export type PublicationData2 = {
-    book: BookData2 | null;
+export type PublicationData = {
+    book: BookData | null;
     locations: Location[] | null;
     user: User | null;
     publicationState: string | null;
@@ -41,7 +31,7 @@ export type PublicationData2 = {
     self: string | null,
 }
 
-export type BookData2 = {
+export type BookData = {
     state: string | null;
     available: boolean | null;
     owner: User | null;
