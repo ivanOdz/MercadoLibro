@@ -276,4 +276,18 @@ export class PublicationComponent implements OnInit {
     getCover() {
         return this.publication?.book?.bookModel?.coverUri || this.getDefaultImage();
     }
+
+    getFormattedDate(time: Date | null | undefined) {
+        if (!time) {
+            return "";
+        }
+        const date = new Date(time);
+        switch (this.translate.currentLang) {
+            case 'es':
+                return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
+            case 'en':
+                return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long' }); // en-GB para evitar coma en inglés
+        }
+        return "";
+    }
 }

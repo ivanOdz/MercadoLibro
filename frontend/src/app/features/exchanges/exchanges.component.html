@@ -124,7 +124,7 @@
             <div class="message" *ngFor="let message of selectedCard.messages; let i = index; trackBy: trackByMessage;">
                 <div style="margin:1rem" *ngIf="i === 0 || !isSameDay(message.time, selectedCard.messages[i - 1].time)">
                     <span  class="date-separator">
-                        {{ getDay(message.time) }} de {{ getMonthName(getMonth(message.time)) }}
+                        {{getFormattedDate(message.time)}}
                     </span>
                 </div>
                 <div [ngClass]="message.user === loggedUser?.self ? 'outgoing' : 'incoming'" class="message">

@@ -280,4 +280,15 @@ export class ExchangesComponent implements OnInit {
         return date instanceof Date && !isNaN(date.getTime());
     }
 
+    getFormattedDate(time: Date) {
+        const date = new Date(time);
+        switch (this.translate.currentLang) {
+            case 'es':
+                return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
+            case 'en':
+                return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long' }); // en-GB para evitar coma en inglés
+        }
+        return "";
+    }
+
 }
