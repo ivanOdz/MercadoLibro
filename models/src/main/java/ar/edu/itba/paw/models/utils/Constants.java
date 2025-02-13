@@ -7,13 +7,13 @@ public final class Constants {
         // restrict instantiation
     }
 
-    public static final int BOOKS_PAGE_SIZE = 14;
+    public static final int BOOKS_PAGE_SIZE = 9;
 
     public static final int PUBLICATIONS_PAGE_SIZE = 5;
 
-    public static final int EXCHANGES_PAGE_SIZE = 10;
+    public static final int EXCHANGES_PAGE_SIZE = 3;
 
-    public static final int PROFILE_PAGE_SIZE = 6;
+    public static final int PROFILE_PAGE_SIZE = 3;
 
     public static final int INITIAL_EXCHANGE_VALUE = 0;
 
