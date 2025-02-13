@@ -132,4 +132,25 @@ export class ExchangeService {
             })
         );
     }
+
+    createExchange(exchangeUrn: string, bookUrn: string | null | undefined, locationUrn: string, publicationUrn: string | null | undefined){
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/vnd.exchanges.create.v1+json'
+        });
+
+        let body = {
+            bookURN: bookUrn,
+            locationURN: locationUrn,
+            publicationURN: publicationUrn
+        };
+
+
+        return this.http.post<void>(`${exchangeUrn}`, body, { headers, observe: 'response' }).pipe(
+            map(response => response.headers.get('Location')),
+            catchError((error) => {
+                console.error("Error al crear el intercambio:", error);
+                return throwError(() => error);
+            }
+        ));
+    }
 }

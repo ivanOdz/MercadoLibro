@@ -49,14 +49,14 @@ public class ExchangeController {
         Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ExchangeDTO>>(exchangeDTOS) {});
         UriBuilder uri = PageResponseUtil.getUriBuilderExchanges(uriInfo.getAbsolutePathBuilder(), userId, state, isOfferer, isRequester);
 
-        return PageResponseUtil.getResponse(page, exchanges.getMetadata().getMaxPage(), uri, response);
+        return PageResponseUtil.getResponse(page, exchanges.getMetadata().getMaxPage(), uriInfo.getAbsolutePathBuilder(), response);
     }
 
     @POST
     @Consumes(value = {VndType.APPLICATION_CREATE_EXCHANGE})
     @PreAuthorize("@accessControl.createExchangeAccess(#createExchangeDTO)")
     public Response createExchange(CreateExchangeDTO createExchangeDTO) {
-        Exchange exchange = exchangeService.initializeExchange(createExchangeDTO.getBookId(), createExchangeDTO.getPublicationId(), createExchangeDTO.getLocationId());
+        Exchange exchange = exchangeService.initializeExchange(createExchangeDTO.getBookId(), createExchangeDTO.getLocationId(), createExchangeDTO.getPublicationId());
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(exchange.getExchangeId())).build()).build();
     }
 

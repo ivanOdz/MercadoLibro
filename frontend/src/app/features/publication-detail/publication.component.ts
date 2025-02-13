@@ -6,7 +6,6 @@ import { Carousel } from 'primeng/carousel';
 import { trigger, style, animate, transition } from '@angular/animations';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import {PrimeTemplate} from "primeng/api";
-import {routes} from "../../app.routes";
 import {ActivatedRoute, Router} from "@angular/router";
 import {NgForOf, NgIf} from "@angular/common";
 import {Select} from "primeng/select";
@@ -25,7 +24,9 @@ import {User} from "../../core/models/user.model";
 import {Rating} from "primeng/rating";
 import {AuthService} from "../../core/services/auth.service";
 import {Tooltip} from "primeng/tooltip";
-import {StyleClass} from "primeng/styleclass";
+import {ExchangeService} from "../../core/services/exchange.service";
+import {Location} from "../../core/models/location.model";
+import {routes} from "../../app.routes";
 
 @Component({
     selector: 'app-publication-detail',
@@ -72,8 +73,15 @@ import {StyleClass} from "primeng/styleclass";
 export class PublicationComponent implements OnInit {
 
     publication: PublicationData2 | null = null;
-    bookImages: string[] = [];
     publicationLocations: string[] = [];
+    bookImages: string[] = [];
+    selectedBookIndex: number | null = null;
+
+
+    userBooks: BookData2[] = [];
+    userLocations: Location[] = [];
+    selectedLocation: Location | null = null;
+    exchangeSolicited: boolean = false;
 
     ngOnInit(): void {
         this.route.params.subscribe(params => {
@@ -81,6 +89,20 @@ export class PublicationComponent implements OnInit {
             this.loadPublication(id);
         });
     }
+
+    constructor(private translate: TranslateService,
+                private router: Router,
+                private route: ActivatedRoute,
+                private ps: PublicationService,
+                private us: UserService,
+                private as: AuthService,
+                private es: ExchangeService,
+                private bs: BookService,
+                private bms: BookModelService) {
+    }
+
+
+    /** API **/
 
     loadPublication(id: string) {
         this.ps.getPublication(`${environment.production ? environment.productionUrl : environment.developmentUrl}/publications/${id}`).pipe(
@@ -137,49 +159,12 @@ export class PublicationComponent implements OnInit {
         });
     }
 
-
-    constructor(private translate: TranslateService,
-                private router: Router,
-                private route: ActivatedRoute,
-                private ps: PublicationService,
-                private us: UserService,
-                private as: AuthService,
-                private bs: BookService,
-                private bms: BookModelService) {
-        this.translate.onLangChange.subscribe(() => this.loadPublicationDetailItems());
-    }
-
-    loadPublicationDetailItems() {
-        // static data translations
-    }
-
-    selectedBookIndex: number | null = null;
-
-    selectBook(index: number) {
-        this.selectedBookIndex = this.selectedBookIndex === index ? null : index;
-    }
-
-
-    protected readonly routes = routes;
-    protected readonly Router = Router;
-
-    goToPublications() {
-        this.router.navigate(['/publications']);
-    }
-
-    exchangeSolicited: boolean = false;
-
-    currentBookPage: number = 0;
-
-    userBooks: BookData2[] = [];
-
     toggleSolicitExchange() {
         this.exchangeSolicited = !this.exchangeSolicited;
 
         if (this.exchangeSolicited) {
             this.loadBooksData()
             this.loadUserLocations()
-
         }
     }
 
@@ -230,20 +215,46 @@ export class PublicationComponent implements OnInit {
             })
         ).subscribe({
             next: (locations) => {
-                this.userLocations = locations.map(location => location.location);
+                this.userLocations = locations.map(location => {
+                    return {
+                        location: location.location,
+                        publications: location.publications,
+                        self: location.self
+                    } as Location;
+                });
             },
         });
     }
 
-
-
-    userLocations: string[] = [];
-    selectedLocation: string = '';
-
     requestExchange() {
+        if (this.selectedLocation == null) {
+            // error management
+            return;
+        }
+        if (!this.selectedBookIndex) {
+            // error management
+            return;
+        }
 
+        let exchangesUrn = `${environment.production ? environment.productionUrl : environment.developmentUrl}/exchanges`
+
+        this.es.createExchange(exchangesUrn, this.publication?.book?.self, this.selectedLocation.self, this.publication?.self).subscribe({
+            next: (response) => {
+                this.router.navigate(['/exchanges/requests']);
+            }
+        });
     }
 
+
+    /** HTML **/
+
+    selectBook(index: number) {
+        this.selectedBookIndex = this.selectedBookIndex === index ? null : index;
+    }
+
+    goToPublications() {
+        this.router.navigate(['/publications']);
+    }
 
     get userRating(): number {
         return this.publication?.user?.ratingAverage ?? 0;
@@ -254,7 +265,6 @@ export class PublicationComponent implements OnInit {
             this.publication.user.ratingAverage = value;
         }
     }
-
 
     getImages(){
         return this.bookImages.length === 0 ? [this.getDefaultImage()] : this.bookImages;

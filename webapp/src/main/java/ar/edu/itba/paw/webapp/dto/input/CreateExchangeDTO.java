@@ -44,4 +44,6 @@ public class CreateExchangeDTO {
     public void setPublicationURN(URI publicationURN) {
         this.publicationURN = publicationURN;
     }
+
 }
+

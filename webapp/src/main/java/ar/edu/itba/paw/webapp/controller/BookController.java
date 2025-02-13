@@ -58,7 +58,7 @@ public class BookController {
         Map<String, String> conditionHeaders = SerializationUtils.serializeConditionWrapper(conditionSummary);
         conditionHeaders.forEach(response::header);
 
-        return PageResponseUtil.getResponse(currentPage, paginated.getMetadata().getMaxPage(), uriInfo, response);
+        return PageResponseUtil.getResponse(currentPage, paginated.getMetadata().getMaxPage(), uriInfo.getAbsolutePathBuilder(), response);
     }
 
     @GET
