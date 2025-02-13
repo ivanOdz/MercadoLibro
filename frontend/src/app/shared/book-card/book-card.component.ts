@@ -1,9 +1,9 @@
-import { Component, Input } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { TranslateService, TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
-import { BookData } from '../../../core/models/types';
+import { BookData } from '../../core/models/types';
 import { NgIf } from "@angular/common";
 
 @Component({
@@ -13,7 +13,7 @@ import { NgIf } from "@angular/common";
     standalone: true,
 	imports: [ CommonModule, NgIf, TranslatePipe ]
 })
-export class BookCardComponent {
+export class BookCardComponent implements OnInit{
 	
 	@Input() book!: BookData;
 	@Input() showOwner: boolean = false;
@@ -30,9 +30,7 @@ export class BookCardComponent {
 		console.log(this.book);
 		this.bookImage = this.getBookImage();
 		
-		if (typeof this.book.owner === 'string') {
-			this.fetchOwnerDetails(this.book.owner);
-		} else if (this.book.owner && this.book.owner.username) {
+		if (this.book.owner && this.book.owner.username) {
 			this.ownerName = this.book.owner.username;
 		} else {
 			this.ownerName = 'BOOK_CARD.UNKNOWN';

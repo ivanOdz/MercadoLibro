@@ -1,5 +1,5 @@
 import {Component, OnInit} from "@angular/core";
-import {NavbarComponent} from "../../shared/components/navbar/navbar.component";
+import {NavbarComponent} from "../../shared/navbar/navbar.component";
 import {TranslatePipe, TranslateService} from "@ngx-translate/core";
 import {Button} from "primeng/button";
 import { Carousel } from 'primeng/carousel';

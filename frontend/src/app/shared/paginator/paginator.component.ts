@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Pagination } from "../../../core/models/pagination";
+import { Pagination } from "../../core/models/pagination";
 import { NgIf } from "@angular/common";
 import { MatIconModule } from '@angular/material/icon';
 

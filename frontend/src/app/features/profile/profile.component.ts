@@ -1,9 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { NavbarComponent } from "../../shared/components/navbar/navbar.component";
+import { NavbarComponent } from "../../shared/navbar/navbar.component";
 import { CommonModule, NgForOf } from '@angular/common';
 import { User } from '../../core/models/user.model';
 import { UserService } from '../../core/services/user.service';
-import { HttpClient } from "@angular/common/http";
 import { AuthService } from '../../core/services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { Location } from '../../core/models/location.model';
@@ -11,7 +10,7 @@ import { ReviewComponent } from './review/review.component';
 import { Review } from '../../core/models/review.model';
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { Pagination } from "../../core/models/pagination";
-import { PaginatorComponent } from "../../shared/components/paginator/paginator.component";
+import { PaginatorComponent } from "../../shared/paginator/paginator.component";
 import {MatIcon} from "@angular/material/icon";
 import {environment} from "../../../environments/environment";
 
@@ -40,7 +39,7 @@ export class ProfileComponent implements OnInit{
   pagination: Pagination | null = null;
 
 
-  constructor(private authService: AuthService, private translate: TranslateService, private http: HttpClient) {}
+  constructor(private authService: AuthService, private translate: TranslateService) {}
 
   openModal() {
     if (this.loggedUser) {

@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, FormArray, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule, Location } from '@angular/common';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
-import { NavbarComponent } from "../../shared/components/navbar/navbar.component";
+import { NavbarComponent } from "../../shared/navbar/navbar.component";
 import { BookModel } from "../../core/models/bookModel.model";
 import { BookModelService } from "../../core/services/bookmodel.service";
 import {environment} from "../../../environments/environment";
@@ -128,7 +128,7 @@ export class BookFormComponent {
 			
 			this.bookModelService.uploadBookModel(this.url, bookData, rating).subscribe({
 				
-				next: (response) => {
+				next: () => {
 					console.log('Upload of Book Model successful :)');
 				},
 				error: (error) => {

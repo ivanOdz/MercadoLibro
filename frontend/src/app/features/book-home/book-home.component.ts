@@ -3,14 +3,14 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
-import { NavbarComponent } from "../../shared/components/navbar/navbar.component";
-import { BookCardComponent } from '../../shared/components/book-card/book-card.component';
+import { NavbarComponent } from "../../shared/navbar/navbar.component";
+import { BookCardComponent } from '../../shared/book-card/book-card.component';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { BookModelService } from "../../core/services/bookmodel.service";
 import { BookService } from "../../core/services/book.service";
 import { AuthService } from '../../core/services/auth.service';
-import { FilterListComponent } from "../../shared/components/filter-list/filter-list.component";
-import { SortComponent } from "../../shared/components/sort/sort.component";
+import { FilterListComponent } from "../../shared/filter-list/filter-list.component";
+import { SortComponent } from "../../shared/sort/sort.component";
 import { BookData } from "../../core/models/types";
 import { filter, switchMap, tap, forkJoin} from "rxjs";
 import { map } from "rxjs/operators";
@@ -19,7 +19,7 @@ import { InputGroupAddon } from 'primeng/inputgroupaddon';
 import { ButtonModule } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
 import {Pagination} from "../../core/models/pagination";
-import { PaginatorComponent } from "../../shared/components/paginator/paginator.component";
+import { PaginatorComponent } from "../../shared/paginator/paginator.component";
 
 @Component({
 	selector: 'app-book-home',
