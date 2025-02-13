@@ -24,3 +24,8 @@
 .filter-count {
     color: #555;
 }
+
+:host ::ng-deep .p-card-body {
+    box-shadow: 6px 6px 20px rgb(0 0 0 / 13%);
+    border-radius: 1rem;
+}

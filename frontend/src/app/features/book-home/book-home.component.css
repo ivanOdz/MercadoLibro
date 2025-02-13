@@ -3,6 +3,8 @@
 	justify-content: space-between;
 	grid-template-columns: 0.75fr 2fr;
 	gap: 20px;
+	padding: 5vh 5vh 1vh 5vh;
+	height: 91vh;
 }
 
 .column-filters {
@@ -61,7 +63,7 @@
 	display: flex;
 	align-items: center;
 	flex-direction: column;
-	margin: 0% 5%;
+	margin: 0 5%;
 }
 
 .page-title {
@@ -79,15 +81,9 @@
 }
 
 .filter-line {
-	border-bottom: 2px solid rgba(160, 160, 160, 1);
+	border-bottom: 2px solid rgb(203 203 203 / 52%);
 	width: 100%;
 	box-shadow: 0 15px 30px rgba(0, 0, 0, 1);
-}
-
-.filter-middle-line {
-	border-bottom: 2px solid rgba(160, 160, 160, 1);
-	width: 100%;
-	box-shadow: 0 0px 30px rgba(0, 0, 0, 1);
 }
 
 .search-info {
@@ -173,14 +169,15 @@
 .fixed-add-book-btn {
 	width: 100%;
 	background-color: #d5c4a1;
-	color: white;
+	color: #fff;
 	font-size: 18px;
-	font-weight: bold;
+	font-weight: normal;
 	border-radius: 8px;
 	padding: 12px;
-	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-	transition: background-color 0.3s ease;
+	box-shadow: 3px 10px 18px #0000001a;
+	transition: background-color .3s ease;
 	cursor: pointer;
+	border: none;
 }
 
 .fixed-add-book-btn:hover {

@@ -6,9 +6,9 @@
 		<p class="page-filter-text">{{ 'FILTERS' | translate }}</p>
 		<div class="filter-line"></div>
 		<app-filter-list [headers]="conditionHeaders" filterType="Condition" *ngIf="showConditionFilter">></app-filter-list>
-		<div class="filter-middle-line"></div>
+		<div class="filter-line"></div>
 		<app-filter-list [headers]="genreHeaders" filterType="Genre" *ngIf="showGenreFilter"></app-filter-list>
-		<div class="filter-middle-line"></div>
+		<div class="filter-line"></div>
 	</div>
 	
 	<div class="column-content">

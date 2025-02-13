@@ -3,6 +3,7 @@
 	justify-content: space-between;
 	grid-template-columns: 0.75fr 2fr;
 	gap: 20px;
+	padding: 5vh;
 }
 
 .column-filters {
@@ -61,7 +62,7 @@
 	display: flex;
 	align-items: center;
 	flex-direction: column;
-	margin: 0% 5%;
+	margin: 0 5%;
 }
 
 .page-title {
@@ -79,16 +80,11 @@
 }
 
 .filter-line {
-	border-bottom: 2px solid rgba(160, 160, 160, 1);
+	border-bottom: 2px solid rgb(203 203 203 / 52%);
 	width: 100%;
 	box-shadow: 0 15px 30px rgba(0, 0, 0, 1);
 }
 
-.filter-middle-line {
-	border-bottom: 2px solid rgba(160, 160, 160, 1);
-	width: 100%;
-	box-shadow: 0 0px 30px rgba(0, 0, 0, 1);
-}
 
 .search-info {
 	display: flex;

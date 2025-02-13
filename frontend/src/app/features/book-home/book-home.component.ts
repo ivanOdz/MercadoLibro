@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { NavbarComponent } from "../../shared/components/navbar/navbar.component";
 import { BookCardComponent } from '../../shared/components/book-card/book-card.component';
+import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { BookModelService } from "../../core/services/bookmodel.service";
 import { BookService } from "../../core/services/book.service";
 import { AuthService } from '../../core/services/auth.service';
@@ -26,7 +27,8 @@ import { PaginatorComponent } from "../../shared/components/paginator/paginator.
 	styleUrl: './book-home.component.css',
 	standalone: true,
     imports: [CommonModule, TranslatePipe, NavbarComponent, RouterModule, FilterListComponent,
-        SortComponent, InputGroup, InputGroupAddon, ButtonModule, InputText, FormsModule, BookCardComponent, PaginatorComponent ]
+        SortComponent, InputGroup, InputGroupAddon, ButtonModule, InputText, FormsModule,
+		BookCardComponent, PaginatorComponent,ScrollPanelModule ]
 
 })
 export class BookHomeComponent implements OnInit {
