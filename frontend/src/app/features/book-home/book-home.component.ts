@@ -19,6 +19,8 @@ import { ButtonModule } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
 import { User } from "../../core/models/user.model";
 import { BookModel } from "../../core/models/bookModel.model";
+import {Pagination} from "../../core/models/pagination";
+import { PaginatorComponent } from "../../shared/components/paginator/paginator.component";
 
 @Component({
 	selector: 'app-book-home',
@@ -26,7 +28,7 @@ import { BookModel } from "../../core/models/bookModel.model";
 	styleUrl: './book-home.component.css',
 	standalone: true,
     imports: [CommonModule, TranslatePipe, NavbarComponent, RouterModule, FilterListComponent,
-        SortComponent, InputGroup, InputGroupAddon, ButtonModule, InputText, FormsModule, BookCardComponent ]
+        SortComponent, InputGroup, InputGroupAddon, ButtonModule, InputText, FormsModule, BookCardComponent, PaginatorComponent ]
 
 })
 export class BookHomeComponent implements OnInit {
@@ -59,6 +61,7 @@ export class BookHomeComponent implements OnInit {
 	};
 
 	books: BookData2[] = [];
+	pagination: Pagination | null= null;
 	
 	ngOnInit() {
 		this.fetchBooks();
@@ -123,12 +126,12 @@ export class BookHomeComponent implements OnInit {
 		this.fetchBooks();
 	}
 	
-	fetchBooks() {
+	fetchBooks(url: string | null = null) {
 		
 		this.authService.loggedUser$.pipe(
 			filter(user => !!user),
 			switchMap((user) => {
-				this.currentFilters.booksUrl = user.books; // Asignamos la URL de los libros del usuario
+				this.currentFilters.booksUrl = user.books;
 
 				return this.route.queryParams.pipe(
 					tap((params) => {
@@ -138,9 +141,14 @@ export class BookHomeComponent implements OnInit {
 						this.showConditionFilter = !params['state'];
 						this.showGenreFilter = !params['genre'];
 					}),
-					switchMap(() => this.bookService.getBooks({ ...this.currentFilters })),
+					switchMap(() => {
+						return url
+							? this.bookService.getBooksByUrl(url)
+							: this.bookService.getBooks({ ...this.currentFilters });
+					}),
 					tap((response) => {
 					    this.processHeaders(response.headers);
+						this.pagination = response.pagination;
 					}),
 					switchMap((response) => {
 						return forkJoin(

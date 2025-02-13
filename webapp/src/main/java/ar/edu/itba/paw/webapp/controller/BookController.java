@@ -60,7 +60,7 @@ public class BookController {
 
         UriBuilder uri = PageResponseUtil.getUriBuilderBooks(uriInfo.getAbsolutePathBuilder(), userId, search, sortType, state, genre);
 
-        return PageResponseUtil.getResponse(currentPage, paginated.getMetadata().getMaxPage(), uriInfo.getAbsolutePathBuilder(), response);
+        return PageResponseUtil.getResponse(currentPage, paginated.getMetadata().getMaxPage(), uri, response);
     }
 
     @GET
