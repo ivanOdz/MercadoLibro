@@ -46,7 +46,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <p-paginator (onPageChange)="onOfferredPageChange($event)" [first]="currentOfferedPage" [rows]="rows" [totalRecords]="totalRecords" />
+                            <app-paginator *ngIf="loggedUser" [pagination]="paginationOffered" [fetchMethod]="getOffered.bind(this)"></app-paginator>
                         </div>
                         <div class="content-panel" style="align-content: center;text-align: center" *ngIf="isLoading">
                             <div class="emtpy-content-panel">
@@ -149,7 +149,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <p-paginator (onPageChange)="onRequestedPageChange($event)" [first]="currentSolicitedPage" [rows]="rows" [totalRecords]="totalRecords" />
+                            <app-paginator *ngIf="loggedUser" [pagination]="paginationSolicited" [fetchMethod]="getSolicited.bind(this)"></app-paginator>
                         </div>
                         <div class="content-panel" style="align-content: center;text-align: center" *ngIf="isLoading">
                             <div class="emtpy-content-panel">

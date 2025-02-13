@@ -26,16 +26,18 @@ import {environment} from "../../../environments/environment";
 import {ProgressSpinner} from "primeng/progressspinner";
 import { ConfirmationService } from 'primeng/api';
 import {BookData, ExchangeData} from "../../core/models/types";
+import { PaginatorComponent } from "../../shared/components/paginator/paginator.component";
+import {Pagination} from "../../core/models/pagination";
 
 @Component({
     selector: 'app-exchanges',
-    templateUrl: `exchanges.component.html`,
+    templateUrl: 'exchanges.component.html',
     standalone: true,
     styleUrl: './exchanges.component.css',
     providers: [ConfirmationService],
-    imports: [ButtonModule, SidebarComponent, NavbarComponent, NgForOf, Paginator,
+    imports: [ButtonModule, SidebarComponent, NavbarComponent, NgForOf,
         Steps, Rating, FormsModule, Dialog, InputText, NgIf, NgClass,
-        ProgressSpinner, ConfirmDialogModule]
+        ProgressSpinner, ConfirmDialogModule, PaginatorComponent]
 })
 export class ExchangesComponent implements OnInit {
     loggedUser: User | null = null;
@@ -58,29 +60,29 @@ export class ExchangesComponent implements OnInit {
 
     // ##################  Api calls  ##################
 
-    private loadExchanges(): void {
+    private loadExchanges(url: string | null = null): void {
             this.activeExchanges = [];
             this.isLoading = true;
 
 
             this.as.loggedUser$.pipe(
             filter((user: User | null) => !!user),
-                switchMap((user: User) =>
-                    this.es.getActiveExchanges(user.exchanges, this.currentPage).pipe(
+                switchMap((user: User) => {
+                    const exchangeObservable = url
+                        ? this.es.getExchangesByUrl(url)
+                        : this.es.getActiveExchanges(user.exchanges, this.currentPage);
+
+                    return exchangeObservable.pipe(
                         tap((response) => {
-                            this.next = response.pagination.next
-                            this.prev = response.pagination.prev
-                            this.last = response.pagination.last
-                            this.first = response.pagination.first
+                            this.pagination = response.pagination;
                         }),
                         map(response => response.exchange),
                         catchError((error) => {
                             console.error("Error obteniendo intercambios:", error);
                             return of([]);
                         })
-                    )
-                )
-                ,
+                    );
+                }),
                 switchMap((exchanges: Exchange[]) => {
                     if (exchanges.length === 0) {
                         console.warn("No se encontraron intercambios.");
@@ -282,17 +284,11 @@ export class ExchangesComponent implements OnInit {
 
     /***  Pagination ***/
 
-    private next: string | undefined;
-    private prev: string | undefined;
-    private last: string | undefined;
-    private first: string | undefined;
-
-
-    rows: unknown;
-    totalRecords: unknown;
+    pagination: Pagination | null = null;
     currentPage: number = 0;
-    onPageChange($event: PaginatorState) {
-        this.currentPage = $event.page || 0;
+
+    getActive(url: string) {
+        this.loadExchanges(url);
     }
 
 

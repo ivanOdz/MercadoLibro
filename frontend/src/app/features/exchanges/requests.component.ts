@@ -3,7 +3,6 @@ import {SidebarComponent} from "./components/sidebar.component";
 import {NavbarComponent} from "../../shared/components/navbar/navbar.component";
 import {Tab, TabList, TabPanel, TabPanels, Tabs} from "primeng/tabs";
 import {NgForOf, NgIf} from "@angular/common";
-import {Paginator, PaginatorState} from "primeng/paginator";
 import {Rating} from "primeng/rating";
 import {FormsModule} from "@angular/forms";
 import {Button} from "primeng/button";
@@ -21,10 +20,12 @@ import {Exchange} from "../../core/models/exchange.model";
 import {ProgressSpinner} from "primeng/progressspinner";
 import {Dialog} from "primeng/dialog";
 import {BookData, ExchangeData} from "../../core/models/types";
+import {Pagination} from "../../core/models/pagination";
+import {PaginatorComponent} from "../../shared/components/paginator/paginator.component";
 
 @Component({
     selector: 'exchanges-requests',
-    templateUrl: `requests.component.html`,
+    templateUrl: 'requests.component.html',
     standalone: true,
     styleUrl: './exchanges.component.css',
     imports: [
@@ -36,13 +37,13 @@ import {BookData, ExchangeData} from "../../core/models/types";
         TabPanels,
         TabPanel,
         NgForOf,
-        Paginator,
         Rating,
         FormsModule,
         Button,
         NgIf,
         ProgressSpinner,
-        Dialog
+        Dialog,
+        PaginatorComponent
     ]
 })
 export class RequestsComponent  implements OnInit {
@@ -65,26 +66,43 @@ export class RequestsComponent  implements OnInit {
     }
 
     // ##################  Api calls  ##################
-    private loadExchanges(): void {
+    private loadExchanges(url: string | null = null, isOffer: boolean | null = null): void {
         this.requestedExchanges = [];
         this.offeredExchanges = [];
         this.isLoading = true;
 
         this.as.loggedUser$.pipe(
             filter((user: User | null) => !!user),
-            switchMap((user: User) =>
-                forkJoin({
-                    offered: this.es.getExchangesOffers(user.exchanges, this.currentOfferedPage),
-                    solicited: this.es.getSolicitedExchanges(user.exchanges, this.currentSolicitedPage)
-                })
-            ),
+            switchMap((user: User) => {
+                let requests;
+
+                if (url !== null && isOffer === true) {
+                    requests = forkJoin({
+                        offered: this.es.getExchangesByUrl(url),
+                        solicited: this.es.getSolicitedExchanges(user.exchanges, this.currentSolicitedPage)
+                    });
+                } else if (url !== null && isOffer === false) {
+                    requests = forkJoin({
+                        offered: this.es.getExchangesOffers(user.exchanges, this.currentOfferedPage),
+                        solicited: this.es.getExchangesByUrl(url)
+                    });
+                } else {
+                    requests = forkJoin({
+                        offered: this.es.getExchangesOffers(user.exchanges, this.currentOfferedPage),
+                        solicited: this.es.getSolicitedExchanges(user.exchanges, this.currentSolicitedPage)
+                    });
+                }
+
+                return requests;
+            }),
             switchMap(({ offered, solicited }) => {
                 if (!offered.exchange.length && !solicited.exchange.length) {
                     console.warn("No se encontraron intercambios.");
                     this.isLoading = false;
                     return of({ requesterExchanges: [], offeredExchanges: [] });
                 }
-
+                this.paginationOffered = offered.pagination;
+                this.paginationSolicited = solicited.pagination
                 return forkJoin({
                     requesterExchanges: this.processExchanges(offered.exchange),
                     offeredExchanges: this.processExchanges(solicited.exchange),
@@ -255,35 +273,17 @@ export class RequestsComponent  implements OnInit {
 
     /***  Pagination ***/
 
-    rows: unknown;
-    totalRecords: unknown;
+    paginationOffered: Pagination | null = null;
+    paginationSolicited: Pagination | null = null;
+
     currentOfferedPage: number = 0;
     currentSolicitedPage: number = 0;
 
-
-
-
-
-
-
-
-
-
-
-
-    /////////////////////////////////
-
-
-
-    value: any;
-
-
-
-    onRequestedPageChange($event: PaginatorState) {
-
+    getOffered(url: string) {
+        this.loadExchanges(url, true);
     }
 
-    onOfferredPageChange($event: PaginatorState) {
-
+    getSolicited(url: string) {
+        this.loadExchanges(url, false);
     }
 }

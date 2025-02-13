@@ -44,7 +44,7 @@
                         </div>
                     </div>
                 </div>
-                <p-paginator (onPageChange)="onPageChange($event)" [first]="currentPage" [rows]="rows" [totalRecords]="totalRecords" />
+                <app-paginator [pagination]="pagination" [fetchMethod]="getActive.bind(this)"></app-paginator>
             </div>
 
             <div class="content-panel" style="align-content: center;text-align: center" *ngIf="isLoading">

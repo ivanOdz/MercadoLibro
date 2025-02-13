@@ -3,7 +3,6 @@ import {SidebarComponent} from "./components/sidebar.component";
 import {NavbarComponent} from "../../shared/components/navbar/navbar.component";
 import {NgForOf, NgIf} from "@angular/common";
 import {Tab, TabList, TabPanel, TabPanels, Tabs} from "primeng/tabs";
-import {Paginator, PaginatorState} from "primeng/paginator";
 import {Rating} from "primeng/rating";
 import {FormsModule} from "@angular/forms";
 import {Button} from "primeng/button";
@@ -22,10 +21,12 @@ import {Exchange} from "../../core/models/exchange.model";
 import {map} from "rxjs/operators";
 import {ProgressSpinner} from "primeng/progressspinner";
 import {BookData, ExchangeData} from "../../core/models/types";
+import { PaginatorComponent } from "../../shared/components/paginator/paginator.component";
+import {Pagination} from "../../core/models/pagination";
 
 @Component({
     selector: 'exchanges-history',
-    templateUrl: `history.component.html`,
+    templateUrl: 'history.component.html',
     standalone: true,
     styleUrl: './exchanges.component.css',
     imports: [
@@ -37,14 +38,14 @@ import {BookData, ExchangeData} from "../../core/models/types";
         TabPanel,
         TabPanels,
         Tabs,
-        Paginator,
         Rating,
         FormsModule,
         Button,
         Textarea,
         Popover,
         ProgressSpinner,
-        NgIf
+        NgIf,
+        PaginatorComponent
     ]
 })
 export class HistoryComponent implements OnInit {
@@ -69,26 +70,43 @@ export class HistoryComponent implements OnInit {
 
 
 
-    private loadExchanges(): void {
+    private loadExchanges(url: string | null = null, isCompleted: boolean | null = null): void {
         this.rejectedExchanges = [];
         this.completedExchanges = [];
         this.isLoading = true;
 
         this.as.loggedUser$.pipe(
             filter((user: User | null) => !!user),
-            switchMap((user: User) =>
-                forkJoin({
-                    completed: this.es.getCompletedExchanges(user.exchanges, this.currentCompletedPage),
-                    rejected: this.es.getRejectedExchanges(user.exchanges, this.currentRejectedPage)
-                })
-            ),
+            switchMap((user: User) => {
+                let requests;
+
+                if (url !== null && isCompleted === true) {
+                    requests = forkJoin({
+                        completed: this.es.getExchangesByUrl(url),
+                        rejected: this.es.getSolicitedExchanges(user.exchanges, this.currentRejectedPage)
+                    });
+                } else if (url !== null && isCompleted === false) {
+                    requests = forkJoin({
+                        completed: this.es.getExchangesOffers(user.exchanges, this.currentCompletedPage),
+                        rejected: this.es.getExchangesByUrl(url)
+                    });
+                } else {
+                    requests = forkJoin({
+                        completed: this.es.getCompletedExchanges(user.exchanges, this.currentCompletedPage),
+                        rejected: this.es.getRejectedExchanges(user.exchanges, this.currentRejectedPage)
+                    });
+                }
+
+                return requests;
+            }),
             switchMap(({ completed, rejected }) => {
                 if (!completed.exchange.length && !rejected.exchange.length) {
                     console.warn("No se encontraron intercambios.");
                     this.isLoading = false;
                     return of({ rejectedExchanges: [], completedExchanges: [] });
                 }
-
+                this.paginationCompleted = completed.pagination;
+                this.paginationRejected = rejected.pagination
                 return forkJoin({
                     rejectedExchanges: this.processExchanges(rejected.exchange),
                     completedExchanges: this.processExchanges(completed.exchange),
@@ -234,41 +252,18 @@ export class HistoryComponent implements OnInit {
 
     /***  Pagination ***/
 
-    rows: unknown;
-    totalRecords: unknown;
+    paginationCompleted: Pagination | null = null;
+    paginationRejected: Pagination | null = null;
+
     currentCompletedPage: number = 0;
     currentRejectedPage: number = 0;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /////////////////////////////////////
-
-
-
-
-    onPageChange($event: any) {
-        console.log($event);
+    getCompleted(url: string) {
+        this.loadExchanges(url, true);
     }
 
-    onCompletedPageChange($event: PaginatorState) {
-
+    getRejected(url: string) {
+        this.loadExchanges(url, false);
     }
 
-    onRejectedPageChange($event: PaginatorState) {
-
-    }
 }
