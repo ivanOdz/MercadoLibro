@@ -154,7 +154,11 @@
     "DATE": "Fecha de la publicación",
     "LOCATION": "Ubicaciones",
     "BOOK_CONDITION": "Condición",
-    "USER": "Usuario"
+    "USER": "Usuario",
+    "ADD_BOOK": "Agregar libro",
+    "NO_BOOKS": "Aún no tienes libros",
+    "NO_LOCATIONS": "Aún no tienes ubicaciones",
+    "ADD_LOCATIONS": "Agrega una ubicación"
   },
   "BOOK_HOME": {
     "SEARCH": "Buscar en mis libros",

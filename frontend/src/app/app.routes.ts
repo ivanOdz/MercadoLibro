@@ -102,12 +102,18 @@ export const routes: Routes = [
     title: 'Books',
     canActivate: [AuthGuard],
   },
+  {
+    path: '/book_models',
+    title: 'Book Models',
+    canActivate: [AuthGuard],
+  },
   //Error Pages
   {
     path: '**',
     component: NotFoundComponent,
     title: 'Error',
   },
+
 ];
 
 // Para proteger el acceso a las rutas que se requiere tener autenticacion

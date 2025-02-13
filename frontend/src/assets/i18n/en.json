@@ -154,7 +154,11 @@
     "DATE": "Publication date",
     "LOCATION": "Locations",
     "BOOK_CONDITION": "Book condition",
-    "USER": "User"
+    "USER": "User",
+    "ADD_BOOK": "Add book",
+    "NO_BOOKS": "You don't have any books yet",
+    "NO_LOCATIONS": "You don't have any locations yet",
+    "ADD_LOCATIONS": "Add a location"
   },
   "BOOK_HOME": {
     "SEARCH": "Search in my books",

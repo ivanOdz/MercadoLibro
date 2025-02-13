@@ -309,4 +309,12 @@ export class PublicationComponent implements OnInit {
                 return "";
         }
     }
+
+    redirectToBookModels() {
+        this.router.navigate(['/book_models'])
+    }
+
+    redirectToProfile() {
+        this.router.navigate(['/profile'])
+    }
 }
