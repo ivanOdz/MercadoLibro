@@ -1,14 +1,15 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { PublicationService } from '../../core/services/publication.service';
 import { AuthService } from '../../core/services/auth.service';
+import { TranslateService, TranslatePipe, TranslateModule } from '@ngx-translate/core';
 import { NavbarComponent } from "../../shared/components/navbar/navbar.component";
 import { FilterListComponent } from "../../shared/components/filter-list/filter-list.component";
 import { SortComponent } from "../../shared/components/sort/sort.component";
-import {combineLatest, distinctUntilChanged, filter, of, startWith, Subscription, switchMap, tap} from "rxjs";
-import {PublicationData2} from "../../core/models/types";
-import {map, take} from "rxjs/operators";
-import {NgIf} from "@angular/common";
+import { combineLatest, distinctUntilChanged, filter, of, startWith, Subscription, switchMap, tap } from "rxjs";
+import { PublicationData2 } from "../../core/models/types";
+import { map, take } from "rxjs/operators";
+import { NgIf } from "@angular/common";
 
 @Component({
   selector: 'app-publications',
@@ -16,6 +17,8 @@ import {NgIf} from "@angular/common";
   standalone: true,
   imports: [
     NavbarComponent,
+	TranslatePipe,
+	RouterModule,
     FilterListComponent,
     SortComponent,
     NgIf
@@ -45,8 +48,27 @@ export class PublicationsComponent implements OnInit, OnDestroy {
       private publicationService: PublicationService,
       private authService: AuthService,
       private route: ActivatedRoute,
+	  private router: Router,
   ) {}
 
+  removeFilter(filterKey: keyof typeof this.currentFilters) {
+  	if (filterKey === 'state') {
+  		this.currentFilters.state = '';
+  	}	
+  	else if (filterKey === 'genre') {
+  		this.currentFilters.genre = '';
+  	}
+  	
+  	this.router.navigate([], {
+  		relativeTo: this.route,
+  		queryParams: { [filterKey]: null },
+  		queryParamsHandling: 'merge',
+  	});
+  	
+//  	this.fetchPublications();
+//	this.ngOnInit();
+  }
+  
   ngOnInit() {
     this.subscription = this.route.queryParams.pipe(
         tap((params) => {

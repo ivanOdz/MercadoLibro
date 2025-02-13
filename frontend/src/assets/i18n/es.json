@@ -162,13 +162,17 @@
     "RESULTS": "Resultados totales",
     "NO_RESULTS": "No se ha encontrado ningún libro.",
     "ADD_BOOKS": "Si tienes un libro que no tenemos disponible, agrégalo!",
-    "ADD_BOOK_MODEL": "Crear libro",
-    "NO_STATE_FILTER": "Sin filtro de condición",
-    "NO_GENRE_FILTER": "Sin filtro de género",
-    "FILTERS": "Filtros"
+    "ADD_BOOK_MODEL": "Crear libro"
   },
   "BOOK_CARD": {
     "OWNER": "Dueño",
     "STATE": "Estado"
+  },
+  "FILTERS": "Filtros",
+  "TOTAL_RESULTS": "Resultados totales",
+  "NO_STATE_FILTER": "Sin filtro de condición",
+  "NO_GENRE_FILTER": "Sin filtro de género",
+  "PUBLICATIONS": {
+  	"TITLE": "Publicaciones"
   }
 }

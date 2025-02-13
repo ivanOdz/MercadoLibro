@@ -161,14 +161,18 @@
     "RESULTS": "Total results",
     "NO_RESULTS": "No books founded",
     "ADD_BOOKS": "If you have a book that we don't have available, add one!",
-    "ADD_BOOK_MODEL": "Create book",
-    "NO_STATE_FILTER": "No state filter",
-    "NO_GENRE_FILTER": "No genre filter",
-    "FILTERS": "Filters"
+    "ADD_BOOK_MODEL": "Create book"
   },
   "BOOK_CARD": {
     "OWNER": "Owner",
     "STATE": "State"
+  },
+  "FILTERS": "Filters",
+  "TOTAL_RESULTS": "Total results",
+  "NO_STATE_FILTER": "No state filter",
+  "NO_GENRE_FILTER": "No genre filter",
+  "PUBLICATIONS": {
+  	"TITLE": "Publications"
   }
-
+  
 }
