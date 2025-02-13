@@ -36,10 +36,10 @@
                         <div class="active-card-second-column">
                             <p-steps [model]="steps" [activeIndex]="1" [readonly]="true" />
                             <div *ngIf="isRequester(card)? !card.exchange.requester_received : !card.exchange.offerer_received">
-                                <p-button class="confirm-button" styleClass="confirm-button" label="confirmar" (click)="showConfirmExchangeDialog(card, isRequester(card))" />
+                                <p-button class="confirm-button" styleClass="confirm-button" label="{{ 'EXCHANGES.CONFIRM_LABEL' | translate}}" (click)="showConfirmExchangeDialog(card, isRequester(card))" />
                             </div>
                             <div *ngIf="isRequester(card)? card.exchange.requester_received : card.exchange.offerer_received">
-                                <span style="margin-top: 1rem;font-size: 12px;padding: 0.5rem;background: lightgray" class="exchange-completed-span" >Ya has confirmado</span>
+                                <span style="margin-top: 1rem;font-size: 12px;padding: 0.5rem;background: lightgray" class="exchange-completed-span" >{{ 'EXCHANGES.ALREADY_CONFIRMED_SPAN' | translate}}</span>
                             </div>
                         </div>
                     </div>
@@ -86,7 +86,7 @@
                         </p>
                     </div>
                 </div>
-                <p class="static-section-headers">Por tu libro</p>
+                <p class="static-section-headers">{{ 'EXCHANGES.FOR_YOUR_SUBHEADER' | translate}}</p>
                 <div class="static-card book-yours-card" id="book-yours-card">
                     <div style="grid-column: 1;justify-items: center;">
                         <img [src]="!isRequester(selectedCard)? getBookImage(selectedCard.offeredPub.book) : getBookImage(selectedCard.requestedPub.book)"
@@ -107,18 +107,18 @@
             </div>
             <div *ngIf="!selectedCard && !isLoading">
                 <div class="emtpy-content-panel">
-                    <p class="text-empty">Selecciona una tarjeta para más detalles</p>
+                    <p class="text-empty">{{ 'EXCHANGES.SELECT_CARD' | translate}}</p>
                 </div>
             </div>
         </div>
         <div *ngIf="activeExchanges.length === 0 && !isLoading" class="card-section-empty">
-            <p class="text-empty">No tienes intercambios activos</p>
-            <p-button styleClass="empty-button" label="Ver publicaciones" icon="pi pi-search" (click)="redirectToPublications()" />
+            <p class="text-empty">{{ 'EXCHANGES.NO_ACTIVE_EXCHANGES' | translate}}</p>
+            <p-button styleClass="empty-button" label="{{ 'EXCHANGES.SEE_PUBLICATIONS' | translate}}" icon="pi pi-search" (click)="redirectToPublications()" />
         </div>
     </div>
 </div>
 
-<p-dialog [contentStyle]="{ 'overflow-y': 'hidden'}" *ngIf="selectedCard" header="Chat" [modal]="true" [(visible)]="displayModal" [style]="{ width: '25rem', height: '50vh' }">
+<p-dialog [contentStyle]="{ 'overflow-y': 'hidden'}" *ngIf="selectedCard" header="{{ 'EXCHANGES.CHAT' | translate}}" [modal]="true" [(visible)]="displayModal" [style]="{ width: '25rem', height: '50vh' }">
     <div class="chat-container">
         <div class="chat-messages">
             <div class="message" *ngFor="let message of selectedCard.messages; let i = index; trackBy: trackByMessage;">
@@ -139,7 +139,7 @@
         <div class="chat-input p-inputgroup">
             <input
                     pInputText
-                    placeholder="Escribe un mensaje..."
+                    placeholder="{{ 'EXCHANGES.WRITE_MESSAGE_PLACEHOLDER' | translate}}"
                     [(ngModel)]="newMessage"
                     (keydown.enter)="sendMessage()"
             />
@@ -151,12 +151,12 @@
 <p-dialog [(visible)]="confirmExchangeDialogVisible" [modal]="true" [style]="{ width: '25rem' }">
     <ng-template #header>
         <div class="inline-flex items-center justify-center gap-2">
-            <span class="font-bold whitespace-nowrap">Confirm exchange</span>
+            <span class="font-bold whitespace-nowrap">{{ 'EXCHANGES.CONFIRM_ALT' | translate}}</span>
         </div>
     </ng-template>
-    <span class="text-surface-500 dark:text-surface-400 block">Are you sure you want to confirm that you received your book</span>
+    <span class="text-surface-500 dark:text-surface-400 block">{{ 'EXCHANGES.CONFIRM_DESCRIPTION' | translate}}</span>
     <ng-template #footer>
-        <p-button label="Cancel" [raised]="true" severity="secondary" (click)="confirmExchangeDialogVisible = false" />
-        <p-button label="Confirm" [raised]="true" severity="contrast" [style]="{color: 'white'}" (click)="confirmExchange(confirmData.card, confirmData.requester)" />
+        <p-button label="{{ 'EXCHANGES.CANCEL' | translate}}" [raised]="true" severity="secondary" (click)="confirmExchangeDialogVisible = false" />
+        <p-button label="{{ 'EXCHANGES.CONFIRM_LABEL' | translate}}" [raised]="true" severity="contrast" [class]="'confirm-button-d'" [style]="{color: 'white'}" (click)="confirmExchange(confirmData.card, confirmData.requester)" />
     </ng-template>
 </p-dialog>

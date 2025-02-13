@@ -511,3 +511,12 @@
     align-items: center;
     justify-content: center;
 }
+
+
+
+:host ::ng-deep .confirm-button-d button span.p-button-label {
+    color: white;
+    font-weight: normal;
+}
+
+

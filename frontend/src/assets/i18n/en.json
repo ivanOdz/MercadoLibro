@@ -173,6 +173,22 @@
   "NO_GENRE_FILTER": "No genre filter",
   "PUBLICATIONS": {
   	"TITLE": "Publications"
+  },
+  "EXCHANGES": {
+    "REQUESTS_TITLE": "Exchange requests",
+    "HISTORY_TITLE": "Exchange history",
+    "ACTIVE_TITLE": "Active exchanges",
+    "CONFIRM_LABEL": "Confirm",
+    "ALREADY_CONFIRMED_SPAN": "You have already confirmed",
+    "FOR_YOUR_SUBHEADER": "For your book:",
+    "SELECT_CARD": "Select a card to see more details",
+    "NO_ACTIVE_EXCHANGES": "You don't have any active exchanges",
+    "SEE_PUBLICATIONS": "See publications",
+    "CHAT": "Chat",
+    "WRITE_MESSAGE_PLACEHOLDER": "Write a message...",
+    "CONFIRM_ALT": "Confirm exchange",
+    "CONFIRM_DESCRIPTION": "Are you sure you want to confirm that you received your book?",
+    "CANCEL": "Cancel"
   }
   
 }

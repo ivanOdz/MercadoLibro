@@ -28,6 +28,7 @@ import { ConfirmationService } from 'primeng/api';
 import {BookData, ExchangeData} from "../../core/models/types";
 import { PaginatorComponent } from "../../shared/components/paginator/paginator.component";
 import {Pagination} from "../../core/models/pagination";
+import {TranslatePipe, TranslateService} from "@ngx-translate/core";
 
 @Component({
     selector: 'app-exchanges',
@@ -37,7 +38,7 @@ import {Pagination} from "../../core/models/pagination";
     providers: [ConfirmationService],
     imports: [ButtonModule, SidebarComponent, NavbarComponent, NgForOf,
         Steps, Rating, FormsModule, Dialog, InputText, NgIf, NgClass,
-        ProgressSpinner, ConfirmDialogModule, PaginatorComponent]
+        ProgressSpinner, ConfirmDialogModule, PaginatorComponent, TranslatePipe]
 })
 export class ExchangesComponent implements OnInit {
     loggedUser: User | null = null;
@@ -47,7 +48,7 @@ export class ExchangesComponent implements OnInit {
 
     constructor(private es: ExchangeService, private us: UserService, private ps: PublicationService,
                 private bs: BookService, private bms: BookModelService, private as: AuthService,
-                private router: Router, private changeDetectorRef: ChangeDetectorRef) {}
+                private router: Router, private changeDetectorRef: ChangeDetectorRef, private translate: TranslateService) {}
 
     ngOnInit(): void {
         this.isLoading = true;
@@ -56,6 +57,7 @@ export class ExchangesComponent implements OnInit {
             this.loggedUser = user;
             this.loadExchanges();
         });
+        this.loadActiveVariablesNames();
     }
 
     // ##################  Api calls  ##################
@@ -266,6 +268,11 @@ export class ExchangesComponent implements OnInit {
         const dateObj = new Date(date);
         return (dateObj.getMinutes() < 10 ? '0' : '') + dateObj.getMinutes().toString() ;
     }
+
+    loadActiveVariablesNames() {
+        this.Title = this.translate.instant('EXCHANGES.ACTIVE_TITLE');
+    }
+
 
 
     /*** Dialogs ***/

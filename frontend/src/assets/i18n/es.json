@@ -174,5 +174,21 @@
   "NO_GENRE_FILTER": "Sin filtro de género",
   "PUBLICATIONS": {
   	"TITLE": "Publicaciones"
+  },
+  "EXCHANGES": {
+    "REQUESTS_TITLE": "Solicitudes de intercambio",
+    "HISTORY_TITLE": "Historial de intercambios",
+    "ACTIVE_TITLE": "Intercambios activos",
+    "CONFIRM_LABEL": "Confirmar",
+    "ALREADY_CONFIRMED_SPAN": "Ya has confirmado",
+    "FOR_YOUR_SUBHEADER": "Por tu libro:",
+    "SELECT_CARD": "Selecciona una tarjeta para más detalles",
+    "NO_ACTIVE_EXCHANGES": "No tienes intercambios activos",
+    "SEE_PUBLICATIONS": "Ver publicaciones",
+    "CHAT": "Chat",
+    "WRITE_MESSAGE_PLACEHOLDER": "Escribe un mensaje...",
+    "CONFIRM_ALT": "Confirmar intercambio",
+    "CONFIRM_DESCRIPTION": "¿Estás seguro que deseas confirmar el intercambio?",
+    "CANCEL": "Cancelar"
   }
 }
