@@ -18,10 +18,7 @@ import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -46,6 +43,9 @@ public class BookController {
                              @QueryParam("genre") final String genre,
                              @QueryParam("page") @DefaultValue("0")final int currentPage) {
         PaginatedResponse<Book, ItemFilterMetadata> paginated = bs.getPaginatedBooks(search, state, genre, currentPage, userId, sortType);
+        if(paginated.getData().isEmpty()) {
+            return Response.noContent().build();
+        }
         final List<BookDTO> books = paginated.getData().stream().map(book -> BookDTO.fromBook(uriInfo, book)).collect(Collectors.toList());
         Response.ResponseBuilder response = Response.ok(new GenericEntity<List<BookDTO>>(books) {});
 
@@ -58,7 +58,9 @@ public class BookController {
         Map<String, String> conditionHeaders = SerializationUtils.serializeConditionWrapper(conditionSummary);
         conditionHeaders.forEach(response::header);
 
-        return PageResponseUtil.getResponse(currentPage, paginated.getMetadata().getMaxPage(), uriInfo, response);
+        UriBuilder uri = PageResponseUtil.getUriBuilderBooks(uriInfo.getAbsolutePathBuilder(), userId, search, sortType, state, genre);
+
+        return PageResponseUtil.getResponse(currentPage, paginated.getMetadata().getMaxPage(), uri, response);
     }
 
     @GET
