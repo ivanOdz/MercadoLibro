@@ -15,7 +15,7 @@ import {Divider} from "primeng/divider";
 import {Paginator} from "primeng/paginator";
 import { BookData2, PublicationData2} from "../../core/models/types";
 import {PublicationService} from "../../core/services/publication.service";
-import {catchError, filter, forkJoin, of, switchMap, tap} from "rxjs";
+import {catchError, filter, forkJoin, of, switchMap} from "rxjs";
 import {map} from "rxjs/operators";
 import {UserService} from "../../core/services/user.service";
 import {BookService} from "../../core/services/book.service";
@@ -26,7 +26,6 @@ import {AuthService} from "../../core/services/auth.service";
 import {Tooltip} from "primeng/tooltip";
 import {ExchangeService} from "../../core/services/exchange.service";
 import {Location} from "../../core/models/location.model";
-import {routes} from "../../app.routes";
 
 @Component({
     selector: 'app-publication-detail',
@@ -174,7 +173,7 @@ export class PublicationComponent implements OnInit {
             switchMap((user: User) => {
                 return this.bs.getBooks({
                     booksUrl: user.books,
-                    state: 'AVAILABLE',
+                    state: '',
                     genre: '',
                     search: ''
                 });
@@ -238,8 +237,8 @@ export class PublicationComponent implements OnInit {
 
         let exchangesUrn = `${environment.production ? environment.productionUrl : environment.developmentUrl}/exchanges`
 
-        this.es.createExchange(exchangesUrn, this.publication?.book?.self, this.selectedLocation.self, this.publication?.self).subscribe({
-            next: (response) => {
+        this.es.createExchange(exchangesUrn, this.userBooks[this.selectedBookIndex].self, this.selectedLocation.self, this.publication?.self).subscribe({
+            next: () => {
                 this.router.navigate(['/exchanges/requests']);
             }
         });

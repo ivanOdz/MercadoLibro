@@ -1,10 +1,9 @@
 import {Exchange} from "../models/exchange.model";
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {map} from "rxjs/operators";
-import {catchError, Observable, throwError} from "rxjs";
+import {catchError, Observable, of, throwError} from "rxjs";
 import {Injectable} from "@angular/core";
 import {Pagination} from "../models/pagination";
-import {AuthService} from "./auth.service";
 import {Message} from "../models/message.model";
 
 @Injectable({ providedIn: 'root' })
@@ -34,7 +33,7 @@ export class ExchangeService {
         return this.getExchangesByUrl(`${exchangesUrl}&${params.toString()}`);
     }
 
-    getExchangesByUrl(exchangesUrl: string): Observable< {exchange: Exchange[], pagination: Pagination}> {
+    getExchangesByUrl(exchangesUrl: string): Observable<{ exchange: Exchange[], pagination: Pagination }> {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.exchanges.v1+json' });
 
         return this.http.get<any>(`${exchangesUrl}`, { headers, observe: 'response' }).pipe(
@@ -43,9 +42,15 @@ export class ExchangeService {
                 let pagination = new Pagination(linkHeader);
                 console.log("Paginación de exchanges:", pagination);
                 const exchanges: Exchange[] = response.body.map((exchange: any) => new Exchange(exchange));
-                return {exchange: exchanges, pagination: pagination };
-            }));
+                return { exchange: exchanges, pagination: pagination };
+            }),
+            catchError(error => {
+                console.error("Error al obtener los intercambios:", error);
+                return of({ exchange: [], pagination: new Pagination(null) }); // Devuelve vacío en caso de error
+            })
+        );
     }
+
 
     //  /exchanges?user_id=123546789&state=accepted&isRequester=true&isOfferer=true&page=1
     //  exchangesUrl: /exchanges?user_id=123546789

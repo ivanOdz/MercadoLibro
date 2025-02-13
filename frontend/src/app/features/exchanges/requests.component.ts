@@ -76,23 +76,24 @@ export class RequestsComponent  implements OnInit {
             switchMap((user: User) => {
                 let requests;
 
-                if (url !== null && isOffer === true) {
+                if (isOffer != null && url != null) {
+                    if (isOffer) {
+                        requests = forkJoin({
+                            offered: this.es.getExchangesOffers(user.exchanges, this.currentOfferedPage),
+                            solicited: this.es.getExchangesByUrl(url)
+                        });
+                    } else {
+                        requests = forkJoin({
+                            offered: this.es.getExchangesByUrl(url),
+                            solicited: this.es.getSolicitedExchanges(user.exchanges, this.currentSolicitedPage)
+                        });
+                    }
+                }else  {
                     requests = forkJoin({
-                        offered: this.es.getExchangesByUrl(url),
-                        solicited: this.es.getSolicitedExchanges(user.exchanges, this.currentSolicitedPage)
-                    });
-                } else if (url !== null && isOffer === false) {
-                    requests = forkJoin({
-                        offered: this.es.getExchangesOffers(user.exchanges, this.currentOfferedPage),
-                        solicited: this.es.getExchangesByUrl(url)
-                    });
-                } else {
-                    requests = forkJoin({
-                        offered: this.es.getExchangesOffers(user.exchanges, this.currentOfferedPage),
-                        solicited: this.es.getSolicitedExchanges(user.exchanges, this.currentSolicitedPage)
+                            offered: this.es.getExchangesOffers(user.exchanges, this.currentOfferedPage),
+                            solicited: this.es.getSolicitedExchanges(user.exchanges, this.currentSolicitedPage)
                     });
                 }
-
                 return requests;
             }),
             switchMap(({ offered, solicited }) => {
@@ -104,8 +105,8 @@ export class RequestsComponent  implements OnInit {
                 this.paginationOffered = offered.pagination;
                 this.paginationSolicited = solicited.pagination
                 return forkJoin({
-                    requesterExchanges: this.processExchanges(offered.exchange),
-                    offeredExchanges: this.processExchanges(solicited.exchange),
+                    requesterExchanges: this.processExchanges(solicited.exchange),
+                    offeredExchanges: this.processExchanges(offered.exchange),
                 });
             })
         ).subscribe(({ requesterExchanges, offeredExchanges }) => {
