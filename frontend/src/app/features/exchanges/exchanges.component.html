@@ -22,14 +22,14 @@
                                      class="book-image"/>
 
                                 <p style="margin-bottom: 0">
-                                    {{ !isRequester(card) ? card.offeredPub.book.model?.title : card.requestedPub.book.model?.title }}
+                                    {{ !isRequester(card) ? card.offeredPub.book?.bookModel?.title : card.requestedPub.book?.bookModel?.title }}
                                 </p>
                             </div>
                             <i class="pi pi-arrow-right-arrow-left icon-card-active"></i>
                             <div class="active-card-first-column-book-second">
                                 <img [src]="!isRequester(card) ? getBookImage(card.requestedPub.book) : getBookImage(card.offeredPub.book)" alt="Book Image" class="book-image"/>
                                 <p style="margin-bottom: 0">
-                                    {{ !isRequester(card) ? card.requestedPub.book.model?.title : card.offeredPub.book.model?.title }}
+                                    {{ !isRequester(card) ? card.requestedPub.book?.bookModel?.title : card.offeredPub.book?.bookModel?.title }}
                                 </p>
                             </div>
                         </div>
@@ -58,10 +58,10 @@
                         <div class="user-card-image"></div>
                     </div>
                     <div style="grid-column: 2; text-align: start;">
-                        <p class="user-card-name">{{ isRequester(selectedCard) ? selectedCard.offeredPub.book.owner?.username :
-                            selectedCard.requestedPub.book.owner?.username }}</p>
-                        <p class="user-card-email">{{ isRequester(selectedCard) ? selectedCard.offeredPub.book.owner?.mail :
-                            selectedCard.requestedPub.book.owner?.mail }}</p>
+                        <p class="user-card-name">{{ isRequester(selectedCard) ? selectedCard.offeredPub.book?.owner?.username :
+                            selectedCard.requestedPub.book?.owner?.username }}</p>
+                        <p class="user-card-email">{{ isRequester(selectedCard) ? selectedCard.offeredPub.book?.owner?.mail :
+                            selectedCard.requestedPub.book?.owner?.mail }}</p>
                         <p-rating [(ngModel)]="selectedUserRating" [disabled]="true" />
                     </div>
                     <div style="grid-column: 3; align-content: center;text-align: end;">
@@ -76,13 +76,13 @@
                              class="book-image-static"/>
                     </div>
                     <div style="grid-column: 2; text-align: start;">
-                        <p class="book-card-title">{{ isRequester(selectedCard) ? selectedCard.offeredPub.book.model?.title :
-                            selectedCard.requestedPub.book.model?.title }}</p>
-                        <p class="book-card-author">{{ isRequester(selectedCard) ? selectedCard.offeredPub.book.model?.authors :
-                            selectedCard.requestedPub.book.model?.authors }}</p>
+                        <p class="book-card-title">{{ isRequester(selectedCard) ? selectedCard.offeredPub.book?.bookModel?.title :
+                            selectedCard.requestedPub.book?.bookModel?.title }}</p>
+                        <p class="book-card-author">{{ isRequester(selectedCard) ? selectedCard.offeredPub.book?.bookModel?.authors :
+                            selectedCard.requestedPub.book?.bookModel?.authors }}</p>
                         <p class="book-card-description">
-                            {{ isRequester(selectedCard) ? selectedCard.offeredPub.book.model?.description :
-                            selectedCard.requestedPub.book.model?.description }}
+                            {{ isRequester(selectedCard) ? selectedCard.offeredPub.book?.bookModel?.description :
+                            selectedCard.requestedPub.book?.bookModel?.description }}
                         </p>
                     </div>
                 </div>
@@ -94,13 +94,13 @@
                              class="book-image-static"/>
                     </div>
                     <div style="grid-column: 2; text-align: start;">
-                        <p class="book-card-title">{{ isRequester(selectedCard) ? selectedCard.requestedPub.book.model?.title :
-                            selectedCard.offeredPub.book.model?.title }}</p>
-                        <p class="book-card-author">{{ isRequester(selectedCard) ? selectedCard.requestedPub.book.model?.authors :
-                            selectedCard.offeredPub.book.model?.authors }}</p>
+                        <p class="book-card-title">{{ isRequester(selectedCard) ? selectedCard.requestedPub.book?.bookModel?.title :
+                            selectedCard.offeredPub.book?.bookModel?.title }}</p>
+                        <p class="book-card-author">{{ isRequester(selectedCard) ? selectedCard.requestedPub.book?.bookModel?.authors :
+                            selectedCard.offeredPub.book?.bookModel?.authors }}</p>
                         <p class="book-card-description">
-                            {{ isRequester(selectedCard) ? selectedCard.requestedPub.book.model?.description :
-                            selectedCard.offeredPub.book.model?.description }}
+                            {{ isRequester(selectedCard) ? selectedCard.requestedPub.book?.bookModel?.description :
+                            selectedCard.offeredPub.book?.bookModel?.description }}
                         </p>
                     </div>
                 </div>

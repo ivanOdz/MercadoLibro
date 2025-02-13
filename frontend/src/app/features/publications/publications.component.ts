@@ -7,7 +7,7 @@ import { NavbarComponent } from "../../shared/components/navbar/navbar.component
 import { FilterListComponent } from "../../shared/components/filter-list/filter-list.component";
 import { SortComponent } from "../../shared/components/sort/sort.component";
 import { combineLatest, distinctUntilChanged, filter, of, startWith, Subscription, switchMap, tap } from "rxjs";
-import { PublicationData2 } from "../../core/models/types";
+import { PublicationData } from "../../core/models/types";
 import { map, take } from "rxjs/operators";
 import { NgIf } from "@angular/common";
 
@@ -32,7 +32,7 @@ export class PublicationsComponent implements OnInit, OnDestroy {
 
   private subscription!: Subscription;
 
-  publications: PublicationData2[] = [];
+  publications: PublicationData[] = [];
 
   currentFilters = {
     state: '',

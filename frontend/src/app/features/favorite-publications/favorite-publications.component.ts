@@ -3,7 +3,7 @@ import {PublicationService} from "../../core/services/publication.service";
 import {AuthService} from "../../core/services/auth.service";
 import {ActivatedRoute} from "@angular/router";
 import {distinctUntilChanged, filter, Subscription, switchMap, tap} from "rxjs";
-import {PublicationData2} from "../../core/models/types";
+import {PublicationData} from "../../core/models/types";
 import {take} from "rxjs/operators";
 import {FilterListComponent} from "../../shared/components/filter-list/filter-list.component";
 import {NavbarComponent} from "../../shared/components/navbar/navbar.component";
@@ -34,7 +34,7 @@ export class FavoritePublicationsComponent implements OnInit {
 
     private subscription!: Subscription;
 
-    publications: PublicationData2[] = [];
+    publications: PublicationData[] = [];
 
     currentFilters = {
     state: '',

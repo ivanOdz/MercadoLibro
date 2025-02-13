@@ -1,15 +1,20 @@
 import {Exchange} from "../models/exchange.model";
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {map} from "rxjs/operators";
-import {catchError, Observable, of, throwError} from "rxjs";
+import {catchError, forkJoin, Observable, of, switchMap, throwError} from "rxjs";
 import {Injectable} from "@angular/core";
 import {Pagination} from "../models/pagination";
 import {Message} from "../models/message.model";
+import {PublicationService} from "./publication.service";
+import {UserService} from "./user.service";
+import {BookService} from "./book.service";
+import {BookModelService} from "./bookmodel.service";
 
 @Injectable({ providedIn: 'root' })
 export class ExchangeService {
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private ps: PublicationService, private us: UserService, private bs: BookService,
+                private bms: BookModelService) { }
 
 
     getMessages(messagesUrl: string): Observable<Message[]> {
@@ -157,5 +162,86 @@ export class ExchangeService {
                 return throwError(() => error);
             }
         ));
+    }
+
+    processExchanges(exchanges: Exchange[]): Observable<any[]> {
+        if (exchanges.length === 0) return of([]);
+
+        const exchangeRequests = exchanges.map((exchange) =>
+            forkJoin({
+                offererPub: this.ps.getPublication(exchange.offerer),
+                requesterPub: this.ps.getPublication(exchange.requester),
+            }).pipe(
+                switchMap(({ offererPub, requesterPub }) => {
+                    if (!offererPub || !requesterPub) return of(null);
+
+                    return forkJoin({
+                        offererUser: this.us.getUser(offererPub.user).pipe(catchError(() => of(null))),
+                        requesterUser: this.us.getUser(requesterPub.user).pipe(catchError(() => of(null))),
+                        offererBook: this.bs.getBook(offererPub.book).pipe(catchError(() => of(null))),
+                        requesterBook: this.bs.getBook(requesterPub.book).pipe(catchError(() => of(null))),
+                        offererLocations: this.us.getLocationsInPublication(offererPub.locations).pipe(catchError(() => of([]))),
+                        requesterLocations: this.us.getLocationsInPublication(requesterPub.locations).pipe(catchError(() => of([]))),
+                    }).pipe(
+                        switchMap(({ offererUser, requesterUser, offererBook, requesterBook, offererLocations, requesterLocations }) => {
+                            if (!offererBook || !requesterBook) return of(null);
+
+                            return forkJoin({
+                                offererBookModel: this.bms.getBookModel(offererBook.bookModel).pipe(catchError(() => of(null))),
+                                requesterBookModel: this.bms.getBookModel(requesterBook.bookModel).pipe(catchError(() => of(null))),
+                                messages: this.getMessages(exchange.chat).pipe(
+                                    catchError(() => of([]))
+                                )
+                            }).pipe(
+                                map(({ offererBookModel, requesterBookModel, messages }) => ({
+                                    exchange,
+                                    offeredPub: {
+                                        book: {
+                                            state: offererBook.state,
+                                            available: offererBook.available,
+                                            owner: offererUser,
+                                            bookModel: offererBookModel,
+                                            images: offererBook.images,
+                                            self: offererBook.self
+                                        },
+                                        locations: offererLocations,
+                                        user: offererUser,
+                                        publicationState: offererPub.publicationState,
+                                        publicationDatetime: new Date(offererPub.publicationDatetime),
+                                        favoriteEndpoint: offererPub.favoriteEndpoint,
+                                        favoritePublication: null,
+                                        isFavoriteTemplate: offererPub.isFavoriteTemplate,
+                                        self: offererPub.self,
+                                    },
+                                    requestedPub: {
+                                        book: {
+                                            state: requesterBook.state,
+                                            available: requesterBook.available,
+                                            owner: requesterUser,
+                                            bookModel: requesterBookModel,
+                                            images: requesterBook.images,
+                                            self: requesterBook.self
+                                        },
+                                        locations: requesterLocations,
+                                        user: requesterUser,
+                                        publicationState: requesterPub.publicationState,
+                                        publicationDatetime: new Date(requesterPub.publicationDatetime),
+                                        favoriteEndpoint: requesterPub.favoriteEndpoint,
+                                        favoritePublication: null,
+                                        isFavoriteTemplate: requesterPub.isFavoriteTemplate,
+                                        self: requesterPub.self,
+                                    },
+                                    messages: messages
+                                }))
+                            );
+                        })
+                    );
+                })
+            )
+        );
+
+        return forkJoin(exchangeRequests).pipe(
+            map((result) => result.filter((item) => item !== null)) // Eliminamos los nulos
+        );
     }
 }

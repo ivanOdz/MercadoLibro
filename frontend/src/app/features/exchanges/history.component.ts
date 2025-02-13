@@ -16,9 +16,7 @@ import {BookService} from "../../core/services/book.service";
 import {BookModelService} from "../../core/services/bookmodel.service";
 import {AuthService} from "../../core/services/auth.service";
 import {Router} from "@angular/router";
-import {catchError, filter, forkJoin, Observable, of, switchMap} from "rxjs";
-import {Exchange} from "../../core/models/exchange.model";
-import {map} from "rxjs/operators";
+import { filter, forkJoin, of, switchMap} from "rxjs";
 import {ProgressSpinner} from "primeng/progressspinner";
 import {BookData, ExchangeData} from "../../core/models/types";
 import { PaginatorComponent } from "../../shared/components/paginator/paginator.component";
@@ -112,8 +110,8 @@ export class HistoryComponent implements OnInit {
                 this.paginationCompleted = completed.pagination;
                 this.paginationRejected = rejected.pagination
                 return forkJoin({
-                    rejectedExchanges: this.processExchanges(rejected.exchange),
-                    completedExchanges: this.processExchanges(completed.exchange),
+                    rejectedExchanges: this.es.processExchanges(rejected.exchange),
+                    completedExchanges: this.es.processExchanges(completed.exchange),
                 });
             })
         ).subscribe(({ rejectedExchanges, completedExchanges }) => {
@@ -127,66 +125,6 @@ export class HistoryComponent implements OnInit {
             console.error("Error en la carga de intercambios:", error);
         });
     }
-
-    /**
-     * Procesa una lista de intercambios y obtiene los datos necesarios
-     */
-    private processExchanges(exchanges: Exchange[]): Observable<any[]> {
-        if (exchanges.length === 0) return of([]);
-
-        const exchangeRequests = exchanges.map((exchange) =>
-            forkJoin({
-                offererPub: this.ps.getPublication(exchange.offerer),
-                requesterPub: this.ps.getPublication(exchange.requester),
-            }).pipe(
-                switchMap(({ offererPub, requesterPub }) => {
-                    if (!offererPub || !requesterPub) return of(null);
-
-                    return forkJoin({
-                        offererUser: this.us.getUser(offererPub.user).pipe(catchError(() => of(null))),
-                        requesterUser: this.us.getUser(requesterPub.user).pipe(catchError(() => of(null))),
-                        offererBook: this.bs.getBook(offererPub.book).pipe(catchError(() => of(null))),
-                        requesterBook: this.bs.getBook(requesterPub.book).pipe(catchError(() => of(null))),
-                        offererLocations: this.us.getLocationsInPublication(offererPub.locations).pipe(catchError(() => of([]))),
-                        requesterLocations: this.us.getLocationsInPublication(requesterPub.locations).pipe(catchError(() => of([]))),
-                    }).pipe(
-                        switchMap(({ offererUser, requesterUser, offererBook, requesterBook, offererLocations, requesterLocations }) => {
-                            if (!offererBook || !requesterBook) return of(null);
-
-                            return forkJoin({
-                                offererBookModel: this.bms.getBookModel(offererBook.bookModel).pipe(catchError(() => of(null))),
-                                requesterBookModel: this.bms.getBookModel(requesterBook.bookModel).pipe(catchError(() => of(null))),
-                            }).pipe(
-                                map(({ offererBookModel, requesterBookModel }) => ({
-                                    exchange,
-                                    offeredPub: {
-                                        book: {
-                                            owner: offererUser,
-                                            model: offererBookModel,
-                                        },
-                                        locations: offererLocations,
-                                    },
-                                    requestedPub: {
-                                        book: {
-                                            owner: requesterUser,
-                                            model: requesterBookModel,
-                                        },
-                                        locations: requesterLocations,
-                                    },
-                                    messages: []
-                                }))
-                            );
-                        })
-                    );
-                })
-            )
-        );
-
-        return forkJoin(exchangeRequests).pipe(
-            map((result) => result.filter((item) => item !== null)) // Eliminamos los nulos
-        );
-    }
-
 
     addUserReview($event: any, op:any) {
         if (!this.reviewText || !this.reviewValue) return;
@@ -235,11 +173,11 @@ export class HistoryComponent implements OnInit {
     }
 
     isRequester(selectedCard: ExchangeData | null) {
-        return this.loggedUser?.username == selectedCard?.requestedPub.book.owner?.username;
+        return this.loggedUser?.username == selectedCard?.requestedPub.book?.owner?.username;
     }
 
-    getBookImage(book: BookData) {
-        return book.model?.coverUri || 'assets/book.jpg';
+    getBookImage(book: BookData | null) {
+        return book?.bookModel?.coverUri || 'assets/book.jpg';
     }
 
     reviewText: string = '';

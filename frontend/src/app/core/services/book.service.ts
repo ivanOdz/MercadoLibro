@@ -3,7 +3,7 @@ import {HttpClient, HttpHeaders, HttpParams, HttpResponse} from "@angular/common
 import {catchError, forkJoin, Observable, of, switchMap, tap, throwError} from "rxjs";
 import {Publication} from "../models/publication.model";
 import {Book} from "../models/book.model";
-import {BookData2} from "../models/types";
+import {BookData} from "../models/types";
 import {BookModelService} from "./bookmodel.service";
 import {map} from "rxjs/operators";
 import {environment} from "../../../environments/environment";
@@ -77,7 +77,7 @@ export class BookService {
     }
 */
 
-    updateBookstate(book: BookData2, newState: string): Observable<void> {
+    updateBookstate(book: BookData, newState: string): Observable<void> {
         const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.books.v1+json' });
         const body = { state: newState };
 
