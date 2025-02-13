@@ -24,18 +24,24 @@ export class ExchangeService {
     }
 
     private getExchanges(exchangesUrl: string, page: number, state: string,  is_offerer: boolean, is_requester: boolean): Observable< {exchange: Exchange[], pagination: Pagination}> {
-        const headers = new HttpHeaders({ 'Accept': 'application/vnd.exchanges.v1+json' });
-
+        console.log("URL final:", `${exchangesUrl}`);
         let params = new HttpParams()
             .set('state', state)
             .set('is_offerer', is_offerer ? 'true' : 'false')
             .set('is_requester', is_requester ? 'true' : 'false')
-            .set('page', (page !== undefined && page !== null) ? page.toString() : '0');
+            .set('page', page.toString());
 
-        return this.http.get<any>(`${exchangesUrl}`, { headers, params, observe: 'response' }).pipe(
+        return this.getExchangesByUrl(`${exchangesUrl}&${params.toString()}`);
+    }
+
+    getExchangesByUrl(exchangesUrl: string): Observable< {exchange: Exchange[], pagination: Pagination}> {
+        const headers = new HttpHeaders({ 'Accept': 'application/vnd.exchanges.v1+json' });
+
+        return this.http.get<any>(`${exchangesUrl}`, { headers, observe: 'response' }).pipe(
             map(response => {
                 const linkHeader = response.headers.get('link');
                 let pagination = new Pagination(linkHeader);
+                console.log("Paginación de exchanges:", pagination);
                 const exchanges: Exchange[] = response.body.map((exchange: any) => new Exchange(exchange));
                 return {exchange: exchanges, pagination: pagination };
             }));
