@@ -290,4 +290,23 @@ export class PublicationComponent implements OnInit {
         }
         return "";
     }
+
+    getConditionTranslation(state: string | undefined) {
+        switch (state) {
+            case 'NEW':
+                return this.translate.instant('bookstate.' + state.toLowerCase());
+            case 'LIKE_NEW':
+                return this.translate.instant('bookstate.like.new');
+            case 'VERY_GOOD':
+                return this.translate.instant('bookstate.very.good');
+            case 'GOOD':
+                return this.translate.instant('bookstate.' + state.toLowerCase());
+            case 'ACCEPTABLE':
+                return this.translate.instant('bookstate.' + state.toLowerCase());
+            case 'WORN':
+                return this.translate.instant('bookstate.' + state.toLowerCase());
+            default:
+                return "";
+        }
+    }
 }

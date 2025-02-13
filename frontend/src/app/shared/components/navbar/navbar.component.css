@@ -81,3 +81,20 @@
     color: #000000;
     border-radius: 6px;
 }
+
+
+:host ::ng-deep .p-button:not(:disabled):hover  {
+    background: #ccc8ba;
+    color: #000000;
+    border: none;
+}
+
+:host ::ng-deep .p-button  {
+    border: none;
+}
+
+:host ::ng-deep .p-button:not(:disabled):active  {
+    background: #ccc8ba;
+    color: #000000;
+    border: none;
+}

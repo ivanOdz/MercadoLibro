@@ -35,7 +35,7 @@
                         <i class="pi pi-address-book" style="font-size: 1.25rem;"></i>
                         <p>{{ 'PUBLICATION_D.BOOK_CONDITION' | translate}}</p>
                     </div>
-                    <div class="detail">{{ publication?.book?.state }}</div>
+                    <div class="detail">{{ getConditionTranslation(publication?.book?.state)  }}</div>
                 </div>
                 <div style="grid-column: 3">
                     <div class="detail-title">

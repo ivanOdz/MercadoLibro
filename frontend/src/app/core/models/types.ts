@@ -32,7 +32,7 @@ export type PublicationData = {
 }
 
 export type BookData = {
-    state: string | null;
+    state: string;
     available: boolean | null;
     owner: User | null;
     bookModel: BookModel | null;
