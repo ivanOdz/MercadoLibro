@@ -1,0 +1,15 @@
+.publication-card-container {
+    width: 55vw;
+    height: 22vh;
+    background: white;
+    box-shadow: 4px 6px 6px #0000001a;
+    border-radius: 2rem;
+    padding: 2rem;
+    transition: transform 0.2s;
+    cursor: pointer;
+}
+
+
+.publication-card-container:hover {
+    transform: scale(1.05);
+}

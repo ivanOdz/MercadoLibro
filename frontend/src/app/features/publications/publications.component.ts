@@ -9,7 +9,9 @@ import { SortComponent } from "../../shared/sort/sort.component";
 import { distinctUntilChanged, filter, Subscription, switchMap, tap } from "rxjs";
 import { PublicationData } from "../../core/models/types";
 import { take } from "rxjs/operators";
-import { NgIf } from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
+import { ScrollPanelModule } from 'primeng/scrollpanel';
+import {PublicationCardComponent} from "../../shared/publication-card/publication.card";
 
 @Component({
   selector: 'app-publications',
@@ -17,11 +19,14 @@ import { NgIf } from "@angular/common";
   standalone: true,
   imports: [
     NavbarComponent,
-	TranslatePipe,
-	RouterModule,
+    TranslatePipe,
+    RouterModule,
     FilterListComponent,
     SortComponent,
-    NgIf
+    NgIf,
+    PublicationCardComponent,
+    NgForOf,
+    ScrollPanelModule
   ],
   styleUrls: ['./publications.component.css']
 })

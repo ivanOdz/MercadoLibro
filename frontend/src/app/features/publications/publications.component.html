@@ -37,10 +37,12 @@
 			</div>
 			<app-sort></app-sort>
 		</div>
-		
-		<div class="publications-grid">
-<!-- 			<app-book-card *ngFor="let publication of publications" [book]="book" [showOwner]="false" [showGenre]="true" [showState]="true"></app-book-card> -->
-		</div>
-		
+
+        <p-scrollpanel [style]="{ width:'65vw', height: '68vh'}">
+            <div class="publications-grid">
+                <publication-card *ngFor="let publication of publications" [publication]="publication"></publication-card>
+            </div>
+        </p-scrollpanel>
+
 	</div>
 </div>
