@@ -79,19 +79,19 @@ export class RequestsComponent  implements OnInit {
                 if (isOffer != null && url != null) {
                     if (isOffer) {
                         requests = forkJoin({
-                            offered: this.es.getExchangesOffers(user.exchanges, this.currentOfferedPage),
-                            solicited: this.es.getExchangesByUrl(url)
+                            offered: this.es.getExchangesByUrl(url),
+                            solicited: this.es.getSolicitedExchanges(user.exchanges, this.currentSolicitedPage)
                         });
                     } else {
                         requests = forkJoin({
-                            offered: this.es.getExchangesByUrl(url),
-                            solicited: this.es.getSolicitedExchanges(user.exchanges, this.currentSolicitedPage)
+                            offered: this.es.getExchangesOffers(user.exchanges, this.currentOfferedPage),
+                            solicited: this.es.getExchangesByUrl(url)
                         });
                     }
                 }else  {
                     requests = forkJoin({
-                            offered: this.es.getExchangesOffers(user.exchanges, this.currentOfferedPage),
-                            solicited: this.es.getSolicitedExchanges(user.exchanges, this.currentSolicitedPage)
+                        offered: this.es.getExchangesOffers(user.exchanges, this.currentOfferedPage),
+                        solicited: this.es.getSolicitedExchanges(user.exchanges, this.currentSolicitedPage)
                     });
                 }
                 return requests;

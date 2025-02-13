@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {HttpClient, HttpHeaders, HttpParams, HttpResponse} from "@angular/common/http";
-import {catchError, forkJoin, Observable, switchMap, tap, throwError} from "rxjs";
+import {catchError, forkJoin, Observable, of, switchMap, tap, throwError} from "rxjs";
 import {Publication} from "../models/publication.model";
 import {Book} from "../models/book.model";
 import {BookData2} from "../models/types";
@@ -32,14 +32,25 @@ export class BookService {
             .set('search', search)
             .set('genre', genre);
 
-        return this.http.get<Book[]>(`${booksUrl}`, { headers, params, observe: 'response' }).pipe(
-            map(response =>{
+        return this.getBooksByUrl(`${booksUrl}&${params.toString()}`);
+    }
+
+    getBooksByUrl(booksUrl: string): Observable<{ books: Book[], pagination: Pagination, headers: HttpHeaders }> {
+        const headers = new HttpHeaders({ 'Accept': 'application/vnd.books.v1+json' });
+
+        return this.http.get<Book[]>(`${booksUrl}`, { headers, observe: 'response' }).pipe(
+            map(response => {
                 const linkHeader = response.headers.get('Link');
                 let pagination = new Pagination(linkHeader);
+                console.log("Paginación de books:", pagination);
                 const books: Book[] = response.body?.map((book: any) => new Book(book)) || [];
-                return { books, pagination, headers: response.headers };
-            }
-        ));
+                return { books: books, pagination: pagination, headers: response.headers };
+            }),
+            catchError(error => {
+                console.error("Error al obtener los libros:", error);
+                return of({ books: [], pagination: new Pagination(null), headers: error.headers });
+            })
+        );
     }
 
     /*
