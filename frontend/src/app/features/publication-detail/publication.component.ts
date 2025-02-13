@@ -317,4 +317,10 @@ export class PublicationComponent implements OnInit {
     redirectToProfile() {
         this.router.navigate(['/profile'])
     }
+
+    isUserPublication() {
+        return this.as.loggedUser$.subscribe(user => {
+            return user?.self === this.publication?.user?.self;
+        })
+    }
 }

@@ -22,7 +22,10 @@
                     <p class="book-description">{{publication?.book?.bookModel?.description}}</p>
                 </div>
                 <div class="book-card-third-column">
-                    <p-button (click)="toggleSolicitExchange()" [styleClass]="'i-want-it-button'" label="{{ 'PUBLICATION_D.SOLICIT_BUTTON' | translate }}"></p-button>
+                    <p-button *ngIf="!isUserPublication()" (click)="toggleSolicitExchange()" [styleClass]="'i-want-it-button'" label="{{ 'PUBLICATION_D.SOLICIT_BUTTON' | translate }}"></p-button>
+                    <div *ngIf="isUserPublication()">
+                        <p>{{ 'PUBLICATION_D.YOUR_PUBLICATION' | translate }}</p>
+                    </div>
                 </div>
             </div>
             <div class="publication-detail-card book-details-card">
