@@ -1,8 +1,8 @@
-import { Component, OnDestroy, OnInit, Input, inject, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { TranslateService, TranslatePipe, TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { NavbarComponent } from "../../shared/components/navbar/navbar.component";
 import { BookCardComponent } from '../../shared/components/book-card/book-card.component';
 import { BookModelService } from "../../core/services/bookmodel.service";
@@ -11,14 +11,12 @@ import { AuthService } from '../../core/services/auth.service';
 import { FilterListComponent } from "../../shared/components/filter-list/filter-list.component";
 import { SortComponent } from "../../shared/components/sort/sort.component";
 import { BookData } from "../../core/models/types";
-import { Subscription, combineLatest, filter, switchMap, tap, distinctUntilChanged, forkJoin} from "rxjs";
-import { map, take } from "rxjs/operators";
+import { filter, switchMap, tap, forkJoin} from "rxjs";
+import { map } from "rxjs/operators";
 import { InputGroup } from 'primeng/inputgroup';
 import { InputGroupAddon } from 'primeng/inputgroupaddon';
 import { ButtonModule } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
-import { User } from "../../core/models/user.model";
-import { BookModel } from "../../core/models/bookModel.model";
 import {Pagination} from "../../core/models/pagination";
 import { PaginatorComponent } from "../../shared/components/paginator/paginator.component";
 
@@ -32,9 +30,8 @@ import { PaginatorComponent } from "../../shared/components/paginator/paginator.
 
 })
 export class BookHomeComponent implements OnInit {
-	
+
 	@ViewChild('searchInput') searchInput!: ElementRef;
-	private subscription!: Subscription;
 
 	constructor(private authService: AuthService,
 				private route: ActivatedRoute,

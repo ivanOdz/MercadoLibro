@@ -2,13 +2,13 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { PublicationService } from '../../core/services/publication.service';
 import { AuthService } from '../../core/services/auth.service';
-import { TranslateService, TranslatePipe, TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { NavbarComponent } from "../../shared/components/navbar/navbar.component";
 import { FilterListComponent } from "../../shared/components/filter-list/filter-list.component";
 import { SortComponent } from "../../shared/components/sort/sort.component";
-import { combineLatest, distinctUntilChanged, filter, of, startWith, Subscription, switchMap, tap } from "rxjs";
+import { distinctUntilChanged, filter, Subscription, switchMap, tap } from "rxjs";
 import { PublicationData } from "../../core/models/types";
-import { map, take } from "rxjs/operators";
+import { take } from "rxjs/operators";
 import { NgIf } from "@angular/common";
 
 @Component({
@@ -86,7 +86,7 @@ export class PublicationsComponent implements OnInit, OnDestroy {
           this.publications = response.body || [];
           this.processHeaders(response.headers);
         }),
-        switchMap((response) =>
+        switchMap(() =>
             this.authService.loggedUser$.pipe(
                 distinctUntilChanged(),
                 filter(user => !!user),

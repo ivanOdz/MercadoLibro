@@ -160,8 +160,6 @@ export class PublicationService {
 
     // favoriteEndpoint -> publication.favoriteEndpoint
     likePublication(publication: PublicationData, userUrl: string): Observable<any> {
-        const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.users.v1+json'});
-
         return this.http.post(`${publication.favoriteEndpoint}`, {user_id: userUrl}).pipe(
             tap(() => console.log("Publicación marcada como favorita"))
         );

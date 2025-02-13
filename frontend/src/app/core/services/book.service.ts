@@ -1,21 +1,14 @@
 import {Injectable} from "@angular/core";
-import {HttpClient, HttpHeaders, HttpParams, HttpResponse} from "@angular/common/http";
-import {catchError, forkJoin, Observable, of, switchMap, tap, throwError} from "rxjs";
-import {Publication} from "../models/publication.model";
+import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
+import {catchError, Observable, of, tap, throwError} from "rxjs";
 import {Book} from "../models/book.model";
 import {BookData} from "../models/types";
-import {BookModelService} from "./bookmodel.service";
 import {map} from "rxjs/operators";
-import {environment} from "../../../environments/environment";
 import {Pagination} from "../models/pagination";
-import {Exchange} from "../models/exchange.model";
-import {Review} from "../models/review.model";
 
 @Injectable({ providedIn: 'root' })
 export class BookService {
-    baseUrl = environment.production ? environment.productionUrl : environment.developmentUrl;
-
-    constructor(private http: HttpClient, private bookModelService: BookModelService) {}
+    constructor(private http: HttpClient) {}
 
     getBook(bookUrn: string) : Observable<Book>  {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.books.v1+json'});
@@ -25,8 +18,6 @@ export class BookService {
     }
 
     getBooks({booksUrl, state, genre, search }: { booksUrl: string;state: string; genre: string; search: string}): Observable<{books: Book[], pagination: Pagination, headers: HttpHeaders}> {
-        const headers = new HttpHeaders({ 'Accept': 'application/vnd.books.v1+json' });
-
         let params = new HttpParams()
             .set('state', state)
             .set('search', search)
