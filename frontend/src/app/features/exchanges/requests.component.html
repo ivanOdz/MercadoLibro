@@ -6,8 +6,8 @@
 
         <p-tabs value="0">
             <p-tablist>
-                <p-tab value="0">Offers</p-tab>
-                <p-tab value="1">My requests</p-tab>
+                <p-tab value="0">{{ 'EXCHANGES.OFFERS_TAB' | translate }}</p-tab>
+                <p-tab value="1">{{ 'EXCHANGES.REQUESTS_TAB' | translate }}</p-tab>
             </p-tablist>
             <p-tabpanels>
                 <p-tabpanel value="0">
@@ -66,7 +66,7 @@
                                     <p-rating [(ngModel)]="selectedUserRatingOffered" [disabled]="true" />
                                 </div>
                             </div>
-                            <p class="static-section-headers">El libro</p>
+                            <p class="static-section-headers">{{ 'EXCHANGES.THEIR_BOOK' | translate }}</p>
                             <div class="static-card book-theirs-card " id="book-theirs-card-offers">
                                 <div style="grid-column: 1;justify-items: center;">
                                     <img [src]="isRequester(selectedOffersCard)? getBookImage(selectedOffersCard.offeredPub.book) : getBookImage(selectedOffersCard.requestedPub.book)"
@@ -84,7 +84,7 @@
                                     </p>
                                 </div>
                             </div>
-                            <p class="static-section-headers">Por tu libro</p>
+                            <p class="static-section-headers">{{ 'EXCHANGES.FOR_YOUR_SUBHEADER' | translate }}</p>
                             <div class="static-card book-theirs-card " id="book-yours-card-offers">
                                 <div style="grid-column: 1;justify-items: center;">
                                     <img [src]="!isRequester(selectedOffersCard)? getBookImage(selectedOffersCard.offeredPub.book) : getBookImage(selectedOffersCard.requestedPub.book)"
@@ -105,13 +105,13 @@
                         </div>
                         <div *ngIf="!selectedOffersCard && !isLoading">
                             <div class="emtpy-content-panel">
-                                <p class="text-empty">Selecciona una tarjeta para más detalles</p>
+                                <p class="text-empty">{{ 'EXCHANGES.SELECT_CARD' | translate }}</p>
                             </div>
                         </div>
                     </div>
                     <div *ngIf="offeredExchanges.length === 0 && !isLoading" class="card-section-empty">
-                        <p class="text-empty">No tienes ofertas para intercambiar</p>
-                        <p-button styleClass="empty-button" label="Ver publicaciones" icon="pi pi-search" (click)="redirectToPublications()" />
+                        <p class="text-empty">{{ 'EXCHANGES.NO_OFFERS' | translate }}</p>
+                        <p-button styleClass="empty-button" label="{{ 'EXCHANGES.SEE_PUBLICATIONS' | translate }}" icon="pi pi-search" (click)="redirectToPublications()" />
                     </div>
                 </p-tabpanel>
                 <p-tabpanel value="1">
@@ -145,7 +145,7 @@
                                         </div>
                                     </div>
                                     <div class="requests-second-column">
-                                        <span class="exchange-solicited-span">Intercambio solicitado</span>
+                                        <span class="exchange-solicited-span">{{ 'EXCHANGES.SOLICITED_EXCHANGE_TAB' | translate }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -169,7 +169,7 @@
                                     <p-rating [(ngModel)]="selectedUserRatingRequested" [disabled]="true" />
                                 </div>
                             </div>
-                            <p class="static-section-headers">El libro</p>
+                            <p class="static-section-headers">{{ 'EXCHANGES.THEIR_BOOK' | translate }}</p>
                             <div class="static-card book-theirs-card " id="book-theirs-card-requests">
                                 <div style="grid-column: 1;justify-items: center;">
                                     <img [src]="isRequester(selectedRequestsCard)? getBookImage(selectedRequestsCard.offeredPub.book) : getBookImage(selectedRequestsCard.requestedPub.book)"
@@ -187,7 +187,7 @@
                                     </p>
                                 </div>
                             </div>
-                            <p class="static-section-headers">Por tu libro</p>
+                            <p class="static-section-headers">{{ 'EXCHANGES.FOR_YOUR_SUBHEADER' | translate }}</p>
                             <div class="static-card book-theirs-card " id="book-yours-card-requests">
                                 <div style="grid-column: 1;justify-items: center;">
                                     <img [src]="!isRequester(selectedRequestsCard)? getBookImage(selectedRequestsCard.offeredPub.book) : getBookImage(selectedRequestsCard.requestedPub.book)"
@@ -208,13 +208,13 @@
                         </div>
                         <div *ngIf="!selectedRequestsCard && !isLoading">
                             <div class="emtpy-content-panel">
-                                <p class="text-empty">Selecciona una tarjeta para más detalles</p>
+                                <p class="text-empty">{{ 'EXCHANGES.SELECT_CARD' | translate }}</p>
                             </div>
                         </div>
                     </div>
                     <div *ngIf="requestedExchanges.length === 0 && !isLoading" class="card-section-empty">
-                        <p class="text-empty">No tienes ningún intercambio solicitado</p>
-                        <p-button styleClass="empty-button" label="Ver publicaciones" icon="pi pi-search" (click)="redirectToPublications()" />
+                        <p class="text-empty">{{ 'EXCHANGES.NO_REQUESTS' | translate }}</p>
+                        <p-button styleClass="empty-button" label="{{ 'EXCHANGES.SEE_PUBLICATIONS' | translate }}" icon="pi pi-search" (click)="redirectToPublications()" />
                     </div>
                 </p-tabpanel>
             </p-tabpanels>
@@ -230,8 +230,8 @@
     </ng-template>
     <span class="text-surface-500 dark:text-surface-400 block">Are you sure you want to accept an exchange?</span>
     <ng-template #footer>
-        <p-button label="Cancel" [raised]="true" severity="secondary" (click)="acceptExchangeDialogVisible = false" />
-        <p-button label="Start" [raised]="true" severity="success" (click)="acceptExchange()" />
+        <p-button label="{{ 'EXCHANGES.CANCEL' | translate }}" [raised]="true" severity="secondary" (click)="acceptExchangeDialogVisible = false" />
+        <p-button label="{{ 'EXCHANGES.START' | translate }}" [raised]="true" severity="success" (click)="acceptExchange()" />
 
     </ng-template>
 </p-dialog>
@@ -244,7 +244,7 @@
     </ng-template>
     <span class="text-surface-500 dark:text-surface-400 block">Are you sure you want to reject the exchange</span>
     <ng-template #footer>
-        <p-button label="Cancel" [raised]="true" severity="secondary" (click)="rejectExchangeDialogVisible = false" />
-        <p-button label="Reject" [raised]="true" severity="danger" (click)="rejectExchange()" />
+        <p-button label="{{ 'EXCHANGES.CANCEL' | translate }}" [raised]="true" severity="secondary" (click)="rejectExchangeDialogVisible = false" />
+        <p-button label="{{ 'EXCHANGES.REJECT' | translate }}" [raised]="true" severity="danger" (click)="rejectExchange()" />
     </ng-template>
 </p-dialog>

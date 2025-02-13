@@ -196,9 +196,13 @@
     "COMPLETED_TAB": "Completed",
     "REJECTED_TAB": "Rejected",
     "COMPLETED_SPAN": "Completed exchange",
-    "THEIR_BOOK": "Their book:"
-
-
+    "THEIR_BOOK": "Their book:",
+    "OFFERS_TAB": "Offers",
+    "REQUESTS_TAB": "Your requests",
+    "NO_OFFERS": "You don't have any offers yet",
+    "NO_REQUESTS": "You don't have any requested exchange",
+    "START": "Start",
+    "REJECT": "Reject"
   }
   
 }

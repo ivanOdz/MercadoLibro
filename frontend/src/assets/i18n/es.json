@@ -192,12 +192,19 @@
     "CONFIRM_ALT": "Confirmar intercambio",
     "CONFIRM_DESCRIPTION": "¿Estás seguro que deseas confirmar el intercambio?",
     "CANCEL": "Cancelar",
+    "REJECT": "Rechazar",
+    "START": "Iniciar",
     "COMPLETED_TAB": "Completados",
     "REJECTED_TAB": "Rechazados",
     "COMPLETED_SPAN": "Intercambio completado",
     "REJECTED_SPAN": "Intercambio rechazado",
     "NO_REJECTED_EXCHANGES": "No tienes intercambios rechazados",
     "LEAVE_REVIEW": "Deja tu reseña",
-    "SEND_LABEL": "Enviar"
+    "SEND_LABEL": "Enviar",
+    "OFFERS_TAB": "Ofertas",
+    "REQUESTS_TAB": "Tus solicitudes",
+    "NO_OFFERS": "No tienes ofertas para intercambiar",
+    "NO_REQUESTS": "No tienes solicitudes de intercambio",
+    "SOLICITED_EXCHANGE_TAB": "Intercambio solicitado"
   }
 }

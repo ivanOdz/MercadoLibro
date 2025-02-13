@@ -22,6 +22,7 @@ import {Dialog} from "primeng/dialog";
 import {BookData, ExchangeData} from "../../core/models/types";
 import {Pagination} from "../../core/models/pagination";
 import {PaginatorComponent} from "../../shared/components/paginator/paginator.component";
+import {TranslatePipe, TranslateService} from "@ngx-translate/core";
 
 @Component({
     selector: 'exchanges-requests',
@@ -43,7 +44,8 @@ import {PaginatorComponent} from "../../shared/components/paginator/paginator.co
         NgIf,
         ProgressSpinner,
         Dialog,
-        PaginatorComponent
+        PaginatorComponent,
+        TranslatePipe
     ]
 })
 export class RequestsComponent  implements OnInit {
@@ -55,7 +57,7 @@ export class RequestsComponent  implements OnInit {
 
     constructor(private es: ExchangeService, private us: UserService, private ps: PublicationService,
                 private bs: BookService, private bms: BookModelService, private as: AuthService,
-                private router: Router) {}
+                private router: Router, private translate: TranslateService) {}
 
     ngOnInit(): void {
         this.isLoading = true;
@@ -63,6 +65,7 @@ export class RequestsComponent  implements OnInit {
             this.loggedUser = user;
             this.loadExchanges();
         });
+        this.loadRequestVariablesNames();
     }
 
     // ##################  Api calls  ##################
@@ -219,7 +222,7 @@ export class RequestsComponent  implements OnInit {
 
     /***  Html functions  ***/
 
-    Title = "Requests";
+    Title = "";
 
 
     selectedOffersCard: ExchangeData | null = null;
@@ -254,6 +257,11 @@ export class RequestsComponent  implements OnInit {
     getBookImage(book: BookData) {
         return book.model?.coverUri || 'assets/book.jpg';
     }
+
+    loadRequestVariablesNames() {
+        this.Title = this.translate.instant('EXCHANGES.REQUESTS_TITLE');
+    }
+
 
     /*** Dialogs ***/
 
