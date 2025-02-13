@@ -49,7 +49,7 @@ public class ExchangeController {
         Response.ResponseBuilder response = Response.ok(new GenericEntity<List<ExchangeDTO>>(exchangeDTOS) {});
         UriBuilder uri = PageResponseUtil.getUriBuilderExchanges(uriInfo.getAbsolutePathBuilder(), userId, state, isOfferer, isRequester);
 
-        return PageResponseUtil.getResponse(page, exchanges.getMetadata().getMaxPage(), uriInfo.getAbsolutePathBuilder(), response);
+        return PageResponseUtil.getResponse(page, exchanges.getMetadata().getMaxPage(), uri, response);
     }
 
     @POST
