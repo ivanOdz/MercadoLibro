@@ -52,11 +52,12 @@ export class ExchangesComponent implements OnInit {
     ngOnInit(): void {
         this.isLoading = true;
         this.currentPage = 0;
+        this.translate.onLangChange.subscribe(() => this.loadActiveVariablesNames());
+        this.loadActiveVariablesNames();
         this.as.loggedUser$.subscribe((user: User | null) => {
             this.loggedUser = user;
             this.loadExchanges();
         });
-        this.loadActiveVariablesNames();
     }
 
     // ##################  Api calls  ##################
@@ -270,6 +271,11 @@ export class ExchangesComponent implements OnInit {
 
     loadActiveVariablesNames() {
         this.Title = this.translate.instant('EXCHANGES.ACTIVE_TITLE');
+        this.steps = [
+            { label: this.translate.instant('EXCHANGES.ACCEPTED') },
+            { label: this.translate.instant('EXCHANGES.AWAITING_CONFIRMATION') },
+            { label: this.translate.instant('EXCHANGES.COMPLETED') }
+        ]
     }
 
 
@@ -306,11 +312,7 @@ export class ExchangesComponent implements OnInit {
 
     displayModal: boolean = false;
 
-    steps: MenuItem[] = [
-        { label: 'Aceptado' },
-        { label: 'Esperando confirmacion' },
-        { label: 'Finalizado' }
-    ];
+    steps: MenuItem[] = [];
     value: any;
     newMessage: any;
 

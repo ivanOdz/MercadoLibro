@@ -194,6 +194,8 @@
     "CONFIRM_DESCRIPTION": "Are you sure you want to confirm that you received your book?",
     "CANCEL": "Cancel",
     "COMPLETED_TAB": "Completed",
+    "LEAVE_REVIEW": "Leave your review",
+    "LEAVE_A_REVIEW": "Leave a review",
     "REJECTED_TAB": "Rejected",
     "COMPLETED_SPAN": "Completed exchange",
     "THEIR_BOOK": "Their book:",
@@ -202,7 +204,10 @@
     "NO_OFFERS": "You don't have any offers yet",
     "NO_REQUESTS": "You don't have any requested exchange",
     "START": "Start",
-    "REJECT": "Reject"
+    "REJECT": "Reject",
+    "COMPLETED": "Completed",
+    "AWAITING_CONFIRMATION": "Awaiting confirmation",
+    "ACCEPTED": "Accepted"
   }
   
 }

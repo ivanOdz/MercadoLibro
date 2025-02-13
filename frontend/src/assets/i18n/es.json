@@ -200,11 +200,15 @@
     "REJECTED_SPAN": "Intercambio rechazado",
     "NO_REJECTED_EXCHANGES": "No tienes intercambios rechazados",
     "LEAVE_REVIEW": "Deja tu reseña",
+    "LEAVE_A_REVIEW": "Deja una reseña",
     "SEND_LABEL": "Enviar",
     "OFFERS_TAB": "Ofertas",
     "REQUESTS_TAB": "Tus solicitudes",
     "NO_OFFERS": "No tienes ofertas para intercambiar",
     "NO_REQUESTS": "No tienes solicitudes de intercambio",
-    "SOLICITED_EXCHANGE_TAB": "Intercambio solicitado"
+    "SOLICITED_EXCHANGE_TAB": "Intercambio solicitado",
+    "COMPLETED": "Finalizado",
+    "AWAITING_CONFIRMATION": "Esperando confirmación",
+    "ACCEPTED": "Aceptado"
   }
 }

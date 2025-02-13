@@ -64,11 +64,12 @@ export class HistoryComponent implements OnInit {
 
     ngOnInit(): void {
         this.isLoading = true;
+        this.translate.onLangChange.subscribe(() => this.loadHistoryVariablesNames());
+        this.loadHistoryVariablesNames();
         this.as.loggedUser$.subscribe((user: User | null) => {
             this.loggedUser = user;
             this.loadExchanges();
         });
-        this.loadHistoryVariablesNames();
     }
 
 

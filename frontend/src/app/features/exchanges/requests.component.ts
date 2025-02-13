@@ -61,11 +61,12 @@ export class RequestsComponent  implements OnInit {
 
     ngOnInit(): void {
         this.isLoading = true;
+        this.translate.onLangChange.subscribe(() => this.loadRequestVariablesNames());
+        this.loadRequestVariablesNames();
         this.as.loggedUser$.subscribe((user: User | null) => {
             this.loggedUser = user;
             this.loadExchanges();
         });
-        this.loadRequestVariablesNames();
     }
 
     // ##################  Api calls  ##################

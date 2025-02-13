@@ -65,7 +65,7 @@
                                     <p-rating [(ngModel)]="selectedUserRatingCompleted" [disabled]="true" />
                                 </div>
                                 <div style="grid-column: 3;text-align: start;align-content: center;justify-items: center;">
-                                    <p class="user-card-review" style="text-align: center;">Deja una reseña</p>
+                                    <p class="user-card-review" style="text-align: center;">{{ 'EXCHANGES.LEAVE_A_REVIEW' | translate }}</p>
                                     <i style="font-size: large;font-weight: lighter;cursor: pointer" class="pi pi-chevron-up icon-card-active" (click)="toggleReviewContent($event, op)"></i>
                                 </div>
                             </div>
