@@ -41,7 +41,7 @@ export class FilterListComponent implements OnInit, OnChanges  {
     parseHeaders() {
         const prefix = this.filterType === 'Condition' ? 'bookstate.' : 'genre.';
         const paramName = this.filterType === 'Condition' ? 'state' : 'genre';
-
+		
         this.filters = Object.keys(this.headers)
             .map((key) => {
                 const value = this.headers[key]; // Accede usando corchetes
