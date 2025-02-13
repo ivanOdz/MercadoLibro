@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 
-import { BookData2 } from '../../../core/models/types';
+import { BookData } from '../../../core/models/types';
 import { NgIf } from "@angular/common";
 
 @Component({
@@ -15,7 +15,7 @@ import { NgIf } from "@angular/common";
 })
 export class BookCardComponent {
 	
-	@Input() book!: BookData2;
+	@Input() book!: BookData;
 	@Input() showOwner: boolean = false;
 	@Input() showGenre: boolean = true;
 	@Input() showState: boolean = true;

@@ -10,10 +10,9 @@ import {Rating} from "primeng/rating";
 import {FormsModule} from "@angular/forms";
 import {Dialog} from "primeng/dialog";
 import {InputText} from "primeng/inputtext";
-import {Exchange} from "../../core/models/exchange.model";
 import {ExchangeService} from "../../core/services/exchange.service";
 import {UserService} from "../../core/services/user.service";
-import {catchError, filter, forkJoin, of, switchMap, tap} from "rxjs";
+import {catchError, filter, of, switchMap, tap} from "rxjs";
 import {User} from "../../core/models/user.model";
 import {AuthService} from "../../core/services/auth.service";
 import {Router} from "@angular/router";
@@ -63,101 +62,45 @@ export class ExchangesComponent implements OnInit {
     // ##################  Api calls  ##################
 
     private loadExchanges(url: string | null = null): void {
-            this.activeExchanges = [];
-            this.isLoading = true;
+        this.activeExchanges = [];
+        this.isLoading = true;
 
-
-            this.as.loggedUser$.pipe(
+        this.as.loggedUser$.pipe(
             filter((user: User | null) => !!user),
-                switchMap((user: User) => {
-                    const exchangeObservable = url
-                        ? this.es.getExchangesByUrl(url)
-                        : this.es.getActiveExchanges(user.exchanges, this.currentPage);
+            switchMap((user: User) => {
+                const exchangeObservable = url
+                    ? this.es.getExchangesByUrl(url)
+                    : this.es.getActiveExchanges(user.exchanges, this.currentPage);
 
-                    return exchangeObservable.pipe(
-                        tap((response) => {
-                            this.pagination = response.pagination;
-                        }),
-                        map(response => response.exchange),
-                        catchError((error) => {
-                            console.error("Error obteniendo intercambios:", error);
-                            return of([]);
-                        })
-                    );
-                }),
-                switchMap((exchanges: Exchange[]) => {
-                    if (exchanges.length === 0) {
-                        console.warn("No se encontraron intercambios.");
-                        return of([]);
-                }
-
-                const exchangeRequests = exchanges.map((exchange) => forkJoin({
-                        offererPub: this.ps.getPublication(exchange.offerer),
-                        requesterPub: this.ps.getPublication(exchange.requester),
-                    }).pipe(
-                        switchMap(({ offererPub, requesterPub }) => {
-                            if (!offererPub || !requesterPub) return of(null);
-
-                            return forkJoin({
-                                offererUser: this.us.getUser(offererPub.user).pipe(catchError(() => of(null))),
-                                requesterUser: this.us.getUser(requesterPub.user).pipe(catchError(() => of(null))),
-                                offererBook: this.bs.getBook(offererPub.book).pipe(catchError(() => of(null))),
-                                requesterBook: this.bs.getBook(requesterPub.book).pipe(catchError(() => of(null))),
-                                offererLocations: this.us.getLocationsInPublication(offererPub.locations).pipe(catchError(() => of([]))),
-                                requesterLocations: this.us.getLocationsInPublication(requesterPub.locations).pipe(catchError(() => of([]))),
-                            }).pipe(
-                                switchMap(({ offererUser, requesterUser, offererBook, requesterBook, offererLocations, requesterLocations }) => {
-                                    if (!offererBook || !requesterBook) return of(null);
-
-                                    return forkJoin({
-                                        offererBookModel: this.bms.getBookModel(offererBook.bookModel).pipe(
-                                            tap((r) => console.log("Respuesta de la API de book model:", r)),
-                                            catchError(() => of(null))),
-                                        requesterBookModel: this.bms.getBookModel(requesterBook.bookModel).pipe(
-                                            tap((r) => console.log("Respuesta de la API de book model:", r)),
-                                            catchError(() => of(null))),
-                                        messages: this.es.getMessages(exchange.chat).pipe(
-                                            catchError(() => of([]))
-                                        )
-                                    }).pipe(
-                                        map(({ offererBookModel, requesterBookModel, messages }) => ({
-                                            exchange,
-                                            offeredPub: {
-                                                book: {
-                                                    owner: offererUser,
-                                                    model: offererBookModel,
-                                                },
-                                                locations: offererLocations,
-                                            },
-                                            requestedPub: {
-                                                book: {
-                                                    owner: requesterUser,
-                                                    model: requesterBookModel,
-                                                },
-                                                locations: requesterLocations,
-                                            },
-                                            messages
-                                        }))
-                                    );
-                                })
-                            );
-                        })
-                    )
+                return exchangeObservable.pipe(
+                    tap((response) => {
+                        this.pagination = response.pagination;
+                    }),
+                    map(response => response.exchange),
+                    catchError((error) => {
+                        console.error("Error obteniendo intercambios:", error);
+                        return of([]); // Retorna un array vacío si hay error
+                    })
                 );
-                return forkJoin(exchangeRequests).pipe(
-                    tap((result) => console.log("Intercambios procesados:", result)),
-                    map((result) => result.filter((item) => item !== null)) // Eliminamos nulos
-                );
+            }),
+            switchMap((exchanges) => {
+                return this.es.processExchanges(exchanges);
             })
-            ).subscribe(
-                (activeExchanges) => {
-                    this.activeExchanges = activeExchanges;
-                    this.isLoading = false;
-                    console.log("Intercambios cargados:", this.activeExchanges);
-                },
-                (error) => console.error("Error en la carga de intercambios:", error)
-            );
+        ).subscribe(
+            (activeExchanges) => {
+                this.activeExchanges = activeExchanges;
+                this.isLoading = false;
+                console.log("Intercambios cargados:", this.activeExchanges);
+            },
+            (error) => {
+                this.isLoading = false;
+                console.error("Error en la carga de intercambios:", error);
+            }
+        );
     }
+
+
+
 
 
     confirmExchange(card: ExchangeData, requester: boolean) {
@@ -179,7 +122,7 @@ export class ExchangesComponent implements OnInit {
 
     sendMessage() {
         if (this.newMessage.trim() && this.selectedCard?.exchange.chat) {
-            this.es.sendMessage(this.selectedCard?.exchange.chat, this.isRequester(this.selectedCard) ? this.selectedCard.requestedPub.book.owner?.self : this.selectedCard.offeredPub.book.owner?.self, this.newMessage).subscribe(
+            this.es.sendMessage(this.selectedCard?.exchange.chat, this.isRequester(this.selectedCard) ? this.selectedCard.requestedPub.book?.owner?.self : this.selectedCard.offeredPub.book?.owner?.self, this.newMessage).subscribe(
                 (messageUrn) => {
                     console.log("Mensaje enviado:", messageUrn);
                     this.es.getMessage(messageUrn).subscribe(
@@ -218,11 +161,11 @@ export class ExchangesComponent implements OnInit {
     }
 
     isRequester(selectedCard: ExchangeData | null) {
-        return this.loggedUser?.username == selectedCard?.requestedPub?.book.owner?.username;
+        return this.loggedUser?.username == selectedCard?.requestedPub?.book?.owner?.username;
     }
 
-    getBookImage(book: BookData) {
-        return book.model?.coverUri || 'assets/book.jpg';
+    getBookImage(book: BookData | null) {
+        return book?.bookModel?.coverUri || 'assets/book.jpg';
     }
 
     addMessage(newMessage: any) {

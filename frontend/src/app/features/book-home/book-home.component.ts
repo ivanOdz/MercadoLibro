@@ -10,7 +10,7 @@ import { BookService } from "../../core/services/book.service";
 import { AuthService } from '../../core/services/auth.service';
 import { FilterListComponent } from "../../shared/components/filter-list/filter-list.component";
 import { SortComponent } from "../../shared/components/sort/sort.component";
-import { BookData2 } from "../../core/models/types";
+import { BookData } from "../../core/models/types";
 import { Subscription, combineLatest, filter, switchMap, tap, distinctUntilChanged, forkJoin} from "rxjs";
 import { map, take } from "rxjs/operators";
 import { InputGroup } from 'primeng/inputgroup';
@@ -60,7 +60,7 @@ export class BookHomeComponent implements OnInit {
 		search: '',
 	};
 
-	books: BookData2[] = [];
+	books: BookData[] = [];
 	pagination: Pagination | null= null;
 	
 	ngOnInit() {
@@ -161,7 +161,7 @@ export class BookHomeComponent implements OnInit {
 										bookModel: bookModel,
 										images: null,
 										self: book.self,
-									}) as BookData2)
+									}) as BookData)
 								)
 							)
 						);
