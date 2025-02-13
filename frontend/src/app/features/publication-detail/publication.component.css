@@ -46,8 +46,8 @@
 }
 
 .book-image {
-    height: 90%;
-    width: 80%;
+    height: 46vh;
+    width: 18vw;
     background-color: darkgray;
     border-radius: 0.75rem;
 }
