@@ -24,7 +24,7 @@ export class BookService {
         );
     }
 
-    getBooks({booksUrl, state, genre, search }: { booksUrl: string;state: string; genre: string; search: string}): Observable<{books: Book[], pagination: Pagination}> {
+    getBooks({booksUrl, state, genre, search }: { booksUrl: string;state: string; genre: string; search: string}): Observable<{books: Book[], pagination: Pagination, headers: HttpHeaders}> {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.books.v1+json' });
 
         let params = new HttpParams()
@@ -37,7 +37,7 @@ export class BookService {
                 const linkHeader = response.headers.get('Link');
                 let pagination = new Pagination(linkHeader);
                 const books: Book[] = response.body?.map((book: any) => new Book(book)) || [];
-                return { books, pagination };
+                return { books, pagination, headers: response.headers };
             }
         ));
     }

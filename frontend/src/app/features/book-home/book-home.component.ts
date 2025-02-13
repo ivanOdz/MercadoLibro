@@ -1,8 +1,8 @@
-import { Component, OnInit, Input, inject, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnDestroy, OnInit, Input, inject, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { TranslateService, TranslatePipe } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe, TranslateModule } from '@ngx-translate/core';
 import { NavbarComponent } from "../../shared/components/navbar/navbar.component";
 import { BookCardComponent } from '../../shared/components/book-card/book-card.component';
 import { BookModelService } from "../../core/services/bookmodel.service";
@@ -11,14 +11,14 @@ import { AuthService } from '../../core/services/auth.service';
 import { FilterListComponent } from "../../shared/components/filter-list/filter-list.component";
 import { SortComponent } from "../../shared/components/sort/sort.component";
 import { BookData2 } from "../../core/models/types";
-import {Subscription, combineLatest, filter, switchMap, tap, distinctUntilChanged, forkJoin} from "rxjs";
-import {map, take} from "rxjs/operators";
+import { Subscription, combineLatest, filter, switchMap, tap, distinctUntilChanged, forkJoin} from "rxjs";
+import { map, take } from "rxjs/operators";
 import { InputGroup } from 'primeng/inputgroup';
 import { InputGroupAddon } from 'primeng/inputgroupaddon';
 import { ButtonModule } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
-import {User} from "../../core/models/user.model";
-import {BookModel} from "../../core/models/bookModel.model";
+import { User } from "../../core/models/user.model";
+import { BookModel } from "../../core/models/bookModel.model";
 
 @Component({
 	selector: 'app-book-home',
@@ -26,7 +26,7 @@ import {BookModel} from "../../core/models/bookModel.model";
 	styleUrl: './book-home.component.css',
 	standalone: true,
     imports: [CommonModule, TranslatePipe, NavbarComponent, RouterModule, FilterListComponent,
-        SortComponent, InputGroup, InputGroupAddon, ButtonModule, InputText, FormsModule, BookCardComponent]
+        SortComponent, InputGroup, InputGroupAddon, ButtonModule, InputText, FormsModule, BookCardComponent ]
 
 })
 export class BookHomeComponent implements OnInit {
@@ -59,10 +59,11 @@ export class BookHomeComponent implements OnInit {
 	};
 
 	books: BookData2[] = [];
+	
 	ngOnInit() {
 		this.fetchBooks();
 	}
-
+	
 	private processHeaders(headers: any) {
 		const newConditionHeaders: Record<string, string> = {};
 		const newGenreHeaders: Record<string, string> = {};
@@ -123,6 +124,7 @@ export class BookHomeComponent implements OnInit {
 	}
 	
 	fetchBooks() {
+		
 		this.authService.loggedUser$.pipe(
 			filter(user => !!user),
 			switchMap((user) => {
@@ -137,9 +139,12 @@ export class BookHomeComponent implements OnInit {
 						this.showGenreFilter = !params['genre'];
 					}),
 					switchMap(() => this.bookService.getBooks({ ...this.currentFilters })),
-					switchMap(({books, pagination}) => {
+					tap((response) => {
+					    this.processHeaders(response.headers);
+					}),
+					switchMap((response) => {
 						return forkJoin(
-							books.map(book =>
+							response.books.map(book =>
 								this.bms.getBookModel(book.bookModel).pipe(
 									map((bookModel) => ({
 										state: book.state,
