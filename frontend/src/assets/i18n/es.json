@@ -182,6 +182,8 @@
     "CONFIRM_LABEL": "Confirmar",
     "ALREADY_CONFIRMED_SPAN": "Ya has confirmado",
     "FOR_YOUR_SUBHEADER": "Por tu libro:",
+    "THEIR_BOOK": "Su libro:",
+    "NO_COMPLETED_EXCHANGES": "No has completado ningún intercambio aún",
     "SELECT_CARD": "Selecciona una tarjeta para más detalles",
     "NO_ACTIVE_EXCHANGES": "No tienes intercambios activos",
     "SEE_PUBLICATIONS": "Ver publicaciones",
@@ -189,6 +191,13 @@
     "WRITE_MESSAGE_PLACEHOLDER": "Escribe un mensaje...",
     "CONFIRM_ALT": "Confirmar intercambio",
     "CONFIRM_DESCRIPTION": "¿Estás seguro que deseas confirmar el intercambio?",
-    "CANCEL": "Cancelar"
+    "CANCEL": "Cancelar",
+    "COMPLETED_TAB": "Completados",
+    "REJECTED_TAB": "Rechazados",
+    "COMPLETED_SPAN": "Intercambio completado",
+    "REJECTED_SPAN": "Intercambio rechazado",
+    "NO_REJECTED_EXCHANGES": "No tienes intercambios rechazados",
+    "LEAVE_REVIEW": "Deja tu reseña",
+    "SEND_LABEL": "Enviar"
   }
 }

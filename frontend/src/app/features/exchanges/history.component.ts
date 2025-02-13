@@ -23,6 +23,7 @@ import {ProgressSpinner} from "primeng/progressspinner";
 import {BookData, ExchangeData} from "../../core/models/types";
 import { PaginatorComponent } from "../../shared/components/paginator/paginator.component";
 import {Pagination} from "../../core/models/pagination";
+import {TranslatePipe, TranslateService} from "@ngx-translate/core";
 
 @Component({
     selector: 'exchanges-history',
@@ -45,7 +46,8 @@ import {Pagination} from "../../core/models/pagination";
         Popover,
         ProgressSpinner,
         NgIf,
-        PaginatorComponent
+        PaginatorComponent,
+        TranslatePipe
     ]
 })
 export class HistoryComponent implements OnInit {
@@ -58,7 +60,7 @@ export class HistoryComponent implements OnInit {
 
     constructor(private es: ExchangeService, private us: UserService, private ps: PublicationService,
                 private bs: BookService, private bms: BookModelService, private as: AuthService,
-                private router: Router) {}
+                private router: Router, private translate: TranslateService) {}
 
     ngOnInit(): void {
         this.isLoading = true;
@@ -66,6 +68,7 @@ export class HistoryComponent implements OnInit {
             this.loggedUser = user;
             this.loadExchanges();
         });
+        this.loadHistoryVariablesNames();
     }
 
 
@@ -202,7 +205,7 @@ export class HistoryComponent implements OnInit {
 
     /***  Html functions  ***/
 
-    Title = "History";
+    Title = "";
 
     isLoading = true;
 
@@ -247,6 +250,11 @@ export class HistoryComponent implements OnInit {
         this.userToReview = this.isRequester(this.selectedCompletedCard) ? this.selectedCompletedCard?.offeredPub?.book?.owner : this.selectedCompletedCard?.requestedPub?.book?.owner;
         console.log("en toggle review" + this.userToReview);
         op.toggle($event)
+    }
+
+
+    loadHistoryVariablesNames() {
+        this.Title = this.translate.instant('EXCHANGES.HISTORY_TITLE');
     }
 
 

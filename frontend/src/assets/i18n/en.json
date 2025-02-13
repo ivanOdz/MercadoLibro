@@ -183,12 +183,22 @@
     "FOR_YOUR_SUBHEADER": "For your book:",
     "SELECT_CARD": "Select a card to see more details",
     "NO_ACTIVE_EXCHANGES": "You don't have any active exchanges",
+    "NO_COMPLETED_EXCHANGES": "You don't have any completed exchanges",
+    "NO_REJECTED_EXCHANGES": "You don't have any rejected exchanges",
+    "SEND_LABEL": "Send",
+    "REJECTED_SPAN": "Rejected exchange",
     "SEE_PUBLICATIONS": "See publications",
     "CHAT": "Chat",
     "WRITE_MESSAGE_PLACEHOLDER": "Write a message...",
     "CONFIRM_ALT": "Confirm exchange",
     "CONFIRM_DESCRIPTION": "Are you sure you want to confirm that you received your book?",
-    "CANCEL": "Cancel"
+    "CANCEL": "Cancel",
+    "COMPLETED_TAB": "Completed",
+    "REJECTED_TAB": "Rejected",
+    "COMPLETED_SPAN": "Completed exchange",
+    "THEIR_BOOK": "Their book:"
+
+
   }
   
 }

@@ -6,8 +6,8 @@
 
         <p-tabs value="0">
             <p-tablist>
-                <p-tab value="0">Completed</p-tab>
-                <p-tab value="1">Rejected</p-tab>
+                <p-tab value="0">{{ 'EXCHANGES.COMPLETED_TAB' | translate }}</p-tab>
+                <p-tab value="1">{{ 'EXCHANGES.REJECTED_TAB' | translate }}</p-tab>
             </p-tablist>
             <p-tabpanels>
                 <p-tabpanel value="0">
@@ -41,7 +41,7 @@
                                         </div>
                                     </div>
                                     <div class="requests-second-column">
-                                        <span class="exchange-completed-span">Intercambio completado</span>
+                                        <span class="exchange-completed-span">{{ 'EXCHANGES.COMPLETED_SPAN' | translate }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -70,7 +70,7 @@
                                 </div>
                             </div>
 
-                            <p class="static-section-headers">El libro</p>
+                            <p class="static-section-headers">{{ 'EXCHANGES.THEIR_BOOK' | translate }}</p>
                             <div class="static-card book-theirs-card" id="book-theirs-card-completed">
                                 <div style="grid-column: 1;justify-items: center;">
                                     <img [src]="isRequester(selectedCompletedCard)? getBookImage(selectedCompletedCard.offeredPub.book) : getBookImage(selectedCompletedCard.requestedPub.book)"
@@ -88,7 +88,7 @@
                                     </p>
                                 </div>
                             </div>
-                            <p class="static-section-headers">Por tu libro</p>
+                            <p class="static-section-headers">{{ 'EXCHANGES.FOR_YOUR_SUBHEADER' | translate }}</p>
                             <div class="static-card book-yours-card" id="book-yours-card-completed">
                                 <div style="grid-column: 1;justify-items: center;">
                                     <img [src]="!isRequester(selectedCompletedCard)? getBookImage(selectedCompletedCard.offeredPub.book) : getBookImage(selectedCompletedCard.requestedPub.book)"
@@ -109,13 +109,13 @@
                         </div>
                         <div *ngIf="!selectedCompletedCard && !isLoading">
                             <div class="emtpy-content-panel">
-                                <p class="text-empty">Selecciona una tarjeta para más detalles</p>
+                                <p class="text-empty">{{ 'EXCHANGES.SELECT_CARD' | translate }}</p>
                             </div>
                         </div>
                     </div>
                     <div *ngIf="completedExchanges.length === 0 && !isLoading" class="card-section-empty">
-                        <p class="text-empty">No tienes intercambios completados</p>
-                        <p-button styleClass="empty-button" label="Ver publicaciones" icon="pi pi-search" (click)="redirectToPublications()" />
+                        <p class="text-empty">{{ 'EXCHANGES.NO_COMPLETED_EXCHANGES' | translate }}</p>
+                        <p-button styleClass="empty-button" label="{{ 'EXCHANGES.SEE_PUBLICATIONS' | translate }}" icon="pi pi-search" (click)="redirectToPublications()" />
                     </div>
                 </p-tabpanel>
                 <p-tabpanel value="1">
@@ -149,7 +149,7 @@
                                         </div>
                                     </div>
                                     <div class="requests-second-column">
-                                        <span class="exchange-rejected-span">Intercambio rechazado</span>
+                                        <span class="exchange-rejected-span">{{ 'EXCHANGES.REJECTED_SPAN' | translate }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -173,7 +173,7 @@
                                     <p-rating [(ngModel)]="selectedUserRatingRejected" [disabled]="true" />
                                 </div>
                             </div>
-                            <p class="static-section-headers">El libro</p>
+                            <p class="static-section-headers">{{ 'EXCHANGES.THEIR_BOOK' | translate }}</p>
                             <div class="static-card book-theirs-card" id="book-theirs-card-rejected">
                                 <div style="grid-column: 1;justify-items: center;">
                                     <img [src]="isRequester(selectedRejectedCard)? getBookImage(selectedRejectedCard.offeredPub.book) : getBookImage(selectedRejectedCard.requestedPub.book)"
@@ -191,7 +191,7 @@
                                     </p>
                                 </div>
                             </div>
-                            <p class="static-section-headers">Por tu libro</p>
+                            <p class="static-section-headers">{{ 'EXCHANGES.FOR_YOUR_SUBHEADER' | translate }}</p>
                             <div class="static-card book-yours-card" id="book-yours-card-rejected">
                                 <div style="grid-column: 1;justify-items: center;">
                                     <img [src]="!isRequester(selectedRejectedCard)? getBookImage(selectedRejectedCard.offeredPub.book) : getBookImage(selectedRejectedCard.requestedPub.book)"
@@ -212,12 +212,12 @@
                         </div>
                         <div *ngIf="!selectedRejectedCard && !isLoading">
                             <div class="emtpy-content-panel">
-                                <p class="text-empty">Selecciona una tarjeta para más detalles</p>
+                                <p class="text-empty">{{ 'EXCHANGES.SELECT_CARD' | translate }}</p>
                             </div>
                         </div>
                     </div>
                     <div *ngIf="rejectedExchanges.length === 0 && !isLoading" class="card-section-empty">
-                        <p class="text-empty">No tienes ningún intercambio rechazado</p>
+                        <p class="text-empty">{{ 'EXCHANGES.NO_REJECTED_EXCHANGES' | translate }}</p>
                         <p-button styleClass="empty-button" label="Ver publicaciones" icon="pi pi-search" (click)="redirectToPublications()" />
                     </div>
                 </p-tabpanel>
@@ -228,9 +228,9 @@
 
 <p-popover #op>
         <div style="padding: 1rem;">
-            <p style="margin: 0">Deja tu reseña</p>
+            <p style="margin: 0">{{ 'EXCHANGES.LEAVE_REVIEW' | translate }}</p>
             <p-rating [(ngModel)]="reviewValue" style="margin-bottom: 1rem;margin-top: 1rem" />
             <textarea pTextarea [(ngModel)]="reviewText"></textarea>
-            <p-button label="Enviar" (click)="addUserReview($event,op)" />
+            <p-button label="{{ 'EXCHANGES.SEND_LABEL' | translate }}" (click)="addUserReview($event,op)" />
         </div>
 </p-popover>

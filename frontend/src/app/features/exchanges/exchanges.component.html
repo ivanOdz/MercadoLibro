@@ -68,7 +68,7 @@
                         <i style="font-size: xx-large;font-weight: lighter;cursor: pointer" class="pi pi-comment icon-card-active" (click)="openChat()"></i>
                     </div>
                 </div>
-                <p class="static-section-headers">El libro</p>
+                <p class="static-section-headers">{{ 'EXCHANGES.THEIR_BOOK' | translate }}</p>
                 <div class="static-card book-theirs-card" id="book-theirs-card">
                     <div style="grid-column: 1;justify-items: center;">
                         <img [src]="isRequester(selectedCard)? getBookImage(selectedCard.offeredPub.book) : getBookImage(selectedCard.requestedPub.book)"

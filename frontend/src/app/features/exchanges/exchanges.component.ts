@@ -3,7 +3,6 @@ import {NavbarComponent} from "../../shared/components/navbar/navbar.component";
 import { ButtonModule } from 'primeng/button';
 import {SidebarComponent} from "./components/sidebar.component";
 import {NgClass, NgForOf, NgIf} from "@angular/common";
-import {Paginator, PaginatorState} from "primeng/paginator";
 import {Steps} from "primeng/steps";
 import {MenuItem} from "primeng/api";
 import {ConfirmDialogModule} from "primeng/confirmdialog";
