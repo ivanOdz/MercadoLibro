@@ -45,7 +45,7 @@ public class PublicationController {
                                        @QueryParam("genre") final String genre,
                                        @QueryParam("user_id") Long userId,
                                        @QueryParam("location_id") Long locationId,
-                                       @QueryParam("page") @DefaultValue("0")final int currentPage,
+                                       @QueryParam("page") @DefaultValue("0") final int currentPage,
                                        @QueryParam("favorites") @DefaultValue("false") Boolean favorites) {
 
         PaginatedResponse<Publication, ItemFilterMetadata> publications = ps.getPaginatedPublications(search,
@@ -66,7 +66,9 @@ public class PublicationController {
         Map<String, String> conditionHeaders = SerializationUtils.serializeConditionWrapper(conditionSummary);
         conditionHeaders.forEach(response::header);
 
-        return PageResponseUtil.getResponse(currentPage, publications.getMetadata().getMaxPage(), uriInfo.getAbsolutePathBuilder(), response);
+        UriBuilder uri = PageResponseUtil.getUriBuilderPublications(uriInfo.getAbsolutePathBuilder(), search, sortType, state, genre, userId, locationId, favorites);
+
+        return PageResponseUtil.getResponse(currentPage, publications.getMetadata().getMaxPage(), uri, response);
     }
 
 

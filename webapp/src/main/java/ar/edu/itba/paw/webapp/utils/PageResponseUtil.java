@@ -58,4 +58,29 @@ public class PageResponseUtil {
         }
         return uri;
     }
+
+    public static UriBuilder getUriBuilderPublications(UriBuilder uri, final String search, final String sortType, String state, final String genre, Long userId, Long locationId, Boolean favorites) {
+        if(search != null) {
+            uri.queryParam("search", search);
+        }
+        if(sortType != null) {
+            uri.queryParam("sort", sortType);
+        }
+        if(state != null) {
+            uri.queryParam("state", state);
+        }
+        if(genre != null) {
+            uri.queryParam("genre", genre);;
+        }
+        if(userId != null) {
+            uri.queryParam("user_id", userId);
+        }
+        if(locationId != null) {
+            uri.queryParam("location_id", locationId);
+        }
+        if(favorites != null) {
+            uri.queryParam("favorites", favorites);
+        }
+        return uri;
+    }
 }
