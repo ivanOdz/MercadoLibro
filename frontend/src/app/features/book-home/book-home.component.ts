@@ -45,10 +45,6 @@ export class BookHomeComponent implements OnInit {
 	uploadBookModelUrl: string = "/books/add";
 	conditionHeaders: Record<string, string> = {};
 	genreHeaders: Record<string, string> = {};
-
-	
-	showConditionFilter: boolean = true;
-	showGenreFilter: boolean = true;
 	isSearchActive = false;
 	lastSearchQuery: string | null = null;
 	
@@ -137,8 +133,6 @@ export class BookHomeComponent implements OnInit {
 						this.currentFilters.state = params['state'] || '';
 						this.currentFilters.genre = params['genre'] || '';
 						this.currentFilters.search = params['search'] || '';
-						this.showConditionFilter = !params['state'];
-						this.showGenreFilter = !params['genre'];
 					}),
 					switchMap(() => {
 						return url

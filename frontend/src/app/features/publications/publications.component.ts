@@ -40,8 +40,6 @@ export class PublicationsComponent implements OnInit, OnDestroy {
 	
 	conditionHeaders: Record<string, string> = {};
 	genreHeaders: Record<string, string> = {};
-	showConditionFilter: boolean = true;
-	showGenreFilter: boolean = true;
 	isSearchActive = false;
 	lastSearchQuery: string | null = null;
 	
@@ -129,9 +127,6 @@ export class PublicationsComponent implements OnInit, OnDestroy {
 				this.currentFilters.genre = params['genre'] || '';
 				this.currentFilters.page = params['page'] || 0;
 				this.currentFilters.search = params['search'] || '';
-
-				this.showConditionFilter = !params['state'];
-				this.showGenreFilter = !params['genre'];
 			}),
 	        switchMap(() => this.publicationService.getGeneralPublications(this.currentFilters)),
 	        tap((response) => {
