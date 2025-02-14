@@ -167,7 +167,12 @@
     "RESULTS": "Total results",
     "NO_RESULTS": "No books founded",
     "ADD_BOOKS": "If you have a book that we don't have available, add one!",
-    "ADD_BOOK_MODEL": "Create book"
+    "CREATE_PUBLICATION_HEADER": "Create a publication to exchange your book",
+    "ADD_BOOK_MODEL": "Create book",
+    "SELECT_LOCATIONS": "Select the delivery locations of the book",
+    "SELECT_LOCATION": "Select a location...",
+    "CANCEL": "Cancel",
+    "CREATE_PUB": "Create publication"
   },
   "BOOK_CARD": {
     "OWNER": "Owner",

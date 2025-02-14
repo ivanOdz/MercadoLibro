@@ -76,3 +76,71 @@
 .book-state-worn {
 	background-color: rgba(180, 25, 25, 0.8);
 }
+
+
+.select-locations {
+	display: grid;
+	grid-template-rows: 25% 25% auto;
+	height: 14vh;
+}
+
+.selected-book-in-modal {
+	display: grid;
+	grid-template-columns: 40% 40%;
+	gap: 10%;
+	margin: 4%;
+}
+
+.buttons-in-modal {
+	grid-template-columns: 40% 40%;
+	align-content: center;
+	height: 5vh;
+	display: grid;
+	gap: 20%;
+	margin-top: 5%;
+}
+
+:host ::ng-deep .p-dialog {
+	padding: 3rem;
+	border-radius: 2rem;
+}
+
+:host ::ng-deep .p-dialog-title {
+	font-weight: normal;
+}
+
+.book-image-in-modal {
+	width: 10vh;
+	border-radius: 0.5rem;
+}
+
+
+:host ::ng-deep .w-full {
+	height: 4.5vh;
+}
+
+:host ::ng-deep .p-select-overlay {
+	top: -26vh;
+	height: 21vh
+}
+:host ::ng-deep .create-publication-button {
+	background: #c0b197;
+	border: none;
+	justify-self: end;
+}
+:host ::ng-deep .create-publication-button:not(:disabled):hover {
+	background: #988c78;
+	border: none;
+}
+:host ::ng-deep .cancel-publication-button {
+	background: #9a9d9e;
+	border: none;
+	width: 15vh;
+}
+:host ::ng-deep .cancel-publication-button:not(:disabled):hover {
+	background: #6c6e6f;
+	border:none
+}
+:host ::ng-deep .p-select:not(.p-disabled).p-focus {
+	border-color: #c2b5a0;
+}

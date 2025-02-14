@@ -167,7 +167,13 @@
     "RESULTS": "Resultados totales",
     "NO_RESULTS": "No se ha encontrado ningún libro.",
     "ADD_BOOKS": "Si tienes un libro que no tenemos disponible, agrégalo!",
-    "ADD_BOOK_MODEL": "Crear libro"
+    "ADD_BOOK_MODEL": "Crear libro",
+    "CREATE_PUBLICATION_HEADER": "Crear publicación con tu libro para intercambiar",
+    "SELECT_LOCATIONS": "Seleccione las ubicaciones de entrega del libro",
+    "SELECT_LOCATION": "Selecciona una ubicación",
+    "CANCEL": "Cancelar",
+    "CREATE_PUB": "Crear publicación"
+
   },
   "BOOK_CARD": {
     "OWNER": "Dueño",

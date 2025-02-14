@@ -9,6 +9,7 @@ import {UserService} from "./user.service";
 import {BookModelService} from "./bookmodel.service";
 import {AuthService} from "./auth.service";
 import {environment} from "../../../environments/environment";
+import {Location} from "../models/location.model";
 
 @Injectable({ providedIn: 'root' })
 export class PublicationService {
@@ -189,5 +190,9 @@ export class PublicationService {
         return forkJoin(favoriteRequests).pipe(
             tap(() => console.log("Se han actualizado las publicaciones con su estado de favorito"))
         );
+    }
+
+    createPublication(userUrl: string, bookUrl: string | null, selectedLocations: Location[]) {
+
     }
 }
