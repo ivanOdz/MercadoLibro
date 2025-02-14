@@ -318,9 +318,11 @@ export class PublicationComponent implements OnInit {
         this.router.navigate(['/profile'])
     }
 
-    isUserPublication() {
-        return this.as.loggedUser$.subscribe(user => {
-            return user?.self === this.publication?.user?.self;
-        })
+    isUserPublication(): boolean {
+        let isUserPublication = false;
+        this.as.loggedUser$.subscribe(user => {
+            isUserPublication = this.publication?.user?.self === user?.self;
+        });
+        return isUserPublication;
     }
 }
