@@ -1,10 +1,9 @@
 .book-home {
 	display: grid;
 	justify-content: space-between;
-	grid-template-columns: 0.75fr 2fr;
+	grid-template-columns: .75fr 2fr;
 	gap: 20px;
-	padding: 5vh 5vh 1vh 5vh;
-	height: 91vh;
+	padding: 5vh 5vh 0;
 }
 
 .column-filters {
