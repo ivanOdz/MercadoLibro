@@ -172,7 +172,8 @@
     "SELECT_LOCATIONS": "Select the delivery locations of the book",
     "SELECT_LOCATION": "Select a location...",
     "CANCEL": "Cancel",
-    "CREATE_PUB": "Create publication"
+    "CREATE_PUB": "Create publication",
+    "NO_LOCATION_ERROR": "You must select a location"
   },
   "BOOK_CARD": {
     "OWNER": "Owner",

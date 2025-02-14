@@ -37,6 +37,7 @@ export class BookCardComponent implements OnInit{
 	ownerName: string = '...';
 	bookImage!: string;
 	defaultImage: string = './assets/book.jpg';
+	errorNoLocation: boolean = false;
 	
 	constructor(private http: HttpClient, private as: AuthService, private us: UserService,
 				private ps: PublicationService,
@@ -94,28 +95,22 @@ export class BookCardComponent implements OnInit{
 	}
 
 	createPublication() {
-		if(this.selectedLocation === null) {
-			// error management
+		if(!this.selectedLocation) {
+			this.errorNoLocation = true;
 			return;
 		}
-
-		console.log(this.selectedLocation);
-		console.log(this.book);
-
 
 		this.modalPublicationVisible = false;
 
 		this.as.loggedUser$.pipe(
 			filter((user) => !!user),
 			switchMap((user: User) =>{
-				console.log(user)
 				return this.ps.createPublication(user.self, this.book.self, this.selectedLocation)
 			}
 			)
 		).subscribe(() => {
 			this.router.navigate(['publications/mine'])
 		});
-
 
 
 	}

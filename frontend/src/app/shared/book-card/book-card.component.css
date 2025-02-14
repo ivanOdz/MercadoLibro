@@ -145,3 +145,9 @@
 :host ::ng-deep .p-select:not(.p-disabled).p-focus {
 	border-color: #c2b5a0;
 }
+
+
+.error {
+	color: red;
+	font-size: small;
+}
