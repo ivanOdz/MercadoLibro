@@ -10,7 +10,7 @@ import { LanguageSwitcherComponent } from '../language-switcher/language-switche
 import { TieredMenu } from 'primeng/tieredmenu';
 import {Router, RouterLink} from "@angular/router";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
-import { AuthService } from "../../../core/services/auth.service";
+import { AuthService } from "../../core/services/auth.service";
 import { NgOptimizedImage } from "@angular/common";
 import {FormsModule} from "@angular/forms";
 

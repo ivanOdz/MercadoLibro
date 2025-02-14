@@ -22,7 +22,10 @@
                     <p class="book-description">{{publication?.book?.bookModel?.description}}</p>
                 </div>
                 <div class="book-card-third-column">
-                    <p-button (click)="toggleSolicitExchange()" [styleClass]="'i-want-it-button'" label="{{ 'PUBLICATION_D.SOLICIT_BUTTON' | translate }}"></p-button>
+                    <p-button *ngIf="!isUserPublication()" (click)="toggleSolicitExchange()" [styleClass]="'i-want-it-button'" label="{{ 'PUBLICATION_D.SOLICIT_BUTTON' | translate }}"></p-button>
+                    <div *ngIf="isUserPublication()">
+                        <p>{{ 'PUBLICATION_D.YOUR_PUBLICATION' | translate }}</p>
+                    </div>
                 </div>
             </div>
             <div class="publication-detail-card book-details-card">
@@ -35,7 +38,7 @@
                         <i class="pi pi-address-book" style="font-size: 1.25rem;"></i>
                         <p>{{ 'PUBLICATION_D.BOOK_CONDITION' | translate}}</p>
                     </div>
-                    <div class="detail">{{ publication?.book?.state }}</div>
+                    <div class="detail">{{ getConditionTranslation(publication?.book?.state)  }}</div>
                 </div>
                 <div style="grid-column: 3">
                     <div class="detail-title">
@@ -93,20 +96,24 @@
                     <p-divider/>
                 </div>
                 <div style="grid-row: 2">
-                    <div class="select-book-container">
-                        <div *ngFor="let book of userBooks; let i = index"
-                             class="book"
-                            [class.selected]="selectedBookIndex === i"
-                            (click)="selectBook(i)">
-                            <img class="book-image-select" [pTooltip]="tooltipContent" [src]="getCover()" alt="{{book.bookModel?.title}}"/>
-                            <ng-template #tooltipContent class="book-tooltip">
-                                <div class="book-tooltip">
-                                    <p class="tooltip-title">{{book.bookModel?.title}}</p>
-                                    <p class="tooltip-authors">{{book.bookModel?.authors}}</p>
-                                    <p class="tooltip-description">{{book.bookModel?.description}}<</p>
-                                </div>
-                            </ng-template>
-                        </div>
+                    <div class="select-book-container" *ngIf="userBooks.length !== 0">
+                            <div *ngFor="let book of userBooks; let i = index"
+                                 class="book"
+                                [class.selected]="selectedBookIndex === i"
+                                (click)="selectBook(i)">
+                                <img class="book-image-select" [pTooltip]="tooltipContent" [src]="getCover()" alt="{{book.bookModel?.title}}"/>
+                                <ng-template #tooltipContent class="book-tooltip">
+                                    <div class="book-tooltip">
+                                        <p class="tooltip-title">{{book.bookModel?.title}}</p>
+                                        <p class="tooltip-authors">{{book.bookModel?.authors}}</p>
+                                        <p class="tooltip-description">{{book.bookModel?.description}}<</p>
+                                    </div>
+                                </ng-template>
+                            </div>
+                    </div>
+                    <div class="select-book-container-empty" *ngIf="userBooks.length === 0" >
+                        <p class="text-empty">{{ 'PUBLICATION_D.NO_BOOKS' | translate}}</p>
+                        <p-button [styleClass]="'redirect-buttons'" label="{{ 'PUBLICATION_D.ADD_BOOK' | translate}}" icon="pi pi-book" (click)="redirectToBookModels()" />
                     </div>
                     <p-paginator/>
                 </div>
@@ -117,7 +124,7 @@
                     <p-divider/>
                 </div>
                 <div class="start-exchange-location-section" style="grid-row: 2">
-                    <p-select
+                    <p-select *ngIf="userLocations.length !== 0"
                             [panelStyleClass]="'custom-select'"
                             [options]="userLocations"
                             [(ngModel)]="selectedLocation"
@@ -136,6 +143,10 @@
                             </div>
                         </ng-template>
                     </p-select>
+                    <div *ngIf="userLocations.length === 0"  style="text-align: center; margin: 1rem;" >
+                        <p class="text-empty">{{ 'PUBLICATION_D.NO_LOCATIONS' | translate}}</p>
+                        <p-button [styleClass]="'redirect-buttons'" label="{{ 'PUBLICATION_D.ADD_LOCATIONS' | translate}}" icon="pi pi-map-marker" (click)="redirectToProfile()" />
+                    </div>
                     <div style="text-align: center">
                         <p-button [styleClass]="'i-want-it-button'"
                                   label="{{ 'PUBLICATION_D.START_EXCHANGE_BUTTON' | translate }}"

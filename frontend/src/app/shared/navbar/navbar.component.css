@@ -1,10 +1,7 @@
 :host ::ng-deep .p-menubar {
-    width: 100vw; /* 📌 Ocupa todo el ancho */
-    max-width: none;
-    display: flex;
-    justify-content: space-between;
+	width: 100%;
     padding: 0 1rem;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     background-color: #F8F4E9;
     color: #000000;
 }
@@ -80,4 +77,21 @@
     background-color: rgba(200, 194, 182, 0.54);
     color: #000000;
     border-radius: 6px;
+}
+
+
+:host ::ng-deep .p-button:not(:disabled):hover  {
+    background: #ccc8ba;
+    color: #000000;
+    border: none;
+}
+
+:host ::ng-deep .p-button  {
+    border: none;
+}
+
+:host ::ng-deep .p-button:not(:disabled):active  {
+    background: #ccc8ba;
+    color: #000000;
+    border: none;
 }

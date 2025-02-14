@@ -1,5 +1,5 @@
 import {Component, OnInit} from "@angular/core";
-import {NavbarComponent} from "../../shared/components/navbar/navbar.component";
+import {NavbarComponent} from "../../shared/navbar/navbar.component";
 import {TranslatePipe, TranslateService} from "@ngx-translate/core";
 import {Button} from "primeng/button";
 import { Carousel } from 'primeng/carousel';
@@ -289,5 +289,38 @@ export class PublicationComponent implements OnInit {
                 return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long' }); // en-GB para evitar coma en inglés
         }
         return "";
+    }
+
+    getConditionTranslation(state: string | undefined) {
+        switch (state) {
+            case 'NEW':
+                return this.translate.instant('bookstate.' + state.toLowerCase());
+            case 'LIKE_NEW':
+                return this.translate.instant('bookstate.like.new');
+            case 'VERY_GOOD':
+                return this.translate.instant('bookstate.very.good');
+            case 'GOOD':
+                return this.translate.instant('bookstate.' + state.toLowerCase());
+            case 'ACCEPTABLE':
+                return this.translate.instant('bookstate.' + state.toLowerCase());
+            case 'WORN':
+                return this.translate.instant('bookstate.' + state.toLowerCase());
+            default:
+                return "";
+        }
+    }
+
+    redirectToBookModels() {
+//        this.router.navigate(['/book_models'])
+    }
+
+    redirectToProfile() {
+        this.router.navigate(['/profile'])
+    }
+
+    isUserPublication() {
+        return this.as.loggedUser$.subscribe(user => {
+            return user?.self === this.publication?.user?.self;
+        })
     }
 }

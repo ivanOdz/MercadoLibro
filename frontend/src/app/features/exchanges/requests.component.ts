@@ -1,6 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {SidebarComponent} from "./components/sidebar.component";
-import {NavbarComponent} from "../../shared/components/navbar/navbar.component";
+import {NavbarComponent} from "../../shared/navbar/navbar.component";
 import {Tab, TabList, TabPanel, TabPanels, Tabs} from "primeng/tabs";
 import {NgForOf, NgIf} from "@angular/common";
 import {Rating} from "primeng/rating";
@@ -19,7 +19,7 @@ import {ProgressSpinner} from "primeng/progressspinner";
 import {Dialog} from "primeng/dialog";
 import {BookData, ExchangeData} from "../../core/models/types";
 import {Pagination} from "../../core/models/pagination";
-import {PaginatorComponent} from "../../shared/components/paginator/paginator.component";
+import {PaginatorComponent} from "../../shared/paginator/paginator.component";
 import {TranslatePipe, TranslateService} from "@ngx-translate/core";
 
 @Component({

@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import {RouterLink} from '@angular/router';
-import { NavbarComponent } from '../../../shared/components/navbar/navbar.component';
+import { NavbarComponent } from '../../../shared/navbar/navbar.component';
 
 
 @Component({

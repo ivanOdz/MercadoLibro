@@ -5,9 +5,9 @@ import {ActivatedRoute} from "@angular/router";
 import {distinctUntilChanged, filter, Subscription, switchMap, tap} from "rxjs";
 import {PublicationData} from "../../core/models/types";
 import {take} from "rxjs/operators";
-import {FilterListComponent} from "../../shared/components/filter-list/filter-list.component";
-import {NavbarComponent} from "../../shared/components/navbar/navbar.component";
-import {SortComponent} from "../../shared/components/sort/sort.component";
+import {FilterListComponent} from "../../shared/filter-list/filter-list.component";
+import {NavbarComponent} from "../../shared/navbar/navbar.component";
+import {SortComponent} from "../../shared/sort/sort.component";
 import {NgIf} from "@angular/common";
 
 @Component({

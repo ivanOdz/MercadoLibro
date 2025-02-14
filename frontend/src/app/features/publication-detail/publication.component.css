@@ -46,8 +46,8 @@
 }
 
 .book-image {
-    height: 90%;
-    width: 80%;
+    height: 46vh;
+    width: 18vw;
     background-color: darkgray;
     border-radius: 0.75rem;
 }
@@ -183,11 +183,10 @@ p {
 
 .start-exchange-location-section {
     display: grid;
-    height: 4vh;
+    height: 15vh;
     grid-template-columns: 50% 50%;
     justify-content: center;
     gap: 5%;
-    margin: 3rem;
 }
 
 .start-exchange-book-section {
@@ -331,11 +330,21 @@ p {
 
 .select-book-container {
     display: grid;
-    grid-template-columns: repeat(7, 0.5fr);
+    grid-template-columns: repeat(6, 0.5fr);
     grid-template-rows: repeat(2, auto);
     width: 100%;
     justify-content: center;
+    justify-items: center;
 }
+
+.select-book-container-empty {
+    width: auto;
+    margin: 1rem;
+    align-content: center;
+    text-align: center;
+    padding: 2rem;
+}
+
 .start-exchange-description {
     width: auto;
     font-size: x-large;
@@ -366,4 +375,44 @@ p {
 :host ::ng-deep .p-tooltip {
     max-height: 10vh;
     background: #aaaaaa;
+}
+
+
+.text-empty {
+    width: auto;
+    text-align: center;
+    padding: 1rem;
+}
+
+:host ::ng-deep .p-button.empty-button {
+    color: black;
+    background: #b6ab89;
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transform: scale(1);
+}
+
+
+
+:host ::ng-deep .redirect-buttons {
+    background-color: #767676a1;
+    color: #ffffff;
+    box-shadow: 4px 6px 6px #0000001a;
+    border: none;
+    cursor: pointer;
+    height: 3rem;
+    width: 12rem;
+}
+
+
+:host ::ng-deep .redirect-buttons:not(.disabled):hover {
+    background-color: #8c7b5f;
+    transition: transform 0.2s;
+    transform: scale(1.1);
+    border: none;
+}
+:host ::ng-deep .redirect-buttons:not(.disabled):active {
+    background-color: #8c7b5f;
+    box-shadow: 4px 6px 6px #0000001a;
+    border: none;
 }

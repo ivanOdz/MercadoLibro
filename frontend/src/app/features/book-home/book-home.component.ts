@@ -3,13 +3,14 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
-import { NavbarComponent } from "../../shared/components/navbar/navbar.component";
-import { BookCardComponent } from '../../shared/components/book-card/book-card.component';
+import { NavbarComponent } from "../../shared/navbar/navbar.component";
+import { BookCardComponent } from '../../shared/book-card/book-card.component';
+import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { BookModelService } from "../../core/services/bookmodel.service";
 import { BookService } from "../../core/services/book.service";
 import { AuthService } from '../../core/services/auth.service';
-import { FilterListComponent } from "../../shared/components/filter-list/filter-list.component";
-import { SortComponent } from "../../shared/components/sort/sort.component";
+import { FilterListComponent } from "../../shared/filter-list/filter-list.component";
+import { SortComponent } from "../../shared/sort/sort.component";
 import { BookData } from "../../core/models/types";
 import { filter, switchMap, tap, forkJoin} from "rxjs";
 import { map } from "rxjs/operators";
@@ -17,8 +18,8 @@ import { InputGroup } from 'primeng/inputgroup';
 import { InputGroupAddon } from 'primeng/inputgroupaddon';
 import { ButtonModule } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
-import {Pagination} from "../../core/models/pagination";
-import { PaginatorComponent } from "../../shared/components/paginator/paginator.component";
+import { Pagination } from "../../core/models/pagination";
+import { PaginatorComponent } from "../../shared/paginator/paginator.component";
 
 @Component({
 	selector: 'app-book-home',
@@ -26,7 +27,8 @@ import { PaginatorComponent } from "../../shared/components/paginator/paginator.
 	styleUrl: './book-home.component.css',
 	standalone: true,
     imports: [CommonModule, TranslatePipe, NavbarComponent, RouterModule, FilterListComponent,
-        SortComponent, InputGroup, InputGroupAddon, ButtonModule, InputText, FormsModule, BookCardComponent, PaginatorComponent ]
+        SortComponent, InputGroup, InputGroupAddon, ButtonModule, InputText, FormsModule,
+		BookCardComponent, PaginatorComponent, ScrollPanelModule ]
 
 })
 export class BookHomeComponent implements OnInit {
@@ -43,10 +45,6 @@ export class BookHomeComponent implements OnInit {
 	uploadBookModelUrl: string = "/books/add";
 	conditionHeaders: Record<string, string> = {};
 	genreHeaders: Record<string, string> = {};
-
-	
-	showConditionFilter: boolean = true;
-	showGenreFilter: boolean = true;
 	isSearchActive = false;
 	lastSearchQuery: string | null = null;
 	
@@ -135,8 +133,6 @@ export class BookHomeComponent implements OnInit {
 						this.currentFilters.state = params['state'] || '';
 						this.currentFilters.genre = params['genre'] || '';
 						this.currentFilters.search = params['search'] || '';
-						this.showConditionFilter = !params['state'];
-						this.showGenreFilter = !params['genre'];
 					}),
 					switchMap(() => {
 						return url

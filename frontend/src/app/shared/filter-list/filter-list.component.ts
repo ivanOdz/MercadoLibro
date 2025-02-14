@@ -1,5 +1,5 @@
-import {Component, Input, Output, EventEmitter, OnInit, SimpleChanges, OnChanges} from '@angular/core';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import {Component, Input, OnInit, SimpleChanges, OnChanges} from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { NgForOf, UpperCasePipe } from "@angular/common";
 import { Card } from "primeng/card";
 import { PrimeTemplate } from "primeng/api";

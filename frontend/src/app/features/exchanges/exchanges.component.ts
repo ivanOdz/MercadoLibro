@@ -1,5 +1,5 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {NavbarComponent} from "../../shared/components/navbar/navbar.component";
+import {NavbarComponent} from "../../shared/navbar/navbar.component";
 import { ButtonModule } from 'primeng/button';
 import {SidebarComponent} from "./components/sidebar.component";
 import {NgClass, NgForOf, NgIf} from "@angular/common";
@@ -24,7 +24,7 @@ import {environment} from "../../../environments/environment";
 import {ProgressSpinner} from "primeng/progressspinner";
 import { ConfirmationService } from 'primeng/api';
 import {BookData, ExchangeData} from "../../core/models/types";
-import { PaginatorComponent } from "../../shared/components/paginator/paginator.component";
+import { PaginatorComponent } from "../../shared/paginator/paginator.component";
 import {Pagination} from "../../core/models/pagination";
 import {TranslatePipe, TranslateService} from "@ngx-translate/core";
 

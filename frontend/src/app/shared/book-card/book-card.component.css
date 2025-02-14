@@ -1,5 +1,5 @@
 .book-card {
-	width: 260px;
+	width: 11vw;
 	background: white;
 	border-radius: 12px;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
@@ -16,8 +16,8 @@
 }
 
 .book-image {
-	width: 100%;
-	height: 180px;
+	height: 20vh;
+	width: 8vw;
 	object-fit: cover;
 	border-radius: 8px;
 }
@@ -27,12 +27,18 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	max-height: 17vh;
+	overflow-y: hidden;
 }
 
 .book-title {
 	font-size: 18px;
 	font-weight: bold;
 	color: #333;
+	overflow-y: clip;
+	height: 2.5rem;
+	justify-items: center;
+	align-content: center;
 }
 
 .book-owner {
