@@ -13,18 +13,14 @@ import { NgForOf, NgIf } from "@angular/common";
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { PublicationCardComponent } from "../../shared/publication-card/publication.card";
 import { Pagination } from "../../core/models/pagination";
-import { PaginatorComponent } from "../../shared/paginator/paginator.component";
-import { InputText } from 'primeng/inputtext';
-import { InputGroup } from 'primeng/inputgroup';
-import { InputGroupAddon } from 'primeng/inputgroupaddon';
 
 @Component({
 	selector: 'app-publications',
 	templateUrl: `./publications.component.html`,
 	styleUrls: ['./publications.component.css'],
 	standalone: true,
-	imports: [ NavbarComponent, TranslatePipe, RouterModule, FilterListComponent, SortComponent, NgIf,
-		PublicationCardComponent, NgForOf, ScrollPanelModule, PaginatorComponent, InputGroup, InputGroupAddon, InputText ]
+	imports: [ NavbarComponent, TranslatePipe, RouterModule, FilterListComponent, NgIf,
+		PublicationCardComponent, NgForOf, ScrollPanelModule,SortComponent ]
 
 })
 export class PublicationsComponent implements OnInit, OnDestroy {

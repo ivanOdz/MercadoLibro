@@ -13,7 +13,6 @@ import {UserService} from "../../core/services/user.service";
 import {filter} from "rxjs";
 import {Location} from "../../core/models/location.model";
 import {FormsModule} from "@angular/forms";
-import {MultiSelect} from "primeng/multiselect";
 import {Button} from "primeng/button";
 import {PublicationService} from "../../core/services/publication.service";
 import {Router} from "@angular/router";
@@ -25,7 +24,7 @@ import {Select} from "primeng/select";
     templateUrl: './book-card.component.html',
     styleUrl: './book-card.component.css',
     standalone: true,
-	imports: [CommonModule, NgIf, TranslatePipe, Dialog, Divider, FormsModule, MultiSelect, Button, Select]
+	imports: [CommonModule, NgIf, TranslatePipe, Dialog, Divider, FormsModule, Button, Select]
 })
 export class BookCardComponent implements OnInit{
 	

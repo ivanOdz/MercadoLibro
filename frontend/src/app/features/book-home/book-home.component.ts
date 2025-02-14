@@ -10,7 +10,6 @@ import { BookModelService } from "../../core/services/bookmodel.service";
 import { BookService } from "../../core/services/book.service";
 import { AuthService } from '../../core/services/auth.service';
 import { FilterListComponent } from "../../shared/filter-list/filter-list.component";
-import { SortComponent } from "../../shared/sort/sort.component";
 import { BookData } from "../../core/models/types";
 import { filter, switchMap, tap, forkJoin} from "rxjs";
 import { map } from "rxjs/operators";
@@ -27,7 +26,7 @@ import { PaginatorComponent } from "../../shared/paginator/paginator.component";
 	styleUrl: './book-home.component.css',
 	standalone: true,
     imports: [CommonModule, TranslatePipe, NavbarComponent, RouterModule, FilterListComponent,
-        SortComponent, InputGroup, InputGroupAddon, ButtonModule, InputText, FormsModule,
+        InputGroup, InputGroupAddon, ButtonModule, InputText, FormsModule,
 		BookCardComponent, PaginatorComponent, ScrollPanelModule ]
 
 })
