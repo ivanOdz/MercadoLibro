@@ -1,0 +1,10 @@
+<div class="book-card">
+    <img [src]="bookImage" alt="Book Cover" class="book-image" (error)="bookImage = defaultImage">
+
+    <div class="book-info">
+        <h3 class="book-title">{{ bookModel!.title }}</h3>
+        <p *ngFor="let author of bookModel.authors"> {{ author }}</p>
+
+        <p class="book-owner"><strong>{{ 'GENRE' | translate }}:</strong> {{ ('genre.' + (bookModel!.genre | lowercase)) | translate }}</p>
+    </div>
+</div>
