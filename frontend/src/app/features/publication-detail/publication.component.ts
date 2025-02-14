@@ -275,16 +275,17 @@ export class PublicationComponent implements OnInit {
         }
     }
 
-    getImages(){
-        return this.bookImages.length === 0 ? [this.getDefaultImage()] : this.bookImages;
+    getImages(bookImages: string[] | null = null): string[] {
+        return bookImages || [this.getDefaultImage()];
     }
 
     getDefaultImage() {
         return `${environment.production? 'http://pawserver.it.itba.edu.ar/paw-2024b-09'  : 'http://localhost:8080'}/assets/book.jpg`;
     }
 
-    getCover() {
-        return this.publication?.book?.bookModel?.coverUri || this.getDefaultImage();
+    getCover(book: BookData | null = null) {
+        return book?.bookModel?.coverUri ||
+            this.getImages(book?.images)[0] || this.getDefaultImage();
     }
 
     getFormattedDate(time: Date | null | undefined) {

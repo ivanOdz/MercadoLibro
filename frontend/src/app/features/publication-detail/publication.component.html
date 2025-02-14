@@ -10,7 +10,7 @@
         <div class="publication-detail-card-section">
             <div class="publication-detail-card book-card">
                 <div style="grid-column: 1; justify-items: center;">
-                    <p-carousel [value]="getImages()" [numVisible]="1" [numScroll]="1" [circular]="true" autoplayInterval="3000">
+                    <p-carousel [value]="getImages(bookImages)" [numVisible]="1" [numScroll]="1" [circular]="true" autoplayInterval="3000">
                         <ng-template let-item pTemplate="item">
                             <img class="book-image" [src]="item" alt="Book Image" />
                         </ng-template>
@@ -77,7 +77,7 @@
             </div>
             <div class="start-exchange-user-card">
                 <div class="user-card-first-column">
-                    <img class="book-image-small-card" [src]="getCover()" alt="Book Image" />
+                    <img class="book-image-small-card" [src]="getCover(publication?.book)" alt="Book Image" />
                 </div>
                 <div class="user-card-second-column">
                     <p class="book-title-small-card">{{publication?.book?.bookModel?.title}}</p>
@@ -101,7 +101,7 @@
                                  class="book"
                                 [class.selected]="selectedBookIndex === i"
                                 (click)="selectBook(i)">
-                                <img class="book-image-select" [pTooltip]="tooltipContent" [src]="getCover()" alt="{{book.bookModel?.title}}"/>
+                                <img class="book-image-select" [pTooltip]="tooltipContent" [src]="getCover(book)" alt="{{book.bookModel?.title}}"/>
                                 <ng-template #tooltipContent class="book-tooltip">
                                     <div class="book-tooltip">
                                         <p class="tooltip-title">{{book.bookModel?.title}}</p>
