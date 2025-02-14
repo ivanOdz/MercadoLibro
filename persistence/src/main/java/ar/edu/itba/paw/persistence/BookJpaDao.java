@@ -52,7 +52,7 @@ public class BookJpaDao implements BookDao {
     }
 
     @Override
-    public PaginatedResponse<Book, ItemFilterMetadata> getPaginatedBooks(String search, BookState state, Genre genre, int page, long userId, String sortType) {
+    public PaginatedResponse<Book, ItemFilterMetadata> getPaginatedBooks(String search, BookState state, Genre genre, int page, long userId, String sortType, Boolean available) {
         if(page < 0){
             page = 0;
         }
@@ -75,6 +75,10 @@ public class BookJpaDao implements BookDao {
 
         if (state != null) {
             sqlQuery.append("AND b.bookState = :state ");
+        }
+
+        if (available) {
+            sqlQuery.append("AND b.available = true ");
         }
 
         Query nativeQuery = em.createNativeQuery(sqlQuery.toString());

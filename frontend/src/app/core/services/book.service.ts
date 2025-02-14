@@ -17,11 +17,12 @@ export class BookService {
         );
     }
 
-    getBooks({booksUrl, state, genre, search }: { booksUrl: string;state: string; genre: string; search: string}): Observable<{books: Book[], pagination: Pagination, headers: HttpHeaders}> {
+    getBooks({booksUrl, state, genre, search, available }: { booksUrl: string;state: string; genre: string; search: string; available: boolean}): Observable<{books: Book[], pagination: Pagination, headers: HttpHeaders}> {
         let params = new HttpParams()
             .set('state', state)
             .set('search', search)
-            .set('genre', genre);
+            .set('genre', genre)
+            .set('available', available ? 'true' : 'false');
 
         return this.getBooksByUrl(`${booksUrl}&${params.toString()}`);
     }
@@ -35,6 +36,7 @@ export class BookService {
                 let pagination = new Pagination(linkHeader);
                 console.log("Paginación de books:", pagination);
                 const books: Book[] = response.body?.map((book: any) => new Book(book)) || [];
+                console.log("Libros obtenidos:", books);
                 return { books: books, pagination: pagination, headers: response.headers };
             }),
             catchError(error => {

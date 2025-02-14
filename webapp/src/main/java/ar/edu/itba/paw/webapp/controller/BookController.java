@@ -41,8 +41,9 @@ public class BookController {
                              @QueryParam("sort") @DefaultValue("BOOK_NAME_ASCENDING") final String sortType,
                              @QueryParam("state") String state,
                              @QueryParam("genre") final String genre,
-                             @QueryParam("page") @DefaultValue("0")final int currentPage) {
-        PaginatedResponse<Book, ItemFilterMetadata> paginated = bs.getPaginatedBooks(search, state, genre, currentPage, userId, sortType);
+                             @QueryParam("page") @DefaultValue("0")final int currentPage,
+                             @QueryParam("available") @DefaultValue("false") final boolean available) {
+        PaginatedResponse<Book, ItemFilterMetadata> paginated = bs.getPaginatedBooks(search, state, genre, currentPage, userId, sortType, available);
         if(paginated.getData().isEmpty()) {
             return Response.noContent().build();
         }
@@ -58,7 +59,7 @@ public class BookController {
         Map<String, String> conditionHeaders = SerializationUtils.serializeConditionWrapper(conditionSummary);
         conditionHeaders.forEach(response::header);
 
-        UriBuilder uri = PageResponseUtil.getUriBuilderBooks(uriInfo.getAbsolutePathBuilder(), userId, search, sortType, state, genre);
+        UriBuilder uri = PageResponseUtil.getUriBuilderBooks(uriInfo.getAbsolutePathBuilder(), userId, search, sortType, state, genre, available);
 
         return PageResponseUtil.getResponse(currentPage, paginated.getMetadata().getMaxPage(), uri, response);
     }

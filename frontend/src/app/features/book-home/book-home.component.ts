@@ -52,6 +52,7 @@ export class BookHomeComponent implements OnInit {
 		state: '',
 		genre: '',
 		search: '',
+		available: false,
 	};
 
 	books: BookData[] = [];

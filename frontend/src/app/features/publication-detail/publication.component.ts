@@ -181,7 +181,8 @@ export class PublicationComponent implements OnInit {
                     booksUrl: user.books,
                     state: '',
                     genre: '',
-                    search: ''
+                    search: '',
+                    available: true
                 });
             }),
             switchMap(({ books, pagination }) => {

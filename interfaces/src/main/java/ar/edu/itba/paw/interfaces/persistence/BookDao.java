@@ -19,7 +19,7 @@ public interface BookDao {
 
     List<Book> getAllBooksByUser(long userId);
 
-    PaginatedResponse<Book, ItemFilterMetadata> getPaginatedBooks(String search, BookState state, Genre genre, int currentPage, long userId, String sortType);
+    PaginatedResponse<Book, ItemFilterMetadata> getPaginatedBooks(String search, BookState state, Genre genre, int currentPage, long userId, String sortType, Boolean available);
 
     List<BookStateWrapper> getBookStateQtyByBook(String search, Genre genre, Long userId);
 

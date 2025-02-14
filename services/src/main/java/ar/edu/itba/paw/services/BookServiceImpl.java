@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.exceptions.BookBadRequestException;
-import ar.edu.itba.paw.interfaces.exceptions.BookModelNotFoundException;
 import ar.edu.itba.paw.interfaces.exceptions.BookNotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
@@ -14,14 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.net.URI;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
-import static ar.edu.itba.paw.models.utils.Constants.*;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -96,11 +91,11 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    public PaginatedResponse<Book, ItemFilterMetadata> getPaginatedBooks(String search, String state, String genre, int currentPage, long userId, String sortType) {
+    public PaginatedResponse<Book, ItemFilterMetadata> getPaginatedBooks(String search, String state, String genre, int currentPage, long userId, String sortType, Boolean available) {
         BookState stateFilter = BookState.fromString(state);
         Genre genreFilter = Genre.fromString(genre);
 
-        return bookDao.getPaginatedBooks(search, stateFilter, genreFilter, currentPage, userId, sortType);
+        return bookDao.getPaginatedBooks(search, stateFilter, genreFilter, currentPage, userId, sortType, available);
     }
 
     @Override

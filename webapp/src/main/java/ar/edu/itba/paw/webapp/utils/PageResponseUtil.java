@@ -2,11 +2,8 @@ package ar.edu.itba.paw.webapp.utils;
 
 import ar.edu.itba.paw.models.utils.ExchangeState;
 
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
 public class PageResponseUtil {
 
@@ -29,7 +26,7 @@ public class PageResponseUtil {
         return builder.build();
     }
 
-    public static UriBuilder getUriBuilderBooks(UriBuilder uri, final long userId, final String search, final String sortType, final String state, final String genre) {
+    public static UriBuilder getUriBuilderBooks(UriBuilder uri, final long userId, final String search, final String sortType, final String state, final String genre, final Boolean available) {
         uri.queryParam("owner", userId);
         if(search != null) {
             uri.queryParam("search", search);
@@ -41,7 +38,10 @@ public class PageResponseUtil {
             uri.queryParam("state", state);
         }
         if(genre != null) {
-            uri.queryParam("genre", genre);;
+            uri.queryParam("genre", genre);
+        }
+        if(available != null) {
+            uri.queryParam("available", available);
         }
         return uri;
     }
@@ -55,7 +55,7 @@ public class PageResponseUtil {
             uri.queryParam("is_offerer", isOfferer);
         }
         if(isRequester != null) {
-            uri.queryParam("is_requester", isRequester);;
+            uri.queryParam("is_requester", isRequester);
         }
         return uri;
     }
@@ -71,7 +71,7 @@ public class PageResponseUtil {
             uri.queryParam("state", state);
         }
         if(genre != null) {
-            uri.queryParam("genre", genre);;
+            uri.queryParam("genre", genre);
         }
         if(userId != null) {
             uri.queryParam("user_id", userId);
@@ -89,7 +89,7 @@ public class PageResponseUtil {
             uri.queryParam("search", search);
         }
         if(genre != null) {
-            uri.queryParam("genre", genre);;
+            uri.queryParam("genre", genre);
         }
         if(sortType != null) {
             uri.queryParam("sort", sortType);
