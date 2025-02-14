@@ -74,13 +74,19 @@ export class PublicationComponent implements OnInit {
     publication: PublicationData | null = null;
     publicationLocations: string[] = [];
     bookImages: string[] = [];
-    selectedBookIndex: number | null = null;
 
 
     userBooks: BookData[] = [];
     userLocations: Location[] = [];
+
     selectedLocation: Location | null = null;
+    errorNoLocation: boolean = false;
+
+    selectedBookIndex: number | null = null;
+    errorNoBook: boolean = false;
+
     exchangeSolicited: boolean = false;
+
 
     ngOnInit(): void {
         this.route.params.subscribe(params => {
@@ -226,12 +232,15 @@ export class PublicationComponent implements OnInit {
     }
 
     requestExchange() {
-        if (this.selectedLocation == null) {
-            // error management
+        if (this.selectedLocation == null && this.selectedBookIndex == null) {
+            this.errorNoBook = true;
+            this.errorNoLocation = true;
             return;
-        }
-        if (!this.selectedBookIndex) {
-            // error management
+        } else if (this.selectedLocation == null) {
+            this.errorNoLocation = true;
+            return;
+        } else if (this.selectedBookIndex == null) {
+            this.errorNoBook = true;
             return;
         }
 

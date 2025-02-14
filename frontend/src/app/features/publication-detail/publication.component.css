@@ -177,6 +177,7 @@ p {
 
 .start-exchange-container {
     width: auto;
+    padding: 2rem;
 }
 
 
@@ -186,7 +187,6 @@ p {
     height: 15vh;
     grid-template-columns: 50% 50%;
     justify-content: center;
-    gap: 5%;
 }
 
 .start-exchange-book-section {
@@ -274,7 +274,7 @@ p {
 
 :host ::ng-deep .w-full {
     width: 70% !important;
-    height: 65%;
+    height: 30%;
 }
 
 
@@ -415,4 +415,11 @@ p {
     background-color: #8c7b5f;
     box-shadow: 4px 6px 6px #0000001a;
     border: none;
+}
+
+
+.error {
+    color: red;
+    font-size: small;
+    margin: 2rem
 }

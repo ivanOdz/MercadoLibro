@@ -115,6 +115,7 @@
                         <p class="text-empty">{{ 'PUBLICATION_D.NO_BOOKS' | translate}}</p>
                         <p-button [styleClass]="'redirect-buttons'" label="{{ 'PUBLICATION_D.ADD_BOOK' | translate}}" icon="pi pi-book" (click)="redirectToBookModels()" />
                     </div>
+                    <p *ngIf="errorNoBook" class="error">{{'PUBLICATION_D.NO_BOOK_ERROR' |translate }}</p>
                     <p-paginator/>
                 </div>
             </div>
@@ -124,25 +125,16 @@
                     <p-divider/>
                 </div>
                 <div class="start-exchange-location-section" style="grid-row: 2">
-                    <p-select *ngIf="userLocations.length !== 0"
-                            [panelStyleClass]="'custom-select'"
-                            [options]="userLocations"
-                            [(ngModel)]="selectedLocation"
-                            optionLabel="location"
-                            [filter]="true" filterBy="location"
-                            [showClear]="true" placeholder="Select a Country"
-                            class="w-full md:w-56">
-                        <ng-template #selectedItem let-selectedOption>
-                            <div class="flex items-center gap-2">
-                                <div>{{ selectedOption }}</div>
-                            </div>
-                        </ng-template>
-                        <ng-template let-country #item>
-                            <div class="flex items-center gap-2">
-                                <div>{{ country }}</div>
-                            </div>
-                        </ng-template>
-                    </p-select>
+                    <div>
+                        <p-select *ngIf="userLocations.length !== 0"
+                                [panelStyleClass]="'custom-select'"
+                                [options]="userLocations"
+                                [(ngModel)]="selectedLocation"
+                                optionLabel="location"
+                                placeholder="{{'BOOK_HOME.NO_LOCATION_ERROR' |translate}}"
+                                class="w-full md:w-56"></p-select>
+                        <p *ngIf="errorNoLocation" class="error">{{ 'BOOK_HOME.SELECT_LOCATION'|translate }}</p>
+                    </div>
                     <div *ngIf="userLocations.length === 0"  style="text-align: center; margin: 1rem;" >
                         <p class="text-empty">{{ 'PUBLICATION_D.NO_LOCATIONS' | translate}}</p>
                         <p-button [styleClass]="'redirect-buttons'" label="{{ 'PUBLICATION_D.ADD_LOCATIONS' | translate}}" icon="pi pi-map-marker" (click)="redirectToProfile()" />
