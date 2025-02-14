@@ -13,10 +13,12 @@ import { Pagination } from "../../core/models/pagination";
 import { PaginatorComponent } from "../../shared/paginator/paginator.component";
 import {MatIcon} from "@angular/material/icon";
 import {environment} from "../../../environments/environment";
+import {Button} from "primeng/button";
+import {Dialog} from "primeng/dialog";
 
 @Component({
   selector: 'app-profile',
-  imports: [NavbarComponent, NgForOf, FormsModule, CommonModule, ReviewComponent, TranslatePipe, PaginatorComponent, MatIcon],
+  imports: [NavbarComponent, NgForOf, FormsModule, CommonModule, ReviewComponent, TranslatePipe, PaginatorComponent, MatIcon, Button, Dialog],
   standalone: true,
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
