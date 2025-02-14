@@ -2,7 +2,6 @@
     display: flex;
     justify-content: center;
     align-items: stretch;
-    height: 91vh;
     width: 100vw;
 }
 
@@ -200,7 +199,7 @@ p {
 
 .book-image-select {
     height: 11rem;
-    width: 9rem;
+    width: 8vw;
     border-radius: 0.5rem;
 }
 
@@ -214,7 +213,7 @@ p {
     height: 25vh;
     border-radius: 2rem;
     box-shadow: 4px 6px 6px #0000001a;
-    padding: 1.5rem;
+    padding: .5rem;
     margin-top: 2rem;
     margin-bottom: 2rem;
     grid-template-columns: 15% 22% auto;
@@ -261,7 +260,7 @@ p {
 }
 
 .book-title-small-card {
-    font-size: xx-large;
+    font-size: large;
     margin-top: 1rem;
     margin-bottom: 1rem;
 }
@@ -269,7 +268,7 @@ p {
 
 :host ::ng-deep .p-scrollpanel-content-container {
     padding: 2rem;
-    height: 81vh;
+    height: 100%;
 }
 
 :host ::ng-deep .w-full {
@@ -296,7 +295,7 @@ p {
 }
 
 .select-book-title {
-    font-size: medium;
+    font-size: small;
 }
 
 :host ::ng-deep .p-paginator {
@@ -312,7 +311,7 @@ p {
 .book {
     border-radius: .5rem;
     height: 12rem;
-    width: 10rem;
+    width: 9vw;
     cursor: pointer;
     transition: background-color 0.3s ease;
     display: flex;

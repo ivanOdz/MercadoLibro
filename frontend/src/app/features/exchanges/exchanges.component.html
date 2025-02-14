@@ -35,7 +35,7 @@
                         </div>
                         <div class="active-card-second-column">
                             <p-steps [model]="steps" [activeIndex]="1" [readonly]="true" />
-                            <div *ngIf="isRequester(card)? !card.exchange.requester_received : !card.exchange.offerer_received">
+                            <div style="margin-left: 1rem;" *ngIf="isRequester(card)? !card.exchange.requester_received : !card.exchange.offerer_received">
                                 <p-button class="confirm-button" styleClass="confirm-button" label="{{ 'EXCHANGES.CONFIRM_LABEL' | translate}}" (click)="showConfirmExchangeDialog(card, isRequester(card))" />
                             </div>
                             <div *ngIf="isRequester(card)? card.exchange.requester_received : card.exchange.offerer_received">
