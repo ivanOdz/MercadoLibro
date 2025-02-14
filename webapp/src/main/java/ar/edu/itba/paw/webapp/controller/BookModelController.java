@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.utils.pagination.BookModelMetadata;
 import ar.edu.itba.paw.webapp.dto.input.BookModelDTO;
 import ar.edu.itba.paw.webapp.mediaTypes.VndType;
 import ar.edu.itba.paw.webapp.utils.CacheResponseUtil;
+import ar.edu.itba.paw.webapp.utils.PageResponseUtil;
 import ar.edu.itba.paw.webapp.utils.SerializationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -44,7 +45,10 @@ public class BookModelController {
         Map<String, String> genreHeaders = SerializationUtils.serializeGenreWrapper(genresSummary);
         genreHeaders.forEach(response::header);
 
-        return CacheResponseUtil.conditionalCacheResponse(request, new EntityTag(Integer.toString(modelBooks.getData().hashCode())));
+        UriBuilder uri = PageResponseUtil.getUriBuilderBookModels(uriInfo.getAbsolutePathBuilder(), search, genre, sortType);
+        Response.ResponseBuilder cachedResponse = CacheResponseUtil.conditionalCacheResponse(request, new EntityTag(Integer.toString(modelBooks.getData().hashCode())));
+
+        return PageResponseUtil.getResponse(currentPage, modelBooks.getMetadata().getMaxPage(), uri, cachedResponse);
     }
 
 
