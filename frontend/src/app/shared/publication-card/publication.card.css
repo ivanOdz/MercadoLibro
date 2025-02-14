@@ -4,7 +4,7 @@
 	background: #fff;
 	box-shadow: 4px 6px 6px #0000001a;
 	border-radius: 2rem;
-	padding: 0.5rem 2rem;
+	padding: 2rem;
 	transition: transform .2s;
 	cursor: pointer;
 	align-content: center;
@@ -51,7 +51,7 @@
 
 .book-image {
 	width: 10vw;
-	height: auto;
-	border-radius: 0.5rem;
+	height: 30vh;
+	border-radius: 1rem;
 	align-self: center;
 }
