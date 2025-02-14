@@ -27,7 +27,7 @@ import { PaginatorComponent } from "../../shared/paginator/paginator.component";
 	styleUrl: './book-home.component.css',
 	standalone: true,
     imports: [CommonModule, TranslatePipe, NavbarComponent, RouterModule, FilterListComponent,
-        SortComponent, InputGroup, InputGroupAddon, ButtonModule, InputText, FormsModule,
+        InputGroup, InputGroupAddon, ButtonModule, InputText, FormsModule,
 		BookCardComponent, PaginatorComponent, ScrollPanelModule ]
 
 })

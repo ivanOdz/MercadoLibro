@@ -25,7 +25,7 @@ import {Select} from "primeng/select";
     templateUrl: './book-card.component.html',
     styleUrl: './book-card.component.css',
     standalone: true,
-	imports: [CommonModule, NgIf, TranslatePipe, Dialog, Divider, FormsModule, MultiSelect, Button, Select]
+	imports: [CommonModule, NgIf, TranslatePipe, Dialog, Divider, FormsModule, Button, Select]
 })
 export class BookCardComponent implements OnInit{
 	
