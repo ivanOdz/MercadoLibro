@@ -20,8 +20,7 @@
     "MY_BOOKS": "My Books",
     "MY_PUBLICATIONS": "My Publications",
     "FAVORITES": "Favorites",
-    "LOGOUT": "Logout",
-    "SEARCH": "Search publications"
+    "LOGOUT": "Logout"
   },
   "BOOK_FORM": {
     "BACK": "← Go Back",
@@ -185,7 +184,8 @@
   "NO_STATE_FILTER": "No state filter",
   "NO_GENRE_FILTER": "No genre filter",
   "PUBLICATIONS": {
-  	"TITLE": "Publications"
+  	"TITLE": "Publications",
+  	"SEARCH": "Search publications"
   },
   "EXCHANGES": {
     "REQUESTS_TITLE": "Exchange requests",
