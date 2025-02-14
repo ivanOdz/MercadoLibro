@@ -72,7 +72,7 @@ export class BookCardComponent implements OnInit{
 
 	modalPublicationVisible: boolean = false;
 	userLocations: Location[] = [];
-	selectedLocations: Location[] = [];
+	selectedLocation: Location | null = null
 
 	openModal() {
 		this.modalPublicationVisible = true;
@@ -94,17 +94,23 @@ export class BookCardComponent implements OnInit{
 	}
 
 	createPublication() {
-		if(this.selectedLocations.length === 0) {
+		if(this.selectedLocation === null) {
 			// error management
+			return;
 		}
+
+		console.log(this.selectedLocation);
+		console.log(this.book);
+
 
 		this.modalPublicationVisible = false;
 
 		this.as.loggedUser$.pipe(
-			take(1),
 			filter((user) => !!user),
-			switchMap((user: User) =>
-				this.ps.createPublication(user.self, this.book.self, this.selectedLocations[0])
+			switchMap((user: User) =>{
+				console.log(user)
+				return this.ps.createPublication(user.self, this.book.self, this.selectedLocation)
+			}
 			)
 		).subscribe(() => {
 			this.router.navigate(['publications/mine'])

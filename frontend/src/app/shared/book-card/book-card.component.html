@@ -31,7 +31,7 @@
     <div class="select-locations">
         <p>{{ 'BOOK_HOME.SELECT_LOCATIONS' | translate}}</p>
         <p-divider/>
-        <p-select [options]="userLocations" [(ngModel)]="selectedLocations" optionLabel="location" placeholder="{{'BOOK_HOME.SELECT_LOCATION' |translate}}" class="w-full md:w-56" />
+        <p-select [options]="userLocations" [(ngModel)]="selectedLocation" optionLabel="location" placeholder="{{'BOOK_HOME.SELECT_LOCATION' |translate}}" class="w-full md:w-56" />
     </div>
     <div class="buttons-in-modal">
         <p-button [styleClass]="'cancel-publication-button'" label="{{ 'BOOK_HOME.CANCEL' | translate }}" class="cancel-button" (click)="closeModal()"></p-button>
