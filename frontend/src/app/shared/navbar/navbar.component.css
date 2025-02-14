@@ -1,8 +1,5 @@
 :host ::ng-deep .p-menubar {
-    width: 100vw; /* 📌 Ocupa todo el ancho */
-    max-width: none;
-    display: flex;
-    justify-content: space-between;
+	width: 100%;
     padding: 0 1rem;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     background-color: #F8F4E9;

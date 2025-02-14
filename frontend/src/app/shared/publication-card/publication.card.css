@@ -1,10 +1,10 @@
 .publication-card-container {
 	width: 55vw;
-	max-height: 40vh;
+	max-height: 35vh;
 	background: #fff;
 	box-shadow: 4px 6px 6px #0000001a;
 	border-radius: 2rem;
-	padding: 2rem;
+	padding: 0.5rem 2rem;
 	transition: transform .2s;
 	cursor: pointer;
 	align-content: center;
@@ -21,7 +21,7 @@
 
 .first-column-card {
 	grid-column: 1;
-	text-align: center;
+	align-content: center;
 }
 
 .second-column-card {
@@ -50,7 +50,8 @@
 }
 
 .book-image {
-	height: 18vh;
-	width: 7vw;
+	width: 10vw;
+	height: auto;
 	border-radius: 0.5rem;
+	align-self: center;
 }

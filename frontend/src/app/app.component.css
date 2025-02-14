@@ -51,15 +51,6 @@ p {
     color: var(--gray-700);
 }
 
-main {
-    width: 100%;
-    min-height: 100%;
-    display: flex;
-    justify-content: start;
-    box-sizing: inherit;
-    position: relative;
-}
-
 .angular-logo {
     max-width: 9.2rem;
 }
