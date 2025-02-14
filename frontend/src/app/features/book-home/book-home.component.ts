@@ -18,7 +18,7 @@ import { InputGroup } from 'primeng/inputgroup';
 import { InputGroupAddon } from 'primeng/inputgroupaddon';
 import { ButtonModule } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
-import {Pagination} from "../../core/models/pagination";
+import { Pagination } from "../../core/models/pagination";
 import { PaginatorComponent } from "../../shared/paginator/paginator.component";
 
 @Component({
@@ -28,7 +28,7 @@ import { PaginatorComponent } from "../../shared/paginator/paginator.component";
 	standalone: true,
     imports: [CommonModule, TranslatePipe, NavbarComponent, RouterModule, FilterListComponent,
         SortComponent, InputGroup, InputGroupAddon, ButtonModule, InputText, FormsModule,
-		BookCardComponent, PaginatorComponent,ScrollPanelModule ]
+		BookCardComponent, PaginatorComponent, ScrollPanelModule ]
 
 })
 export class BookHomeComponent implements OnInit {
