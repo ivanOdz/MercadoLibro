@@ -137,7 +137,8 @@
     "USERNAME_ALREADY_EXISTS": "This username is already taken",
     "UPDATE_ERROR": "Username cannot be updated",
     "USERNAME_EMPTY": "Username cannot be empty",
-    "NO_REVIEWS": "Nobody left a review for you yet!"
+    "NO_REVIEWS": "Nobody left a review for you yet!",
+    "DELETE_LOCATION": "Delete location"
   },
   "PUBLICATION_D": {
     "RETURN": "Return to publications",
@@ -226,6 +227,8 @@
     "REQUESTS_SIDEBAR": "Requests",
     "SIDEBAR_TITLE": "Exchanges"
 
+  },
+  "BOOK_MODEL": {
+    "RETURN": "Return to My Books"
   }
-  
 }

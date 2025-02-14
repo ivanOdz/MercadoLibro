@@ -53,39 +53,49 @@
     </div>
 
     <!-- Username Modal -->
-    <div class="modal-overlay" *ngIf="isModalOpen">
-        <div class="modal">
-            <h3>{{ 'PROFILE.EDIT_USERNAME' | translate }}</h3>
-            <input type="text" [(ngModel)]="newUsername" placeholder="{{ 'PROFILE.NEW_USERNAME' | translate }}" (input)="clearErrorMessage()">
-            <p *ngIf="usernameError" class="error-message">{{ usernameError }}</p>
-            <div class="modal-buttons">
-                <button (click)="closeModal()">{{ 'PROFILE.CANCEL' | translate }}</button>
-                <button (click)="updateUsername()" [disabled]="!isValidUsername()">{{ 'PROFILE.ACCEPT' | translate }}</button>
+    <p-dialog [(visible)]="isModalOpen" [modal]="true" [style]="{ width: '25rem' }">
+        <ng-template #header>
+            <div class="inline-flex items-center justify-center gap-2">
+                <span class="font-bold whitespace-nowrap">{{ 'PROFILE.EDIT_USERNAME' | translate }}</span>
             </div>
-        </div>
-    </div>
+        </ng-template>
+        <input type="text" [(ngModel)]="newUsername" placeholder="{{ 'PROFILE.NEW_USERNAME' | translate }}" (input)="clearErrorMessage()" class="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200" />
+        <p *ngIf="usernameError" class="error-message">{{ usernameError }}</p>
+        <ng-template #footer>
+            <p-button label="{{ 'PROFILE.CANCEL' | translate }}" [raised]="true" severity="secondary" (click)="closeModal()" />
+            <p-button label="{{ 'PROFILE.ACCEPT' | translate }}" [raised]="true" severity="success" (click)="updateUsername()" [disabled]="!isValidUsername()"/>
+
+        </ng-template>
+    </p-dialog>
 
     <!-- Add Location Modal -->
-    <div class="modal-overlay" *ngIf="isAddModalOpen">
-        <div class="modal">
-            <h3>{{ 'PROFILE.ADD_LOCATION' | translate }}</h3>
-            <input type="text" [(ngModel)]="newLocationName" placeholder="{{ 'PROFILE.INSERT_LOCATION' | translate }}" />
-            <div class="modal-buttons">
-                <button (click)="closeAddModal()">{{ 'PROFILE.CANCEL' | translate }}</button>
-                <button (click)="addLocation(newLocationName)">{{ 'PROFILE.ACCEPT' | translate }}</button>
+    <p-dialog [(visible)]="isAddModalOpen" [modal]="true" [style]="{ width: '25rem' }">
+        <ng-template #header>
+            <div class="inline-flex items-center justify-center gap-2">
+                <span class="font-bold whitespace-nowrap">{{ 'PROFILE.ADD_LOCATION' | translate }}</span>
             </div>
-        </div>
-    </div>
+        </ng-template>
+        <input type="text" [(ngModel)]="newLocationName" placeholder="{{ 'PROFILE.INSERT_LOCATION' | translate }}" class="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"/>
+        <ng-template #footer>
+            <p-button label="{{ 'PROFILE.CANCEL' | translate }}" [raised]="true" severity="secondary" (click)="closeAddModal()" />
+            <p-button label="{{ 'PROFILE.ACCEPT' | translate }}" [raised]="true" severity="success" (click)="addLocation(newLocationName)" />
+
+        </ng-template>
+    </p-dialog>
 
     <!-- Remove Location Modal -->
-    <div class="modal-overlay" *ngIf="isRemoveModalOpen">
-        <div class="modal">
-            <h3>{{ 'PROFILE.CONFIRM_DELETE_LOCATION' | translate }}"{{ locationToRemove?.location }}"?</h3>
-            <div class="modal-buttons">
-                <button (click)="closeRemoveModal()">{{ 'PROFILE.CANCEL' | translate }}</button>
-                <button (click)="removeLocation()">{{ 'PROFILE.ACCEPT' | translate }}</button>
+    <p-dialog [(visible)]="isRemoveModalOpen" [modal]="true" [style]="{ width: '25rem' }">
+        <ng-template #header>
+            <div class="inline-flex items-center justify-center gap-2">
+                <span class="font-bold whitespace-nowrap">{{ 'PROFILE.DELETE_LOCATION' | translate }}</span>
             </div>
-        </div>
-    </div>
+        </ng-template>
+        <span class="text-surface-500 dark:text-surface-400 block">{{ 'PROFILE.CONFIRM_DELETE_LOCATION' | translate }}"{{ locationToRemove?.location }}"?</span>
+        <ng-template #footer>
+            <p-button label="{{ 'PROFILE.CANCEL' | translate }}" [raised]="true" severity="secondary" (click)="closeRemoveModal()" />
+            <p-button label="{{ 'PROFILE.ACCEPT' | translate }}" [raised]="true" severity="success" (click)="removeLocation()" />
+
+        </ng-template>
+    </p-dialog>
 
 </div>

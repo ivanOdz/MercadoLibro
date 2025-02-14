@@ -135,11 +135,12 @@
     "CONFIRM_DELETE_LOCATION": "¿Está seguro que quiere borrar la ubicación ",
     "ADD_LOCATION": "Agregar ubicación",
     "NEW_USERNAME": "Nuevo nombre de usuario",
-    "INSERT_LOCATION": "Ingrese ubicación",
+    "INSERT_LOCATION": "Ingrese una ubicación",
     "USERNAME_ALREADY_EXISTS": "Este nombre de usuario ya está en uso",
     "UPDATE_ERROR": "No se puede cambiar el nombre de usuario",
     "USERNAME_EMPTY": "El nombre de usuario no puede ser vacío",
-    "NO_REVIEWS": "¡Todavía nadie le dejó una reseña!"
+    "NO_REVIEWS": "¡Todavía nadie le dejó una reseña!",
+    "DELETE_LOCATION": "Eliminar ubicación"
   },
   "PUBLICATION_D": {
     "RETURN": "Regresar a publicaciones",
@@ -229,5 +230,8 @@
     "ACTIVE_SIDEBAR": "Activos",
     "REQUESTS_SIDEBAR": "Solicitudes",
     "SIDEBAR_TITLE": "Intercambios"
+  },
+  "BOOK_MODEL": {
+    "RETURN": "Regresar a Mis Libros"
   }
 }
