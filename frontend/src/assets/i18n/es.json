@@ -175,7 +175,9 @@
     "SELECT_LOCATION": "Selecciona una ubicación",
     "CANCEL": "Cancelar",
     "CREATE_PUB": "Crear publicación",
-    "NO_LOCATION_ERROR": "Debes seleccionar una ubicación"
+    "NO_LOCATION_ERROR": "Debes seleccionar una ubicación",
+    "SEE_PUBLICATION_HEADER": "Este libro se encuentra publicado",
+    "SEE_PUBLICATION_BUTTON": "Ver mis publicaciónes"
 
 
   },

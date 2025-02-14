@@ -18,7 +18,7 @@
 	</div>
 </div>
 
-<p-dialog header="{{ 'BOOK_HOME.CREATE_PUBLICATION_HEADER' | translate}}" [modal]="true" [(visible)]="modalPublicationVisible" [style]="{ width: '30vw' }">
+<p-dialog header="{{ book.available ? ( 'BOOK_HOME.CREATE_PUBLICATION_HEADER' | translate) : ('BOOK_HOME.SEE_PUBLICATION_HEADER' | translate)}}" [modal]="true" [(visible)]="modalPublicationVisible" [style]="{ width: '30vw' }">
     <div class="selected-book-in-modal">
         <div style="grid-column: 1">
             <img class="book-image-in-modal" [src]="getBookImage()" alt="book image"/>
@@ -28,15 +28,18 @@
             <p class="book-authors">{{book.bookModel?.authors}}</p>
         </div>
     </div>
-    <div class="select-locations">
+    <div class="select-locations" *ngIf="book.available">
         <p>{{ 'BOOK_HOME.SELECT_LOCATIONS' | translate}}</p>
         <p-divider/>
         <p-select [options]="userLocations" [(ngModel)]="selectedLocation" optionLabel="location" placeholder="{{'BOOK_HOME.SELECT_LOCATION' |translate}}" class="w-full md:w-56" />
         <p *ngIf="errorNoLocation" class="error">{{ 'BOOK_HOME.NO_LOCATION_ERROR' | translate }}</p>
     </div>
-    <div class="buttons-in-modal">
+    <div class="buttons-in-modal" *ngIf="book.available">
         <p-button [styleClass]="'cancel-publication-button'" label="{{ 'BOOK_HOME.CANCEL' | translate }}" class="cancel-button" (click)="closeModal()"></p-button>
         <p-button [styleClass]="'create-publication-button'" label="{{ 'BOOK_HOME.CREATE_PUB' | translate }}" class="cancel-button" (click)="createPublication()"></p-button>
+    </div>
+    <div style="text-align: center;" *ngIf="!book.available">
+        <p-button [styleClass]="'see-publication-button'" class="" label="{{ 'BOOK_HOME.SEE_PUBLICATION_BUTTON' | translate }}" (click)="goToMyPublications()"></p-button>
     </div>
 
 </p-dialog>

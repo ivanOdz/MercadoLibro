@@ -1,15 +1,17 @@
 .book-card {
 	width: 11vw;
-	background: white;
+	background: #fff;
 	border-radius: 12px;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+	box-shadow: 0 4px 8px #00000026;
 	padding: 15px;
 	cursor: pointer;
-	text-align: center;
 	transition: transform 0.3s ease-in-out;
-	display: flex;
-	flex-direction: column;
+	display: grid;
 	align-items: center;
+	grid-template-rows: 60% 40%;
+	justify-content: center;
+	text-align: center;
+	justify-items: center;
 }
 
 .book-card:hover {
@@ -36,10 +38,11 @@
 	font-size: 18px;
 	font-weight: bold;
 	color: #333;
-	overflow-y: clip;
 	height: 2.5rem;
 	justify-items: center;
 	align-content: center;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .book-owner {
@@ -51,7 +54,7 @@
 .book-state {
 	padding: 5px 10px;
 	border-radius: 5px;
-	font-size: 14px;
+	font-size: x-small;
 }
 
 .book-state-new {
@@ -142,6 +145,16 @@
 	background: #6c6e6f;
 	border:none
 }
+:host ::ng-deep .see-publication-button {
+	background: #9a9d9e;
+	border: none;
+	font-size: small;
+	margin: 1rem;
+}
+:host ::ng-deep .see-publication-button:not(:disabled):hover {
+	background: #6c6e6f;
+	border:none
+}
 :host ::ng-deep .p-select:not(.p-disabled).p-focus {
 	border-color: #c2b5a0;
 }
@@ -151,3 +164,4 @@
 	color: red;
 	font-size: small;
 }
+

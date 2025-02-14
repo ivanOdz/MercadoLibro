@@ -73,6 +73,7 @@ export class BookCardComponent implements OnInit{
 	modalPublicationVisible: boolean = false;
 	userLocations: Location[] = [];
 	selectedLocation: Location | null = null
+	modalSeePublicationVisible: boolean = false;
 
 	openModal() {
 		this.modalPublicationVisible = true;
@@ -112,5 +113,9 @@ export class BookCardComponent implements OnInit{
 		});
 
 
+	}
+
+	goToMyPublications() {
+		this.router.navigate(['publications/mine']);
 	}
 }

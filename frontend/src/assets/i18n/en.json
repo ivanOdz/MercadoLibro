@@ -174,7 +174,9 @@
     "SELECT_LOCATION": "Select a location...",
     "CANCEL": "Cancel",
     "CREATE_PUB": "Create publication",
-    "NO_LOCATION_ERROR": "You must select a location"
+    "NO_LOCATION_ERROR": "You must select a location",
+    "SEE_PUBLICATION_HEADER": "This book is already published",
+    "SEE_PUBLICATION_BUTTON": "See my publications"
   },
   "BOOK_CARD": {
     "OWNER": "Owner",
