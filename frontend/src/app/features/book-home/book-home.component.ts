@@ -11,7 +11,7 @@ import { BookService } from "../../core/services/book.service";
 import { AuthService } from '../../core/services/auth.service';
 import { FilterListComponent } from "../../shared/filter-list/filter-list.component";
 import { BookData } from "../../core/models/types";
-import { filter, switchMap, tap, forkJoin} from "rxjs";
+import { filter, switchMap, tap, forkJoin } from "rxjs";
 import { map } from "rxjs/operators";
 import { InputGroup } from 'primeng/inputgroup';
 import { InputGroupAddon } from 'primeng/inputgroupaddon';

@@ -187,7 +187,8 @@
   "NO_STATE_FILTER": "Sin filtro de condición",
   "NO_GENRE_FILTER": "Sin filtro de género",
   "PUBLICATIONS": {
-  	"TITLE": "Publicaciones"
+  	"TITLE": "Publicaciones",
+  	"SEARCH": "Buscar en publicaciones"
   },
   "EXCHANGES": {
     "REQUESTS_TITLE": "Solicitudes de intercambio",

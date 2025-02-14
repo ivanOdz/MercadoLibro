@@ -1,5 +1,7 @@
-import {Component, OnDestroy, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { PublicationService } from '../../core/services/publication.service';
 import { AuthService } from '../../core/services/auth.service';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -14,14 +16,19 @@ import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { PublicationCardComponent } from "../../shared/publication-card/publication.card";
 import { Pagination } from "../../core/models/pagination";
 import { PaginatorComponent } from "../../shared/paginator/paginator.component";
+import { InputGroup } from 'primeng/inputgroup';
+import { InputGroupAddon } from 'primeng/inputgroupaddon';
+import { InputText } from 'primeng/inputtext';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
 	selector: 'app-publications',
 	templateUrl: `./publications.component.html`,
 	styleUrls: ['./publications.component.css'],
 	standalone: true,
-	imports: [NavbarComponent, TranslatePipe, RouterModule, FilterListComponent, NgIf,
-		PublicationCardComponent, NgForOf, ScrollPanelModule, SortComponent, PaginatorComponent]
+	imports: [CommonModule, NavbarComponent, TranslatePipe, RouterModule, FilterListComponent, NgIf,
+		PublicationCardComponent, NgForOf, ScrollPanelModule, SortComponent, PaginatorComponent,
+		InputGroup, InputGroupAddon, InputText, ButtonModule, FormsModule]
 
 })
 export class PublicationsComponent implements OnInit, OnDestroy {

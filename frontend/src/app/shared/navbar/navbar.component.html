@@ -4,13 +4,7 @@
             <a routerLink="/publications">
                 <img ngSrc="../../../assets/mercado_libro.png" alt="image" width="80" height="80"/>
             </a>
-
-            <p-inputgroup>
-                <input pInputText [(ngModel)]="searchQuery" (keyup.enter)="search()" placeholder="{{ 'NAVBAR.SEARCH' | translate }}" />
-                <p-inputgroup-addon>
-                    <p-button icon="pi pi-search" severity="secondary" variant="text" (click)="search()"/>
-                </p-inputgroup-addon>
-            </p-inputgroup>
+            <p class="page-title">Mercado Libro</p>
         </div>
     </ng-template>
 
