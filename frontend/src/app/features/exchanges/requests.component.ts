@@ -21,6 +21,7 @@ import {BookData, ExchangeData} from "../../core/models/types";
 import {Pagination} from "../../core/models/pagination";
 import {PaginatorComponent} from "../../shared/paginator/paginator.component";
 import {TranslatePipe, TranslateService} from "@ngx-translate/core";
+import {ScrollPanelModule} from "primeng/scrollpanel";
 
 @Component({
     selector: 'exchanges-requests',
@@ -43,7 +44,8 @@ import {TranslatePipe, TranslateService} from "@ngx-translate/core";
         ProgressSpinner,
         Dialog,
         PaginatorComponent,
-        TranslatePipe
+        TranslatePipe,
+        ScrollPanelModule
     ]
 })
 export class RequestsComponent  implements OnInit {

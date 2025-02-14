@@ -16,7 +16,7 @@
                             <div class="card-section" style="align-content: center;text-align: center" *ngIf="isLoading">
                                 <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
                             </div>
-                            <div *ngIf="completedExchanges.length != 0 && !isLoading" class="card-section">
+                            <p-scrollpanel [style]="{height: '97%'}" *ngIf="completedExchanges.length != 0 && !isLoading" [class]="'card-section'" >
                                 <div
                                         class="card"
                                         *ngFor="let card of completedExchanges"
@@ -44,15 +44,15 @@
                                         <span class="exchange-completed-span">{{ 'EXCHANGES.COMPLETED_SPAN' | translate }}</span>
                                     </div>
                                 </div>
-                            </div>
-                            <app-paginator [pagination]="paginationCompleted" [fetchMethod]="getCompleted.bind(this)"></app-paginator>
+                                <app-paginator [pagination]="paginationCompleted" [fetchMethod]="getCompleted.bind(this)"></app-paginator>
+                            </p-scrollpanel>
                         </div>
-                        <div class="content-panel" style="align-content: center;text-align: center" *ngIf="isLoading">
+                        <div class="content-panel-w-tabs" style="align-content: center;text-align: center" *ngIf="isLoading">
                             <div class="emtpy-content-panel">
                                 <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
                             </div>
                         </div>
-                        <div class="content-panel" id="content-panel-completed" *ngIf="selectedCompletedCard && !isLoading">
+                        <div class="content-panel-w-tabs" id="content-pane-completed" *ngIf="selectedCompletedCard && !isLoading">
                             <div class="static-card user-card" id="user-card-completed">
                                 <div style="grid-column: 1; justify-items: center;">
                                     <div class="user-card-image"></div>
@@ -70,14 +70,14 @@
                                 </div>
                             </div>
 
-                            <p class="static-section-headers">{{ 'EXCHANGES.THEIR_BOOK' | translate }}</p>
-                            <div class="static-card book-theirs-card" id="book-theirs-card-completed">
-                                <div style="grid-column: 1;justify-items: center;">
+                            <p class="static-section-headers-tabs">{{ 'EXCHANGES.THEIR_BOOK' | translate }}</p>
+                            <div class="static-card book-theirs-card-w-tabs" id="book-theirs-card-completed">
+                                <div style="grid-column: 1;justify-items: center;max-height: 18vh;">
                                     <img [src]="isRequester(selectedCompletedCard)? getBookImage(selectedCompletedCard.offeredPub.book) : getBookImage(selectedCompletedCard.requestedPub.book)"
                                          alt="Book Image"
                                          class="book-image-static"/>
                                 </div>
-                                <div style="grid-column: 2; text-align: start;">
+                                <div style="grid-column: 2; text-align: start;max-height: 18vh;">
                                     <p class="book-card-title">{{ isRequester(selectedCompletedCard) ? selectedCompletedCard.offeredPub.book?.bookModel?.title :
                                         selectedCompletedCard.requestedPub.book?.bookModel?.title }}</p>
                                     <p class="book-card-author">{{ isRequester(selectedCompletedCard) ? selectedCompletedCard.offeredPub.book?.bookModel?.authors :
@@ -88,14 +88,14 @@
                                     </p>
                                 </div>
                             </div>
-                            <p class="static-section-headers">{{ 'EXCHANGES.FOR_YOUR_SUBHEADER' | translate }}</p>
-                            <div class="static-card book-yours-card" id="book-yours-card-completed">
-                                <div style="grid-column: 1;justify-items: center;">
+                            <p class="static-section-headers-tabs">{{ 'EXCHANGES.FOR_YOUR_SUBHEADER' | translate }}</p>
+                            <div class="static-card book-yours-card-w-tabs" id="book-yours-card-completed">
+                                <div style="grid-column: 1;justify-items: center;max-height: 18vh;">
                                     <img [src]="!isRequester(selectedCompletedCard)? getBookImage(selectedCompletedCard.offeredPub.book) : getBookImage(selectedCompletedCard.requestedPub.book)"
                                          alt="Book Image"
                                          class="book-image-static"/>
                                 </div>
-                                <div style="grid-column: 2; text-align: start;">
+                                <div style="grid-column: 2; text-align: start;max-height: 18vh;">
                                     <p class="book-card-title">{{ isRequester(selectedCompletedCard) ? selectedCompletedCard.requestedPub.book?.bookModel?.title :
                                         selectedCompletedCard.offeredPub.book?.bookModel?.title }}</p>
                                     <p class="book-card-author">{{ isRequester(selectedCompletedCard) ? selectedCompletedCard.requestedPub.book?.bookModel?.authors :
@@ -124,7 +124,7 @@
                             <div class="card-section" style="align-content: center;text-align: center" *ngIf="isLoading">
                                 <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
                             </div>
-                            <div *ngIf="rejectedExchanges.length != 0 && !isLoading" class="card-section">
+                            <p-scrollpanel [style]="{height: '97%'}" *ngIf="rejectedExchanges.length != 0 && !isLoading" [class]="'card-section'" >
                                 <div
                                         class="card"
                                         *ngFor="let card of rejectedExchanges"
@@ -152,15 +152,15 @@
                                         <span class="exchange-rejected-span">{{ 'EXCHANGES.REJECTED_SPAN' | translate }}</span>
                                     </div>
                                 </div>
-                            </div>
-                            <app-paginator [pagination]="paginationRejected" [fetchMethod]="getRejected.bind(this)"></app-paginator>
+                                <app-paginator [pagination]="paginationRejected" [fetchMethod]="getRejected.bind(this)"></app-paginator>
+                            </p-scrollpanel>
                         </div>
-                        <div class="content-panel" style="align-content: center;text-align: center" *ngIf="isLoading">
+                        <div class="content-panel-w-tabs" style="align-content: center;text-align: center" *ngIf="isLoading">
                             <div class="emtpy-content-panel">
                                 <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
                             </div>
                         </div>
-                        <div class="content-panel" id="content-panel-rejected" *ngIf="selectedRejectedCard && !isLoading">
+                        <div class="content-panel-w-tabs" id="content-panel-rejected" *ngIf="selectedRejectedCard && !isLoading">
                             <div class="static-card user-card" id="user-card-rejected">
                                 <div style="grid-column: 1; justify-items: center;">
                                     <div class="user-card-image"></div>
@@ -173,8 +173,8 @@
                                     <p-rating [(ngModel)]="selectedUserRatingRejected" [disabled]="true" />
                                 </div>
                             </div>
-                            <p class="static-section-headers">{{ 'EXCHANGES.THEIR_BOOK' | translate }}</p>
-                            <div class="static-card book-theirs-card" id="book-theirs-card-rejected">
+                            <p class="static-section-headers-tabs">{{ 'EXCHANGES.THEIR_BOOK' | translate }}</p>
+                            <div class="static-card book-theirs-card-w-tabs" id="book-theirs-card-rejected">
                                 <div style="grid-column: 1;justify-items: center;">
                                     <img [src]="isRequester(selectedRejectedCard)? getBookImage(selectedRejectedCard.offeredPub.book) : getBookImage(selectedRejectedCard.requestedPub.book)"
                                          alt="Book Image"
@@ -191,14 +191,14 @@
                                     </p>
                                 </div>
                             </div>
-                            <p class="static-section-headers">{{ 'EXCHANGES.FOR_YOUR_SUBHEADER' | translate }}</p>
-                            <div class="static-card book-yours-card" id="book-yours-card-rejected">
-                                <div style="grid-column: 1;justify-items: center;">
+                            <p class="static-section-headers-tabs">{{ 'EXCHANGES.FOR_YOUR_SUBHEADER' | translate }}</p>
+                            <div class="static-card book-yours-card-w-tabs" id="book-yours-card-rejected">
+                                <div style="grid-column: 1;justify-items: center;max-height: 18vh;">
                                     <img [src]="!isRequester(selectedRejectedCard)? getBookImage(selectedRejectedCard.offeredPub.book) : getBookImage(selectedRejectedCard.requestedPub.book)"
                                          alt="Book Image"
                                          class="book-image-static"/>
                                 </div>
-                                <div style="grid-column: 2; text-align: start;">
+                                <div style="grid-column: 2; text-align: start;max-height: 18vh;">
                                     <p class="book-card-title">{{ isRequester(selectedRejectedCard) ? selectedRejectedCard.requestedPub.book?.bookModel?.title :
                                         selectedRejectedCard.offeredPub.book?.bookModel?.title }}</p>
                                     <p class="book-card-author">{{ isRequester(selectedRejectedCard) ? selectedRejectedCard.requestedPub.book?.bookModel?.authors :

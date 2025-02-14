@@ -22,6 +22,7 @@ import {BookData, ExchangeData} from "../../core/models/types";
 import { PaginatorComponent } from "../../shared/paginator/paginator.component";
 import {Pagination} from "../../core/models/pagination";
 import {TranslatePipe, TranslateService} from "@ngx-translate/core";
+import {ScrollPanelModule} from "primeng/scrollpanel";
 
 @Component({
     selector: 'exchanges-history',
@@ -45,7 +46,8 @@ import {TranslatePipe, TranslateService} from "@ngx-translate/core";
         ProgressSpinner,
         NgIf,
         PaginatorComponent,
-        TranslatePipe
+        TranslatePipe,
+        ScrollPanelModule
     ]
 })
 export class HistoryComponent implements OnInit {
