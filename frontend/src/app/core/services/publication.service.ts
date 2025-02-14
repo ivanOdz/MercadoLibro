@@ -18,8 +18,6 @@ export class PublicationService {
     constructor(private http: HttpClient, private authService: AuthService, private bookService: BookService, private userService: UserService, private bookModelService: BookModelService) {}
 
     private getPublications({ state, genre, page, search, favorites, user }: { state: string; genre: string; page: number; search: string; favorites: boolean; user: string | null}): Observable<HttpResponse<Publication[]>> {
-        const headers = new HttpHeaders({ 'Accept': 'application/vnd.publications.v1+json' });
-
         let queryParams = '';
 
         if (search) {
@@ -53,10 +51,13 @@ export class PublicationService {
 
         const url = `${this.baseUrl}/publications${queryParams ? '?' + queryParams : ''}`;
 
-        return this.http.get<Publication[]>(url, {
-            headers,
-            observe: 'response'
-        }).pipe(
+        return this.getPublicationsByUrl(url);
+    }
+
+    private getPublicationsByUrl(url: string): Observable<HttpResponse<Publication[]>> {
+        const headers = new HttpHeaders({ 'Accept': 'application/vnd.publications.v1+json' });
+
+        return this.http.get<Publication[]>(url, { headers, observe: 'response' }).pipe(
             //tap((response) => console.log("Respuesta completa de la API:", response))
         );
     }

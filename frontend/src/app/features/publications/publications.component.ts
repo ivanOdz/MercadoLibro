@@ -13,14 +13,15 @@ import { NgForOf, NgIf } from "@angular/common";
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { PublicationCardComponent } from "../../shared/publication-card/publication.card";
 import { Pagination } from "../../core/models/pagination";
+import { PaginatorComponent } from "../../shared/paginator/paginator.component";
 
 @Component({
 	selector: 'app-publications',
 	templateUrl: `./publications.component.html`,
 	styleUrls: ['./publications.component.css'],
 	standalone: true,
-	imports: [ NavbarComponent, TranslatePipe, RouterModule, FilterListComponent, NgIf,
-		PublicationCardComponent, NgForOf, ScrollPanelModule,SortComponent ]
+	imports: [NavbarComponent, TranslatePipe, RouterModule, FilterListComponent, NgIf,
+		PublicationCardComponent, NgForOf, ScrollPanelModule, SortComponent, PaginatorComponent]
 
 })
 export class PublicationsComponent implements OnInit, OnDestroy {
@@ -128,6 +129,7 @@ export class PublicationsComponent implements OnInit, OnDestroy {
 	        tap((response) => {
 				this.publications = response.body || [];
 				this.processHeaders(response.headers);
+				//this.pagination = response.pagination;
 			}),
 			switchMap(() =>
 				this.authService.loggedUser$.pipe(
