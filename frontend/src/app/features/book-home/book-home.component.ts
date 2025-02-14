@@ -18,7 +18,7 @@ import { InputGroup } from 'primeng/inputgroup';
 import { InputGroupAddon } from 'primeng/inputgroupaddon';
 import { ButtonModule } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
-import {Pagination} from "../../core/models/pagination";
+import { Pagination } from "../../core/models/pagination";
 import { PaginatorComponent } from "../../shared/paginator/paginator.component";
 
 @Component({
@@ -28,7 +28,7 @@ import { PaginatorComponent } from "../../shared/paginator/paginator.component";
 	standalone: true,
     imports: [CommonModule, TranslatePipe, NavbarComponent, RouterModule, FilterListComponent,
         SortComponent, InputGroup, InputGroupAddon, ButtonModule, InputText, FormsModule,
-		BookCardComponent, PaginatorComponent,ScrollPanelModule ]
+		BookCardComponent, PaginatorComponent, ScrollPanelModule ]
 
 })
 export class BookHomeComponent implements OnInit {
@@ -42,13 +42,9 @@ export class BookHomeComponent implements OnInit {
 				private bms: BookModelService)
 	{ }
 
-	uploadBookModelUrl: string = "/books/add";
+	uploadBookModelUrl: string = "/library";
 	conditionHeaders: Record<string, string> = {};
 	genreHeaders: Record<string, string> = {};
-
-	
-	showConditionFilter: boolean = true;
-	showGenreFilter: boolean = true;
 	isSearchActive = false;
 	lastSearchQuery: string | null = null;
 	
@@ -137,8 +133,6 @@ export class BookHomeComponent implements OnInit {
 						this.currentFilters.state = params['state'] || '';
 						this.currentFilters.genre = params['genre'] || '';
 						this.currentFilters.search = params['search'] || '';
-						this.showConditionFilter = !params['state'];
-						this.showGenreFilter = !params['genre'];
 					}),
 					switchMap(() => {
 						return url

@@ -311,7 +311,7 @@ export class PublicationComponent implements OnInit {
     }
 
     redirectToBookModels() {
-        this.router.navigate(['/book_models'])
+//        this.router.navigate(['/book_models'])
     }
 
     redirectToProfile() {

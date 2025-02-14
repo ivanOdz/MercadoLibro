@@ -1,0 +1,57 @@
+<app-navbar></app-navbar>
+<button type="button" (click)="goBack()" class="back-button">{{ 'BOOK_FORM.BACK' | translate }}</button>
+<div class="book-home">
+
+    <div class="column-content">
+
+        <p class="page-title">{{ 'BOOK_HOME.TITLE' | translate }}</p>
+        <p-inputgroup>
+            <input #searchInput pInputText
+                   [(ngModel)]="currentFilters.search"
+                   (keyup.enter)="search()"
+                   [ngClass]="{ 'search-applied': isSearchActive }"
+                   (blur)="onBlur()"
+                   (ngModelChange)="onSearchChange()"
+                   placeholder="{{ 'BOOK_HOME.SEARCH' | translate }}" />
+            <p-inputgroup-addon>
+                <p-button icon="pi pi-search" severity="secondary" variant="text" (click)="search()"/>
+            </p-inputgroup-addon>
+        </p-inputgroup>
+
+        <div class="search-info">
+            <p>{{ 'TOTAL_RESULTS' | translate }}: {{ bookModels.length }}</p>
+            <div class="active-filters">
+                <div class="filter-right">
+                    <button *ngIf="currentFilters.genre" class="filter-badge" (click)="removeFilter('genre')">
+                        {{ currentFilters.genre | translate }} ✕
+                    </button>
+                    <button *ngIf="!currentFilters.genre" class="no-filter-badge">
+                        {{ 'NO_GENRE_FILTER' | translate }}
+                    </button>
+                </div>
+            </div>
+            <!--<app-sort></app-sort> -->
+            <br>
+        </div>
+
+        <div class="books-grid">
+            <app-book-model-card *ngFor="let bookModel of bookModels" [bookModel]="bookModel"></app-book-model-card>
+        </div>
+
+        <div class="no-books" *ngIf="bookModels.length === 0">
+            <p>{{ 'BOOK_HOME.NO_RESULTS' | translate }}</p>
+        </div>
+
+    </div>
+
+    <div class="column-filters">
+        <p class="page-filter-text">{{ 'FILTERS' | translate }}</p>
+        <div class="filter-line"></div>
+        <app-filter-list [headers]="genreHeaders" filterType="Genre"></app-filter-list>
+        <div class="filter-middle-line"></div>
+        <div class="fixed-add-book-container">
+
+        </div>
+    </div>
+
+</div>

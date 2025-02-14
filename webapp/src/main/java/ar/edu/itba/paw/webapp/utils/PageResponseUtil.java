@@ -25,6 +25,7 @@ public class PageResponseUtil {
                 builder.link(uri.clone().replaceQueryParam("page", page + 1).build(), "next");
             }
         }
+        System.out.println("headers in getResponse: " + builder.build().getHeaders());
         return builder.build();
     }
 
@@ -80,6 +81,18 @@ public class PageResponseUtil {
         }
         if(favorites != null) {
             uri.queryParam("favorites", favorites);
+        }
+        return uri;
+    }
+    public static UriBuilder getUriBuilderBookModels(UriBuilder uri, final String search, final String genre, final String sortType) {
+        if(search != null) {
+            uri.queryParam("search", search);
+        }
+        if(genre != null) {
+            uri.queryParam("genre", genre);;
+        }
+        if(sortType != null) {
+            uri.queryParam("sort", sortType);
         }
         return uri;
     }

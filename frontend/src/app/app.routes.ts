@@ -16,6 +16,7 @@ import { BookHomeComponent } from './features/book-home/book-home.component';
 import {MyPublicationsComponent} from "./features/my-publications/my-publications.component";
 import {FavoritePublicationsComponent} from "./features/favorite-publications/favorite-publications.component";
 import {PublicationComponent} from "./features/publication-detail/publication.component";
+import {BookModelComponent} from "./features/book-model/book-model.component";
 
 export const routes: Routes = [
   {path: '', redirectTo: 'publications', pathMatch: 'full'},
@@ -103,9 +104,10 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: '/book_models',
-    title: 'Book Models',
-    canActivate: [AuthGuard],
+    path: 'library',
+    component: BookModelComponent,
+    title: 'Library',
+    //canActivate: [AuthGuard],
   },
   //Error Pages
   {
@@ -113,7 +115,6 @@ export const routes: Routes = [
     component: NotFoundComponent,
     title: 'Error',
   },
-
 ];
 
 // Para proteger el acceso a las rutas que se requiere tener autenticacion
