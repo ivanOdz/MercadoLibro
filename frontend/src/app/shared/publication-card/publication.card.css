@@ -1,51 +1,56 @@
 .publication-card-container {
-    width: 55vw;
-    height: 24vh;
-    background: #fff;
-    box-shadow: 4px 6px 6px #0000001a;
-    border-radius: 2rem;
-    padding: 2rem;
-    transition: transform .2s;
-    cursor: pointer;
-    align-content: center;
-    display: grid;
-    grid-template-columns: 20% 60% auto;
-    gap: 5%;
+	width: 55vw;
+	max-height: 40vh;
+	background: #fff;
+	box-shadow: 4px 6px 6px #0000001a;
+	border-radius: 2rem;
+	padding: 2rem;
+	transition: transform .2s;
+	cursor: pointer;
+	align-content: center;
+	display: grid;
+	grid-template-columns: 20% 60% auto;
+	gap: 5%;
+	overflow: hidden;
 }
 
-
 .publication-card-container:hover {
-    transform: scale(1.05);
+	transform: scale(1.05);
+	background-color: rgba(240, 232, 210, 0.9);
 }
 
 .first-column-card {
-    grid-column: 1;
-    text-align: center;
+	grid-column: 1;
+	text-align: center;
 }
+
 .second-column-card {
-    grid-column: 2;
+	grid-column: 2;
 }
 .third-column-card {
-    grid-column: 3;
+	grid-column: 3;
 }
 
 .publisher-text-card {
-    font-size: x-small;
+	font-size: x-small;
 }
+
 .description-text-card {
-    font-size: medium;
-    max-height: 4rem;
-    overflow-y: clip;
+	font-size: medium;
+	max-height: 4rem;
+	overflow-y: clip;
 }
+
 .title-text-card {
-    font-size: x-large;
+	font-size: x-large;
 }
+
 .authors-text-card {
-    font-size: small;
+	font-size: small;
 }
 
 .book-image {
-    height: 18vh;
-    width: 7vw;
-    border-radius: 0.5rem;
+	height: 18vh;
+	width: 7vw;
+	border-radius: 0.5rem;
 }
