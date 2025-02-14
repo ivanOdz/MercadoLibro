@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import { NavbarComponent } from "../../shared/components/navbar/navbar.component";
+import { NavbarComponent } from "../../shared/navbar/navbar.component";
 import { TranslatePipe } from "@ngx-translate/core";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import { Button } from "primeng/button";
@@ -12,9 +12,9 @@ import { switchMap, tap } from "rxjs";
 import { BookModelService } from "../../core/services/bookmodel.service";
 import { Pagination } from "../../core/models/pagination";
 import { BookModel } from "../../core/models/bookModel.model";
-import {BookCardComponent} from "../../shared/components/book-card/book-card.component";
-import {FilterListComponent} from "../../shared/components/filter-list/filter-list.component";
-import {BookModelCardComponent} from "../../shared/components/book-model-card/book-model-card.component";
+import {BookCardComponent} from "../../shared/book-card/book-card.component";
+import {FilterListComponent} from "../../shared/filter-list/filter-list.component";
+import {BookModelCardComponent} from "../../shared/book-model-card/book-model-card.component";
 
 @Component({
   selector: 'app-book-model',
