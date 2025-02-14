@@ -8,6 +8,7 @@ import {MenuItem} from "primeng/api";
 import {ConfirmDialogModule} from "primeng/confirmdialog";
 import {Rating} from "primeng/rating";
 import {FormsModule} from "@angular/forms";
+import { ScrollPanelModule } from 'primeng/scrollpanel';
 import {Dialog} from "primeng/dialog";
 import {InputText} from "primeng/inputtext";
 import {ExchangeService} from "../../core/services/exchange.service";
@@ -36,7 +37,8 @@ import {TranslatePipe, TranslateService} from "@ngx-translate/core";
     providers: [ConfirmationService],
     imports: [ButtonModule, SidebarComponent, NavbarComponent, NgForOf,
         Steps, Rating, FormsModule, Dialog, InputText, NgIf, NgClass,
-        ProgressSpinner, ConfirmDialogModule, PaginatorComponent, TranslatePipe]
+        ProgressSpinner, ConfirmDialogModule, PaginatorComponent, TranslatePipe,
+        ScrollPanelModule]
 })
 export class ExchangesComponent implements OnInit {
     loggedUser: User | null = null;

@@ -71,7 +71,7 @@
                 <p style="margin:0">{{ 'PUBLICATION_D.RETURN_TO_DETAIL' | translate }}</p>
             </div>
         </div>
-        <p-scrollpanel [style]="{height: '80vh'}">
+        <p-scrollpanel [style]="{height: '90%'}">
             <div class="start-exchange-description">
                 <p>{{'PUBLICATION_D.START_EXCHANGE_DESCRIPTION' | translate}}</p>
             </div>
@@ -85,8 +85,8 @@
                     <p class="book-description-small-card">{{publication?.book?.bookModel?.description}}</p>
                 </div>
                 <div class="user-card-third-column">
-                    <p style="font-size: x-large">{{'PUBLICATION_D.USER'|translate}}</p>
-                    <p style="margin-top: 0.5rem; margin-bottom: 0.5rem">{{publication?.user?.username}}</p>
+                    <p style="font-size: large">{{'PUBLICATION_D.USER'|translate}}</p>
+                    <p style="margin-top: 0.5rem; margin-bottom: 0.5rem; font-size: small;">{{publication?.user?.username}}</p>
                     <p-rating type="number" [(ngModel)]="userRating" [readonly]="true" />
                 </div>
             </div>
