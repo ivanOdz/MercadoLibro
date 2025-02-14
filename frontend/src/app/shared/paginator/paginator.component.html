@@ -1,20 +1,24 @@
 <div class="pagination-container" *ngIf="pagination?.multiplePages()">
     <mat-icon
+            class="pagination-icon"
             fontIcon="keyboard_double_arrow_left"
             (click)="fetch(pagination?.first ?? undefined)"
             [class.disabled]="!pagination?.hasPrev()">
     </mat-icon>
     <mat-icon
+            class="pagination-icon"
             fontIcon="chevron_left"
             (click)="fetch(pagination?.prev ?? undefined)"
             [class.disabled]="!pagination?.hasPrev()">
     </mat-icon>
     <mat-icon
+            class="pagination-icon"
             fontIcon="chevron_right"
             (click)="fetch(pagination?.next ?? undefined)"
             [class.disabled]="!pagination?.hasNext()">
     </mat-icon>
     <mat-icon
+            class="pagination-icon"
             fontIcon="keyboard_double_arrow_right"
             (click)="fetch(pagination?.last ?? undefined)"
             [class.disabled]="!pagination?.hasNext()">

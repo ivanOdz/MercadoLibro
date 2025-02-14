@@ -73,7 +73,7 @@ public class PublicationController {
 
 
     @POST
-    @Consumes(value = {VndType.APPLICATION_PUBLICATION})
+    @Consumes(value = {VndType.APPLICATION_INPUT_PUBLICATION})
     @PreAuthorize("@accessControl.publicationsPostAccess(#publicationDTO)")
     public Response postPublication(final PublicationInputDTO publicationDTO) {
         Publication publication = ps.createPublication(publicationDTO.getBookId(), publicationDTO.getUserId(), publicationDTO.getLocationId());

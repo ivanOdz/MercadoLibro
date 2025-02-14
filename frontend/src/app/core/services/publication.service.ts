@@ -192,7 +192,19 @@ export class PublicationService {
         );
     }
 
-    createPublication(userUrl: string, bookUrl: string | null, selectedLocations: Location[]) {
+    createPublication(userUrl: string, bookUrl: string | null, selectedLocation: Location) {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.publications.input.v1+json' });
 
+        let body = {
+            userURN: userUrl,
+            bookURN: bookUrl,
+            locationURN: selectedLocation.self
+        }
+
+        return this.http.post(`${this.baseUrl}/publications`, body, {headers}).pipe(
+            tap((r) => {
+                console.log("Publicación creada:", r);
+            })
+        )
     }
 }

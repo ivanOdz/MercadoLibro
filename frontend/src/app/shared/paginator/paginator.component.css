@@ -1,0 +1,19 @@
+.pagination-icon {
+    cursor: pointer;
+    margin: .5rem;
+    height: 2rem;
+    width: 2rem;
+    align-content: center;
+    border-radius: 1rem;
+}
+
+
+
+.pagination-icon:hover {
+    background: #d6d2c568;
+}
+
+.pagination-container {
+    margin: 2rem;
+    text-align: center;
+}

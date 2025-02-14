@@ -94,18 +94,23 @@ export class BookCardComponent implements OnInit{
 	}
 
 	createPublication() {
+		if(this.selectedLocations.length === 0) {
+			// error management
+		}
+
 		this.modalPublicationVisible = false;
 
-		// this.as.loggedUser$.pipe(
-		// 	take(1),
-		// 	filter((user) => !!user),
-		// 	switchMap((user: User) => {
-		// 		this.ps.createPublication(user.self, this.book.self, this.selectedLocations);
-		// 	}
-		// ).subscribe(() => {
-		//
-		// 	});
+		this.as.loggedUser$.pipe(
+			take(1),
+			filter((user) => !!user),
+			switchMap((user: User) =>
+				this.ps.createPublication(user.self, this.book.self, this.selectedLocations[0])
+			)
+		).subscribe(() => {
+			this.router.navigate(['publications/mine'])
+		});
 
-		this.router.navigate(['publications/mine'])
+
+
 	}
 }

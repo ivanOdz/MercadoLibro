@@ -58,9 +58,9 @@
             <div class="books-grid">
                 <app-book-card *ngFor="let book of books" [book]="book" [showOwner]="false" [showGenre]="true" [showState]="true"></app-book-card>
             </div>
+            <app-paginator [pagination]="pagination" [fetchMethod]="fetchBooks.bind(this)"></app-paginator>
         </p-scrollpanel>
-        <app-paginator [pagination]="pagination" [fetchMethod]="fetchBooks.bind(this)"></app-paginator>
-		
+
 		<div class="no-books" *ngIf="books.length === 0">
 		    <p>{{ 'BOOK_HOME.NO_RESULTS' | translate }}</p>
 		    <p>{{ 'BOOK_HOME.ADD_BOOKS' | translate }}</p>
