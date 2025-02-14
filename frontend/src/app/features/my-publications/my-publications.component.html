@@ -1,14 +1,7 @@
-<app-navbar></app-navbar>
-<app-filter-list
-        [headers]="conditionHeaders"
-        filterType="Condition"
-        *ngIf="showConditionFilter">
-
-</app-filter-list>
-
-<app-filter-list
-        [headers]="genreHeaders"
-        filterType="Genre"
-        *ngIf="showGenreFilter">
-</app-filter-list>
-<app-sort></app-sort>
+<card-page 
+  [pageTitle]="'My Publications'"
+  [fetchMethod]="fetchMyPublications"
+  [items]="publications"
+  [showSearchBar]="true"
+  [displaySort]="true"
+></card-page>
