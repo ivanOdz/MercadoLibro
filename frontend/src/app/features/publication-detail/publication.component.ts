@@ -87,11 +87,15 @@ export class PublicationComponent implements OnInit {
 
     exchangeSolicited: boolean = false;
 
+    fromBooks: boolean = false;
 
     ngOnInit(): void {
         this.route.params.subscribe(params => {
             const id = params['id'];
             this.loadPublication(id);
+        });
+        this.route.queryParams.subscribe(params => {
+            this.fromBooks = params['origen'] !== 'publications';
         });
     }
 
@@ -335,5 +339,9 @@ export class PublicationComponent implements OnInit {
             isUserPublication = this.publication?.user?.self === user?.self;
         });
         return isUserPublication;
+    }
+
+    goToMyBooks() {
+        this.router.navigate(['/my-books']);
     }
 }

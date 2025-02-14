@@ -22,7 +22,7 @@ export class PublicationCardComponent {
     goToPublicationDetail() {
         if (this.publication.self) {
             const path = this.publication.self.replace(/^.*\/api/, '');
-            this.router.navigate([path]);
+            this.router.navigate([path],{ queryParams: { origen: 'publications' } });
         }
     }
 

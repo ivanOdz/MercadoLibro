@@ -160,7 +160,8 @@
     "NO_LOCATIONS": "Aún no tienes ubicaciones",
     "ADD_LOCATIONS": "Agrega una ubicación",
     "YOUR_PUBLICATION": "Tu publicación",
-    "NO_BOOK_ERROR": "Debes seleccionar un libro"
+    "NO_BOOK_ERROR": "Debes seleccionar un libro",
+    "RETURN_BOOKS": "Regresar a mis libros"
   },
   "BOOK_HOME": {
     "SEARCH": "Buscar en mis libros",

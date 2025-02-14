@@ -159,7 +159,8 @@
     "NO_LOCATIONS": "You don't have any locations yet",
     "YOUR_PUBLICATION": "Your publication",
     "ADD_LOCATIONS": "Add a location",
-    "NO_BOOK_ERROR": "You must select a book"
+    "NO_BOOK_ERROR": "You must select a book",
+    "RETURN_BOOKS": "Return to my books"
   },
   "BOOK_HOME": {
     "SEARCH": "Search in my books",
