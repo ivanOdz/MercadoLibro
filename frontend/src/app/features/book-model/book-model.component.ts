@@ -12,7 +12,6 @@ import { switchMap, tap } from "rxjs";
 import { BookModelService } from "../../core/services/bookmodel.service";
 import { Pagination } from "../../core/models/pagination";
 import { BookModel } from "../../core/models/bookModel.model";
-import {BookCardComponent} from "../../shared/book-card/book-card.component";
 import {FilterListComponent} from "../../shared/filter-list/filter-list.component";
 import {BookModelCardComponent} from "../../shared/book-model-card/book-model-card.component";
 import {PaginatorComponent} from "../../shared/paginator/paginator.component";
@@ -34,7 +33,6 @@ import {ScrollPanel} from "primeng/scrollpanel";
     FilterListComponent,
     BookModelCardComponent,
     NgForOf,
-    BookCardComponent,
     PaginatorComponent,
     ScrollPanel,
     RouterLink,
