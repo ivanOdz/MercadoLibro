@@ -6,11 +6,12 @@ import { PublicationCardComponent } from '../../shared/publication-card/publicat
 import { PublicationService } from "../../core/services/publication.service";
 import { AuthService } from "../../core/services/auth.service";
 import { ObservablePublicationData, PublicationData } from "../../core/models/types";
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-my-publications',
   standalone: true,
-  imports: [CardPageComponent, PublicationCardComponent],
+  imports: [CardPageComponent, PublicationCardComponent, TranslatePipe],
   templateUrl: './my-publications.component.html',
   styleUrls: ['./my-publications.component.css']
 })
@@ -18,7 +19,7 @@ export class MyPublicationsComponent {
   showConditionFilter: boolean = true;
   showGenreFilter: boolean = true;
   private subscription!: Subscription;
-  publications: PublicationData[] = [];  // Asegúrate de declarar un array para las publicaciones
+  publications: PublicationData[] = [];
   headersData: any;
   
   @ViewChild('publicationCard') publicationCard!: TemplateRef<any>;
@@ -28,18 +29,12 @@ export class MyPublicationsComponent {
       private authService: AuthService,
   ) {}
   
-  // Método para obtener publicaciones
   fetchMyPublications = (state: string, genre: string, search: string, page: number): ObservablePublicationData => {
       return this.authService.loggedUser$.pipe(
           filter(user => !!user),
           switchMap((user) =>
-              this.publicationService.getMyPublications(
-                  user.publications,
-				  state,
-				  genre,
-				  page,
-				  search
-              ).pipe(
+              this.publicationService.getMyPublications(user.publications, state, genre, page, search)
+		      .pipe(
 				  tap(response => {
 					if (response.headers) {
 						this.headersData = response.headers;
@@ -50,24 +45,7 @@ export class MyPublicationsComponent {
           )
       );
   };
-  
-  ngOnInit(): void {
-    // Llamar a la función de publicación cuando se cargue el componente
-    /*this.fetchMyPublications().subscribe(
-        (response) => {
-          this.publications = response.publicationData;
-        }
-    )*/
-  }
-
-  // Limpiar la suscripción al destruir el componente
-  ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-  }
 }
-
 
 /*
 ngOnInit() {
