@@ -129,7 +129,7 @@
     gap: .5rem;
 }
 
-.emtpy-content-panel {
+.empty-content-panel {
     display: grid;
     text-align: center;
     color: #000;

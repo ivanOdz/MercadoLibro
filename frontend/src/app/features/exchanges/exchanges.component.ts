@@ -100,6 +100,7 @@ export class ExchangesComponent implements OnInit {
 
 
 
+
     confirmExchange(card: ExchangeData, requester: boolean) {
         this.confirmExchangeDialogVisible = false;
 
@@ -172,10 +173,6 @@ export class ExchangesComponent implements OnInit {
         return this.loggedUser?.username == selectedCard?.requestedPub?.book?.owner?.username;
     }
 
-    getBookImage(book: BookData | null) {
-        return book?.bookModel?.cover || 'assets/book.jpg';
-    }
-
     addMessage(newMessage: any) {
         this.selectedCard?.messages.push(newMessage);
         this.changeDetectorRef.detectChanges();
@@ -229,6 +226,19 @@ export class ExchangesComponent implements OnInit {
         ]
     }
 
+    getImages(bookImages: string[] | null = null): string[] {
+        return bookImages || [this.getDefaultImage()];
+    }
+
+    getDefaultImage() {
+        return `${environment.production? 'http://pawserver.it.itba.edu.ar/paw-2024b-09'  : 'http://localhost:8080'}/assets/book.jpg`;
+    }
+
+    getCover(book: BookData | null = null) {
+        console.log("publication imge: ", book?.bookModel?.cover);
+        return book?.bookModel?.cover ||
+            this.getImages(book?.images)[0] || this.getDefaultImage();
+    }
 
 
     /*** Dialogs ***/
