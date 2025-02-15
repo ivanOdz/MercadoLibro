@@ -85,7 +85,7 @@ export class PublicationService {
         return this.getPublicationsWithDetails(url);
     }
 
-    private getPublicationsWithDetails(publicationEndpointUrl: string): ObservablePublicationData {
+    getPublicationsWithDetails(publicationEndpointUrl: string): ObservablePublicationData {
         return this.getPublicationsByUrl(publicationEndpointUrl).pipe(
             switchMap((response) => {
                 const publications = response.publications;

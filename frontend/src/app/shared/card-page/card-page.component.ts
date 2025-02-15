@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, TemplateRef, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, OnInit, TemplateRef, ViewChild, ElementRef, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -29,10 +29,12 @@ import {ObservablePublicationData} from "../../core/models/types";
 export class CardPageComponent implements OnInit {
 	
 	@Input() pageTitle!: string;
-	@Input() items: any[] = []; 
-	@Input() fetchMethod!: (params: any) => ObservablePublicationData;
+	@Input() fetchMethod!: (state: string, genre: string, search: string, page: number) => ObservablePublicationData;
 	@Input() showSearchBar!: boolean;
 	@Input() displaySort!: boolean;
+	@Input() displayGridStyle: boolean = false;
+	
+	@Input() items: any[] = []; 
 	@Input() cardTemplate!: TemplateRef<any>;
 	
 	@ViewChild('searchInput') searchInput!: ElementRef;
@@ -44,21 +46,23 @@ export class CardPageComponent implements OnInit {
 	isSearchActive = false;
 	lastSearchQuery: string | null = null;
 	pagination: Pagination | null = null;
-
+	stateFilterApplied: boolean = false;
+	genreFilterApplied: boolean = false;
+	
 	currentFilters = {
 			state: '',
 			genre: '',
 			search: '',
-			page: 0,
-			available: false,
+			page: 0
 		};
 	
 	ngOnInit() {
-		this.fetchItems();
+		this.fetchItems(undefined, 1);
 	}
 	
-	fetchItems() {
-		this.fetchMethod(this.currentFilters).pipe(
+	fetchItems(url: string | undefined, page: number) {
+		this.currentFilters.page = page;
+		this.fetchMethod(this.currentFilters.state, this.currentFilters.genre, this.currentFilters.search, this.currentFilters.page).pipe(
 			switchMap((response) => {
 				this.pagination = response.pagination;
 				this.conditionHeaders = response.headers.conditionHeaders;
@@ -66,7 +70,11 @@ export class CardPageComponent implements OnInit {
 				this.items = response.publicationData;
 				return [];
 			})
-		).subscribe();
+		).subscribe({
+			next: (items) => {
+				this.items = items;
+			}
+		});
 	}
 
 	search() {
@@ -90,9 +98,11 @@ export class CardPageComponent implements OnInit {
 	removeFilter(filterKey: keyof typeof this.currentFilters) {
 		if (filterKey === 'state') {
 			this.currentFilters.state = '';
+			this.stateFilterApplied = false;
 		}	
 		else if (filterKey === 'genre') {
 			this.currentFilters.genre = '';
+			this.genreFilterApplied = false;
 		}
 
 		this.router.navigate([], {
@@ -101,6 +111,27 @@ export class CardPageComponent implements OnInit {
 			queryParamsHandling: 'merge',
 		});
 
-		this.fetchItems();
+		this.fetchItems(undefined, 1);
+	}
+	
+	processHeaders(headersData: { conditionHeaders: Record<string, string>, genreHeaders: Record<string, string> }) {
+		if (!headersData) return;
+
+		this.conditionHeaders = { ...headersData.conditionHeaders };
+		this.genreHeaders = { ...headersData.genreHeaders };
+	}
+	
+	onFilterUpdate(filter: { param: string, value: string }) {
+
+		if (filter.param === "state") {
+			this.currentFilters.state = filter.value;
+			this.stateFilterApplied = true;
+		}
+		else if (filter.param === "genre") {
+			this.currentFilters.genre = filter.value;
+			this.genreFilterApplied = true;
+		}
+				
+		this.fetchItems(undefined, 1);
 	}
 }

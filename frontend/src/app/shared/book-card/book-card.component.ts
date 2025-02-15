@@ -18,6 +18,7 @@ import {PublicationService} from "../../core/services/publication.service";
 import {Router} from "@angular/router";
 import {User} from "../../core/models/user.model";
 import {Select} from "primeng/select";
+import {environment} from "../../../environments/environment";
 
 @Component({
     selector: 'app-book-card',
@@ -65,9 +66,13 @@ export class BookCardComponent implements OnInit{
 	}
 	
 	getBookImage(): string {
-		return	this.book.images?.length ? this.book.images[0] :
-				this.book.bookModel?.cover ? this.book.bookModel.cover :
+		return	this.book.images?.length ? this.getBaseUrl() + this.book.images[0] :
+				this.book.bookModel?.cover ? this.getBaseUrl() + this.book.bookModel.cover :
 				this.defaultImage;
+	}
+
+	getBaseUrl() {
+		return `${environment.production? environment.productionUrl  : environment.developmentUrl}`;
 	}
 
 	modalPublicationVisible: boolean = false;

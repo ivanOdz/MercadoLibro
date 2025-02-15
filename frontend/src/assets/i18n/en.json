@@ -228,8 +228,11 @@
     "HISTORY_SIDEBAR": "History",
     "ACTIVE_SIDEBAR": "Current",
     "REQUESTS_SIDEBAR": "Requests",
-    "SIDEBAR_TITLE": "Exchanges"
-
+    "SIDEBAR_TITLE": "Exchanges",
+    "ACCEPT_EXCHANGE": "Accept exchange",
+    "CONFIRM_EXCHANGE": "Are you sure you want to accept an exchange?",
+    "REJECT_EXCHANGE": "Reject exchange",
+    "CONFIRM_REJECT": "Are you sure you want to reject the exchange?"
   },
   "BOOK_MODEL": {
     "RETURN": "Return to My Books",
@@ -237,5 +240,6 @@
     "SEARCH": "Search in our library",
     "NO_BOOK": "Didn't find your book?",
     "ADD_BOOK": "Add here!"
-  }
+  },
+  "MY_PUBLICATIONS": "My publications"
 }

@@ -11,6 +11,18 @@
     background: #d6d2c568;
 }
 
+.pagination-container mat-icon.disabled {
+    cursor: not-allowed;
+    color: #b0bec5;
+    transform: scale(1);
+}
+
+.pagination-container mat-icon.disabled:hover {
+    transform: scale(1);
+    color: #b0bec5;
+    background: #fcfaf8;
+}
+
 .pagination-container {
     display: flex;
     align-items: center;

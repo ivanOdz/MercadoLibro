@@ -225,10 +225,10 @@
 <p-dialog [(visible)]="acceptExchangeDialogVisible" [modal]="true" [style]="{ width: '25rem' }">
     <ng-template #header>
         <div class="inline-flex items-center justify-center gap-2">
-            <span class="font-bold whitespace-nowrap">Accept exchange</span>
+            <span class="font-bold whitespace-nowrap">{{ 'EXCHANGES.ACCEPT_EXCHANGE' | translate }}</span>
         </div>
     </ng-template>
-    <span class="text-surface-500 dark:text-surface-400 block">Are you sure you want to accept an exchange?</span>
+    <span class="text-surface-500 dark:text-surface-400 block">{{ 'EXCHANGES.CONFIRM_EXCHANGE' | translate }}</span>
     <ng-template #footer>
         <p-button label="{{ 'EXCHANGES.CANCEL' | translate }}" [raised]="true" severity="secondary" (click)="acceptExchangeDialogVisible = false" />
         <p-button label="{{ 'EXCHANGES.START' | translate }}" [raised]="true" severity="success" (click)="acceptExchange()" />
@@ -239,10 +239,10 @@
 <p-dialog [(visible)]="rejectExchangeDialogVisible" [modal]="true" [style]="{ width: '25rem' }">
     <ng-template #header>
         <div class="inline-flex items-center justify-center gap-2">
-            <span class="font-bold whitespace-nowrap">Reject exchange</span>
+            <span class="font-bold whitespace-nowrap">{{ 'EXCHANGES.REJECT_EXCHANGE' | translate }}</span>
         </div>
     </ng-template>
-    <span class="text-surface-500 dark:text-surface-400 block">Are you sure you want to reject the exchange</span>
+    <span class="text-surface-500 dark:text-surface-400 block">{{ 'EXCHANGES.CONFIRM_REJECT' | translate }}</span>
     <ng-template #footer>
         <p-button label="{{ 'EXCHANGES.CANCEL' | translate }}" [raised]="true" severity="secondary" (click)="rejectExchangeDialogVisible = false" />
         <p-button label="{{ 'EXCHANGES.REJECT' | translate }}" [raised]="true" severity="danger" (click)="rejectExchange()" />

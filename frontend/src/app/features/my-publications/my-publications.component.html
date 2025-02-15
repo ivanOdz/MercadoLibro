@@ -1,7 +1,12 @@
 <card-page 
-  [pageTitle]="'My Publications'"
-  [fetchMethod]="fetchMyPublications"
-  [items]="publications"
-  [showSearchBar]="true"
-  [displaySort]="true"
+	[pageTitle]="'MY_PUBLICATIONS' | translate"
+	[fetchMethod]="fetchMyPublications"
+	[items]="publications"
+	[showSearchBar]="true"
+	[displaySort]="true"
+	[cardTemplate]="publicationCardTemplate"
 ></card-page>
+
+<ng-template #publicationCardTemplate let-publication>
+	<publication-card [publication]="publication"></publication-card>
+</ng-template>
