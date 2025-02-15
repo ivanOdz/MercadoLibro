@@ -232,7 +232,11 @@
     "HISTORY_SIDEBAR": "Historial",
     "ACTIVE_SIDEBAR": "Activos",
     "REQUESTS_SIDEBAR": "Solicitudes",
-    "SIDEBAR_TITLE": "Intercambios"
+    "SIDEBAR_TITLE": "Intercambios",
+    "ACCEPT_EXCHANGE": "Aceptar intercambio",
+    "CONFIRM_EXCHANGE": "¿Está seguro que quiere aceptar el intercambio?",
+    "REJECT_EXCHANGE": "Rechazar intercambio",
+    "CONFIRM_REJECT": "¿Está seguro que quiere rechazar el intercambio?"
   },
   "BOOK_MODEL": {
     "RETURN": "Regresar a Mis Libros",
