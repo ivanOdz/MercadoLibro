@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {catchError, forkJoin, Observable, of, switchMap, tap, throwError} from "rxjs";
 import {Publication} from "../models/publication.model";
-import {FavoritePublication, PublicationData} from "../models/types";
+import {FavoritePublication, ObservablePublication, ObservablePublicationData, PublicationData} from "../models/types";
 import {map} from "rxjs/operators";
 import {BookService} from "./book.service";
 import {UserService} from "./user.service";
@@ -16,9 +16,9 @@ import {Pagination} from "../models/pagination";
 export class PublicationService {
     baseUrl = environment.production ? environment.productionUrl : environment.developmentUrl;
 
-    constructor(private http: HttpClient, private authService: AuthService, private bookService: BookService, private userService: UserService, private bookModelService: BookModelService) {}
+    constructor(private http: HttpClient, private authService: AuthService, private bookService: BookService, private userService: UserService, private bookModelService: BookModelService){}
 
-    private getPublications({ state, genre, page, search, favorites, user }: { state: string; genre: string; page: number; search: string; favorites: boolean; user: string | null}): Observable<{ publications: Publication[], pagination: Pagination, headers: {conditionHeaders: Record<string, string>, genreHeaders: Record<string, string>} }> {
+    private getPublications({ state, genre, page, search, favorites, user }: { state: string; genre: string; page: number; search: string; favorites: boolean; user: string | null}): ObservablePublication {
         let queryParams = '';
 
         if (search) {
@@ -55,7 +55,7 @@ export class PublicationService {
         return this.getPublicationsByUrl(url);
     }
 
-    private getPublicationsByUrl(url: string): Observable<{ publications: Publication[], pagination: Pagination, headers: {conditionHeaders: Record<string, string>, genreHeaders: Record<string, string>} }> {
+    private getPublicationsByUrl(url: string): ObservablePublication {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.publications.v1+json' });
 
         return this.http.get<any>(url, { headers, observe: 'response' }).pipe(
@@ -98,23 +98,22 @@ export class PublicationService {
         );
     }
 
-    getGeneralPublications({state, genre, page, search}: {state: string; genre: string; page: number; search: string;}): Observable<{ publicationData: PublicationData[], pagination: Pagination, headers: {conditionHeaders: Record<string, string>, genreHeaders: Record<string, string>} }> {
+    getGeneralPublications({state, genre, page, search}: {state: string; genre: string; page: number; search: string;}): ObservablePublicationData {
         return this.getPublicationsWithDetails({state, genre, page, search, favorites: false, user: null});
     }
 
-    getMyPublications({state, genre, page, search, user}: {state: string; genre: string; page: number; search: string; user: string}):
-        Observable<{ publicationData: PublicationData[], pagination: Pagination, headers: {conditionHeaders: Record<string, string>, genreHeaders: Record<string, string>} }> {
+    getMyPublications({state, genre, page, search, user}: {state: string; genre: string; page: number; search: string; user: string}):  ObservablePublicationData{
         const userId = user.split("/").pop();
         return this.getPublicationsWithDetails({state, genre, page, search, favorites: false, user: userId!});
     }
 
-    getFavoritePublications({state, genre, page, search, user}: {state: string; genre: string; page: number; search: string; user: string}): Observable<{ publicationData: PublicationData[], pagination: Pagination, headers: {conditionHeaders: Record<string, string>, genreHeaders: Record<string, string>} }> {
+    getFavoritePublications({state, genre, page, search, user}: {state: string; genre: string; page: number; search: string; user: string}): ObservablePublicationData {
         const userId = user.split("/").pop();
         return this.getPublicationsWithDetails({state, genre, page, search, favorites: true, user: userId!});
     }
 
     private getPublicationsWithDetails({state, genre, page, search, favorites, user}: {state: string; genre: string; page: number; search: string; favorites: boolean; user: string | null}):
-        Observable<{ publicationData: PublicationData[], pagination: Pagination, headers: {conditionHeaders: Record<string, string>, genreHeaders: Record<string, string>} }> {
+        ObservablePublicationData {
         return this.getPublications({state, genre, page, search, favorites, user}).pipe(
             switchMap((response) => {
                 const publications = response.publications;
