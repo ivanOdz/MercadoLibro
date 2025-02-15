@@ -5,9 +5,9 @@
 	<div class="column-filters">
 		<p class="page-filter-text">{{ 'FILTERS' | translate }}</p>
 		<div class="filter-line"></div>
-		<app-filter-list [headers]="conditionHeaders" filterType="Condition"></app-filter-list>
+		<app-filter-list [headers]="conditionHeaders" filterType="Condition" (filterChanged)="onFilterUpdate($event)"></app-filter-list>
 		<div class="filter-line"></div>
-		<app-filter-list [headers]="genreHeaders" filterType="Genre"></app-filter-list>
+		<app-filter-list [headers]="genreHeaders" filterType="Genre" (filterChanged)="onFilterUpdate($event)"></app-filter-list>
 		<div class="filter-line"></div>
 	</div>
 	
@@ -59,9 +59,9 @@
 				</ng-container>
 			</div>
 			
-            <app-paginator [pagination]="pagination" [fetchMethod]="fetchItems.bind(this)"></app-paginator>
+		</p-scrollpanel>
         
-        </p-scrollpanel>
+		<app-paginator [pagination]="pagination" [fetchMethod]="fetchItems.bind(this)"></app-paginator>
         
 	</div>
 </div>

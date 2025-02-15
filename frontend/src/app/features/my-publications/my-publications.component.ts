@@ -1,9 +1,9 @@
 import { Component,TemplateRef, ViewChild } from '@angular/core';
-import {filter, Subscription} from 'rxjs';
-import {map, switchMap} from 'rxjs/operators';
+import { filter, Subscription } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { CardPageComponent } from '../../shared/card-page/card-page.component';
 import { PublicationService } from "../../core/services/publication.service";
-import {AuthService} from "../../core/services/auth.service";
+import { AuthService } from "../../core/services/auth.service";
 import { ObservablePublicationData, PublicationData} from "../../core/models/types";
 
 @Component({
@@ -18,47 +18,45 @@ export class MyPublicationsComponent {
   showGenreFilter: boolean = true;
   private subscription!: Subscription;
   publications: PublicationData[] = [];  // Asegúrate de declarar un array para las publicaciones
-
+  headersData: any;
+  
   @ViewChild('publicationCard') publicationCard!: TemplateRef<any>;
 
   constructor(
       private publicationService: PublicationService,
       private authService: AuthService,
   ) {}
-
-  currentFilters = {
-    state: '',
-    genre: '',
-    page: 0,
-    search: ''
-  };
-
+  
   // Método para obtener publicaciones
-  fetchMyPublications = (): ObservablePublicationData => {
+  fetchMyPublications = (state: string, genre: string, search: string, page: number): ObservablePublicationData => {
       return this.authService.loggedUser$.pipe(
           filter(user => !!user),
           switchMap((user) =>
               this.publicationService.getMyPublications(
                   user.publications,
-                  this.currentFilters.state,
-                  this.currentFilters.genre,
-                  this.currentFilters.page,
-                  this.currentFilters.search
+				  state,
+				  genre,
+				  page,
+				  search
               ).pipe(
+				  tap(response => {
+					if (response.headers) {
+						this.headersData = response.headers;
+					}
+				  }),
                   map(response => response)
               )
           )
       );
   };
-
-
+  
   ngOnInit(): void {
     // Llamar a la función de publicación cuando se cargue el componente
-    this.fetchMyPublications().subscribe(
+    /*this.fetchMyPublications().subscribe(
         (response) => {
           this.publications = response.publicationData;
         }
-    )
+    )*/
   }
 
   // Limpiar la suscripción al destruir el componente
