@@ -11,21 +11,17 @@ import { MatIconModule } from '@angular/material/icon';
     styleUrl: './paginator.component.css'
 })
 export class PaginatorComponent {
-  @Input() fetchMethod!: (url: string) => void;
+  @Input() fetchMethod!: (url: string, page: number) => void;
   @Input() pagination: Pagination | null = null;
   page: number = 1;
   
   fetch(url: string | undefined, page: number) {
     if (url && this.fetchMethod) {
-
-      if (this.pagination && page > this.pagination!.pages)
-      { this.page = this.pagination?.pages || 1; }
-	  else if (page < 1)
-	  { this.page = 1; }
-      else
-	  { this.page = page; }
-	  
-      this.fetchMethod(url);
+      
+      const maxPage = this.pagination?.pages ?? 1;
+      this.page = Math.max(1, Math.min(page, maxPage));
+      
+      this.fetchMethod(url, this.page);
     }
   }
 

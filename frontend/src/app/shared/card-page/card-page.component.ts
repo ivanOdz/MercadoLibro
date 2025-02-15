@@ -57,16 +57,17 @@ export class CardPageComponent implements OnInit {
 		};
 	
 	ngOnInit() {
-		this.fetchItems();
+		this.fetchItems(undefined, 1);
 	}
 	
-	fetchItems() {
+	fetchItems(url: string | undefined, page: number) {
+		this.currentFilters.page = page;
 		this.fetchMethod(this.currentFilters.state, this.currentFilters.genre, this.currentFilters.search, this.currentFilters.page).pipe(
 			switchMap((response) => {
 				this.pagination = response.pagination;
 				this.conditionHeaders = response.headers.conditionHeaders;
 				this.genreHeaders = response.headers.genreHeaders;
-				this.items = response.publicationData
+				this.items = response.publicationData;
 				return [];
 			})
 		).subscribe({
@@ -110,7 +111,7 @@ export class CardPageComponent implements OnInit {
 			queryParamsHandling: 'merge',
 		});
 
-		this.fetchItems();
+		this.fetchItems(undefined, 1);
 	}
 	
 	processHeaders(headersData: { conditionHeaders: Record<string, string>, genreHeaders: Record<string, string> }) {
@@ -131,6 +132,6 @@ export class CardPageComponent implements OnInit {
 			this.genreFilterApplied = true;
 		}
 				
-		this.fetchItems();
+		this.fetchItems(undefined, 1);
 	}
 }
