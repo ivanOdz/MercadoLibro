@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, TemplateRef, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, OnInit, TemplateRef, ViewChild, ElementRef, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -30,7 +30,7 @@ export class CardPageComponent implements OnInit {
 	
 	@Input() pageTitle!: string;
 	@Input() items: any[] = []; 
-	@Input() fetchMethod!: (params: any) => ObservablePublicationData;
+	@Input() fetchMethod!: (state: string, genre: string, search: string, page: number) => ObservablePublicationData;
 	@Input() showSearchBar!: boolean;
 	@Input() displaySort!: boolean;
 	@Input() cardTemplate!: TemplateRef<any>;
@@ -49,8 +49,7 @@ export class CardPageComponent implements OnInit {
 			state: '',
 			genre: '',
 			search: '',
-			page: 0,
-			available: false,
+			page: 0
 		};
 	
 	ngOnInit() {
@@ -58,15 +57,19 @@ export class CardPageComponent implements OnInit {
 	}
 	
 	fetchItems() {
-		this.fetchMethod(this.currentFilters).pipe(
+		this.fetchMethod(this.currentFilters.state, this.currentFilters.genre, this.currentFilters.search, this.currentFilters.page).pipe(
 			switchMap((response) => {
 				this.pagination = response.pagination;
 				this.conditionHeaders = response.headers.conditionHeaders;
 				this.genreHeaders = response.headers.genreHeaders;
-				this.items = response.publicationData;
+				this.items = response.publicationData
 				return [];
 			})
-		).subscribe();
+		).subscribe({
+			next: (items) => {
+				this.items = items;
+			}
+		});
 	}
 
 	search() {
@@ -101,6 +104,25 @@ export class CardPageComponent implements OnInit {
 			queryParamsHandling: 'merge',
 		});
 
+		this.fetchItems();
+	}
+	
+	processHeaders(headersData: { conditionHeaders: Record<string, string>, genreHeaders: Record<string, string> }) {
+		if (!headersData) return;
+
+		this.conditionHeaders = { ...headersData.conditionHeaders };
+		this.genreHeaders = { ...headersData.genreHeaders };
+	}
+	
+	onFilterUpdate(filter: { param: string, value: string }) {
+
+		if (filter.param === "state") {
+			this.currentFilters.state = filter.value;
+		}
+		else if (filter.param === "genre") {
+			this.currentFilters.genre = filter.value;
+		}
+				
 		this.fetchItems();
 	}
 }

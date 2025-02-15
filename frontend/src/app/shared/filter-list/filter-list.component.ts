@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, SimpleChanges, OnChanges} from '@angular/core';
+import {Component, Input, OnInit, SimpleChanges, OnChanges, EventEmitter, Output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { NgForOf, UpperCasePipe } from "@angular/common";
 import { Card } from "primeng/card";
@@ -23,7 +23,8 @@ import { ChangeDetectionStrategy } from '@angular/core';
 export class FilterListComponent implements OnInit, OnChanges  {
     @Input() headers: Record<string, string> = {};
     @Input() filterType: 'Condition' | 'Genre' = 'Condition';
-
+	@Output() filterChanged = new EventEmitter<{ param: string, value: string }>();
+	
     filters: { labelKey: string; count: number; queryParam: string }[] = [];
 
     constructor(private router: Router) {}
@@ -64,10 +65,12 @@ export class FilterListComponent implements OnInit, OnChanges  {
         const queryParam = filter.queryParam;
         const param = queryParam.split('=')[0];
         const value = queryParam.split('=')[1];
-
+		
         this.router.navigate([], {
             queryParams: { [param]: value },
             queryParamsHandling: 'merge'
         });
+		
+		this.filterChanged.emit({ param, value });
     }
 }
