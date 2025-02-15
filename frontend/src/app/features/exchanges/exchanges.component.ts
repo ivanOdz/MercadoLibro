@@ -116,10 +116,21 @@ export class ExchangesComponent implements OnInit {
         this.isLoading = true;
         this.es.confirmExchange(card.exchange.self, card.exchange.accept_code, requester).subscribe(
             () => {
-                console.log("Intercambio confirmado:", card.exchange.self);
-                this.loadExchanges();
+                this.es.getExchange(card.exchange.self).subscribe(
+                    (exchangeData) => {
+                        console.log("Intercambio confirmado:", exchangeData.isConfirmed);
+                        if (exchangeData.requester_received && exchangeData.offerer_received) {
+                            this.router.navigate(['/exchanges/history'], { queryParams: { selectedTab: 0 } });
+                        } else {
+                            this.loadExchanges(); // stay in the same page
+                        }
+                    },
+                    (error) => console.error("Error al obtener la información del intercambio:", error)
+                );
             },
-            (error) => console.error("Error al confirmar el intercambio:", error))
+            (error) => console.error("Error al confirmar el intercambio:", error)
+        );
+
     }
 
     sendMessage() {

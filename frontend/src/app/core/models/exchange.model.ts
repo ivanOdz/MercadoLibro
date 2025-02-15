@@ -28,4 +28,8 @@ export class Exchange {
         this.offererReview = data.offererReview;
         this.requesterReview = data.requesterReview;
     }
+
+    getIsConfirmed() {
+        return this.isConfirmed;
+    }
 }

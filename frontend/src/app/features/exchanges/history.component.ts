@@ -15,7 +15,7 @@ import {PublicationService} from "../../core/services/publication.service";
 import {BookService} from "../../core/services/book.service";
 import {BookModelService} from "../../core/services/bookmodel.service";
 import {AuthService} from "../../core/services/auth.service";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import { filter, forkJoin, of, switchMap} from "rxjs";
 import {ProgressSpinner} from "primeng/progressspinner";
 import {BookData, ExchangeData} from "../../core/models/types";
@@ -60,12 +60,18 @@ export class HistoryComponent implements OnInit {
 
     constructor(private es: ExchangeService, private us: UserService, private ps: PublicationService,
                 private bs: BookService, private bms: BookModelService, private as: AuthService,
-                private router: Router, private translate: TranslateService) {}
+                private router: Router, private translate: TranslateService, private route: ActivatedRoute) {}
 
     ngOnInit(): void {
         this.isLoading = true;
         this.translate.onLangChange.subscribe(() => this.loadHistoryVariablesNames());
         this.loadHistoryVariablesNames();
+
+        this.route.queryParams.subscribe((params) => {
+            if(params['selectedTab'] !== undefined) {
+                this.value = +params['selectedTab'];
+            }
+        })
         this.as.loggedUser$.subscribe((user: User | null) => {
             this.loggedUser = user;
             this.loadExchanges();
@@ -149,6 +155,8 @@ export class HistoryComponent implements OnInit {
     Title = "";
 
     isLoading = true;
+
+    value: number = 0;
 
 
     selectedCompletedCard: ExchangeData | null = null;

@@ -80,7 +80,7 @@
 .card-section-empty {
     align-content: center;
     justify-items: center;
-    height: calc(100vh - 30vh);
+    height: 60vh;
 }
 
 .card {
