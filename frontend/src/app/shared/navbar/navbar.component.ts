@@ -48,6 +48,7 @@ export class NavbarComponent {
             {
                 label: this.translate.instant('NAVBAR.LOGOUT'),
                 icon: 'pi pi-sign-out',
+                id: 'logout-item',
                 command: () => this.logout()
             }
         ];

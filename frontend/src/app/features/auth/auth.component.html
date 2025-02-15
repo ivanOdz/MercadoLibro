@@ -7,21 +7,21 @@
         <form #loginForm="ngForm" (ngSubmit)="login()">
             <div class="field">
                 <label for="username" class="block text-900 font-medium mb-2">{{ 'LOGIN.USERNAME' | translate }}</label>
-                <input id="username" type="text" pInputText [(ngModel)]="username" class="w-full" name="username" required />
+                <input data-cy="username" id="username" type="text" pInputText [(ngModel)]="username" class="w-full" name="username" required />
             </div>
 
             <div class="field">
                 <label for="password" class="block text-900 font-medium mb-2">{{ 'LOGIN.PASSWORD' | translate }}</label>
-                <p-password [fluid]="true" [feedback]="false" [toggleMask]="true" id="password" [(ngModel)]="password" name="password" required />
+                <p-password data-cy="password" [fluid]="true" [feedback]="false" [toggleMask]="true" id="password" [(ngModel)]="password" name="password" required />
             </div>
 
             <div class="flex align-items-center justify-content-between mb-4">
-                <p-checkbox id="remember" binary="true" [(ngModel)]="rememberMe" name="rememberMe"/>
+                <p-checkbox data-cy="remember-me" id="remember" binary="true" [(ngModel)]="rememberMe" name="rememberMe"/>
                 <label for="remember" class="ml-2">{{ 'LOGIN.REMEMBER_ME' | translate }}</label>
                 <a href="/auth/request-change-password" class="text-primary">{{ 'LOGIN.FORGOT_PASSWORD' | translate }}</a>
             </div>
 
-            <button pButton type="submit" [disabled]="!loginForm.valid" class="w-full">{{ 'LOGIN.BUTTON' | translate }}</button>
+            <button data-cy="submit" pButton type="submit" [disabled]="!loginForm.valid" class="w-full">{{ 'LOGIN.BUTTON' | translate }}</button>
         </form>
 
         <div class="mt-2">
