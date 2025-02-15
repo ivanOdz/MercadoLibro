@@ -5,6 +5,7 @@ import {ButtonDirective} from "primeng/button";
 import {UserService} from "../../core/services/user.service";
 import {NgIf} from "@angular/common";
 import {LanguageService} from "../../core/services/language.service";
+import {TranslatePipe, TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-forgot-password',
@@ -12,7 +13,8 @@ import {LanguageService} from "../../core/services/language.service";
     FormsModule,
     InputText,
     ButtonDirective,
-    NgIf
+    NgIf,
+    TranslatePipe
   ],
   standalone: true,
   templateUrl: './forgot-password.component.html',
@@ -25,6 +27,7 @@ export class ForgotPasswordComponent {
   showForm: boolean = true;
 
   constructor(private userService: UserService,
+              private translate: TranslateService,
               private languageService: LanguageService // DO NOT DELETE! Translation would not work otherwise
   ) {}
 
@@ -33,13 +36,12 @@ export class ForgotPasswordComponent {
       next: ()=> {
         this.showForm = false;
         this.showConfirmation = true;
-        this.message = 'Si el correo está registrado, revisa tu bandeja de entrada para el código de recuperación.';
+        this.message = this.translate.instant('AUTH.CHECK_INBOX');
       },
       error: () => {
-        this.showForm = false;
-        this.showConfirmation = true;
-        this.message = 'Si el correo está registrado, revisa tu bandeja de entrada para el código de recuperación.';
+        // IMPLEMENT: ERROR MANAGEMENT
     }
     });
   }
+
 }

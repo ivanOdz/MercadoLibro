@@ -261,6 +261,21 @@
     "GO_HOME": "Ir al Inicio",
     "REGISTER_SUCCESS": "¡Registro exitoso!",
     "REGISTER_SUCCESS_DESCRIPTION": "Te has registrado con éxito. Por favor, revisa tu correo para verificar tu cuenta.",
-    "VERIFICATION_CODE_MISSING": "El código de verificación es inválido o está faltante. Por favor, revise el link de verificación."
+    "VERIFICATION_CODE_MISSING": "El código de verificación es inválido o está faltante. Por favor, revise el link de verificación.",
+    "CHECK_YOUR_EMAIL": "¡Revisa tu correo!",
+    "RETURN_LOGIN": "Volver a la página de inicio",
+    "SEND_CODE": "Enviar código",
+    "RECOVER_PASSWORD": "Recuperar Contraseña",
+    "RECOVER_PASSWORD_DESCRIPTION": "Ingresa tu correo electrónico y te enviaremos un link para recuperar tu contraseña",
+    "CHECK_INBOX": "Si el correo está registrado, revisa tu bandeja de entrada para el código de recuperación.",
+    "INVALID_CODE": "Código inválido o faltante",
+    "REESTABLISH_PASSWORD": "Restablecer contraseña",
+    "REESTABLISH_PASSWORD_DESCRIPTION": "Ingresa el código enviado a tu correo y establece una nueva contraseña.",
+    "VERIFICATION_CODE": "Código de verificación",
+    "NEW_PASSWORD": "Nueva contraseña",
+    "CONFIRM_PASSWORD": "Confirmar contraseña",
+    "CHANGE_PASSWORD": "Cambiar contraseña",
+    "REMEMBER_PASSWORD": "¿Recuerdas tu contraseña?"
+
   }
 }

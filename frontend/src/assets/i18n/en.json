@@ -257,6 +257,20 @@
     "GO_HOME": "Go to home",
     "REGISTER_SUCCESS": "Registration successful!",
     "REGISTER_SUCCESS_DESCRIPTION": "You have successfully registered. Check your email to verify your account.",
-    "VERIFICATION_CODE_MISSING": "Verification code is invalid or missing. Please check the link in your email."
+    "VERIFICATION_CODE_MISSING": "Verification code is invalid or missing. Please check the link in your email.",
+    "CHECK_YOUR_EMAIL": "Check your email!",
+    "RETURN_LOGIN": "Return to login",
+    "SEND_CODE": "Send code",
+    "RECOVER_PASSWORD": "Recover password",
+    "RECOVER_PASSWORD_DESCRIPTION": "Enter your email to receive a password recovery link.",
+    "CHECK_INBOX": "If the email is registered, you will receive a recovery link.",
+    "INVALID_CODE": "Invalid or missing code",
+    "REESTABLISH_PASSWORD": "Reestablish password",
+    "REESTABLISH_PASSWORD_DESCRIPTION": "Enter the code you received in your email and set a new password.",
+    "VERIFICATION_CODE": "Verification code",
+    "NEW_PASSWORD": "New password",
+    "CONFIRM_PASSWORD": "Confirm password",
+    "CHANGE_PASSWORD": "Change password",
+    "REMEMBER_PASSWORD": "Did you remember your password?"
   }
 }
