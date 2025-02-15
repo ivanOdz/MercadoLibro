@@ -70,7 +70,7 @@ export class FavoritePublicationsComponent implements OnInit {
               switchMap(() => this.publicationService.getFavoritePublications({ ...this.currentFilters })),
               tap((response) => {
                 // Procesar las publicaciones y los encabezados
-                this.publications = response.body || [];
+                this.publications = response.publicationData
                 this.processHeaders(response.headers);
               })
           );

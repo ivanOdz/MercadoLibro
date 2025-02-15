@@ -12,15 +12,10 @@ import { ScrollPanelModule } from 'primeng/scrollpanel';
 import {Dialog} from "primeng/dialog";
 import {InputText} from "primeng/inputtext";
 import {ExchangeService} from "../../core/services/exchange.service";
-import {UserService} from "../../core/services/user.service";
 import {catchError, filter, of, switchMap, tap} from "rxjs";
 import {User} from "../../core/models/user.model";
 import {AuthService} from "../../core/services/auth.service";
 import {Router} from "@angular/router";
-import {PublicationService} from "../../core/services/publication.service";
-import {BookModelService} from "../../core/services/bookmodel.service";
-import {BookService} from "../../core/services/book.service";
-import {map} from "rxjs/operators";
 import {environment} from "../../../environments/environment";
 import {ProgressSpinner} from "primeng/progressspinner";
 import { ConfirmationService } from 'primeng/api';
@@ -28,6 +23,7 @@ import {BookData, ExchangeData} from "../../core/models/types";
 import { PaginatorComponent } from "../../shared/paginator/paginator.component";
 import {Pagination} from "../../core/models/pagination";
 import {TranslatePipe, TranslateService} from "@ngx-translate/core";
+import {map} from "rxjs/operators";
 
 @Component({
     selector: 'app-exchanges',
@@ -46,8 +42,7 @@ export class ExchangesComponent implements OnInit {
     activeExchanges: ExchangeData[] = [];
 
 
-    constructor(private es: ExchangeService, private us: UserService, private ps: PublicationService,
-                private bs: BookService, private bms: BookModelService, private as: AuthService,
+    constructor(private es: ExchangeService, private as: AuthService,
                 private router: Router, private changeDetectorRef: ChangeDetectorRef, private translate: TranslateService) {}
 
     ngOnInit(): void {
@@ -116,10 +111,21 @@ export class ExchangesComponent implements OnInit {
         this.isLoading = true;
         this.es.confirmExchange(card.exchange.self, card.exchange.accept_code, requester).subscribe(
             () => {
-                console.log("Intercambio confirmado:", card.exchange.self);
-                this.loadExchanges();
+                this.es.getExchange(card.exchange.self).subscribe(
+                    (exchangeData) => {
+                        console.log("Intercambio confirmado:", exchangeData.isConfirmed);
+                        if (exchangeData.requester_received && exchangeData.offerer_received) {
+                            this.router.navigate(['/exchanges/history'], { queryParams: { selectedTab: 0 } });
+                        } else {
+                            this.loadExchanges(); // stay in the same page
+                        }
+                    },
+                    (error) => console.error("Error al obtener la información del intercambio:", error)
+                );
             },
-            (error) => console.error("Error al confirmar el intercambio:", error))
+            (error) => console.error("Error al confirmar el intercambio:", error)
+        );
+
     }
 
     sendMessage() {

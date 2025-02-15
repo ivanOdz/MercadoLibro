@@ -2,9 +2,6 @@ import { Component, ViewChild } from '@angular/core';
 import { MenubarModule } from 'primeng/menubar';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { ButtonModule } from 'primeng/button';
-import { InputGroup } from 'primeng/inputgroup';
-import { InputGroupAddon } from 'primeng/inputgroupaddon';
-import { InputText } from 'primeng/inputtext';
 import { MenuItem } from 'primeng/api';
 import { LanguageSwitcherComponent } from '../language-switcher/language-switcher.component';
 import { TieredMenu } from 'primeng/tieredmenu';
@@ -23,9 +20,6 @@ import {FormsModule} from "@angular/forms";
         MenubarModule,
         TieredMenuModule,
         ButtonModule,
-        InputGroup,
-        InputGroupAddon,
-        InputText,
         LanguageSwitcherComponent,
         RouterLink,
         TranslatePipe,

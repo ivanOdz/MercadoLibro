@@ -16,6 +16,10 @@ export class ExchangeService {
     constructor(private http: HttpClient, private ps: PublicationService, private us: UserService, private bs: BookService,
                 private bms: BookModelService) { }
 
+    getExchange(exchangeUrl: string | undefined): Observable<Exchange> {
+        const headers = new HttpHeaders({ 'Accept': 'application/vnd.exchanges.v1+json' });
+        return this.http.get<any>(`${exchangeUrl}`, { headers });
+    }
 
     getMessages(messagesUrl: string): Observable<Message[]> {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.message.v1+json' });

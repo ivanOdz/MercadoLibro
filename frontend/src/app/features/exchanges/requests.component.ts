@@ -13,7 +13,7 @@ import {PublicationService} from "../../core/services/publication.service";
 import {BookService} from "../../core/services/book.service";
 import {BookModelService} from "../../core/services/bookmodel.service";
 import {AuthService} from "../../core/services/auth.service";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {filter, forkJoin, of, switchMap} from "rxjs";
 import {ProgressSpinner} from "primeng/progressspinner";
 import {Dialog} from "primeng/dialog";
@@ -57,12 +57,19 @@ export class RequestsComponent  implements OnInit {
 
     constructor(private es: ExchangeService, private us: UserService, private ps: PublicationService,
                 private bs: BookService, private bms: BookModelService, private as: AuthService,
-                private router: Router, private translate: TranslateService) {}
+                private router: Router, private translate: TranslateService,private route: ActivatedRoute) {}
 
     ngOnInit(): void {
         this.isLoading = true;
         this.translate.onLangChange.subscribe(() => this.loadRequestVariablesNames());
         this.loadRequestVariablesNames();
+
+        this.route.queryParams.subscribe((params) => {
+            if(params['selectedTab'] !== undefined){
+                this.value = +params['selectedTab'];
+            }
+        })
+
         this.as.loggedUser$.subscribe((user: User | null) => {
             this.loggedUser = user;
             this.loadExchanges();
@@ -137,8 +144,7 @@ export class RequestsComponent  implements OnInit {
         this.isLoading = true;
         this.es.acceptExchange(this.exchangeData.exchange.self, this.exchangeData.exchange.accept_code, null).subscribe(
             () => {
-                console.log("Intercambio aceptado:", this.exchangeData?.exchange.self);
-                this.loadExchanges();
+                this.router.navigate(['/exchanges']);
             },
             (error) => console.error("Error al aceptar el intercambio:", error))
     }
@@ -155,8 +161,7 @@ export class RequestsComponent  implements OnInit {
         this.isLoading = true;
         this.es.rejectExchange(this.exchangeData.exchange.self, this.exchangeData.exchange.accept_code, null).subscribe(
             () => {
-                console.log("Intercambio rechazado:", this.exchangeData?.exchange.self);
-                this.loadExchanges();
+                this.router.navigate(['/exchanges/history'], { queryParams: { selectedTab: 1 } });
             },
             (error) => console.error("Error al rechazar el intercambio:", error))
     }
@@ -166,6 +171,7 @@ export class RequestsComponent  implements OnInit {
 
     Title = "";
 
+    value: number = 0;
 
     selectedOffersCard: ExchangeData | null = null;
     selectedRequestsCard: ExchangeData | null = null;

@@ -3,6 +3,32 @@ import {Message} from "./message.model";
 import {Location} from "./location.model";
 import {User} from "./user.model";
 import {BookModel} from "./bookModel.model";
+import {Observable} from "rxjs";
+import {Pagination} from "./pagination";
+import {Publication} from "./publication.model";
+
+export type ObservablePublicationData =
+    Observable<{
+        publicationData: PublicationData[],
+        pagination: Pagination,
+        headers: {
+            conditionHeaders: Record<string, string>,
+            genreHeaders: Record<string, string>
+        }
+    }>
+
+
+
+export type ObservablePublication =
+    Observable<{
+        publications: Publication[],
+        pagination: Pagination,
+        headers: {
+            conditionHeaders: Record<string, string>,
+            genreHeaders: Record<string, string>
+        }
+    }>
+
 
 
 export type ExchangeData = {

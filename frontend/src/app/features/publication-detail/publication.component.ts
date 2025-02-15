@@ -253,7 +253,7 @@ export class PublicationComponent implements OnInit {
 
         this.es.createExchange(exchangesUrn, this.userBooks[this.selectedBookIndex].self, this.selectedLocation.self, this.publication?.self).subscribe({
             next: () => {
-                this.router.navigate(['/exchanges/requests']);
+                this.router.navigate(['/exchanges/requests'], { queryParams: { selectedTab: 1 } });
             }
         });
     }
