@@ -451,6 +451,7 @@
     grid-template-columns: 25% 70%;
     gap: 5%;
     height: 100%;
+    width: 30vw;
 }
 
 .book-yours-card {
@@ -458,6 +459,7 @@
     grid-template-columns: 25% 70%;
     gap: 5%;
     height: 100%;
+    width: 30vw;
 }
 .book-theirs-card-w-tabs   {
     display: grid;

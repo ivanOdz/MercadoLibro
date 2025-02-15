@@ -45,10 +45,10 @@
 }
 
 .book-image {
-    height: 46vh;
-    width: 18vw;
-    background-color: darkgray;
-    border-radius: 0.75rem;
+    height: 34vh;
+    width: 14vw;
+    background-color: #a9a9a9;
+    border-radius: .75rem
 }
 
 .book-authors {
@@ -71,6 +71,7 @@
     grid-column: 3;
     align-content: center;
     text-align: center;
+    height: 90%;
 }
 
 :host ::ng-deep .i-want-it-button {
@@ -107,6 +108,13 @@
     background: #aca28c;
 }
 
+:host ::ng-deep .p-carousel-content-container {
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    width: 20vw;
+}
+
 .return-button {
     width: 17%;
     flex-direction: row;
@@ -115,6 +123,7 @@
     padding: 1rem;
     gap: 9%;
     cursor: pointer;
+    font-size: small;
 }
 
 .return-to-publication {
