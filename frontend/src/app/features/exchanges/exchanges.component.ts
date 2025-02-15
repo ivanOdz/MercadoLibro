@@ -86,7 +86,7 @@ export class ExchangesComponent implements OnInit {
         ).subscribe(
             (activeExchanges) => {
                 this.activeExchanges = activeExchanges;
-                // this.isLoading = false;
+                this.isLoading = false;
                 console.log("Intercambios cargados:", this.activeExchanges);
             },
             (error) => {
