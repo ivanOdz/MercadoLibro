@@ -50,8 +50,8 @@
 		</div>
 
         <p-scrollpanel [style]="{ width:'65vw', height: '68vh'}">
-        
-			<div class="items-grid">
+
+			<div class="cards" [ngClass]="{ 'cards-grid': displayGridStyle === true }">
 				<ng-container *ngFor="let item of items">
 					<ng-container *ngIf="cardTemplate">
 						<ng-container *ngTemplateOutlet="cardTemplate; context: { $implicit: item }"></ng-container>

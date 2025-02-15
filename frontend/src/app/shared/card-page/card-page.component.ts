@@ -29,10 +29,12 @@ import {ObservablePublicationData} from "../../core/models/types";
 export class CardPageComponent implements OnInit {
 	
 	@Input() pageTitle!: string;
-	@Input() items: any[] = []; 
 	@Input() fetchMethod!: (state: string, genre: string, search: string, page: number) => ObservablePublicationData;
 	@Input() showSearchBar!: boolean;
 	@Input() displaySort!: boolean;
+	@Input() displayGridStyle: boolean = false;
+	
+	@Input() items: any[] = []; 
 	@Input() cardTemplate!: TemplateRef<any>;
 	
 	@ViewChild('searchInput') searchInput!: ElementRef;

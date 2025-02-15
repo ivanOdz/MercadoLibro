@@ -1,15 +1,16 @@
-import { Component,TemplateRef, ViewChild } from '@angular/core';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { filter, Subscription } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { CardPageComponent } from '../../shared/card-page/card-page.component';
+import { PublicationCardComponent } from '../../shared/publication-card/publication.card';
 import { PublicationService } from "../../core/services/publication.service";
 import { AuthService } from "../../core/services/auth.service";
-import { ObservablePublicationData, PublicationData} from "../../core/models/types";
+import { ObservablePublicationData, PublicationData } from "../../core/models/types";
 
 @Component({
   selector: 'app-my-publications',
   standalone: true,
-  imports: [CardPageComponent],
+  imports: [CardPageComponent, PublicationCardComponent],
   templateUrl: './my-publications.component.html',
   styleUrls: ['./my-publications.component.css']
 })
@@ -19,7 +20,6 @@ export class MyPublicationsComponent {
   private subscription!: Subscription;
   publications: PublicationData[] = [];  // Asegúrate de declarar un array para las publicaciones
   headersData: any;
-    
   
   @ViewChild('publicationCard') publicationCard!: TemplateRef<any>;
 
