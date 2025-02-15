@@ -21,7 +21,7 @@ export class Pagination {
 					    this.last = url || undefined;
 					    const pageMatch = url.match(/[?&]page=(\d+)/);
 					    if (pageMatch) {
-					        this.pages = parseInt(pageMatch[1], 10) + 1;
+					        this.pages = parseInt(pageMatch[1], 10);
 					    }
 					}
                 }

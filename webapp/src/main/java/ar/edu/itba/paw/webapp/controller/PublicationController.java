@@ -68,6 +68,8 @@ public class PublicationController {
 
         UriBuilder uri = PageResponseUtil.getUriBuilderPublications(uriInfo.getAbsolutePathBuilder(), search, sortType, state, genre, userId, locationId, favorites);
 
+        response.header("X-Total-Count", publications.getMetadata().getTotalResults());
+        
         return PageResponseUtil.getResponse(currentPage, publications.getMetadata().getMaxPage(), uri, response);
     }
 

@@ -14,7 +14,8 @@ export type ObservablePublicationData =
         headers: {
             conditionHeaders: Record<string, string>,
             genreHeaders: Record<string, string>
-        }
+        },
+		totalResults: number
     }>
 
 
@@ -26,7 +27,8 @@ export type ObservablePublication =
         headers: {
             conditionHeaders: Record<string, string>,
             genreHeaders: Record<string, string>
-        }
+		},
+		totalResults: number
     }>
 
 
