@@ -17,6 +17,7 @@ import {MyPublicationsComponent} from "./features/my-publications/my-publication
 import {FavoritePublicationsComponent} from "./features/favorite-publications/favorite-publications.component";
 import {PublicationComponent} from "./features/publication-detail/publication.component";
 import {BookModelComponent} from "./features/book-model/book-model.component";
+import {RegisterComponentSuccess} from "./features/register/register-success.component";
 
 export const routes: Routes = [
   {path: '', redirectTo: 'publications', pathMatch: 'full'},
@@ -57,6 +58,11 @@ export const routes: Routes = [
     path: 'auth/register',
     component: RegisterComponent,
     title: 'Register'
+  },
+  {
+    path: 'auth/register/success',
+    component: RegisterComponentSuccess,
+    title: 'Success'
   },
   {
     path: 'auth/verify',

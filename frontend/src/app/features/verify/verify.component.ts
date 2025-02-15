@@ -8,18 +8,20 @@ import {Message} from "primeng/message";
 import {PrimeTemplate} from "primeng/api";
 import {NgIf} from "@angular/common";
 import {LanguageService} from "../../core/services/language.service";
+import {TranslatePipe, TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-verify',
   standalone: true,
-    imports: [
-        ProgressSpinner,
-        Card,
-        Button,
-        Message,
-        PrimeTemplate,
-        NgIf
-    ],
+  imports: [
+    ProgressSpinner,
+    Card,
+    Button,
+    Message,
+    PrimeTemplate,
+    NgIf,
+    TranslatePipe
+  ],
   templateUrl: './verify.component.html',
   styleUrl: './verify.component.css'
 })
@@ -35,7 +37,8 @@ export class VerifyComponent implements OnInit {
       private route: ActivatedRoute,
       private userService: UserService,
       private router: Router,
-      private languageService: LanguageService // DO NOT DELETE! Translation would not work otherwise
+      private translate: TranslateService,
+      private languageService: LanguageService
   ) {}
 
   ngOnInit(): void {
@@ -44,7 +47,7 @@ export class VerifyComponent implements OnInit {
       if (this.verificationCode) {
         this.verifyUser(this.verificationCode);
       } else {
-        this.errorMessage = 'El código de verificación es inválido o no está presente.';
+        this.errorMessage = this.translate.instant('AUTH.VERIFICATION_CODE_MISSING');
       }
     });
   }
@@ -52,19 +55,19 @@ export class VerifyComponent implements OnInit {
   verifyUser(verificationCode: number): void {
     this.isVerifying = true;
     this.userService.verifyUser(verificationCode).subscribe({
-      next: (response) => {
+      next: () => {
         this.isVerifying = false;
         this.verificationSuccess = true;
       },
-      error: (error) => {
+      error: () => {
         this.isVerifying = false;
         this.verificationFailed = true;
-        this.errorMessage = 'El código de verificación no es válido. Por favor, inténtelo nuevamente.';
+        this.errorMessage = this.translate.instant('AUTH.VERIFICATION_CODE_MISSING');
       }
     });
   }
 
   goToHome(): void {
-    this.router.navigate(['/']);
+    this.router.navigate(['/publications']);
   }
 }

@@ -4,29 +4,29 @@
 
 <!-- Mensaje de éxito -->
 @if (verificationSuccess) {
-    <p-card class="flex align-items-center justify-content-center w-full h-full success-card">
-        <ng-template pTemplate="title">
+    <p-card data-cy="title-success" class="flex align-items-center justify-content-center w-full h-full success-card">
+        <ng-template  pTemplate="title">
             <i class="pi pi-check-circle text-green-500 text-3xl"></i>
-            ¡Verificación exitosa!
+            {{ 'AUTH.VERIFICATION_SUCCESS' | translate }}
         </ng-template>
         <ng-template pTemplate="content">
-            <p>Tu cuenta ha sido verificada con éxito. Ahora puedes acceder a todas las funcionalidades.</p>
-            <p-button label="Ir al Inicio" icon="pi pi-home" (click)="goToHome()" class="flex justify-content-center w-full"></p-button>
+            <p>{{ 'AUTH.VERIFICATION_SUCCESS_DESCRIPTION' | translate }}</p>
+            <p-button data-cy="button-home" label="{{ 'AUTH.GO_HOME' | translate }}" icon="pi pi-home" (click)="goToHome()" class="flex justify-content-center w-full"></p-button>
         </ng-template>
     </p-card>
 }
 
 <!-- Mensaje de error -->
 @if (verificationFailed) {
-    <p-card class="flex align-items-center justify-content-center w-full h-full error-card">
-        <ng-template pTemplate="title">
+    <p-card data-cy="title-error" class="flex align-items-center justify-content-center w-full h-full error-card">
+        <ng-template  pTemplate="title">
             <i class="pi pi-times-circle text-red-500 text-3xl"></i>
-            Error en la verificación
+            {{ 'AUTH.VERIFICATION_ERROR' |translate }}
         </ng-template>
         <ng-template pTemplate="content">
             <p-message severity="error" [text]="errorMessage"></p-message>
-            <p>Por favor, chequee que el token de verificacion sea correcto</p>
-            <p-button label="Ir al Inicio" icon="pi pi-home" (click)="goToHome()" class="flex justify-content-center w-full"></p-button>
+            <p>{{ 'AUTH.VERIFICATION_ERROR_DESCRIPTION' |translate }}</p>
+            <p-button label="{{ 'AUTH.GO_HOME' |translate }}" icon="pi pi-home" (click)="goToHome()" class="flex justify-content-center w-full"></p-button>
         </ng-template>
     </p-card>
 }

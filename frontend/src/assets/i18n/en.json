@@ -241,5 +241,22 @@
     "NO_BOOK": "Didn't find your book?",
     "ADD_BOOK": "Add here!"
   },
-  "MY_PUBLICATIONS": "My publications"
+  "MY_PUBLICATIONS": "My publications",
+  "AUTH": {
+    "REPEAT_PASSWORD": "Repeat password",
+    "REGISTER": "Register",
+    "HAVE_ACCOUNT?": "Already have an account?",
+    "LOGIN": "Login",
+    "EMAIL": "Email",
+    "USERNAME": "Username",
+    "PASSWORD": "Password",
+    "VERIFICATION_SUCCESS": "Verification successful!",
+    "VERIFICATION_SUCCESS_DESCRIPTION": "Your account has been verified. You can now login.",
+    "VERIFICATION_ERROR_DESCRIPTION": "There was an error verifying your account. Please check the verification link.",
+    "VERIFICATION_ERROR": "Verification error",
+    "GO_HOME": "Go to home",
+    "REGISTER_SUCCESS": "Registration successful!",
+    "REGISTER_SUCCESS_DESCRIPTION": "You have successfully registered. Check your email to verify your account.",
+    "VERIFICATION_CODE_MISSING": "Verification code is invalid or missing. Please check the link in your email."
+  }
 }

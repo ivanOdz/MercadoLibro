@@ -245,5 +245,22 @@
     "NO_BOOK": "¿No encuentras tu libro?",
     "ADD_BOOK": "¡Agregalo aquí!"
   },
-  "MY_PUBLICATIONS": "Mis publicaciones"
+  "MY_PUBLICATIONS": "Mis publicaciones",
+  "AUTH": {
+    "REPEAT_PASSWORD": "Repetir contraseña",
+    "REGISTER": "Registrarse",
+    "HAVE_ACCOUNT?": "Ya tienes una cuenta?",
+    "LOGIN": "Iniciar sesión",
+    "EMAIL": "Correo electrónico",
+    "USERNAME": "Nombre de usuario",
+    "PASSWORD": "Contraseña",
+    "VERIFICATION_SUCCESS": "¡Verificación exitosa!",
+    "VERIFICATION_SUCCESS_DESCRIPTION": "Tu cuenta ha sido verificada con éxito. Ahora puedes acceder a todas las funcionalidades.",
+    "VERIFICATION_ERROR_DESCRIPTION": "Por favor, chequee que el token de verificación sea correcto",
+    "VERIFICATION_ERROR": "Error en la verificación",
+    "GO_HOME": "Ir al Inicio",
+    "REGISTER_SUCCESS": "¡Registro exitoso!",
+    "REGISTER_SUCCESS_DESCRIPTION": "Te has registrado con éxito. Por favor, revisa tu correo para verificar tu cuenta.",
+    "VERIFICATION_CODE_MISSING": "El código de verificación es inválido o está faltante. Por favor, revise el link de verificación."
+  }
 }
