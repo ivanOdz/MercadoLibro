@@ -9,12 +9,12 @@ public class CacheResponseUtil {
 
     public static final int MAX_AGE = 31536000; // 1 year
 
-    public static Response.ResponseBuilder conditionalCacheResponse(Request request, EntityTag entityTag) {
+    public static Response.ResponseBuilder conditionalCacheResponse(Request request, EntityTag entityTag, Object entity) {
         CacheControl cc = new CacheControl();
         cc.setMustRevalidate(true);
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
         if (builder == null) {
-            builder = Response.ok().tag(entityTag);
+            builder = Response.ok(entity).tag(entityTag);
         }
         return builder.cacheControl(cc);
     }

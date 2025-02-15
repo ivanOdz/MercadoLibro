@@ -42,11 +42,12 @@ public class BookModelController {
 
         List<GenreWrapper> genresSummary = bookModelService.getGenreWrapperList(search);
 
-        Map<String, String> genreHeaders = SerializationUtils.serializeGenreWrapper(genresSummary);
-        genreHeaders.forEach(response::header);
-
         UriBuilder uri = PageResponseUtil.getUriBuilderBookModels(uriInfo.getAbsolutePathBuilder(), search, genre, sortType);
-        Response.ResponseBuilder cachedResponse = CacheResponseUtil.conditionalCacheResponse(request, new EntityTag(Integer.toString(modelBooks.getData().hashCode())));
+
+        Response.ResponseBuilder cachedResponse = CacheResponseUtil.conditionalCacheResponse(request, new EntityTag(Integer.toString(modelBooks.getData().hashCode())), new GenericEntity<List<BookModelDTO>>(bookModels) {});
+
+        Map<String, String> genreHeaders = SerializationUtils.serializeGenreWrapper(genresSummary);
+        genreHeaders.forEach(cachedResponse::header);
 
         return PageResponseUtil.getResponse(currentPage, modelBooks.getMetadata().getMaxPage(), uri, cachedResponse);
     }
