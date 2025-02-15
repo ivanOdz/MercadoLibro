@@ -1,7 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {SidebarComponent} from "./components/sidebar.component";
 import {NavbarComponent} from "../../shared/navbar/navbar.component";
-import {NgForOf, NgIf} from "@angular/common";
+import {NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
 import {Tab, TabList, TabPanel, TabPanels, Tabs} from "primeng/tabs";
 import {Rating} from "primeng/rating";
 import {FormsModule} from "@angular/forms";
@@ -23,6 +23,7 @@ import { PaginatorComponent } from "../../shared/paginator/paginator.component";
 import {Pagination} from "../../core/models/pagination";
 import {TranslatePipe, TranslateService} from "@ngx-translate/core";
 import {ScrollPanelModule} from "primeng/scrollpanel";
+import {environment} from "../../../environments/environment";
 
 @Component({
     selector: 'exchanges-history',
@@ -47,7 +48,8 @@ import {ScrollPanelModule} from "primeng/scrollpanel";
         NgIf,
         PaginatorComponent,
         TranslatePipe,
-        ScrollPanelModule
+        ScrollPanelModule,
+        NgOptimizedImage
     ]
 })
 export class HistoryComponent implements OnInit {
@@ -186,10 +188,6 @@ export class HistoryComponent implements OnInit {
         return this.loggedUser?.username == selectedCard?.requestedPub.book?.owner?.username;
     }
 
-    getBookImage(book: BookData | null) {
-        return book?.bookModel?.cover || 'assets/book.jpg';
-    }
-
     reviewText: string = '';
     reviewValue: number = 0;
 
@@ -204,6 +202,20 @@ export class HistoryComponent implements OnInit {
 
     loadHistoryVariablesNames() {
         this.Title = this.translate.instant('EXCHANGES.HISTORY_TITLE');
+    }
+
+    getBookImages(bookImages: string[] | null = null): string[] {
+        return bookImages || [this.getDefaultImage()];
+    }
+
+    getDefaultImage() {
+        return `${environment.production? 'http://pawserver.it.itba.edu.ar/paw-2024b-09'  : 'http://localhost:8080'}/assets/book.jpg`;
+    }
+
+    getCover(book: BookData | null = null) {
+        console.log("publication imge: ", book?.bookModel?.cover);
+        return book?.bookModel?.cover ||
+            this.getBookImages(book?.images)[0] || this.getDefaultImage();
     }
 
 

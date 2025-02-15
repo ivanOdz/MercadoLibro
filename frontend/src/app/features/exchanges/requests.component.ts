@@ -22,6 +22,7 @@ import {Pagination} from "../../core/models/pagination";
 import {PaginatorComponent} from "../../shared/paginator/paginator.component";
 import {TranslatePipe, TranslateService} from "@ngx-translate/core";
 import {ScrollPanelModule} from "primeng/scrollpanel";
+import {environment} from "../../../environments/environment";
 
 @Component({
     selector: 'exchanges-requests',
@@ -202,12 +203,23 @@ export class RequestsComponent  implements OnInit {
         return this.loggedUser?.username == selectedCard?.requestedPub.book?.owner?.username;
     }
 
-    getBookImage(book: BookData | null) {
-        return book?.bookModel?.cover || 'assets/book.jpg';
-    }
 
     loadRequestVariablesNames() {
         this.Title = this.translate.instant('EXCHANGES.REQUESTS_TITLE');
+    }
+
+    getImages(bookImages: string[] | null = null): string[] {
+        return bookImages || [this.getDefaultImage()];
+    }
+
+    getDefaultImage() {
+        return `${environment.production? 'http://pawserver.it.itba.edu.ar/paw-2024b-09'  : 'http://localhost:8080'}/assets/book.jpg`;
+    }
+
+    getCover(book: BookData | null = null) {
+        console.log("publication imge: ", book?.bookModel?.cover);
+        return book?.bookModel?.cover ||
+            this.getImages(book?.images)[0] || this.getDefaultImage();
     }
 
 

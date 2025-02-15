@@ -1,6 +1,6 @@
 .publication-card-container {
 	width: 55vw;
-	max-height: 35vh;
+	max-height: 30vh;
 	background: #fff;
 	box-shadow: 4px 6px 6px #0000001a;
 	border-radius: 2rem;
@@ -36,13 +36,13 @@
 }
 
 .description-text-card {
-	font-size: medium;
+	font-size: small;
 	max-height: 4rem;
 	overflow-y: clip;
 }
 
 .title-text-card {
-	font-size: x-large;
+	font-size: large;
 }
 
 .authors-text-card {
@@ -50,8 +50,8 @@
 }
 
 .book-image {
-	width: 10vw;
-	height: 30vh;
+	width: 9vw;
+	height: 25vh;
 	border-radius: 1rem;
 	align-self: center;
 }

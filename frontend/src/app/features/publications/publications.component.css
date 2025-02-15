@@ -4,7 +4,7 @@
 	grid-template-columns: 0.75fr 2fr;
 	gap: 20px;
 	padding: 5vh;
-	height: 91vh;
+	height: 89vh;
 }
 
 .column-filters {
@@ -103,12 +103,11 @@
 
 .publications-grid {
 	display: grid;
-	align-self: center;
 	grid-template-columns: 1fr;
 	gap: 16px;
 	width: 100%;
 	margin: auto;
-	justify-items: start;
+	justify-items: center;
 	padding: 2rem;
 }
 

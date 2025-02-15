@@ -129,7 +129,7 @@
     gap: .5rem;
 }
 
-.emtpy-content-panel {
+.empty-content-panel {
     display: grid;
     text-align: center;
     color: #000;
@@ -139,7 +139,7 @@
     align-items: center;
     justify-content: center;
     width: 50vh;
-    height: 70vh;
+    height: 65vh;
 }
 
 .main-section {
@@ -451,6 +451,7 @@
     grid-template-columns: 25% 70%;
     gap: 5%;
     height: 100%;
+    width: 30vw;
 }
 
 .book-yours-card {
@@ -458,6 +459,7 @@
     grid-template-columns: 25% 70%;
     gap: 5%;
     height: 100%;
+    width: 30vw;
 }
 .book-theirs-card-w-tabs   {
     display: grid;

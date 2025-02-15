@@ -25,7 +25,7 @@
                                 >
                                     <div class="active-card-first-column">
                                         <div class="active-card-first-column-book-first">
-                                            <img [src]="!isRequester(card) ? getBookImage(card.offeredPub.book) : getBookImage(card.requestedPub.book)"
+                                            <img [src]="!isRequester(card) ? getCover(card.offeredPub.book) : getCover(card.requestedPub.book)"
                                                  alt="Book Image"
                                                  class="book-image"/>
                                             <p style="margin-bottom: 0">
@@ -34,7 +34,7 @@
                                         </div>
                                         <i class="pi pi-arrow-right-arrow-left icon-card-active"></i>
                                         <div class="active-card-first-column-book-second">
-                                            <img [src]="!isRequester(card) ? getBookImage(card.requestedPub.book) : getBookImage(card.offeredPub.book)" alt="Book Image" class="book-image"/>
+                                            <img [src]="!isRequester(card) ? getCover(card.requestedPub.book) : getCover(card.offeredPub.book)" alt="Book Image" class="book-image"/>
                                             <p style="margin-bottom: 0">
                                                 {{ !isRequester(card) ? card.requestedPub.book?.bookModel?.title : card.offeredPub.book?.bookModel?.title }}
                                             </p>
@@ -49,7 +49,7 @@
                             </p-scrollpanel>
                         </div>
                         <div class="content-panel-w-tabs" style="align-content: center;text-align: center" *ngIf="isLoading">
-                            <div class="emtpy-content-panel">
+                            <div class="empty-content-panel">
                                 <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
                             </div>
                         </div>
@@ -69,7 +69,7 @@
                             <p class="static-section-headers-tabs">{{ 'EXCHANGES.THEIR_BOOK' | translate }}</p>
                             <div class="static-card book-theirs-card-w-tabs " id="book-theirs-card-offers">
                                 <div style="grid-column: 1;justify-items: center;max-height: 18vh;">
-                                    <img [src]="isRequester(selectedOffersCard)? getBookImage(selectedOffersCard.offeredPub.book) : getBookImage(selectedOffersCard.requestedPub.book)"
+                                    <img [src]="isRequester(selectedOffersCard)? getCover(selectedOffersCard.offeredPub.book) : getCover(selectedOffersCard.requestedPub.book)"
                                          alt="Book Image"
                                          class="book-image-static"/>
                                 </div>
@@ -87,7 +87,7 @@
                             <p class="static-section-headers-tabs">{{ 'EXCHANGES.FOR_YOUR_SUBHEADER' | translate }}</p>
                             <div class="static-card book-yours-card-w-tabs " id="book-yours-card-offers">
                                 <div style="grid-column: 1;justify-items: center;max-height: 18vh;">
-                                    <img [src]="!isRequester(selectedOffersCard)? getBookImage(selectedOffersCard.offeredPub.book) : getBookImage(selectedOffersCard.requestedPub.book)"
+                                    <img [src]="!isRequester(selectedOffersCard)? getCover(selectedOffersCard.offeredPub.book) : getCover(selectedOffersCard.requestedPub.book)"
                                          alt="Book Image"
                                          class="book-image-static"/>
                                 </div>
@@ -104,7 +104,7 @@
                             </div>
                         </div>
                         <div *ngIf="!selectedOffersCard && !isLoading">
-                            <div class="emtpy-content-panel">
+                            <div class="empty-content-panel">
                                 <p class="text-empty">{{ 'EXCHANGES.SELECT_CARD' | translate }}</p>
                             </div>
                         </div>
@@ -129,7 +129,7 @@
                                 >
                                     <div class="active-card-first-column">
                                         <div class="active-card-first-column-book-first">
-                                            <img [src]="!isRequester(card)? getBookImage(card.offeredPub.book) : getBookImage(card.requestedPub.book)"
+                                            <img [src]="!isRequester(card)? getCover(card.offeredPub.book) : getCover(card.requestedPub.book)"
                                                  alt="Book Image"
                                                  class="book-image"/>
                                             <p style="margin-bottom: 0">
@@ -138,7 +138,7 @@
                                         </div>
                                         <i class="pi pi-arrow-right-arrow-left icon-card-active"></i>
                                         <div class="active-card-first-column-book-second">
-                                            <img [src]="!isRequester(card) ? getBookImage(card.requestedPub.book) : getBookImage(card.offeredPub.book)" alt="Book Image" class="book-image"/>
+                                            <img [src]="!isRequester(card) ? getCover(card.requestedPub.book) : getCover(card.offeredPub.book)" alt="Book Image" class="book-image"/>
                                             <p style="margin-bottom: 0">
                                                 {{ !isRequester(card) ? card.requestedPub.book?.bookModel?.title : card.offeredPub.book?.bookModel?.title }}
                                             </p>
@@ -152,7 +152,7 @@
                             </p-scrollpanel>
                         </div>
                         <div class="content-panel-w-tabs" style="align-content: center;text-align: center" *ngIf="isLoading">
-                            <div class="emtpy-content-panel">
+                            <div class="empty-content-panel">
                                 <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
                             </div>
                         </div>
@@ -172,7 +172,7 @@
                             <p class="static-section-headers-tabs">{{ 'EXCHANGES.THEIR_BOOK' | translate }}</p>
                             <div class="static-card book-theirs-card-w-tabs " id="book-theirs-card-requests">
                                 <div style="grid-column: 1;justify-items: center;max-height: 18vh;">
-                                    <img [src]="isRequester(selectedRequestsCard)? getBookImage(selectedRequestsCard.offeredPub.book) : getBookImage(selectedRequestsCard.requestedPub.book)"
+                                    <img [src]="isRequester(selectedRequestsCard)? getCover(selectedRequestsCard.offeredPub.book) : getCover(selectedRequestsCard.requestedPub.book)"
                                          alt="Book Image"
                                          class="book-image-static"/>
                                 </div>
@@ -190,7 +190,7 @@
                             <p class="static-section-headers-tabs">{{ 'EXCHANGES.FOR_YOUR_SUBHEADER' | translate }}</p>
                             <div class="static-card book-yours-card-w-tabs " id="book-yours-card-requests">
                                 <div style="grid-column: 1;justify-items: center;max-height: 18vh;">
-                                    <img [src]="!isRequester(selectedRequestsCard)? getBookImage(selectedRequestsCard.offeredPub.book) : getBookImage(selectedRequestsCard.requestedPub.book)"
+                                    <img [src]="!isRequester(selectedRequestsCard)? getCover(selectedRequestsCard.offeredPub.book) : getCover(selectedRequestsCard.requestedPub.book)"
                                          alt="Book Image"
                                          class="book-image-static"/>
                                 </div>
@@ -207,7 +207,7 @@
                             </div>
                         </div>
                         <div *ngIf="!selectedRequestsCard && !isLoading">
-                            <div class="emtpy-content-panel">
+                            <div class="empty-content-panel">
                                 <p class="text-empty">{{ 'EXCHANGES.SELECT_CARD' | translate }}</p>
                             </div>
                         </div>
