@@ -66,24 +66,7 @@ export class PublicationsComponent implements OnInit, OnDestroy {
 		this.subscription.unsubscribe();
 	}
 	
-	private processHeaders(headers: any) {
-		const newConditionHeaders: Record<string, string> = {};
-		const newGenreHeaders: Record<string, string> = {};
 
-		headers.keys().forEach((key: string) => {
-			const value = headers.get(key);
-			if (value !== null) {
-				if (key.startsWith("x-bookstate-")) {
-					newConditionHeaders[key] = value;
-				} else if (key.startsWith("x-genre-")) {
-					newGenreHeaders[key] = value;
-				}
-			}
-		});
-
-		this.conditionHeaders = { ...newConditionHeaders };
-		this.genreHeaders = { ...newGenreHeaders };
-	}
 	
 	search() {
 		if (this.currentFilters.search) {
@@ -134,9 +117,10 @@ export class PublicationsComponent implements OnInit, OnDestroy {
 			}),
 	        switchMap(() => this.publicationService.getGeneralPublications(this.currentFilters)),
 	        tap((response) => {
-				this.publications = response.body || [];
-				this.processHeaders(response.headers);
-				//this.pagination = response.pagination;
+				this.publications = response.publicationData || [];
+				this.conditionHeaders = response.headers.conditionHeaders
+				this.genreHeaders = response.headers.genreHeaders
+				this.pagination = response.pagination;
 			}),
 			switchMap(() =>
 				this.authService.loggedUser$.pipe(

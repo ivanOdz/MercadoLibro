@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {catchError, forkJoin, Observable, of, switchMap, tap, throwError} from "rxjs";
 import {Publication} from "../models/publication.model";
 import {FavoritePublication, PublicationData} from "../models/types";
@@ -10,6 +10,7 @@ import {BookModelService} from "./bookmodel.service";
 import {AuthService} from "./auth.service";
 import {environment} from "../../../environments/environment";
 import {Location} from "../models/location.model";
+import {Pagination} from "../models/pagination";
 
 @Injectable({ providedIn: 'root' })
 export class PublicationService {
@@ -17,7 +18,7 @@ export class PublicationService {
 
     constructor(private http: HttpClient, private authService: AuthService, private bookService: BookService, private userService: UserService, private bookModelService: BookModelService) {}
 
-    private getPublications({ state, genre, page, search, favorites, user }: { state: string; genre: string; page: number; search: string; favorites: boolean; user: string | null}): Observable<HttpResponse<Publication[]>> {
+    private getPublications({ state, genre, page, search, favorites, user }: { state: string; genre: string; page: number; search: string; favorites: boolean; user: string | null}): Observable<{ publications: Publication[], pagination: Pagination, headers: {conditionHeaders: Record<string, string>, genreHeaders: Record<string, string>} }> {
         let queryParams = '';
 
         if (search) {
@@ -54,11 +55,19 @@ export class PublicationService {
         return this.getPublicationsByUrl(url);
     }
 
-    private getPublicationsByUrl(url: string): Observable<HttpResponse<Publication[]>> {
+    private getPublicationsByUrl(url: string): Observable<{ publications: Publication[], pagination: Pagination, headers: {conditionHeaders: Record<string, string>, genreHeaders: Record<string, string>} }> {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.publications.v1+json' });
 
-        return this.http.get<Publication[]>(url, { headers, observe: 'response' }).pipe(
-            //tap((response) => console.log("Respuesta completa de la API:", response))
+        return this.http.get<any>(url, { headers, observe: 'response' }).pipe(
+            map(response => {
+                const linkHeader = response.headers.get('link');
+                let pagination = new Pagination(linkHeader);
+                const publications: Publication[] = response.body.map((publication: any) => new Publication(publication));
+                return { publications: publications, pagination: pagination, headers: this.processHeaders(response.headers) };
+            }),
+            catchError(error => {
+                return of({ publications: [], pagination: new Pagination(null), headers: { conditionHeaders: {}, genreHeaders: {} } });
+            })
         );
     }
 
@@ -89,24 +98,26 @@ export class PublicationService {
         );
     }
 
-    getGeneralPublications({state, genre, page, search}: {state: string; genre: string; page: number; search: string;}): Observable<HttpResponse<PublicationData[]>> {
+    getGeneralPublications({state, genre, page, search}: {state: string; genre: string; page: number; search: string;}): Observable<{ publicationData: PublicationData[], pagination: Pagination, headers: {conditionHeaders: Record<string, string>, genreHeaders: Record<string, string>} }> {
         return this.getPublicationsWithDetails({state, genre, page, search, favorites: false, user: null});
     }
 
-    getMyPublications({state, genre, page, search, user}: {state: string; genre: string; page: number; search: string; user: string}): Observable<HttpResponse<PublicationData[]>> {
+    getMyPublications({state, genre, page, search, user}: {state: string; genre: string; page: number; search: string; user: string}):
+        Observable<{ publicationData: PublicationData[], pagination: Pagination, headers: {conditionHeaders: Record<string, string>, genreHeaders: Record<string, string>} }> {
         const userId = user.split("/").pop();
         return this.getPublicationsWithDetails({state, genre, page, search, favorites: false, user: userId!});
     }
 
-    getFavoritePublications({state, genre, page, search, user}: {state: string; genre: string; page: number; search: string; user: string}): Observable<HttpResponse<PublicationData[]>> {
+    getFavoritePublications({state, genre, page, search, user}: {state: string; genre: string; page: number; search: string; user: string}): Observable<{ publicationData: PublicationData[], pagination: Pagination, headers: {conditionHeaders: Record<string, string>, genreHeaders: Record<string, string>} }> {
         const userId = user.split("/").pop();
         return this.getPublicationsWithDetails({state, genre, page, search, favorites: true, user: userId!});
     }
 
-    private getPublicationsWithDetails({state, genre, page, search, favorites, user}: {state: string; genre: string; page: number; search: string; favorites: boolean; user: string | null}): Observable<HttpResponse<PublicationData[]>> {
+    private getPublicationsWithDetails({state, genre, page, search, favorites, user}: {state: string; genre: string; page: number; search: string; favorites: boolean; user: string | null}):
+        Observable<{ publicationData: PublicationData[], pagination: Pagination, headers: {conditionHeaders: Record<string, string>, genreHeaders: Record<string, string>} }> {
         return this.getPublications({state, genre, page, search, favorites, user}).pipe(
             switchMap((response) => {
-                const publications = response.body || [];
+                const publications = response.publications;
 
                 const detailsRequests = publications.map((publication) =>
                     forkJoin({
@@ -150,14 +161,33 @@ export class PublicationService {
                             isFavoriteTemplate: data.isFavoriteTemplate
                         }));
                         console.log("Publicaciones con detalles:", transformedData);
-                        return new HttpResponse<PublicationData[]>({
-                            body: transformedData,
+                        return ({
+                            publicationData: transformedData,
+                            pagination: response.pagination,
                             headers: response.headers
                         });
                     })
                 );
             })
         );
+    }
+
+    private processHeaders(headers: any): {conditionHeaders: Record<string, string>, genreHeaders: Record<string, string>} {
+        const newConditionHeaders: Record<string, string> = {};
+        const newGenreHeaders: Record<string, string> = {};
+
+        headers.keys().forEach((key: string) => {
+            const value = headers.get(key);
+            if (value !== null) {
+                if (key.startsWith("x-bookstate-")) {
+                    newConditionHeaders[key] = value;
+                } else if (key.startsWith("x-genre-")) {
+                    newGenreHeaders[key] = value;
+                }
+            }
+        });
+
+        return {conditionHeaders: newConditionHeaders, genreHeaders: newGenreHeaders};
     }
 
     // favoriteEndpoint -> publication.favoriteEndpoint
