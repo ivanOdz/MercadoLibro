@@ -65,8 +65,8 @@ export class RequestsComponent  implements OnInit {
         this.loadRequestVariablesNames();
 
         this.route.queryParams.subscribe((params) => {
-            if(params['selectedTab']){
-                this.value = params['selectedTab'];
+            if(params['selectedTab'] !== undefined){
+                this.value = +params['selectedTab'];
             }
         })
 
@@ -144,8 +144,7 @@ export class RequestsComponent  implements OnInit {
         this.isLoading = true;
         this.es.acceptExchange(this.exchangeData.exchange.self, this.exchangeData.exchange.accept_code, null).subscribe(
             () => {
-                console.log("Intercambio aceptado:", this.exchangeData?.exchange.self);
-                this.loadExchanges();
+                this.router.navigate(['/exchanges']);
             },
             (error) => console.error("Error al aceptar el intercambio:", error))
     }
@@ -162,8 +161,7 @@ export class RequestsComponent  implements OnInit {
         this.isLoading = true;
         this.es.rejectExchange(this.exchangeData.exchange.self, this.exchangeData.exchange.accept_code, null).subscribe(
             () => {
-                console.log("Intercambio rechazado:", this.exchangeData?.exchange.self);
-                this.loadExchanges();
+                this.router.navigate(['/exchanges/history'], { queryParams: { selectedTab: 1 } });
             },
             (error) => console.error("Error al rechazar el intercambio:", error))
     }
