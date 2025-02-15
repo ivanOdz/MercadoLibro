@@ -1,7 +1,7 @@
 import {HttpInterceptorFn, HttpResponse} from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import {catchError, tap, throwError} from 'rxjs';
+import {catchError, EMPTY, tap, throwError} from 'rxjs';
 import {AuthService} from "../services/auth.service";
 import {environment} from "../../../environments/environment";
 
@@ -58,6 +58,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
                                 authService.logout();
                                 router.navigate(['/auth/login']);
                             }
+                            console.log('ERROR refresh', error);
                             return throwError(() => refreshError);
                         })
                     );
@@ -65,8 +66,11 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
                     authService.logout();
                     router.navigate(['/auth/login']);
                 }
+                return EMPTY
+            } else {
+                console.log('ERROR', error);
+                return throwError(() => error);
             }
-            return throwError(() => error);
         })
     );
 };
