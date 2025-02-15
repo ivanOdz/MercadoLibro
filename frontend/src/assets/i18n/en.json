@@ -232,6 +232,10 @@
 
   },
   "BOOK_MODEL": {
-    "RETURN": "Return to My Books"
+    "RETURN": "Return to My Books",
+    "TITLE": "Select a book from our library",
+    "SEARCH": "Search in our library",
+    "NO_BOOK": "Didn't find your book?",
+    "ADD_BOOK": "Add here!"
   }
 }

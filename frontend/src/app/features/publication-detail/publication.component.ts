@@ -288,7 +288,8 @@ export class PublicationComponent implements OnInit {
     }
 
     getCover(book: BookData | null = null) {
-        return book?.bookModel?.coverUri ||
+        console.log("publication imge: ", book?.bookModel?.cover);
+        return book?.bookModel?.cover ||
             this.getImages(book?.images)[0] || this.getDefaultImage();
     }
 

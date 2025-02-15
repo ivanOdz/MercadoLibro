@@ -66,7 +66,7 @@ export class BookCardComponent implements OnInit{
 	
 	getBookImage(): string {
 		return	this.book.images?.length ? this.book.images[0] :
-				this.book.bookModel?.coverUri ? this.book.bookModel.coverUri :
+				this.book.bookModel?.cover ? this.book.bookModel.cover :
 				this.defaultImage;
 	}
 

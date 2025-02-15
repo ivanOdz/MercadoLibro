@@ -1,10 +1,13 @@
 <app-navbar></app-navbar>
-<button type="button" (click)="goBack()" class="back-button">{{ 'BOOK_FORM.BACK' | translate }}</button>
-<div class="book-home">
+<div class="return-button" (click)="goBack()">
+    <i class="pi pi-arrow-left return-icon"></i>
+    <p style="margin:0">{{ 'BOOK_MODEL.RETURN' | translate }}</p>
+</div>
+<div class="book-model-home">
 
     <div class="column-content">
 
-        <p class="page-title">{{ 'BOOK_HOME.TITLE' | translate }}</p>
+        <p class="page-title">{{ 'BOOK_MODEL.TITLE' | translate }}</p>
         <p-inputgroup>
             <input #searchInput pInputText
                    [(ngModel)]="currentFilters.search"
@@ -12,7 +15,7 @@
                    [ngClass]="{ 'search-applied': isSearchActive }"
                    (blur)="onBlur()"
                    (ngModelChange)="onSearchChange()"
-                   placeholder="{{ 'BOOK_HOME.SEARCH' | translate }}" />
+                   placeholder="{{ 'BOOK_MODEL.SEARCH' | translate }}" />
             <p-inputgroup-addon>
                 <p-button icon="pi pi-search" severity="secondary" variant="text" (click)="search()"/>
             </p-inputgroup-addon>
@@ -34,9 +37,12 @@
             <br>
         </div>
 
-        <div class="books-grid">
-            <app-book-model-card *ngFor="let bookModel of bookModels" [bookModel]="bookModel"></app-book-model-card>
-        </div>
+        <p-scrollpanel [style]="{ width:'65vw', height: '68vh'}" >
+            <div class="book-models-grid">
+                <app-book-model-card *ngFor="let bookModel of bookModels" [bookModel]="bookModel"></app-book-model-card>
+            </div>
+            <app-paginator [pagination]="pagination" [fetchMethod]="getBookModels.bind(this)"></app-paginator>
+        </p-scrollpanel>
 
         <div class="no-books" *ngIf="bookModels.length === 0">
             <p>{{ 'BOOK_HOME.NO_RESULTS' | translate }}</p>
@@ -48,9 +54,10 @@
         <p class="page-filter-text">{{ 'FILTERS' | translate }}</p>
         <div class="filter-line"></div>
         <app-filter-list [headers]="genreHeaders" filterType="Genre"></app-filter-list>
-        <div class="filter-middle-line"></div>
+        <div class="filter-line"></div>
         <div class="fixed-add-book-container">
-
+            <p>{{ 'BOOK_MODEL.NO_BOOK' | translate }}</p>
+            <button icon="pi pi-plus" class="fixed-add-book-btn"  [routerLink]="uploadBookModelUrl">{{ 'BOOK_MODEL.ADD_BOOK' | translate }}</button>
         </div>
     </div>
 

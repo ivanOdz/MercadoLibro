@@ -41,7 +41,6 @@ export class BookModelService {
             map(response => {
                 const linkHeader = response.headers.get('Link');
                 let pagination = new Pagination(linkHeader);
-                console.log("Paginación de book models:", pagination);
                 const bookModels: BookModel[] = response.body?.map((bm: any) => new BookModel(bm)) || [];
                 return { bookModels, pagination, headers: response.headers };
             }),

@@ -203,7 +203,7 @@ export class RequestsComponent  implements OnInit {
     }
 
     getBookImage(book: BookData | null) {
-        return book?.bookModel?.coverUri || 'assets/book.jpg';
+        return book?.bookModel?.cover || 'assets/book.jpg';
     }
 
     loadRequestVariablesNames() {

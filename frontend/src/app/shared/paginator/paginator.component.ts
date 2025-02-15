@@ -13,9 +13,18 @@ import { MatIconModule } from '@angular/material/icon';
 export class PaginatorComponent {
   @Input() fetchMethod!: (url: string) => void;
   @Input() pagination: Pagination | null = null;
-
-  fetch(url: string | undefined) {
+  page: number = 1;
+  
+  fetch(url: string | undefined, page: number) {
     if (url && this.fetchMethod) {
+
+      if (this.pagination && page > this.pagination!.pages)
+      { this.page = this.pagination?.pages || 1; }
+	  else if (page < 1)
+	  { this.page = 1; }
+      else
+	  { this.page = page; }
+	  
       this.fetchMethod(url);
     }
   }

@@ -66,7 +66,6 @@ export class PublicationsComponent implements OnInit, OnDestroy {
 		this.subscription.unsubscribe();
 	}
 	
-
 	
 	search() {
 		if (this.currentFilters.search) {
@@ -121,7 +120,7 @@ export class PublicationsComponent implements OnInit, OnDestroy {
 				this.conditionHeaders = response.headers.conditionHeaders
 				this.genreHeaders = response.headers.genreHeaders
 				this.pagination = response.pagination;
-				console.log('PAginationData:', this.pagination);
+				console.log('PaginationData:', this.pagination);
 			}),
 			switchMap(() =>
 				this.authService.loggedUser$.pipe(
