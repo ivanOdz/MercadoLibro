@@ -26,10 +26,10 @@ export class BookModelCardComponent {
     }
 
   private getBookImage(): string {
-    return this.bookModel.cover ? this.getDefaultImage() + this.bookModel.cover : this.defaultImage;
+    return this.bookModel.cover ? this.getBaseUrl() + this.bookModel.cover : this.defaultImage;
   }
 
-  getDefaultImage() {
+  getBaseUrl() {
     return `${environment.production? environment.productionUrl  : environment.developmentUrl}`;
   }
 }
