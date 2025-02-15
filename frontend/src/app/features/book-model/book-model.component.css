@@ -23,13 +23,14 @@
     height: 91vh;
 }
 .book-models-grid {
-    display: grid;
+    display: flex;
     grid-template-columns: repeat(4, 1fr);
     gap: 10px;
     padding: 16px;
     width: 100%;
     margin: auto;
     justify-items: center;
-    justify-content: space-evenly;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
