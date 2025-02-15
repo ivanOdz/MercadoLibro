@@ -13,9 +13,9 @@
     </mat-icon>
     
    <div class="page-info">
-      <span class="page-number">{{ page }}</span>
+      <span class="page-number">{{ page + 1 }}</span>
       <span class="page-divider"> / </span>
-      <span class="total-pages">{{ pagination?.pages || 1 }}</span>
+      <span class="total-pages">{{ pagination ? pagination!.pages + 1 : 1 }}</span>
   </div>
   
     <mat-icon
