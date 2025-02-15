@@ -7,13 +7,29 @@
     border-radius: 1rem;
 }
 
-
-
 .pagination-icon:hover {
     background: #d6d2c568;
 }
 
 .pagination-container {
-    margin: 2rem;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.page-info {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.page-number, .total-pages {
+    margin: 0 5px;
+}
+
+.page-divider {
+    font-size: 16px;
+    font-weight: normal;
 }

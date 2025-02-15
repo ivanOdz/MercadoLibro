@@ -28,7 +28,7 @@
 		</p-inputgroup>
 		
 		<div class="search-info">
-			<p>{{ 'TOTAL_RESULTS' | translate }}: {{ publications.length }}</p>
+			<p>{{ 'TOTAL_RESULTS' | translate }}: {{ publications.length * (pagination ? pagination!.pages : 1) }}</p>
 			<div class="active-filters">
 				<div class="filter-left">
 					<button *ngIf="currentFilters.state" class="filter-badge" (click)="removeFilter('state')">
