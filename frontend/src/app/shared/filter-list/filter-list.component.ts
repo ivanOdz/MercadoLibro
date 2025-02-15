@@ -22,6 +22,7 @@ import { ChangeDetectionStrategy } from '@angular/core';
 })
 export class FilterListComponent implements OnInit, OnChanges  {
     @Input() headers: Record<string, string> = {};
+	@Input() filterApplied: boolean = false;
     @Input() filterType: 'Condition' | 'Genre' = 'Condition';
 	@Output() filterChanged = new EventEmitter<{ param: string, value: string }>();
 	
@@ -34,7 +35,7 @@ export class FilterListComponent implements OnInit, OnChanges  {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes["headers"]?.currentValue) {
+        if (changes["headers"]?.currentValue && !this.filterApplied) {
             this.parseHeaders();
         }
     }
@@ -42,7 +43,6 @@ export class FilterListComponent implements OnInit, OnChanges  {
     parseHeaders() {
         const prefix = this.filterType === 'Condition' ? 'bookstate.' : 'genre.';
         const paramName = this.filterType === 'Condition' ? 'state' : 'genre';
-		
         this.filters = Object.keys(this.headers)
             .map((key) => {
                 const value = this.headers[key]; // Accede usando corchetes
@@ -72,5 +72,6 @@ export class FilterListComponent implements OnInit, OnChanges  {
         });
 		
 		this.filterChanged.emit({ param, value });
+		this.filters = this.filters.filter(f => f.queryParam === queryParam);
     }
 }

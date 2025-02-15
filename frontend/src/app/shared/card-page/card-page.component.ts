@@ -44,7 +44,9 @@ export class CardPageComponent implements OnInit {
 	isSearchActive = false;
 	lastSearchQuery: string | null = null;
 	pagination: Pagination | null = null;
-
+	stateFilterApplied: boolean = false;
+	genreFilterApplied: boolean = false;
+	
 	currentFilters = {
 			state: '',
 			genre: '',
@@ -93,9 +95,11 @@ export class CardPageComponent implements OnInit {
 	removeFilter(filterKey: keyof typeof this.currentFilters) {
 		if (filterKey === 'state') {
 			this.currentFilters.state = '';
+			this.stateFilterApplied = false;
 		}	
 		else if (filterKey === 'genre') {
 			this.currentFilters.genre = '';
+			this.genreFilterApplied = false;
 		}
 
 		this.router.navigate([], {
@@ -118,9 +122,11 @@ export class CardPageComponent implements OnInit {
 
 		if (filter.param === "state") {
 			this.currentFilters.state = filter.value;
+			this.stateFilterApplied = true;
 		}
 		else if (filter.param === "genre") {
 			this.currentFilters.genre = filter.value;
+			this.genreFilterApplied = true;
 		}
 				
 		this.fetchItems();

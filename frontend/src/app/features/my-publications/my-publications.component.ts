@@ -19,6 +19,7 @@ export class MyPublicationsComponent {
   private subscription!: Subscription;
   publications: PublicationData[] = [];  // Asegúrate de declarar un array para las publicaciones
   headersData: any;
+    
   
   @ViewChild('publicationCard') publicationCard!: TemplateRef<any>;
 
