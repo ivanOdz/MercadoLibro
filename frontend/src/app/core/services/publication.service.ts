@@ -102,9 +102,8 @@ export class PublicationService {
         return this.getPublicationsWithDetails({state, genre, page, search, favorites: false, user: null});
     }
 
-    getMyPublications({state, genre, page, search, user}: {state: string; genre: string; page: number; search: string; user: string}):  ObservablePublicationData{
-        const userId = user.split("/").pop();
-        return this.getPublicationsWithDetails({state, genre, page, search, favorites: false, user: userId!});
+    getMyPublications(state: string, genre: string, page: number, search: string, user: string):  ObservablePublicationData{
+        return this.getPublicationsWithDetails({state, genre, page, search, favorites: false, user });
     }
 
     getFavoritePublications({state, genre, page, search, user}: {state: string; genre: string; page: number; search: string; user: string}): ObservablePublicationData {

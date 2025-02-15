@@ -1,8 +1,10 @@
 import { Component,TemplateRef, ViewChild } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { map  } from 'rxjs/operators';
+import {filter, Subscription} from 'rxjs';
+import {map, switchMap} from 'rxjs/operators';
 import { CardPageComponent } from '../../shared/card-page/card-page.component';
 import { PublicationService } from "../../core/services/publication.service";
+import {AuthService} from "../../core/services/auth.service";
+import {User} from "../../core/models/user.model";
 
 @Component({
   selector: 'app-my-publications',
@@ -21,11 +23,19 @@ export class MyPublicationsComponent {
 
   constructor(
       private publicationService: PublicationService,
+      private authService: AuthService,
   ) {}
 
+  currentFilters = {
+    state: '',
+    genre: '',
+    page: 0,
+    search: ''
+  };
+
   // Método para obtener publicaciones
-  fetchMyPublications(filters: any) {
-    return this.publicationService.getMyPublications(filters).pipe(
+  fetchMyPublications(user: User) {
+    return this.publicationService.getMyPublications(this.currentFilters.state, this.currentFilters.genre, this.currentFilters.page, this.currentFilters.search, user.self).pipe(
       map(response => ({
         data: response.publicationData,
         pagination: response.pagination,
@@ -36,9 +46,12 @@ export class MyPublicationsComponent {
 
   ngOnInit(): void {
     // Llamar a la función de publicación cuando se cargue el componente
-    this.subscription = this.fetchMyPublications({}).subscribe(response => {
-      this.publications = response.data;
-    });
+    this.authService.loggedUser$.pipe(
+        filter(user => !!user),
+        switchMap((user) => {
+          return this.fetchMyPublications(user, );
+        })
+    )
   }
 
   // Limpiar la suscripción al destruir el componente
