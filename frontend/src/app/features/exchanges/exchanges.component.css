@@ -130,18 +130,16 @@
 }
 
 .emtpy-content-panel {
-    display: flex;
-    font-size: 16px;
+    display: grid;
     text-align: center;
-    flex-direction: column;
-    color: black;
-    background-color: white;
+    color: #000;
+    background-color: #fff;
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 90%;
-    height: 90%;
+    box-shadow: 0 4px 6px #0000001a;
     align-items: center;
-    justify-content: center
+    justify-content: center;
+    width: 50vh;
+    height: 70vh;
 }
 
 .main-section {

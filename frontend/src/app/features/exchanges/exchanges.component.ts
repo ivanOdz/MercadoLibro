@@ -12,15 +12,10 @@ import { ScrollPanelModule } from 'primeng/scrollpanel';
 import {Dialog} from "primeng/dialog";
 import {InputText} from "primeng/inputtext";
 import {ExchangeService} from "../../core/services/exchange.service";
-import {UserService} from "../../core/services/user.service";
 import {catchError, filter, of, switchMap, tap} from "rxjs";
 import {User} from "../../core/models/user.model";
 import {AuthService} from "../../core/services/auth.service";
 import {Router} from "@angular/router";
-import {PublicationService} from "../../core/services/publication.service";
-import {BookModelService} from "../../core/services/bookmodel.service";
-import {BookService} from "../../core/services/book.service";
-import {map} from "rxjs/operators";
 import {environment} from "../../../environments/environment";
 import {ProgressSpinner} from "primeng/progressspinner";
 import { ConfirmationService } from 'primeng/api';
@@ -46,8 +41,7 @@ export class ExchangesComponent implements OnInit {
     activeExchanges: ExchangeData[] = [];
 
 
-    constructor(private es: ExchangeService, private us: UserService, private ps: PublicationService,
-                private bs: BookService, private bms: BookModelService, private as: AuthService,
+    constructor(private es: ExchangeService, private as: AuthService,
                 private router: Router, private changeDetectorRef: ChangeDetectorRef, private translate: TranslateService) {}
 
     ngOnInit(): void {
@@ -91,7 +85,7 @@ export class ExchangesComponent implements OnInit {
         ).subscribe(
             (activeExchanges) => {
                 this.activeExchanges = activeExchanges;
-                this.isLoading = false;
+                // this.isLoading = false;
                 console.log("Intercambios cargados:", this.activeExchanges);
             },
             (error) => {
