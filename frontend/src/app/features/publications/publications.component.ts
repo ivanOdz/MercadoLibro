@@ -121,6 +121,7 @@ export class PublicationsComponent implements OnInit, OnDestroy {
 				this.conditionHeaders = response.headers.conditionHeaders
 				this.genreHeaders = response.headers.genreHeaders
 				this.pagination = response.pagination;
+				console.log('PAginationData:', this.pagination);
 			}),
 			switchMap(() =>
 				this.authService.loggedUser$.pipe(

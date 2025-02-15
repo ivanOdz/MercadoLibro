@@ -1,13 +1,8 @@
-import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Subscription, Observable } from 'rxjs';
-import { switchMap, tap, filter, distinctUntilChanged, take, map  } from 'rxjs/operators';
-import { HttpHeaders } from '@angular/common/http';
-import { AuthService } from '../../core/services/auth.service';
-import { PublicationData } from '../../core/models/types';
+import { Component,TemplateRef, ViewChild } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { map  } from 'rxjs/operators';
 import { CardPageComponent } from '../../shared/card-page/card-page.component';
 import { PublicationService } from "../../core/services/publication.service";
-import { Pagination } from "../../core/models/pagination";
 
 @Component({
   selector: 'app-my-publications',
@@ -26,19 +21,14 @@ export class MyPublicationsComponent {
 
   constructor(
       private publicationService: PublicationService,
-      private authService: AuthService,
-      private route: ActivatedRoute,
   ) {}
 
   // Método para obtener publicaciones
   fetchMyPublications(filters: any) {
     return this.publicationService.getMyPublications(filters).pipe(
       map(response => ({
-        data: response.body?.map(pub => ({
-          ...pub,
-          book: pub.book?.self ?? '' // Garantiza que book siempre sea un string
-        })) || [],
-        pagination: new Pagination(response.headers.get('Link')),
+        data: response.publicationData,
+        pagination: response.pagination,
         headers: response.headers
       }))
     );
