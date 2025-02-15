@@ -30,6 +30,7 @@
     "EDITORIAL": "Editorial",
     "DESCRIPTION": "Descripción",
     "GENRE": "Género",
+    "BOOK_STATE": "Condiciones del libro",
     "EDITION": "Edición",
     "WEIGHT": "Peso (gramos)",
     "PAGES": "Páginas",
@@ -50,6 +51,7 @@
     "EDITORIAL_IS_OBLIGATORY": "La editorial es obligatoria.",
     "NUMERIC_FIELD_IS_OBLIGATORY": "Este campo es numérico y obligatorio.",
     "SELECT_GENRE": "Seleccione un género",
+    "SELECT_STATE": "Select the state of your book",
     "ADD_IMAGE": "Agregar imagen"
   },
   "genre": {
@@ -100,8 +102,6 @@
     "new": "Nuevo",
     "like.new": "Como Nuevo",
     "very.good": "Muy Bueno",
-    "like_new": "Como Nuevo",
-    "very_good": "Muy Bueno",
     "good": "Bueno",
     "acceptable": "Aceptable",
     "worn": "Desgastado"
@@ -243,6 +243,8 @@
     "TITLE": "Selecciona un libro de nuestra biblioteca",
     "SEARCH": "Buscar en nuestra biblioteca",
     "NO_BOOK": "¿No encuentras tu libro?",
-    "ADD_BOOK": "¡Agregalo aquí!"
+    "ADD_BOOK": "¡Agregalo aquí!",
+    "ADDING_BOOK": "Agregue el libro a su colección",
+    "TELL_US_ABOUT_YOUR_BOOK": "¡Cuéntenos sobre su libro!"
   }
 }
