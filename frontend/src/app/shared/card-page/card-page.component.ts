@@ -12,8 +12,9 @@ import { ButtonModule } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
 import { Pagination } from "../../core/models/pagination";
 import { PaginatorComponent } from "../paginator/paginator.component";
-import { Observable, switchMap } from "rxjs";
+import { switchMap } from "rxjs";
 import { SortComponent } from "../sort/sort.component";
+import {ObservablePublicationData} from "../../core/models/types";
 
 @Component({
 	selector: 'card-page',
@@ -29,7 +30,7 @@ export class CardPageComponent implements OnInit {
 	
 	@Input() pageTitle!: string;
 	@Input() items: any[] = []; 
-	@Input() fetchMethod!: (params: any) => Observable<{ data: any[], pagination: Pagination, headers: { conditionHeaders: Record<string, string>, genreHeaders: Record<string, string>} } >;
+	@Input() fetchMethod!: (params: any) => ObservablePublicationData;
 	@Input() showSearchBar!: boolean;
 	@Input() displaySort!: boolean;
 	@Input() cardTemplate!: TemplateRef<any>;
@@ -62,7 +63,7 @@ export class CardPageComponent implements OnInit {
 				this.pagination = response.pagination;
 				this.conditionHeaders = response.headers.conditionHeaders;
 				this.genreHeaders = response.headers.genreHeaders;
-				this.items = response.data || [];
+				this.items = response.publicationData;
 				return [];
 			})
 		).subscribe();

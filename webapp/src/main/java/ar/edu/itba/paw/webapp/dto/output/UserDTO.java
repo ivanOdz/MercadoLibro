@@ -30,6 +30,8 @@ public class UserDTO {
 
 	private URI favorites;
 
+	private URI publications;
+
 	private URI exchanges;
 
 	@SupportedLanguage
@@ -51,7 +53,8 @@ public class UserDTO {
 		dto.locations = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(user.getUserId())).path("locations").build();
 		dto.reviews = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(user.getUserId())).path("reviews").build();
 		dto.books = uriInfo.getBaseUriBuilder().path("books").queryParam("owner", user.getUserId()).build();
-		dto.favorites = uriInfo.getBaseUriBuilder().path("users").path(String.valueOf(user.getUserId())).path("favorite").build();
+		dto.favorites = uriInfo.getBaseUriBuilder().path("publications").queryParam("user_id", String.valueOf(user.getUserId())).queryParam("favorites", true).build();
+		dto.publications = uriInfo.getBaseUriBuilder().path("publications").queryParam("user_id", String.valueOf(user.getUserId())).build();
 		dto.exchanges = uriInfo.getBaseUriBuilder().path("exchanges").queryParam("user_id", user.getUserId()).build();
 		return dto;
 	}
@@ -154,6 +157,12 @@ public class UserDTO {
 		this.language = language;
 	}
 
+	public URI getPublications() {
+		return publications;
+	}
 
+	public void setPublications(URI publications) {
+		this.publications = publications;
+	}
 }
 

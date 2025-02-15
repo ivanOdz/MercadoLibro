@@ -4,7 +4,7 @@ import {map, switchMap} from 'rxjs/operators';
 import { CardPageComponent } from '../../shared/card-page/card-page.component';
 import { PublicationService } from "../../core/services/publication.service";
 import {AuthService} from "../../core/services/auth.service";
-import {User} from "../../core/models/user.model";
+import { ObservablePublicationData, PublicationData} from "../../core/models/types";
 
 @Component({
   selector: 'app-my-publications',
@@ -17,7 +17,7 @@ export class MyPublicationsComponent {
   showConditionFilter: boolean = true;
   showGenreFilter: boolean = true;
   private subscription!: Subscription;
-  publications: any[] = [];  // Asegúrate de declarar un array para las publicaciones
+  publications: PublicationData[] = [];  // Asegúrate de declarar un array para las publicaciones
 
   @ViewChild('publicationCard') publicationCard!: TemplateRef<any>;
 
@@ -34,23 +34,30 @@ export class MyPublicationsComponent {
   };
 
   // Método para obtener publicaciones
-  fetchMyPublications(user: User) {
-    return this.publicationService.getMyPublications(this.currentFilters.state, this.currentFilters.genre, this.currentFilters.page, this.currentFilters.search, user.self).pipe(
-      map(response => ({
-        data: response.publicationData,
-        pagination: response.pagination,
-        headers: response.headers
-      }))
-    );
-  }
+  fetchMyPublications = (): ObservablePublicationData => {
+      return this.authService.loggedUser$.pipe(
+          filter(user => !!user),
+          switchMap((user) =>
+              this.publicationService.getMyPublications(
+                  user.publications,
+                  this.currentFilters.state,
+                  this.currentFilters.genre,
+                  this.currentFilters.page,
+                  this.currentFilters.search
+              ).pipe(
+                  map(response => response)
+              )
+          )
+      );
+  };
+
 
   ngOnInit(): void {
     // Llamar a la función de publicación cuando se cargue el componente
-    this.authService.loggedUser$.pipe(
-        filter(user => !!user),
-        switchMap((user) => {
-          return this.fetchMyPublications(user, );
-        })
+    this.fetchMyPublications().subscribe(
+        (response) => {
+          this.publications = response.publicationData;
+        }
     )
   }
 

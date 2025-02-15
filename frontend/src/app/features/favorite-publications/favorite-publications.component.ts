@@ -67,7 +67,7 @@ export class FavoritePublicationsComponent implements OnInit {
                   this.showGenreFilter = !params['genre'];
 
               }),
-              switchMap(() => this.publicationService.getFavoritePublications({ ...this.currentFilters })),
+              switchMap(() => this.publicationService.getFavoritePublications(user.self, this.currentFilters.state, this.currentFilters.genre, this.currentFilters.page, this.currentFilters.search)),
               tap((response) => {
                 // Procesar las publicaciones y los encabezados
                 this.publications = response.publicationData
