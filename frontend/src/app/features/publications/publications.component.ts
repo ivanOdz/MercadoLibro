@@ -114,7 +114,11 @@ export class PublicationsComponent implements OnInit, OnDestroy {
 				this.currentFilters.page = params['page'] || 0;
 				this.currentFilters.search = params['search'] || '';
 			}),
-	        switchMap(() => this.publicationService.getGeneralPublications(this.currentFilters.state, this.currentFilters.genre, this.currentFilters.page, this.currentFilters.search)),
+	        switchMap(() => {
+				return url
+				? this.publicationService.getPublicationsWithDetails(url)
+				: this.publicationService.getGeneralPublications(this.currentFilters.state, this.currentFilters.genre, this.currentFilters.page, this.currentFilters.search)
+			}),
 	        tap((response) => {
 				this.publications = response.publicationData || [];
 				this.conditionHeaders = response.headers.conditionHeaders
