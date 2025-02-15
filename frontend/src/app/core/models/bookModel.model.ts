@@ -15,8 +15,8 @@ export class BookModel {
 	ratingCount: number;
 	averageRating: number;
 	authors: string[];
-	coverUri: string;
-	selfUri: string;
+	cover: string;
+	self: string;
 	
 	constructor(data: any) {
 		this.isbn = data.isbn;
@@ -35,7 +35,7 @@ export class BookModel {
 		this.ratingCount = data.ratingCount;
 		this.averageRating = data.averageRating;
 		this.authors = data.authors;
-		this.coverUri = data.coverUri;
-		this.selfUri = data.selfUri;
+		this.cover = data.cover;
+		this.self = data.self;
 	}
 }

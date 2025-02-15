@@ -167,7 +167,7 @@ export class ExchangesComponent implements OnInit {
     }
 
     getBookImage(book: BookData | null) {
-        return book?.bookModel?.coverUri || 'assets/book.jpg';
+        return book?.bookModel?.cover || 'assets/book.jpg';
     }
 
     addMessage(newMessage: any) {
