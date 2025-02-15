@@ -1,0 +1,35 @@
+.return-button {
+    width: 17%;
+    flex-direction: row;
+    display: flex;
+    border-radius: 1rem;
+    padding: 1rem;
+    gap: 9%;
+    cursor: pointer;
+}
+.return-button:hover {
+    background: #aca28c29;
+    font-weight: bold;
+}
+.return-icon {
+    font-size: medium;
+}
+.book-model-home {
+    display: grid;
+    justify-content: space-between;
+    grid-template-columns: 2fr 0.75fr;
+    gap: 20px;
+    padding: 5vh 5vh 1vh 5vh;
+    height: 91vh;
+}
+.book-models-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    padding: 16px;
+    width: 100%;
+    margin: auto;
+    justify-items: center;
+    justify-content: space-evenly;
+}
+

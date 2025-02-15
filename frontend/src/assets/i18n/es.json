@@ -235,6 +235,11 @@
     "SIDEBAR_TITLE": "Intercambios"
   },
   "BOOK_MODEL": {
-    "RETURN": "Regresar a Mis Libros"
+    "RETURN": "Regresar a Mis Libros",
+    "TITLE": "Selecciona un libro de nuestra biblioteca",
+    "SEARCH": "Buscar en nuestra biblioteca",
+    "NO_BOOK": "¿No encuentras tu libro?",
+    "ADD_BOOK": "¡Agregalo aquí!"
+  }
   }
 }

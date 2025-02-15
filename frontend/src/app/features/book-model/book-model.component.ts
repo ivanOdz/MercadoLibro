@@ -15,6 +15,8 @@ import { BookModel } from "../../core/models/bookModel.model";
 import {BookCardComponent} from "../../shared/book-card/book-card.component";
 import {FilterListComponent} from "../../shared/filter-list/filter-list.component";
 import {BookModelCardComponent} from "../../shared/book-model-card/book-model-card.component";
+import {PaginatorComponent} from "../../shared/paginator/paginator.component";
+import {ScrollPanel} from "primeng/scrollpanel";
 
 @Component({
   selector: 'app-book-model',
@@ -32,6 +34,10 @@ import {BookModelCardComponent} from "../../shared/book-model-card/book-model-ca
     FilterListComponent,
     BookModelCardComponent,
     NgForOf,
+    BookCardComponent,
+    PaginatorComponent,
+    ScrollPanel,
+    RouterLink,
   ],
   templateUrl: './book-model.component.html',
   styleUrls: ['./book-model.component.css', '../book-home/book-home.component.css']
@@ -50,6 +56,7 @@ export class BookModelComponent implements OnInit {
   lastSearchQuery: string | null = null;
   @ViewChild('searchInput') searchInput!: ElementRef;
   pagination: Pagination | null = null;
+  uploadBookModelUrl: string = "/books/add";
 
 
   constructor(private router: Router, private route: ActivatedRoute, private bms: BookModelService) {

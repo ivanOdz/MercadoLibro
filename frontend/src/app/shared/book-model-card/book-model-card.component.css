@@ -1,5 +1,6 @@
 .book-card {
-    width: 260px;
+    width: 23%;
+    min-width: 200px;
     background: #F2EBD8;
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
@@ -17,10 +18,11 @@
 }
 
 .book-image {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
+    width: 80%;
+    height: 150px;
+    object-fit: contain;
     border-radius: 8px;
+    text-align: center;
 }
 
 .book-info {
@@ -31,43 +33,13 @@
 }
 
 .book-title {
-    font-size: 18px;
+    font-size: 13px;
     font-weight: bold;
     color: #333;
 }
 
-.book-owner {
+.book-genre {
     font-size: 14px;
     color: #666;
     margin-bottom: 5px;
-}
-
-.book-state {
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 14px;
-}
-
-.book-state-new {
-    background-color: rgba(160, 100, 200, 0.9);
-}
-
-.book-state-like-new {
-    background-color: rgba(0, 200, 200, 0.9);
-}
-
-.book-state-very-good {
-    background-color: rgba(0, 180, 50, 0.9);
-}
-
-.book-state-good {
-    background-color: rgba(80, 140, 80, 0.8);
-}
-
-.book-state-aceptable {
-    background-color: rgba(150, 150, 0, 0.9);
-}
-
-.book-state-worn {
-    background-color: rgba(180, 25, 25, 0.8);
 }

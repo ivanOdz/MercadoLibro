@@ -2,6 +2,7 @@ import {Component, Input} from '@angular/core';
 import {BookModel} from "../../core/models/bookModel.model";
 import {LowerCasePipe, NgForOf, NgIf} from "@angular/common";
 import {TranslatePipe} from "@ngx-translate/core";
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-book-model-card',
@@ -25,6 +26,10 @@ export class BookModelCardComponent {
     }
 
   private getBookImage(): string {
-    return this.bookModel.coverUri ? this.bookModel.coverUri : this.defaultImage;
+    return this.bookModel.cover ? this.getDefaultImage() + this.bookModel.cover : this.defaultImage;
+  }
+
+  getDefaultImage() {
+    return `${environment.production? environment.productionUrl  : environment.developmentUrl}`;
   }
 }
