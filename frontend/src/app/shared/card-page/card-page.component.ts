@@ -49,6 +49,7 @@ export class CardPageComponent implements OnInit {
 	stateFilterApplied: boolean = false;
 	genreFilterApplied: boolean = false;
 	totalResults: number = 0;
+	resetPaginatorNumber: boolean = false;
 	
 	currentFilters = {
 			state: '',
@@ -70,7 +71,6 @@ export class CardPageComponent implements OnInit {
 				this.genreHeaders = response.headers.genreHeaders;
 				this.items = response.publicationData;
 				this.totalResults = response.totalResults;
-				console.log("Total Results:", this.totalResults);
 				return [];
 			})
 		).subscribe({
@@ -114,6 +114,8 @@ export class CardPageComponent implements OnInit {
 			queryParamsHandling: 'merge',
 		});
 
+		this.resetPaginatorNumber = true;
+		setTimeout(() => (this.resetPaginatorNumber = false), 100);
 		this.fetchItems(undefined, 0);
 	}
 	
@@ -134,7 +136,9 @@ export class CardPageComponent implements OnInit {
 			this.currentFilters.genre = filter.value;
 			this.genreFilterApplied = true;
 		}
-				
+		
+		this.resetPaginatorNumber = true;
+		setTimeout(() => (this.resetPaginatorNumber = false), 100);
 		this.fetchItems(undefined, 0);
 	}
 }

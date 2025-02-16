@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Pagination } from "../../core/models/pagination";
 import { NgIf } from "@angular/common";
 import { MatIconModule } from '@angular/material/icon';
@@ -10,9 +10,10 @@ import { MatIconModule } from '@angular/material/icon';
     standalone: true,
     styleUrl: './paginator.component.css'
 })
-export class PaginatorComponent {
+export class PaginatorComponent implements OnChanges {
   @Input() fetchMethod!: (url: string, page: number) => void;
   @Input() pagination: Pagination | null = null;
+  @Input() reset: boolean = false;
   page: number = 0;
   
   fetch(url: string | undefined, page: number) {
@@ -24,5 +25,10 @@ export class PaginatorComponent {
       this.fetchMethod(url, this.page);
     }
   }
-
+  
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['reset'] && changes['reset'].currentValue === true) {
+      this.page = 0;
+	}
+  }
 }
