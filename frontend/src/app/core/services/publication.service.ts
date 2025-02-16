@@ -26,11 +26,12 @@ export class PublicationService {
             map(response => {
                 const linkHeader = response.headers.get('link');
                 let pagination = new Pagination(linkHeader);
+				const totalResults = Number(response.headers.get('X-Total-Count')) || 0;
                 const publications: Publication[] = response.body.map((publication: any) => new Publication(publication));
-                return { publications: publications, pagination: pagination, headers: this.processHeaders(response.headers) };
+                return { publications: publications, pagination: pagination, headers: this.processHeaders(response.headers), totalResults: totalResults };
             }),
             catchError(error => {
-                return of({ publications: [], pagination: new Pagination(null), headers: { conditionHeaders: {}, genreHeaders: {} } });
+                return of({ publications: [], pagination: new Pagination(null), headers: { conditionHeaders: {}, genreHeaders: {} }, totalResults: 0 });
             })
         );
     }
@@ -135,7 +136,8 @@ export class PublicationService {
                         return ({
                             publicationData: transformedData,
                             pagination: response.pagination,
-                            headers: response.headers
+                            headers: response.headers,
+							totalResults: response.totalResults
                         });
                     })
                 );

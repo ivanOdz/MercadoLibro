@@ -141,7 +141,7 @@
     "DELETE_LOCATION": "Delete location"
   },
   "PUBLICATION_D": {
-    "RETURN": "Return to publications",
+    "RETURN": "Return",
     "SOLICIT_BUTTON": "I want it!",
     "ADDITIONAL_DETAILS": "Additional details",
     "RETURN_TO_DETAIL": "Return to publication",
@@ -243,5 +243,6 @@
     "ADDING_BOOK": "Adding book to your collection",
     "TELL_US_ABOUT_YOUR_BOOK": "Tell us about your book!"
   },
-  "MY_PUBLICATIONS": "My publications"
+  "MY_PUBLICATIONS": "My publications",
+  "MY_FAVORITE_PUBLICATIONS": "My favorites"
 }

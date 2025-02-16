@@ -143,7 +143,7 @@
     "DELETE_LOCATION": "Eliminar ubicación"
   },
   "PUBLICATION_D": {
-    "RETURN": "Regresar a publicaciones",
+    "RETURN": "Regresar",
     "SOLICIT_BUTTON": "Lo quiero!",
     "ADDITIONAL_DETAILS": "Detalles adicionales",
     "RETURN_TO_DETAIL": "Regresar a la publicación",
@@ -247,5 +247,6 @@
     "ADDING_BOOK": "Agregue el libro a su colección",
     "TELL_US_ABOUT_YOUR_BOOK": "¡Cuéntenos sobre su libro!"
   },
-  "MY_PUBLICATIONS": "Mis publicaciones"
+  "MY_PUBLICATIONS": "Mis publicaciones",
+  "MY_FAVORITE_PUBLICATIONS": "Mis favoritos"
 }

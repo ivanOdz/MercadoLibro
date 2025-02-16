@@ -14,7 +14,7 @@
 	<div class="column-content">
 
 		<p class="page-title">{{ pageTitle | translate }}</p>
-		<p-inputgroup>
+		<p-inputgroup *ngIf="showSearchBar">
 			<input #searchInput pInputText
 					[(ngModel)]="currentFilters.search"
 					(keyup.enter)="search()"
@@ -27,7 +27,7 @@
 		</p-inputgroup>
 		
 		<div class="search-info">
-			<p>{{ 'TOTAL_RESULTS' | translate }}: {{ items.length }}</p>
+			<p>{{ 'TOTAL_RESULTS' | translate }}: {{ totalResults ? totalResults : 0 }}</p>
 			<div class="active-filters">
 				<div class="filter-left">
 					<button *ngIf="currentFilters.state" class="filter-badge" (click)="removeFilter('state')">
@@ -47,6 +47,7 @@
 				</div>
 			</div>
 			<app-sort *ngIf="displaySort"></app-sort>
+			<br *ngIf="!displaySort">
 		</div>
 
         <p-scrollpanel [style]="{ width:'65vw', height: '68vh'}">
@@ -61,7 +62,7 @@
 			
 		</p-scrollpanel>
         
-		<app-paginator [pagination]="pagination" [fetchMethod]="fetchItems.bind(this)"></app-paginator>
+		<app-paginator [pagination]="pagination" [fetchMethod]="fetchItems.bind(this)" [reset]="resetPaginatorNumber"></app-paginator>
         
 	</div>
 </div>

@@ -22,7 +22,7 @@ public class PageResponseUtil {
                 builder.link(uri.clone().replaceQueryParam("page", page + 1).build(), "next");
             }
         }
-
+        
         return builder.build();
     }
 

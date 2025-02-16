@@ -48,6 +48,8 @@ export class CardPageComponent implements OnInit {
 	pagination: Pagination | null = null;
 	stateFilterApplied: boolean = false;
 	genreFilterApplied: boolean = false;
+	totalResults: number = 0;
+	resetPaginatorNumber: boolean = false;
 	
 	currentFilters = {
 			state: '',
@@ -57,7 +59,7 @@ export class CardPageComponent implements OnInit {
 		};
 	
 	ngOnInit() {
-		this.fetchItems(undefined, 1);
+		this.fetchItems(undefined, 0);
 	}
 	
 	fetchItems(url: string | undefined, page: number) {
@@ -68,6 +70,7 @@ export class CardPageComponent implements OnInit {
 				this.conditionHeaders = response.headers.conditionHeaders;
 				this.genreHeaders = response.headers.genreHeaders;
 				this.items = response.publicationData;
+				this.totalResults = response.totalResults;
 				return [];
 			})
 		).subscribe({
@@ -111,7 +114,9 @@ export class CardPageComponent implements OnInit {
 			queryParamsHandling: 'merge',
 		});
 
-		this.fetchItems(undefined, 1);
+		this.resetPaginatorNumber = true;
+		setTimeout(() => (this.resetPaginatorNumber = false), 100);
+		this.fetchItems(undefined, 0);
 	}
 	
 	processHeaders(headersData: { conditionHeaders: Record<string, string>, genreHeaders: Record<string, string> }) {
@@ -131,7 +136,9 @@ export class CardPageComponent implements OnInit {
 			this.currentFilters.genre = filter.value;
 			this.genreFilterApplied = true;
 		}
-				
-		this.fetchItems(undefined, 1);
+		
+		this.resetPaginatorNumber = true;
+		setTimeout(() => (this.resetPaginatorNumber = false), 100);
+		this.fetchItems(undefined, 0);
 	}
 }
