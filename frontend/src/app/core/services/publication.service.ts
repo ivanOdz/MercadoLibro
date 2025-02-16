@@ -11,6 +11,7 @@ import {AuthService} from "./auth.service";
 import {environment} from "../../../environments/environment";
 import {Location} from "../models/location.model";
 import {Pagination} from "../models/pagination";
+import { User } from "../../core/models/user.model";
 
 @Injectable({ providedIn: 'root' })
 export class PublicationService {
@@ -190,12 +191,11 @@ export class PublicationService {
             })
         );
     }
-
-    // favoriteEndpoint -> publication.favoriteEndpoint
-    likePublication(publication: PublicationData, userUrl: string): Observable<any> {
-		console.log("likePublication");
-		console.log(publication);
-        return this.http.post(`${publication.favoriteEndpoint}`, {user_id: userUrl}).pipe(
+	
+    likePublication(publication: PublicationData, user: User): Observable<any> {
+		const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.users.v1+json' });
+		
+        return this.http.post(`${publication.favoriteEndpoint}`, user, { headers }).pipe(
             tap(() => console.log("Publicación marcada como favorita"))
         );
     }

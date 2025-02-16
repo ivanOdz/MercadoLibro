@@ -60,7 +60,7 @@ export class PublicationCardComponent implements OnInit {
 				error: (err) => console.error('Error al eliminar de favoritos', err)
 			});
 		} else {
-			this.publicationService.likePublication(this.publication, this.loggedUser.self).subscribe({
+			this.publicationService.likePublication(this.publication, this.loggedUser).subscribe({
 				next: () => console.log('Publicación agregada a favoritos'),
 				error: (err) => console.error('Error al agregar a favoritos', err)
 			});
