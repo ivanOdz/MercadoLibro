@@ -60,7 +60,7 @@ Cypress.Commands.add('login', (username: string, password: string, rememberMe: b
 });
 
 Cypress.Commands.add('waitExchangesRequests', () => {
-    cy.wait('@getExchanges');
+
     cy.wait('@getPublication');
     cy.wait('@getUser');
     cy.wait('@getBook');
