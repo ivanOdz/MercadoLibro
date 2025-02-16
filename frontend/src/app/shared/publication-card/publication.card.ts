@@ -1,23 +1,27 @@
-import {Component, Input} from "@angular/core";
-import { PublicationData} from "../../core/models/types";
-import { Router} from "@angular/router";
+import { Component, Input, OnInit } from "@angular/core";
+import { CommonModule } from '@angular/common';
+import { PublicationData } from "../../core/models/types";
+import { Router } from "@angular/router";
+import { TranslatePipe } from '@ngx-translate/core';
+import { environment } from "../../../environments/environment";
 
 @Component({
     selector: 'publication-card',
     templateUrl: './publication.card.html',
     styleUrl: './publication.card.css',
     standalone: true,
+	imports: [CommonModule, TranslatePipe]
 })
-export class PublicationCardComponent {
+export class PublicationCardComponent implements OnInit {
     @Input() publication!: PublicationData;
+	bookImage!: string;
+	defaultImage: string = './assets/book.jpg';
+	
+    constructor(private router: Router) { }
 
-    constructor(private router: Router) {
-    }
-
-    getBookImage(images: string[] | null | undefined) {
-        return images? images[0] : 'assets/book.jpg';
-    }
-
+	ngOnInit() {
+		this.bookImage = this.getBookImage();
+	}
 
     goToPublicationDetail() {
         if (this.publication.self) {
@@ -25,5 +29,15 @@ export class PublicationCardComponent {
             this.router.navigate([path],{ queryParams: { origen: 'publications' } });
         }
     }
+	
+	getBaseUrl() {
+		return `${environment.production? environment.productionUrl  : environment.developmentUrl}`;
+	}
+	
+	getBookImage(): string {
+		return	this.publication.book?.images?.length ? this.getBaseUrl() + this.publication.book.images[0] :
+				this.publication.book?.bookModel?.cover ? this.getBaseUrl() + this.publication.book.bookModel.cover :
+				this.defaultImage;
+	}
 
 }

@@ -7,9 +7,21 @@
 }
 
 .p-menubar-start, .p-menubar-end {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+	display: flex;
+	align-content: center;
+}
+
+.image-title {
+	 display: inline-flex;
+	 align-items: center;
+	 text-decoration: none;
+}
+
+.page-title {
+	padding: 0 10px;
+	font-size: 18px;
+	color: black;
+	
 }
 
 :host ::ng-deep .p-button {
@@ -96,8 +108,3 @@
     border: none;
 }
 
-.page-title {
-	
-	font-size: 18px;
-	color: black;
-}

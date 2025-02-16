@@ -1,6 +1,6 @@
 .publication-card-container {
-	width: 55vw;
-	max-height: 30vh;
+	width: 60vw;
+	height: 140px;
 	background: #fff;
 	box-shadow: 4px 6px 6px #0000001a;
 	border-radius: 2rem;
@@ -31,18 +31,18 @@
 	grid-column: 3;
 }
 
-.publisher-text-card {
-	font-size: x-small;
+.title-text {
+	margin-top: 0;
+	font-size: 22px;
+	font-style: normal;
 }
 
-.description-text-card {
-	font-size: small;
-	max-height: 4rem;
-	overflow-y: clip;
+.editorial-edition-text {
+	font-size: 15px;
 }
 
-.title-text-card {
-	font-size: large;
+.year-genre-text {
+	font-size: 12px;
 }
 
 .authors-text-card {
@@ -50,8 +50,8 @@
 }
 
 .book-image {
-	width: 9vw;
-	height: 25vh;
+	height: 120px;
+	width: auto;
 	border-radius: 1rem;
 	align-self: center;
 }

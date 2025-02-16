@@ -51,7 +51,14 @@
     "NUMERIC_FIELD_IS_OBLIGATORY": "This field is numeric and required.",
     "SELECT_GENRE": "Select a genre",
     "SELECT_STATE": "Select the state of your book",
-    "ADD_IMAGE": "Add image"
+    "ADD_IMAGE": "Add image",
+    "LOCATION": "Location",
+  	"LOCATIONS": "Locations",
+  	"STATE": "State",
+  	"IMAGE": "Image",
+  	"IMAGES": "Images",
+  	"AVAILABLE": "Published",
+  	"UNAVAILABLE": "Unpublished"
   },
   "genre": {
     "fiction": "Fiction",
