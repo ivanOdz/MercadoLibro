@@ -105,8 +105,8 @@
   },
   "bookstate": {
     "new": "New",
-    "like.new": "Like New",
-    "very.good": "Very Good",
+    "like_new": "Like New",
+    "very_good": "Very Good",
     "good": "Good",
     "acceptable": "Acceptable",
     "worn": "Worn"

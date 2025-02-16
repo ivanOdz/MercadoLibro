@@ -33,7 +33,7 @@ export class BookModalComponent {
   @Input() modalVisible: boolean = false;
   @Output() modalVisibleChange = new EventEmitter<boolean>();
 
-  bookStates = ['new', 'like.new', 'very.good', 'good', 'acceptable', 'worn'];
+  bookStates = ['new', 'like_new', 'very_good', 'good', 'acceptable', 'worn'];
 
   rating: number = 1;
   bookState: string = '';
