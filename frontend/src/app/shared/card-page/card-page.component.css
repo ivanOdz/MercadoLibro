@@ -3,7 +3,7 @@
 	justify-content: space-between;
 	grid-template-columns: 0.75fr 2fr;
 	margin: 0 auto 0 auto;
-	padding: 0.5vh 5vh 0vh 5vh;
+	padding: 0.5vh 5vh 0 5vh;
 }
 
 .column-filters {
@@ -151,6 +151,7 @@
 	justify-content: center;
 	align-items: center;
 	padding: 5px 15px 25px 15px;
+	height: 64vh;
 }
 
 ::ng-deep .p-scrollpanel-bar {

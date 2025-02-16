@@ -125,11 +125,12 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 /*
                  * Book controller
                  **/
-                .antMatchers("/api/books")
-                    .authenticated()
 
                 .antMatchers(HttpMethod.GET,"/api/books")
                     .access(BOOKS_ACCESS)
+
+                .antMatchers(HttpMethod.POST,"/api/books")
+                    .permitAll()
 
                 /*
                  * Book Model controller

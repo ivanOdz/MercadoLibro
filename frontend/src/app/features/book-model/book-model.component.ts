@@ -38,6 +38,7 @@ import {ScrollPanel} from "primeng/scrollpanel";
     RouterLink,
   ],
   templateUrl: './book-model.component.html',
+  standalone: true,
   styleUrls: ['./book-model.component.css', '../book-home/book-home.component.css']
 })
 export class BookModelComponent implements OnInit {

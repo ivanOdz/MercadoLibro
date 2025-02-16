@@ -7,6 +7,8 @@ import { NavbarComponent } from "../../shared/navbar/navbar.component";
 import { BookModel } from "../../core/models/bookModel.model";
 import { BookModelService } from "../../core/services/bookmodel.service";
 import {environment} from "../../../environments/environment";
+import {BookService} from "../../core/services/book.service";
+import {AuthService} from "../../core/services/auth.service";
 
 @Component({
 	
@@ -19,15 +21,23 @@ import {environment} from "../../../environments/environment";
 export class BookFormComponent {
 	
 	url: string = `${environment.production ? environment.productionUrl : environment.developmentUrl}/book_models`;
+	bookUrl: string = (environment.production ? environment.productionUrl : environment.developmentUrl) + '/books';
+	bookModelUrl: string = '';
 	bookModelService: BookModelService = inject(BookModelService);
+	bookService: BookService = inject(BookService);
+	authService: AuthService = inject(AuthService);
+	user: string | undefined = '';
+
 	bookModelForm: FormGroup;
 	rating: number = 1;
+	condition: string = '';
 	imagePreview: string | ArrayBuffer | null = null;
 	uploadProgress = 0;
 	genres = [	'fiction', 'non.fiction', 'mystery', 'thriller', 'science.fiction', 'fantasy', 'romance', 'historical.fiction', 'horror', 'biography', 'autobiography', 'memoir',
 				'young.adult', 'childrens.literature',  'graphic.novel' ,'classic', 'adventure', 'dystopian', 'self.help', 'poetry', 'literary.fiction', 'crime', 'western',
 				'contemporary', 'religious.spiritual', 'philosophy', 'science', 'travel', 'true.crime', 'historical.non.fiction', 'other'
 			];
+	bookStates = ['new', 'like_new', 'very_good', 'good', 'acceptable', 'worn'];
 	dimensions = ['small', 'medium', 'large'];
 	languages = ['spanish', 'english'];
 	
@@ -48,6 +58,7 @@ export class BookFormComponent {
 													isPocketEdition: [false],
 													isHardcover: [false],
 													rating: [1, [Validators.min(1), Validators.max(5)]],
+													condition: ['', Validators.required],
 													authors: this.formBuilder.array([""]),
 												});
 		this.translate.setDefaultLang(this.translate.getBrowserLang() || 'en');
@@ -120,16 +131,29 @@ export class BookFormComponent {
 		}
 		
 		if (this.bookModelForm.valid) {
+
+			this.authService.loggedUser$.subscribe(user => {
+				this.user = user?.self;
+			});
 			
 			console.log('New book:', this.bookModelForm.value);
 			
 			const bookData = new BookModel(this.bookModelForm.value);
 			const rating = this.bookModelForm.value.rating;
-			
-			this.bookModelService.uploadBookModel(this.url, bookData, rating).subscribe({
+			const condition = this.bookModelForm.value.condition;
+
+			this.bookModelService.uploadBookModel(this.url, bookData).subscribe({
 				
-				next: () => {
+				next: (response) => {
 					console.log('Upload of Book Model successful :)');
+					this.bookService.uploadBook(this.bookUrl, response, rating, condition, this.user).subscribe({
+						next: () => {
+							console.log('Upload of Book successful :)');
+						},
+						error: (error) => {
+							console.error('Upload of Book failed', error);
+						}
+					});
 				},
 				error: (error) => {
 					console.error('Upload of Book Model failed', error);
