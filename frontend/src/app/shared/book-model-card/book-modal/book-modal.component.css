@@ -1,0 +1,59 @@
+.selected-book-in-modal {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 1rem;
+}
+
+.book-image-in-modal {
+    width: 100px;
+    height: auto;
+    border-radius: 5px;
+}
+
+.book-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.star-rating {
+    display: flex;
+    justify-content: start;
+    margin-top: 5px;
+}
+
+.star-icon {
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0 5px;
+}
+
+.filled-star {
+    color: gold;
+}
+
+.empty-star {
+    color: gray;
+}
+
+.error {
+    color: red;
+    font-size: 0.9rem;
+}
+
+.button-group {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.submit-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.submit-button:hover {
+    background-color: #0056b3;
+}

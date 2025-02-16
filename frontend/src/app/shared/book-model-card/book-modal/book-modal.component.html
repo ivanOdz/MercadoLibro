@@ -1,0 +1,42 @@
+<p-dialog header="{{ 'BOOK_MODEL.ADDING_BOOK' | translate }}" [modal]="true" [(visible)]="modalVisible" [style]="{ width: '40%' }">
+    <div class="selected-book-in-modal">
+        <div style="grid-column: 1">
+            <img class="book-image-in-modal" [src]="this.bookImage" alt="book image"/>
+        </div>
+        <div style="grid-column: 2; text-align: end">
+            <p class="book-title">{{ bookModel.title }}</p>
+            <p class="book-authors">{{ getFormattedAuthors(bookModel.authors) }}</p>
+            <p>{{ bookModel.description }}</p>
+        </div>
+    </div>
+
+    <p class="book-title">{{ 'BOOK_MODEL.TELL_US_ABOUT_YOUR_BOOK' | translate }}</p>
+
+    <label>{{ 'BOOK_FORM.RATING' | translate }}:</label>
+    <input formControlName="rating">
+    <div class="star-rating">
+        <ng-container *ngFor="let star of [1, 2, 3, 4, 5]">
+            <i
+                    class="star-icon"
+                    [ngClass]="star <= rating ? 'filled-star' : 'empty-star'"
+                    (click)="setRating(star)">
+            </i>
+        </ng-container>
+    </div>
+
+    <span *ngIf="bookForm.get('rating')?.invalid" class="error">
+        {{ 'BOOK_FORM.OUT_OF_RANGE' | translate }}
+    </span>
+
+    <label>{{ 'BOOK_FORM.BOOK_STATE' | translate }}:</label>
+    <!--<p-dropdown [options]="bookStates" [(ngModel)]="bookState" optionLabel="bookState" placeholder="{{ 'BOOK_FORM.SELECT_STATE' | translate }}" class="w-full md:w-56">
+        <ng-template let-state pTemplate="item">
+            {{ ('bookstate.' + state.value) | translate }}
+        </ng-template>
+    </p-dropdown>-->
+
+    <div class="buttons-in-modal">
+        <p-button [styleClass]="'cancel-publication-button'" label="{{ 'BOOK_HOME.CANCEL' | translate }}" class="cancel-button" (click)="closeModal()"></p-button>
+        <p-button [styleClass]="'create-publication-button'" label="{{ 'BOOK_FORM.SAVE' | translate }}" class="cancel-button" (click)="submitForm()"></p-button>
+    </div>
+</p-dialog>
