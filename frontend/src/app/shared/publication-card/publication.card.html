@@ -1,6 +1,7 @@
 <div class="publication-card-container" (click)="goToPublicationDetail()">
 	<div class="first-column-card">
-		<img class="book-image" [src]="getBookImage(publication.book?.images)" alt="book-image"/>
+<!-- 		<img class="book-image" [src]="getBookImage(publication.book?.images)" alt="book-image"/> -->
+		<img [src]="bookImage" alt="Book Cover" class="book-image" (error)="bookImage = defaultImage">
 	</div>
 	<div class="second-column-card">
 		<p class="title-text-card">{{ publication.book?.bookModel?.title }}</p>
