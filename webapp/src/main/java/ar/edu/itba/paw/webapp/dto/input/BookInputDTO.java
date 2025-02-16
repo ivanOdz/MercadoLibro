@@ -8,8 +8,8 @@ import java.util.stream.Collectors;
 
 public class BookInputDTO {
     private String condition;
-    private URI bookModelURN;
-    private URI userURN;
+    private URI bookModel;
+    private URI user;
     private Integer rating;
     private List<URI> imageURNS;
 
@@ -22,19 +22,19 @@ public class BookInputDTO {
     }
 
     public URI getBookModelURN() {
-        return bookModelURN;
+        return bookModel;
     }
 
     public void setBookModelURN(URI bookModelURN) {
-        this.bookModelURN = bookModelURN;
+        this.bookModel = bookModelURN;
     }
 
     public URI getUserURN() {
-        return userURN;
+        return user;
     }
 
     public void setUserURN(URI userURN) {
-        this.userURN = userURN;
+        this.user = userURN;
     }
 
     public Integer getRating() {
@@ -54,11 +54,11 @@ public class BookInputDTO {
     }
 
     public Long getBookModelId() {
-        return UrnResolverUtil.getBookModelId(bookModelURN);
+        return UrnResolverUtil.getBookModelId(bookModel);
     }
 
     public Long getUserId() {
-        return UrnResolverUtil.getUserId(userURN);
+        return UrnResolverUtil.getUserId(user);
     }
 
     public List<Long> getImageIds() {

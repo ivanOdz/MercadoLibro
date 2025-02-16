@@ -30,7 +30,7 @@
     "EDITORIAL": "Editorial",
     "DESCRIPTION": "Descripción",
     "GENRE": "Género",
-    "BOOK_STATE": "Condiciones del libro",
+    "BOOK_STATE": "Condición del libro",
     "EDITION": "Edición",
     "WEIGHT": "Peso (gramos)",
     "PAGES": "Páginas",
@@ -51,7 +51,7 @@
     "EDITORIAL_IS_OBLIGATORY": "La editorial es obligatoria.",
     "NUMERIC_FIELD_IS_OBLIGATORY": "Este campo es numérico y obligatorio.",
     "SELECT_GENRE": "Seleccione un género",
-    "SELECT_STATE": "Select the state of your book",
+    "SELECT_STATE": "Seleccione el estado de su libro",
     "ADD_IMAGE": "Agregar imagen"
   },
   "genre": {

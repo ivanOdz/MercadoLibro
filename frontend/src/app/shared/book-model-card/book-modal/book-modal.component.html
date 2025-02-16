@@ -9,34 +9,56 @@
             <p>{{ bookModel.description }}</p>
         </div>
     </div>
+    <div class="filter-line"></div>
 
     <p class="book-title">{{ 'BOOK_MODEL.TELL_US_ABOUT_YOUR_BOOK' | translate }}</p>
 
-    <label>{{ 'BOOK_FORM.RATING' | translate }}:</label>
-    <input formControlName="rating">
-    <div class="star-rating">
-        <ng-container *ngFor="let star of [1, 2, 3, 4, 5]">
-            <i
-                    class="star-icon"
-                    [ngClass]="star <= rating ? 'filled-star' : 'empty-star'"
-                    (click)="setRating(star)">
-            </i>
-        </ng-container>
+    <div class="book-info-container">
+        <div class="book-info-row">
+            <label>{{ 'BOOK_FORM.RATING' | translate }}:</label>
+            <div class="star-rating">
+                <span *ngFor="let star of [1, 2, 3, 4, 5]"
+                      class="star-icon"
+                      [ngClass]="{'filled-star': star <= rating, 'empty-star': star > rating}"
+                      (click)="setRating(star)">
+                    ★
+                </span>
+            </div>
+            <span *ngIf="rating < 1 || rating > 5" class="error">{{ 'BOOK_FORM.OUT_OF_RANGE' | translate }}</span>
+        </div>
+
+        <div class="book-info-row">
+            <label style="margin-right: 10px">{{ 'BOOK_FORM.BOOK_STATE' | translate }}:</label>
+            <select [(ngModel)]="bookState">
+                <option value="" disabled selected>{{ 'BOOK_FORM.SELECT_STATE' | translate }}</option>
+                <option *ngFor="let state of bookStates" [value]="state">
+                    {{ ('bookstate.' + state) | translate }}
+                </option>
+            </select>
+        </div>
+
+        <!-- Parte inferior: Selector de imágenes -->
+        <div class="bottom">
+            <label class="image-upload-label">
+                <input type="file" (change)="onImagesSelected($event)" accept="image/*" multiple>
+                <span uk-icon="icon: cloud-upload"></span>
+                <span *ngIf="imagePreviews.length === 0" class="upload-text">{{ 'BOOK_FORM.ADD_IMAGE' | translate }}</span>
+
+                <div *ngIf="imagePreviews.length > 0" class="image-preview">
+                    <div *ngFor="let preview of imagePreviews; let i = index">
+                        <img [src]="preview" alt="Preview {{i}}">
+                        <button type="button" (click)="removeImage(i)">✖</button>
+                    </div>
+                </div>
+            </label>
+            <progress *ngIf="uploadProgress > 0" class="uk-progress" [value]="uploadProgress" max="100"></progress>
+        </div>
+
+        <div class="buttons-in-modal">
+            <p-button [styleClass]="'cancel-publication-button'" label="{{ 'BOOK_HOME.CANCEL' | translate }}" class="cancel-button" (click)="closeModal()"></p-button>
+            <p-button [disabled]="!isFormValid()" [styleClass]="'create-publication-button'" label="{{ 'BOOK_FORM.SAVE' | translate }}" class="cancel-button" (click)="submitForm()"></p-button>
+        </div>
+
     </div>
 
-    <span *ngIf="bookForm.get('rating')?.invalid" class="error">
-        {{ 'BOOK_FORM.OUT_OF_RANGE' | translate }}
-    </span>
-
-    <label>{{ 'BOOK_FORM.BOOK_STATE' | translate }}:</label>
-    <!--<p-dropdown [options]="bookStates" [(ngModel)]="bookState" optionLabel="bookState" placeholder="{{ 'BOOK_FORM.SELECT_STATE' | translate }}" class="w-full md:w-56">
-        <ng-template let-state pTemplate="item">
-            {{ ('bookstate.' + state.value) | translate }}
-        </ng-template>
-    </p-dropdown>-->
-
-    <div class="buttons-in-modal">
-        <p-button [styleClass]="'cancel-publication-button'" label="{{ 'BOOK_HOME.CANCEL' | translate }}" class="cancel-button" (click)="closeModal()"></p-button>
-        <p-button [styleClass]="'create-publication-button'" label="{{ 'BOOK_FORM.SAVE' | translate }}" class="cancel-button" (click)="submitForm()"></p-button>
-    </div>
 </p-dialog>

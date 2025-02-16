@@ -5,6 +5,7 @@ import {Book} from "../models/book.model";
 import {BookData} from "../models/types";
 import {map} from "rxjs/operators";
 import {Pagination} from "../models/pagination";
+import { BookModel } from "../models/bookModel.model";
 
 @Injectable({ providedIn: 'root' })
 export class BookService {
@@ -86,6 +87,16 @@ export class BookService {
                 return throwError(() => new Error(error));
             })
         );
-}
+    }
+
+    uploadBook(bookUrl: string, bookModelUrl: string, rating: number, condition: string, user: string | undefined): Observable<any> {
+        const headers = new HttpHeaders({'Content-Type': 'application/vnd.books.v1+json'});
+        const body = { bookModel: bookModelUrl, rating: rating, condition: condition, user: user, imageURNS: null };
+
+        return this.http.post(`${bookUrl}`, body, { headers, observe: 'response' }).pipe(
+            tap((response) => console.log("API response (Post) of Book:", response))
+        );
+
+    }
 
 }

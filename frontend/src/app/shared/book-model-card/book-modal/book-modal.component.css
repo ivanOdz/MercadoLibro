@@ -1,30 +1,44 @@
+/* Contenedor principal del modal */
 .selected-book-in-modal {
     display: grid;
     grid-template-columns: 1fr 2fr;
     gap: 1rem;
 }
 
+/* Imagen del libro en el modal */
 .book-image-in-modal {
     width: 100px;
     height: auto;
     border-radius: 5px;
 }
 
+/* Título del libro */
 .book-title {
     font-size: 1.2rem;
     font-weight: bold;
 }
 
+/* Contenedor del formulario */
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-top: 10px;
+}
+
 .star-rating {
     display: flex;
-    justify-content: start;
+    justify-content: center;
+    align-items: center;
     margin-top: 5px;
 }
 
 .star-icon {
-    font-size: 1.5rem;
+    font-size: 2rem;
     cursor: pointer;
-    padding: 0 5px;
+    padding: 5px;
+    transition: color 0.3s;
 }
 
 .filled-star {
@@ -35,16 +49,128 @@
     color: gray;
 }
 
+/* Estilos para mensajes de error */
 .error {
     color: red;
     font-size: 0.9rem;
 }
 
+/* Línea divisoria */
+.filter-line {
+    border-bottom: 2px solid rgba(203, 203, 203, 0.52);
+    width: 100%;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 1);
+}
+
+/* Estilo para el select */
+.book-condition {
+    width: 100%;
+    max-width: 250px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+select {
+    appearance: none; /* Elimina el estilo nativo */
+    background-color: white;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+/* Agregar un ícono de flecha personalizado */
+select {
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16' fill='%23777'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 12px;
+    padding-right: 32px; /* Espacio para la flecha */
+}
+
+/* Efecto hover */
+select:hover {
+    border-color: #999;
+}
+
+/* Efecto cuando está en foco */
+select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+
+/* Contenedor de carga de imagen */
+.image-upload-container {
+    text-align: center;
+    margin-top: 30px;
+}
+
+/* Área de arrastrar y soltar imagen */
+.image-upload-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    padding: 10px;
+    border: 2px dashed #aaa;
+    border-radius: 8px;
+    transition: border-color 0.3s;
+}
+
+.image-upload-label:hover {
+    border-color: rgba(235, 130, 55, 1);
+}
+
+.image-upload-label input[type="file"] {
+    display: none;
+}
+
+/* Texto debajo del área de carga */
+.upload-text {
+    margin: 14px;
+}
+
+/* Vista previa de imagen seleccionada */
+.image-preview {
+    margin-top: 12px;
+    position: relative;
+    display: inline-block;
+}
+
+.image-preview img {
+    max-width: 350px;
+    max-height: 350px;
+    border-radius: 5px;
+}
+
+/* Botón para eliminar imagen */
+.image-preview button {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+/* Grupo de botones */
 .button-group {
     margin-top: 15px;
     text-align: center;
 }
 
+/* Botón de envío */
 .submit-button {
     padding: 10px 20px;
     background-color: #007bff;
@@ -52,8 +178,44 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 .submit-button:hover {
     background-color: #0056b3;
+}
+.book-info-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.book-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Para asegurar que el contenedor padre tenga `position: relative;` */
+.container {
+    position: relative;
+    padding: 20px;
+}
+/* Contenedor inferior (Selector de imágenes) */
+.bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+    padding: 15px;
+    border-top: 1px solid rgba(203, 203, 203, 0.52);
+}
+
+/* Ajuste para centrar los elementos dentro de .bottom */
+.bottom label,
+.bottom progress {
+    width: 100%;
+    text-align: center;
 }
