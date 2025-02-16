@@ -2,14 +2,15 @@
 <div class="container">
     <div class="publication-detail-main-section" *ngIf="!exchangeSolicited" @fadeOutUp>
         <div class="publication-detail-header">
-            <div *ngIf="!fromBooks" class="return-button" (click)="goToPublications()">
+<!--             <div class="return-button" (click)="goToPublications()"> -->
+            <div class="return-button" (click)="goBack()">
                 <i class="pi pi-arrow-left return-icon"></i>
                 <p style="margin:0">{{ 'PUBLICATION_D.RETURN' | translate }}</p>
             </div>
-            <div *ngIf="fromBooks" class="return-button" (click)="goToMyBooks()">
-                <i class="pi pi-arrow-left return-icon"></i>
-                <p style="margin:0">{{ 'PUBLICATION_D.RETURN_BOOKS' | translate }}</p>
-            </div>
+<!--             <div *ngIf="fromBooks" class="return-button" (click)="goToMyBooks()"> -->
+<!--                 <i class="pi pi-arrow-left return-icon"></i> -->
+<!--                 <p style="margin:0">{{ 'PUBLICATION_D.RETURN_BOOKS' | translate }}</p> -->
+<!--             </div> -->
         </div>
         <div class="publication-detail-card-section">
             <div class="publication-detail-card book-card">

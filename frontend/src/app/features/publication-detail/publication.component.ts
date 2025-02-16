@@ -7,7 +7,7 @@ import { trigger, style, animate, transition } from '@angular/animations';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import {PrimeTemplate} from "primeng/api";
 import {ActivatedRoute, Router} from "@angular/router";
-import {NgForOf, NgIf} from "@angular/common";
+import {NgForOf, NgIf, Location as AngularLocation} from "@angular/common";
 import {Select} from "primeng/select";
 import {FormsModule} from "@angular/forms";
 import {environment} from "../../../environments/environment";
@@ -107,7 +107,8 @@ export class PublicationComponent implements OnInit {
                 private as: AuthService,
                 private es: ExchangeService,
                 private bs: BookService,
-                private bms: BookModelService) {
+                private bms: BookModelService,
+				private angularLocation: AngularLocation) {
     }
 
 
@@ -345,4 +346,13 @@ export class PublicationComponent implements OnInit {
     goToMyBooks() {
         this.router.navigate(['/my-books']);
     }
+	
+	goBack() {
+		if (window.history.length > 2) {
+			this.angularLocation.back();
+		}
+		else {
+			this.router.navigate(['/']);
+		}
+	}
 }
