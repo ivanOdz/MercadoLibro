@@ -4,6 +4,8 @@ import { PublicationData } from "../../core/models/types";
 import { Router } from "@angular/router";
 import { TranslatePipe } from '@ngx-translate/core';
 import { environment } from "../../../environments/environment";
+import { User } from "../../core/models/user.model";
+import { PublicationService } from "../../core/services/publication.service";
 
 @Component({
     selector: 'publication-card',
@@ -14,13 +16,17 @@ import { environment } from "../../../environments/environment";
 })
 export class PublicationCardComponent implements OnInit {
     @Input() publication!: PublicationData;
+	@Input() loggedUser!: User | null;
+	showLikeHeart: boolean = false;
+	
 	bookImage!: string;
 	defaultImage: string = './assets/book.jpg';
 	
-    constructor(private router: Router) { }
+    constructor(private router: Router, private publicationService: PublicationService) { }
 
 	ngOnInit() {
 		this.bookImage = this.getBookImage();
+		this.showLikeHeart = this.loggedUser ? true : false;
 	}
 
     goToPublicationDetail() {
@@ -39,5 +45,26 @@ export class PublicationCardComponent implements OnInit {
 				this.publication.book?.bookModel?.cover ? this.getBaseUrl() + this.publication.book.bookModel.cover :
 				this.defaultImage;
 	}
+	
+	toggleLike(event: Event): void {
+		
+		event.stopPropagation();
+		
+		if (!this.loggedUser) {
+			console.warn('User not logged!');
+			return;
+		}
 
+		if (this.publication.favoritePublication) {
+			this.publicationService.unlikePublication(this.publication).subscribe({
+				next: () => console.log('Publicación eliminada de favoritos'),
+				error: (err) => console.error('Error al eliminar de favoritos', err)
+			});
+		} else {
+			this.publicationService.likePublication(this.publication, this.loggedUser.self).subscribe({
+				next: () => console.log('Publicación agregada a favoritos'),
+				error: (err) => console.error('Error al agregar a favoritos', err)
+			});
+		}
+	}
 }

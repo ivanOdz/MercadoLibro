@@ -33,6 +33,7 @@
 
 .auxiliar-column {
 	grid-column: 3;
+	display: grid;
 }
 
 .title-text {
@@ -66,6 +67,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	align-self: flex-end;
 }
 
 .star-icon {
@@ -90,4 +92,30 @@
 	color: #998877;
 	margin: 0;
 	padding: 0px 6px 0px 6px;
+}
+
+.heart-icon {
+	font-size: 24px;
+	font-weight: bold;
+	cursor: pointer;
+	transition: color 0.3s ease;
+	align-self: center;
+	margin-left: auto;
+	pointer-events: auto;
+}
+
+.heart-icon.pi-heart {
+	color: rgba(190, 190, 190, 1);
+}
+
+.heart-icon.pi-heart:hover {
+	color: rgba(235, 130, 55, 1);
+}
+
+.heart-icon.pi-heart-fill.liked {
+	color: rgba(235, 130, 55, 1);
+}
+
+.heart-icon.pi-heart-fill.liked:hover {
+	color: rgba(150, 150, 50, 1);
 }

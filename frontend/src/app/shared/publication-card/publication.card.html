@@ -9,9 +9,9 @@
 	</div>
 	<div class="auxiliar-column">
 	
-	
-		<div class="rating-container">
+		<i *ngIf="showLikeHeart === true" class="heart-icon pi" [ngClass]="publication.favoritePublication ? 'pi-heart-fill liked' : 'pi-heart'" (click)="toggleLike($event)"></i>
 		
+		<div class="rating-container">
 			<p class="rating-text">{{ publication.book!.bookModel!.averageRating }}</p>
 			<ng-container class="stars-container" *ngFor="let star of [1, 2, 3, 4, 5]; let i = index">
 				<i class="star-icon" [ngClass]="star <= publication.book!.bookModel!.averageRating ? 'filled-star' : 'empty-star'"></i>
