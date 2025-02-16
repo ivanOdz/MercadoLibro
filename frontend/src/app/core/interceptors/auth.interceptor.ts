@@ -59,7 +59,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
                                 router.navigate(['/auth/login']);
                             }
                             console.log('ERROR refresh', error);
-                            return throwError(() => refreshError);
+                            return EMPTY;
                         })
                     );
                 } else {

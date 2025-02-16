@@ -9,7 +9,7 @@
   "self": "http://localhost:8080/api/exchanges/4",
   "offerer": "http://localhost:8080/api/publications/5",
   "requester": "http://localhost:8080/api/publications/8",
-  "chat": "http://localhost:8080/api/exchanges/4/chat",
+  "chat": "http://localhost:8080/api/exchanges/4/messages",
   "offererReview": "http://localhost:8080/api/user/6/review/4",
   "requesterReview": "http://localhost:8080/api/user/8/review/6"
 }
