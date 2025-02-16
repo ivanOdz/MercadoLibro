@@ -20,7 +20,6 @@ export class FavoritePublicationsComponent {
 	showConditionFilter: boolean = true;
 	showGenreFilter: boolean = true;
 	publications: PublicationData[] = [];
-	headersData: any;
 	private subscription!: Subscription;
   
 	@ViewChild('publicationCard') publicationCard!: TemplateRef<any>;
@@ -33,17 +32,7 @@ export class FavoritePublicationsComponent {
 	fetchMyFavoritePublications = (state: string, genre: string, search: string, page: number): ObservablePublicationData => {
 		return this.authService.loggedUser$.pipe(
 			filter(user => !!user),
-			switchMap((user) =>
-				this.publicationService.getFavoritePublications(user.self, state, genre, page, search)
-				.pipe(
-					tap(response => {
-						if (response.headers) {
-							this.headersData = response.headers;
-						}
-					}),
-					map(response => response)
-				)
-			)
+			switchMap((user) => this.publicationService.getFavoritePublications(user.self, state, genre, page, search))
 		);
 	};
 }

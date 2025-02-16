@@ -19,7 +19,6 @@ export class MyPublicationsComponent {
 	showConditionFilter: boolean = true;
 	showGenreFilter: boolean = true;
 	publications: PublicationData[] = [];
-	headersData: any;
 	private subscription!: Subscription;
   
 	@ViewChild('publicationCard') publicationCard!: TemplateRef<any>;
@@ -32,17 +31,7 @@ export class MyPublicationsComponent {
 	fetchMyPublications = (state: string, genre: string, search: string, page: number): ObservablePublicationData => {
 		return this.authService.loggedUser$.pipe(
 			filter(user => !!user),
-			switchMap((user) =>
-				this.publicationService.getMyPublications(user.publications, state, genre, page, search)
-				.pipe(
-					tap(response => {
-						if (response.headers) {
-							this.headersData = response.headers;
-						}
-					}),
-					map(response => response)
-				)
-			)
+			switchMap((user) => this.publicationService.getMyPublications(user.publications, state, genre, page, search))
 		);
 	};
 }
