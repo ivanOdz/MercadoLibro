@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, TemplateRef, ViewChild, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
@@ -8,6 +8,7 @@ import { PublicationService } from "../../core/services/publication.service";
 import { AuthService } from "../../core/services/auth.service";
 import { ObservablePublicationData, PublicationData } from "../../core/models/types";
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
+import { User } from "../../core/models/user.model";
 
 @Component({
 	selector: 'app-publications',
@@ -17,12 +18,13 @@ import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 	imports: [CardPageComponent, PublicationCardComponent, TranslatePipe]
 
 })
-export class PublicationsComponent {
+export class PublicationsComponent implements OnInit {
 	showConditionFilter: boolean = true;
 	showGenreFilter: boolean = true;
 	publications: PublicationData[] = [];
 	private subscription!: Subscription;
-
+	loggedUser: User | null = null;
+	
 	@ViewChild('publicationCard') publicationCard!: TemplateRef<any>;
 
 	constructor(
@@ -31,6 +33,10 @@ export class PublicationsComponent {
 		private route: ActivatedRoute
 	) { }
 
+	ngOnInit() {
+		this.authService.loggedUser$.subscribe(user => { this.loggedUser = user; });
+	}
+	
 	fetchPublications = (state: string, genre: string, search: string, page: number): ObservablePublicationData => {
 		return this.publicationService.getGeneralPublications(state, genre, page, search);
 	};

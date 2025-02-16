@@ -17,7 +17,7 @@ import { PublicationService } from "../../core/services/publication.service";
 export class PublicationCardComponent implements OnInit {
     @Input() publication!: PublicationData;
 	@Input() loggedUser!: User | null;
-	showLikeHeart: boolean = false;
+	@Input() showLikeHeart: boolean = false;
 	
 	bookImage!: string;
 	defaultImage: string = './assets/book.jpg';
@@ -26,7 +26,6 @@ export class PublicationCardComponent implements OnInit {
 
 	ngOnInit() {
 		this.bookImage = this.getBookImage();
-		this.showLikeHeart = this.loggedUser ? true : false;
 	}
 
     goToPublicationDetail() {

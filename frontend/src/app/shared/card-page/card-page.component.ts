@@ -14,7 +14,7 @@ import { Pagination } from "../../core/models/pagination";
 import { PaginatorComponent } from "../paginator/paginator.component";
 import { switchMap } from "rxjs";
 import { SortComponent } from "../sort/sort.component";
-import {ObservablePublicationData} from "../../core/models/types";
+import { ObservablePublicationData } from "../../core/models/types";
 
 @Component({
 	selector: 'card-page',
