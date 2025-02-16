@@ -64,7 +64,7 @@ public class BookModelController {
 
     @POST
     @Consumes(value = {VndType.APPLICATION_BOOK_MODEL})
-    public Response postBookModel(final BookModelDTO bookModelDTO, @QueryParam("rating") final Integer rating) {
+    public Response postBookModel(final BookModelDTO bookModelDTO) {
         BookModel bookModel = bookModelService
                 .createBookModel(bookModelDTO.getIsbn(), bookModelDTO.getTitle(), bookModelDTO.getEditorial(),
                         bookModelDTO.getDescription(), Genre.fromString("genre." + bookModelDTO.getGenre()), bookModelDTO.getEdition(),

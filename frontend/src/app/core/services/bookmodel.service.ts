@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
+import {HttpClient, HttpHeaders, HttpParams, HttpResponse} from "@angular/common/http";
 import {catchError, Observable, of, tap} from "rxjs";
 import { BookModel } from "../models/bookModel.model";
 import {Pagination} from "../models/pagination";
@@ -17,14 +17,14 @@ export class BookModelService {
         );
     }
 
-	uploadBookModel(bookModelUrl: string, bookData: BookModel, rating: number): Observable<any> {
-		
-		const headers = new HttpHeaders({'Content-Type': 'application/vnd.book_models.v1+json'});
-		
-		return this.http.post(`${bookModelUrl}?rating=${rating}`, bookData, { headers, observe: 'response' }).pipe(
-			tap((r) => console.log("API response (Post) of Book Model:", r))
-		);
-	}
+    uploadBookModel(bookModelUrl: string, bookData: BookModel): Observable<string> {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.book_models.v1+json' });
+
+        return this.http.post(`${bookModelUrl}`, bookData, { headers, observe: 'response' }).pipe(
+            map(response => response.headers.get('Location') || '')
+        );
+    }
+
 
     getBookModels({ bookModelsUrl, genre, search }: { bookModelsUrl: string; genre: string; search: string }): Observable<{ bookModels: BookModel[], pagination: Pagination, headers: HttpHeaders }> {
         let params = new HttpParams()
