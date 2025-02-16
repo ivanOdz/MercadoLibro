@@ -3,14 +3,14 @@
 	justify-content: space-between;
 	grid-template-columns: 0.75fr 2fr;
 	margin: 0 auto 0 auto;
-	padding: 0vh 5vh 0vh 5vh;
+	padding: 0.5vh 5vh 0vh 5vh;
 }
 
 .column-filters {
 	display: flex;
 	flex-direction: column;
 	margin: 8% 8%;
-	gap: 20px;
+	gap: 4%;
 }
 
 .active-filters {
@@ -58,13 +58,6 @@
 	transition: background 0.2s;
 }
 
-.column-content {
-	display: flex;
-	align-items: center;
-	flex-direction: column;
-	margin: 0 5%;
-}
-
 .page-title {
 	margin: 15px 10px;
 	text-align: center;
@@ -105,19 +98,17 @@
 	gap: 16px;
 	width: 100%;
 	height: 10%;
-	margin: auto;
-	justify-items: center;
-	padding: 2rem;
+	padding-top: 20px;
+	padding-bottom: 20px;
 }
 
 .cards-grid {
 	display: grid;
-	align-self: center;
 	grid-template-columns: repeat(auto-fill, minmax(1vw, 1fr));
 	gap: 16px;
 	padding: 16px;
 	width: 100%;
-	margin: auto;
+	margin: 16px;
 	justify-items: center;
 }
 
@@ -139,4 +130,38 @@
 	cursor: pointer;
 	font-size: 16px;
 	transition: background 0.3s ease-in-out;
+}
+
+.column-content {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
+.content {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin-top: auto;
+}
+
+.scroll-panel {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 5px 15px 25px 15px;
+}
+
+::ng-deep .p-scrollpanel-bar {
+	background-color: rgba(220, 170, 130, 0.9);
+}
+
+.pagination {
+	margin-top: auto;
+	padding-top: 40px;
+}
+
+.spacer {
+	height: 20px;
 }

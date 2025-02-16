@@ -1,12 +1,23 @@
 <div class="publication-card-container" (click)="goToPublicationDetail()">
-	<div class="first-column-card">
+	<div class="image-column">
 		<img [src]="bookImage" alt="Book Cover" class="book-image" (error)="bookImage = defaultImage">
 	</div>
-	<div class="second-column-card">
+	<div class="book-data-column">
 		<p class="title-text">{{ publication.book?.bookModel?.title }}</p>
 		<p class="editorial-edition-text">{{ publication.book?.bookModel?.editorial }}, {{ publication.book?.bookModel?.edition }}° {{ 'BOOK_FORM.EDITION' | translate }}</p>
 		<p class="year-genre-text">{{ publication.book?.bookModel?.publicationYear }}, {{ ('genre.' + (publication.book?.bookModel?.genre | lowercase)) | translate }}</p>
-
 	</div>
-	<div class="third-column-card"></div>
+	<div class="auxiliar-column">
+	
+	
+		<div class="rating-container">
+		
+			<p class="rating-text">{{ publication.book!.bookModel!.averageRating }}</p>
+			<ng-container class="stars-container" *ngFor="let star of [1, 2, 3, 4, 5]; let i = index">
+				<i class="star-icon" [ngClass]="star <= publication.book!.bookModel!.averageRating ? 'filled-star' : 'empty-star'"></i>
+			</ng-container>
+			<p class="rating-text">({{ publication.book!.bookModel!.ratingCount }})</p>
+		</div>
+	
+	</div>
 </div>

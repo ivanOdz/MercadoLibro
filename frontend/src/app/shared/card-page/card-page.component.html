@@ -49,20 +49,21 @@
 			<app-sort *ngIf="displaySort"></app-sort>
 			<br *ngIf="!displaySort">
 		</div>
-
-        <p-scrollpanel [style]="{ width:'65vw', height: '68vh'}">
-
-			<div class="cards" [ngClass]="{ 'cards-grid': displayGridStyle === true }">
-				<ng-container *ngFor="let item of items">
+	
+		<div class="content">
+			<p-scrollpanel class="scroll-panel" [style]="{ width:'65vw', height: '68vh'}">
+	
+				<div [ngClass]="{ 'cards-grid': displayGridStyle === true, 'cards': displayGridStyle === false }">
 					<ng-container *ngIf="cardTemplate">
-						<ng-container *ngTemplateOutlet="cardTemplate; context: { $implicit: item }"></ng-container>
+						<ng-container *ngFor="let item of items" [ngTemplateOutlet]="cardTemplate" [ngTemplateOutletContext]="{ $implicit: item }"></ng-container>
 					</ng-container>
-				</ng-container>
-			</div>
-			
-		</p-scrollpanel>
-        
-		<app-paginator [pagination]="pagination" [fetchMethod]="fetchItems.bind(this)" [reset]="resetPaginatorNumber"></app-paginator>
+					<div class="spacer"></div>
+				</div>
+				
+			</p-scrollpanel>
+	        
+			<app-paginator [pagination]="pagination" [fetchMethod]="fetchItems.bind(this)" [reset]="resetPaginatorNumber"></app-paginator>
+		</div>
         
 	</div>
 </div>

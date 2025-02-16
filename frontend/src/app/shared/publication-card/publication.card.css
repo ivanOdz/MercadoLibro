@@ -1,17 +1,17 @@
 .publication-card-container {
-	width: 60vw;
-	height: 140px;
+	width: 58vw;
+	height: 130px;
 	background: #fff;
 	box-shadow: 4px 6px 6px #0000001a;
 	border-radius: 2rem;
-	padding: 2rem;
+	padding: 1rem 2rem;
 	transition: transform .2s;
 	cursor: pointer;
 	align-content: center;
 	display: grid;
-	grid-template-columns: 20% 60% auto;
-	gap: 5%;
 	overflow: hidden;
+	grid-template-columns: 0.5fr 5fr auto;
+	margin: 5px 36px;
 }
 
 .publication-card-container:hover {
@@ -19,30 +19,37 @@
 	background-color: rgba(240, 232, 210, 0.9);
 }
 
-.first-column-card {
+.image-column {
 	grid-column: 1;
-	align-content: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
-.second-column-card {
+.book-data-column {
 	grid-column: 2;
+	padding-left: 20px;
 }
-.third-column-card {
+
+.auxiliar-column {
 	grid-column: 3;
 }
 
 .title-text {
-	margin-top: 0;
+	margin-top: 5px;
 	font-size: 22px;
 	font-style: normal;
+	margin-bottom: 20px;
 }
 
 .editorial-edition-text {
 	font-size: 15px;
+	margin-bottom: 15px;
 }
 
 .year-genre-text {
 	font-size: 12px;
+	margin-bottom: 5px;
 }
 
 .authors-text-card {
@@ -50,8 +57,37 @@
 }
 
 .book-image {
-	height: 120px;
+	height: 110px;
 	width: auto;
 	border-radius: 1rem;
-	align-self: center;
+}
+
+.rating-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.star-icon {
+	font-size: 25px;
+	font-style: normal;
+	margin-bottom: 4px;
+}
+
+.filled-star::before {
+	content: "★";
+	color: #ddaa77;
+}
+
+.empty-star::before {
+	content: "☆";
+	color: #bbb;
+}
+
+.rating-text {
+	font-size: 15px;
+	font-style: normal;
+	color: #998877;
+	margin: 0;
+	padding: 0px 6px 0px 6px;
 }
