@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.utils.*;
 import ar.edu.itba.paw.models.utils.pagination.ItemFilterMetadata;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.util.*;
@@ -28,6 +29,7 @@ public class BookJpaDao implements BookDao {
     }
 
     @Override
+    @Transactional
     public void createBookRating(User user, BookModel bookModel, int rating) {
         final BookRating br = new BookRating(user.getUserId(), bookModel.getBookModelId(), rating);
         em.persist(br);

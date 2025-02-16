@@ -66,4 +66,20 @@ public class BookInputDTO {
                 .map(UrnResolverUtil::getImageId)
                 .collect(Collectors.toList());
     }
+
+    public URI getBookModel() {
+        return bookModel;
+    }
+
+    public void setBookModel(URI bookModel) {
+        this.bookModel = bookModel;
+    }
+
+    public URI getUser() {
+        return user;
+    }
+
+    public void setUser(URI user) {
+        this.user = user;
+    }
 }

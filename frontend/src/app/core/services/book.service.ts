@@ -5,7 +5,6 @@ import {Book} from "../models/book.model";
 import {BookData} from "../models/types";
 import {map} from "rxjs/operators";
 import {Pagination} from "../models/pagination";
-import { BookModel } from "../models/bookModel.model";
 
 @Injectable({ providedIn: 'root' })
 export class BookService {
@@ -91,8 +90,18 @@ export class BookService {
 
     uploadBook(bookUrl: string, bookModelUrl: string, rating: number, condition: string, user: string | undefined): Observable<any> {
         console.log("this is the bookUrl to call post: " + bookUrl);
-        const headers = new HttpHeaders({'Content-Type': 'application/vnd.books.v1+json'});
-        const body = { condition: condition, bookModel: bookModelUrl, user: user, rating: rating, imageURNS: ['http://localhost:8080/api/images/101', 'http://localhost:8080/api/images/104'] };
+        const headers = new HttpHeaders({'Content-Type': 'application/vnd.books.input.v1+json'});
+        const body = {
+            condition: 'VERY_GOOD',
+            bookModel: bookModelUrl,
+            user: user,
+            rating: rating,
+            imageURNS:
+                ['http://localhost:8080/api/images/84',
+                'http://localhost:8080/api/images/85'
+                ]
+        };
+
         console.log("creating a book here ....");
         console.log("bookModel: " + body.bookModel);
         console.log("rating: " + body.rating);

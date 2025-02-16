@@ -144,11 +144,14 @@ public class BookServiceImpl implements BookService {
         }
     }
 
-    private void setImage(Book book, Long imageId) {
+    @Transactional
+    @Override
+    public void setImage(Book book, Long imageId) {
         Image image = imageService.getImageById(imageId);
 
         BookImage bookImage = new BookImage();
         bookImage.setImage(image);
+        bookImage.setBook(book);
 
         // IMPLEMENT: set image order
         bookImage.setImageOrder(book.getImages().size());

@@ -8,7 +8,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BookModalComponent } from "./book-modal/book-modal.component";
 
 @Component({
-  selector: 'app-book-model-card',
+    selector: 'app-book-model-card',
     imports: [
         LowerCasePipe,
         TranslatePipe,
@@ -18,8 +18,9 @@ import { BookModalComponent } from "./book-modal/book-modal.component";
         ReactiveFormsModule,
         BookModalComponent
     ],
-  templateUrl: './book-model-card.component.html',
-  styleUrl: './book-model-card.component.css'
+    templateUrl: './book-model-card.component.html',
+    standalone: true,
+    styleUrl: './book-model-card.component.css'
 })
 export class BookModelCardComponent {
 
