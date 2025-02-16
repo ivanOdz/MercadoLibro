@@ -9,42 +9,42 @@ import { ObservablePublicationData, PublicationData } from "../../core/models/ty
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-my-publications',
-  standalone: true,
-  imports: [CardPageComponent, PublicationCardComponent, TranslatePipe],
-  templateUrl: './my-publications.component.html',
-  styleUrls: ['./my-publications.component.css']
+	selector: 'app-my-publications',
+	templateUrl: './my-publications.component.html',
+	styleUrls: ['./my-publications.component.css'],
+	standalone: true,
+	imports: [CardPageComponent, PublicationCardComponent, TranslatePipe]
 })
 export class MyPublicationsComponent {
-  showConditionFilter: boolean = true;
-  showGenreFilter: boolean = true;
-  private subscription!: Subscription;
-  publications: PublicationData[] = [];
-  headersData: any;
+	showConditionFilter: boolean = true;
+	showGenreFilter: boolean = true;
+	publications: PublicationData[] = [];
+	headersData: any;
+	private subscription!: Subscription;
   
-  @ViewChild('publicationCard') publicationCard!: TemplateRef<any>;
+	@ViewChild('publicationCard') publicationCard!: TemplateRef<any>;
 
-  constructor(
-      private publicationService: PublicationService,
-      private authService: AuthService,
-  ) {}
+	constructor(
+		private publicationService: PublicationService,
+		private authService: AuthService,
+	) { }
   
-  fetchMyPublications = (state: string, genre: string, search: string, page: number): ObservablePublicationData => {
-      return this.authService.loggedUser$.pipe(
-          filter(user => !!user),
-          switchMap((user) =>
-              this.publicationService.getMyPublications(user.publications, state, genre, page, search)
-		      .pipe(
-				  tap(response => {
-					if (response.headers) {
-						this.headersData = response.headers;
-					}
-				  }),
-                  map(response => response)
-              )
-          )
-      );
-  };
+	fetchMyPublications = (state: string, genre: string, search: string, page: number): ObservablePublicationData => {
+		return this.authService.loggedUser$.pipe(
+			filter(user => !!user),
+			switchMap((user) =>
+				this.publicationService.getMyPublications(user.publications, state, genre, page, search)
+				.pipe(
+					tap(response => {
+						if (response.headers) {
+							this.headersData = response.headers;
+						}
+					}),
+					map(response => response)
+				)
+			)
+		);
+	};
 }
 
 /*

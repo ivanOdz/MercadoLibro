@@ -241,5 +241,6 @@
     "NO_BOOK": "Didn't find your book?",
     "ADD_BOOK": "Add here!"
   },
-  "MY_PUBLICATIONS": "My publications"
+  "MY_PUBLICATIONS": "My publications",
+  "MY_FAVORITE_PUBLICATIONS": "My favorites"
 }

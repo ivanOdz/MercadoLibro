@@ -1,56 +1,57 @@
-import {Component, OnInit} from '@angular/core';
-import {PublicationService} from "../../core/services/publication.service";
-import {AuthService} from "../../core/services/auth.service";
-import {ActivatedRoute} from "@angular/router";
-import {distinctUntilChanged, filter, Subscription, switchMap, tap} from "rxjs";
-import {PublicationData} from "../../core/models/types";
-import {take} from "rxjs/operators";
-import {FilterListComponent} from "../../shared/filter-list/filter-list.component";
-import {NavbarComponent} from "../../shared/navbar/navbar.component";
-import {SortComponent} from "../../shared/sort/sort.component";
-import {NgIf} from "@angular/common";
+import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { filter, Subscription } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
+import { CardPageComponent } from '../../shared/card-page/card-page.component';
+import { PublicationCardComponent } from '../../shared/publication-card/publication.card';
+import { PublicationService } from "../../core/services/publication.service";
+import { AuthService } from "../../core/services/auth.service";
+import { ObservablePublicationData, PublicationData } from "../../core/models/types";
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-favorite-publications',
-    imports: [
-        FilterListComponent,
-        NavbarComponent,
-        SortComponent,
-        NgIf
-    ],
-  templateUrl: './favorite-publications.component.html',
-  standalone: true,
-  styleUrl: './favorite-publications.component.css'
+	selector: 'app-favorite-publications',
+	templateUrl: './favorite-publications.component.html',
+	standalone: true,
+	styleUrl: './favorite-publications.component.css',
+	imports: [CardPageComponent, PublicationCardComponent, TranslatePipe]
 })
-export class FavoritePublicationsComponent implements OnInit {
+export class FavoritePublicationsComponent {
+	
+	showConditionFilter: boolean = true;
+	showGenreFilter: boolean = true;
+	publications: PublicationData[] = [];
+	headersData: any;
+	private subscription!: Subscription;
+  
+	@ViewChild('publicationCard') publicationCard!: TemplateRef<any>;
 
-    conditionHeaders: Record<string, string> = {};
-    genreHeaders: Record<string, string> = {};
+	constructor(
+		private publicationService: PublicationService,
+		private authService: AuthService,
+	) { }
+  
+	fetchMyFavoritePublications = (state: string, genre: string, search: string, page: number): ObservablePublicationData => {
+		return this.authService.loggedUser$.pipe(
+			filter(user => !!user),
+			switchMap((user) =>
+				this.publicationService.getFavoritePublications(user.self, state, genre, page, search)
+				.pipe(
+					tap(response => {
+						if (response.headers) {
+							this.headersData = response.headers;
+						}
+					}),
+					map(response => response)
+				)
+			)
+		);
+	};
+}
 
 
-    showConditionFilter: boolean = true;
-    showGenreFilter: boolean = true;
+/*
 
-
-    private subscription!: Subscription;
-
-    publications: PublicationData[] = [];
-
-    currentFilters = {
-    state: '',
-    genre: '',
-    page: 0,
-    search: '',
-    user: ''
-    };
-
-    constructor(
-        private publicationService: PublicationService,
-        private authService: AuthService,
-        private route: ActivatedRoute,
-    ) {}
-
-    ngOnInit() {
+ngOnInit() {
     this.subscription = this.authService.loggedUser$.pipe(
         filter(user => !!user),
         switchMap((user) => {
@@ -91,30 +92,4 @@ export class FavoritePublicationsComponent implements OnInit {
         console.error('Error:', err);
       }
     });
-    }
-
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
-  }
-
-
-  private processHeaders(headers: any) {
-    const newConditionHeaders: Record<string, string> = {};
-    const newGenreHeaders: Record<string, string> = {};
-
-    headers.keys().forEach((key: string) => {
-      const value = headers.get(key);
-      if (value !== null) {
-        if (key.startsWith("x-bookstate-")) {
-          newConditionHeaders[key] = value;
-        } else if (key.startsWith("x-genre-")) {
-          newGenreHeaders[key] = value;
-        }
-      }
-    });
-
-    this.conditionHeaders = { ...newConditionHeaders };
-    this.genreHeaders = { ...newGenreHeaders };
-  }
-
-}
+    }*/
