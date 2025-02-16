@@ -1,13 +1,12 @@
 <div class="publication-card-container" (click)="goToPublicationDetail()">
 	<div class="first-column-card">
-<!-- 		<img class="book-image" [src]="getBookImage(publication.book?.images)" alt="book-image"/> -->
 		<img [src]="bookImage" alt="Book Cover" class="book-image" (error)="bookImage = defaultImage">
 	</div>
 	<div class="second-column-card">
-		<p class="title-text-card">{{ publication.book?.bookModel?.title }}</p>
-		<p class="authors-text-card">{{ publication.book?.bookModel?.authors }}</p>
-		<p class="description-text-card">{{ publication.book?.bookModel?.description }}</p>
-		<p class="publisher-text-card">{{ publication.book?.bookModel?.editorial }}</p>
+		<p class="title-text">{{ publication.book?.bookModel?.title }}</p>
+		<p class="editorial-edition-text">{{ publication.book?.bookModel?.editorial }}, {{ publication.book?.bookModel?.edition }}° {{ 'BOOK_FORM.EDITION' | translate }}</p>
+		<p class="year-genre-text">{{ publication.book?.bookModel?.publicationYear }}, {{ ('genre.' + (publication.book?.bookModel?.genre | lowercase)) | translate }}</p>
+
 	</div>
 	<div class="third-column-card"></div>
 </div>

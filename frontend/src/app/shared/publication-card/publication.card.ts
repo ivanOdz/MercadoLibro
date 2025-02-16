@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from "@angular/core";
+import { CommonModule } from '@angular/common';
 import { PublicationData } from "../../core/models/types";
 import { Router } from "@angular/router";
 import { TranslatePipe } from '@ngx-translate/core';
@@ -9,7 +10,7 @@ import { environment } from "../../../environments/environment";
     templateUrl: './publication.card.html',
     styleUrl: './publication.card.css',
     standalone: true,
-	imports: [TranslatePipe]
+	imports: [CommonModule, TranslatePipe]
 })
 export class PublicationCardComponent implements OnInit {
     @Input() publication!: PublicationData;
