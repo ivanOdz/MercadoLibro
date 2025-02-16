@@ -94,6 +94,6 @@ export class BookModalComponent {
     });
     console.log('Datos:', { rating: this.rating, bookState: this.bookState });
     this.closeModal();
-    this.bookService.uploadBook(this.bookUrl, this.bookModel.self, this.rating, this.bookState, this.user);
+    this.bookService.uploadBook(this.bookUrl, this.bookModel.self, this.rating, this.bookState, this.user).subscribe();
   }
 }

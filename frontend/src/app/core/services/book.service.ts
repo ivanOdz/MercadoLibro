@@ -76,6 +76,7 @@ export class BookService {
 
         return this.http.patch<void>(`${book.self}`, body, { headers }).pipe(
             tap(() => {
+                console.log("Libro uri:", book.self);
                 book.state = body.state; // Actualizo el estado del libro localmente para que refleje en la card.
                 //console.log('Libro actualizado localmente:', book);
             }),
@@ -89,10 +90,9 @@ export class BookService {
     }
 
     uploadBook(bookUrl: string, bookModelUrl: string, rating: number, condition: string, user: string | undefined): Observable<any> {
-        console.log("this is the bookUrl to call post: " + bookUrl);
         const headers = new HttpHeaders({'Content-Type': 'application/vnd.books.input.v1+json'});
         const body = {
-            condition: 'VERY_GOOD',
+            condition: condition.toUpperCase(),
             bookModel: bookModelUrl,
             user: user,
             rating: rating,
@@ -101,12 +101,6 @@ export class BookService {
                 'http://localhost:8080/api/images/85'
                 ]
         };
-
-        console.log("creating a book here ....");
-        console.log("bookModel: " + body.bookModel);
-        console.log("rating: " + body.rating);
-        console.log("condition: " + body.condition);
-        console.log("user: " + body.user);
 
         return this.http.post(`${bookUrl}`, body, { headers, observe: 'response' }).pipe(
             tap((response) => console.log("API response (Post) of Book:", response))
