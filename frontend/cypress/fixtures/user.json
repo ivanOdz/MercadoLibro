@@ -1,0 +1,16 @@
+{
+  "username": "username",
+  "mail": "username@mail.com",
+  "ratingCount": 3,
+  "ratingAverage": 4,
+  "self": "http://localhost:8080/api/users/1",
+  "image": "http://localhost:8080/api/images/1",
+  "favoriteLocation": "http://localhost:8080/api/locations/1",
+  "locations": "http://localhost:8080/api/users/1/locations",
+  "reviews": "http://localhost:8080/api/users/1/reviews",
+  "books": "http://localhost:8080/api/books?user_id=1",
+  "favorites": "http://localhost:8080/api/publications?favorites=true&user_id=1",
+  "exchanges": "http://localhost:8080/api/exchanges?user_id=1",
+  "language": "es",
+  "publications": "http://localhost:8080/api/publications?user_id=1"
+}

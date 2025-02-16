@@ -9,7 +9,7 @@
                     <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
                 </div>
                 <p-scrollpanel [style]="{height: '97%'}" *ngIf="activeExchanges.length != 0 && !isLoading" [class]="'card-section'" >
-                    <div
+                    <div    data-cy="exchanges"
                             class="card"
                             *ngFor="let card of activeExchanges"
                             (click)="selectCard(card)"
@@ -157,6 +157,6 @@
     <span class="text-surface-500 dark:text-surface-400 block">{{ 'EXCHANGES.CONFIRM_DESCRIPTION' | translate}}</span>
     <ng-template #footer>
         <p-button label="{{ 'EXCHANGES.CANCEL' | translate}}" [raised]="true" severity="secondary" (click)="confirmExchangeDialogVisible = false" />
-        <p-button label="{{ 'EXCHANGES.CONFIRM_LABEL' | translate}}" [raised]="true" severity="contrast" [class]="'confirm-button-d'" [style]="{color: 'white'}" (click)="confirmExchange(confirmData.card, confirmData.requester)" />
+        <p-button data-cy="confirm-button" label="{{ 'EXCHANGES.CONFIRM_LABEL' | translate}}" [raised]="true" severity="contrast" [class]="'confirm-button-d'" [style]="{color: 'white'}" (click)="confirmExchange(confirmData.card, confirmData.requester)" />
     </ng-template>
 </p-dialog>

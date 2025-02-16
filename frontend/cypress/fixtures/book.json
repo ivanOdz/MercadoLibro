@@ -1,0 +1,12 @@
+{
+  "state": "NEW",
+  "available": false,
+  "self": "http://localhost:8080/api/books/1",
+  "owner": "http://localhost:8080/api/users/1",
+  "bookModel": "http://localhost:8080/api/book_models/1",
+  "images": [
+    "http://localhost:8080/api/images/18",
+    "http://localhost:8080/api/images/18",
+    "http://localhost:8080/api/images/18"
+  ]
+}

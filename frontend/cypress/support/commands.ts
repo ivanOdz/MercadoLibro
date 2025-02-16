@@ -40,17 +40,38 @@
 Cypress.Commands.add('login', (username: string, password: string, rememberMe: boolean = false) => {
     cy.visit('/auth/login');
 
+    cy.intercept('HEAD', '**/book_models', (req) => {
+        req.reply({
+            statusCode: 200,
+            headers: {
+                'X-Access-Token': 'fake_access_token',
+                'X-Refresh-Token': 'fake_refresh_token',
+                'X-User-URI': '/users/1'
+            }
+        });
+    }).as('loginRequest');
+
     cy.get('[data-cy=username]').type(username)
     cy.get('[data-cy=password]').type(password);
     if (rememberMe) {
-        cy.get('[data-cy=remember-me]').check();
+        cy.get('[data-cy=remember-me]').click();
     }
     cy.get('[data-cy=submit]').click();
 });
 
+Cypress.Commands.add('waitExchangesRequests', () => {
+    cy.wait('@getExchanges');
+    cy.wait('@getPublication');
+    cy.wait('@getUser');
+    cy.wait('@getBook');
+    cy.wait('@getBookModel');
+    cy.wait('@getLocations');
+    cy.wait('@getMessages');
+});
 
 declare namespace Cypress {
     interface Chainable {
         login(username: string, password: string, rememberMe?: boolean): Chainable<void>;
+        waitExchangesRequests(): Chainable<void>;
     }
 }

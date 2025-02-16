@@ -1,0 +1,10 @@
+{
+  "book": "http://localhost:8080/api/books/1",
+  "publicationState": "TERMINATED",
+  "publicationDatetime": "2021-06-01T00:00:00Z",
+  "locations": "http://localhost:8080/api/user/1/locations?publication_id=1",
+  "user": "http://localhost:8080/api/users/1",
+  "favoriteEndpoint": "http://localhost:8080/api/publications/1/favorite?user_id=1",
+  "isFavoriteTemplate": "http://localhost:8080/api/publications/1/favorite?user_id={user_id}",
+  "self": "http://localhost:8080/api/publications/1"
+}
