@@ -26,6 +26,7 @@ export class PublicationCardComponent implements OnInit {
 
 	ngOnInit() {
 		this.bookImage = this.getBookImage();
+		this.getIfItIsFavorite();
 	}
 
     goToPublicationDetail() {
@@ -35,14 +36,19 @@ export class PublicationCardComponent implements OnInit {
         }
     }
 	
+	getIfItIsFavorite() {
+		if (this.showLikeHeart) {
+			this.publicationService.getFavoritePublication(this.publication.isFavoriteTemplate, this.loggedUser!.self)
+			.subscribe((favoritePublication) => { this.publication.favoritePublication = favoritePublication; });
+		}
+	}
+	
 	getBaseUrl() {
 		return `${environment.production? environment.productionUrl  : environment.developmentUrl}`;
 	}
 	
 	getBookImage(): string {
-		return	this.publication.book?.images?.length ? this.getBaseUrl() + this.publication.book.images[0] :
-				this.publication.book?.bookModel?.cover ? this.getBaseUrl() + this.publication.book.bookModel.cover :
-				this.defaultImage;
+		return	this.publication.book?.images?.length ? this.publication.book.images[0] : (this.publication.book?.bookModel?.cover ? this.getBaseUrl() + this.publication.book.bookModel.cover : this.defaultImage);
 	}
 	
 	toggleLike(event: Event): void {
@@ -56,13 +62,13 @@ export class PublicationCardComponent implements OnInit {
 
 		if (this.publication.favoritePublication) {
 			this.publicationService.unlikePublication(this.publication).subscribe({
-				next: () => console.log('Publicación eliminada de favoritos'),
-				error: (err) => console.error('Error al eliminar de favoritos', err)
+				next: () => this.publication.favoritePublication = null,
+//				error: (err) => console.error('Error eliminating', err)
 			});
 		} else {
 			this.publicationService.likePublication(this.publication, this.loggedUser).subscribe({
-				next: () => console.log('Publicación agregada a favoritos'),
-				error: (err) => console.error('Error al agregar a favoritos', err)
+				next: () => this.getIfItIsFavorite(),
+//				error: (err) => console.error('Error posting', err)
 			});
 		}
 	}

@@ -9,5 +9,5 @@
 ></card-page>
 
 <ng-template #publicationCardTemplate let-publication>
-	<publication-card [publication]="publication"></publication-card>
+	<publication-card [publication]="publication" [loggedUser]="loggedUser" [showLikeHeart]="true"></publication-card>
 </ng-template>
