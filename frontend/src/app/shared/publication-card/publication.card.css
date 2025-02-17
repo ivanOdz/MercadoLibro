@@ -10,7 +10,7 @@
 	align-content: center;
 	display: grid;
 	overflow: hidden;
-	grid-template-columns: 0.5fr 5fr auto;
+	grid-template-columns: 0.6fr 2fr auto;
 	margin: 5px 36px;
 }
 
@@ -29,6 +29,7 @@
 .book-data-column {
 	grid-column: 2;
 	padding-left: 20px;
+	max-height: 130px;
 }
 
 .auxiliar-column {
@@ -37,24 +38,28 @@
 }
 
 .title-text {
-	margin-top: 5px;
 	font-size: 22px;
 	font-style: normal;
-	margin-bottom: 20px;
+	margin: 10px 0 10px 0;
 }
 
-.editorial-edition-text {
-	font-size: 15px;
-	margin-bottom: 15px;
+.book-info {
+	display: flex;
+	align-items: center;
 }
 
 .year-genre-text {
-	font-size: 12px;
-	margin-bottom: 5px;
+	font-size: 15px;
+	padding-right: 20px;
+	margin: 10px 0 10px 0;
 }
 
-.authors-text-card {
-	font-size: small;
+.editorial-edition-text {
+	font-size: 12px;
+}
+
+.locations-text {
+	font-size: 14px;
 }
 
 .book-image {

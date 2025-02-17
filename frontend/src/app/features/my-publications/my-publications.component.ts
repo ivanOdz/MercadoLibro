@@ -35,7 +35,7 @@ export class MyPublicationsComponent implements OnInit {
 		this.authService.loggedUser$.subscribe(user => { this.loggedUser = user; });
 	}
 
-	fetchMyPublications = (state: string, genre: string, search: string, page: number): ObservablePublicationData => {
-		return this.publicationService.getMyPublications(this.loggedUser!.publications, state, genre, page, search);
+	fetchMyPublications = (state: string, genre: string, search: string, page: number, sort: string | null): ObservablePublicationData => {
+		return this.publicationService.getMyPublications(this.loggedUser!.publications, state, genre, page, search, sort);
 	};
 }

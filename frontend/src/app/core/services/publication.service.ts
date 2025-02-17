@@ -37,7 +37,7 @@ export class PublicationService {
         );
     }
 
-    private processParams(state: string, genre: string, page: number, search: string, favorites: boolean | null, user: string | null): string {
+    private processParams(state: string, genre: string, page: number, search: string, favorites: boolean | null, user: string | null, sort: string | null): string {
         let queryParams = '';
 
         if (search) queryParams += `search=${search}`;
@@ -67,24 +67,28 @@ export class PublicationService {
             queryParams += `page=${page}`;
         }
 
+		if (sort !== null) {
+		    if (queryParams) queryParams += '&';
+		    queryParams += `sort=${sort}`;
+		}
+
         return queryParams;
 
     }
 
-    getGeneralPublications(state: string, genre: string, page: number, search: string): ObservablePublicationData {
-        let url = `${this.baseUrl}/publications?${this.processParams(state, genre, page, search, false, null)}`;
+    getGeneralPublications(state: string, genre: string, page: number, search: string, sort: string | null): ObservablePublicationData {
+        let url = `${this.baseUrl}/publications?${this.processParams(state, genre, page, search, false, null, sort)}`;
         return this.getPublicationsWithDetails(url);
     }
 
     //myPublicationsUrl: {base_path}/publications?user_id={user_id}
-    getMyPublications(myPublicationsUrl: string, state: string, genre: string, page: number, search: string): ObservablePublicationData{
-        let url = `${myPublicationsUrl}&${this.processParams(state, genre, page, search, false, null)}`;
+    getMyPublications(myPublicationsUrl: string, state: string, genre: string, page: number, search: string, sort: string | null): ObservablePublicationData{
+        let url = `${myPublicationsUrl}&${this.processParams(state, genre, page, search, false, null, sort)}`;
         return this.getPublicationsWithDetails(url);
     }
 
-    getFavoritePublications(favoritePubsUrl: string, state: string, genre: string, page: number, search: string): ObservablePublicationData {
-        let url = `${favoritePubsUrl}&${this.processParams(state, genre, page, search, null, null)}`;
-		console.log(url);
+    getFavoritePublications(favoritePubsUrl: string, state: string, genre: string, page: number, search: string, sort: string | null): ObservablePublicationData {
+        let url = `${favoritePubsUrl}&${this.processParams(state, genre, page, search, null, null, sort)}`;
         return this.getPublicationsWithDetails(url);
     }
 
@@ -134,7 +138,6 @@ export class PublicationService {
                             favoritePublication: null,
                             isFavoriteTemplate: data.isFavoriteTemplate
                         }));
-                        console.log("Publicaciones con detalles:", transformedData);
                         return ({
                             publicationData: transformedData,
                             pagination: response.pagination,

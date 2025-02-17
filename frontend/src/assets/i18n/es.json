@@ -116,8 +116,8 @@
     "worn": "Desgastado"
   },
   "sort": {
-    "rating.ascending": "Más valorados",
-    "rating.descending": "Menos valorados",
+    "rating.ascending": "Menos valorados",
+    "rating.descending": "Más valorados",
     "publication.date.ascending": "Mas antiguas",
     "publication.date.descending": "Mas recientes",
     "book.name.ascending": "Nombre del libro ascendente",
