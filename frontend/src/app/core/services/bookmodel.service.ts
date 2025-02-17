@@ -17,10 +17,31 @@ export class BookModelService {
         );
     }
 
-    uploadBookModel(bookModelUrl: string, bookData: BookModel): Observable<string> {
+    uploadBookModel(bookModelUrl: string, bookData: BookModel, cover: string | undefined): Observable<string> {
+        console.log('Book MODEL SERVICE:', cover);
         const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.book_models.v1+json' });
-
-        return this.http.post(`${bookModelUrl}`, bookData, { headers, observe: 'response' }).pipe(
+        const body = {
+            isbn: bookData.isbn,
+            title: bookData.title,
+            editorial: bookData.editorial,
+            description: bookData.description,
+            genre: bookData.genre,
+            edition: bookData.edition,
+            weight: bookData.weight,
+            pages: bookData.pages,
+            bookLanguage: bookData.bookLanguage,
+            dimension: bookData.dimension,
+            publicationYear: bookData.publicationYear,
+            pocketEdition: bookData.pocketEdition,
+            hardcover: bookData.hardcover,
+            ratingCount: bookData.ratingCount,
+            averageRating: bookData.averageRating,
+            authors: bookData.authors,
+            cover: cover,
+            self: bookData.self
+        }
+        console.log()
+        return this.http.post(`${bookModelUrl}`, body, { headers, observe: 'response' }).pipe(
             map(response => response.headers.get('Location') || '')
         );
     }

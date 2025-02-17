@@ -71,6 +71,7 @@ public class BookModelController {
                         bookModelDTO.getPublicationYear(), bookModelDTO.getHardcover(), bookModelDTO.getPocketEdition(),
                         BookDimension.fromString("dimension." + bookModelDTO.getDimension()), Language.fromString("language." + bookModelDTO.getBookLanguage()),
                         bookModelDTO.getPages(),bookModelDTO.getWeight(), bookModelDTO.getAuthors());
+        bookModelService.setCover(bookModel.getBookModelId(), bookModelDTO.getCoverId());
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(bookModel.getBookModelId())).build()).build();
     }
 
