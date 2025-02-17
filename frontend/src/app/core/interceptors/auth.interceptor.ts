@@ -3,7 +3,6 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import {catchError, EMPTY, tap, throwError} from 'rxjs';
 import {AuthService} from "../services/auth.service";
-import {environment} from "../../../environments/environment";
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
     const authService = inject(AuthService);
@@ -39,7 +38,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
             }
         }),
         catchError((error) => {
-            if (error.status === 401) {
+            if (error.status === 401 && !req.url.includes('/favorite')) {
                 const refreshToken = sessionStorage.getItem('refreshToken') || localStorage.getItem('refreshToken');
 
                 if (refreshToken) {
@@ -56,7 +55,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
                         catchError((refreshError) => {
                             if (refreshError.status === 401) {
                                 authService.logout();
-                                router.navigate(['/auth/login']);
+                                window.location.reload()
                             }
                             console.log('ERROR refresh', error);
                             return EMPTY;
@@ -67,10 +66,13 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
                     router.navigate(['/auth/login']);
                 }
                 return EMPTY
-            } else {
-                console.log('ERROR', error);
-                return throwError(() => error);
+            } else if (error.status === 401 ) {
+                console.log('ERROR returning empty', error);
+                return EMPTY;
             }
+
+            console.log('ERROR', error);
+            return throwError(() => error);
         })
     );
 };

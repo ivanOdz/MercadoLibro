@@ -17,7 +17,7 @@ public class UnauthorizedRequestHandler implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException e) throws IOException {
 
-        response.addHeader("WWW-Authenticate", "Basic realm=\"Mercado Libro\"");
+        response.addHeader("WWW-Authenticate", "Bearer realm=\"Mercado Libro\"");
 
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
