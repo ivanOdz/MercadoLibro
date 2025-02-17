@@ -47,10 +47,11 @@ export class BookModelService {
     }
 
 
-    getBookModels({ bookModelsUrl, genre, search }: { bookModelsUrl: string; genre: string; search: string }): Observable<{ bookModels: BookModel[], pagination: Pagination, headers: HttpHeaders }> {
+    getBookModels({ bookModelsUrl, genre, search, sort }: { bookModelsUrl: string; genre: string; search: string, sort: string }): Observable<{ bookModels: BookModel[], pagination: Pagination, headers: HttpHeaders }> {
         let params = new HttpParams()
             .set('search', search)
-            .set('genre', genre);
+            .set('genre', genre)
+            .set('sort', sort);
 
         return this.getBookModelsByUrl(`${bookModelsUrl}?${params.toString()}`);
     }

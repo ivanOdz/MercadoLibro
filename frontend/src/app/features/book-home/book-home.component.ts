@@ -19,6 +19,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
 import { Pagination } from "../../core/models/pagination";
 import { PaginatorComponent } from "../../shared/paginator/paginator.component";
+import {SortComponent} from "../../shared/sort/sort.component";
 
 @Component({
 	selector: 'app-book-home',
@@ -27,7 +28,7 @@ import { PaginatorComponent } from "../../shared/paginator/paginator.component";
 	standalone: true,
     imports: [CommonModule, TranslatePipe, NavbarComponent, RouterModule, FilterListComponent,
         InputGroup, InputGroupAddon, ButtonModule, InputText, FormsModule,
-		BookCardComponent, PaginatorComponent, ScrollPanelModule ]
+        BookCardComponent, PaginatorComponent, ScrollPanelModule, SortComponent]
 
 })
 export class BookHomeComponent implements OnInit {
@@ -53,10 +54,12 @@ export class BookHomeComponent implements OnInit {
 		genre: '',
 		search: '',
 		available: false,
+		sort: '',
 	};
 
 	books: BookData[] = [];
 	pagination: Pagination | null= null;
+	resetPaginatorNumber: boolean = false;
 	
 	ngOnInit() {
 		this.fetchBooks();
@@ -120,7 +123,16 @@ export class BookHomeComponent implements OnInit {
 		
 		this.fetchBooks();
 	}
-	
+
+	onSortUpdate(sort: string) {
+		console.log("Sort:", sort);
+		this.currentFilters.sort = sort.replace(/^sort\./, '').toUpperCase().replace(/\./g, '_');
+		console.log("NEW Sort:", this.currentFilters.sort);
+		this.resetPaginatorNumber = true;
+		setTimeout(() => (this.resetPaginatorNumber = false), 300);
+		this.fetchBooks();
+	}
+
 	fetchBooks(url: string | null = null) {
 		
 		this.authService.loggedUser$.pipe(
@@ -133,6 +145,7 @@ export class BookHomeComponent implements OnInit {
 						this.currentFilters.state = params['state'] || '';
 						this.currentFilters.genre = params['genre'] || '';
 						this.currentFilters.search = params['search'] || '';
+						this.currentFilters.sort = params['sort'] || '';
 					}),
 					switchMap(() => {
 						return url

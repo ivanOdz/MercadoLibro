@@ -187,6 +187,7 @@ export class PublicationComponent implements OnInit {
                     state: '',
                     genre: '',
                     search: '',
+                    sort: '',
                     available: true
                 });
             }),

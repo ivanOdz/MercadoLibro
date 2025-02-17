@@ -17,12 +17,13 @@ export class BookService {
         );
     }
 
-    getBooks({booksUrl, state, genre, search, available }: { booksUrl: string;state: string; genre: string; search: string; available: boolean}): Observable<{books: Book[], pagination: Pagination, headers: HttpHeaders}> {
+    getBooks({booksUrl, state, genre, search, available, sort }: { booksUrl: string; state: string; genre: string; search: string; available: boolean, sort: string}): Observable<{books: Book[], pagination: Pagination, headers: HttpHeaders}> {
         let params = new HttpParams()
             .set('state', state)
             .set('search', search)
             .set('genre', genre)
-            .set('available', available ? 'true' : 'false');
+            .set('available', available ? 'true' : 'false')
+            .set('sort', sort);
 
         return this.getBooksByUrl(`${booksUrl}&${params.toString()}`);
     }

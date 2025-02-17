@@ -50,8 +50,8 @@
 					</button>
 				</div>
 			</div>
-<!-- 			<app-sort></app-sort> -->
-			<br>
+            <app-sort (sortChange)="onSortUpdate($event)"></app-sort>
+            <br>
 		</div>
 
         <p-scrollpanel [style]="{ width:'65vw', height: '62vh'}" >

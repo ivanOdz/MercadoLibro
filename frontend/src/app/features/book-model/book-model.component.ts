@@ -16,6 +16,7 @@ import {FilterListComponent} from "../../shared/filter-list/filter-list.componen
 import {BookModelCardComponent} from "../../shared/book-model-card/book-model-card.component";
 import {PaginatorComponent} from "../../shared/paginator/paginator.component";
 import {ScrollPanel} from "primeng/scrollpanel";
+import {SortComponent} from "../../shared/sort/sort.component";
 
 @Component({
   selector: 'app-book-model',
@@ -36,6 +37,7 @@ import {ScrollPanel} from "primeng/scrollpanel";
     PaginatorComponent,
     ScrollPanel,
     RouterLink,
+    SortComponent,
   ],
   templateUrl: './book-model.component.html',
   standalone: true,
@@ -50,12 +52,14 @@ export class BookModelComponent implements OnInit {
     bookModelsUrl: 'api/book_models',
     genre: '',
     search: '',
+    sort: '',
   };
   isSearchActive = false;
   lastSearchQuery: string | null = null;
   @ViewChild('searchInput') searchInput!: ElementRef;
   pagination: Pagination | null = null;
   uploadBookModelUrl: string = "/books/add";
+  resetPaginatorNumber: boolean = false;
 
 
   constructor(private router: Router, private route: ActivatedRoute, private bms: BookModelService) {
@@ -103,10 +107,18 @@ export class BookModelComponent implements OnInit {
     this.getBookModels();
   }
 
+  onSortUpdate(sort: string) {
+    this.currentFilters.sort = sort.replace(/^sort\./, '').toUpperCase().replace(/\./g, '_');
+    this.resetPaginatorNumber = true;
+    setTimeout(() => (this.resetPaginatorNumber = false), 300);
+    this.getBookModels();
+  }
+
   getBookModels(url: string | null = null) {
     this.route.queryParams.pipe(
         tap((params) => {
           this.currentFilters.search = params['search'] || '';
+          this.currentFilters.sort = params['sort'] || '';
           this.currentFilters.genre = params['genre'] || '';
           this.showGenreFilter = !params['genre'];
         }),
