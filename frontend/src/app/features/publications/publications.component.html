@@ -52,7 +52,7 @@
 
         <p-scrollpanel [style]="{ width:'65vw', height: '62vh'}">
             <div class="publications-grid">
-                <publication-card *ngFor="let publication of publications" [publication]="publication"></publication-card>
+                <publication-card data-cy="publications" *ngFor="let publication of publications" [publication]="publication"></publication-card>
             </div>
             <app-paginator [pagination]="pagination" [fetchMethod]="fetchPublications.bind(this)"></app-paginator>
         </p-scrollpanel>

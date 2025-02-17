@@ -2,13 +2,32 @@ describe('General exchanges tests', () => {
     beforeEach(() => {
         cy.login('testuser', 'password', false);
 
+        cy.interceptPublicationRequests();
+        cy.intercept('POST', '**/exchanges', { statusCode: 200 }).as('createExchange');
 
-
-        cy.visit('/publication/3');
+        cy.get('[data-cy=publications]').first().click();
     });
 
     it('should create an exchange.json', () => {
+        cy.waitPublicationRequests();
 
+        cy.get('[data-cy=exchange-button]').click();
+
+        cy.wait('@getLocations');
+        cy.wait('@getBooks');
+
+        cy.get('.book').first().click();
+
+        cy.get('p-select').click();
+        cy.get('.p-select-option')
+            .first()
+            .click();
+
+        cy.get('[data-cy=exchange]').click();
+
+        cy.wait('@createExchange').then(({ response }) => {
+            expect(response?.statusCode).to.eq(200);
+        });
     });
 })
 

@@ -1,0 +1,42 @@
+[
+  {
+      "book": "http://localhost:8080/api/books/1",
+      "publicationState": "CURRENT",
+      "publicationDatetime": "2021-06-01T00:00:00Z",
+      "locations": "http://localhost:8080/api/users/3/locations?publication_id=1",
+      "user": "http://localhost:8080/api/users/3",
+      "favoriteEndpoint": "http://localhost:8080/api/publications/1/favorite?user_id=3",
+      "isFavoriteTemplate": "http://localhost:8080/api/publications/1/favorite?user_id={user_id}",
+      "self": "http://localhost:8080/api/publications/1"
+  },
+  {
+      "book": "http://localhost:8080/api/books/1",
+      "publicationState": "CURRENT",
+      "publicationDatetime": "2021-06-01T00:00:00Z",
+      "locations": "http://localhost:8080/api/users/4/locations?publication_id=2",
+      "user": "http://localhost:8080/api/users/4",
+      "favoriteEndpoint": "http://localhost:8080/api/publications/2/favorite?user_id=4",
+      "isFavoriteTemplate": "http://localhost:8080/api/publications/2/favorite?user_id={user_id}",
+      "self": "http://localhost:8080/api/publications/2"
+  },
+  {
+      "book": "http://localhost:8080/api/books/1",
+      "publicationState": "CURRENT",
+      "publicationDatetime": "2021-06-01T00:00:00Z",
+      "locations": "http://localhost:8080/api/users/5/locations?publication_id=3",
+      "user": "http://localhost:8080/api/users/5",
+      "favoriteEndpoint": "http://localhost:8080/api/publications/3/favorite?user_id=5",
+      "isFavoriteTemplate": "http://localhost:8080/api/publications/3/favorite?user_id={user_id}",
+      "self": "http://localhost:8080/api/publications/3"
+  },
+  {
+      "book": "http://localhost:8080/api/books/1",
+      "publicationState": "CURRENT",
+      "publicationDatetime": "2021-06-01T00:00:00Z",
+      "locations": "http://localhost:8080/api/users/6/locations?publication_id=4",
+      "user": "http://localhost:8080/api/users/6",
+      "favoriteEndpoint": "http://localhost:8080/api/publications/4/favorite?user_id=6",
+      "isFavoriteTemplate": "http://localhost:8080/api/publications/4/favorite?user_id={user_id}",
+      "self": "http://localhost:8080/api/publications/4"
+  }
+]
