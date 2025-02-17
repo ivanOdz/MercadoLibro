@@ -125,9 +125,7 @@ export class BookHomeComponent implements OnInit {
 	}
 
 	onSortUpdate(sort: string) {
-		console.log("Sort:", sort);
-		this.currentFilters.sort = sort.replace(/^sort\./, '').toUpperCase().replace(/\./g, '_');
-		console.log("NEW Sort:", this.currentFilters.sort);
+		this.currentFilters.sort = sort;
 		this.resetPaginatorNumber = true;
 		setTimeout(() => (this.resetPaginatorNumber = false), 300);
 		this.fetchBooks();

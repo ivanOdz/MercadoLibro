@@ -108,7 +108,7 @@ export class BookModelComponent implements OnInit {
   }
 
   onSortUpdate(sort: string) {
-    this.currentFilters.sort = sort.replace(/^sort\./, '').toUpperCase().replace(/\./g, '_');
+    this.currentFilters.sort = sort;
     this.resetPaginatorNumber = true;
     setTimeout(() => (this.resetPaginatorNumber = false), 300);
     this.getBookModels();
