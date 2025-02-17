@@ -6,6 +6,8 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { environment } from "../../../environments/environment";
 import { User } from "../../core/models/user.model";
 import { PublicationService } from "../../core/services/publication.service";
+import {catchError, EMPTY, throwError} from "rxjs";
+import {AuthService} from "../../core/services/auth.service";
 
 @Component({
     selector: 'publication-card',
@@ -22,7 +24,7 @@ export class PublicationCardComponent implements OnInit {
 	bookImage!: string;
 	defaultImage: string = './assets/book.jpg';
 	
-    constructor(private router: Router, private publicationService: PublicationService) { }
+    constructor(private router: Router, private publicationService: PublicationService, private au: AuthService) { }
 
 	ngOnInit() {
 		this.bookImage = this.getBookImage();
@@ -35,14 +37,58 @@ export class PublicationCardComponent implements OnInit {
             this.router.navigate([path],{ queryParams: { origen: 'publications' } });
         }
     }
-	
+
 	getIfItIsFavorite() {
 		if (this.showLikeHeart) {
-			this.publicationService.getFavoritePublication(this.publication.isFavoriteTemplate, this.loggedUser!.self)
-			.subscribe((favoritePublication) => { this.publication.favoritePublication = favoritePublication; });
+			// Verificamos si el usuario está loggeado antes de hacer cualquier acción con favoritos
+			this.au.loggedUser$.pipe(
+				catchError((err) => {
+					if (err.status === 401) {
+						// El usuario no está loggeado, no hacemos nada más
+						return EMPTY;
+					}
+					return throwError(() => err); // Propagamos otros errores
+				})
+			).subscribe({
+				next: (user) => {
+					if (user) {
+						// Si el usuario está loggeado, lo asignamos y buscamos los favoritos
+						this.loggedUser = user;
+
+						// Llamamos a getFavoritePublication solo si el usuario está loggeado
+						this.publicationService.getFavoritePublication(this.publication.isFavoriteTemplate, this.loggedUser!.self)
+							.pipe(
+								catchError((err) => {
+									if (err.status === 401) {
+										// Si no está loggeado
+										return EMPTY;
+									} else if (err.status === 404) {
+										// Si no se encuentra como favorito
+										return EMPTY;
+									}
+									return throwError(() => err); // Propagamos otros errores
+								})
+							)
+							.subscribe({
+								next: (favoritePublication) => {
+									// Si hay favoritos, los asignamos
+									this.publication.favoritePublication = favoritePublication;
+								},
+								error: (err) => {
+									console.error('Error inesperado:', err);
+								}
+							});
+					}
+				},
+				error: (err) => {
+					console.error('Error inesperado:', err);
+				}
+			});
 		}
 	}
-	
+
+
+
 	getBaseUrl() {
 		return `${environment.production? environment.productionUrl  : environment.developmentUrl}`;
 	}

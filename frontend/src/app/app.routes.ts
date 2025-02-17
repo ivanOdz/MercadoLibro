@@ -101,7 +101,7 @@ export const routes: Routes = [
     path: 'books/add',
     component: BookFormComponent,
     title: 'Add a new book',
-    /*canActivate: [AuthGuard],*/
+    canActivate: [AuthGuard]
   },
   {
     path: 'my-books',
@@ -113,7 +113,7 @@ export const routes: Routes = [
     path: 'library',
     component: BookModelComponent,
     title: 'Library',
-    //canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
   },
   //Error Pages
   {

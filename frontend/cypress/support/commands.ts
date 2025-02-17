@@ -120,6 +120,11 @@ Cypress.Commands.add('interceptBooksRequests', () => {
     cy.intercept('GET', '**/book_models/*', { fixture: 'book_model.json' }).as('getBookModel');
 })
 
+Cypress.Commands.add('waitBooksRequests', () => {
+    cy.wait('@getBooks');
+    cy.wait('@getBookModel');
+})
+
 
 declare namespace Cypress {
     interface Chainable {
@@ -131,5 +136,6 @@ declare namespace Cypress {
         interceptPublicationsRequests(): Chainable<void>;
         waitPublicationsRequests(): Chainable<void>;
         interceptBooksRequests(): Chainable<void>;
+        waitBooksRequests(): Chainable<void>;
     }
 }

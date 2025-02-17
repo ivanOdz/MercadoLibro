@@ -45,6 +45,8 @@ describe("Publications tests", () => {
 
         cy.visit("/my-books")
 
+        cy.waitBooksRequests()
+
         cy.get('[data-cy=books]').first().click()
 
         cy.get('[data-cy=locations-select]').click()

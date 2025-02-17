@@ -56,7 +56,7 @@
 
         <div class="buttons-in-modal">
             <p-button [styleClass]="'cancel-publication-button'" label="{{ 'BOOK_HOME.CANCEL' | translate }}" class="cancel-button" (click)="closeModal()"></p-button>
-            <p-button [disabled]="!isFormValid()" [styleClass]="'create-publication-button'" label="{{ 'BOOK_FORM.SAVE' | translate }}" class="cancel-button" (click)="submitForm()"></p-button>
+            <p-button data-cy="submit" [disabled]="!isFormValid()" [styleClass]="'create-publication-button'" label="{{ 'BOOK_FORM.SAVE' | translate }}" class="cancel-button" (click)="submitForm()"></p-button>
         </div>
 
     </div>

@@ -17,7 +17,7 @@
                 {{ ('bookstate.' + (book.state! | lowercase)) | translate }}
             </p>
             <span class="edit-icon-container">
-                <mat-icon fontIcon="edit" (click)="openStateModal()"></mat-icon>
+                <mat-icon data-cy="edit" fontIcon="edit" (click)="openStateModal()"></mat-icon>
             </span>
         </div>
     </div>
@@ -64,7 +64,7 @@
     </select>
     <ng-template #footer>
         <p-button label="{{ 'PROFILE.CANCEL' | translate }}" [raised]="true" severity="secondary" (click)="closeStateModal()" />
-        <p-button label="{{ 'PROFILE.ACCEPT' | translate }}" [raised]="true" severity="success" (click)="updateState()" [disabled]="!isValidState()"/>
+        <p-button data-cy="submit-edit" label="{{ 'PROFILE.ACCEPT' | translate }}" [raised]="true" severity="success" (click)="updateState()" [disabled]="!isValidState()"/>
 
     </ng-template>
 </p-dialog>

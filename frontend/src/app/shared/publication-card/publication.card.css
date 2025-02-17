@@ -3,14 +3,14 @@
 	height: 130px;
 	background: #fff;
 	box-shadow: 4px 6px 6px #0000001a;
-	border-radius: 2rem;
-	padding: 1rem 2rem;
+	border-radius: 1rem;
+	padding: 2vh;
 	transition: transform .2s;
 	cursor: pointer;
 	align-content: center;
 	display: grid;
 	overflow: hidden;
-	grid-template-columns: 0.6fr 2fr auto;
+	grid-template-columns: .4fr 2fr auto;
 	margin: 5px 36px;
 }
 
@@ -65,7 +65,7 @@
 .book-image {
 	height: 110px;
 	width: auto;
-	border-radius: 1rem;
+	border-radius: .5rem;
 }
 
 .rating-container {
@@ -73,6 +73,7 @@
 	align-items: center;
 	justify-content: center;
 	align-self: flex-end;
+	margin: 1rem;
 }
 
 .star-icon {
@@ -96,7 +97,7 @@
 	font-style: normal;
 	color: #998877;
 	margin: 0;
-	padding: 0px 6px 0px 6px;
+	padding: 0 6px 0 6px;
 }
 
 .heart-icon {

@@ -39,7 +39,7 @@
 
         <p-scrollpanel [style]="{ width:'65vw', height: '68vh'}" >
             <div class="book-models-grid">
-                <app-book-model-card *ngFor="let bookModel of bookModels" [bookModel]="bookModel"></app-book-model-card>
+                <app-book-model-card data-cy="book_models" *ngFor="let bookModel of bookModels" [bookModel]="bookModel"></app-book-model-card>
             </div>
             <app-paginator [pagination]="pagination" [fetchMethod]="getBookModels.bind(this)"></app-paginator>
         </p-scrollpanel>

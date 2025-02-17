@@ -60,7 +60,7 @@ export class NavbarComponent {
 
     logout() {
         this.authService.logout();
-		window.location.reload();
+        this.router.navigate(['/auth/login']);
     }
 
     search() {

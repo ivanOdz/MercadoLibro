@@ -253,7 +253,7 @@
     "TELL_US_ABOUT_YOUR_BOOK": "Tell us about your book!"
   },
   "MY_PUBLICATIONS": "My publications",
-  "MY_FAVORITE_PUBLICATIONS": "My favorites"
+  "MY_FAVORITE_PUBLICATIONS": "My favorites",
   "AUTH": {
     "REPEAT_PASSWORD": "Repeat password",
     "REGISTER": "Register",
