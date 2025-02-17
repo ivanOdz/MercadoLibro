@@ -84,6 +84,7 @@ export class PublicationService {
 
     getFavoritePublications(favoritePubsUrl: string, state: string, genre: string, page: number, search: string): ObservablePublicationData {
         let url = `${favoritePubsUrl}&${this.processParams(state, genre, page, search, null, null)}`;
+		console.log(url);
         return this.getPublicationsWithDetails(url);
     }
 

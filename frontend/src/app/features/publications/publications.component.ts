@@ -19,11 +19,12 @@ import { User } from "../../core/models/user.model";
 
 })
 export class PublicationsComponent implements OnInit {
+	
 	showConditionFilter: boolean = true;
 	showGenreFilter: boolean = true;
 	publications: PublicationData[] = [];
-	private subscription!: Subscription;
 	loggedUser: User | null = null;
+	private subscription!: Subscription;
 	
 	@ViewChild('publicationCard') publicationCard!: TemplateRef<any>;
 
@@ -40,42 +41,4 @@ export class PublicationsComponent implements OnInit {
 	fetchPublications = (state: string, genre: string, search: string, page: number): ObservablePublicationData => {
 		return this.publicationService.getGeneralPublications(state, genre, page, search);
 	};
-	
-	/*
-   fetchPublications(url: string | null = null) {
-		this.subscription = this.route.queryParams.pipe(
-			tap((params) => {
-				this.currentFilters.state = params['state'] || '';
-				this.currentFilters.genre = params['genre'] || '';
-				this.currentFilters.page = params['page'] || 0;
-				this.currentFilters.search = params['search'] || '';
-			}),
-	        switchMap(() => {
-				return url
-				? this.publicationService.getPublicationsWithDetails(url)
-				: this.publicationService.getGeneralPublications(this.currentFilters.state, this.currentFilters.genre, this.currentFilters.page, this.currentFilters.search)
-			}),
-	        tap((response) => {
-				this.publications = response.publicationData || [];
-				this.conditionHeaders = response.headers.conditionHeaders
-				this.genreHeaders = response.headers.genreHeaders
-				this.pagination = response.pagination;
-				console.log('PaginationData:', this.pagination);
-			}),
-			switchMap(() =>
-				this.authService.loggedUser$.pipe(
-					distinctUntilChanged(),
-					filter(user => !!user),
-					take(1),
-					tap((user) => {
-						this.publicationService.setFavoritePublication(user!.self, this.publications).subscribe();
-					})
-				)
-			)
-		).subscribe({
-			error: (err) => {
-				console.error('Error:', err);
-			}
-		});
-	}*/
 }
