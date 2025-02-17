@@ -1,10 +1,28 @@
-<div class="book-card">
+<div class="book-card" (click)="openModal()">
+    <div class="star-rating">
+        <span class="star-text">{{ bookModel.averageRating }}</span>
+        <div class="stars">
+            <mat-icon class="star" *ngFor="let star of getStarArray(bookModel.averageRating)">
+                {{ star }}
+            </mat-icon>
+        </div>
+        <span class="star-text">({{ bookModel.ratingCount }})</span>
+    </div>
+
+
     <img [src]="bookImage" alt="Book Cover" class="book-image" (error)="bookImage = defaultImage">
 
     <div class="book-info">
         <h3 class="book-title">{{ bookModel!.title }}</h3>
-        <p *ngFor="let author of bookModel.authors"> {{ author }}</p>
+        <p class="book-authors"> {{ getFormattedAuthors(bookModel.authors) }}</p>
 
         <p class="book-genre"><strong>{{ 'GENRE' | translate }}:</strong> {{ ('genre.' + (bookModel!.genre | lowercase)) | translate }}</p>
     </div>
 </div>
+
+<app-book-modal
+        [bookModel]="bookModel"
+        [bookImage]="bookImage"
+        [(modalVisible)]="modalVisible">
+</app-book-modal>
+

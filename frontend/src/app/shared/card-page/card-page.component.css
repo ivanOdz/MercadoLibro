@@ -2,16 +2,15 @@
 	display: grid;
 	justify-content: space-between;
 	grid-template-columns: 0.75fr 2fr;
-	margin-top: 0;
-	padding: 1vh 5vh 2vh 5vh;
-	height: 91vh;
+	margin: 0 auto 0 auto;
+	padding: 0.5vh 5vh 0 5vh;
 }
 
 .column-filters {
 	display: flex;
 	flex-direction: column;
 	margin: 8% 8%;
-	gap: 20px;
+	gap: 4%;
 }
 
 .active-filters {
@@ -59,13 +58,6 @@
 	transition: background 0.2s;
 }
 
-.column-content {
-	display: flex;
-	align-items: center;
-	flex-direction: column;
-	margin: 0 5%;
-}
-
 .page-title {
 	margin: 15px 10px;
 	text-align: center;
@@ -91,8 +83,7 @@
 	justify-content: space-between;
 	align-items: center;
 	width: 100%;
-	margin: 10px 10px;
-	padding-left: 4px;
+	padding: 10px;
 }
 
 .search-applied {
@@ -105,39 +96,18 @@
 	grid-template-columns: 1fr;
 	gap: 16px;
 	width: 100%;
-	margin: auto;
-	justify-items: center;
-	padding: 2rem;
+	height: 10%;
+	padding-top: 0px 0px 0px 0px;
 }
 
 .cards-grid {
 	display: grid;
-	align-self: center;
-	grid-template-columns: repeat(auto-fill, minmax(11vw, 1fr));
+	grid-template-columns: repeat(auto-fill, minmax(1vw, 1fr));
 	gap: 16px;
 	padding: 16px;
 	width: 100%;
-	margin: auto;
+	margin: 16px;
 	justify-items: center;
-}
-
-.card {
-	width: 100%;
-	max-width: 260px;
-	background: white;
-	border-radius: 12px;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-	padding: 15px;
-	text-align: center;
-	transition: transform 0.3s ease-in-out;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	height: 41vh;
-}
-
-.card:hover {
-	transform: scale(1.05);
 }
 
 .no-cards {
@@ -158,4 +128,41 @@
 	cursor: pointer;
 	font-size: 16px;
 	transition: background 0.3s ease-in-out;
+}
+
+.column-content {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
+.content {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin-top: auto;
+	padding-top: 40px;
+}
+
+.scroll-panel {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 5px 15px 25px 15px;
+	height: 64vh;
+}
+
+::ng-deep .p-scrollpanel-bar {
+	background-color: rgba(220, 170, 130, 0.9);
+}
+
+.pagination {
+	margin-top: auto;
+	padding-top: 40px;
+}
+
+.spacer {
+	height: 20px;
+	width: 12%;
 }

@@ -1,14 +1,13 @@
-<app-navbar></app-navbar>
-<app-filter-list
-        [headers]="conditionHeaders"
-        filterType="Condition"
-        *ngIf="showConditionFilter">
+<card-page 
+	[pageTitle]="'MY_FAVORITE_PUBLICATIONS' | translate"
+	[fetchMethod]="fetchMyFavoritePublications"
+	[items]="publications"
+	[showSearchBar]="false"
+	[displaySort]="false"
+	[displayGridStyle]="false"
+	[cardTemplate]="publicationCardTemplate"
+></card-page>
 
-</app-filter-list>
-
-<app-filter-list
-        [headers]="genreHeaders"
-        filterType="Genre"
-        *ngIf="showGenreFilter">
-</app-filter-list>
-<app-sort></app-sort>
+<ng-template #publicationCardTemplate let-publication>
+	<publication-card [publication]="publication" [loggedUser]="loggedUser" [showLikeHeart]="true"></publication-card>
+</ng-template>

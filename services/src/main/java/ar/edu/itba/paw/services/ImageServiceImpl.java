@@ -49,11 +49,11 @@ public class ImageServiceImpl implements ImageService {
     @Override
     @Transactional
     public Image saveImage(MultipartFile file) {
-        Image image = new Image();
+        Image image;
 
         try {
             LOGGER.info("Saving image with original filename: {}", file.getOriginalFilename());
-            imageDao.createImage(file.getBytes());
+            image = imageDao.createImage(file.getBytes());
             LOGGER.info("Image with filename {} saved successfully", file.getOriginalFilename());
         } catch (IOException e) {
             LOGGER.warn("Error saving image with filename: {}", file.getOriginalFilename());

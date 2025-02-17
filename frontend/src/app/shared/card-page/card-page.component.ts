@@ -14,7 +14,7 @@ import { Pagination } from "../../core/models/pagination";
 import { PaginatorComponent } from "../paginator/paginator.component";
 import { switchMap } from "rxjs";
 import { SortComponent } from "../sort/sort.component";
-import {ObservablePublicationData} from "../../core/models/types";
+import { ObservablePublicationData } from "../../core/models/types";
 
 @Component({
 	selector: 'card-page',
@@ -29,7 +29,7 @@ import {ObservablePublicationData} from "../../core/models/types";
 export class CardPageComponent implements OnInit {
 	
 	@Input() pageTitle!: string;
-	@Input() fetchMethod!: (state: string, genre: string, search: string, page: number) => ObservablePublicationData;
+	@Input() fetchMethod!: (state: string, genre: string, search: string, page: number, sort: string) => ObservablePublicationData;
 	@Input() showSearchBar!: boolean;
 	@Input() displaySort!: boolean;
 	@Input() displayGridStyle: boolean = false;
@@ -49,12 +49,14 @@ export class CardPageComponent implements OnInit {
 	stateFilterApplied: boolean = false;
 	genreFilterApplied: boolean = false;
 	totalResults: number = 0;
+	resetPaginatorNumber: boolean = false;
 	
 	currentFilters = {
 			state: '',
 			genre: '',
 			search: '',
-			page: 0
+			page: 0,
+			sort: '',
 		};
 	
 	ngOnInit() {
@@ -63,14 +65,13 @@ export class CardPageComponent implements OnInit {
 	
 	fetchItems(url: string | undefined, page: number) {
 		this.currentFilters.page = page;
-		this.fetchMethod(this.currentFilters.state, this.currentFilters.genre, this.currentFilters.search, this.currentFilters.page).pipe(
+		this.fetchMethod(this.currentFilters.state, this.currentFilters.genre, this.currentFilters.search, this.currentFilters.page, this.currentFilters.sort).pipe(
 			switchMap((response) => {
 				this.pagination = response.pagination;
 				this.conditionHeaders = response.headers.conditionHeaders;
 				this.genreHeaders = response.headers.genreHeaders;
 				this.items = response.publicationData;
 				this.totalResults = response.totalResults;
-				console.log("Total Results:", this.totalResults);
 				return [];
 			})
 		).subscribe({
@@ -92,6 +93,8 @@ export class CardPageComponent implements OnInit {
 		
 		this.lastSearchQuery = this.currentFilters.search;
 		this.searchInput.nativeElement.blur();
+		
+		this.updateItems();
 	}
 	
 	onBlur() {
@@ -114,7 +117,7 @@ export class CardPageComponent implements OnInit {
 			queryParamsHandling: 'merge',
 		});
 
-		this.fetchItems(undefined, 0);
+		this.updateItems();
 	}
 	
 	processHeaders(headersData: { conditionHeaders: Record<string, string>, genreHeaders: Record<string, string> }) {
@@ -125,7 +128,6 @@ export class CardPageComponent implements OnInit {
 	}
 	
 	onFilterUpdate(filter: { param: string, value: string }) {
-
 		if (filter.param === "state") {
 			this.currentFilters.state = filter.value;
 			this.stateFilterApplied = true;
@@ -134,7 +136,18 @@ export class CardPageComponent implements OnInit {
 			this.currentFilters.genre = filter.value;
 			this.genreFilterApplied = true;
 		}
-				
+		
+		this.updateItems();
+	}
+	
+	onSortUpdate(sort: string) {
+		this.currentFilters.sort = sort;
+		this.updateItems();
+	}
+	
+	updateItems() {
+		this.resetPaginatorNumber = true;
+		setTimeout(() => (this.resetPaginatorNumber = false), 300);
 		this.fetchItems(undefined, 0);
 	}
 }

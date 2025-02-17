@@ -29,6 +29,7 @@
     "EDITORIAL": "Publisher",
     "DESCRIPTION": "Description",
     "GENRE": "Genre",
+    "BOOK_STATE": "Book State",
     "EDITION": "Edition",
     "WEIGHT": "Weight (grams)",
     "PAGES": "Pages",
@@ -49,7 +50,15 @@
     "EDITORIAL_IS_OBLIGATORY": "The publisher is required.",
     "NUMERIC_FIELD_IS_OBLIGATORY": "This field is numeric and required.",
     "SELECT_GENRE": "Select a genre",
-    "ADD_IMAGE": "Add image"
+    "SELECT_STATE": "Select the state of your book",
+    "ADD_IMAGE": "Add image",
+    "LOCATION": "Location",
+  	"LOCATIONS": "Locations",
+  	"STATE": "State",
+  	"IMAGE": "Image",
+  	"IMAGES": "Images",
+  	"AVAILABLE": "Published",
+  	"UNAVAILABLE": "Unpublished"
   },
   "genre": {
     "fiction": "Fiction",
@@ -239,9 +248,12 @@
     "TITLE": "Select a book from our library",
     "SEARCH": "Search in our library",
     "NO_BOOK": "Didn't find your book?",
-    "ADD_BOOK": "Add here!"
+    "ADD_BOOK": "Add here!",
+    "ADDING_BOOK": "Adding book to your collection",
+    "TELL_US_ABOUT_YOUR_BOOK": "Tell us about your book!"
   },
   "MY_PUBLICATIONS": "My publications",
+  "MY_FAVORITE_PUBLICATIONS": "My favorites"
   "AUTH": {
     "REPEAT_PASSWORD": "Repeat password",
     "REGISTER": "Register",

@@ -6,23 +6,32 @@
 	
 	<p class="page-title">{{ 'BOOK_FORM.TITLE' | translate }}</p>
 	
-	<form [formGroup]="bookModelForm" (ngSubmit)="submitForm()">
+	<form [formGroup]="bookModelForm" (ngSubmit)="goBackToBooks()">
 		<div class="form-grid">
 			<div class="column">
-				<label>ISBN:</label>
+                <label>{{ 'BOOK_FORM.BOOK_TITLE' | translate }}:</label>
+                <input type="text" formControlName="title" [class.invalid]="bookModelForm.get('title')?.invalid && bookModelForm.get('title')?.touched" />
+                <span *ngIf="bookModelForm.get('title')?.invalid && bookModelForm.get('title')?.touched" class="error">{{ 'BOOK_FORM.TITLE_IS_OBLIGATORY' | translate }}</span>
+
+                <label>{{ 'BOOK_FORM.AUTHORS' | translate }} ({{authors.length}}):</label>
+                <div formArrayName="authors">
+                    <div *ngFor="let author of authors.controls; let i = index" class="author-row">
+                        <input type="text" [formControlName]="i" class=""/>
+                        <button type="button" (click)="removeAuthor(i)">❌</button>
+                    </div>
+                </div>
+                <button type="button" (click)="addAuthor()" class="add-author">{{ 'BOOK_FORM.ADD_AUTHOR' | translate }}</button>
+
+                <label>{{ 'BOOK_FORM.PUBLICATION_YEAR' | translate }}:</label>
+                <input type="number" formControlName="publicationYear" />
+                <span *ngIf="bookModelForm.get('publicationYear')?.hasError('pattern') && bookModelForm.get('publicationYear')?.touched" class="error">{{ 'BOOK_FORM.FORMAT_ERROR' | translate }}</span>
+                <span *ngIf="bookModelForm.get('publicationYear')?.hasError('max') && bookModelForm.get('publicationYear')?.touched" class="error">{{ 'BOOK_FORM.YEAR_OUT_OF_RANGE' | translate }}</span>
+
+                <label>ISBN:</label>
 				<input type="text" formControlName="isbn" [class.invalid]="bookModelForm.get('isbn')?.invalid && bookModelForm.get('isbn')?.touched" />
 				<span *ngIf="bookModelForm.get('isbn')?.hasError('required') && bookModelForm.get('isbn')?.touched" class="error">{{ 'BOOK_FORM.ISBN_IS_OBLIGATORY' | translate }}</span>
 				<span *ngIf="bookModelForm.get('isbn')?.hasError('pattern') && bookModelForm.get('isbn')?.touched" class="error">{{ 'BOOK_FORM.FORMAT_ERROR' | translate }}</span>
-				
-				<label>{{ 'BOOK_FORM.BOOK_TITLE' | translate }}:</label>
-				<input type="text" formControlName="title" [class.invalid]="bookModelForm.get('title')?.invalid && bookModelForm.get('title')?.touched" />
-				<span *ngIf="bookModelForm.get('title')?.invalid && bookModelForm.get('title')?.touched" class="error">{{ 'BOOK_FORM.TITLE_IS_OBLIGATORY' | translate }}</span>
-				
-				<label>{{ 'BOOK_FORM.EDITORIAL' | translate }}:</label>
-				<input type="text" formControlName="editorial" formControlName="editorial" [class.invalid]="bookModelForm.get('editorial')?.invalid && bookModelForm.get('editorial')?.touched" />
-				<span *ngIf="bookModelForm.get('editorial')?.hasError('required') && bookModelForm.get('editorial')?.touched" class="error">{{ 'BOOK_FORM.EDITORIAL_IS_OBLIGATORY' | translate }}</span>
-				<span *ngIf="bookModelForm.get('editorial')?.hasError('pattern') && bookModelForm.get('editorial')?.touched" class="error">{{ 'BOOK_FORM.FORMAT_ERROR' | translate }}</span>
-								
+
 				<label>{{ 'BOOK_FORM.DESCRIPTION' | translate }}:</label>
 				<textarea formControlName="description"></textarea>
 				
@@ -38,17 +47,7 @@
 				<input type="number" formControlName="edition" />
 				<span *ngIf="bookModelForm.get('edition')?.hasError('required') && bookModelForm.get('edition')?.touched" class="error">{{ 'BOOK_FORM.NUMERIC_FIELD_IS_OBLIGATORY' | translate }}</span>
 				<span *ngIf="(bookModelForm.get('edition')?.hasError('min') || bookModelForm.get('edition')?.hasError('max')) && bookModelForm.get('edition')?.touched" class="error">{{ 'BOOK_FORM.NUMBER_OUT_OF_RANGE' | translate }}</span>
-				
-				<label>{{ 'BOOK_FORM.WEIGHT' | translate }}:</label>
-				<input type="number" formControlName="weight" />
-				<span *ngIf="bookModelForm.get('weight')?.hasError('required') && bookModelForm.get('weight')?.touched" class="error">{{ 'BOOK_FORM.NUMERIC_FIELD_IS_OBLIGATORY' | translate }}</span>
-				<span *ngIf="(bookModelForm.get('weight')?.hasError('min') || bookModelForm.get('weight')?.hasError('max')) && bookModelForm.get('weight')?.touched" class="error">{{ 'BOOK_FORM.NUMBER_OUT_OF_RANGE' | translate }}</span>
-				
-				<label>{{ 'BOOK_FORM.PAGES' | translate }}:</label>
-				<input type="number" formControlName="pages" />
-				<span *ngIf="bookModelForm.get('pages')?.hasError('required') && bookModelForm.get('pages')?.touched" class="error">{{ 'BOOK_FORM.NUMERIC_FIELD_IS_OBLIGATORY' | translate }}</span>
-				<span *ngIf="(bookModelForm.get('pages')?.hasError('min') || bookModelForm.get('pages')?.hasError('max')) && bookModelForm.get('pages')?.touched" class="error">{{ 'BOOK_FORM.NUMBER_OUT_OF_RANGE' | translate }}</span>
-				
+
 				<div class="grid" style="margin-top: 5%;">
 					<div class="column">
 						<label>{{ 'BOOK_FORM.IS_POCKET_EDITION' | translate }}:</label>
@@ -63,28 +62,38 @@
 			</div>
 		
 			<div class="book-separator"></div>
-		
-			<div class="column">
-				<label>{{ 'BOOK_FORM.LANGUAGE' | translate }}:</label>
+
+            <div class="column">
+                <label>{{ 'BOOK_FORM.EDITORIAL' | translate }}:</label>
+                <input type="text" formControlName="editorial" formControlName="editorial" [class.invalid]="bookModelForm.get('editorial')?.invalid && bookModelForm.get('editorial')?.touched" />
+                <span *ngIf="bookModelForm.get('editorial')?.hasError('required') && bookModelForm.get('editorial')?.touched" class="error">{{ 'BOOK_FORM.EDITORIAL_IS_OBLIGATORY' | translate }}</span>
+                <span *ngIf="bookModelForm.get('editorial')?.hasError('pattern') && bookModelForm.get('editorial')?.touched" class="error">{{ 'BOOK_FORM.FORMAT_ERROR' | translate }}</span>
+
+                <label>{{ 'BOOK_FORM.LANGUAGE' | translate }}:</label>
 				<select formControlName="bookLanguage" id="bookLanguage">
 					<option *ngFor="let bookLanguageValue of languages" [value]="bookLanguageValue">
 						{{ ('LANGUAGES.' + (bookLanguageValue | uppercase)) | translate }}
 					</option>
 				</select>
-				
+
 				<label>{{ 'BOOK_FORM.DIMENSIONS' | translate }}:</label>
 				<select formControlName="dimension" id="dimension">
 					<option *ngFor="let dimensionValue of dimensions" [value]="dimensionValue">
 						{{ ('dimension.' + dimensionValue) | translate }}
 					</option>
 				</select>
-				
-				<label>{{ 'BOOK_FORM.PUBLICATION_YEAR' | translate }}:</label>
-				<input type="number" formControlName="publicationYear" />
-				<span *ngIf="bookModelForm.get('publicationYear')?.hasError('pattern') && bookModelForm.get('publicationYear')?.touched" class="error">{{ 'BOOK_FORM.FORMAT_ERROR' | translate }}</span>
-				<span *ngIf="bookModelForm.get('publicationYear')?.hasError('max') && bookModelForm.get('publicationYear')?.touched" class="error">{{ 'BOOK_FORM.YEAR_OUT_OF_RANGE' | translate }}</span>
-				
-				<label>{{ 'BOOK_FORM.RATING' | translate }} ({{ rating }}):</label>
+
+                <label>{{ 'BOOK_FORM.WEIGHT' | translate }}:</label>
+                <input type="number" formControlName="weight" />
+                <span *ngIf="bookModelForm.get('weight')?.hasError('required') && bookModelForm.get('weight')?.touched" class="error">{{ 'BOOK_FORM.NUMERIC_FIELD_IS_OBLIGATORY' | translate }}</span>
+                <span *ngIf="(bookModelForm.get('weight')?.hasError('min') || bookModelForm.get('weight')?.hasError('max')) && bookModelForm.get('weight')?.touched" class="error">{{ 'BOOK_FORM.NUMBER_OUT_OF_RANGE' | translate }}</span>
+
+                <label>{{ 'BOOK_FORM.PAGES' | translate }}:</label>
+                <input type="number" formControlName="pages" />
+                <span *ngIf="bookModelForm.get('pages')?.hasError('required') && bookModelForm.get('pages')?.touched" class="error">{{ 'BOOK_FORM.NUMERIC_FIELD_IS_OBLIGATORY' | translate }}</span>
+                <span *ngIf="(bookModelForm.get('pages')?.hasError('min') || bookModelForm.get('pages')?.hasError('max')) && bookModelForm.get('pages')?.touched" class="error">{{ 'BOOK_FORM.NUMBER_OUT_OF_RANGE' | translate }}</span>
+
+                <label>{{ 'BOOK_FORM.RATING' | translate }} ({{ rating }}):</label>
 				<div class="star-rating">
 					<ng-container *ngFor="let star of [1, 2, 3, 4, 5]; let i = index">
 						<i
@@ -95,18 +104,15 @@
 					</ng-container>
 				</div>
 				<span *ngIf="bookModelForm.get('rating')?.hasError('min') || bookModelForm.get('rating')?.hasError('max')" class="error">{{ 'BOOK_FORM.OUT_OF_RANGE' | translate }}</span>
-				
-				<label>{{ 'BOOK_FORM.AUTHORS' | translate }} ({{authors.length}}):</label>
-								
-				<div formArrayName="authors">
-					<div *ngFor="let author of authors.controls; let i = index" class="author-row">
-						<input type="text" [formControlName]="i" class=""/>
-						<button type="button" (click)="removeAuthor(i)">❌</button>
-					</div>
-				</div>
-				
-				<button type="button" (click)="addAuthor()" class="add-author">{{ 'BOOK_FORM.ADD_AUTHOR' | translate }}</button>
-				
+
+                <label>{{ 'BOOK_FORM.BOOK_STATE' | translate }}:</label>
+                <select formControlName="condition" id="condition">
+                    <option value="" disabled selected>{{ 'BOOK_FORM.SELECT_STATE' | translate }}</option>
+                    <option *ngFor="let stateValue of bookStates" [value]="stateValue">
+                        {{ ('bookstate.' + stateValue) | translate }}
+                    </option>
+                </select>
+
 				<div class="image-upload-container">
 					<label class="image-upload-label">
 						<input type="file" (change)="onImageSelected($event)" accept="image/*">

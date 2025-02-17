@@ -1,6 +1,7 @@
 .book-card {
-    width: 23%;
+    flex: 1 1 calc(25% - 20px);
     min-width: 200px;
+    max-width: 250px;
     background: #F2EBD8;
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
@@ -12,11 +13,24 @@
     align-items: center;
     cursor: pointer;
 }
-
+@media (max-width: 1024px) {
+    .book-card {
+        flex: 1 1 calc(33.33% - 20px);
+    }
+}
+@media (max-width: 768px) {
+    .book-card {
+        flex: 1 1 calc(50% - 20px);
+    }
+}
+@media (max-width: 480px) {
+    .book-card {
+        flex: 1 1 100%;
+    }
+}
 .book-card:hover {
     transform: scale(1.05);
 }
-
 .book-image {
     width: 80%;
     height: 150px;
@@ -24,22 +38,94 @@
     border-radius: 8px;
     text-align: center;
 }
-
 .book-info {
     margin-top: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-
 .book-title {
-    font-size: 13px;
+    font-size: 18px;
     font-weight: bold;
     color: #333;
+    height: 2.5rem;
+    justify-items: center;
+    align-content: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
-
+.book-authors {
+    font-size: 12px;
+    color: #666;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 90%;
+}
 .book-genre {
     font-size: 14px;
     color: #666;
     margin-bottom: 5px;
+}
+.star-rating {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #6B243B;
+    margin-bottom: 4px;
+    justify-content: flex-start;
+}
+.stars {
+    display: flex;
+    gap: 2px;
+}
+.star {
+    font-size: 16px;
+    margin: 0;
+}
+.stars mat-icon {
+    margin: 0;
+}
+.star mat-icon {
+    margin: 0;
+}
+.star-text {
+    font-size: 12px;
+    color: #666;
+    margin-left: 5px;
+}
+.selected-book-in-modal {
+    display: grid;
+    grid-template-columns: 40% 40%;
+    gap: 10%;
+    margin: 4%;
+}
+.book-image-in-modal {
+    width: 10vh;
+    border-radius: 0.5rem;
+}
+.star-icon {
+    font-size: 40px;
+    font-style: normal;
+    margin-right: 2px;
+    cursor: pointer;
+}
+.error {
+    color: red;
+    font-size: 12px;
+    margin: 0.2%;
+}
+.button-group {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.submit-button {
+    background: rgba(60, 220, 60, .4);
+    color: black;
+    border: 1px solid rgba(60, 220, 60, 1);
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
 }

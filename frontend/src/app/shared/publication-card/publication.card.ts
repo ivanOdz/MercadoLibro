@@ -1,23 +1,33 @@
-import {Component, Input} from "@angular/core";
-import { PublicationData} from "../../core/models/types";
-import { Router} from "@angular/router";
+import { Component, Input, OnInit } from "@angular/core";
+import { CommonModule } from '@angular/common';
+import { PublicationData } from "../../core/models/types";
+import { Router } from "@angular/router";
+import { TranslatePipe } from '@ngx-translate/core';
+import { environment } from "../../../environments/environment";
+import { User } from "../../core/models/user.model";
+import { PublicationService } from "../../core/services/publication.service";
 
 @Component({
     selector: 'publication-card',
     templateUrl: './publication.card.html',
     styleUrl: './publication.card.css',
     standalone: true,
+	imports: [CommonModule, TranslatePipe]
 })
-export class PublicationCardComponent {
+export class PublicationCardComponent implements OnInit {
     @Input() publication!: PublicationData;
+	@Input() loggedUser!: User | null;
+	@Input() showLikeHeart: boolean = false;
+	
+	bookImage!: string;
+	defaultImage: string = './assets/book.jpg';
+	
+    constructor(private router: Router, private publicationService: PublicationService) { }
 
-    constructor(private router: Router) {
-    }
-
-    getBookImage(images: string[] | null | undefined) {
-        return images? images[0] : 'assets/book.jpg';
-    }
-
+	ngOnInit() {
+		this.bookImage = this.getBookImage();
+		this.getIfItIsFavorite();
+	}
 
     goToPublicationDetail() {
         if (this.publication.self) {
@@ -25,5 +35,56 @@ export class PublicationCardComponent {
             this.router.navigate([path],{ queryParams: { origen: 'publications' } });
         }
     }
+	
+	getIfItIsFavorite() {
+		if (this.showLikeHeart) {
+			this.publicationService.getFavoritePublication(this.publication.isFavoriteTemplate, this.loggedUser!.self)
+			.subscribe((favoritePublication) => { this.publication.favoritePublication = favoritePublication; });
+		}
+	}
+	
+	getBaseUrl() {
+		return `${environment.production? environment.productionUrl  : environment.developmentUrl}`;
+	}
+	
+	getBookImage(): string {
+		return	this.publication.book?.images?.length ? this.publication.book.images[0] : (this.publication.book?.bookModel?.cover ? this.getBaseUrl() + this.publication.book.bookModel.cover : this.defaultImage);
+	}
+	
+	toggleLike(event: Event): void {
+		
+		event.stopPropagation();
+		
+		if (!this.loggedUser) {
+			console.warn('User not logged!');
+			return;
+		}
+
+		if (this.publication.favoritePublication) {
+			this.publicationService.unlikePublication(this.publication).subscribe({
+				next: () => this.publication.favoritePublication = null,
+//				error: (err) => console.error('Error eliminating', err)
+			});
+		} else {
+			this.publicationService.likePublication(this.publication, this.loggedUser).subscribe({
+				next: () => this.getIfItIsFavorite(),
+//				error: (err) => console.error('Error posting', err)
+			});
+		}
+	}
+	
+	getFormattedLocations(publication: PublicationData): string {
+		
+		if (!publication.locations || publication.locations.length === 0) {
+			return '?';
+		}
+
+		const locationNames = publication.locations.map(loc => loc.location);
+		if (locationNames.length > 3) {
+			return `${locationNames.slice(0, 3).join(', ')}...`;
+	    }
+
+		return locationNames.join(', ');
+	}
 
 }

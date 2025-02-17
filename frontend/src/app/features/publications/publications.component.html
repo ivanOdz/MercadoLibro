@@ -1,61 +1,13 @@
-<app-navbar></app-navbar>
+<card-page
+	[pageTitle]="'PUBLICATIONS.TITLE' | translate"
+	[fetchMethod]="fetchPublications"
+	[items]="publications"
+	[showSearchBar]="true"
+	[displaySort]="true"
+	[displayGridStyle]="false"
+	[cardTemplate]="publicationCardTemplate"
+></card-page>
 
-<div class="publications-home">
-
-	<div class="column-filters">
-		<p class="page-filter-text">{{ 'FILTERS' | translate }}</p>
-		<div class="filter-line"></div>
-		<app-filter-list [headers]="conditionHeaders" filterType="Condition"></app-filter-list>
-		<div class="filter-line"></div>
-		<app-filter-list [headers]="genreHeaders" filterType="Genre"></app-filter-list>
-		<div class="filter-line"></div>
-	</div>
-	
-	<div class="column-content">
-
-		<p class="page-title">{{ 'PUBLICATIONS.TITLE' | translate }}</p>
-		<p-inputgroup>
-			<input #searchInput pInputText
-					[(ngModel)]="currentFilters.search"
-					(keyup.enter)="search()"
-					[ngClass]="{ 'search-applied': isSearchActive }"
-					(blur)="onBlur()"
-					(ngModelChange)="onSearchChange()"
-					placeholder="{{ 'PUBLICATIONS.SEARCH' | translate }}" />
-			<p-inputgroup-addon>
-				<p-button icon="pi pi-search" severity="secondary" variant="text" (click)="search()"/>
-			</p-inputgroup-addon>
-		</p-inputgroup>
-		
-		<div class="search-info">
-			<p>{{ 'TOTAL_RESULTS' | translate }}: {{ publications.length * (pagination ? pagination!.pages : 1) }}</p>
-			<div class="active-filters">
-				<div class="filter-left">
-					<button *ngIf="currentFilters.state" class="filter-badge" (click)="removeFilter('state')">
-						{{ currentFilters.state | translate }} ✕
-					</button>
-					<button *ngIf="!currentFilters.state" class="no-filter-badge">
-						{{ 'NO_STATE_FILTER' | translate }}
-					</button>
-				</div>
-				<div class="filter-right">
-					<button *ngIf="currentFilters.genre" class="filter-badge" (click)="removeFilter('genre')">
-						{{ currentFilters.genre | translate }} ✕
-					</button>
-					<button *ngIf="!currentFilters.genre" class="no-filter-badge">
-						{{ 'NO_GENRE_FILTER' | translate }}
-					</button>
-				</div>
-			</div>
-			<app-sort></app-sort>
-		</div>
-
-        <p-scrollpanel [style]="{ width:'65vw', height: '62vh'}">
-            <div class="publications-grid">
-                <publication-card data-cy="publications" *ngFor="let publication of publications" [publication]="publication"></publication-card>
-            </div>
-            <app-paginator [pagination]="pagination" [fetchMethod]="fetchPublications.bind(this)"></app-paginator>
-        </p-scrollpanel>
-
-	</div>
-</div>
+<ng-template #publicationCardTemplate let-publication>
+	<publication-card [publication]="publication" [loggedUser]="loggedUser" [showLikeHeart]="true"></publication-card>
+</ng-template>

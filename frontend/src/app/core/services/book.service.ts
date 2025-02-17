@@ -76,6 +76,7 @@ export class BookService {
 
         return this.http.patch<void>(`${book.self}`, body, { headers }).pipe(
             tap(() => {
+                console.log("Libro uri:", book.self);
                 book.state = body.state; // Actualizo el estado del libro localmente para que refleje en la card.
                 //console.log('Libro actualizado localmente:', book);
             }),
@@ -86,6 +87,22 @@ export class BookService {
                 return throwError(() => new Error(error));
             })
         );
-}
+    }
+
+    uploadBook(bookUrl: string, bookModelUrl: string, rating: number, condition: string, user: string | undefined, images: string[] | undefined): Observable<any> {
+        const headers = new HttpHeaders({'Content-Type': 'application/vnd.books.input.v1+json'});
+        const body = {
+            condition: condition.toUpperCase(),
+            bookModel: bookModelUrl,
+            user: user,
+            rating: rating,
+            imageURNS: images
+        }
+
+        return this.http.post(`${bookUrl}`, body, { headers, observe: 'response' }).pipe(
+            tap((response) => console.log("API response (Post) of Book:", response))
+        );
+
+    }
 
 }

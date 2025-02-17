@@ -30,6 +30,7 @@
     "EDITORIAL": "Editorial",
     "DESCRIPTION": "Descripción",
     "GENRE": "Género",
+    "BOOK_STATE": "Condición del libro",
     "EDITION": "Edición",
     "WEIGHT": "Peso (gramos)",
     "PAGES": "Páginas",
@@ -50,7 +51,15 @@
     "EDITORIAL_IS_OBLIGATORY": "La editorial es obligatoria.",
     "NUMERIC_FIELD_IS_OBLIGATORY": "Este campo es numérico y obligatorio.",
     "SELECT_GENRE": "Seleccione un género",
-    "ADD_IMAGE": "Agregar imagen"
+    "SELECT_STATE": "Seleccione el estado de su libro",
+    "ADD_IMAGE": "Agregar imagen",
+    "LOCATION": "Ubicación",
+    "LOCATIONS": "Ubicaciones",
+    "STATE": "Condición",
+    "IMAGE": "Imagen",
+    "IMAGES": "Imagenes",
+    "AVAILABLE": "Publicado",
+    "UNAVAILABLE": "Sin publicar"
   },
   "genre": {
     "fiction": "Ficción",
@@ -107,8 +116,8 @@
     "worn": "Desgastado"
   },
   "sort": {
-    "rating.ascending": "Más valorados",
-    "rating.descending": "Menos valorados",
+    "rating.ascending": "Menos valorados",
+    "rating.descending": "Más valorados",
     "publication.date.ascending": "Mas antiguas",
     "publication.date.descending": "Mas recientes",
     "book.name.ascending": "Nombre del libro ascendente",
@@ -243,8 +252,11 @@
     "TITLE": "Selecciona un libro de nuestra biblioteca",
     "SEARCH": "Buscar en nuestra biblioteca",
     "NO_BOOK": "¿No encuentras tu libro?",
-    "ADD_BOOK": "¡Agregalo aquí!"
+    "ADD_BOOK": "¡Agregalo aquí!",
+    "ADDING_BOOK": "Agregue el libro a su colección",
+    "TELL_US_ABOUT_YOUR_BOOK": "¡Cuéntenos sobre su libro!"
   },
+  "MY_FAVORITE_PUBLICATIONS": "Mis favoritos"
   "MY_PUBLICATIONS": "Mis publicaciones",
   "AUTH": {
     "REPEAT_PASSWORD": "Repetir contraseña",

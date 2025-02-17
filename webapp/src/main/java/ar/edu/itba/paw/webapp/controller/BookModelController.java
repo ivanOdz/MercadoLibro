@@ -64,13 +64,14 @@ public class BookModelController {
 
     @POST
     @Consumes(value = {VndType.APPLICATION_BOOK_MODEL})
-    public Response postBookModel(final BookModelDTO bookModelDTO, @QueryParam("rating") final Integer rating) {
+    public Response postBookModel(final BookModelDTO bookModelDTO) {
         BookModel bookModel = bookModelService
                 .createBookModel(bookModelDTO.getIsbn(), bookModelDTO.getTitle(), bookModelDTO.getEditorial(),
                         bookModelDTO.getDescription(), Genre.fromString("genre." + bookModelDTO.getGenre()), bookModelDTO.getEdition(),
                         bookModelDTO.getPublicationYear(), bookModelDTO.getHardcover(), bookModelDTO.getPocketEdition(),
                         BookDimension.fromString("dimension." + bookModelDTO.getDimension()), Language.fromString("language." + bookModelDTO.getBookLanguage()),
                         bookModelDTO.getPages(),bookModelDTO.getWeight(), bookModelDTO.getAuthors());
+        bookModelService.setCover(bookModel.getBookModelId(), bookModelDTO.getCoverId());
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(bookModel.getBookModelId())).build()).build();
     }
 

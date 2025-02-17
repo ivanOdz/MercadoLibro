@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, TemplateRef, ViewChild, OnInit } from '@angular/core';
 import { filter, Subscription } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { CardPageComponent } from '../../shared/card-page/card-page.component';
@@ -7,86 +7,35 @@ import { PublicationService } from "../../core/services/publication.service";
 import { AuthService } from "../../core/services/auth.service";
 import { ObservablePublicationData, PublicationData } from "../../core/models/types";
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
+import { User } from "../../core/models/user.model";
 
 @Component({
-  selector: 'app-my-publications',
-  standalone: true,
-  imports: [CardPageComponent, PublicationCardComponent, TranslatePipe],
-  templateUrl: './my-publications.component.html',
-  styleUrls: ['./my-publications.component.css']
+	selector: 'app-my-publications',
+	templateUrl: './my-publications.component.html',
+	styleUrls: ['./my-publications.component.css'],
+	standalone: true,
+	imports: [CardPageComponent, PublicationCardComponent, TranslatePipe]
 })
-export class MyPublicationsComponent {
-  showConditionFilter: boolean = true;
-  showGenreFilter: boolean = true;
-  private subscription!: Subscription;
-  publications: PublicationData[] = [];
-  headersData: any;
+export class MyPublicationsComponent implements OnInit {
+	
+	showConditionFilter: boolean = true;
+	showGenreFilter: boolean = true;
+	publications: PublicationData[] = [];
+	loggedUser: User | null = null;
+	private subscription!: Subscription;
   
-  @ViewChild('publicationCard') publicationCard!: TemplateRef<any>;
+	@ViewChild('publicationCard') publicationCard!: TemplateRef<any>;
 
-  constructor(
-      private publicationService: PublicationService,
-      private authService: AuthService,
-  ) {}
+	constructor(
+		private publicationService: PublicationService,
+		private authService: AuthService,
+	) { }
   
-  fetchMyPublications = (state: string, genre: string, search: string, page: number): ObservablePublicationData => {
-      return this.authService.loggedUser$.pipe(
-          filter(user => !!user),
-          switchMap((user) =>
-              this.publicationService.getMyPublications(user.publications, state, genre, page, search)
-		      .pipe(
-				  tap(response => {
-					if (response.headers) {
-						this.headersData = response.headers;
-					}
-				  }),
-                  map(response => response)
-              )
-          )
-      );
-  };
+	ngOnInit() {
+		this.authService.loggedUser$.subscribe(user => { this.loggedUser = user; });
+	}
+
+	fetchMyPublications = (state: string, genre: string, search: string, page: number, sort: string | null): ObservablePublicationData => {
+		return this.publicationService.getMyPublications(this.loggedUser!.publications, state, genre, page, search, sort);
+	};
 }
-
-/*
-ngOnInit() {
-
-  this.subscription = this.authService.loggedUser$.pipe(
-      filter(user => !!user),
-      switchMap((user) => {
-        this.currentFilters.user = user.self;
-
-        return this.route.queryParams.pipe(
-            tap((params) => {
-              this.currentFilters.state = params['state'] || '';
-              this.currentFilters.genre = params['genre'] || '';
-              this.currentFilters.page = params['page'] || 0;
-              this.currentFilters.search = params['search'] || '';
-
-                this.showConditionFilter = !params['state'];
-                this.showGenreFilter = !params['genre'];
-            }),
-            switchMap(() => this.publicationService.getMyPublications({ ...this.currentFilters })),
-            tap((response) => {
-              // Procesar las publicaciones y los encabezados
-              this.publications = response.body || [];
-              this.processHeaders(response.headers);
-            })
-        );
-      }),
-      switchMap(() =>
-          this.authService.loggedUser$.pipe(
-              distinctUntilChanged(),
-              filter(user => !!user),
-              take(1),
-              tap((user) => {
-                // Si el usuario está logueado, actualizamos las publicaciones favoritas
-                this.publicationService.setFavoritePublication(user!.self, this.publications).subscribe();
-              })
-          )
-      )
-  ).subscribe({
-    error: (err) => {
-      console.error('Error:', err);
-    }
-  });
-}*/

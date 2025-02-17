@@ -1,17 +1,17 @@
 .publication-card-container {
-	width: 55vw;
-	max-height: 30vh;
+	width: 58vw;
+	height: 130px;
 	background: #fff;
 	box-shadow: 4px 6px 6px #0000001a;
 	border-radius: 2rem;
-	padding: 2rem;
+	padding: 1rem 2rem;
 	transition: transform .2s;
 	cursor: pointer;
 	align-content: center;
 	display: grid;
-	grid-template-columns: 20% 60% auto;
-	gap: 5%;
 	overflow: hidden;
+	grid-template-columns: 0.6fr 2fr auto;
+	margin: 5px 36px;
 }
 
 .publication-card-container:hover {
@@ -19,39 +19,108 @@
 	background-color: rgba(240, 232, 210, 0.9);
 }
 
-.first-column-card {
+.image-column {
 	grid-column: 1;
-	align-content: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
-.second-column-card {
+.book-data-column {
 	grid-column: 2;
+	padding-left: 20px;
+	max-height: 130px;
 }
-.third-column-card {
+
+.auxiliar-column {
 	grid-column: 3;
+	display: grid;
 }
 
-.publisher-text-card {
-	font-size: x-small;
+.title-text {
+	font-size: 22px;
+	font-style: normal;
+	margin: 10px 0 10px 0;
 }
 
-.description-text-card {
-	font-size: small;
-	max-height: 4rem;
-	overflow-y: clip;
+.book-info {
+	display: flex;
+	align-items: center;
 }
 
-.title-text-card {
-	font-size: large;
+.year-genre-text {
+	font-size: 15px;
+	padding-right: 20px;
+	margin: 10px 0 10px 0;
 }
 
-.authors-text-card {
-	font-size: small;
+.editorial-edition-text {
+	font-size: 12px;
+}
+
+.locations-text {
+	font-size: 14px;
 }
 
 .book-image {
-	width: 9vw;
-	height: 25vh;
+	height: 110px;
+	width: auto;
 	border-radius: 1rem;
+}
+
+.rating-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	align-self: flex-end;
+}
+
+.star-icon {
+	font-size: 25px;
+	font-style: normal;
+	margin-bottom: 4px;
+}
+
+.filled-star::before {
+	content: "★";
+	color: #ddaa77;
+}
+
+.empty-star::before {
+	content: "☆";
+	color: #bbb;
+}
+
+.rating-text {
+	font-size: 15px;
+	font-style: normal;
+	color: #998877;
+	margin: 0;
+	padding: 0px 6px 0px 6px;
+}
+
+.heart-icon {
+	font-size: 24px;
+	font-weight: bold;
+	cursor: pointer;
+	transition: color 0.3s ease;
 	align-self: center;
+	margin-left: auto;
+	pointer-events: auto;
+}
+
+.heart-icon.pi-heart {
+	color: rgba(190, 190, 190, 1);
+}
+
+.heart-icon.pi-heart:hover {
+	color: rgba(235, 130, 55, 1);
+}
+
+.heart-icon.pi-heart-fill.liked {
+	color: rgba(235, 130, 55, 1);
+}
+
+.heart-icon.pi-heart-fill.liked:hover {
+	color: rgba(150, 150, 50, 1);
 }
