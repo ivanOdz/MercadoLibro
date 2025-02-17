@@ -72,4 +72,19 @@ export class PublicationCardComponent implements OnInit {
 			});
 		}
 	}
+	
+	getFormattedLocations(publication: PublicationData): string {
+		
+		if (!publication.locations || publication.locations.length === 0) {
+			return '?';
+		}
+
+		const locationNames = publication.locations.map(loc => loc.location);
+		if (locationNames.length > 3) {
+			return `${locationNames.slice(0, 3).join(', ')}...`;
+	    }
+
+		return locationNames.join(', ');
+	}
+
 }

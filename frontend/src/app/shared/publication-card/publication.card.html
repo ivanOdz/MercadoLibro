@@ -4,8 +4,12 @@
 	</div>
 	<div class="book-data-column">
 		<p class="title-text">{{ publication.book?.bookModel?.title }}</p>
-		<p class="editorial-edition-text">{{ publication.book?.bookModel?.editorial }}, {{ publication.book?.bookModel?.edition }}° {{ 'BOOK_FORM.EDITION' | translate }}</p>
-		<p class="year-genre-text">{{ publication.book?.bookModel?.publicationYear }}, {{ ('genre.' + (publication.book?.bookModel?.genre | lowercase)) | translate }}</p>
+		<div class="book-info">
+			<p class="year-genre-text">{{ publication.book?.bookModel?.publicationYear }}, {{ ('genre.' + (publication.book?.bookModel?.genre | lowercase)) | translate }}</p>
+			<p class="editorial-edition-text">({{ publication.book?.bookModel?.editorial }}, {{ publication.book?.bookModel?.edition }}° {{ 'BOOK_FORM.EDITION' | translate }})</p>
+		</div>
+		<p *ngIf="!publication.locations || publication.locations!.length < 2" class="locations-text"><strong>{{ 'BOOK_FORM.LOCATION' | translate }}: </strong>{{ getFormattedLocations(publication) }}</p>
+		<p *ngIf="publication.locations && publication.locations!.length > 1" class="locations-text"><strong>{{ 'BOOK_FORM.LOCATIONS' | translate }}: </strong>{{ getFormattedLocations(publication) }}</p>
 	</div>
 	<div class="auxiliar-column">
 	
