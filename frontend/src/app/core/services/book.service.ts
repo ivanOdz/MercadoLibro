@@ -73,18 +73,21 @@ export class BookService {
 
     updateBookstate(book: BookData, newState: string): Observable<void> {
         const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.books.v1+json' });
-        const body = { state: newState };
+        const body = {  state: newState,
+                        available: book.available,
+                        owner: book.owner,
+                        bookModel: book.bookModel,
+                        images: book.images,
+                        self: book.self
+                    };
 
         return this.http.patch<void>(`${book.self}`, body, { headers }).pipe(
             tap(() => {
                 console.log("Libro uri:", book.self);
-                book.state = body.state; // Actualizo el estado del libro localmente para que refleje en la card.
-                //console.log('Libro actualizado localmente:', book);
+                book.state = newState; // Actualizo el estado del libro localmente para que refleje en la card.
             }),
             catchError((error) => {
-                if (error.status === 404) {
-                    console.log("Haciendo redirección a /404");
-                }
+                console.error("Error en PATCH:", error);
                 return throwError(() => new Error(error));
             })
         );

@@ -131,13 +131,12 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public Book updateBook(Long bookId, String bookState) {
+    public void updateBook(Long bookId, String bookState) {
         LOGGER.info("Attempting to update the state of Book with ID: {} to state: {}", bookId, bookState);
 
         Optional<Book> updatedBook = bookDao.updateBookState(bookId, bookState);
         if (updatedBook.isPresent()) {
             LOGGER.info("Successfully updated Book with ID: {} to state: {}", bookId, bookState);
-            return updatedBook.get();
         } else {
             LOGGER.warn("Book with ID: {} not found, state update failed", bookId);
             throw new BookNotFoundException("Book not found");

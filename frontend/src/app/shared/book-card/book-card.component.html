@@ -6,14 +6,7 @@
 		<p *ngIf="showOwner" class="book-owner"><strong>{{ 'BOOK_CARD.OWNER' | translate }}</strong> {{ ownerName }}</p>
 		<p *ngIf="showGenre" class="book-owner"><strong>{{ 'GENRE' | translate }}:</strong> {{ ('genre.' + (book.bookModel!.genre | lowercase)) | translate }}</p>
         <div class="book-state-container">
-            <p *ngIf="showState" class="book-state" [ngClass]="{
-                'book-state-new': book.state == 'NEW',
-                'book-state-like-new': book.state == 'LIKE_NEW',
-                'book-state-very-good': book.state == 'VERY_GOOD',
-                'book-state-good': book.state == 'GOOD',
-                'book-state-aceptable': book.state == 'ACCEPTABLE',
-                'book-state-worn': book.state == 'WORN'
-            }"> <strong>{{ 'BOOK_CARD.STATE' | translate }}:</strong>
+            <p *ngIf="showState" class="book-state"> <strong>{{ 'BOOK_CARD.STATE' | translate }}:</strong>
                 {{ ('bookstate.' + (book.state! | lowercase)) | translate }}
             </p>
             <span class="edit-icon-container">
@@ -56,7 +49,7 @@
             <span class="font-bold whitespace-nowrap">{{ 'BOOK_FORM.SELECT_STATE' | translate }}</span>
         </div>
     </ng-template>
-    <select [(ngModel)]="newCondition">
+    <select [(ngModel)]="newCondition" class="book-state-select">
         <option value="" disabled selected>{{ ('bookstate.' + this.condition.toLowerCase()) | translate }}</option>
         <option *ngFor="let state of bookStates" [value]="state">
             {{ ('bookstate.' + state) | translate }}

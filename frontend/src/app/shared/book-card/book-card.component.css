@@ -53,34 +53,11 @@
 
 .book-state {
 	padding: 5px 10px;
+	border: 1px solid black;
 	border-radius: 5px;
 	font-size: x-small;
+	background-color: transparent;
 }
-
-.book-state-new {
-	background-color: rgba(160, 100, 200, 0.9);
-}
-
-.book-state-like-new {
-	background-color: rgba(0, 200, 200, 0.9);
-}
-
-.book-state-very-good {
-	background-color: rgba(0, 180, 50, 0.9);
-}
-
- .book-state-good {
- 	background-color: rgba(80, 140, 80, 0.8);
- }
- 
-.book-state-aceptable {
-	background-color: rgba(150, 150, 0, 0.9);
-}
-
-.book-state-worn {
-	background-color: rgba(180, 25, 25, 0.8);
-}
-
 
 .select-locations {
 	display: grid;
@@ -173,4 +150,19 @@
 
 .edit-icon-container {
 	margin-left: 10px;
+}
+.book-state-select {
+	width: 100%;
+	padding: 8px;
+	font-size: 1rem;
+	border-radius: 5px;
+	border: 1px solid #ccc;
+	background-color: #fff;
+	color: #333;
+	cursor: pointer;
+}
+
+.book-state-select:focus {
+	border-color: #007bff;
+	outline: none;
 }

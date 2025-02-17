@@ -86,7 +86,7 @@ public class BookController {
     @PATCH
     @Path("/{id}")
     @Consumes(value = {VndType.APPLICATION_BOOK})
-    //@PreAuthorize("@accessControl.modifyBookAccess(#bookId, #book)")
+    @PreAuthorize("@accessControl.modifyBookAccess(#bookId, #book)")
     public Response updateBook(@PathParam("id") final long bookId, final BookDTO book) {
         bs.updateBook(bookId, book.getState());
         return Response.noContent().build();
