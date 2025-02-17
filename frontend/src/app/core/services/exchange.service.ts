@@ -67,18 +67,18 @@ export class ExchangeService {
         return this.getExchanges(exchangesUrl, page, 'ACCEPTED', true, true);
     }
 
-    // /exchanges?user_id=12345678state=pending&isOfferer=false&isRequester=true
+    // /exchanges?user_id=12345678&state=pending&is_offerer=false&is_requester=true
     getSolicitedExchanges(exchangesUrl: string, page:number): Observable< {exchange: Exchange[], pagination: Pagination}> {
         return this.getExchanges(exchangesUrl, page, 'PENDING', false, true);
     }
 
-    // /exchanges?user_id=12345678state=pending&isOfferer=true&isRequester=false
+    // /exchanges?user_id=12345678state=pending&is_offerer=true&is_requester=false
     getExchangesOffers(exchangesUrl: string, page: number): Observable< {exchange: Exchange[], pagination: Pagination}> {
         return this.getExchanges(exchangesUrl, page, 'PENDING', true, false);
     }
 
 
-    // /exchanges?user_id=12345678&state=completed&isOfferer=true&isRequester=true&page=1
+    // /exchanges?user_id=12345678&state=completed&is_offerer=true&is_requester=true&page=1
     getCompletedExchanges(exchangesUrl: string, page: number): Observable< {exchange: Exchange[], pagination: Pagination}> {
         return this.getExchanges(exchangesUrl, page, 'TERMINATED', true, true);
     }

@@ -11,8 +11,8 @@
       "offerer": "http://localhost:8080/api/publications/2",
       "requester": "http://localhost:8080/api/publications/5",
       "chat": "http://localhost:8080/api/exchanges/1/messages",
-      "offererReview": "http://localhost:8080/api/user/3/review/1",
-      "requesterReview": "http://localhost:8080/api/user/5/review/3"
+      "offererReview": "",
+      "requesterReview": ""
     },
     {
         "state": "ACCEPTED",
@@ -26,8 +26,8 @@
         "offerer": "http://localhost:8080/api/publications/3",
         "requester": "http://localhost:8080/api/publications/6",
         "chat": "http://localhost:8080/api/exchanges/2/messages",
-        "offererReview": "http://localhost:8080/api/user/4/review/2",
-        "requesterReview": "http://localhost:8080/api/user/6/review/4"
+        "offererReview": "",
+        "requesterReview": ""
     },
     {
         "state": "ACCEPTED",
@@ -41,8 +41,8 @@
         "offerer": "http://localhost:8080/api/publications/4",
         "requester": "http://localhost:8080/api/publications/7",
         "chat": "http://localhost:8080/api/exchanges/3/messages",
-        "offererReview": "http://localhost:8080/api/user/5/review/3",
-        "requesterReview": "http://localhost:8080/api/user/7/review/5"
+        "offererReview": "",
+        "requesterReview": ""
     },
     {
         "state": "ACCEPTED",
@@ -56,7 +56,7 @@
         "offerer": "http://localhost:8080/api/publications/5",
         "requester": "http://localhost:8080/api/publications/8",
         "chat": "http://localhost:8080/api/exchanges/4/messages",
-        "offererReview": "http://localhost:8080/api/user/6/review/4",
-        "requesterReview": "http://localhost:8080/api/user/8/review/6"
+        "offererReview": "",
+        "requesterReview": ""
     }
 ]

@@ -69,9 +69,20 @@ Cypress.Commands.add('waitExchangesRequests', () => {
     cy.wait('@getMessages');
 });
 
+
+Cypress.Commands.add('interceptExchangesRequests', () => {
+    cy.intercept('GET', '**/publications/*', { fixture: 'publication.json' }).as('getPublication');
+    cy.intercept('GET', '**/users/*', { fixture: 'user.json' }).as('getUser');
+    cy.intercept('GET', '**/books/*', { fixture: 'book.json' }).as('getBook');
+    cy.intercept('GET', '**/book_models/*', { fixture: 'book_model.json' }).as('getBookModel');
+    cy.intercept('GET', '**/users/*/locations?*', { fixture: 'locations.json' }).as('getLocations');
+    cy.intercept('GET', '**/exchanges/*/messages', { fixture: 'messages.json' }).as('getMessages');
+});
+
 declare namespace Cypress {
     interface Chainable {
         login(username: string, password: string, rememberMe?: boolean): Chainable<void>;
         waitExchangesRequests(): Chainable<void>;
+        interceptExchangesRequests(): Chainable<void>;
     }
 }

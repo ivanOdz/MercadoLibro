@@ -20,12 +20,7 @@ describe('Active Exchanges tests', () => {
 
         cy.intercept('GET', '**/exchanges?*', { fixture: 'active-exchanges.json' }).as('getExchanges');
 
-        cy.intercept('GET', '**/publications/*', { fixture: 'publication.json' }).as('getPublication');
-        cy.intercept('GET', '**/users/*', { fixture: 'user.json' }).as('getUser');
-        cy.intercept('GET', '**/books/*', { fixture: 'book.json' }).as('getBook');
-        cy.intercept('GET', '**/book_models/*', { fixture: 'book_model.json' }).as('getBookModel');
-        cy.intercept('GET', '**/users/*/locations?*', { fixture: 'locations.json' }).as('getLocations');
-        cy.intercept('GET', '**/exchanges/*/messages', { fixture: 'messages.json' }).as('getMessages');
+        cy.interceptExchangesRequests();
 
         cy.intercept('PATCH', '**/exchanges/*', { statusCode: 200 }).as('confirmExchange');
         cy.intercept('POST', '**/exchanges/*/messages', { fixture: 'message.json' }).as('sendMessage');
@@ -97,35 +92,37 @@ describe('Requests Exchanges tests', () => {
     beforeEach(() => {
         cy.login('testuser', 'password', true);
 
-        cy.intercept('GET', '**/exchanges?*is_requester=true&is_offerer=false*', {fixture: 'requested-exchanges.json' }).as('getSolicitedExchanges');
-        cy.intercept('GET', '**/exchanges?*is_requester=false&is_offerer=true*', { fixture: 'offered-exchanges.json' }).as('getOfferedExchanges');
+        cy.intercept('GET', '**/exchanges?user_id=*&state=PENDING&is_offerer=false&is_requester=true&page=*', {
+            fixture: 'requested-exchanges.json'
+        }).as('getSolicitedExchanges');
 
-        cy.intercept('GET', '**/publications/*', { fixture: 'publication.json' }).as('getPublication');
-        cy.intercept('GET', '**/users/*', { fixture: 'user.json' }).as('getUser');
-        cy.intercept('GET', '**/books/*', { fixture: 'book.json' }).as('getBook');
-        cy.intercept('GET', '**/book_models/*', { fixture: 'book_model.json' }).as('getBookModel');
-        cy.intercept('GET', '**/users/*/locations?*', { fixture: 'locations.json' }).as('getLocations');
-        cy.intercept('GET', '**/exchanges/*/messages', { fixture: 'messages.json' }).as('getMessages');
+        cy.intercept('GET', '**/exchanges?user_id=*&state=PENDING&is_offerer=true&is_requester=false&page=*', {
+            fixture: 'offered-exchanges.json'
+        }).as('getOfferedExchanges');
 
-        cy.intercept('PATCH', '**/exchanges/*?*accepted=true', { statusCode: 200 }).as('acceptExchange');
-        cy.intercept('PATCH', '**/exchanges/*?*accepted=false', { statusCode: 200 }).as('rejectExchange');
+
+
+        cy.interceptExchangesRequests();
+
+        cy.intercept('PATCH', '**/exchanges/*').as('updateExchange');
 
         cy.visit('/exchanges/requests');
     });
 
     it('should load solicited exchanges', () => {
-        cy.wait('@getSolicitedExchanges');
+
+        cy.wait('@getSolicitedExchanges').its('response.statusCode').should('eq', 200);
         cy.waitExchangesRequests();
 
-        // TODO html
-        cy.get('[data-cy=solicited-exchanges]').should('have.length.greaterThan', 0);
+        cy.get('[data-cy="requests-panel"]').click();
+
+        cy.get('.solicited-exchanges').should('have.length.greaterThan', 0);
     });
 
     it('should load offered exchanges', () => {
         cy.wait('@getOfferedExchanges');
         cy.waitExchangesRequests();
 
-        // TODO html
         cy.get('[data-cy=offered-exchanges]').should('have.length.greaterThan', 0);
     });
 
@@ -133,15 +130,17 @@ describe('Requests Exchanges tests', () => {
         cy.wait('@getOfferedExchanges');
         cy.waitExchangesRequests();
 
-        //
-        // // open modal
-        // cy.get('.confirm-button').first().click();
-        //
-        // // confirm exchange
-        // cy.get('[data-cy=confirm-button]').click();
+        // open modal
+        cy.get('[data-cy=accept-button]').first().click();
+        // accept exchange
+        cy.get('[data-cy=accept]').click();
 
-        cy.wait('@acceptExchange').then(({ response }) => {
-            expect(response?.statusCode).to.eq(200);
+        cy.wait('@updateExchange').then((interception) => {
+            expect(interception.request.body).to.deep.equal({
+                acceptCode: 123,
+                requester: null,
+                accepted: true
+            });
         });
 
     });
@@ -150,17 +149,20 @@ describe('Requests Exchanges tests', () => {
             cy.wait('@getOfferedExchanges');
             cy.waitExchangesRequests();
 
-            // // open modal
-            // cy.get('.confirm-button').first().click();
-            //
-            // // confirm exchange
-            // cy.get('[data-cy=confirm-button]').click();
+            // open modal
+            cy.get('[data-cy=reject-button]').first().click();
 
-            cy.wait('@rejectExchange').then(({ response }) => {
-                expect(response?.statusCode).to.eq(200);
+            // reject exchange
+            cy.get('[data-cy=reject]').click();
+             cy.wait('@updateExchange').then((interception) => {
+                 expect(interception.request.body).to.deep.equal({
+                     acceptCode: 123,
+                     requester: null,
+                     accepted: false
+                 });
+
             });
-
-        });
+     });
 
 });
 
@@ -171,17 +173,12 @@ describe('History Exchanges tests', () => {
     beforeEach(() => {
         cy.login('testuser', 'password', true);
 
-        cy.intercept('GET', '**/exchanges?*state=TERMINATED*', { fixture: 'completed-exchanges.json' }).as('getCompletedExchanges');
-        cy.intercept('GET', '**/exchanges?*state=REJECTED*', { fixture: 'rejected-exchanges.json' }).as('getRejectedExchanges');
+        cy.intercept('GET', '**/exchanges?user_id=*&state=TERMINATED&is_offerer=true&is_requester=true&page=*', { fixture: 'completed-exchanges.json' }).as('getCompletedExchanges');
+        cy.intercept('GET', '**/exchanges?user_id=*&state=REJECTED&is_offerer=true&is_requester=true&page=*', { fixture: 'rejected-exchanges.json' }).as('getRejectedExchanges');
 
-        cy.intercept('GET', '**/publications/*', { fixture: 'publication.json' }).as('getPublication');
-        cy.intercept('GET', '**/users/*', { fixture: 'user.json' }).as('getUser');
-        cy.intercept('GET', '**/books/*', { fixture: 'book.json' }).as('getBook');
-        cy.intercept('GET', '**/book_models/*', { fixture: 'book_model.json' }).as('getBookModel');
-        cy.intercept('GET', '**/users/*/locations?*', { fixture: 'locations.json' }).as('getLocations');
-        cy.intercept('GET', '**/exchanges/*/messages', { fixture: 'messages.json' }).as('getMessages');
+        cy.interceptExchangesRequests();
 
-
+        cy.intercept('POST', '**/users/*/reviews', { fixture: 'review.json' }).as('createReview');
         cy.visit('/exchanges/history');
     });
 
@@ -189,46 +186,42 @@ describe('History Exchanges tests', () => {
         cy.wait('@getCompletedExchanges');
         cy.waitExchangesRequests();
 
-        cy.get('[data-cy=exchanges]').should('have.length.greaterThan', 0);
+        cy.get('[data-cy=completed-exchanges]').should('have.length.greaterThan', 0);
     });
 
     it('should load rejected exchanges', () => {
         cy.wait('@getRejectedExchanges');
         cy.waitExchangesRequests();
 
-        cy.get('[data-cy=exchanges]').should('have.length.greaterThan', 0);
+        cy.get('[data-cy=reject-panel]').click();
+
+        cy.get('[data-cy=rejected-exchanges]').should('have.length.greaterThan', 0);
     });
-
-    it('should confirm an exchange correctly', () => {
-        cy.waitExchangesRequests();
-
-
-        // open modal
-        cy.get('.confirm-button').first().click();
-
-        // confirm exchange
-        cy.get('[data-cy=confirm-button]').click();
-
-        cy.wait('@confirmExchange').then(({ response }) => {
-            expect(response?.statusCode).to.eq(200);
-        });
-
-    });
-
 
     it('should create a review in an exchange', () => {
         cy.waitExchangesRequests();
 
         cy.get('.card').first().click();
 
-        cy.get('[data-cy=open-chat]').click();
-        cy.get('[data-cy=type-message]').type('Hola, ¿cómo coordinamos el intercambio?', {force: true});
+        cy.get('[data-cy=review-button]').click();
 
-        cy.get('[data-cy=send-message]').click();
+        cy.get('p-rating')
+            .find('.p-rating-icon')
+            .eq(4)
+            .click();
 
-        cy.wait('@sendMessage').then(({ response }) => {
+        cy.get('[data-cy=review-text]').type('This is a review', { force: true } );
+
+        cy.get('[data-cy=review-send').click()
+
+        cy.wait('@createReview').then(({ response }) => {
             expect(response?.statusCode).to.eq(200);
         });
+
+    });
+
+    // IMPLEMENT: reviews are not loaded yet just can be posted
+    it('should load a review correctly', () => {
 
     });
 
