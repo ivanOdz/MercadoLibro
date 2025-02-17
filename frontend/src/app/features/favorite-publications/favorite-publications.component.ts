@@ -36,7 +36,7 @@ export class FavoritePublicationsComponent implements OnInit {
 		this.authService.loggedUser$.subscribe(user => { this.loggedUser = user; });
 	}
 	
-	fetchMyFavoritePublications = (state: string, genre: string, search: string, page: number): ObservablePublicationData => {
-		return this.publicationService.getFavoritePublications(this.loggedUser!.favorites, state, genre, page, search);
+	fetchMyFavoritePublications = (state: string, genre: string, search: string, page: number, sort: string): ObservablePublicationData => {
+		return this.publicationService.getFavoritePublications(this.loggedUser!.favorites, state, genre, page, search, sort);
 	};
 }

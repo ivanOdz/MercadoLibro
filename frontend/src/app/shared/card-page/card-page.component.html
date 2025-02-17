@@ -46,7 +46,7 @@
 					</button>
 				</div>
 			</div>
-			<app-sort *ngIf="displaySort"></app-sort>
+			<app-sort *ngIf="displaySort" (sortChange)="onSortUpdate($event)"></app-sort>
 			<div *ngIf="!displaySort" class="spacer"></div>
 		</div>
 	

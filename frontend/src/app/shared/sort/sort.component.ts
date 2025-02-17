@@ -1,9 +1,9 @@
-import { Component} from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { DropdownModule } from 'primeng/dropdown';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';  // Importa Router
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sort',
@@ -17,6 +17,9 @@ import { Router } from '@angular/router';  // Importa Router
   ]
 })
 export class SortComponent {
+	
+  @Output() sortChange = new EventEmitter<string>();
+	
   sortOptions: { label: string; value: string }[] = [];
   selectedSort: { label: string; value: string };
 
@@ -48,5 +51,6 @@ export class SortComponent {
       queryParams: { sort: this.selectedSort.value },
       queryParamsHandling: 'merge'
     });
+	this.sortChange.emit(this.selectedSort.value);
   }
 }
