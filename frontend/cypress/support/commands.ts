@@ -84,7 +84,7 @@ Cypress.Commands.add('interceptPublicationRequests', () => {
     cy.intercept('GET', '**/publications/*', { fixture: 'publications.json' }).as('getPublication');
     cy.intercept('GET', '**/users/*', { fixture: 'user.json' }).as('getUser');
     cy.intercept('GET', '**/books/*', { fixture: 'book.json' }).as('getBook');
-    cy.intercept('GET', '**/books?*available=true*', { fixture: 'books.json' }).as('getBooks');
+    cy.intercept('GET', '**/books?*available=true*', { fixture: 'available-books.json' }).as('getBooks');
     cy.intercept('GET', '**/book_models/*', { fixture: 'book_model.json' }).as('getBookModel');
     cy.intercept('GET', '**/users/*/locations?*', { fixture: 'locations.json' }).as('getLocations');
 });
@@ -96,6 +96,31 @@ Cypress.Commands.add('waitPublicationRequests', () => {
     cy.wait('@getBookModel');
 });
 
+Cypress.Commands.add('interceptPublicationsRequests', () => {
+    cy.intercept('GET', /\/api\/publications(\?.*)?/, { fixture: 'publications.json' }).as('getPublications');
+    cy.intercept('GET', /\/api\/publications\?.*user_id=[^&]+.*/, { fixture: 'my-publications.json' }).as('getMyPublications');
+    cy.intercept('GET', /\/api\/publications\?.*(favorites=true).*(user_id=[^&]+)|.*(user_id=[^&]+).*(favorites=true).*/, { fixture: 'favorite-publications.json' }).as('getFavoritePublications');
+
+
+    cy.intercept('GET', '**/users/*', { fixture: 'user.json' }).as('getUser');
+    cy.intercept('GET', '**/books/*', { fixture: 'book.json' }).as('getBook');
+    cy.intercept('GET', '**/book_models/*', { fixture: 'book_model.json' }).as('getBookModel');
+    cy.intercept('GET', '**/users/*/locations?*', { fixture: 'locations.json' }).as('getLocations');
+});
+
+Cypress.Commands.add('waitPublicationsRequests', () => {
+    cy.wait('@getUser');
+    cy.wait('@getBook');
+    cy.wait('@getBookModel');
+    cy.wait('@getLocations');
+})
+
+Cypress.Commands.add('interceptBooksRequests', () => {
+    cy.intercept('GET', '**/books?*', { fixture: 'available-books.json' }).as('getBooks');
+    cy.intercept('GET', '**/book_models/*', { fixture: 'book_model.json' }).as('getBookModel');
+})
+
+
 declare namespace Cypress {
     interface Chainable {
         login(username: string, password: string, rememberMe?: boolean): Chainable<void>;
@@ -103,5 +128,8 @@ declare namespace Cypress {
         interceptExchangesRequests(): Chainable<void>;
         interceptPublicationRequests(): Chainable<void>;
         waitPublicationRequests(): Chainable<void>;
+        interceptPublicationsRequests(): Chainable<void>;
+        waitPublicationsRequests(): Chainable<void>;
+        interceptBooksRequests(): Chainable<void>;
     }
 }
