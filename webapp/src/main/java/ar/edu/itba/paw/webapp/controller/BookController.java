@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Book;
+import ar.edu.itba.paw.models.BookImage;
 import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.utils.BookState;
 import ar.edu.itba.paw.models.utils.BookStateWrapper;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Component;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -69,6 +71,7 @@ public class BookController {
     @Produces(value = {VndType.APPLICATION_BOOK})
     public Response getBook(@PathParam("id") final long bookId) {
         final Book book = bs.getBookById(bookId);
+        BookDTO sto = BookDTO.fromBook(uriInfo, book);
         return Response.ok(BookDTO.fromBook(uriInfo, book)).build();
     }
 
@@ -83,8 +86,8 @@ public class BookController {
     @PATCH
     @Path("/{id}")
     @Consumes(value = {VndType.APPLICATION_BOOK})
-    @PreAuthorize("@accessControl.modifyBookAccess(#bookId, #book)")
-    public Response updateBook(@PathParam("id") final long bookId, @Valid final BookDTO book) {
+    //@PreAuthorize("@accessControl.modifyBookAccess(#bookId, #book)")
+    public Response updateBook(@PathParam("id") final long bookId, final BookDTO book) {
         bs.updateBook(bookId, book.getState());
         return Response.noContent().build();
     }

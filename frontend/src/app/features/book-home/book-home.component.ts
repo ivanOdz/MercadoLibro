@@ -152,7 +152,7 @@ export class BookHomeComponent implements OnInit {
 										available: book.available,
 										owner: user,
 										bookModel: bookModel,
-										images: null,
+										images: book.images,
 										self: book.self,
 									}) as BookData)
 								)

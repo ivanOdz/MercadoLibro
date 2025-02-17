@@ -5,17 +5,22 @@
 		<h3 class="book-title">{{ book.bookModel!.title }}</h3>
 		<p *ngIf="showOwner" class="book-owner"><strong>{{ 'BOOK_CARD.OWNER' | translate }}</strong> {{ ownerName }}</p>
 		<p *ngIf="showGenre" class="book-owner"><strong>{{ 'GENRE' | translate }}:</strong> {{ ('genre.' + (book.bookModel!.genre | lowercase)) | translate }}</p>
-		<p *ngIf="showState" class="book-state" [ngClass]="{
-			'book-state-new': book.state == 'NEW',
-			'book-state-like-new': book.state == 'LIKE_NEW',
-			'book-state-very-good': book.state == 'VERY_GOOD',
-			'book-state-good': book.state == 'GOOD',
-			'book-state-aceptable': book.state == 'ACCEPTABLE',
-			'book-state-worn': book.state == 'WORN'
-		}"> <strong>{{ 'BOOK_CARD.STATE' | translate }}:</strong>
-			{{ ('bookstate.' + (book.state! | lowercase)) | translate }}
-		</p>
-	</div>
+        <div class="book-state-container">
+            <p *ngIf="showState" class="book-state" [ngClass]="{
+                'book-state-new': book.state == 'NEW',
+                'book-state-like-new': book.state == 'LIKE_NEW',
+                'book-state-very-good': book.state == 'VERY_GOOD',
+                'book-state-good': book.state == 'GOOD',
+                'book-state-aceptable': book.state == 'ACCEPTABLE',
+                'book-state-worn': book.state == 'WORN'
+            }"> <strong>{{ 'BOOK_CARD.STATE' | translate }}:</strong>
+                {{ ('bookstate.' + (book.state! | lowercase)) | translate }}
+            </p>
+            <span class="edit-icon-container">
+                <mat-icon fontIcon="edit" (click)="openStateModal()"></mat-icon>
+            </span>
+        </div>
+    </div>
 </div>
 
 <p-dialog header="{{ book.available ? ( 'BOOK_HOME.CREATE_PUBLICATION_HEADER' | translate) : ('BOOK_HOME.SEE_PUBLICATION_HEADER' | translate)}}" [modal]="true" [(visible)]="modalPublicationVisible" [style]="{ width: '30vw' }">
@@ -42,4 +47,24 @@
         <p-button [styleClass]="'see-publication-button'" class="" label="{{ 'BOOK_HOME.SEE_PUBLICATION_BUTTON' | translate }}" (click)="goToMyPublications()"></p-button>
     </div>
 
+</p-dialog>
+
+<!-- BookState Modal -->
+<p-dialog [(visible)]="isStateModalOpen" [modal]="true" [style]="{ width: '25rem' }">
+    <ng-template #header>
+        <div class="inline-flex items-center justify-center gap-2">
+            <span class="font-bold whitespace-nowrap">{{ 'BOOK_FORM.SELECT_STATE' | translate }}</span>
+        </div>
+    </ng-template>
+    <select [(ngModel)]="newCondition">
+        <option value="" disabled selected>{{ ('bookstate.' + this.condition.toLowerCase()) | translate }}</option>
+        <option *ngFor="let state of bookStates" [value]="state">
+            {{ ('bookstate.' + state) | translate }}
+        </option>
+    </select>
+    <ng-template #footer>
+        <p-button label="{{ 'PROFILE.CANCEL' | translate }}" [raised]="true" severity="secondary" (click)="closeStateModal()" />
+        <p-button label="{{ 'PROFILE.ACCEPT' | translate }}" [raised]="true" severity="success" (click)="updateState()" [disabled]="!isValidState()"/>
+
+    </ng-template>
 </p-dialog>

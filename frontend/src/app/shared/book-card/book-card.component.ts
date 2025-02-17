@@ -19,13 +19,15 @@ import {Router} from "@angular/router";
 import {User} from "../../core/models/user.model";
 import {Select} from "primeng/select";
 import {environment} from "../../../environments/environment";
+import {MatIcon} from "@angular/material/icon";
+import {BookService} from "../../core/services/book.service";
 
 @Component({
     selector: 'app-book-card',
     templateUrl: './book-card.component.html',
     styleUrl: './book-card.component.css',
     standalone: true,
-	imports: [CommonModule, NgIf, TranslatePipe, Dialog, Divider, FormsModule, Button, Select]
+	imports: [CommonModule, NgIf, TranslatePipe, Dialog, Divider, FormsModule, Button, Select, MatIcon]
 })
 export class BookCardComponent implements OnInit{
 	
@@ -38,9 +40,9 @@ export class BookCardComponent implements OnInit{
 	bookImage!: string;
 	defaultImage: string = './assets/book.jpg';
 	errorNoLocation: boolean = false;
-	
+
 	constructor(private http: HttpClient, private as: AuthService, private us: UserService,
-				private ps: PublicationService,
+				private ps: PublicationService, private bs: BookService,
 				private router: Router) { }
 
 	ngOnInit() {
@@ -66,7 +68,7 @@ export class BookCardComponent implements OnInit{
 	}
 	
 	getBookImage(): string {
-		return	this.book.images?.length ? this.getBaseUrl() + this.book.images[0] :
+		return	this.book.images?.length ? this.book.images[0] :
 				this.book.bookModel?.cover ? this.getBaseUrl() + this.book.bookModel.cover :
 				this.defaultImage;
 	}
@@ -79,6 +81,29 @@ export class BookCardComponent implements OnInit{
 	userLocations: Location[] = [];
 	selectedLocation: Location | null = null
 	modalSeePublicationVisible: boolean = false;
+	isStateModalOpen = false;
+	condition: string = '';
+	newCondition: string = '';
+	bookStates = ['new', 'like_new', 'very_good', 'good', 'acceptable', 'worn'];
+
+	openStateModal() {
+		this.condition = this.book.state;
+		this.isStateModalOpen = true;
+	}
+
+	closeStateModal() {
+		this.newCondition = '';
+		this.isStateModalOpen = false;
+	}
+
+	isValidState() {
+		return this.newCondition.length > 0;
+	}
+
+	updateState() {
+		this.bs.updateBookstate(this.book, this.newCondition).subscribe({});
+		this.closeStateModal();
+	}
 
 	openModal() {
 		this.modalPublicationVisible = true;

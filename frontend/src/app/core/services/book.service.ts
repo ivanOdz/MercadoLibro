@@ -89,18 +89,15 @@ export class BookService {
         );
     }
 
-    uploadBook(bookUrl: string, bookModelUrl: string, rating: number, condition: string, user: string | undefined): Observable<any> {
+    uploadBook(bookUrl: string, bookModelUrl: string, rating: number, condition: string, user: string | undefined, images: string[] | undefined): Observable<any> {
         const headers = new HttpHeaders({'Content-Type': 'application/vnd.books.input.v1+json'});
         const body = {
             condition: condition.toUpperCase(),
             bookModel: bookModelUrl,
             user: user,
             rating: rating,
-            imageURNS:
-                ['http://localhost:8080/api/images/84',
-                'http://localhost:8080/api/images/85'
-                ]
-        };
+            imageURNS: images
+        }
 
         return this.http.post(`${bookUrl}`, body, { headers, observe: 'response' }).pipe(
             tap((response) => console.log("API response (Post) of Book:", response))

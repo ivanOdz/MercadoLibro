@@ -9,6 +9,7 @@ import { AuthService } from "../../../core/services/auth.service";
 import { FormsModule } from "@angular/forms";
 import {BookService} from "../../../core/services/book.service";
 import {environment} from "../../../../environments/environment";
+import {ImageService} from "../../../core/services/image.service";
 
 @Component({
   selector: 'app-book-modal',
@@ -39,10 +40,11 @@ export class BookModalComponent {
   bookState: string = '';
   images: File[] = [];
   imagePreviews: string[] = [];
+  imageURNs: string[] = [];
   uploadProgress = 0;
   user: string | undefined = '';
 
-  constructor(private authService: AuthService, private bookService: BookService) {}
+  constructor(private authService: AuthService, private bookService: BookService, private imageService: ImageService) {}
 
 
   openModal() {
@@ -82,18 +84,41 @@ export class BookModalComponent {
   removeImage(index: number) {
     this.images.splice(index, 1);
     this.imagePreviews.splice(index, 1);
+    this.imageURNs.splice(index, 1);
   }
 
   isFormValid(): boolean {
     return this.rating > 0 && this.bookState.length > 0;
   }
 
-  submitForm() {
+  async uploadImages() {
+    this.imageURNs = [];
+    for (const file of this.images) {
+      try {
+        const imageUrl = await this.imageService.uploadImage(file).toPromise();
+        if (imageUrl != null) {
+          this.imageURNs.push(imageUrl);
+        }
+        console.log('Imagen subida:', imageUrl);
+      } catch (error) {
+        console.error('Error al subir imagen:', error);
+      }
+    }
+  }
+
+  async submitForm() {
     this.authService.loggedUser$.subscribe(user => {
       this.user = user?.self;
     });
-    console.log('Datos:', { rating: this.rating, bookState: this.bookState });
+    await this.uploadImages();
     this.closeModal();
-    this.bookService.uploadBook(this.bookUrl, this.bookModel.self, this.rating, this.bookState, this.user).subscribe();
+    this.bookService.uploadBook(this.bookUrl, this.bookModel.self, this.rating, this.bookState, this.user, this.imageURNs).subscribe({
+      next: () => {
+        console.log('Upload of Book successful :)');
+      },
+      error: (error) => {
+        console.error('Upload of Book failed', error);
+      }
+    });;
   }
 }

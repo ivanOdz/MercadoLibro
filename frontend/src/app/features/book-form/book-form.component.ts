@@ -9,6 +9,7 @@ import { BookModelService } from "../../core/services/bookmodel.service";
 import {environment} from "../../../environments/environment";
 import {BookService} from "../../core/services/book.service";
 import {AuthService} from "../../core/services/auth.service";
+import {ImageService} from "../../core/services/image.service";
 
 @Component({
 	
@@ -32,6 +33,8 @@ export class BookFormComponent {
 	rating: number = 1;
 	condition: string = '';
 	imagePreview: string | ArrayBuffer | null = null;
+	selectedFile: File | null = null;
+	imageUrl: string | undefined = '';
 	uploadProgress = 0;
 	genres = [	'fiction', 'non.fiction', 'mystery', 'thriller', 'science.fiction', 'fantasy', 'romance', 'historical.fiction', 'horror', 'biography', 'autobiography', 'memoir',
 				'young.adult', 'childrens.literature',  'graphic.novel' ,'classic', 'adventure', 'dystopian', 'self.help', 'poetry', 'literary.fiction', 'crime', 'western',
@@ -40,8 +43,8 @@ export class BookFormComponent {
 	bookStates = ['new', 'like_new', 'very_good', 'good', 'acceptable', 'worn'];
 	dimensions = ['small', 'medium', 'large'];
 	languages = ['spanish', 'english'];
-	
-	constructor(private formBuilder: FormBuilder, private translate: TranslateService, private location: Location, private router: Router) {
+
+	constructor(private formBuilder: FormBuilder, private translate: TranslateService, private location: Location, private router: Router, private imageService: ImageService) {
 		
 		this.bookModelForm = this.formBuilder.group({
 													isbn: ['978', [Validators.required, Validators.pattern(/^(97[89])\d{1,5}\d{1,7}\d{1,7}\d$/)]],
@@ -73,6 +76,10 @@ export class BookFormComponent {
 			this.router.navigate(['/']);
 		}
 	}
+
+	goBackToBooks() {
+		this.router.navigate(['/my-books']);
+	}
 	
 	get authors(): FormArray {
 		
@@ -94,29 +101,41 @@ export class BookFormComponent {
 		this.rating = value;
 		this.bookModelForm.get('rating')?.setValue(value);
 	}
-	
-	onImageSelected(event: Event): void {
-		
-		const file = (event.target as HTMLInputElement).files?.[0];
-		
+
+	onImageSelected(event: any) {
+		const file = event.target.files[0];
+
 		if (file) {
-			
+			this.selectedFile = file;
+
 			const reader = new FileReader();
-			reader.onload = () => {
-				this.imagePreview = reader.result;
-				this.bookModelForm.patchValue({ image: file });
+			reader.onload = (e: any) => {
+				this.imagePreview = e.target.result;
 			};
 			reader.readAsDataURL(file);
 		}
 	}
 
+	async onUpload() {
+		if (this.selectedFile) {
+			try {
+				// Esperar a que la imagen se suba
+				this.imageUrl = await this.imageService.uploadImage(this.selectedFile).toPromise();
+				console.log('Imagen subida correctamente:', this.imageUrl);
+			} catch (error) {
+				console.error('Error al subir la imagen', error);
+			}
+		}
+	}
+
+
 	removeImage(): void {
 		
 		this.imagePreview = null;
-		this.bookModelForm.patchValue({ image: null });
+		this.selectedFile = null;
 	}
 
-	submitForm() {
+	async submitForm() {
 		
 		this.bookModelForm.markAllAsTouched();
 		console.log('Estoy!');
@@ -129,24 +148,26 @@ export class BookFormComponent {
 				}
 			});
 		}
-		
+
+		await this.onUpload();
+
 		if (this.bookModelForm.valid) {
 
 			this.authService.loggedUser$.subscribe(user => {
 				this.user = user?.self;
 			});
-			
+
 			console.log('New book:', this.bookModelForm.value);
 			
-			const bookData = new BookModel(this.bookModelForm.value);
+			let bookData = new BookModel(this.bookModelForm.value);
 			const rating = this.bookModelForm.value.rating;
-			const condition = this.bookModelForm.value.condition;
+			console.log('IMAGE URL:', this.imageUrl + '|');
+			this.bookModelService.uploadBookModel(this.url, bookData, this.imageUrl).subscribe({
 
-			this.bookModelService.uploadBookModel(this.url, bookData).subscribe({
-				
 				next: (response) => {
 					console.log('Upload of Book Model successful :)');
-					this.bookService.uploadBook(this.bookUrl, response, rating, condition, this.user).subscribe({
+					const imageArray = this.imageUrl	? [ this.imageUrl ] : [];
+					this.bookService.uploadBook(this.bookUrl, response, rating, this.bookModelForm.value.condition, this.user, imageArray ).subscribe({
 						next: () => {
 							console.log('Upload of Book successful :)');
 						},

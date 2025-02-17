@@ -6,7 +6,7 @@
 	
 	<p class="page-title">{{ 'BOOK_FORM.TITLE' | translate }}</p>
 	
-	<form [formGroup]="bookModelForm">
+	<form [formGroup]="bookModelForm" (ngSubmit)="goBackToBooks()">
 		<div class="form-grid">
 			<div class="column">
                 <label>{{ 'BOOK_FORM.BOOK_TITLE' | translate }}:</label>
