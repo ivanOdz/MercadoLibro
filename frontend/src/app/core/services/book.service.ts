@@ -83,10 +83,13 @@ export class BookService {
         }
 
         return this.http.post(`${bookUrl}`, body, { headers, observe: 'response' }).pipe(
-            tap((response) => console.log("API response (Post) of Book:", response)),
             catchError((error) => {
                 this.snackBarService.showError('ERROR.UPLOAD_BOOK');
-                return throwError(() => new Error(error));
+                if(error.status === 500) {
+                    return of(null);
+                } else {
+                    return throwError(() => new Error(error.message));
+                }
             })
         );
 
