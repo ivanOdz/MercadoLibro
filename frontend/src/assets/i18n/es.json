@@ -302,7 +302,13 @@
     "UNEXPECTED_ERROR": "Error inesperado",
     "OR": "ó",
     "CONTINUE_TO_PUBLICATIONS": "Continuar sin usuario:",
-    "GO_TO_PUBLICATIONS": "Ver publicaciones"
+    "GO_TO_PUBLICATIONS": "Ver publicaciones",
+    "EMAIL_INVALID": "Formato de email inválido",
+    "EMAIL_OBLIGATORY": "El email es obligatorio",
+    "USERNAME_OBLIGATORY": "El nombre de usuario es obligatorio",
+    "USERNAME_INVALID": "El nombre de usuario debe tener al menos 5 caracteres",
+    "PASSWORD_OBLIGATORY": "La contraseña es obligatoria",
+    "PASSWORDS_NOT_MATCH": "Las contraseñas no coinciden"
 
   },
   "ERROR": {

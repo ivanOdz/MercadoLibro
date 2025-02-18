@@ -1,12 +1,10 @@
 import {HttpInterceptorFn, HttpResponse} from '@angular/common/http';
 import { inject } from '@angular/core';
-import { Router } from '@angular/router';
-import {catchError, EMPTY, tap, throwError} from 'rxjs';
+import {catchError, tap, throwError} from 'rxjs';
 import {AuthService} from "../services/auth.service";
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
     const authService = inject(AuthService);
-    const router = inject(Router);
 
     const accessToken = sessionStorage.getItem('accessToken') || localStorage.getItem('accessToken');
 

@@ -3,3 +3,57 @@
     width: 100vw;
     height: 100vh;
 }
+
+
+:host ::ng-deep .p-inputtext:enabled:focus {
+    border-color: #a8988c;
+}
+
+:host ::ng-deep .h-full {
+    background: #fcfaf8;
+}
+
+:host ::ng-deep .h-full {
+    background: #fcfaf8;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+:host ::ng-deep .p-button:not(:disabled):hover {
+    background: #a8988c;
+    border: none;
+
+}
+
+
+
+
+:host ::ng-deep .p-button {
+    background: #bda995;
+    border-radius: 0.25rem;
+    font-size: smaller;
+    cursor: pointer;
+    border: none;
+    width: auto;
+}
+
+
+:host ::ng-deep .text-primary {
+    color: #bfa06c !important;
+}
+
+
+:host ::ng-deep .text-900 {
+    text-align: start;
+}
+
+
+.error {
+    color: red;
+    text-align: start;
+    font-size: small;
+    padding: .25rem;
+}

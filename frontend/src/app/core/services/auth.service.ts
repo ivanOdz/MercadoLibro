@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../models/user.model';
 import { UserService } from './user.service';
 import {environment} from "../../../environments/environment";
+import {AbstractControl, ɵFormGroupRawValue, ɵGetProperty, ɵTypedOrUntyped} from "@angular/forms";
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {

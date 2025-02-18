@@ -298,7 +298,14 @@
     "UNEXPECTED_ERROR": "Unexpected error",
     "OR": "or",
     "CONTINUE_TO_PUBLICATIONS": "Continue without signing in:",
-    "GO_TO_PUBLICATIONS": "Go to publications"
+    "GO_TO_PUBLICATIONS": "Go to publications",
+    "EMAIL_INVALID": "Invalid email format",
+    "EMAIL_OBLIGATORY": "Email is required",
+    "USERNAME_OBLIGATORY": "Username is required",
+    "USERNAME_INVALID": "Username must have at least 5 characters",
+    "PASSWORD_OBLIGATORY": "Password is required",
+    "PASSWORDS_NOT_MATCH": "Passwords do not match"
+
   },
   "ERROR": {
     "UPDATE_STATE": "Upsi! There was a problem changing the condition of the book.",

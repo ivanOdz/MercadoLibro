@@ -43,8 +43,11 @@
 }
 
 :host ::ng-deep .text-center {
-    text-align: start; !important;
+    text-align: start;
 }
+
+
+
 
 :host ::ng-deep .p-inputtext:enabled:focus {
     border-color: #a8988c;
@@ -65,3 +68,4 @@
     width: 40vh;
     margin: 2rem;
 }
+
