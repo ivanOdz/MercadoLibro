@@ -1,0 +1,9 @@
+{
+  "description": "This is a review",
+  "reviewDate": null,
+  "rating": 5,
+  "self": null,
+  "subject": null,
+  "reviewer": null,
+  "exchange": "http://localhost:8080/api/exchanges/1"
+}

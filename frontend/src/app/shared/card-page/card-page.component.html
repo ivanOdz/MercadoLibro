@@ -51,9 +51,9 @@
 		</div>
 	
 		<div class="content">
-			<p-scrollpanel class="scroll-panel" [style]="{ width:'65vw', height: '68vh'}">
+			<p-scrollpanel class="scroll-panel" [style]="{ width:'65vw', height: '58vh'}">
 	
-				<div [ngClass]="{ 'cards-grid': displayGridStyle === true, 'cards': displayGridStyle === false }">
+				<div [ngClass]="{ 'cards-grid': displayGridStyle, 'cards': !displayGridStyle }">
 					<ng-container *ngIf="cardTemplate">
 						<ng-container *ngFor="let item of items" [ngTemplateOutlet]="cardTemplate" [ngTemplateOutletContext]="{ $implicit: item }"></ng-container>
 					</ng-container>

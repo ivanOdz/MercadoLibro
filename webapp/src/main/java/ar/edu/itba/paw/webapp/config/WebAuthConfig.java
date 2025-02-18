@@ -165,8 +165,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/api/publications")
                     .access(PUBLICATIONS_GENERAL_ACCESS)
 
-                //.antMatchers(HttpMethod.DELETE, "/api/publications/{publication_id:\\d+}")
-                //    .authenticated()
                 .antMatchers(HttpMethod.DELETE, "/api/publications/{publication_id:\\d+}")
                     .access(PUBLICATION_MODIFY_ACCESS)
 

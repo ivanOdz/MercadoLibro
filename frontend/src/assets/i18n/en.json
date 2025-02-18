@@ -150,7 +150,7 @@
     "DELETE_LOCATION": "Delete location"
   },
   "PUBLICATION_D": {
-    "RETURN": "Return",
+    "RETURN": "Return to publications",
     "SOLICIT_BUTTON": "I want it!",
     "ADDITIONAL_DETAILS": "Additional details",
     "RETURN_TO_DETAIL": "Return to publication",
@@ -170,7 +170,14 @@
     "YOUR_PUBLICATION": "Your publication",
     "ADD_LOCATIONS": "Add a location",
     "NO_BOOK_ERROR": "You must select a book",
-    "RETURN_BOOKS": "Return to my books"
+    "RETURN_BOOKS": "Return to my books",
+    "CONFIRM": "Confirm",
+    "NO_LOCATION_ERROR": "You must select a location",
+    "SELECT_LOCATIONS":"Select the delivery locations of the book",
+    "EDIT_LOCATIONS": "Add a location,",
+    "NO_NEW_LOCATIONS": "You don't have any new locations to add",
+    "YOURS": "Yours",
+    "ELIMINATED": "Eliminated"
   },
   "BOOK_HOME": {
     "SEARCH": "Search in my books",
@@ -254,6 +261,37 @@
   },
   "MY_PUBLICATIONS": "My publications",
   "MY_FAVORITE_PUBLICATIONS": "My favorites",
+  "AUTH": {
+    "REPEAT_PASSWORD": "Repeat password",
+    "REGISTER": "Register",
+    "HAVE_ACCOUNT?": "Already have an account?",
+    "LOGIN": "Login",
+    "EMAIL": "Email",
+    "USERNAME": "Username",
+    "PASSWORD": "Password",
+    "VERIFICATION_SUCCESS": "Verification successful!",
+    "VERIFICATION_SUCCESS_DESCRIPTION": "Your account has been verified. You can now login.",
+    "VERIFICATION_ERROR_DESCRIPTION": "There was an error verifying your account. Please check the verification link.",
+    "VERIFICATION_ERROR": "Verification error",
+    "GO_HOME": "Go to home",
+    "REGISTER_SUCCESS": "Registration successful!",
+    "REGISTER_SUCCESS_DESCRIPTION": "You have successfully registered. Check your email to verify your account.",
+    "VERIFICATION_CODE_MISSING": "Verification code is invalid or missing. Please check the link in your email.",
+    "CHECK_YOUR_EMAIL": "Check your email!",
+    "RETURN_LOGIN": "Return to login",
+    "SEND_CODE": "Send code",
+    "RECOVER_PASSWORD": "Recover password",
+    "RECOVER_PASSWORD_DESCRIPTION": "Enter your email to receive a password recovery link.",
+    "CHECK_INBOX": "If the email is registered, you will receive a recovery link.",
+    "INVALID_CODE": "Invalid or missing code",
+    "REESTABLISH_PASSWORD": "Reestablish password",
+    "REESTABLISH_PASSWORD_DESCRIPTION": "Enter the code you received in your email and set a new password.",
+    "VERIFICATION_CODE": "Verification code",
+    "NEW_PASSWORD": "New password",
+    "CONFIRM_PASSWORD": "Confirm password",
+    "CHANGE_PASSWORD": "Change password",
+    "REMEMBER_PASSWORD": "Did you remember your password?"
+  }
   "ERROR": {
     "UPDATE_STATE": "Upsi! There was a problem changing the condition of the book.",
     "GET_BOOKS": "Upsi! There was a problem while getting your books.",

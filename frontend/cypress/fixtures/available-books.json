@@ -1,0 +1,74 @@
+[
+  {
+      "state": "NEW",
+      "available": true,
+      "self": "http://localhost:8080/api/books/4",
+      "owner": "http://localhost:8080/api/users/1",
+      "bookModel": "http://localhost:8080/api/book_models/1",
+      "images": [
+      "http://localhost:8080/api/images/18",
+      "http://localhost:8080/api/images/17",
+      "http://localhost:8080/api/images/16"
+      ]
+  },
+  {
+      "state": "WORN",
+      "available": true,
+      "self": "http://localhost:8080/api/books/7",
+      "owner": "http://localhost:8080/api/users/1",
+      "bookModel": "http://localhost:8080/api/book_models/2",
+      "images": [
+      "http://localhost:8080/api/images/15",
+      "http://localhost:8080/api/images/14",
+      "http://localhost:8080/api/images/19"
+      ]
+  },
+  {
+      "state": "VERY_GOOD",
+      "available": true,
+      "self": "http://localhost:8080/api/books/3",
+      "owner": "http://localhost:8080/api/users/1",
+      "bookModel": "http://localhost:8080/api/book_models/3",
+      "images": [
+      "http://localhost:8080/api/images/18",
+      "http://localhost:8080/api/images/18",
+      "http://localhost:8080/api/images/18"
+      ]
+  },
+  {
+      "state": "GOOD",
+      "available": true,
+      "self": "http://localhost:8080/api/books/9",
+      "owner": "http://localhost:8080/api/users/1",
+      "bookModel": "http://localhost:8080/api/book_models/4",
+      "images": [
+      "http://localhost:8080/api/images/18",
+      "http://localhost:8080/api/images/18",
+      "http://localhost:8080/api/images/18"
+      ]
+  },
+  {
+      "state": "ACCEPTABLE",
+      "available": true,
+      "self": "http://localhost:8080/api/books/5",
+      "owner": "http://localhost:8080/api/users/1",
+      "bookModel": "http://localhost:8080/api/book_models/5",
+      "images": [
+      "http://localhost:8080/api/images/18",
+      "http://localhost:8080/api/images/18",
+      "http://localhost:8080/api/images/18"
+      ]
+  },
+  {
+      "state": "LIKE_NEW",
+      "available": true,
+      "self": "http://localhost:8080/api/books/6",
+      "owner": "http://localhost:8080/api/users/1",
+      "bookModel": "http://localhost:8080/api/book_models/6",
+      "images": [
+      "http://localhost:8080/api/images/18",
+      "http://localhost:8080/api/images/18",
+      "http://localhost:8080/api/images/18"
+      ]
+  }
+]

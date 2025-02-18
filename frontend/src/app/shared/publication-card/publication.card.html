@@ -1,4 +1,4 @@
-<div class="publication-card-container" (click)="goToPublicationDetail()">
+<div class="publication-card-container" (click)="!isEliminated && goToPublicationDetail()"  [ngClass]="{ 'publication-card-disabled': isEliminated }">
 	<div class="image-column">
 		<img [src]="bookImage" alt="Book Cover" class="book-image" (error)="bookImage = defaultImage">
 	</div>
@@ -11,9 +11,14 @@
 		<p *ngIf="!publication.locations || publication.locations!.length < 2" class="locations-text"><strong>{{ 'BOOK_FORM.LOCATION' | translate }}: </strong>{{ getFormattedLocations(publication) }}</p>
 		<p *ngIf="publication.locations && publication.locations!.length > 1" class="locations-text"><strong>{{ 'BOOK_FORM.LOCATIONS' | translate }}: </strong>{{ getFormattedLocations(publication) }}</p>
 	</div>
-	<div class="auxiliar-column">
 	
-		<i *ngIf="showLikeHeart === true" class="heart-icon pi" [ngClass]="publication.favoritePublication ? 'pi-heart-fill liked' : 'pi-heart'" (click)="toggleLike($event)"></i>
+	<div class="auxiliar-column" *ngIf="!isEliminated">
+		<div class="icons-container">
+			<i *ngIf="showTrashCan && isOwnPublication" class="trash-icon pi pi-trash" (click)="onDeletePublication($event, publication)"></i>
+			<i *ngIf="showIsMine && isOwnPublication" class="is-owner-text">({{ 'PUBLICATION_D.YOURS' | translate }})</i>
+			<i *ngIf="!showIsMine && isOwnPublication" class="is-owner-text">({{ getFormattedDate(publication?.publicationDatetime) }})</i>
+			<i *ngIf="showLikeHeart && !isOwnPublication && loggedUser" class="heart-icon pi" [ngClass]="publication.favoritePublication ? 'pi-heart-fill liked' : 'pi-heart'" (click)="toggleLike($event)"></i>
+		</div>
 		
 		<div class="rating-container">
 			<p class="rating-text">{{ publication.book!.bookModel!.averageRating }}</p>
@@ -22,6 +27,9 @@
 			</ng-container>
 			<p class="rating-text">({{ publication.book!.bookModel!.ratingCount }})</p>
 		</div>
+	</div>
 	
+	<div *ngIf="isEliminated" class="auxiliar-column">
+		<p class="eliminated-text">{{ 'PUBLICATION_D.ELIMINATED' | translate }}</p>
 	</div>
 </div>

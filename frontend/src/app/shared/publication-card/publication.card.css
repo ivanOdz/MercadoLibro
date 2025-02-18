@@ -3,14 +3,14 @@
 	height: 130px;
 	background: #fff;
 	box-shadow: 4px 6px 6px #0000001a;
-	border-radius: 2rem;
-	padding: 1rem 2rem;
+	border-radius: 1rem;
+	padding: 2vh;
 	transition: transform .2s;
 	cursor: pointer;
 	align-content: center;
 	display: grid;
 	overflow: hidden;
-	grid-template-columns: 0.6fr 2fr auto;
+	grid-template-columns: .4fr 2fr auto;
 	margin: 5px 36px;
 }
 
@@ -65,7 +65,7 @@
 .book-image {
 	height: 110px;
 	width: auto;
-	border-radius: 1rem;
+	border-radius: .5rem;
 }
 
 .rating-container {
@@ -73,6 +73,7 @@
 	align-items: center;
 	justify-content: center;
 	align-self: flex-end;
+	margin: 1rem;
 }
 
 .star-icon {
@@ -96,10 +97,38 @@
 	font-style: normal;
 	color: #998877;
 	margin: 0;
-	padding: 0px 6px 0px 6px;
+	padding: 0 6px 0 6px;
+}
+
+.icons-container {
+	display: grid;
+	grid-template-columns: 1fr 3fr 1fr;
+}
+
+.trash-icon {
+	grid-column: 1;
+	font-size: 20px;
+	color: rgba(235, 130, 55, 1);
+	cursor: pointer;
+	transition: color 0.2s ease-in-out;
+	align-self: center;
+	pointer-events: auto;
+}
+
+.trash-icon:hover {
+	color: rgba(150, 150, 50, 1);
+}
+
+.is-owner-text {
+	grid-column: 2;
+	font-size: 13px;
+	font-style: italic;
+	color: #887766;
+	align-self: center;
 }
 
 .heart-icon {
+	grid-column: 3;
 	font-size: 24px;
 	font-weight: bold;
 	cursor: pointer;
@@ -123,4 +152,17 @@
 
 .heart-icon.pi-heart-fill.liked:hover {
 	color: rgba(150, 150, 50, 1);
+}
+
+.eliminated-text {
+	font-size: 16px;
+	font-weight: normal;
+	align-self: center;
+	padding-right: 28px;
+}
+
+.publication-card-disabled {
+	pointer-events: none;
+	opacity: 0.5;
+	filter: grayscale(50%);
 }

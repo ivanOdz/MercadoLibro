@@ -1,4 +1,4 @@
-<card-page 
+<card-page
 	[pageTitle]="'PUBLICATIONS.TITLE' | translate"
 	[fetchMethod]="fetchPublications"
 	[items]="publications"
@@ -9,5 +9,5 @@
 ></card-page>
 
 <ng-template #publicationCardTemplate let-publication>
-	<publication-card [publication]="publication" [loggedUser]="loggedUser" [showLikeHeart]="true"></publication-card>
+	<publication-card data-cy="publications" [publication]="publication" [loggedUser]="loggedUser" [showLikeHeart]="true"></publication-card>
 </ng-template>

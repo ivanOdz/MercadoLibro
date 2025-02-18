@@ -1,7 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {SidebarComponent} from "./components/sidebar.component";
 import {NavbarComponent} from "../../shared/navbar/navbar.component";
-import {NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {Tab, TabList, TabPanel, TabPanels, Tabs} from "primeng/tabs";
 import {Rating} from "primeng/rating";
 import {FormsModule} from "@angular/forms";
@@ -48,8 +48,7 @@ import {environment} from "../../../environments/environment";
         NgIf,
         PaginatorComponent,
         TranslatePipe,
-        ScrollPanelModule,
-        NgOptimizedImage
+        ScrollPanelModule
     ]
 })
 export class HistoryComponent implements OnInit {

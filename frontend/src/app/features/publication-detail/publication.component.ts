@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {ChangeDetectorRef, Component, OnInit} from "@angular/core";
 import {NavbarComponent} from "../../shared/navbar/navbar.component";
 import {TranslatePipe, TranslateService} from "@ngx-translate/core";
 import {Button} from "primeng/button";
@@ -7,7 +7,7 @@ import { trigger, style, animate, transition } from '@angular/animations';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import {PrimeTemplate} from "primeng/api";
 import {ActivatedRoute, Router} from "@angular/router";
-import {NgForOf, NgIf, Location as AngularLocation} from "@angular/common";
+import {NgForOf, NgIf, Location as AngularLocation, AsyncPipe} from "@angular/common";
 import {Select} from "primeng/select";
 import {FormsModule} from "@angular/forms";
 import {environment} from "../../../environments/environment";
@@ -15,8 +15,8 @@ import {Divider} from "primeng/divider";
 import {Paginator} from "primeng/paginator";
 import { BookData, PublicationData} from "../../core/models/types";
 import {PublicationService} from "../../core/services/publication.service";
-import {catchError, filter, forkJoin, of, switchMap} from "rxjs";
-import {map} from "rxjs/operators";
+import {BehaviorSubject, catchError, filter, forkJoin, of, switchMap} from "rxjs";
+import {map, tap} from "rxjs/operators";
 import {UserService} from "../../core/services/user.service";
 import {BookService} from "../../core/services/book.service";
 import {BookModelService} from "../../core/services/bookmodel.service";
@@ -26,6 +26,7 @@ import {AuthService} from "../../core/services/auth.service";
 import {Tooltip} from "primeng/tooltip";
 import {ExchangeService} from "../../core/services/exchange.service";
 import {Location} from "../../core/models/location.model";
+import {Dialog} from "primeng/dialog";
 
 @Component({
     selector: 'app-publication-detail',
@@ -45,7 +46,9 @@ import {Location} from "../../core/models/location.model";
         Paginator,
         NgForOf,
         Rating,
-        Tooltip
+        Tooltip,
+        Dialog,
+        AsyncPipe
     ],
     animations: [
         trigger('fadeOutUp', [
@@ -77,7 +80,7 @@ export class PublicationComponent implements OnInit {
 
 
     userBooks: BookData[] = [];
-    userLocations: Location[] = [];
+    userLocations$ = new BehaviorSubject<Location[]>([]);
 
     selectedLocation: Location | null = null;
     errorNoLocation: boolean = false;
@@ -88,11 +91,17 @@ export class PublicationComponent implements OnInit {
     exchangeSolicited: boolean = false;
 
     fromBooks: boolean = false;
+    modalEditLocationsVisible: boolean = false;
+    selectedAddLocation: Location | null = null;
+    errorNoAddLocation: boolean = false;
+
+    userIsLogged: boolean = false;
 
     ngOnInit(): void {
         this.route.params.subscribe(params => {
             const id = params['id'];
             this.loadPublication(id);
+
         });
         this.route.queryParams.subscribe(params => {
             this.fromBooks = params['origen'] !== 'publications';
@@ -108,7 +117,8 @@ export class PublicationComponent implements OnInit {
                 private es: ExchangeService,
                 private bs: BookService,
                 private bms: BookModelService,
-				private angularLocation: AngularLocation) {
+				private angularLocation: AngularLocation,
+                private cdRef: ChangeDetectorRef) {
     }
 
 
@@ -163,8 +173,22 @@ export class PublicationComponent implements OnInit {
                     favoriteEndpoint: data.publication.favoriteEndpoint,
                     favoritePublication: null,
                     isFavoriteTemplate: '',
-                    self: data.publication.self
+                    self: data.publication.self,
+                    publication: data.publication
                 };
+
+                this.as.loggedUser$.pipe(
+                    tap(user => {
+                        if (user !== null && user.self === data.user?.self) {
+                            this.loadUserLocations(false)
+                        }
+                        if (user !== null) {
+                            this.userIsLogged = true;
+                        }
+                    })
+                ).subscribe(
+                    () => {}
+                )
             }
         });
     }
@@ -174,7 +198,7 @@ export class PublicationComponent implements OnInit {
 
         if (this.exchangeSolicited) {
             this.loadBooksData()
-            this.loadUserLocations()
+            this.loadUserLocations(true)
         }
     }
 
@@ -219,7 +243,7 @@ export class PublicationComponent implements OnInit {
     }
 
 
-    loadUserLocations() {
+    loadUserLocations(exchangeStarted: boolean) {
         this.as.loggedUser$.pipe(
             filter(user => !!user),
             switchMap((user: User) => {
@@ -227,13 +251,22 @@ export class PublicationComponent implements OnInit {
             })
         ).subscribe({
             next: (locations) => {
-                this.userLocations = locations.map(location => {
-                    return {
-                        location: location.location,
-                        publications: location.publications,
-                        self: location.self
-                    } as Location;
-                });
+                let updatedLocations = locations.map(location => ({
+                    location: location.location,
+                    publications: location.publications,
+                    self: location.self
+                }) as Location);
+
+                if (!exchangeStarted) {
+                    updatedLocations = updatedLocations.filter(
+                        location => !this.publication?.locations?.some(
+                            pubLocation => pubLocation.self === location.self
+                        )
+                    );
+                    this.userLocations$.next(updatedLocations);
+                    this.cdRef.detectChanges();
+                }
+
             },
         });
     }
@@ -344,6 +377,7 @@ export class PublicationComponent implements OnInit {
         return isUserPublication;
     }
 
+
     goToMyBooks() {
         this.router.navigate(['/my-books']);
     }
@@ -356,4 +390,42 @@ export class PublicationComponent implements OnInit {
 			this.router.navigate(['/']);
 		}
 	}
+
+    toggleEditModal() {
+        this.modalEditLocationsVisible = !this.modalEditLocationsVisible;
+    }
+
+    editPublicationLocations() {
+        if (!this.selectedAddLocation) {
+            this.errorNoAddLocation = true;
+            return;
+        }
+
+        this.as.loggedUser$.pipe(
+            filter(user => !!user),
+            switchMap((user: User) =>
+                this.ps.addLocation(this.publication?.self, this.selectedAddLocation?.self)
+            )
+        ).subscribe({
+            next: () => {
+
+                if (this.publication) {
+                    this.us.getLocationsInPublication(this.publication.publication?.locations).subscribe(
+                        locations => {
+                            this.publicationLocations = locations.map(location => location.location);
+                        }
+                    );
+                    window.location.reload()
+
+                }
+            },
+
+            error: (err) => {
+                console.error("Error adding location:", err);
+            }
+        });
+
+    }
+
+
 }

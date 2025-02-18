@@ -50,12 +50,12 @@ public class BookModelDTO {
         dto.ratingCount = bookModel.getRatingCount();
         dto.averageRating = bookModel.getAverageRating();
 
-        dto.self = URI.create("/book_models/" + bookModel.getBookModelId());
+        dto.self = uriInfo.getBaseUriBuilder().path("book_models").path(String.valueOf(bookModel.getBookModelId())).build();
 
         dto.authors = bookModel.getAuthors().stream().map(Author::getAuthorName).toList();
 
         if (bookModel.getImage() != null) {
-            dto.cover = URI.create("/images/" + bookModel.getImage().getImageId());
+            dto.cover = uriInfo.getBaseUriBuilder().path("images").path(String.valueOf(bookModel.getImage().getImageId())).build();
         }
         return dto;
     }

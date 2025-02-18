@@ -116,7 +116,8 @@ export class PublicationService {
                                     favoriteEndpoint: publication.favoriteEndpoint,
                                     self: publication.self,
                                     favoritePublication: null,
-                                    isFavoriteTemplate: publication.isFavoriteTemplate
+                                    isFavoriteTemplate: publication.isFavoriteTemplate,
+                                    publication: publication
                                 }))
                             )
                         )
@@ -136,7 +137,8 @@ export class PublicationService {
                             favoriteEndpoint: data.favoriteEndpoint,
                             self: data.self,
                             favoritePublication: null,
-                            isFavoriteTemplate: data.isFavoriteTemplate
+                            isFavoriteTemplate: data.isFavoriteTemplate,
+                            publication: data.publication
                         }));
                         return ({
                             publicationData: transformedData,
@@ -246,5 +248,23 @@ export class PublicationService {
                 console.log("Publicación creada:", r);
             })
         )
+    }
+
+    addLocation(publicationUrl: string | null | undefined, locationUrl: string | undefined) {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.publications.update.v1+json' });
+        if (!publicationUrl) {
+            throw new Error("publicationUrl must be a non-null and non-undefined string");
+        }
+
+        let body = {
+            locationURN: locationUrl
+        }
+
+        return this.http.patch(publicationUrl, body, {headers}).pipe(
+            catchError((error) => {
+                return throwError(() => error);
+            })
+        );
+
     }
 }

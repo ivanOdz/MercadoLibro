@@ -1,0 +1,12 @@
+[
+  {
+    "location": "Recoleta",
+    "publications": "http://localhost:8080/api/publications?location_id=1",
+    "self": "http://localhost:8080/api/user/1/locations/1"
+  },
+  {
+    "location": "Caballito",
+    "publications": "http://localhost:8080/api/publications?location_id=2",
+    "self": "http://localhost:8080/api/user/1/locations/2"
+  }
+]

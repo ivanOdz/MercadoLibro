@@ -98,9 +98,19 @@ export class AuthService {
 
     this.http.head(`${environment.production ? environment.productionUrl : environment.developmentUrl}/book_models`, { headers, observe: 'response' }).subscribe({
       next: (headResponse) => {
-        this.isAuthenticated.next(true);
-        const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-        this.router.navigateByUrl(returnUrl);
+        const accessToken = headResponse.headers.get('accessToken');
+        const refreshToken = headResponse.headers.get('refreshToken');
+
+
+        if (accessToken && refreshToken) {
+            this.storeTokens(accessToken, refreshToken, headResponse.headers.get('userUrn'));
+            this.isAuthenticated.next(true);
+            const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+            this.router.navigateByUrl(returnUrl);
+        } else {
+            this.isAuthenticated.next(false);
+        }
+
       },
       error: () => {
         this.isAuthenticated.next(false);
@@ -115,6 +125,9 @@ export class AuthService {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('loggedUser');
+    sessionStorage.removeItem('userUrn');
+    localStorage.removeItem('userUrn');
+
 
     this._loggedUser.next(null);
     this.isAuthenticated.next(false);

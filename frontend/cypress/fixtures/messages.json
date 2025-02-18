@@ -1,0 +1,17 @@
+[
+  {
+    "message": "Hola",
+    "time": "2024-02-15T12:00:00Z",
+    "self": "http://localhost:8080/api/exchanges/2/messages/1",
+    "user": "http://localhost:8080/api/users/1",
+    "exchange": "http://localhost:8080/api/exchanges/2"
+  },
+  {
+    "message": "Como estas?",
+    "time": "2024-02-15T12:01:00Z",
+    "self": "http://localhost:8080/api/exchanges/2/messages/2",
+    "user": "http://localhost:8080/api/users/2",
+    "exchange": "http://localhost:8080/api/exchanges/2"
+  }
+
+]

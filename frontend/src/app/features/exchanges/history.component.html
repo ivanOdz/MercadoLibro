@@ -7,7 +7,7 @@
         <p-tabs [(value)]="value">
             <p-tablist>
                 <p-tab [value]="0">{{ 'EXCHANGES.COMPLETED_TAB' | translate }}</p-tab>
-                <p-tab [value]="1">{{ 'EXCHANGES.REJECTED_TAB' | translate }}</p-tab>
+                <p-tab data-cy="reject-panel" [value]="1">{{ 'EXCHANGES.REJECTED_TAB' | translate }}</p-tab>
             </p-tablist>
             <p-tabpanels>
                 <p-tabpanel [value]="0">
@@ -17,7 +17,7 @@
                                 <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
                             </div>
                             <p-scrollpanel [style]="{height: '97%'}" *ngIf="completedExchanges.length != 0 && !isLoading" [class]="'card-section'" >
-                                <div
+                                <div    data-cy="completed-exchanges"
                                         class="card"
                                         *ngFor="let card of completedExchanges"
                                         (click)="selectCompletedCard(card)"
@@ -62,11 +62,11 @@
                                         selectedCompletedCard.requestedPub.book?.owner?.username }}</p>
                                     <p class="user-card-email">{{ isRequester(selectedCompletedCard) ? selectedCompletedCard.offeredPub.book?.owner?.mail :
                                         selectedCompletedCard.requestedPub.book?.owner?.mail }}</p>
-                                    <p-rating [(ngModel)]="selectedUserRatingCompleted" [disabled]="true" />
+                                    <p-rating  [(ngModel)]="selectedUserRatingCompleted" [disabled]="true" />
                                 </div>
-                                <div style="grid-column: 3;text-align: start;align-content: center;justify-items: center;">
+                                <div (click)="toggleReviewContent($event, op)" data-cy="review-button" style="grid-column: 3;text-align: start;align-content: center;justify-items: center;">
                                     <p class="user-card-review" style="text-align: center;">{{ 'EXCHANGES.LEAVE_A_REVIEW' | translate }}</p>
-                                    <i style="font-size: large;font-weight: lighter;cursor: pointer" class="pi pi-chevron-up icon-card-active" (click)="toggleReviewContent($event, op)"></i>
+                                    <i  style="font-size: large;font-weight: lighter;cursor: pointer" class="pi pi-chevron-up icon-card-active" ></i>
                                 </div>
                             </div>
 
@@ -125,7 +125,7 @@
                                 <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
                             </div>
                             <p-scrollpanel [style]="{height: '97%'}" *ngIf="rejectedExchanges.length != 0 && !isLoading" [class]="'card-section'" >
-                                <div
+                                <div    data-cy="rejected-exchanges"
                                         class="card"
                                         *ngFor="let card of rejectedExchanges"
                                         (click)="selectRejectedCard(card)"
@@ -230,7 +230,7 @@
         <div style="padding: 1rem;">
             <p style="margin: 0">{{ 'EXCHANGES.LEAVE_REVIEW' | translate }}</p>
             <p-rating [(ngModel)]="reviewValue" style="margin-bottom: 1rem;margin-top: 1rem" />
-            <textarea pTextarea [(ngModel)]="reviewText"></textarea>
-            <p-button label="{{ 'EXCHANGES.SEND_LABEL' | translate }}" (click)="addUserReview($event,op)" />
+            <textarea data-cy="review-text" pTextarea [(ngModel)]="reviewText"></textarea>
+            <p-button data-cy="review-send" label="{{ 'EXCHANGES.SEND_LABEL' | translate }}" (click)="addUserReview($event,op)" />
         </div>
 </p-popover>

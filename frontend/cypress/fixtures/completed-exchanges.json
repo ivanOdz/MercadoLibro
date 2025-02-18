@@ -1,0 +1,62 @@
+[
+  {
+    "state": "TERMINATED",
+    "accept_code": 1641419531,
+    "offerer_received": true,
+    "requester_received": true,
+    "isConfirmed": true,
+    "start_date": "2024-02-15T12:00:00Z",
+    "end_date": "2024-02-16T16:00:00Z",
+    "self": "http://localhost:8080/api/exchanges/1",
+    "offerer": "http://localhost:8080/api/publications/2",
+    "requester": "http://localhost:8080/api/publications/5",
+    "chat": "http://localhost:8080/api/exchanges/1/messages",
+    "offererReview": "http://localhost:8080/api/user/3/review/1",
+    "requesterReview": ""
+  },
+  {
+    "state": "TERMINATED",
+    "accept_code": 1641419531,
+    "offerer_received": true,
+    "requester_received": true,
+    "isConfirmed": true,
+    "start_date": "2024-02-15T12:00:00Z",
+    "end_date": "2024-02-18T12:00:00Z",
+    "self": "http://localhost:8080/api/exchanges/2",
+    "offerer": "http://localhost:8080/api/publications/3",
+    "requester": "http://localhost:8080/api/publications/6",
+    "chat": "http://localhost:8080/api/exchanges/2/messages",
+    "offererReview": "http://localhost:8080/api/user/4/review/2",
+    "requesterReview": "http://localhost:8080/api/user/6/review/4"
+  },
+  {
+    "state": "TERMINATED",
+    "accept_code": 1641419531,
+    "offerer_received": true,
+    "requester_received": true,
+    "isConfirmed": true,
+    "start_date": "2024-02-15T12:00:00Z",
+    "end_date": "2024-02-15T14:00:00Z",
+    "self": "http://localhost:8080/api/exchanges/3",
+    "offerer": "http://localhost:8080/api/publications/4",
+    "requester": "http://localhost:8080/api/publications/7",
+    "chat": "http://localhost:8080/api/exchanges/3/messages",
+    "offererReview": "",
+    "requesterReview": "http://localhost:8080/api/user/7/review/5"
+  },
+  {
+    "state": "TERMINATED",
+    "accept_code": 1641419531,
+    "offerer_received": true,
+    "requester_received": true,
+    "isConfirmed": true,
+    "start_date": "2024-02-15T12:00:00Z",
+    "end_date": "2024-02-17T12:00:00Z",
+    "self": "http://localhost:8080/api/exchanges/4",
+    "offerer": "http://localhost:8080/api/publications/5",
+    "requester": "http://localhost:8080/api/publications/8",
+    "chat": "http://localhost:8080/api/exchanges/4/messages",
+    "offererReview": "",
+    "requesterReview": ""
+  }
+]

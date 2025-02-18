@@ -39,7 +39,7 @@
 
         <p-scrollpanel [style]="{ width:'65vw', height: '68vh'}" >
             <div class="book-models-grid">
-                <app-book-model-card *ngFor="let bookModel of bookModels" [bookModel]="bookModel"></app-book-model-card>
+                <app-book-model-card data-cy="book_models" *ngFor="let bookModel of bookModels" [bookModel]="bookModel"></app-book-model-card>
             </div>
             <app-paginator [pagination]="pagination" [fetchMethod]="getBookModels.bind(this)"></app-paginator>
         </p-scrollpanel>
@@ -57,7 +57,7 @@
         <div class="filter-line"></div>
         <div class="fixed-add-book-container">
             <p>{{ 'BOOK_MODEL.NO_BOOK' | translate }}</p>
-            <button icon="pi pi-plus" class="fixed-add-book-btn"  [routerLink]="uploadBookModelUrl">{{ 'BOOK_MODEL.ADD_BOOK' | translate }}</button>
+            <button data-cy="create-book" icon="pi pi-plus" class="fixed-add-book-btn"  [routerLink]="uploadBookModelUrl">{{ 'BOOK_MODEL.ADD_BOOK' | translate }}</button>
         </div>
     </div>
 

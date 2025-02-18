@@ -156,13 +156,14 @@ public class AccessControl {
     // GET {base_path}/publications?favorites=false&userId=1
     // GET {base_path}/publications?favorites=false&userId=1&locationId=1
     public Boolean publicationsGeneralAccess(HttpServletRequest request) {
-        if(getUser() == null){
-            return false;
-        }
         boolean favorite = Boolean.parseBoolean(request.getParameter("favorites"));
         String userString = request.getParameter("user_id");
-
         String locationString = request.getParameter("location_id");
+
+        if(!favorite && userString == null && locationString == null){
+            // public access
+            return true;
+        }
 
         // publications filtered by location accessed if location belongs to logged user
         Location l = locationString == null ? null : locationService.findById(Long.valueOf(locationString));
@@ -170,11 +171,9 @@ public class AccessControl {
             return l.getUsers().contains(getUser());
         }
 
-        // main page publications with no logged user
-        if(userString == null || (userString.isEmpty() && !favorite)) return true;
-
-        Long userId = Long.parseLong(userString);
-        return userId.equals(getUser().getUserId());
+        return userString != null &&
+                getUser() != null &&
+                getUser().getUserId().equals(Long.parseLong(userString));
     }
 
     // POST {base_path}/publications

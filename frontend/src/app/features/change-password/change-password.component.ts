@@ -6,6 +6,7 @@ import {FormsModule} from "@angular/forms";
 import {InputText} from "primeng/inputtext";
 import {ButtonDirective} from "primeng/button";
 import {LanguageService} from "../../core/services/language.service";
+import {TranslatePipe, TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-change-password',
@@ -15,7 +16,8 @@ import {LanguageService} from "../../core/services/language.service";
     Password,
     FormsModule,
     InputText,
-    ButtonDirective
+    ButtonDirective,
+    TranslatePipe
   ],
   styleUrls: ['./change-password.component.css']
 })
@@ -28,6 +30,7 @@ export class ChangePasswordComponent implements OnInit {
   constructor(private userService: UserService,
               private router: Router,
               private route: ActivatedRoute,
+              private translate: TranslateService,
               private languageService: LanguageService // DO NOT DELETE! Translation would not work otherwise
   ) {}
 
@@ -35,7 +38,7 @@ export class ChangePasswordComponent implements OnInit {
     this.route.queryParams.subscribe((params) => {
       this.passwordCode = params['verification_code'];
       if (!this.passwordCode) {
-        this.errorMessage = 'El código de contraseña es inválido o no está presente.';
+        this.errorMessage = this.translate.instant('AUTH.INVALID_CODE');
       }
     });
   }

@@ -17,6 +17,7 @@ import {MyPublicationsComponent} from "./features/my-publications/my-publication
 import {FavoritePublicationsComponent} from "./features/favorite-publications/favorite-publications.component";
 import {PublicationComponent} from "./features/publication-detail/publication.component";
 import {BookModelComponent} from "./features/book-model/book-model.component";
+import {RegisterComponentSuccess} from "./features/register/register-success.component";
 
 export const routes: Routes = [
   {path: '', redirectTo: 'publications', pathMatch: 'full'},
@@ -59,6 +60,11 @@ export const routes: Routes = [
     title: 'Register'
   },
   {
+    path: 'auth/register/success',
+    component: RegisterComponentSuccess,
+    title: 'Success'
+  },
+  {
     path: 'auth/verify',
     component: VerifyComponent,
     title: 'Verify'
@@ -95,7 +101,7 @@ export const routes: Routes = [
     path: 'books/add',
     component: BookFormComponent,
     title: 'Add a new book',
-    /*canActivate: [AuthGuard],*/
+    canActivate: [AuthGuard]
   },
   {
     path: 'my-books',
@@ -107,7 +113,7 @@ export const routes: Routes = [
     path: 'library',
     component: BookModelComponent,
     title: 'Library',
-    //canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
   },
   //Error Pages
   {

@@ -56,7 +56,7 @@
 
         <p-scrollpanel [style]="{ width:'65vw', height: '62vh'}" >
             <div class="books-grid">
-                <app-book-card *ngFor="let book of books" [book]="book" [showOwner]="false" [showGenre]="true" [showState]="true"></app-book-card>
+                <app-book-card data-cy="books" *ngFor="let book of books" [book]="book" [showOwner]="false" [showGenre]="true" [showState]="true"></app-book-card>
             </div>
             <app-paginator [pagination]="pagination" [fetchMethod]="fetchBooks.bind(this)"></app-paginator>
         </p-scrollpanel>

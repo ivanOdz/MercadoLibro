@@ -6,8 +6,8 @@
 
         <p-tabs [(value)]="value">
             <p-tablist>
-                <p-tab [value]="0">{{ 'EXCHANGES.OFFERS_TAB' | translate }}</p-tab>
-                <p-tab [value]="1">{{ 'EXCHANGES.REQUESTS_TAB' | translate }}</p-tab>
+                <p-tab data-cy="offers-panel" [value]="0">{{ 'EXCHANGES.OFFERS_TAB' | translate }}</p-tab>
+                <p-tab data-cy="requests-panel" [value]="1">{{ 'EXCHANGES.REQUESTS_TAB' | translate }}</p-tab>
             </p-tablist>
             <p-tabpanels>
                 <p-tabpanel [value]="0">
@@ -17,8 +17,8 @@
                                 <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
                             </div>
                             <p-scrollpanel [class]="'card-section'" [style]="{height: '97%'}" *ngIf="offeredExchanges.length != 0 && !isLoading">
-                                <div
-                                        class="card"
+                                <div    data-cy="offered-exchanges"
+                                        class="card offered-exchanges"
                                         *ngFor="let card of offeredExchanges"
                                         (click)="selectOfferedCard(card)"
                                         [class.selected]="selectedOffersCard === card"
@@ -41,8 +41,8 @@
                                         </div>
                                     </div>
                                     <div class="requests-second-column">
-                                        <p-button styleClass="exchange-reject-button" (click)="showRejectDialog(card)">Rechazar</p-button>
-                                        <p-button styleClass="exchange-accept-button" (click)="showAcceptDialog(card)">Aceptar</p-button>
+                                        <p-button data-cy="reject-button" styleClass="exchange-reject-button" (click)="showRejectDialog(card)">Rechazar</p-button>
+                                        <p-button data-cy="accept-button" styleClass="exchange-accept-button" (click)="showAcceptDialog(card)">Aceptar</p-button>
                                     </div>
                                 </div>
                                 <app-paginator *ngIf="loggedUser" [pagination]="paginationOffered" [fetchMethod]="getOffered.bind(this)"></app-paginator>
@@ -121,8 +121,8 @@
                                 <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
                             </div>
                             <p-scrollpanel [style]="{height: '97%'}" [class]="'card-section'" *ngIf="requestedExchanges.length != 0 && !isLoading">
-                                <div
-                                        class="card"
+                                <div    data-cy="solicited-exchanges"
+                                        class="card solicited-exchanges"
                                         *ngFor="let card of requestedExchanges"
                                         (click)="selectRequesterCard(card)"
                                         [class.selected]="selectedRequestsCard === card"
@@ -231,7 +231,7 @@
     <span class="text-surface-500 dark:text-surface-400 block">{{ 'EXCHANGES.CONFIRM_EXCHANGE' | translate }}</span>
     <ng-template #footer>
         <p-button label="{{ 'EXCHANGES.CANCEL' | translate }}" [raised]="true" severity="secondary" (click)="acceptExchangeDialogVisible = false" />
-        <p-button label="{{ 'EXCHANGES.START' | translate }}" [raised]="true" severity="success" (click)="acceptExchange()" />
+        <p-button data-cy="accept" label="{{ 'EXCHANGES.START' | translate }}" [raised]="true" severity="success" (click)="acceptExchange()" />
 
     </ng-template>
 </p-dialog>
@@ -245,6 +245,6 @@
     <span class="text-surface-500 dark:text-surface-400 block">{{ 'EXCHANGES.CONFIRM_REJECT' | translate }}</span>
     <ng-template #footer>
         <p-button label="{{ 'EXCHANGES.CANCEL' | translate }}" [raised]="true" severity="secondary" (click)="rejectExchangeDialogVisible = false" />
-        <p-button label="{{ 'EXCHANGES.REJECT' | translate }}" [raised]="true" severity="danger" (click)="rejectExchange()" />
+        <p-button data-cy="reject" label="{{ 'EXCHANGES.REJECT' | translate }}" [raised]="true" severity="danger" (click)="rejectExchange()" />
     </ng-template>
 </p-dialog>

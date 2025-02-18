@@ -106,7 +106,7 @@
 				<span *ngIf="bookModelForm.get('rating')?.hasError('min') || bookModelForm.get('rating')?.hasError('max')" class="error">{{ 'BOOK_FORM.OUT_OF_RANGE' | translate }}</span>
 
                 <label>{{ 'BOOK_FORM.BOOK_STATE' | translate }}:</label>
-                <select formControlName="condition" id="condition">
+                <select  formControlName="condition" id="condition">
                     <option value="" disabled selected>{{ 'BOOK_FORM.SELECT_STATE' | translate }}</option>
                     <option *ngFor="let stateValue of bookStates" [value]="stateValue">
                         {{ ('bookstate.' + stateValue) | translate }}
@@ -132,7 +132,7 @@
 		</div>
 			
 		<div class="button-group">
-			<button type="submit" class="submit-button" (click)="submitForm()">{{ 'BOOK_FORM.SAVE' | translate }}</button>
+			<button data-cy="submit"  type="submit" class="submit-button" (click)="submitForm()">{{ 'BOOK_FORM.SAVE' | translate }}</button>
 		</div>
 		
 	</form>

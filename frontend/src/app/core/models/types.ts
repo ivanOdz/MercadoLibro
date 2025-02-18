@@ -57,6 +57,7 @@ export type PublicationData = {
     favoritePublication: FavoritePublication | null // If it is null, this publications it is not favorite for logged user. Manually query this field
     isFavoriteTemplate: string;
     self: string | null,
+    publication: Publication | null
 }
 
 export type BookData = {

@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.dto.output;
 
 import ar.edu.itba.paw.models.Publication;
 import ar.edu.itba.paw.models.utils.PublicationState;
+import ar.edu.itba.paw.webapp.utils.UrnResolverUtil;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
@@ -105,6 +106,5 @@ public class PublicationDTO {
     public void setSelf(URI self) {
         this.self = self;
     }
-
 
 }
