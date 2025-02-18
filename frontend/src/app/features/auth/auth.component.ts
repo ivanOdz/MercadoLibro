@@ -40,8 +40,12 @@ export class AuthComponent {
 
 		this.authService.login(this.username, this.password, this.rememberMe).subscribe({
 			next: () => {
-				const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-				this.router.navigateByUrl(returnUrl);
+				this.authService.isAuthenticated$.subscribe(isAuthenticated => {
+					if (isAuthenticated) {
+						const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+						this.router.navigateByUrl(returnUrl);
+					}
+				});
 			},
 			error: (err) => {
 				if (err.status === 401) {
@@ -57,12 +61,6 @@ export class AuthComponent {
 				this.cdRef.detectChanges();
 			}
 		});
-		
-		if (this.authService.isAuthenticated$) {
-			const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-			console.log(returnUrl);
-			this.router.navigateByUrl(returnUrl);
-		}
 	}
 
 

@@ -1,7 +1,7 @@
-import {HttpInterceptorFn, HttpResponse} from '@angular/common/http';
+import { HttpInterceptorFn, HttpResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
-import {catchError, tap, throwError} from 'rxjs';
-import {AuthService} from "../services/auth.service";
+import { catchError, tap, throwError } from 'rxjs';
+import { AuthService } from "../services/auth.service";
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
     const authService = inject(AuthService);
@@ -26,7 +26,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         if (tokenUri) {
             authService.fetchAndSetUser(tokenUri);
         }
-
     };
 
     return next(req).pipe(
@@ -53,7 +52,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
                         catchError((refreshError) => {
                             if (refreshError.status === 401) {
                                 authService.logout();
-                                window.location.reload()
+                                window.location.reload();
                             }
                             return throwError(() => refreshError);
                         })
@@ -61,9 +60,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
                 } else {
                     authService.logout();
                 }
-                throwError(() => error);
-            } else if (error.status === 401 ) {
-                return throwError(() => error);
             }
 
             return throwError(() => error);
