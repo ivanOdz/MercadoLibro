@@ -13,3 +13,23 @@ html {
     margin: 0;
     padding: 0;
 }
+.snackbar-large {
+    font-size: 1.5rem;
+    padding: 16px 32px;
+    min-width: 300px;
+    max-width: 600px;
+    width: auto;
+    text-align: center;
+}
+
+.snackbar-error {
+    background-color: #F2EBD8;
+    color: #333333;
+}
+
+.snack-bar-button {
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
