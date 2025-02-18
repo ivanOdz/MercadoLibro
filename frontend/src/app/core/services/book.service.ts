@@ -15,7 +15,6 @@ export class BookService {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.books.v1+json'});
         return this.http.get<any>(`${bookUrn}`, {headers}).pipe(
             catchError((error) => {
-                this.snackBarService.showError('ERROR.GET_BOOK');
                 return throwError(() => new Error(error));
             })
         );
@@ -45,7 +44,6 @@ export class BookService {
                 return { books: books, pagination: pagination, headers: response.headers };
             }),
             catchError(error => {
-                this.snackBarService.showError('ERROR.GET_BOOKS');
                 return of({ books: [], pagination: new Pagination(null), headers: error.headers });
             })
         );
@@ -85,11 +83,7 @@ export class BookService {
         return this.http.post(`${bookUrl}`, body, { headers, observe: 'response' }).pipe(
             catchError((error) => {
                 this.snackBarService.showError('ERROR.UPLOAD_BOOK');
-                if(error.status === 500) {
-                    return of(null);
-                } else {
-                    return throwError(() => new Error(error.message));
-                }
+                return throwError(() => new Error(error.message));
             })
         );
 

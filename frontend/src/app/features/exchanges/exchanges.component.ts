@@ -76,7 +76,6 @@ export class ExchangesComponent implements OnInit {
                     }),
                     map(response => response.exchange),
                     catchError((error) => {
-                        this.snackBarService.showError('ERROR.GET_EXCHANGES');
                         return of([]); // Retorna un array vacío si hay error
                     })
                 );
@@ -91,7 +90,6 @@ export class ExchangesComponent implements OnInit {
             },
             (error) => {
                 this.isLoading = false;
-                this.snackBarService.showError('ERROR.GET_EXCHANGES');
             }
         );
     }
@@ -119,8 +117,7 @@ export class ExchangesComponent implements OnInit {
                         } else {
                             this.loadExchanges(); // stay in the same page
                         }
-                    },
-                    (error) => this.snackBarService.showError('ERROR.GET_EXCHANGE'));
+                    });
             },
             (error) => this.snackBarService.showError('ERROR.CONFIRM_EXCHANGE'));
 
@@ -130,12 +127,10 @@ export class ExchangesComponent implements OnInit {
         if (this.newMessage.trim() && this.selectedCard?.exchange.chat) {
             this.es.sendMessage(this.selectedCard?.exchange.chat, this.isRequester(this.selectedCard) ? this.selectedCard.requestedPub.book?.owner?.self : this.selectedCard.offeredPub.book?.owner?.self, this.newMessage).subscribe(
                 (messageUrn) => {
-                    console.log("Mensaje enviado:", messageUrn);
                     this.es.getMessage(messageUrn).subscribe(
                         (message) => {
                             this.addMessage(message);
-                        },
-                        (error) => this.snackBarService.showError('ERROR.GET_MESSAGE'));
+                        });
                 },
                 (error) => this.snackBarService.showError('ERROR.SEND_MESSAGE'));
 

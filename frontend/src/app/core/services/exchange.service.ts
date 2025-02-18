@@ -21,7 +21,6 @@ export class ExchangeService {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.exchanges.v1+json' });
         return this.http.get<any>(`${exchangeUrl}`, { headers }).pipe(
             catchError((error) => {
-                this.snackBarService.showError('ERROR.GET_EXCHANGE');
                 return throwError(() => new Error(error));
             })
         );
@@ -31,7 +30,6 @@ export class ExchangeService {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.message.v1+json' });
         return this.http.get<any>(`${messagesUrl}`, { headers }).pipe(
             catchError((error) => {
-                this.snackBarService.showError('ERROR.GET_MESSAGES');
                 return throwError(() => new Error(error));
             })
         );
@@ -41,7 +39,6 @@ export class ExchangeService {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.message.v1+json' });
         return this.http.get<any>(`${messageUrl}`, { headers }).pipe(
             catchError((error) => {
-                this.snackBarService.showError('ERROR.GET_MESSAGE');
                 return throwError(() => new Error(error));
             })
         );
@@ -69,7 +66,6 @@ export class ExchangeService {
                 return { exchange: exchanges, pagination: pagination };
             }),
             catchError(error => {
-                this.snackBarService.showError('ERROR.GET_EXCHANGES');
                 return of({ exchange: [], pagination: new Pagination(null) }); // Devuelve vacío en caso de error
             })
         );
@@ -149,7 +145,7 @@ export class ExchangeService {
         return this.http.post<void>(`${chatUrl}`, body, { headers, observe: 'response' }).pipe(
             map(response => response.headers.get('Location')),
             catchError((error) => {
-                console.error("Error al actualizar el intercambio:", error);
+                this.snackBarService.showError('ERROR.UPDATE_EXCHANGE');
                 return throwError(() => error);
             })
         );
@@ -170,7 +166,7 @@ export class ExchangeService {
         return this.http.post<void>(`${exchangeUrn}`, body, { headers, observe: 'response' }).pipe(
             map(response => response.headers.get('Location')),
             catchError((error) => {
-                console.error("Error al crear el intercambio:", error);
+                this.snackBarService.showError('ERROR.ADD_EXCHANGE');
                 return throwError(() => error);
             }
         ));

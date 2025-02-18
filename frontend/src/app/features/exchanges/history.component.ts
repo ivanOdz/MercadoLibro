@@ -129,7 +129,6 @@ export class HistoryComponent implements OnInit {
             this.isLoading = false;
         }, (error) => {
             this.isLoading = false;
-            this.snackBarService.showError('ERROR.GET_EXCHANGES');
         });
     }
 
@@ -143,7 +142,6 @@ export class HistoryComponent implements OnInit {
                 op.toggle($event);
             },
             catchError(error => {
-                this.snackBarService.showError('ERROR.GET_EXCHANGES');
                 return of({ exchange: [], pagination: new Pagination(null) }); // Devuelve vacío en caso de error
             }));
         });

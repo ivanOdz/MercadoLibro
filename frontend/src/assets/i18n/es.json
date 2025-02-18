@@ -311,6 +311,7 @@
     "GET_MESSAGE": "Upsi! Hubo un problema al obtener tu mensaje.",
     "GET_MESSAGES": "Upsi! Hubo un problema al obtener tus mensajes.",
     "UPDATE_EXCHANGE": "Upsi! Hubo un problema actualizando el estado de su intercambio.",
+    "ADD_EXCHANGE": "Upsi! Hubo un problema creando su intercambio.",
     "CONFIRM_EXCHANGE": "Upsi! Hubo un problema confirmando su intercambio.",
     "REJECT_EXCHANGE": "Upsi! Hubo un problema rechazando su intercambio.",
     "GET_LOCATION": "Upsi! Hubo un problema al obtener la ubicación.",

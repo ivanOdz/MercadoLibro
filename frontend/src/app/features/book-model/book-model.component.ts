@@ -135,9 +135,6 @@ export class BookModelComponent implements OnInit {
     ).subscribe({
       next: (response) => {
         this.bookModels = response.bookModels;
-      },
-      error: (err) => {
-        this.snackBarService.showError('ERROR.GET_BOOKS');
       }
     });
   }
