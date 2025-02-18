@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { NotFoundComponent } from "./features/errors/not-found/not-found.component";
 
 export const routes: Routes = [
   {path: '', redirectTo: 'publications', pathMatch: 'full'},
@@ -22,10 +23,15 @@ export const routes: Routes = [
     title: 'Books',
     loadChildren: () => import('./features/books.routes').then(m => m.booksRoutes)
   },
+  {
+    path: 'error',
+    loadChildren: () => import('./features/errors.routes').then(m => m.errorRoutes)
+  },
   //Error Pages
   {
     path: '**',
-    loadChildren: () => import('./features/errors.routes').then(m => m.errorRoutes)
+    component: NotFoundComponent,
+    title: 'Page Not Found'
   }
 ];
 
