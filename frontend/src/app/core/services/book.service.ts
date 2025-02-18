@@ -5,15 +5,19 @@ import {Book} from "../models/book.model";
 import {BookData} from "../models/types";
 import {map} from "rxjs/operators";
 import {Pagination} from "../models/pagination";
+import {SnackbarService} from "./snackbar.service";
 
 @Injectable({ providedIn: 'root' })
 export class BookService {
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient, private snackBarService: SnackbarService) {}
 
     getBook(bookUrn: string) : Observable<Book>  {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.books.v1+json'});
         return this.http.get<any>(`${bookUrn}`, {headers}).pipe(
-            //tap((r) => console.log("Respuesta de la API con books:", r))
+            catchError((error) => {
+                this.snackBarService.showError('ERROR.GET_BOOK');
+                return throwError(() => new Error(error));
+            })
         );
     }
 
@@ -41,50 +45,28 @@ export class BookService {
                 return { books: books, pagination: pagination, headers: response.headers };
             }),
             catchError(error => {
-                console.error("Error al obtener los libros:", error);
+                this.snackBarService.showError('ERROR.GET_BOOKS');
                 return of({ books: [], pagination: new Pagination(null), headers: error.headers });
             })
         );
     }
 
-    /*
-    getMyBooks({ booksUrl, state, genre, search }: { booksUrl: string; state: string; genre: string; search: string}): Observable<HttpResponse<BookData2[]>> {
-        return this.getBooks( { state, genre, page, search, user: userId! }).pipe(
-            switchMap((response) => {
-                const books = response.body || [];
-
-                const detailsRequests = books.map((book) =>
-                    this.bookModelService.getBookModel(book.bookModel).pipe(
-                        map((bookModel) => ({
-                            ...book,
-                            bookModel
-                        }))
-                    )
-                );
-
-                return forkJoin(detailsRequests).pipe(
-                    map((updatedBooks) =>
-                        new HttpResponse({ body: updatedBooks, headers: response.headers }))
-                );
-            })
-        );
-    }
-*/
-
     updateBookstate(book: BookData, newState: string): Observable<void> {
         const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.books.v1+json' });
-        const body = { state: newState };
+        const body = {  state: newState,
+                        available: book.available,
+                        owner: book.owner,
+                        bookModel: book.bookModel,
+                        images: book.images,
+                        self: book.self
+                    };
 
         return this.http.patch<void>(`${book.self}`, body, { headers }).pipe(
             tap(() => {
-                console.log("Libro uri:", book.self);
-                book.state = body.state; // Actualizo el estado del libro localmente para que refleje en la card.
-                //console.log('Libro actualizado localmente:', book);
+                book.state = newState; // Actualizo el estado del libro localmente para que refleje en la card.
             }),
             catchError((error) => {
-                if (error.status === 404) {
-                    console.log("Haciendo redirección a /404");
-                }
+                this.snackBarService.showError('ERROR.UPDATE_STATE');
                 return throwError(() => new Error(error));
             })
         );
@@ -97,11 +79,18 @@ export class BookService {
             bookModel: bookModelUrl,
             user: user,
             rating: rating,
-            imageURNS: images
+            imageURNS: images ?? []
         }
 
         return this.http.post(`${bookUrl}`, body, { headers, observe: 'response' }).pipe(
-            tap((response) => console.log("API response (Post) of Book:", response))
+            catchError((error) => {
+                this.snackBarService.showError('ERROR.UPLOAD_BOOK');
+                if(error.status === 500) {
+                    return of(null);
+                } else {
+                    return throwError(() => new Error(error.message));
+                }
+            })
         );
 
     }

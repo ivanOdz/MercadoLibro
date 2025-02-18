@@ -10,6 +10,7 @@ import { FormsModule } from "@angular/forms";
 import {BookService} from "../../../core/services/book.service";
 import {environment} from "../../../../environments/environment";
 import {ImageService} from "../../../core/services/image.service";
+import {SnackbarService} from "../../../core/services/snackbar.service";
 
 @Component({
   selector: 'app-book-modal',
@@ -44,7 +45,7 @@ export class BookModalComponent {
   uploadProgress = 0;
   user: string | undefined = '';
 
-  constructor(private authService: AuthService, private bookService: BookService, private imageService: ImageService) {}
+  constructor(private authService: AuthService, private bookService: BookService, private imageService: ImageService, private snackBarService: SnackbarService) {}
 
 
   openModal() {
@@ -113,12 +114,9 @@ export class BookModalComponent {
     await this.uploadImages();
     this.closeModal();
     this.bookService.uploadBook(this.bookUrl, this.bookModel.self, this.rating, this.bookState, this.user, this.imageURNs).subscribe({
-      next: () => {
-        console.log('Upload of Book successful :)');
-      },
       error: (error) => {
-        console.error('Upload of Book failed', error);
+        this.snackBarService.showError('ERROR.UPLOAD_BOOK');
       }
-    });;
+    });
   }
 }

@@ -24,6 +24,7 @@ import { PaginatorComponent } from "../../shared/paginator/paginator.component";
 import {Pagination} from "../../core/models/pagination";
 import {TranslatePipe, TranslateService} from "@ngx-translate/core";
 import {map} from "rxjs/operators";
+import {SnackbarService} from "../../core/services/snackbar.service";
 
 @Component({
     selector: 'app-exchanges',
@@ -43,7 +44,7 @@ export class ExchangesComponent implements OnInit {
 
 
     constructor(private es: ExchangeService, private as: AuthService,
-                private router: Router, private changeDetectorRef: ChangeDetectorRef, private translate: TranslateService) {}
+                private router: Router, private changeDetectorRef: ChangeDetectorRef, private translate: TranslateService, private snackBarService: SnackbarService) {}
 
     ngOnInit(): void {
         this.isLoading = true;
@@ -75,7 +76,7 @@ export class ExchangesComponent implements OnInit {
                     }),
                     map(response => response.exchange),
                     catchError((error) => {
-                        console.error("Error obteniendo intercambios:", error);
+                        this.snackBarService.showError('ERROR.GET_EXCHANGES');
                         return of([]); // Retorna un array vacío si hay error
                     })
                 );
@@ -87,11 +88,10 @@ export class ExchangesComponent implements OnInit {
             (activeExchanges) => {
                 this.activeExchanges = activeExchanges;
                 this.isLoading = false;
-                console.log("Intercambios cargados:", this.activeExchanges);
             },
             (error) => {
                 this.isLoading = false;
-                console.error("Error en la carga de intercambios:", error);
+                this.snackBarService.showError('ERROR.GET_EXCHANGES');
             }
         );
     }
@@ -105,7 +105,7 @@ export class ExchangesComponent implements OnInit {
         this.confirmExchangeDialogVisible = false;
 
         if (!card.exchange) {
-            console.error("No se puede confirmar el intercambio sin datos.");
+            this.snackBarService.showError('ERROR.UPDATE_EXCHANGE');
             return;
         }
 
@@ -114,18 +114,15 @@ export class ExchangesComponent implements OnInit {
             () => {
                 this.es.getExchange(card.exchange.self).subscribe(
                     (exchangeData) => {
-                        console.log("Intercambio confirmado:", exchangeData.isConfirmed);
                         if (exchangeData.requester_received && exchangeData.offerer_received) {
                             this.router.navigate(['/exchanges/history'], { queryParams: { selectedTab: 0 } });
                         } else {
                             this.loadExchanges(); // stay in the same page
                         }
                     },
-                    (error) => console.error("Error al obtener la información del intercambio:", error)
-                );
+                    (error) => this.snackBarService.showError('ERROR.GET_EXCHANGE'));
             },
-            (error) => console.error("Error al confirmar el intercambio:", error)
-        );
+            (error) => this.snackBarService.showError('ERROR.CONFIRM_EXCHANGE'));
 
     }
 
@@ -138,11 +135,9 @@ export class ExchangesComponent implements OnInit {
                         (message) => {
                             this.addMessage(message);
                         },
-                        (error) => console.error("Error al obtener mensajes:", error)
-                    );
+                        (error) => this.snackBarService.showError('ERROR.GET_MESSAGE'));
                 },
-                (error) => console.error("Error al enviar mensaje:", error)
-            );
+                (error) => this.snackBarService.showError('ERROR.SEND_MESSAGE'));
 
 
             this.newMessage = '';
@@ -235,7 +230,6 @@ export class ExchangesComponent implements OnInit {
     }
 
     getCover(book: BookData | null = null) {
-        console.log("publication imge: ", book?.bookModel?.cover);
         return book?.bookModel?.cover ||
             this.getImages(book?.images)[0] || this.getDefaultImage();
     }
@@ -294,7 +288,6 @@ export class ExchangesComponent implements OnInit {
 
 
     isValidDate(date: any): boolean {
-        console.log("Tipo de message.time:", typeof date, date instanceof Date);
         return date instanceof Date && !isNaN(date.getTime());
     }
 

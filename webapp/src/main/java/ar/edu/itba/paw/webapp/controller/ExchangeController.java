@@ -74,6 +74,9 @@ public class ExchangeController {
     @Produces(value = {VndType.APPLICATION_MESSAGE})
     public Response getMessages(@PathParam("id") long exchangeId) {
         List<Message> m = exchangeService.getMessages(exchangeId);
+        if(m.isEmpty()) {
+            return Response.noContent().build();
+        }
         List<MessageDTO> messages = m.stream().map(message -> MessageDTO.fromMessage(uriInfo, message)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<MessageDTO>>(messages) {}).build();
     }
@@ -83,6 +86,9 @@ public class ExchangeController {
     @Produces(value = {VndType.APPLICATION_MESSAGE})
     public Response getMessage(@PathParam("id") long exchangeId, @PathParam("message_id") long messageId) {
         Message m = exchangeService.getMessage(messageId);
+        if(m == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
         MessageDTO message = MessageDTO.fromMessage(uriInfo, m);
         return Response.ok(new GenericEntity<MessageDTO>(message) {}).build();
     }
@@ -92,6 +98,9 @@ public class ExchangeController {
     @Produces(value = {VndType.APPLICATION_EXCHANGE})
     public Response getExchange(@PathParam("id") final Long exchangeId) {
         Exchange exchange = exchangeService.getExchangeById(exchangeId);
+        if (exchange == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
         ExchangeDTO exchangeDTO = ExchangeDTO.fromExchange(uriInfo, exchange);
         return Response.ok(new GenericEntity<ExchangeDTO>(exchangeDTO) {}).build();
     }

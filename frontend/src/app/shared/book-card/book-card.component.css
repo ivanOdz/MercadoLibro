@@ -73,7 +73,7 @@
  .book-state-good {
  	background-color: rgba(80, 140, 80, 0.13);
  }
- 
+
 .book-state-aceptable {
 	background-color: #9696002b;
 }
@@ -176,6 +176,21 @@
 
 .edit-icon-container {
 	margin-left: 10px;
+}
+.book-state-select {
+	width: 100%;
+	padding: 8px;
+	font-size: 1rem;
+	border-radius: 5px;
+	border: 1px solid #ccc;
+	background-color: #fff;
+	color: #333;
+	cursor: pointer;
+}
+
+.book-state-select:focus {
+	border-color: #007bff;
+	outline: none;
 }
 
 .truncate-text {

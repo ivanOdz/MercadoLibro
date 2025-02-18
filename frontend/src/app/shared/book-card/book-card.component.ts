@@ -148,4 +148,16 @@ export class BookCardComponent implements OnInit{
 	goToMyPublications() {
 		this.router.navigate(['publications/mine']);
 	}
+
+	getStateClass() {
+		return {
+			'book-state-new': this.book.state === 'NEW',
+			'book-state-like-new': this.book.state === 'LIKE_NEW',
+			'book-state-very-good': this.book.state === 'VERY_GOOD',
+			'book-state-good': this.book.state === 'GOOD',
+			'book-state-aceptable': this.book.state === 'ACCEPTABLE',
+			'book-state-worn': this.book.state === 'WORN'
+		};
+	}
+
 }

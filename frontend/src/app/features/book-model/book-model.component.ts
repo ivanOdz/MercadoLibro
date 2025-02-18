@@ -17,6 +17,7 @@ import {BookModelCardComponent} from "../../shared/book-model-card/book-model-ca
 import {PaginatorComponent} from "../../shared/paginator/paginator.component";
 import {ScrollPanel} from "primeng/scrollpanel";
 import {SortComponent} from "../../shared/sort/sort.component";
+import {SnackbarService} from "../../core/services/snackbar.service";
 
 @Component({
   selector: 'app-book-model',
@@ -62,7 +63,7 @@ export class BookModelComponent implements OnInit {
   resetPaginatorNumber: boolean = false;
 
 
-  constructor(private router: Router, private route: ActivatedRoute, private bms: BookModelService) {
+  constructor(private router: Router, private route: ActivatedRoute, private bms: BookModelService, private snackBarService: SnackbarService) {
   }
 
   ngOnInit() {
@@ -108,7 +109,7 @@ export class BookModelComponent implements OnInit {
   }
 
   onSortUpdate(sort: string) {
-    this.currentFilters.sort = sort.replace(/^sort\./, '').toUpperCase().replace(/\./g, '_');
+    this.currentFilters.sort = sort;
     this.resetPaginatorNumber = true;
     setTimeout(() => (this.resetPaginatorNumber = false), 300);
     this.getBookModels();
@@ -136,7 +137,7 @@ export class BookModelComponent implements OnInit {
         this.bookModels = response.bookModels;
       },
       error: (err) => {
-        console.error("Error al obtener los modelos de libros:", err);
+        this.snackBarService.showError('ERROR.GET_BOOKS');
       }
     });
   }

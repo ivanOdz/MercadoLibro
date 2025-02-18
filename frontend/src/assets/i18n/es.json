@@ -295,6 +295,24 @@
     "NEW_PASSWORD": "Nueva contraseña",
     "CONFIRM_PASSWORD": "Confirmar contraseña",
     "CHANGE_PASSWORD": "Cambiar contraseña",
+    "REMEMBER_PASSWORD": "¿Recuerdas tu contraseña?",
+    "INCORRECT_CREDENTIALS": "Usuario o contraseña incorrectos",
+    "NO_PERMISSION": "No tienes los permisos para acceder",
+    "SERVER_ERROR": "Servidor con problemas",
+    "UNEXPECTED_ERROR": "Error inesperado",
     "REMEMBER_PASSWORD": "¿Recuerdas tu contraseña?"
+  },
+  "ERROR": {
+    "UPDATE_STATE": "Upsi! Hubo un problema cambiando el estado del libro.",
+    "GET_BOOKS": "Upsi! Hubo un problema obtuviendo tus libros.",
+    "GET_BOOK": "Upsi! Hubo un problema al obtener tu libro.",
+    "UPLOAD_BOOK": "Upsi! No se pudo agregar tu libro, intentelo nuevamente.",
+    "GET_EXCHANGE": "Upsi! Hubo un problema al obtener tu intercambio.",
+    "GET_EXCHANGES": "Upsi! Hubo un problema obtuviendo tus intercambios.",
+    "GET_MESSAGE": "Upsi! Hubo un problema al obtener tu mensaje.",
+    "GET_MESSAGES": "Upsi! Hubo un problema obtuviendo tus mensajes.",
+    "UPDATE_EXCHANGE": "Upsi! Hubo un problema actualizando el estado de su intercambio.",
+    "CONFIRM_EXCHANGE": "Upsi! Hubo un problema confirmando su intercambio.",
+    "REJECT_EXCHANGE": "Upsi! Hubo un problema rechazando su intercambio."
   }
 }

@@ -35,7 +35,7 @@ public interface BookService {
 
     List<BookStateWrapper> getBookStateWrapperList(String serach, String genre, long userId);
 
-    Book updateBook(Long bookId, String bookState);
+    void updateBook(Long bookId, String bookState);
 
     void setImage(Book book, Long imageId);
 }
