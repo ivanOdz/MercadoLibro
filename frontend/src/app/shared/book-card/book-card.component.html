@@ -2,7 +2,7 @@
 	<img [src]="bookImage" alt="Book Cover" class="book-image" (error)="bookImage = defaultImage">
 	  
 	<div class="book-info">
-		<h3 class="book-title">{{ book.bookModel!.title }}</h3>
+		<h3 class="book-title truncate-text">{{ book.bookModel!.title }}</h3>
 		<p *ngIf="showOwner" class="book-owner"><strong>{{ 'BOOK_CARD.OWNER' | translate }}</strong> {{ ownerName }}</p>
 		<p *ngIf="showGenre" class="book-owner"><strong>{{ 'GENRE' | translate }}:</strong> {{ ('genre.' + (book.bookModel!.genre | lowercase)) | translate }}</p>
         <div class="book-state-container">
@@ -15,10 +15,11 @@
                 'book-state-worn': book.state == 'WORN'
             }"> <strong>{{ 'BOOK_CARD.STATE' | translate }}:</strong>
                 {{ ('bookstate.' + (book.state! | lowercase)) | translate }}
-            </p>
-            <span class="edit-icon-container">
-                <mat-icon data-cy="edit" fontIcon="edit" (click)="openStateModal()"></mat-icon>
+                <span class="edit-icon-container">
             </span>
+            </p>
+            <mat-icon data-cy="edit" fontIcon="edit" (click)="openStateModal();$event.stopPropagation()"></mat-icon>
+
         </div>
     </div>
 </div>

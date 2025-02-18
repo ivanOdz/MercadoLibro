@@ -8,10 +8,11 @@
 	transition: transform 0.3s ease-in-out;
 	display: grid;
 	align-items: center;
-	grid-template-rows: 60% 40%;
+	grid-template-rows: 50% auto;
 	justify-content: center;
 	text-align: center;
 	justify-items: center;
+	gap: 5%;
 }
 
 .book-card:hover {
@@ -35,14 +36,14 @@
 }
 
 .book-title {
-	font-size: 18px;
-	font-weight: bold;
+	font-size: medium;
+	font-weight: 700;
 	color: #333;
-	height: 2.5rem;
 	justify-items: center;
 	align-content: center;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	margin: 0;
 }
 
 .book-owner {
@@ -53,39 +54,41 @@
 
 .book-state {
 	padding: 5px 10px;
-	border-radius: 5px;
+	border-radius: 1rem;
 	font-size: x-small;
 }
 
 .book-state-new {
-	background-color: rgba(160, 100, 200, 0.9);
+	background-color: rgba(160, 100, 200, 0.13);
 }
 
 .book-state-like-new {
-	background-color: rgba(0, 200, 200, 0.9);
+	background-color: rgba(0, 200, 200, 0.13);
 }
 
 .book-state-very-good {
-	background-color: rgba(0, 180, 50, 0.9);
+	background-color: rgba(0, 180, 50, 0.13);
 }
 
  .book-state-good {
- 	background-color: rgba(80, 140, 80, 0.8);
+ 	background-color: rgba(80, 140, 80, 0.13);
  }
  
 .book-state-aceptable {
-	background-color: rgba(150, 150, 0, 0.9);
+	background-color: #9696002b;
 }
 
 .book-state-worn {
-	background-color: rgba(180, 25, 25, 0.8);
+	background-color: rgba(180, 25, 25, 0.13);
 }
 
 
 .select-locations {
 	display: grid;
-	grid-template-rows: 25% 25% auto;
+	grid-template-rows: 20% 20% 60%;
 	height: 14vh;
+	font-size: small;
+	gap: 5%;
 }
 
 .selected-book-in-modal {
@@ -174,3 +177,11 @@
 .edit-icon-container {
 	margin-left: 10px;
 }
+
+.truncate-text {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	width: 9vw;
+}
+

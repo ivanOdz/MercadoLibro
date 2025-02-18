@@ -15,7 +15,7 @@
         <div class="publication-detail-card-section">
             <div class="publication-detail-card book-card">
                 <div style="grid-column: 1; justify-items: center;">
-                    <p-carousel [value]="getImages(bookImages)" [numVisible]="1" [numScroll]="1" [circular]="true" autoplayInterval="3000">
+                    <p-carousel [value]="getBooksImages(bookImages)" [numVisible]="1" [numScroll]="1" [circular]="true" autoplayInterval="3000">
                         <ng-template let-item pTemplate="item">
                             <img class="book-image" [src]="item" alt="Book Image" />
                         </ng-template>
@@ -142,11 +142,11 @@
                                 class="w-full md:w-56"></p-select>
                         <p *ngIf="errorNoLocation" class="error">{{ 'BOOK_HOME.SELECT_LOCATION'|translate }}</p>
                     </div>
-                    <div *ngIf="(userLocations$ |async)?.length === 0"  style="text-align: center; margin: 1rem;" >
+                    <div *ngIf="(userLocations$ |async)?.length === 0"  style="text-align: center; margin: 1rem;grid-column: 1;" >
                         <p class="text-empty">{{ 'PUBLICATION_D.NO_LOCATIONS' | translate}}</p>
                         <p-button [styleClass]="'redirect-buttons'" label="{{ 'PUBLICATION_D.ADD_LOCATIONS' | translate}}" icon="pi pi-map-marker" (click)="redirectToProfile()" />
                     </div>
-                    <div style="text-align: center">
+                    <div style="text-align: center;align-content: center;">
                         <p-button data-cy="exchange"
                                 [styleClass]="'i-want-it-button'"
                                   label="{{ 'PUBLICATION_D.START_EXCHANGE_BUTTON' | translate }}"
