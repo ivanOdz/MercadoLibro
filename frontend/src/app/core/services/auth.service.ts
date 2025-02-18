@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap, catchError, throwError, map, finalize } from 'rxjs';
+import { BehaviorSubject, Observable, tap, catchError, throwError, map } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../models/user.model';
 import { UserService } from './user.service';
 import {environment} from "../../../environments/environment";
-import {AbstractControl, ɵFormGroupRawValue, ɵGetProperty, ɵTypedOrUntyped} from "@angular/forms";
+import {take} from "rxjs/operators";
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -45,9 +45,12 @@ export class AuthService {
     if (userUrn) {
       this.fetchAndSetUser(userUrn);
     } else {
+      this.isAuthenticated.next(false);
       this.readySubject.next(true);
     }
   }
+
+
 
 
   // El getter de loggedUser ahora devuelve el observable del BehaviorSubject
@@ -69,79 +72,91 @@ export class AuthService {
   }
 
   fetchAndSetUser(tokenUri: string | null) {
-    if(!tokenUri) {
+    if (!tokenUri) {
+      this.isAuthenticated.next(false);
       this.readySubject.next(true);
       return;
     }
 
-    this.userService.getUser(`${environment.production ? environment.productionUrl : environment.developmentUrl}${tokenUri}`).subscribe({
-      next: (user) => {
-        this.setLoggedUser(user);
-        this.isAuthenticated.next(true);
-        this.readySubject.next(true);
-      },
-      error: () => {
-        this.logout();
-        this.readySubject.next(true);
-        }
-    });
+    this.userService.getUser(`${environment.production ? environment.productionUrl : environment.developmentUrl}${tokenUri}`)
+        .subscribe({
+          next: (user) => {
+            this.setLoggedUser(user);
+            this.isAuthenticated.next(true);
+            this.readySubject.next(true);
+          },
+          error: () => {
+            this.isAuthenticated.next(false);
+            this.readySubject.next(true);
+          }
+        });
   }
+
+
 
 
   login(username: string, password: string, rememberMe: boolean = false): Observable<void> {
     this.rememberMe = rememberMe;
-
-    const authHeader = `Basic ${btoa(`${username}:${password}`)}`;
+    const authHeader = `Basic ${btoa(`${username}:${password}`)}`; // Codificar credenciales en Base64
     const headers = new HttpHeaders({
       Authorization: authHeader,
       'Accept': 'application/vnd.book_models.v1+json',
     });
 
     return this.http.head(`${environment.production ? environment.productionUrl : environment.developmentUrl}/book_models`, { headers, observe: 'response' }).pipe(
-		tap((headResponse) => {
-			const accessToken = headResponse.headers.get('accessToken');
-			const refreshToken = headResponse.headers.get('refreshToken');
-			
-			if (accessToken && refreshToken) {
-				this.storeTokens(accessToken, refreshToken, headResponse.headers.get('userUrn'));
-				this.isAuthenticated.next(true);
-				this.readySubject.next(true);
-			} else {
-				this.isAuthenticated.next(false);
-			}
-		}),
-		map(() => void 0),
-		catchError((error) => {
-			this.isAuthenticated.next(false);
-			return throwError(() => error);
-		}),
-		finalize(() => {
-			this.isAuthenticated.next(false);
-		})
-	);
-}
-/*
-.subscribe({
-  next: (headResponse) => {
-    const accessToken = headResponse.headers.get('accessToken');
-    const refreshToken = headResponse.headers.get('refreshToken');
+        tap((headResponse) => {
+          const accessToken = headResponse.headers.get('accessToken');
+          const refreshToken = headResponse.headers.get('refreshToken');
+          const userUrn = headResponse.headers.get('userUrn');
+
+          if (accessToken && refreshToken && userUrn) {
+            this.storeTokens(accessToken, refreshToken, userUrn);
+
+            this.fetchAndSetUser(userUrn);
+
+            this.loggedUser$.pipe(take(1)).subscribe(user => {
+              if (user) {
+                this.isAuthenticated.next(true);
+
+                const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+                this.router.navigateByUrl(returnUrl);
+              }
+            });
+          } else {
+            this.isAuthenticated.next(false);
+          }
+        }),
+        map(() => void 0),
+        catchError((error) => {
+          this.isAuthenticated.next(false);
+          return throwError(() => error);
+        })
+    );
+  }
 
 
-    if (accessToken && refreshToken) {
-        this.storeTokens(accessToken, refreshToken, headResponse.headers.get('userUrn'));
-        this.isAuthenticated.next(true);
-        const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-        this.router.navigateByUrl(returnUrl);
-    } else {
-        this.isAuthenticated.next(false);
-    }
+  /*
+  .subscribe({
+    next: (headResponse) => {
+      const accessToken = headResponse.headers.get('accessToken');
+      const refreshToken = headResponse.headers.get('refreshToken');
 
-  },
-  error: () => {
-    this.isAuthenticated.next(false);
-  },
-});
-*/
+
+      if (accessToken && refreshToken) {
+          this.storeTokens(accessToken, refreshToken, headResponse.headers.get('userUrn'));
+          this.isAuthenticated.next(true);
+          const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+          this.router.navigateByUrl(returnUrl);
+      } else {
+          this.isAuthenticated.next(false);
+      }
+
+    },
+    error: () => {
+      this.isAuthenticated.next(false);
+    },
+  });
+  */
   logout() {
     sessionStorage.removeItem('accessToken');
     sessionStorage.removeItem('refreshToken');

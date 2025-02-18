@@ -32,7 +32,7 @@ export class RegisterComponent {
       private authService: AuthService,
       private router: Router,
       private fb: FormBuilder,
-      private languageService: LanguageService
+      private languageService: LanguageService // DO NOT DELETE! Translation would not work otherwise
   ) {
     this.loginForm = this.fb.group(
         {
