@@ -42,7 +42,7 @@ export class BookHomeComponent implements OnInit {
 				private bms: BookModelService)
 	{ }
 
-	uploadBookModelUrl: string = "/library";
+	uploadBookModelUrl: string = "/books/library";
 	conditionHeaders: Record<string, string> = {};
 	genreHeaders: Record<string, string> = {};
 	isSearchActive = false;

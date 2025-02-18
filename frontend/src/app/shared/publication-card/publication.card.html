@@ -16,7 +16,7 @@
 		<div *ngIf="!isEliminated" class="icons-container">
 			<i *ngIf="showTrashCan && isOwnPublication" class="trash-icon pi pi-trash" (click)="onDeletePublication($event, publication)"></i>
 			<i *ngIf="showIsMine && isOwnPublication" class="is-owner-text">({{ 'YOURS' | translate }})</i>
-			<i *ngIf="!showIsMine && isOwnPublication" class="is-owner-text">({{ getFormattedDate(publication?.publicationDatetime) }})</i>
+			<i *ngIf="!showIsMine && isOwnPublication" class="is-owner-text">({{ getFormattedDate(publication.publicationDatetime) }})</i>
 			<i *ngIf="showLikeHeart && !isOwnPublication" class="heart-icon pi" [ngClass]="publication.favoritePublication ? 'pi-heart-fill liked' : 'pi-heart'" (click)="toggleLike($event)"></i>
 		</div>
 

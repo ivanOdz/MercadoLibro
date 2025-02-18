@@ -78,7 +78,7 @@ export class BookFormComponent {
 	}
 
 	goBackToBooks() {
-		this.router.navigate(['/my-books']);
+		this.router.navigate(['/books']);
 	}
 	
 	get authors(): FormArray {

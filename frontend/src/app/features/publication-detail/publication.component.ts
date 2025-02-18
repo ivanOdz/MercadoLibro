@@ -366,7 +366,7 @@ export class PublicationComponent implements OnInit {
     }
 
     redirectToProfile() {
-        this.router.navigate(['/profile'])
+        this.router.navigate(['/auth/profile'])
     }
 
     isUserPublication(): boolean {
@@ -379,7 +379,7 @@ export class PublicationComponent implements OnInit {
 
 
     goToMyBooks() {
-        this.router.navigate(['/my-books']);
+        this.router.navigate(['/books']);
     }
 	
 	goBack() {
@@ -403,7 +403,7 @@ export class PublicationComponent implements OnInit {
 
         this.as.loggedUser$.pipe(
             filter(user => !!user),
-            switchMap((user: User) =>
+            switchMap(() =>
                 this.ps.addLocation(this.publication?.self, this.selectedAddLocation?.self)
             )
         ).subscribe({

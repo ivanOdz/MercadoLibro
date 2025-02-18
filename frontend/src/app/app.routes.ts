@@ -1,126 +1,32 @@
 import { Routes } from '@angular/router';
-import { AuthComponent } from "./features/auth/auth.component";
-import {PublicationsComponent} from "./features/publications/publications.component";
-import {ProfileComponent} from "./features/profile/profile.component";
-import {ExchangesComponent} from "./features/exchanges/exchanges.component";
-import {AuthGuard} from "./core/guards/auth.guard";
-import {HistoryComponent} from "./features/exchanges/history.component";
-import {RequestsComponent} from "./features/exchanges/requests.component";
-import {RegisterComponent} from "./features/register/register.component";
-import {VerifyComponent} from "./features/verify/verify.component";
-import {ChangePasswordComponent} from "./features/change-password/change-password.component";
-import {ForgotPasswordComponent} from "./features/forgot-password/forgot-password.component";
-import {BookFormComponent} from "./features/book-form/book-form.component";
-import { NotFoundComponent } from './features/errors/not-found/not-found.component';
-import { BookHomeComponent } from './features/book-home/book-home.component';
-import {MyPublicationsComponent} from "./features/my-publications/my-publications.component";
-import {FavoritePublicationsComponent} from "./features/favorite-publications/favorite-publications.component";
-import {PublicationComponent} from "./features/publication-detail/publication.component";
-import {BookModelComponent} from "./features/book-model/book-model.component";
-import {RegisterComponentSuccess} from "./features/register/register-success.component";
 
 export const routes: Routes = [
   {path: '', redirectTo: 'publications', pathMatch: 'full'},
   {
     path: 'publications',
-    component: PublicationsComponent,
     title: 'Home',
+    loadChildren: () => import('./features/publications.routes').then(m => m.publicationsRoutes)
   },
   {
-    path: 'publications/mine',
-    component: MyPublicationsComponent,
-    title: 'My Publications',
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'publications/favorites',
-    component: FavoritePublicationsComponent,
-    title: 'Favorites',
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'publications/:id',
-    component: PublicationComponent,
-    title: 'Publication',
-  },
-  {
-    path: 'profile',
-    component: ProfileComponent,
-    title: 'Profile',
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'auth/login',
-    component: AuthComponent,
-    title: 'Login'
-  },
-  {
-    path: 'auth/register',
-    component: RegisterComponent,
-    title: 'Register'
-  },
-  {
-    path: 'auth/register/success',
-    component: RegisterComponentSuccess,
-    title: 'Success'
-  },
-  {
-    path: 'auth/verify',
-    component: VerifyComponent,
-    title: 'Verify'
-  },
-  {
-    path: 'auth/request-change-password',
-    component: ForgotPasswordComponent,
-    title: 'Request Password Change'
-  },
-  {
-    path: 'auth/change-password',
-    component: ChangePasswordComponent,
-    title: 'Change Password'
+    path: 'auth',
+    title: 'Auth',
+    loadChildren: () => import('./features/auth.routes').then(m => m.authRoutes)
   },
   {
     path: 'exchanges',
-    component: ExchangesComponent,
     title: 'Exchanges',
-    canActivate: [AuthGuard],
+    loadChildren: () => import('./features/exchanges.routes').then(m => m.exchangesRoutes)
   },
   {
-    path: 'exchanges/requests',
-    component: RequestsComponent,
-    title: 'Exchange requests',
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'exchanges/history',
-    component: HistoryComponent,
-    title: 'Exchange history',
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'books/add',
-    component: BookFormComponent,
-    title: 'Add a new book',
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'my-books',
-    component: BookHomeComponent,
+    path: 'books',
     title: 'Books',
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'library',
-    component: BookModelComponent,
-    title: 'Library',
-    canActivate: [AuthGuard],
+    loadChildren: () => import('./features/books.routes').then(m => m.booksRoutes)
   },
   //Error Pages
   {
     path: '**',
-    component: NotFoundComponent,
-    title: 'Error',
-  },
+    loadChildren: () => import('./features/errors.routes').then(m => m.errorRoutes)
+  }
 ];
 
 // Para proteger el acceso a las rutas que se requiere tener autenticacion

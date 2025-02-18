@@ -6,7 +6,7 @@ describe("Book models tests", () => {
 
 
     it("should load general book models", () => {
-        cy.visit("/library");
+        cy.visit("/books/library");
 
         cy.wait('@getBookModels');
 
