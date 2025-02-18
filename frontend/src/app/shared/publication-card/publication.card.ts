@@ -2,12 +2,12 @@ import { Component, Input, OnInit } from "@angular/core";
 import { CommonModule } from '@angular/common';
 import { PublicationData } from "../../core/models/types";
 import { Router } from "@angular/router";
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { environment } from "../../../environments/environment";
 import { User } from "../../core/models/user.model";
 import { PublicationService } from "../../core/services/publication.service";
-import {catchError, EMPTY, throwError} from "rxjs";
-import {AuthService} from "../../core/services/auth.service";
+import { catchError, EMPTY, throwError } from "rxjs";
+import { AuthService } from "../../core/services/auth.service";
 
 @Component({
     selector: 'publication-card',
@@ -20,14 +20,19 @@ export class PublicationCardComponent implements OnInit {
     @Input() publication!: PublicationData;
 	@Input() loggedUser!: User | null;
 	@Input() showLikeHeart: boolean = false;
+	@Input() showTrashCan: boolean = true;
+	@Input() showIsMine: boolean = false;
 	
+	isEliminated: boolean = false;
+	isOwnPublication: boolean = false;
 	bookImage!: string;
 	defaultImage: string = './assets/book.jpg';
 	
-    constructor(private router: Router, private publicationService: PublicationService, private au: AuthService) { }
+    constructor(private router: Router, private publicationService: PublicationService, private au: AuthService, private translate: TranslateService) { }
 
 	ngOnInit() {
 		this.bookImage = this.getBookImage();
+		this.isOwnPublication = this.publication.user?.self == this.loggedUser?.self;
 		this.getIfItIsFavorite();
 	}
 
@@ -87,8 +92,6 @@ export class PublicationCardComponent implements OnInit {
 		}
 	}
 
-
-
 	getBaseUrl() {
 		return `${environment.production? environment.productionUrl  : environment.developmentUrl}`;
 	}
@@ -131,6 +134,32 @@ export class PublicationCardComponent implements OnInit {
 	    }
 
 		return locationNames.join(', ');
+	}
+	
+	getFormattedDate(time: Date | null | undefined) {
+		
+		if (!time) {
+			return "";
+		}
+		
+		const date = new Date(time);
+		
+		switch (this.translate.currentLang) {
+			case 'es':
+				return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
+			case 'en':
+			return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long' });
+	    }
+		return "";
+	}
+	
+	onDeletePublication(event: Event, publication: PublicationData) {
+		
+		event.stopPropagation();
+		
+		this.publicationService.deleteMyPublication(publication.self!).subscribe(() => {
+	        this.isEliminated = true;
+	    });
 	}
 
 }

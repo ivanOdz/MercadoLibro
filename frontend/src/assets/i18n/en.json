@@ -289,5 +289,6 @@
     "CONFIRM_PASSWORD": "Confirm password",
     "CHANGE_PASSWORD": "Change password",
     "REMEMBER_PASSWORD": "Did you remember your password?"
-  }
+  },
+  "YOURS": "Yours"
 }

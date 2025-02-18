@@ -100,7 +100,35 @@
 	padding: 0 6px 0 6px;
 }
 
+.icons-container {
+	display: grid;
+	grid-template-columns: 1fr 3fr 1fr;
+}
+
+.trash-icon {
+	grid-column: 1;
+	font-size: 20px;
+	color: rgba(235, 130, 55, 1);
+	cursor: pointer;
+	transition: color 0.2s ease-in-out;
+	align-self: center;
+	pointer-events: auto;
+}
+
+.trash-icon:hover {
+	color: rgba(150, 150, 50, 1);
+}
+
+.is-owner-text {
+	grid-column: 2;
+	font-size: 13px;
+	font-style: italic;
+	color: #887766;
+	align-self: center;
+}
+
 .heart-icon {
+	grid-column: 3;
 	font-size: 24px;
 	font-weight: bold;
 	cursor: pointer;
@@ -125,3 +153,4 @@
 .heart-icon.pi-heart-fill.liked:hover {
 	color: rgba(150, 150, 50, 1);
 }
+

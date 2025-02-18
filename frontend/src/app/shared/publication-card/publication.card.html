@@ -13,8 +13,13 @@
 	</div>
 	<div class="auxiliar-column">
 	
-		<i *ngIf="showLikeHeart === true" class="heart-icon pi" [ngClass]="publication.favoritePublication ? 'pi-heart-fill liked' : 'pi-heart'" (click)="toggleLike($event)"></i>
-		
+		<div *ngIf="!isEliminated" class="icons-container">
+			<i *ngIf="showTrashCan && isOwnPublication" class="trash-icon pi pi-trash" (click)="onDeletePublication($event, publication)"></i>
+			<i *ngIf="showIsMine && isOwnPublication" class="is-owner-text">({{ 'YOURS' | translate }})</i>
+			<i *ngIf="!showIsMine && isOwnPublication" class="is-owner-text">({{ getFormattedDate(publication?.publicationDatetime) }})</i>
+			<i *ngIf="showLikeHeart && !isOwnPublication" class="heart-icon pi" [ngClass]="publication.favoritePublication ? 'pi-heart-fill liked' : 'pi-heart'" (click)="toggleLike($event)"></i>
+		</div>
+
 		<div class="rating-container">
 			<p class="rating-text">{{ publication.book!.bookModel!.averageRating }}</p>
 			<ng-container class="stars-container" *ngFor="let star of [1, 2, 3, 4, 5]; let i = index">
