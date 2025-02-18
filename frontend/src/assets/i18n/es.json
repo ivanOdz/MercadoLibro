@@ -294,6 +294,10 @@
     "NEW_PASSWORD": "Nueva contraseña",
     "CONFIRM_PASSWORD": "Confirmar contraseña",
     "CHANGE_PASSWORD": "Cambiar contraseña",
-    "REMEMBER_PASSWORD": "¿Recuerdas tu contraseña?"
+    "REMEMBER_PASSWORD": "¿Recuerdas tu contraseña?",
+    "INCORRECT_CREDENTIALS": "Usuario o contraseña incorrectos",
+    "NO_PERMISSION": "No tienes los permisos para acceder",
+    "SERVER_ERROR": "Servidor con problemas",
+    "UNEXPECTED_ERROR": "Error inesperado"
   }
 }
