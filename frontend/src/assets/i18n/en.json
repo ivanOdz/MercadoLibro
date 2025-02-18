@@ -175,7 +175,9 @@
     "NO_LOCATION_ERROR": "You must select a location",
     "SELECT_LOCATIONS":"Select the delivery locations of the book",
     "EDIT_LOCATIONS": "Add a location,",
-    "NO_NEW_LOCATIONS": "You don't have any new locations to add"
+    "NO_NEW_LOCATIONS": "You don't have any new locations to add",
+    "YOURS": "Yours",
+    "ELIMINATED": "Eliminated"
   },
   "BOOK_HOME": {
     "SEARCH": "Search in my books",
@@ -289,6 +291,5 @@
     "CONFIRM_PASSWORD": "Confirm password",
     "CHANGE_PASSWORD": "Change password",
     "REMEMBER_PASSWORD": "Did you remember your password?"
-  },
-  "YOURS": "Yours"
+  }
 }
