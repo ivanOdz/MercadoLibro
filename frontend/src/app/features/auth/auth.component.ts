@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {ChangeDetectorRef, Component} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { Password } from 'primeng/password';
@@ -9,11 +9,12 @@ import { AuthService } from '../../core/services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from "@ngx-translate/core";
 import { LanguageService } from "../../core/services/language.service";
+import {Divider} from "primeng/divider";
 
 @Component({
 	selector: 'app-auth',
 	standalone: true,
-	imports: [CommonModule, ButtonModule, InputText, Password, Checkbox, FormsModule, TranslatePipe],
+	imports: [CommonModule, ButtonModule, InputText, Password, Checkbox, FormsModule, TranslatePipe, Divider],
 	templateUrl: './auth.component.html',
 	styleUrl: './auth.component.css',
 })
@@ -22,18 +23,21 @@ export class AuthComponent {
 	password: string = '';
 	rememberMe: boolean = false;
 	errorMessage: string = '';
-  
+
+	error:boolean = false;
+
+
   constructor(
 	private authService: AuthService,
 	private router: Router,
 	private route: ActivatedRoute,
-	private languageService: LanguageService // DO NOT DELETE! Translation would not work otherwise
+	private languageService: LanguageService, // DO NOT DELETE! Translation would not work otherwise
+	private cdRef: ChangeDetectorRef
 	) { }
 
 	login() {
-	
 		this.errorMessage = '';
-		
+
 		this.authService.login(this.username, this.password, this.rememberMe).subscribe({
 			next: () => {
 				const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
@@ -49,11 +53,8 @@ export class AuthComponent {
 				} else {
 					this.errorMessage = 'UNEXPECTED_ERROR';
 				}
-			},
-			complete: () => {
-				if (!this.authService.isAuthenticated$) {
-					this.errorMessage = 'INCORRECT_CREDENTIALS';
-				}
+				this.error = true;
+				this.cdRef.detectChanges();
 			}
 		});
 		
@@ -62,5 +63,10 @@ export class AuthComponent {
 			console.log(returnUrl);
 			this.router.navigateByUrl(returnUrl);
 		}
+	}
+
+
+	goToPublications() {
+		this.router.navigate(['/publications']);
 	}
 }

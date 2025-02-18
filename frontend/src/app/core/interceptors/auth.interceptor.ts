@@ -1,12 +1,10 @@
 import {HttpInterceptorFn, HttpResponse} from '@angular/common/http';
 import { inject } from '@angular/core';
-import { Router } from '@angular/router';
-import {catchError, EMPTY, tap, throwError} from 'rxjs';
+import {catchError, tap, throwError} from 'rxjs';
 import {AuthService} from "../services/auth.service";
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
     const authService = inject(AuthService);
-    const router = inject(Router);
 
     const accessToken = sessionStorage.getItem('accessToken') || localStorage.getItem('accessToken');
 
@@ -57,21 +55,17 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
                                 authService.logout();
                                 window.location.reload()
                             }
-                            console.log('ERROR refresh', error);
-                            return EMPTY;
+                            return throwError(() => refreshError);
                         })
                     );
                 } else {
                     authService.logout();
-                    router.navigate(['/auth/login']);
                 }
-                return EMPTY
+                throwError(() => error);
             } else if (error.status === 401 ) {
-                console.log('ERROR returning empty', error);
-                return EMPTY;
+                return throwError(() => error);
             }
 
-            console.log('ERROR', error);
             return throwError(() => error);
         })
     );

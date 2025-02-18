@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
-import {ButtonDirective} from "primeng/button";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {InputText} from "primeng/inputtext";
-import {Password} from "primeng/password";
-import {AuthService} from "../../core/services/auth.service";
-import {NgIf} from "@angular/common";
+import { ButtonDirective } from "primeng/button";
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from "@angular/forms";
+import { InputText } from "primeng/inputtext";
+import { AuthService } from "../../core/services/auth.service";
+import { NgIf } from "@angular/common";
+import { Router } from "@angular/router";
+import { TranslatePipe } from "@ngx-translate/core";
+import {PasswordDirective} from "primeng/password";
 import {LanguageService} from "../../core/services/language.service";
-import {Router} from "@angular/router";
-import {TranslatePipe, TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-register',
@@ -16,29 +16,43 @@ import {TranslatePipe, TranslateService} from "@ngx-translate/core";
     ButtonDirective,
     FormsModule,
     InputText,
-    Password,
     ReactiveFormsModule,
     NgIf,
-    TranslatePipe
+    TranslatePipe,
+    PasswordDirective
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
 export class RegisterComponent {
-
-  email: string = '';
-  username: string = '';
-  password: string = '';
-  repeatPassword: string = '';
   isRegistered = false;
+  loginForm: FormGroup;
 
-  constructor(private authService: AuthService,
-              private router: Router,
-              private languageService: LanguageService // DO NOT DELETE! Translation would not work otherwise
-  ) {}
+  constructor(
+      private authService: AuthService,
+      private router: Router,
+      private fb: FormBuilder,
+      private languageService: LanguageService
+  ) {
+    this.loginForm = this.fb.group(
+        {
+          email: ['', [Validators.required, Validators.email]],
+          username: ['', [Validators.required, Validators.minLength(5)]],
+          password: ['', [Validators.required]],
+          repeatPassword: ['', [Validators.required]]
+        },
+        { validators: this.passwordsMatchValidator }
+    );
+  }
 
   register() {
-    this.authService.register(this.email, this.username, this.password).subscribe({
+    if (this.loginForm.invalid) {
+      return;
+    }
+
+    const { email, username, password } = this.loginForm.value;
+
+    this.authService.register(email, username, password).subscribe({
       next: () => {
         this.router.navigate(['/auth/register/success']);
       },
@@ -46,5 +60,11 @@ export class RegisterComponent {
         console.error('Error al registrar:', err);
       }
     });
+  }
+
+  private passwordsMatchValidator(group: AbstractControl): ValidationErrors | null {
+    const password = group.get('password')?.value;
+    const repeatPassword = group.get('repeatPassword')?.value;
+    return password === repeatPassword ? null : { passwordsMismatch: true };
   }
 }

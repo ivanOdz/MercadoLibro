@@ -12,17 +12,17 @@ export class AuthGuard implements CanActivate {
         return this.authService.ready$.pipe(
             filter(ready => ready),
             take(1),
-            switchMap(() =>
-                this.authService.isAuthenticated$.pipe(
-                    take(1),
-                    tap(isAuthenticated => {
-                        if (!isAuthenticated) {
-                            console.log("Usuario no autenticado, redirigiendo...");
-                            this.router.navigate(['/auth/login'], { queryParams: { returnUrl: state.url } });
-                        }
-                    })
-                )
-            )
+            switchMap(() => this.authService.isAuthenticated$.pipe(
+                take(1),
+                tap(isAuthenticated => {
+                    if (!isAuthenticated) {
+                        console.log("Usuario no autenticado, redirigiendo...");
+                        this.router.navigate(['/auth/login'], { queryParams: { returnUrl: state.url } });
+                    }
+                }),
+                map(isAuthenticated => isAuthenticated)
+            ))
         );
     }
+
 }

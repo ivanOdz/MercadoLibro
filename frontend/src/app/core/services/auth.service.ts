@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../models/user.model';
 import { UserService } from './user.service';
 import {environment} from "../../../environments/environment";
+import {AbstractControl, ɵFormGroupRawValue, ɵGetProperty, ɵTypedOrUntyped} from "@angular/forms";
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -155,7 +156,6 @@ export class AuthService {
     this._loggedUser.next(null);
     this.isAuthenticated.next(false);
     this.readySubject.next(true);
-    this.router.navigateByUrl('/publications');
   }
 
   register(email: string, username: string, password: string): Observable<string | null> {

@@ -3,7 +3,6 @@ describe('Authentication Tests', () => {
         cy.visit('/auth/login');
     });
 
-    // WORKING
     it('should log in successfully with valid credentials', () => {
         cy.intercept('HEAD', '**/book_models', (req) => {
             req.reply({
@@ -57,7 +56,6 @@ describe('Authentication Tests', () => {
             });
     });
 
-    // WORKING
     it('should remember login credentials when Remember Me is checked', () => {
         cy.intercept('HEAD', '**/book_models', (req) => {
             req.reply({
@@ -78,7 +76,6 @@ describe('Authentication Tests', () => {
         cy.window().its('localStorage').should('have.property', 'accessToken');
     });
 
-    // WORKING
     it('should log out correctly', () => {
         cy.login('testuser', 'password123');
         cy.visit('/publications');

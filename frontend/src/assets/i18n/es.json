@@ -299,7 +299,17 @@
     "INCORRECT_CREDENTIALS": "Usuario o contraseña incorrectos",
     "NO_PERMISSION": "No tienes los permisos para acceder",
     "SERVER_ERROR": "Servidor con problemas",
-    "UNEXPECTED_ERROR": "Error inesperado"
+    "UNEXPECTED_ERROR": "Error inesperado",
+    "OR": "ó",
+    "CONTINUE_TO_PUBLICATIONS": "Continuar sin usuario:",
+    "GO_TO_PUBLICATIONS": "Ver publicaciones",
+    "EMAIL_INVALID": "Formato de email inválido",
+    "EMAIL_OBLIGATORY": "El email es obligatorio",
+    "USERNAME_OBLIGATORY": "El nombre de usuario es obligatorio",
+    "USERNAME_INVALID": "El nombre de usuario debe tener al menos 5 caracteres",
+    "PASSWORD_OBLIGATORY": "La contraseña es obligatoria",
+    "PASSWORDS_NOT_MATCH": "Las contraseñas no coinciden"
+
   },
   "ERROR": {
     "UPDATE_STATE": "Upsi! Hubo un problema cambiando el estado del libro.",

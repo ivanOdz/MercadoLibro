@@ -1,15 +1,15 @@
 <div class="flex align-items-center justify-content-center w-full h-full">
     <div class="surface-card p-4 shadow-2 border-round w-full sm:w-25rem">
         <div class="text-center mb-4">
-            <h2 class="text-900">{{ 'LOGIN.TITLE' | translate }}</h2>
+            <h2 style="font-weight: normal;" class="text-900">{{ 'LOGIN.TITLE' | translate }}</h2>
         </div>
 
-        <form #loginForm="ngForm" (ngSubmit)="login()">
+        <form style="text-align: start;" #loginForm="ngForm" (ngSubmit)="login()">
             <div class="field">
                 <label for="username" class="block text-900 font-medium mb-2">{{ 'LOGIN.USERNAME' | translate }}</label>
                 <input data-cy="username" id="username" type="text" pInputText [(ngModel)]="username" class="w-full" name="username" required />
             </div>
-        
+
             <div class="field">
                 <label for="password" class="block text-900 font-medium mb-2">{{ 'LOGIN.PASSWORD' | translate }}</label>
                 <p-password data-cy="password" [fluid]="true" [feedback]="false" [toggleMask]="true" id="password" [(ngModel)]="password" name="password" required />
@@ -21,10 +21,10 @@
                 <a href="/auth/request-change-password" class="text-primary">{{ 'LOGIN.FORGOT_PASSWORD' | translate }}</a>
             </div>
 
-            <div *ngIf="errorMessage" class="text-red-500 text-center mb-3">
+            <div style="text-align: start;font-size: small;" *ngIf="error" class="text-red-500 text-center mb-3">
     	        <p>{{ 'AUTH.' + errorMessage | translate }}</p>
 	        </div>
-	        
+
             <button data-cy="submit" pButton type="submit" [disabled]="!loginForm.valid" class="w-full">{{ 'LOGIN.BUTTON' | translate }}</button>
         </form>
 
@@ -32,5 +32,14 @@
             {{ 'LOGIN.NO_ACCOUNT' | translate }}
             <a href="/auth/register" class="text-primary">{{ 'LOGIN.REGISTER' | translate }}</a>
         </div>
+    </div>
+    <div>
+        <p-divider>{{'AUTH.OR' | translate}}</p-divider>
+    </div>
+    <div>
+        <p>{{'AUTH.CONTINUE_TO_PUBLICATIONS' | translate}}</p>
+        <button pButton (click)="goToPublications()">
+            {{'AUTH.GO_TO_PUBLICATIONS' | translate}}
+        </button>
     </div>
 </div>

@@ -1,22 +1,39 @@
 <div class="flex align-items-center justify-content-center w-full h-full">
     <div class="surface-card p-4 shadow-2 border-round w-full sm:w-25rem">
+        <div class="text-center mb-4">
+            <h2 style="font-weight: normal;justify-self: center" class="text-900">{{ 'AUTH.REGISTER' | translate }}</h2>
+        </div>
         <!-- FORMULARIO (se oculta después del registro exitoso) -->
-        <form *ngIf="!isRegistered" #loginForm="ngForm" (ngSubmit)="register()">
+        <form [formGroup]="loginForm" *ngIf="!isRegistered" (ngSubmit)="register()">
             <div class="field">
                 <label for="email" class="block text-900 font-medium mb-2">{{ 'AUTH.EMAIL' |translate }}</label>
-                <input data-cy='email' id="email" type="email" pInputText [(ngModel)]="email" class="w-full" name="email" required />
+                <input  formControlName="email"  data-cy='email' id="email" type="email" pInputText class="w-full" name="email" required />
+                <div  class="error" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+                    <small *ngIf="loginForm.get('email')?.errors?.['required']">{{'AUTH.EMAIL_OBLIGATORY' | translate}}</small>
+                    <small *ngIf="loginForm.get('email')?.errors?.['email']">{{'AUTH.EMAIL_INVALID' | translate}}</small>
+                </div>
             </div>
             <div class="field">
-                <label for="username" class="block text-900 font-medium mb-2">{{ 'AUTH.USERNAME' |translate }}</label>
-                <input data-cy="username" id="username" type="text" pInputText [(ngModel)]="username" class="w-full" name="username" required />
+                <label  for="username" class="block text-900 font-medium mb-2">{{ 'AUTH.USERNAME' |translate }}</label>
+                <input formControlName="username"  data-cy="username" id="username" type="text" pInputText  class="w-full" name="username" required />
+                <div class="error" *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
+                    <small *ngIf="loginForm.get('username')?.errors?.['required']">{{'AUTH.USERNAME_OBLIGATORY' | translate}}</small>
+                    <small *ngIf="loginForm.get('username')?.errors?.['minlength']">{{'AUTH.USERNAME_INVALID' | translate}}</small>
+                </div>
             </div>
             <div class="field">
                 <label for="password" class="block text-900 font-medium mb-2">{{ 'AUTH.PASSWORD' |translate }}</label>
-                <p-password data-cy="password" [fluid]="true" [feedback]="false" [toggleMask]="true" id="password" [(ngModel)]="password" name="password" required />
+                <input  pInputText class="w-full"  type="password" formControlName="password" data-cy="password" id="password"  required />
+                <div class="error"  *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+                    <small *ngIf="loginForm.get('password')?.errors?.['required']">{{ 'AUTH.PASSWORD_OBLIGATORY' |translate}}</small>
+                </div>
             </div>
             <div class="field">
-                <label for="repeatPassword" class="block text-900 font-medium mb-2">{{ 'AUTH.REPEAT_PASSWORD' |translate }}</label>
-                <p-password data-cy="repeat-password" [fluid]="true" [feedback]="false" [toggleMask]="true" id="repeatPassword" [(ngModel)]="repeatPassword" name="repeatPassword" required />
+                <label formControlName="repeatPassword" type="password" for="repeatPassword" class="block text-900 font-medium mb-2">{{ 'AUTH.REPEAT_PASSWORD' |translate }}</label>
+                <input pInputText class="w-full"  data-cy="repeat-password"  id="repeatPassword" type="password" formControlName="repeatPassword" />
+                <div class="error"  *ngIf="loginForm.hasError('passwordsMismatch') && loginForm.get('repeatPassword')?.touched">
+                    <small>{{'AUTH.PASSWORDS_NOT_MATCH'|translate}}</small>
+                </div>
             </div>
 
             <button data-cy="submit" pButton type="submit" [disabled]="!loginForm.valid" class="w-full">{{ 'AUTH.REGISTER' |translate }}</button>
