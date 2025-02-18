@@ -323,6 +323,18 @@
     "ADD_LOCATION": "Upsi! No se pudo agregar su ubicación, intentelo nuevamente.",
     "UPLOAD_LOCATION": "Upsi! No se pudo crear su ubicación, intentelo nuevamente."
   },
+  "401": {
+    "TITLE": "401 - No autorizado",
+    "MESSAGE": "Lo lamentamos, tiene que ingresar para continuar.",
+    "REDIRECT_TEXT": "¿Quiere autenticarse? Haga click ",
+    "REDIRECT_BUTTON": "aquí."
+  },
+  "403": {
+    "TITLE": "403 - Prohibido",
+    "MESSAGE": "Lo lamentamos, no puede continuar por este camino.",
+    "REDIRECT_TEXT": "Vuelva a la ",
+    "REDIRECT_BUTTON": "página principal."
+  },
   "404": {
     "TITLE": "404 - Página no encontrada",
     "MESSAGE": "Lamentamos no encontrar la página que está buscando.",
