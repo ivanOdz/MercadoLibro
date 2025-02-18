@@ -299,20 +299,34 @@
     "INCORRECT_CREDENTIALS": "Usuario o contraseña incorrectos",
     "NO_PERMISSION": "No tienes los permisos para acceder",
     "SERVER_ERROR": "Servidor con problemas",
-    "UNEXPECTED_ERROR": "Error inesperado",
-    "REMEMBER_PASSWORD": "¿Recuerdas tu contraseña?"
+    "UNEXPECTED_ERROR": "Error inesperado"
   },
   "ERROR": {
     "UPDATE_STATE": "Upsi! Hubo un problema cambiando el estado del libro.",
-    "GET_BOOKS": "Upsi! Hubo un problema obtuviendo tus libros.",
+    "GET_BOOKS": "Upsi! Hubo un problema al obtener tus libros.",
     "GET_BOOK": "Upsi! Hubo un problema al obtener tu libro.",
-    "UPLOAD_BOOK": "Upsi! No se pudo agregar tu libro, intentelo nuevamente.",
+    "UPLOAD_BOOK": "Upsi! No se pudo agregar su libro, intentelo nuevamente.",
     "GET_EXCHANGE": "Upsi! Hubo un problema al obtener tu intercambio.",
-    "GET_EXCHANGES": "Upsi! Hubo un problema obtuviendo tus intercambios.",
+    "GET_EXCHANGES": "Upsi! Hubo un problema al obtener tus intercambios.",
     "GET_MESSAGE": "Upsi! Hubo un problema al obtener tu mensaje.",
-    "GET_MESSAGES": "Upsi! Hubo un problema obtuviendo tus mensajes.",
+    "GET_MESSAGES": "Upsi! Hubo un problema al obtener tus mensajes.",
     "UPDATE_EXCHANGE": "Upsi! Hubo un problema actualizando el estado de su intercambio.",
     "CONFIRM_EXCHANGE": "Upsi! Hubo un problema confirmando su intercambio.",
-    "REJECT_EXCHANGE": "Upsi! Hubo un problema rechazando su intercambio."
+    "REJECT_EXCHANGE": "Upsi! Hubo un problema rechazando su intercambio.",
+    "GET_LOCATION": "Upsi! Hubo un problema al obtener la ubicación.",
+    "GET_PUBLICATION": "Upsi! Hubo un problema al obtener tu publicación.",
+    "GET_PUBLICATIONS": "Upsi! Hubo un problema al obtener las publicaciones.",
+    "GET_FAVS": "Upsi! Hubo un problema al obtener tus publicaciones favoritas.",
+    "LIKE": "Upsi! Hubo un problema al darle like a la publicación.",
+    "DISLIKE": "Upsi! Hubo un problema al sacarle el like a la publicación.",
+    "UPLOAD_PUBLICATION": "Upsi! No se pudo crear su publicación, intentelo nuevamente.",
+    "ADD_LOCATION": "Upsi! No se pudo agregar su ubicación, intentelo nuevamente.",
+    "UPLOAD_LOCATION": "Upsi! No se pudo crear su ubicación, intentelo nuevamente."
+  },
+  "404": {
+    "TITLE": "404 - Página no encontrada",
+    "MESSAGE": "Lamentamos no encontrar la página que está buscando.",
+    "REDIRECT_TEXT": "Vuelva a la ",
+    "REDIRECT_BUTTON": "página principal."
   }
 }
