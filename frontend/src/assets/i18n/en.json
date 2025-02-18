@@ -184,7 +184,7 @@
     "SEARCH": "Search in my books",
     "TITLE": "My books",
     "RESULTS": "Total results",
-    "NO_RESULTS": "No books founded",
+    "NO_RESULTS": "No books found",
     "ADD_BOOKS": "If you have a book that we don't have available, add one!",
     "CREATE_PUBLICATION_HEADER": "Create a publication to exchange your book",
     "ADD_BOOK_MODEL": "Create book",
@@ -309,6 +309,33 @@
     "GET_MESSAGES": "Upsi! There was a problem while getting your messages.",
     "UPDATE_EXCHANGE": "Upsi! There was a problem updating the state of your exchange.",
     "CONFIRM_EXCHANGE": "Upsi! There was a problem confirming your exchange.",
-    "REJECT_EXCHANGE": "Upsi! There was a problem rejecting your exchange."
+    "REJECT_EXCHANGE": "Upsi! There was a problem rejecting your exchange.",
+    "GET_LOCATION": "Upsi! There was a problem getting location.",
+    "GET_PUBLICATION": "Upsi! There was a problem getting the publication.",
+    "GET_PUBLICATIONS": "Upsi! There was a problem while getting the publications.",
+    "GET_FAVS": "Upsi! There was a problem while getting your favorite publications.",
+    "LIKE": "Upsi! There was a problem liking the publication.",
+    "DISLIKE": "Upsi! There was a problem disliking the publication.",
+    "UPLOAD_PUBLICATION": "Upsi! Your publication could not be added, try again later.",
+    "ADD_LOCATION": "Upsi! Your location could not be added, try again later.",
+    "UPLOAD_LOCATION": "Upsi! Your location could not be added, try again later."
+  },
+  "401": {
+    "TITLE": "401 - Unauthorized",
+    "MESSAGE": "Sorry, you need to log in to continue.",
+    "REDIRECT_TEXT": "Do you want to authenticate? Click ",
+    "REDIRECT_BUTTON": "here."
+  },
+  "403": {
+    "TITLE": "403 - Forbidden",
+    "MESSAGE": "Sorry, you cannot continue.",
+    "REDIRECT_TEXT": "Go back to the ",
+    "REDIRECT_BUTTON": "home page"
+  },
+  "404": {
+    "TITLE": "404 - Page not found",
+    "MESSAGE": "Sorry, we couldn’t find the page you were looking for.",
+    "REDIRECT_TEXT": "Go back to the ",
+    "REDIRECT_BUTTON": "home page"
   }
 }
