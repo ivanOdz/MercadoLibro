@@ -290,7 +290,11 @@
     "NEW_PASSWORD": "New password",
     "CONFIRM_PASSWORD": "Confirm password",
     "CHANGE_PASSWORD": "Change password",
-    "REMEMBER_PASSWORD": "Did you remember your password?"
+    "REMEMBER_PASSWORD": "Did you remember your password?",
+    "INCORRECT_CREDENTIALS": "Incorrect user or password",
+    "NO_PERMISSION": "You don't have the permissions to access",
+    "SERVER_ERROR": "Error from server",
+    "UNEXPECTED_ERROR": "Unexpected error"
   },
   "ERROR": {
     "UPDATE_STATE": "Upsi! There was a problem changing the condition of the book.",
