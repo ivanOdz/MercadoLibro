@@ -172,7 +172,7 @@ export class UserService {
     }
 
 
-    getLocationsInPublication(publicationLocationUrl: string): Observable<Location[]> {
+    getLocationsInPublication(publicationLocationUrl: string | undefined): Observable<Location[]> {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.location.v1+json' });
 
         return this.http.get<any[]>(`${publicationLocationUrl}`, { headers }).pipe(

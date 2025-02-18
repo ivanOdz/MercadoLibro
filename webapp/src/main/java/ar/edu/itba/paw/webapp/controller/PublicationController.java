@@ -150,10 +150,10 @@ public class PublicationController {
     // El usuario tiene que estar logueado y debe ser dueño de la publicacion
     // Creo que este metodo se reemplaza por el de la location
     // Este metodo añade una location existente a una publication
-   @PATCH
+    @PATCH
     @Path("/{publication_id}")
-    @Consumes(value = {VndType.APPLICATION_PUBLICATION})
-   @PreAuthorize("@accessControl.publicationsModifyAccess(#publicationId)")
+    @Consumes(value = {VndType.APPLICATION_UPDATE_PUBLICATION})
+    @PreAuthorize("@accessControl.publicationsModifyAccess(#publicationId)")
     public Response updatePublication(@PathParam("publication_id") Long publicationId, PublicationUpdateDTO publicationUpdateDTO) {
         ps.updatePublication(publicationId, publicationUpdateDTO.getLocationId());
 

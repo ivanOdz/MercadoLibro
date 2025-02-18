@@ -170,7 +170,12 @@
     "YOUR_PUBLICATION": "Your publication",
     "ADD_LOCATIONS": "Add a location",
     "NO_BOOK_ERROR": "You must select a book",
-    "RETURN_BOOKS": "Return to my books"
+    "RETURN_BOOKS": "Return to my books",
+    "CONFIRM": "Confirm",
+    "NO_LOCATION_ERROR": "You must select a location",
+    "SELECT_LOCATIONS":"Select the delivery locations of the book",
+    "EDIT_LOCATIONS": "Add a location,",
+    "NO_NEW_LOCATIONS": "You don't have any new locations to add"
   },
   "BOOK_HOME": {
     "SEARCH": "Search in my books",

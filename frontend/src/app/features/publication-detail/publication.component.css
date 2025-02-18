@@ -11,7 +11,6 @@
 
 .publication-detail-main-section {
     width: 90vw;
-    margin: 3rem;
     position: absolute;
     height: 82vh;
 }
@@ -27,15 +26,15 @@
     box-shadow: 4px 6px 6px #0000001a;
     color: #2c1809;
     display: grid;
-    padding: 2.5rem;
+    padding: 2rem;
     margin-top: 1.5rem;
-    margin-bottom: 1.5rem;
 }
 
 .book-details-card {
-    height: 17vh;
+    height: 22vh;
     grid-template-columns: auto 15% 15% 15% 15%;
     gap: 3%;
+    align-items: center;
 }
 
 .book-card {
@@ -120,11 +119,13 @@
     flex-direction: row;
     display: flex;
     border-radius: 1rem;
-    padding: 1rem;
+    padding: .5rem;
     gap: 9%;
     cursor: pointer;
     font-size: small;
+    margin-top: 1rem;
 }
+
 
 .return-to-publication {
     width: 17%;
@@ -281,8 +282,7 @@ p {
 }
 
 :host ::ng-deep .w-full {
-    width: 70% !important;
-    height: 30%;
+    align-self: center;
 }
 
 
@@ -430,4 +430,86 @@ p {
     color: red;
     font-size: small;
     margin: 2rem
+}
+
+
+
+.select-locations {
+    display: grid;
+    grid-template-rows: auto;
+    height: 14vh;
+    padding: 1rem;
+}
+
+
+
+.selected-book-in-modal {
+    display: grid;
+    grid-template-columns: 40% 40%;
+    gap: 10%;
+    margin: 4%;
+}
+
+
+.book-image-in-modal {
+    width: 10vh;
+    border-radius: 0.5rem;
+}
+
+
+.book-title-modal {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    justify-items: center;
+    align-content: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.add-location-button {
+    padding: .5rem;
+    border-radius: 1rem;
+}
+
+
+.add-location-button:hover {
+    background: #aaaaaa;
+}
+
+
+.buttons-in-modal {
+    grid-template-columns: 40% 40%;
+    align-content: center;
+    height: 5vh;
+    display: grid;
+    gap: 20%;
+    margin-top: 5%;
+    justify-items: center;
+}
+
+
+
+:host ::ng-deep .create-publication-button {
+    background: #c0b197;
+    border: none;
+    justify-self: end;
+}
+:host ::ng-deep .create-publication-button:not(:disabled):hover {
+    background: #988c78;
+    border: none;
+}
+:host ::ng-deep .cancel-publication-button {
+    background: #9a9d9e;
+    border: none;
+    width: 15vh;
+}
+:host ::ng-deep .cancel-publication-button:not(:disabled):hover {
+    background: #6c6e6f;
+    border:none
+}
+
+
+:host ::ng-deep .p-dialog-content {
+    overflow-y: visible;
 }
