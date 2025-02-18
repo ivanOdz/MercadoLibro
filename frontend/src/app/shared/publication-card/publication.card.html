@@ -14,12 +14,12 @@
 	
 	<div class="auxiliar-column" *ngIf="!isEliminated">
 		<div class="icons-container">
-			<i *ngIf="showTrashCan && isOwnPublication" class="trash-icon pi pi-trash" (click)="onDeletePublication($event, publication)"></i>
+			<i *ngIf="showTrashCan && isOwnPublication" data-cy="delete" class="trash-icon pi pi-trash" (click)="onDeletePublication($event, publication)"></i>
 			<i *ngIf="showIsMine && isOwnPublication" class="is-owner-text">({{ 'PUBLICATION_D.YOURS' | translate }})</i>
-			<i *ngIf="!showIsMine && isOwnPublication" class="is-owner-text">({{ getFormattedDate(publication?.publicationDatetime) }})</i>
+			<i *ngIf="!showIsMine && isOwnPublication" class="is-owner-text">({{ getFormattedDate(publication.publicationDatetime) }})</i>
 			<i *ngIf="showLikeHeart && !isOwnPublication && loggedUser" class="heart-icon pi" [ngClass]="publication.favoritePublication ? 'pi-heart-fill liked' : 'pi-heart'" (click)="toggleLike($event)"></i>
 		</div>
-		
+
 		<div class="rating-container">
 			<p class="rating-text">{{ publication.book!.bookModel!.averageRating }}</p>
 			<ng-container class="stars-container" *ngFor="let star of [1, 2, 3, 4, 5]; let i = index">
@@ -28,7 +28,7 @@
 			<p class="rating-text">({{ publication.book!.bookModel!.ratingCount }})</p>
 		</div>
 	</div>
-	
+
 	<div *ngIf="isEliminated" class="auxiliar-column">
 		<p class="eliminated-text">{{ 'PUBLICATION_D.ELIMINATED' | translate }}</p>
 	</div>

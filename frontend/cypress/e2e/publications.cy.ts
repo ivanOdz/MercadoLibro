@@ -43,7 +43,7 @@ describe("Publications tests", () => {
         cy.interceptBooksRequests()
         cy.intercept('POST', '**/publications', { fixture: 'publication.json' }).as('createPublication')
 
-        cy.visit("/my-books")
+        cy.visit("/books")
 
         cy.waitBooksRequests()
 
@@ -60,14 +60,47 @@ describe("Publications tests", () => {
 
     })
 
-    // IMPLEMENT
-    it("should edit a publication's locations", () => {
-
-    })
-
-    // IMPLEMENT
     it("should delete a publication", () => {
+        cy.intercept('DELETE', '**/publications/*', { statusCode: 204 }).as('deletePublication');
+        cy.login("testuser", "password123", true)
+        cy.visit("/publications/mine")
+        cy.wait('@getMyPublications');
+        cy.waitPublicationsRequests()
+
+        cy.get('[data-cy=delete]').first().click();
+
+        cy.wait('@deletePublication').then(({ response }) => {
+            expect(response?.statusCode).to.eq(204);
+        })
 
     })
 
+})
+
+describe("Publication PATCH tests", () => {
+    beforeEach(() => {
+        cy.intercept('GET', '**/publications/*', { fixture: 'my-publication.json' }).as('getMyPublication');
+        cy.intercept('PATCH', '**/publications/*',  {statusCode: 200}).as('updatePublication');
+        cy.interceptPublicationRequests()
+        cy.intercept('GET', '**/users/*', { fixture: 'user.json' }).as('getUser');
+
+        cy.visit("/publications")
+    })
+
+
+    it("should edit a publication's locations", () => {
+        cy.login("testuser", "password123", true)
+
+        cy.get('[data-cy=publications]').first().click();
+
+        cy.get('[data-cy=edit-locations]').click();
+        cy.get('[data-cy=locations-select]').click();
+        cy.get('.p-select-option').first().click();
+
+        cy.get('[data-cy=submit]').click({ force: true });
+
+        cy.wait('@updatePublication').then(({ response }) => {
+            expect(response?.statusCode).to.eq(200);
+        });
+    })
 })

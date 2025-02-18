@@ -80,7 +80,7 @@ export class PublicationComponent implements OnInit {
 
 
     userBooks: BookData[] = [];
-    userLocations$ = new BehaviorSubject<Location[]>([]);
+    userLocations: Location[] = [];
 
     selectedLocation: Location | null = null;
     errorNoLocation: boolean = false;
@@ -263,9 +263,9 @@ export class PublicationComponent implements OnInit {
                             pubLocation => pubLocation.self === location.self
                         )
                     );
-                    this.userLocations$.next(updatedLocations);
                     this.cdRef.detectChanges();
                 }
+                this.userLocations = updatedLocations;
 
             },
         });
@@ -314,7 +314,8 @@ export class PublicationComponent implements OnInit {
         }
     }
 
-    getImages(bookImages: string[] | null = null): string[] {
+
+    getBooksImages(bookImages: string[] | null) {
         return bookImages || [this.getDefaultImage()];
     }
 
@@ -323,10 +324,9 @@ export class PublicationComponent implements OnInit {
     }
 
     getCover(book: BookData | null = null) {
-        console.log("publication imge: ", book?.bookModel?.cover);
-        return book?.bookModel?.cover ||
-            this.getImages(book?.images)[0] || this.getDefaultImage();
+        return book?.bookModel?.cover || this.getDefaultImage();
     }
+
 
     getFormattedDate(time: Date | null | undefined) {
         if (!time) {
@@ -366,7 +366,7 @@ export class PublicationComponent implements OnInit {
     }
 
     redirectToProfile() {
-        this.router.navigate(['/profile'])
+        this.router.navigate(['/auth/profile'])
     }
 
     isUserPublication(): boolean {
@@ -379,7 +379,7 @@ export class PublicationComponent implements OnInit {
 
 
     goToMyBooks() {
-        this.router.navigate(['/my-books']);
+        this.router.navigate(['/books']);
     }
 	
 	goBack() {
@@ -403,7 +403,7 @@ export class PublicationComponent implements OnInit {
 
         this.as.loggedUser$.pipe(
             filter(user => !!user),
-            switchMap((user: User) =>
+            switchMap(() =>
                 this.ps.addLocation(this.publication?.self, this.selectedAddLocation?.self)
             )
         ).subscribe({

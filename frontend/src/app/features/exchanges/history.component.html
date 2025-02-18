@@ -231,6 +231,6 @@
             <p style="margin: 0">{{ 'EXCHANGES.LEAVE_REVIEW' | translate }}</p>
             <p-rating [(ngModel)]="reviewValue" style="margin-bottom: 1rem;margin-top: 1rem" />
             <textarea data-cy="review-text" pTextarea [(ngModel)]="reviewText"></textarea>
-            <p-button data-cy="review-send" label="{{ 'EXCHANGES.SEND_LABEL' | translate }}" (click)="addUserReview($event,op)" />
+            <p-button [styleClass]="'confirm-review-button'" data-cy="review-send" label="{{ 'EXCHANGES.SEND_LABEL' | translate }}" (click)="addUserReview($event,op)" />
         </div>
 </p-popover>

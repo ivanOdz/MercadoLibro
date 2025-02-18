@@ -9,6 +9,7 @@ import {TranslatePipe} from "@ngx-translate/core";
         TranslatePipe
     ],
   templateUrl: './not-found.component.html',
+  standalone: true,
   styleUrl: './not-found.component.css'
 })
 export class NotFoundComponent {

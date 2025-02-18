@@ -3,7 +3,7 @@
 	justify-content: space-between;
 	grid-template-columns: .75fr 2fr;
 	gap: 20px;
-	padding: 5vh 5vh 0;
+	padding: 2vh 5vh 0;
 }
 
 .column-filters {
@@ -192,3 +192,4 @@
 .fixed-add-book-btn .pi-plus {
 	margin-right: 8px;
 }
+

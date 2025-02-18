@@ -178,7 +178,8 @@
     "EDIT_LOCATIONS": "Agrega una ubicación",
     "NO_NEW_LOCATIONS": "No hay nuevas ubicaciones para agregar",
     "YOURS": "Tuyo",
-    "ELIMINATED": "Eliminada"
+    "ELIMINATED": "Eliminada",
+    "NO_REVIEWS": "No tiene ratings aún"
   },
   "BOOK_HOME": {
     "SEARCH": "Buscar en mis libros",

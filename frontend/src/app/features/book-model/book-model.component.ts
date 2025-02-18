@@ -71,7 +71,7 @@ export class BookModelComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/my-books']);
+    this.router.navigate(['/books']);
   }
 
   search() {

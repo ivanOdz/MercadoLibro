@@ -581,3 +581,29 @@
 }
 
 
+
+:host ::ng-deep .confirm-review-button {
+    background: #e6d8c9;
+    border-radius: 10px;
+    font-size: smaller;
+    border: none;
+    font-weight: normal;
+    width: auto;
+    text-align: end;
+    margin-top: .5rem;
+}
+
+:host ::ng-deep p-popover .confirm-review-button:hover {
+    background: #c3afa1;
+    border: none;
+
+}
+
+:host ::ng-deep .p-popover-content {
+    div {
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+    }
+
+}
