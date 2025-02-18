@@ -125,6 +125,9 @@ export class AuthService {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('loggedUser');
+    sessionStorage.removeItem('userUrn');
+    localStorage.removeItem('userUrn');
+
 
     this._loggedUser.next(null);
     this.isAuthenticated.next(false);
