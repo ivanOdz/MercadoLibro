@@ -10,6 +10,7 @@ import { HttpClient, provideHttpClient, withInterceptors } from "@angular/common
 import { authInterceptor } from "./core/interceptors/auth.interceptor";
 import {TranslateLoader, TranslateModule, TranslateService} from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
+import {errorInterceptor} from "./core/interceptors/error.interceptor";
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -21,7 +22,7 @@ export const appConfig: ApplicationConfig = {
               providePrimeNG({ theme: { preset: MyPreset, options: {darkModeSelector: '.my-app-dark' } } }),
               provideZoneChangeDetection({ eventCoalescing: true }),
               provideRouter(routes),
-              provideHttpClient(withInterceptors([authInterceptor])),
+              provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
               importProvidersFrom(
                   TranslateModule.forRoot({
                       loader: {
