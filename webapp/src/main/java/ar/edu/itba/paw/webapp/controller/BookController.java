@@ -71,6 +71,9 @@ public class BookController {
     @Produces(value = {VndType.APPLICATION_BOOK})
     public Response getBook(@PathParam("id") final long bookId) {
         final Book book = bs.getBookById(bookId);
+        if (book == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
         BookDTO sto = BookDTO.fromBook(uriInfo, book);
         return Response.ok(BookDTO.fromBook(uriInfo, book)).build();
     }

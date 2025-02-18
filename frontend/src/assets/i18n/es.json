@@ -257,5 +257,11 @@
     "TELL_US_ABOUT_YOUR_BOOK": "¡Cuéntenos sobre su libro!"
   },
   "MY_PUBLICATIONS": "Mis publicaciones",
-  "MY_FAVORITE_PUBLICATIONS": "Mis favoritos"
+  "MY_FAVORITE_PUBLICATIONS": "Mis favoritos",
+  "ERROR": {
+    "UPDATE_STATE": "Upsi! Hubo un problema cambiando el estado del libro.",
+    "GET_BOOKS": "Upsi! Hubo un problema obtuviendo tus libros.",
+    "GET_BOOK": "Upsi! Hubo un problema al obtener tu libro.",
+    "UPLOAD_BOOK": "Upsi! No se pudo agregar tu libro, intentelo nuevamente."
+  }
 }
