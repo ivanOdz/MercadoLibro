@@ -53,7 +53,7 @@ export class BookService {
 
     updateBookstate(book: BookData, newState: string): Observable<void> {
         const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.books.v1+json' });
-        const body = {  state: 'newState',
+        const body = {  state: newState,
                         available: book.available,
                         owner: book.owner,
                         bookModel: book.bookModel,
