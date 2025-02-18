@@ -80,10 +80,6 @@ Cypress.Commands.add('interceptExchangesRequests', () => {
 
 
 Cypress.Commands.add('interceptPublicationRequests', () => {
-    cy.intercept('GET', '**/users/*', { fixture: 'user.json' }).as('getUser');
-    cy.intercept('GET', '**/users/*', { fixture: 'other-user.json' }).as('getPublicationUser');
-    cy.intercept('GET', '**/publications/*', { fixture: 'publication.json' }).as('getPublication');
-    cy.intercept('GET', '**/publications/*', { fixture: 'my-publication.json' }).as('getMyPublication');
     cy.intercept('GET', '**/books/*', { fixture: 'book.json' }).as('getBook');
     cy.intercept('GET', '**/books?*available=true*', { fixture: 'available-books.json' }).as('getBooks');
     cy.intercept('GET', '**/book_models/*', { fixture: 'book_model.json' }).as('getBookModel');

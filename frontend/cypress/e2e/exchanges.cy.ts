@@ -2,6 +2,9 @@ describe('General exchanges tests', () => {
     beforeEach(() => {
         cy.login('testuser', 'password', false);
 
+        cy.intercept('GET', '**/users/*', { fixture: 'other-user.json' }).as('getPublicationUser');
+
+        cy.intercept('GET', '**/publications/*', { fixture: 'publication.json' }).as('getPublication');
         cy.interceptPublicationRequests();
         cy.intercept('POST', '**/exchanges', { statusCode: 200 }).as('createExchange');
 
