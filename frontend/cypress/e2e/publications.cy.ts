@@ -60,9 +60,18 @@ describe("Publications tests", () => {
 
     })
 
-
-    // IMPLEMENT
     it("should delete a publication", () => {
+        cy.intercept('DELETE', '**/publications/*', { statusCode: 204 }).as('deletePublication');
+        cy.login("testuser", "password123", true)
+        cy.visit("/publications/mine")
+        cy.wait('@getMyPublications');
+        cy.waitPublicationsRequests()
+
+        cy.get('[data-cy=delete]').first().click();
+
+        cy.wait('@deletePublication').then(({ response }) => {
+            expect(response?.statusCode).to.eq(204);
+        })
 
     })
 
