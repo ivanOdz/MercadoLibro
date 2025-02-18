@@ -53,12 +53,12 @@
     "SELECT_STATE": "Select the state of your book",
     "ADD_IMAGE": "Add image",
     "LOCATION": "Location",
-  	"LOCATIONS": "Locations",
-  	"STATE": "State",
-  	"IMAGE": "Image",
-  	"IMAGES": "Images",
-  	"AVAILABLE": "Published",
-  	"UNAVAILABLE": "Unpublished"
+    "LOCATIONS": "Locations",
+    "STATE": "State",
+    "IMAGE": "Image",
+    "IMAGES": "Images",
+    "AVAILABLE": "Published",
+    "UNAVAILABLE": "Unpublished"
   },
   "genre": {
     "fiction": "Fiction",
@@ -128,7 +128,7 @@
     "large": "Large (32cm x 20cm)"
   },
   "CONDITION": "Condition",
-  "GENRE" : "Genre",
+  "GENRE": "Genre",
   "PROFILE": {
     "MY_PROFILE": "My Profile",
     "USERNAME": "Username",
@@ -154,7 +154,7 @@
     "SOLICIT_BUTTON": "I want it!",
     "ADDITIONAL_DETAILS": "Additional details",
     "RETURN_TO_DETAIL": "Return to publication",
-    "SUBHEADER_BOOK" : "Select one of your books",
+    "SUBHEADER_BOOK": "Select one of your books",
     "SOLICITED_EXCHANGE_TAB": "Exchange solicited",
     "START_EXCHANGE_DESCRIPTION": "Request an exchange with this book.",
     "SUBHEADER_LOCATION": "Select a location",
@@ -173,7 +173,7 @@
     "RETURN_BOOKS": "Return to my books",
     "CONFIRM": "Confirm",
     "NO_LOCATION_ERROR": "You must select a location",
-    "SELECT_LOCATIONS":"Select the delivery locations of the book",
+    "SELECT_LOCATIONS": "Select the delivery locations of the book",
     "EDIT_LOCATIONS": "Add a location,",
     "NO_NEW_LOCATIONS": "You don't have any new locations to add",
     "YOURS": "Yours",
@@ -204,8 +204,8 @@
   "NO_STATE_FILTER": "No state filter",
   "NO_GENRE_FILTER": "No genre filter",
   "PUBLICATIONS": {
-  	"TITLE": "Publications",
-  	"SEARCH": "Search publications"
+    "TITLE": "Publications",
+    "SEARCH": "Search publications"
   },
   "EXCHANGES": {
     "REQUESTS_TITLE": "Exchange requests",
@@ -291,11 +291,19 @@
     "CONFIRM_PASSWORD": "Confirm password",
     "CHANGE_PASSWORD": "Change password",
     "REMEMBER_PASSWORD": "Did you remember your password?"
-  }
+  },
   "ERROR": {
     "UPDATE_STATE": "Upsi! There was a problem changing the condition of the book.",
     "GET_BOOKS": "Upsi! There was a problem while getting your books.",
     "GET_BOOK": "Upsi! There was a problem getting your book.",
-    "UPLOAD_BOOK": "Upsi! Your book could not be added, try again later."
+    "UPLOAD_BOOK": "Upsi! Your book could not be added, try again later.",
+    "GET_EXCHANGE": "Upsi! There was a problem getting your exchange.",
+    "GET_EXCHANGES": "Upsi! There was a problem while getting your exchanges.",
+    "SEND_MESSAGE": "Upsi! There was a problem sending your message.",
+    "GET_MESSAGE": "Upsi! There was a problem getting your message.",
+    "GET_MESSAGES": "Upsi! There was a problem while getting your messages.",
+    "UPDATE_EXCHANGE": "Upsi! There was a problem updating the state of your exchange.",
+    "CONFIRM_EXCHANGE": "Upsi! There was a problem confirming your exchange.",
+    "REJECT_EXCHANGE": "Upsi! There was a problem rejecting your exchange."
   }
 }

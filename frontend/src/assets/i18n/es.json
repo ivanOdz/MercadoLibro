@@ -300,6 +300,13 @@
     "UPDATE_STATE": "Upsi! Hubo un problema cambiando el estado del libro.",
     "GET_BOOKS": "Upsi! Hubo un problema obtuviendo tus libros.",
     "GET_BOOK": "Upsi! Hubo un problema al obtener tu libro.",
-    "UPLOAD_BOOK": "Upsi! No se pudo agregar tu libro, intentelo nuevamente."
+    "UPLOAD_BOOK": "Upsi! No se pudo agregar tu libro, intentelo nuevamente.",
+    "GET_EXCHANGE": "Upsi! Hubo un problema al obtener tu intercambio.",
+    "GET_EXCHANGES": "Upsi! Hubo un problema obtuviendo tus intercambios.",
+    "GET_MESSAGE": "Upsi! Hubo un problema al obtener tu mensaje.",
+    "GET_MESSAGES": "Upsi! Hubo un problema obtuviendo tus mensajes.",
+    "UPDATE_EXCHANGE": "Upsi! Hubo un problema actualizando el estado de su intercambio.",
+    "CONFIRM_EXCHANGE": "Upsi! Hubo un problema confirmando su intercambio.",
+    "REJECT_EXCHANGE": "Upsi! Hubo un problema rechazando su intercambio."
   }
 }

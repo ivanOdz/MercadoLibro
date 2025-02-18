@@ -9,26 +9,42 @@ import {PublicationService} from "./publication.service";
 import {UserService} from "./user.service";
 import {BookService} from "./book.service";
 import {BookModelService} from "./bookmodel.service";
+import {SnackbarService} from "./snackbar.service";
 
 @Injectable({ providedIn: 'root' })
 export class ExchangeService {
 
     constructor(private http: HttpClient, private ps: PublicationService, private us: UserService, private bs: BookService,
-                private bms: BookModelService) { }
+                private bms: BookModelService, private snackBarService: SnackbarService) { }
 
     getExchange(exchangeUrl: string | undefined): Observable<Exchange> {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.exchanges.v1+json' });
-        return this.http.get<any>(`${exchangeUrl}`, { headers });
+        return this.http.get<any>(`${exchangeUrl}`, { headers }).pipe(
+            catchError((error) => {
+                this.snackBarService.showError('ERROR.GET_EXCHANGE');
+                return throwError(() => new Error(error));
+            })
+        );
     }
 
     getMessages(messagesUrl: string): Observable<Message[]> {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.message.v1+json' });
-        return this.http.get<any>(`${messagesUrl}`, { headers });
+        return this.http.get<any>(`${messagesUrl}`, { headers }).pipe(
+            catchError((error) => {
+                this.snackBarService.showError('ERROR.GET_MESSAGES');
+                return throwError(() => new Error(error));
+            })
+        );
     }
 
     getMessage(messageUrl: string | null): Observable<Message> {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.message.v1+json' });
-        return this.http.get<any>(`${messageUrl}`, { headers });
+        return this.http.get<any>(`${messageUrl}`, { headers }).pipe(
+            catchError((error) => {
+                this.snackBarService.showError('ERROR.GET_MESSAGE');
+                return throwError(() => new Error(error));
+            })
+        );
     }
 
     private getExchanges(exchangesUrl: string, page: number, state: string,  is_offerer: boolean, is_requester: boolean): Observable< {exchange: Exchange[], pagination: Pagination}> {
@@ -49,12 +65,11 @@ export class ExchangeService {
             map(response => {
                 const linkHeader = response.headers.get('link');
                 let pagination = new Pagination(linkHeader);
-                console.log("Paginación de exchanges:", pagination);
                 const exchanges: Exchange[] = response.body.map((exchange: any) => new Exchange(exchange));
                 return { exchange: exchanges, pagination: pagination };
             }),
             catchError(error => {
-                console.error("Error al obtener los intercambios:", error);
+                this.snackBarService.showError('ERROR.GET_EXCHANGES');
                 return of({ exchange: [], pagination: new Pagination(null) }); // Devuelve vacío en caso de error
             })
         );
@@ -90,23 +105,16 @@ export class ExchangeService {
 
 
     private updateExchange(exchangeUrl: string, acceptCode: number, requester: boolean | null, accepted: boolean | null): Observable<any> {
-        const headers = new HttpHeaders({
-            'Content-Type': 'application/vnd.exchanges.update.v1+json'
-        });
-
+        const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.exchanges.update.v1+json' });
         const body: any = {
-            acceptCode: acceptCode,
-            requester: requester,
-            accepted: accepted
+            acceptCode: 'acceptCode',
+            requester: 'requester',
+            accepted: 'accepted'
         };
-
-        console.log("URL final:", `${exchangeUrl}`);
-        console.log("Body enviado:", body);
-
         return this.http.patch<void>(`${exchangeUrl}`, body, { headers }).pipe(
             catchError((error) => {
-                console.error("Error al actualizar el intercambio:", error);
-                return throwError(() => error);
+                this.snackBarService.showError('ERROR.UPDATE_EXCHANGE');
+                return throwError(() => new Error(error));
             })
         );
     }

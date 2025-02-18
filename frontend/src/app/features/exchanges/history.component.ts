@@ -16,7 +16,7 @@ import {BookService} from "../../core/services/book.service";
 import {BookModelService} from "../../core/services/bookmodel.service";
 import {AuthService} from "../../core/services/auth.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import { filter, forkJoin, of, switchMap} from "rxjs";
+import {catchError, filter, forkJoin, of, switchMap} from "rxjs";
 import {ProgressSpinner} from "primeng/progressspinner";
 import {BookData, ExchangeData} from "../../core/models/types";
 import { PaginatorComponent } from "../../shared/paginator/paginator.component";
@@ -24,6 +24,7 @@ import {Pagination} from "../../core/models/pagination";
 import {TranslatePipe, TranslateService} from "@ngx-translate/core";
 import {ScrollPanelModule} from "primeng/scrollpanel";
 import {environment} from "../../../environments/environment";
+import {SnackbarService} from "../../core/services/snackbar.service";
 
 @Component({
     selector: 'exchanges-history',
@@ -61,7 +62,7 @@ export class HistoryComponent implements OnInit {
 
     constructor(private es: ExchangeService, private us: UserService, private ps: PublicationService,
                 private bs: BookService, private bms: BookModelService, private as: AuthService,
-                private router: Router, private translate: TranslateService, private route: ActivatedRoute) {}
+                private router: Router, private translate: TranslateService, private route: ActivatedRoute, private snackBarService: SnackbarService) {}
 
     ngOnInit(): void {
         this.isLoading = true;
@@ -112,7 +113,6 @@ export class HistoryComponent implements OnInit {
             }),
             switchMap(({ completed, rejected }) => {
                 if (!completed.exchange.length && !rejected.exchange.length) {
-                    console.warn("No se encontraron intercambios.");
                     this.isLoading = false;
                     return of({ rejectedExchanges: [], completedExchanges: [] });
                 }
@@ -127,26 +127,25 @@ export class HistoryComponent implements OnInit {
             this.rejectedExchanges = rejectedExchanges;
             this.completedExchanges = completedExchanges;
             this.isLoading = false;
-            console.log("Rejected Exchanges:", this.rejectedExchanges);
-            console.log("Completed Exchanges:", this.completedExchanges);
         }, (error) => {
             this.isLoading = false;
-            console.error("Error en la carga de intercambios:", error);
+            this.snackBarService.showError('ERROR.GET_EXCHANGES');
         });
     }
 
     addUserReview($event: any, op:any) {
         if (!this.reviewText || !this.reviewValue) return;
-        console.log("en add review self" + this.userToReview?.self);
-        console.log("en add review" + this.userToReview);
 
         this.us.getUser(this.userToReview?.self).subscribe((user: User) => {
             this.us.postReview(user.reviews, this.selectedCompletedCard?.exchange.self , this.reviewValue, this.reviewText).subscribe(() => {
-                console.log("Reseña creada exitosamente");
                 this.reviewText = '';
                 this.reviewValue = 0;
                 op.toggle($event);
-            });
+            },
+            catchError(error => {
+                this.snackBarService.showError('ERROR.GET_EXCHANGES');
+                return of({ exchange: [], pagination: new Pagination(null) }); // Devuelve vacío en caso de error
+            }));
         });
     }
 
@@ -194,7 +193,6 @@ export class HistoryComponent implements OnInit {
 
     toggleReviewContent($event:any,op:any) {
         this.userToReview = this.isRequester(this.selectedCompletedCard) ? this.selectedCompletedCard?.offeredPub?.book?.owner : this.selectedCompletedCard?.requestedPub?.book?.owner;
-        console.log("en toggle review" + this.userToReview);
         op.toggle($event)
     }
 
@@ -212,7 +210,6 @@ export class HistoryComponent implements OnInit {
     }
 
     getCover(book: BookData | null = null) {
-        console.log("publication imge: ", book?.bookModel?.cover);
         return book?.bookModel?.cover ||
             this.getBookImages(book?.images)[0] || this.getDefaultImage();
     }

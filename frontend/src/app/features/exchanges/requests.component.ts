@@ -23,6 +23,7 @@ import {PaginatorComponent} from "../../shared/paginator/paginator.component";
 import {TranslatePipe, TranslateService} from "@ngx-translate/core";
 import {ScrollPanelModule} from "primeng/scrollpanel";
 import {environment} from "../../../environments/environment";
+import {SnackbarService} from "../../core/services/snackbar.service";
 
 @Component({
     selector: 'exchanges-requests',
@@ -58,7 +59,7 @@ export class RequestsComponent  implements OnInit {
 
     constructor(private es: ExchangeService, private us: UserService, private ps: PublicationService,
                 private bs: BookService, private bms: BookModelService, private as: AuthService,
-                private router: Router, private translate: TranslateService,private route: ActivatedRoute) {}
+                private router: Router, private translate: TranslateService,private route: ActivatedRoute, private snackBarService: SnackbarService) {}
 
     ngOnInit(): void {
         this.isLoading = true;
@@ -110,7 +111,6 @@ export class RequestsComponent  implements OnInit {
             }),
             switchMap(({ offered, solicited }) => {
                 if (!offered.exchange.length && !solicited.exchange.length) {
-                    console.warn("No se encontraron intercambios.");
                     this.isLoading = false;
                     return of({ requesterExchanges: [], offeredExchanges: [] });
                 }
@@ -125,11 +125,9 @@ export class RequestsComponent  implements OnInit {
             this.requestedExchanges = requesterExchanges;
             this.offeredExchanges = offeredExchanges;
             this.isLoading = false;
-            console.log("Requester Exchanges:", this.requestedExchanges);
-            console.log("Offered Exchanges:", this.offeredExchanges);
         }, (error) => {
             this.isLoading = false;
-            console.error("Error en la carga de intercambios:", error);
+            this.snackBarService.showError('ERROR.GET_EXCHANGES');
         });
     }
 
@@ -138,7 +136,7 @@ export class RequestsComponent  implements OnInit {
 
 
         if (!this.exchangeData) {
-            console.error("No se puede confirmar el intercambio sin datos.");
+            this.snackBarService.showError('ERROR.CONFIRM_EXCHANGE');
             return;
         }
 
@@ -147,7 +145,7 @@ export class RequestsComponent  implements OnInit {
             () => {
                 this.router.navigate(['/exchanges']);
             },
-            (error) => console.error("Error al aceptar el intercambio:", error))
+            (error) => this.snackBarService.showError('ERROR.CONFIRM_EXCHANGE'))
     }
 
     rejectExchange(){
@@ -155,7 +153,7 @@ export class RequestsComponent  implements OnInit {
 
 
         if (!this.exchangeData) {
-            console.error("No se puede confirmar el intercambio sin datos.");
+            this.snackBarService.showError('ERROR.UPDATE_EXCHANGE')
             return;
         }
 
@@ -164,7 +162,7 @@ export class RequestsComponent  implements OnInit {
             () => {
                 this.router.navigate(['/exchanges/history'], { queryParams: { selectedTab: 1 } });
             },
-            (error) => console.error("Error al rechazar el intercambio:", error))
+            (error) =>  this.snackBarService.showError('ERROR.REJECT_EXCHANGE'))
     }
 
 
@@ -217,7 +215,6 @@ export class RequestsComponent  implements OnInit {
     }
 
     getCover(book: BookData | null = null) {
-        console.log("publication imge: ", book?.bookModel?.cover);
         return book?.bookModel?.cover ||
             this.getImages(book?.images)[0] || this.getDefaultImage();
     }
