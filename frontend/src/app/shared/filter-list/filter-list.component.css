@@ -23,6 +23,8 @@
 
 .filter-count {
     color: #555;
+    font-size: small;
+    font-weight: normal;
 }
 
 :host ::ng-deep .p-card-body {
