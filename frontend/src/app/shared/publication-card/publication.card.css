@@ -154,3 +154,15 @@
 	color: rgba(150, 150, 50, 1);
 }
 
+.eliminated-text {
+	font-size: 16px;
+	font-weight: normal;
+	align-self: center;
+	padding-right: 28px;
+}
+
+.publication-card-disabled {
+	pointer-events: none;
+	opacity: 0.5;
+	filter: grayscale(50%);
+}

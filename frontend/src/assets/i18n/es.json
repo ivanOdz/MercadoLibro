@@ -176,7 +176,9 @@
     "NO_LOCATION_ERROR": "Debes seleccionar una ubicación",
     "SELECT_LOCATIONS":"Selecciona la ubicación que deseas añadir a la publicación",
     "EDIT_LOCATIONS": "Agrega una ubicación",
-    "NO_NEW_LOCATIONS": "No hay nuevas ubicaciones para agregar"
+    "NO_NEW_LOCATIONS": "No hay nuevas ubicaciones para agregar",
+    "YOURS": "Tuyo",
+    "ELIMINATED": "Eliminada"
   },
   "BOOK_HOME": {
     "SEARCH": "Buscar en mis libros",
@@ -293,6 +295,5 @@
     "CONFIRM_PASSWORD": "Confirmar contraseña",
     "CHANGE_PASSWORD": "Cambiar contraseña",
     "REMEMBER_PASSWORD": "¿Recuerdas tu contraseña?"
-  },
-  "YOURS": "Tuyo"
+  }
 }
