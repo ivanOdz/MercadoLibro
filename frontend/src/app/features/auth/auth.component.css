@@ -3,3 +3,65 @@
     width: 100vw;
     height: 100vh;
 }
+
+
+:host ::ng-deep .text-primary {
+    color: #bfa06c !important;
+}
+
+
+:host ::ng-deep .p-checkbox-checked .p-checkbox-box {
+    border-color: #ad9e84;
+    background: #b4a790;
+}
+
+:host ::ng-deep .p-checkbox-checked .p-checkbox-box:hover {
+    border-color: #ad9e84;
+    background: #7a7468;
+}
+
+
+:host ::ng-deep .p-button {
+    background: #bda995;
+    border-radius: 0.25rem;
+    font-size: smaller;
+    cursor: pointer;
+    border: none;
+    width: auto;
+}
+
+:host ::ng-deep .p-button:hover {
+    background: #a8988c;
+    border: none;
+
+}
+
+:host ::ng-deep .p-button:not(:disabled):hover {
+    background: #a8988c;
+    border: none;
+
+}
+
+:host ::ng-deep .text-center {
+    text-align: start; !important;
+}
+
+:host ::ng-deep .p-inputtext:enabled:focus {
+    border-color: #a8988c;
+}
+
+:host ::ng-deep .h-full {
+    background: #fcfaf8;
+}
+
+:host ::ng-deep .h-full {
+    background: #fcfaf8;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+}
+
+:host ::ng-deep  .p-divider-horizontal {
+    width: 40vh;
+    margin: 2rem;
+}

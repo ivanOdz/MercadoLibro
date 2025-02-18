@@ -300,7 +300,10 @@
     "NO_PERMISSION": "No tienes los permisos para acceder",
     "SERVER_ERROR": "Servidor con problemas",
     "UNEXPECTED_ERROR": "Error inesperado",
-    "REMEMBER_PASSWORD": "¿Recuerdas tu contraseña?"
+    "OR": "ó",
+    "CONTINUE_TO_PUBLICATIONS": "Continuar sin usuario:",
+    "GO_TO_PUBLICATIONS": "Ver publicaciones"
+
   },
   "ERROR": {
     "UPDATE_STATE": "Upsi! Hubo un problema cambiando el estado del libro.",

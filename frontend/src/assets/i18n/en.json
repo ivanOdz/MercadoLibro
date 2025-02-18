@@ -295,7 +295,10 @@
     "INCORRECT_CREDENTIALS": "Incorrect user or password",
     "NO_PERMISSION": "You don't have the permissions to access",
     "SERVER_ERROR": "Error from server",
-    "UNEXPECTED_ERROR": "Unexpected error"
+    "UNEXPECTED_ERROR": "Unexpected error",
+    "OR": "or",
+    "CONTINUE_TO_PUBLICATIONS": "Continue without signing in:",
+    "GO_TO_PUBLICATIONS": "Go to publications"
   },
   "ERROR": {
     "UPDATE_STATE": "Upsi! There was a problem changing the condition of the book.",

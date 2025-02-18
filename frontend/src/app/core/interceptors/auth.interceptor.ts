@@ -57,21 +57,17 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
                                 authService.logout();
                                 window.location.reload()
                             }
-                            console.log('ERROR refresh', error);
-                            return EMPTY;
+                            return throwError(() => refreshError);
                         })
                     );
                 } else {
                     authService.logout();
-                    router.navigate(['/auth/login']);
                 }
-                return EMPTY
+                throwError(() => error);
             } else if (error.status === 401 ) {
-                console.log('ERROR returning empty', error);
-                return EMPTY;
+                return throwError(() => error);
             }
 
-            console.log('ERROR', error);
             return throwError(() => error);
         })
     );
