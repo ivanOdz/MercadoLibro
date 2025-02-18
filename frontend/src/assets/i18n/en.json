@@ -177,7 +177,8 @@
     "EDIT_LOCATIONS": "Add a location,",
     "NO_NEW_LOCATIONS": "You don't have any new locations to add",
     "YOURS": "Yours",
-    "ELIMINATED": "Eliminated"
+    "ELIMINATED": "Eliminated",
+    "NO_REVIEWS": "No rating available"
   },
   "BOOK_HOME": {
     "SEARCH": "Search in my books",

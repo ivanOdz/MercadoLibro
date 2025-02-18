@@ -93,7 +93,8 @@
                 <div class="user-card-third-column">
                     <p style="font-size: large">{{'PUBLICATION_D.USER'|translate}}</p>
                     <p style="margin-top: 0.5rem; margin-bottom: 0.5rem; font-size: small;">{{publication?.user?.username}}</p>
-                    <p-rating type="number" [(ngModel)]="userRating" [readonly]="true" />
+                    <p-rating *ngIf="publication?.user?.ratingCount !== 0" type="number" [(ngModel)]="userRating" [readonly]="true" />
+                    <p *ngIf="publication?.user?.ratingCount === 0" style="font-size: x-small">{{'PUBLICATION_D.NO_REVIEWS' | translate}}</p>
                 </div>
             </div>
             <div class="start-exchange-book-section">
