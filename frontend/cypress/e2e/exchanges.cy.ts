@@ -9,11 +9,13 @@ describe('General exchanges tests', () => {
     });
 
     it('should create an exchange.json', () => {
+
         cy.waitPublicationRequests();
+        cy.wait('@getPublicationUser');
 
         cy.get('[data-cy=exchange-button]').click();
 
-        cy.wait('@getLocations');
+        cy.wait('@getUserLocations');
         cy.wait('@getBooks');
 
         cy.get('.book').first().click();

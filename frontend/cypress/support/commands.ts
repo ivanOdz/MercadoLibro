@@ -60,7 +60,6 @@ Cypress.Commands.add('login', (username: string, password: string, rememberMe: b
 });
 
 Cypress.Commands.add('waitExchangesRequests', () => {
-
     cy.wait('@getPublication');
     cy.wait('@getUser');
     cy.wait('@getBook');
@@ -81,18 +80,20 @@ Cypress.Commands.add('interceptExchangesRequests', () => {
 
 
 Cypress.Commands.add('interceptPublicationRequests', () => {
-    cy.intercept('GET', '**/publications/*', { fixture: 'publications.json' }).as('getPublication');
     cy.intercept('GET', '**/users/*', { fixture: 'user.json' }).as('getUser');
+    cy.intercept('GET', '**/users/*', { fixture: 'other-user.json' }).as('getPublicationUser');
+    cy.intercept('GET', '**/publications/*', { fixture: 'publication.json' }).as('getPublication');
+    cy.intercept('GET', '**/publications/*', { fixture: 'my-publication.json' }).as('getMyPublication');
     cy.intercept('GET', '**/books/*', { fixture: 'book.json' }).as('getBook');
     cy.intercept('GET', '**/books?*available=true*', { fixture: 'available-books.json' }).as('getBooks');
     cy.intercept('GET', '**/book_models/*', { fixture: 'book_model.json' }).as('getBookModel');
-    cy.intercept('GET', '**/users/*/locations?*', { fixture: 'locations.json' }).as('getLocations');
+    cy.intercept('GET', '**/users/*/locations?*', { fixture: 'locations.json' }).as('getPublicationsLocations');
+    cy.intercept('GET', '**/users/*/locations', { fixture: 'new-locations.json' }).as('getUserLocations');
 });
 
 Cypress.Commands.add('waitPublicationRequests', () => {
-    cy.wait('@getPublication');
-    cy.wait('@getUser');
     cy.wait('@getBook');
+    cy.wait('@getPublicationsLocations');
     cy.wait('@getBookModel');
 });
 

@@ -51,7 +51,7 @@
                         <p>{{ 'PUBLICATION_D.LOCATION' | translate}}</p>
                     </div>
                     <div class="detail">{{ publicationLocations }}</div>
-                    <i *ngIf="isUserPublication() && userIsLogged" class="pi pi-plus-circle add-location-button" style="cursor: pointer; justify-items: center;" (click)="toggleEditModal()"></i>
+                    <i data-cy="edit-locations" *ngIf="isUserPublication() && userIsLogged" class="pi pi-plus-circle add-location-button" style="cursor: pointer; justify-items: center;" (click)="toggleEditModal()"></i>
                 </div>
                 <div style="grid-column: 4">
                     <div class="detail-title">
@@ -106,6 +106,7 @@
                     <div class="select-book-container" *ngIf="userBooks.length !== 0">
                             <div *ngFor="let book of userBooks; let i = index"
                                  class="book"
+                                 data-cy="books"
                                 [class.selected]="selectedBookIndex === i"
                                 (click)="selectBook(i)">
                                 <img class="book-image-select" [pTooltip]="tooltipContent" [src]="getCover(book)" alt="{{book.bookModel?.title}}"/>
@@ -133,16 +134,16 @@
                 </div>
                 <div class="start-exchange-location-section" style="grid-row: 2">
                     <div>
-                        <p-select *ngIf="(userLocations$ |async)?.length !== 0"
+                        <p-select *ngIf="(userLocations.length !== 0)"
                                 [panelStyleClass]="'custom-select'"
-                                [options]="(userLocations$ |async) || []"
+                                [options]="(userLocations) || []"
                                 [(ngModel)]="selectedLocation"
                                 optionLabel="location"
                                 placeholder="{{'BOOK_HOME.NO_LOCATION_ERROR' |translate}}"
                                 class="w-full md:w-56"></p-select>
                         <p *ngIf="errorNoLocation" class="error">{{ 'BOOK_HOME.SELECT_LOCATION'|translate }}</p>
                     </div>
-                    <div *ngIf="(userLocations$ |async)?.length === 0"  style="text-align: center; margin: 1rem;grid-column: 1;" >
+                    <div *ngIf="(userLocations.length === 0)"  style="text-align: center; margin: 1rem;grid-column: 1;" >
                         <p class="text-empty">{{ 'PUBLICATION_D.NO_LOCATIONS' | translate}}</p>
                         <p-button [styleClass]="'redirect-buttons'" label="{{ 'PUBLICATION_D.ADD_LOCATIONS' | translate}}" icon="pi pi-map-marker" (click)="redirectToProfile()" />
                     </div>
@@ -173,17 +174,17 @@
             <p class="book-authors-modal">{{publication?.book?.bookModel?.authors}}</p>
         </div>
     </div>
-    <div  *ngIf="(userLocations$ |async)?.length !== 0" class="select-locations">
+    <div  *ngIf="(userLocations.length !== 0)" class="select-locations">
         <p>{{ 'PUBLICATION_D.SELECT_LOCATIONS' | translate}}</p>
         <p-divider/>
-        <p-select data-cy="locations-select" [options]="(userLocations$ |async) || []" [(ngModel)]="selectedAddLocation" optionLabel="location" placeholder="{{'BOOK_HOME.SELECT_LOCATION' |translate}}" class="w-full md:w-56" />
+        <p-select data-cy="locations-select" [options]="userLocations || []" [(ngModel)]="selectedAddLocation" optionLabel="location" placeholder="{{'BOOK_HOME.SELECT_LOCATION' |translate}}" class="w-full md:w-56" />
         <p *ngIf="errorNoAddLocation" class="error">{{ 'PUBLICATION_D.NO_LOCATION_ERROR' | translate }}</p>
     </div>
-    <div *ngIf="(userLocations$ |async)?.length === 0"  style="text-align: center; margin: 1rem;" >
+    <div *ngIf="(userLocations.length === 0)"  style="text-align: center; margin: 1rem;" >
         <p class="text-empty">{{ 'PUBLICATION_D.NO_NEW_LOCATIONS' | translate}}</p>
         <p-button [styleClass]="'redirect-buttons'" label="{{ 'PUBLICATION_D.ADD_LOCATIONS' | translate}}" icon="pi pi-map-marker" (click)="redirectToProfile()" />
     </div>
-    <div *ngIf="(userLocations$ |async)?.length !== 0" class="buttons-in-modal">
+    <div *ngIf="(userLocations.length !== 0)" class="buttons-in-modal">
         <p-button [styleClass]="'cancel-publication-button'" label="{{ 'BOOK_HOME.CANCEL' | translate }}" class="cancel-button" (click)="toggleEditModal()"></p-button>
         <p-button data-cy="submit" [styleClass]="'create-publication-button'" label="{{ 'PUBLICATION_D.CONFIRM' | translate }}" class="cancel-button" (click)="editPublicationLocations()"></p-button>
     </div>

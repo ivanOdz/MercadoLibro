@@ -1,0 +1,12 @@
+[
+  {
+    "location": "Quilmes",
+    "publications": "http://localhost:8080/api/publications?location_id=3",
+    "self": "http://localhost:8080/api/user/1/locations/3"
+  },
+  {
+    "location": "San Isidro",
+    "publications": "http://localhost:8080/api/publications?location_id=4",
+    "self": "http://localhost:8080/api/user/1/locations/4"
+  }
+]

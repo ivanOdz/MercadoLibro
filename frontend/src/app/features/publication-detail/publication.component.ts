@@ -80,7 +80,7 @@ export class PublicationComponent implements OnInit {
 
 
     userBooks: BookData[] = [];
-    userLocations$ = new BehaviorSubject<Location[]>([]);
+    userLocations: Location[] = [];
 
     selectedLocation: Location | null = null;
     errorNoLocation: boolean = false;
@@ -263,9 +263,9 @@ export class PublicationComponent implements OnInit {
                             pubLocation => pubLocation.self === location.self
                         )
                     );
-                    this.userLocations$.next(updatedLocations);
                     this.cdRef.detectChanges();
                 }
+                this.userLocations = updatedLocations;
 
             },
         });
@@ -314,17 +314,9 @@ export class PublicationComponent implements OnInit {
         }
     }
 
+
     getBooksImages(bookImages: string[] | null) {
         return bookImages || [this.getDefaultImage()];
-    }
-
-    getImages(book: BookData | null): string[] {
-        if (book?.images?.length === 0 || !book?.images || book === null) {
-            let cover = this.getCover(book)
-            if(cover.length !== 0) return [cover];
-            return [this.getDefaultImage()]
-        }
-        return book?.images;
     }
 
     getDefaultImage() {
@@ -332,10 +324,9 @@ export class PublicationComponent implements OnInit {
     }
 
     getCover(book: BookData | null = null) {
-        console.log("publication imge: ", book?.bookModel?.cover);
-        return book?.bookModel?.cover ||
-            this.getImages(book)[0] || this.getDefaultImage();
+        return book?.bookModel?.cover || this.getDefaultImage();
     }
+
 
     getFormattedDate(time: Date | null | undefined) {
         if (!time) {
