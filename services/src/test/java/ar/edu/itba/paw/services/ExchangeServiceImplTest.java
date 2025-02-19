@@ -92,7 +92,7 @@ public class ExchangeServiceImplTest {
         exchange.setRequester(publication_2);
         
         when(bookService.getBookById(BOOK_ID_1)).thenReturn(book_1);
-        when(publicationService.createPublication(BOOK_ID_1, USER_ID_1, LOCATION_ID)).thenReturn(publication_1);
+        when(publicationService.createPublication(BOOK_ID_1, USER_ID_1, LOCATION_ID,true)).thenReturn(publication_1);
         when(exchangeDao.createExchange(BOOK_ID_1, REQUESTER_ID_1, ACCEPT_CODE, any())).thenReturn(exchange);
         
         returnExchange = exchangeServiceImpl.initializeExchange(BOOK_ID_1, LOCATION_ID, OFFERER_ID_1);

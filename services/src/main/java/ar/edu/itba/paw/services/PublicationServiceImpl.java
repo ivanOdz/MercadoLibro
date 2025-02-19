@@ -18,8 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
-import static ar.edu.itba.paw.models.utils.Constants.*;
-
 
 @Service
 public class PublicationServiceImpl implements PublicationService {
@@ -43,7 +41,7 @@ public class PublicationServiceImpl implements PublicationService {
 
     @Override
     @Transactional
-    public Publication createPublication(Long bookId, Long userId, Long locationId) {
+    public Publication createPublication(Long bookId, Long userId, Long locationId, Boolean toExchange) {
         Book book = bookService.getBookById(bookId);
         User user = userService.findById(userId);
         Location location = locationService.findById(locationId);
@@ -51,7 +49,7 @@ public class PublicationServiceImpl implements PublicationService {
         List<Location> locations = new ArrayList<>();
         locations.add(location);
 
-        Publication publication = pubDao.createPublication(book, user, locations, PublicationState.CURRENT);
+        Publication publication = pubDao.createPublication(book, user, locations, toExchange? PublicationState.OFFERED : PublicationState.CURRENT);
         // In case create publication fails, this log wont appear as it will throw an exception.
         LOGGER.info("Publication of id {} successfully created", publication.getPublicationId());
 

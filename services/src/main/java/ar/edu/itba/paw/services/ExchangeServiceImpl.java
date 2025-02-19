@@ -42,7 +42,7 @@ public class ExchangeServiceImpl implements ExchangeService {
     	Book b = bs.getBookById(bookId);
     	
         Long userId = b.getOwner().getUserId();
-        long requesterPubId = ps.createPublication(bookId, userId, locationId).getPublicationId();
+        long requesterPubId = ps.createPublication(bookId, userId, locationId, true).getPublicationId();
 
         Random random = new Random();
         int acceptCode = Math.abs(random.nextInt());
@@ -103,7 +103,8 @@ public class ExchangeServiceImpl implements ExchangeService {
 
         emailService.sendExchangeEmail(requester, offerer, bookRequested, bookOffered, state);
 
-        ps.terminatePublication(exchange.getOfferer());
+
+        if(state) ps.terminatePublication(exchange.getOfferer());
         ps.terminatePublication(exchange.getRequester());
 
         LOGGER.info("Exchange of id: {} processed successfully", exchange.getExchangeId());
