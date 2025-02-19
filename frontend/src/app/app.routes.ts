@@ -31,22 +31,7 @@ export const routes: Routes = [
   {
     path: '**',
     component: NotFoundComponent,
-    title: 'Page Not Found'
+    title: 'TITLE.NOT_FOUND'
   }
 ];
 
-// Para proteger el acceso a las rutas que se requiere tener autenticacion
-/*const routes: Routes = [
-
-  {
-    path: '',
-    canActivate: [AuthGuard], // Protege todas las rutas hijas
-    children: [
-      { path: 'perfil', component: PerfilComponent },
-      { path: 'dashboard', component: DashboardComponent },
-      { path: 'configuracion', component: ConfiguracionComponent }
-    ]
-  },
-  { path: 'login', component: LoginComponent }
-];
-*/
