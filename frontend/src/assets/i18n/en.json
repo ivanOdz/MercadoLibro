@@ -332,6 +332,7 @@
     "DISLIKE": "Upsi! There was a problem disliking the publication.",
     "UPLOAD_PUBLICATION": "Upsi! Your publication could not be added, try again later.",
     "ADD_LOCATION": "Upsi! Your location could not be added, try again later.",
+    "DELETE_LOCATION": "Upsi! Your location could not be deleted, try again later.",
     "UPLOAD_LOCATION": "Upsi! Your location could not be added, try again later.",
     "CHANGE_LANGUAGE": "Upsi! Language could not be changed, try again later."
   },
