@@ -96,7 +96,6 @@ public class User {
     }
 
     public String getPassword() {
-        // TODO:
         return password;
     }
 

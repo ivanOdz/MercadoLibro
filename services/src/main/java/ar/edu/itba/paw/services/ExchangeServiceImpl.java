@@ -188,21 +188,6 @@ public class ExchangeServiceImpl implements ExchangeService {
         return e.get();
     }
 
-    // exchanges where user is the publication owner
-//    @Override
-//    @Transactional(readOnly = true)
-//    public PaginatedResponse<Exchange, BasicMetadata> getExchangeOffererListByUserId(long userId, int currentPage, ExchangeState exchangeState) {
-//        return exchangeDao.getAllExchangesByUserId(userId, exchangeState, currentPage, true);
-//    }
-//
-//    // exchanges where user is the requester owner
-//    @Override
-//    @Transactional(readOnly = true)
-//    public PaginatedResponse<Exchange, BasicMetadata> getExchangeRequesterListByUserId(long userId, int currentPage, ExchangeState exchangeState) {
-//        return exchangeDao.getAllExchangesByUserId(userId, exchangeState, currentPage, false);
-//    }
-
-
     @Override
     public PaginatedResponse<Exchange, BasicMetadata> getExchanges(long userId, ExchangeState exchangeState, Boolean isOfferer, Boolean isRequester, int currentPage) {
         return exchangeDao.getAllExchangesByUserId(userId, exchangeState, currentPage, isOfferer, isRequester);

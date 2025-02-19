@@ -52,11 +52,24 @@ export class RequestsComponent  implements OnInit {
     offeredExchanges: ExchangeData[] = [];
     requestedExchanges: ExchangeData[] = [];
 
+    acceptCode: string | null = null;
+    state: string | null = null;
 
     constructor(private es: ExchangeService, private as: AuthService,
                 private router: Router, private translate: TranslateService,private route: ActivatedRoute, private snackBarService: SnackbarService) {}
 
     ngOnInit(): void {
+        this.route.queryParams.subscribe((params) => {
+            this.acceptCode = params['accept_code'];
+            this.state = params['state'];
+            if (this.acceptCode) {
+                if(this.state === 'accepted'){
+                    this.acceptExchange();
+                } else if(this.state === 'rejected'){
+                    this.rejectExchange()
+                }
+            }
+        })
         this.isLoading = true;
         this.translate.onLangChange.subscribe(() => this.loadRequestVariablesNames());
         this.loadRequestVariablesNames();
@@ -120,10 +133,12 @@ export class RequestsComponent  implements OnInit {
             this.requestedExchanges = requesterExchanges;
             this.offeredExchanges = offeredExchanges;
             this.isLoading = false;
-            this.firstLoad ? this.firstLoad = false : null
+            this.firstLoadRequested && this.requestedExchanges.length !==0 ? this.firstLoadRequested = false : null
+            this.firstLoadOffered && this.offeredExchanges.length !==0 ? this.firstLoadOffered = false : null
         }, () => {
             this.isLoading = false;
-            this.firstLoad ? this.firstLoad = false : null
+            this.firstLoadRequested && this.requestedExchanges.length !==0 ? this.firstLoadRequested = false : null
+            this.firstLoadOffered && this.offeredExchanges.length !==0 ? this.firstLoadOffered = false : null
         });
     }
 
@@ -240,7 +255,8 @@ export class RequestsComponent  implements OnInit {
 
     currentOfferedPage: number = 0;
     currentSolicitedPage: number = 0;
-    firstLoad: boolean= true;
+    firstLoadRequested: boolean= true;
+    firstLoadOffered: boolean= true;
 
     getOffered(url: string) {
         this.loadExchanges(url, true);

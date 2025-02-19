@@ -87,11 +87,11 @@ export class ExchangesComponent implements OnInit {
             (activeExchanges) => {
                 this.activeExchanges = activeExchanges;
                 this.isLoading = false;
-                this.firstLoad ? this.firstLoad = false : null
+                this.firstLoad && this.activeExchanges.length !==0 ? this.firstLoad = false : null
             },
             () => {
                 this.isLoading = false;
-                this.firstLoad ? this.firstLoad = false : null
+                this.firstLoad && this.activeExchanges.length !==0 ? this.firstLoad = false : null
             }
         );
     }

@@ -10,8 +10,6 @@ public interface EmailService {
     @Async
     void sendExchangeEmail(User requester, User offerer, Book bookRequested, Book bookOffered, boolean state);
 
-//    void sendExchangeEmail(final String receiver, Map<String, Object> variables, boolean state, String locale);
-
     @Async
     void sendExchangeRequestEmail(User requester, User offerer, Book bookRequested, Book bookOffered,long acceptCode);
 

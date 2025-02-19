@@ -156,7 +156,6 @@
     "ADDITIONAL_DETAILS": "Additional details",
     "RETURN_TO_DETAIL": "Return to publication",
     "SUBHEADER_BOOK": "Select one of your books",
-    "SOLICITED_EXCHANGE_TAB": "Exchange solicited",
     "START_EXCHANGE_DESCRIPTION": "Request an exchange with this book.",
     "SUBHEADER_LOCATION": "Select a location",
     "START_EXCHANGE_BUTTON": "Request exchange",
@@ -251,7 +250,8 @@
     "ACCEPT_EXCHANGE": "Accept exchange",
     "CONFIRM_EXCHANGE": "Are you sure you want to accept an exchange?",
     "REJECT_EXCHANGE": "Reject exchange",
-    "CONFIRM_REJECT": "Are you sure you want to reject the exchange?"
+    "CONFIRM_REJECT": "Are you sure you want to reject the exchange?",
+    "SOLICITED_EXCHANGE_TAB": "Exchange solicited"
   },
   "BOOK_MODEL": {
     "RETURN": "Return to My Books",

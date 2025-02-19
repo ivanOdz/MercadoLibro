@@ -72,8 +72,8 @@ public class EmailServiceImpl implements EmailService {
         variables.put("requesterName", requester.getUsername());
         variables.put("offererName", offerer.getUsername());
         variables.put("offererEmail", offerer.getMail());
-        variables.put("exchangeUrl", webappUrl + "/requests");
-        variables.put("publicationsUrl", webappUrl);
+        variables.put("exchangeUrl", webappUrl + "/exchanges/requests");
+        variables.put("publicationsUrl", webappUrl + "/publications");
 
         String locale = requester.getLanguage();
 
@@ -91,9 +91,9 @@ public class EmailServiceImpl implements EmailService {
         variables.put("requesterName", requester.getUsername());
         variables.put("requestedPublication", bookRequested.getBookModel().getTitle());
         variables.put("offeredPublication", bookOffered.getBookModel().getTitle());
-        variables.put("validationUrl", webappUrl + "/createexchange?accept_code=" + acceptCode+ "&state=true");
-        variables.put("rejectionUrl", webappUrl + "/createexchange?accept_code=" + acceptCode + "&state=false");
-        variables.put("exchangeUrl", webappUrl + "/offers"); // TODO: verificar el funcionamiento de esto
+        variables.put("validationUrl", webappUrl + "/exchanges/requests?accept_code=" + acceptCode+ "&state=accepted");
+        variables.put("rejectionUrl", webappUrl + "/exchanges/requests?accept_code=" + acceptCode + "&state=rejected");
+        variables.put("exchangeUrl", webappUrl + "/exchanges/requests");
 
         sendEmail(offerer.getMail(), variables, "exchangeRequest", messageSource.getMessage("email.subject.request", null, Locale.forLanguageTag(offerer.getLanguage())), offerer.getLanguage());
     }

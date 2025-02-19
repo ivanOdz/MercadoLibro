@@ -152,7 +152,6 @@ public class BookServiceImpl implements BookService {
         bookImage.setImage(image);
         bookImage.setBook(book);
 
-        // IMPLEMENT: set image order
         bookImage.setImageOrder(book.getImages().size());
         bookImage.setImageDatetime(Timestamp.valueOf(LocalDateTime.now()));
         bookDao.setImage(book, bookImage);
