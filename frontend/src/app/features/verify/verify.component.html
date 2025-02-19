@@ -5,6 +5,7 @@
 <!-- Mensaje de éxito -->
 @if (verificationSuccess) {
     <p-card data-cy="title-success" class="flex align-items-center justify-content-center w-full h-full success-card">
+        <img src="./assets/mercado_libro.png" alt="image" width="50" height="50"/>
         <ng-template  pTemplate="title">
             <i class="pi pi-check-circle text-green-500 text-3xl"></i>
             {{ 'AUTH.VERIFICATION_SUCCESS' | translate }}
@@ -19,6 +20,7 @@
 <!-- Mensaje de error -->
 @if (verificationFailed) {
     <p-card data-cy="title-error" class="flex align-items-center justify-content-center w-full h-full error-card">
+        <img src="./assets/mercado_libro.png" alt="image" width="50" height="50"/>
         <ng-template  pTemplate="title">
             <i class="pi pi-times-circle text-red-500 text-3xl"></i>
             {{ 'AUTH.VERIFICATION_ERROR' |translate }}

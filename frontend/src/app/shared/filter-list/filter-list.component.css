@@ -18,7 +18,8 @@
 }
 
 .filter-label {
-    font-weight: bold;
+    font-weight: normal;
+    font-size: small;
 }
 
 .filter-count {
