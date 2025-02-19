@@ -59,7 +59,7 @@ public class ExchangeServiceImpl implements ExchangeService {
             Book bookOffered = ex.getOfferer().getBook();
             Book bookRequested = ex.getRequester().getBook();
 
-            emailService.sendExchangeRequestEmail(requester, offerer, bookRequested, bookOffered, ex.getAcceptCode());
+            emailService.sendExchangeRequestEmail(requester, offerer, bookRequested, bookOffered, ex.getExchangeId(),ex.getAcceptCode() );
         }
         else {
             LOGGER.warn("Could not initialize exchange for book id {}", bookId);

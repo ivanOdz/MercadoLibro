@@ -52,6 +52,7 @@ export class RequestsComponent  implements OnInit {
     offeredExchanges: ExchangeData[] = [];
     requestedExchanges: ExchangeData[] = [];
 
+    exchangeId: string | null = null;
     acceptCode: string | null = null;
     state: string | null = null;
 
@@ -60,14 +61,17 @@ export class RequestsComponent  implements OnInit {
 
     ngOnInit(): void {
         this.route.queryParams.subscribe((params) => {
+            this.exchangeId = params['exchange_id'];
             this.acceptCode = params['accept_code'];
             this.state = params['state'];
-            if (this.acceptCode) {
-                if(this.state === 'accepted'){
-                    this.acceptExchange();
-                } else if(this.state === 'rejected'){
-                    this.rejectExchange()
-                }
+            if (this.exchangeId) {
+                this.exchangeData = {
+                    exchange: {
+                        self: `${environment.production ? environment.productionUrl : environment.developmentUrl}/exchanges/${this.exchangeId}`,
+                        accept_code: this.acceptCode
+                    }
+                } as unknown as ExchangeData
+                this.state === 'accepted' ? this.acceptExchange() : this.rejectExchange()
             }
         })
         this.isLoading = true;
@@ -144,8 +148,6 @@ export class RequestsComponent  implements OnInit {
 
     acceptExchange(){
         this.acceptExchangeDialogVisible = false;
-
-
         if (!this.exchangeData) {
             this.snackBarService.showError('ERROR.CONFIRM_EXCHANGE');
             return;
@@ -265,4 +267,5 @@ export class RequestsComponent  implements OnInit {
     getSolicited(url: string) {
         this.loadExchanges(url, false);
     }
+
 }

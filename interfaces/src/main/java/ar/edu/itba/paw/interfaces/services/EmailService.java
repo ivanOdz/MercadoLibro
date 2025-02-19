@@ -10,7 +10,7 @@ public interface EmailService {
     void sendExchangeEmail(User requester, User offerer, Book bookRequested, Book bookOffered, boolean state);
 
     @Async
-    void sendExchangeRequestEmail(User requester, User offerer, Book bookRequested, Book bookOffered,long acceptCode);
+    void sendExchangeRequestEmail(User requester, User offerer, Book bookRequested, Book bookOffered,long exchangeId, long acceptCode);
 
     @Async
     void sendVerificationEmail(User user);

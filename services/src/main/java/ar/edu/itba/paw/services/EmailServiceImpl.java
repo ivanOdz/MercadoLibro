@@ -85,14 +85,14 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendExchangeRequestEmail(User requester, User offerer, Book bookRequested, Book bookOffered, long acceptCode) {
+    public void sendExchangeRequestEmail(User requester, User offerer, Book bookRequested, Book bookOffered, long exchangeId, long acceptCode) {
         Map<String, Object> variables = new HashMap<>();
         variables.put("requesterEmail", requester.getMail());
         variables.put("requesterName", requester.getUsername());
         variables.put("requestedPublication", bookRequested.getBookModel().getTitle());
         variables.put("offeredPublication", bookOffered.getBookModel().getTitle());
-        variables.put("validationUrl", webappUrl + "/exchanges/requests?accept_code=" + acceptCode+ "&state=accepted");
-        variables.put("rejectionUrl", webappUrl + "/exchanges/requests?accept_code=" + acceptCode + "&state=rejected");
+        variables.put("validationUrl", webappUrl + "/exchanges/requests?exchange_id=" + exchangeId + "&accept_code="+acceptCode + "&state=accepted");
+        variables.put("rejectionUrl", webappUrl + "/exchanges/requests?exchange_id=" + exchangeId + "&accept_code="+acceptCode +"&state=rejected");
         variables.put("exchangeUrl", webappUrl + "/exchanges/requests");
 
         sendEmail(offerer.getMail(), variables, "exchangeRequest", messageSource.getMessage("email.subject.request", null, Locale.forLanguageTag(offerer.getLanguage())), offerer.getLanguage());
