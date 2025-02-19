@@ -102,7 +102,7 @@ export class UserService {
             return EMPTY;
         }
 
-        const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.useers.v1+json' });
+        const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.users.v1+json' });
 
         const body = {
             newUsername: null,
@@ -111,7 +111,7 @@ export class UserService {
 
         return this.http.patch<void>(`${user.self}`, body, { headers }).pipe(
             catchError((error: HttpErrorResponse) => {
-                this.snackBarService.showError("ERROR.CHANGE_LANGUAGE");
+                //this.snackBarService.showError("ERROR.CHANGE_LANGUAGE");
                 return throwError(() => new Error(error.message));
             })
         );
