@@ -4,7 +4,6 @@ import ar.edu.itba.paw.models.Book;
 import ar.edu.itba.paw.models.User;
 import org.springframework.scheduling.annotation.Async;
 
-import java.util.Map;
 
 public interface EmailService {
     @Async
