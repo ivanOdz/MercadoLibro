@@ -15,6 +15,7 @@ import {MatIcon} from "@angular/material/icon";
 import {environment} from "../../../environments/environment";
 import {Button} from "primeng/button";
 import {Dialog} from "primeng/dialog";
+import {catchError} from "rxjs";
 
 @Component({
   selector: 'app-profile',
@@ -81,13 +82,11 @@ export class ProfileComponent implements OnInit{
           if(this.loggedUser){
             this.loggedUser.username = this.newUsername;
           }
-          console.log("Usuario cambiado a:", this.newUsername);
           this.usernameError = '';
           this.closeModal();
         },
         error: (err) => {
           this.usernameError = err.message;
-          console.log("Usuario en uso:", this.newUsername);
         }
       });
     }
@@ -98,8 +97,6 @@ export class ProfileComponent implements OnInit{
       this.userService.getLocations(this.loggedUser).subscribe(locations => {
         this.locations = locations;
       });
-    } else {
-      console.log("el usuario no está definido, no se pueden cargar las ubicaciones");
     }
   }
 
@@ -114,10 +111,15 @@ export class ProfileComponent implements OnInit{
 
   addLocation(location: string) {
     if (this.loggedUser && location.trim() !== '') {
-      this.userService.addLocation(this.loggedUser, location).subscribe(() => {
-        this.locations.push({ location: location, publications: '', self: '' });
-        this.closeAddModal();
-        this.getLocations();
+      this.userService.addLocation(this.loggedUser, location).subscribe({
+        next: () => {
+          this.locations.push({location: location, publications: '', self: ''});
+          this.closeAddModal();
+          this.getLocations();
+        },
+        error: (err) => {
+          this.closeAddModal();
+        }
       });
     }
   }
@@ -134,9 +136,14 @@ export class ProfileComponent implements OnInit{
 
   removeLocation() {
     if (this.locationToRemove && this.loggedUser) {
-      this.userService.removeLocation(this.locationToRemove).subscribe(() => {
-        this.locations = this.locations.filter(loc => loc !== this.locationToRemove);
-        this.closeRemoveModal();
+      this.userService.removeLocation(this.locationToRemove).subscribe( {
+        next: () => {
+          this.locations = this.locations.filter(loc => loc !== this.locationToRemove);
+          this.closeRemoveModal();
+        },
+        error: (err) => {
+          this.closeRemoveModal();
+        }
       });
     }
   }
@@ -148,14 +155,11 @@ export class ProfileComponent implements OnInit{
         this.reviews = reviews;
         this.pagination = pagination;
       });
-    } else {
-      console.log("el usuario no está definido, no se pueden cargar las reseñas");
     }
   }
 
   ngOnInit(): void {
     this.authService.loggedUser$.subscribe(user => {
-      console.log("Usuario recibido:", user);
       if (user) {
         this.loggedUser = user;
         this.getLocations();

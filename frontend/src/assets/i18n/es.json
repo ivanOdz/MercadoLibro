@@ -338,12 +338,14 @@
     "DISLIKE": "Upsi! Hubo un problema al sacarle el like a la publicación.",
     "UPLOAD_PUBLICATION": "Upsi! No se pudo crear su publicación, intentelo nuevamente.",
     "ADD_LOCATION": "Upsi! No se pudo agregar su ubicación, intentelo nuevamente.",
+    "DELETE_LOCATION": "Upsi! No se pudo eliminar su ubicación, intentelo nuevamente.",
     "UPLOAD_LOCATION": "Upsi! No se pudo crear su ubicación, intentelo nuevamente.",
-    "CHANGE_LANGUAGE": "Upsi! No se pudo modificar el idioma, intentelo nuevamente."
+    "CHANGE_LANGUAGE": "Upsi! No se pudo modificar el idioma, intentelo nuevamente.",
+    "ADD_REVIEW": "Upsi! No se pudo agregar su reseña, intentelo nuevamente."
   },
   "401": {
     "TITLE": "401 - No autorizado",
-    "MESSAGE": "Lo lamentamos, tiene que ingresar para continuar.",
+    "MESSAGE": "Lo lamentamos, ocurrió un error.",
     "REDIRECT_TEXT": "¿Quiere autenticarse? Haga click ",
     "REDIRECT_BUTTON": "aquí."
   },

@@ -91,8 +91,8 @@ export class UserService {
                     const errorMessage = this.translate.instant("PROFILE.USERNAME_ALREADY_EXISTS");
                     return throwError(() => new Error(errorMessage));
                 }
-                this.snackBarService.showError("PROFILE.UPDATE_ERROR");
-                return throwError(() => new Error(error.message));
+                const errorMessage = this.translate.instant("PROFILE.UPDATE_ERROR");
+                return throwError(() => new Error(errorMessage));
             })
         );
     }
@@ -119,7 +119,10 @@ export class UserService {
 
     getLocations(user: User): Observable<Location[]> {
         return this.http.get<Location[]>(`${user.locations}`).pipe(
-            map((locationsData: any[]) => locationsData.map(location => new Location(location)))
+            map((locationsData: any[]) => locationsData.map(location => new Location(location))),
+            catchError((error) => {
+                return throwError(() => error);
+            })
         );
     }
 
@@ -127,13 +130,8 @@ export class UserService {
         const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.location.v1+json', 'Accept': 'application/vnd.location.v1+json' });
 
         return this.http.post<any>(`${user.locations}`, { location }, { headers, observe: 'response' }).pipe(
-            tap((response) => {
-                if (response.status === 204) {
-                    console.log('Ubicación creada exitosamente');
-                }
-            }),
             catchError((error) => {
-                console.error('Error en la creación de la ubicación', error);
+                this.snackBarService.showError("ERROR.ADD_LOCATION");
                 return throwError(() => error);
             })
 
@@ -141,7 +139,12 @@ export class UserService {
     }
 
     removeLocation(location: Location) {
-        return this.http.delete<void>(`${location.self}`);
+        return this.http.delete<void>(`${location.self}`).pipe(
+            catchError((error) => {
+                this.snackBarService.showError("ERROR.DELETE_LOCATION");
+                return throwError(() => error);
+            })
+        );
     }
 
     getReviews(user: User, page: number): Observable<{ reviews: Review[], pagination: Pagination }> {
@@ -158,6 +161,9 @@ export class UserService {
                 let pagination = new Pagination(linkHeader);
                 const reviews: Review[] = response.body?.map((review: any) => new Review(review)) || [];
                 return { reviews, pagination };
+            }),
+            catchError((error) => {
+                return throwError(() => error);
             })
         );
     }
@@ -167,7 +173,8 @@ export class UserService {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.location.v1+json' });
 
         return this.http.get<any[]>(`${publicationLocationUrl}`, { headers }).pipe(
-            map((l) => l.map((l: any) => new Location(l))));
+            map((l) => l.map((l: any) => new Location(l))),
+            catchError((error) => { return throwError(() => error); }));
     }
 
 
@@ -184,7 +191,13 @@ export class UserService {
             exchange: exchangesUrn,
         }
 
-        return this.http.post<void>(`${reviewsUrn}`, body ,{ headers });
+        return this.http.post<void>(`${reviewsUrn}`, body ,{ headers }).pipe(
+            catchError((error) => {
+                this.snackBarService.showError("ERROR.ADD_REVIEW");
+                return throwError(() => error);
+            })
+
+        );
     }
 
 }
