@@ -214,8 +214,6 @@ export class PublicationService {
     }
 
     unlikePublication(publication: PublicationData): Observable<any> {
-		console.log("unlikePublication");
-		console.log(publication);
         return this.http.delete<void>(`${publication.favoritePublication?.self}`).pipe(
             tap(() => publication.favoritePublication = null), // Después de eliminar, asigna null
             catchError((error) => {
@@ -250,7 +248,7 @@ export class PublicationService {
 
         let body = {
             userURN: userUrl,
-            bookURN: 'bookUrl',
+            bookURN: bookUrl,
             locationURN: selectedLocation?.self
         }
 
