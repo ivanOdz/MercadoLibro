@@ -127,8 +127,12 @@ export class HistoryComponent implements OnInit {
             this.rejectedExchanges = rejectedExchanges;
             this.completedExchanges = completedExchanges;
             this.isLoading = false;
+            this.firstLoad ? this.firstLoad = false : null
+
         }, (error) => {
             this.isLoading = false;
+            this.firstLoad ? this.firstLoad = false : null
+
         });
     }
 
@@ -220,6 +224,7 @@ export class HistoryComponent implements OnInit {
 
     currentCompletedPage: number = 0;
     currentRejectedPage: number = 0;
+    firstLoad: boolean= true;
 
     getCompleted(url: string) {
         this.loadExchanges(url, true);

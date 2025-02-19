@@ -87,9 +87,11 @@ export class ExchangesComponent implements OnInit {
             (activeExchanges) => {
                 this.activeExchanges = activeExchanges;
                 this.isLoading = false;
+                this.firstLoad ? this.firstLoad = false : null
             },
             (error) => {
                 this.isLoading = false;
+                this.firstLoad ? this.firstLoad = false : null
             }
         );
     }
@@ -280,6 +282,7 @@ export class ExchangesComponent implements OnInit {
 
 
     protected readonly environment = environment;
+    firstLoad: boolean= true;
 
 
     isValidDate(date: any): boolean {

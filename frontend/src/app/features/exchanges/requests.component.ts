@@ -125,8 +125,10 @@ export class RequestsComponent  implements OnInit {
             this.requestedExchanges = requesterExchanges;
             this.offeredExchanges = offeredExchanges;
             this.isLoading = false;
-        }, (error) => {
+            this.firstLoad ? this.firstLoad = false : null
+        }, () => {
             this.isLoading = false;
+            this.firstLoad ? this.firstLoad = false : null
         });
     }
 
@@ -243,6 +245,7 @@ export class RequestsComponent  implements OnInit {
 
     currentOfferedPage: number = 0;
     currentSolicitedPage: number = 0;
+    firstLoad: boolean= true;
 
     getOffered(url: string) {
         this.loadExchanges(url, true);
