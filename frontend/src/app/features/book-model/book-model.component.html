@@ -1,12 +1,11 @@
 <app-navbar></app-navbar>
-<div class="return-button" (click)="goBack()">
-    <i class="pi pi-arrow-left return-icon"></i>
-    <p style="margin:0">{{ 'BOOK_MODEL.RETURN' | translate }}</p>
-</div>
 <div class="book-model-home">
 
     <div class="column-content">
-
+        <div class="return-button" (click)="goBack()">
+            <i class="pi pi-arrow-left return-icon"></i>
+            <p style="margin:0">{{ 'BOOK_MODEL.RETURN' | translate }}</p>
+        </div>
         <p class="page-title">{{ 'BOOK_MODEL.TITLE' | translate }}</p>
         <p-inputgroup>
             <input #searchInput pInputText
@@ -37,14 +36,17 @@
             <br>
         </div>
 
-        <p-scrollpanel [style]="{ width:'65vw', height: '68vh'}" >
+        <p-scrollpanel *ngIf="!loading && bookModels.length !== 0" [style]="{ width:'65vw', height: '52vh'}" >
             <div class="book-models-grid">
                 <app-book-model-card data-cy="book_models" *ngFor="let bookModel of bookModels" [bookModel]="bookModel"></app-book-model-card>
             </div>
-            <app-paginator [pagination]="pagination" [fetchMethod]="getBookModels.bind(this)"></app-paginator>
         </p-scrollpanel>
+        <div style="height: 63vh;align-content: center;" *ngIf="loading">
+            <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
+        </div>
+        <app-paginator *ngIf="!firstLoad && bookModels.length !== 0" [pagination]="pagination" [fetchMethod]="getBookModels.bind(this)"></app-paginator>
 
-        <div class="no-books" *ngIf="bookModels.length === 0">
+        <div class="no-books" *ngIf="bookModels.length === 0 && !loading">
             <p>{{ 'BOOK_HOME.NO_RESULTS' | translate }}</p>
         </div>
 

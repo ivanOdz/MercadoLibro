@@ -20,15 +20,16 @@ import { InputText } from 'primeng/inputtext';
 import { Pagination } from "../../core/models/pagination";
 import { PaginatorComponent } from "../../shared/paginator/paginator.component";
 import {SortComponent} from "../../shared/sort/sort.component";
+import {ProgressSpinner} from "primeng/progressspinner";
 
 @Component({
 	selector: 'app-book-home',
 	templateUrl: './book-home.component.html',
 	styleUrl: './book-home.component.css',
 	standalone: true,
-    imports: [CommonModule, TranslatePipe, NavbarComponent, RouterModule, FilterListComponent,
-        InputGroup, InputGroupAddon, ButtonModule, InputText, FormsModule,
-        BookCardComponent, PaginatorComponent, ScrollPanelModule, SortComponent]
+	imports: [CommonModule, TranslatePipe, NavbarComponent, RouterModule, FilterListComponent,
+		InputGroup, InputGroupAddon, ButtonModule, InputText, FormsModule,
+		BookCardComponent, PaginatorComponent, ScrollPanelModule, SortComponent, ProgressSpinner]
 
 })
 export class BookHomeComponent implements OnInit {
@@ -60,6 +61,8 @@ export class BookHomeComponent implements OnInit {
 	books: BookData[] = [];
 	pagination: Pagination | null= null;
 	resetPaginatorNumber: boolean = false;
+	firstLoad: boolean = true;
+	loading: boolean = true;
 	
 	ngOnInit() {
 		this.fetchBooks();
@@ -132,7 +135,7 @@ export class BookHomeComponent implements OnInit {
 	}
 
 	fetchBooks(url: string | null = null) {
-		
+		this.loading = true;
 		this.authService.loggedUser$.pipe(
 			filter(user => !!user),
 			switchMap((user) => {
@@ -175,6 +178,12 @@ export class BookHomeComponent implements OnInit {
 		).subscribe({
 			next: (books) => {
 				this.books = books;
+				this.loading = false;
+				this.firstLoad ? (this.firstLoad = false) : null;
+			},
+			complete: () => {
+				this.loading = false;
+				this.firstLoad ? (this.firstLoad = false) : null;
 			}
 		})
 	}

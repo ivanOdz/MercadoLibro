@@ -59,7 +59,7 @@
 }
 
 .column-content {
-	display: flex;
+	display: grid;
 	align-items: center;
 	flex-direction: column;
 	margin: 0 5%;

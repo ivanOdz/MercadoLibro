@@ -27,6 +27,7 @@ import {Tooltip} from "primeng/tooltip";
 import {ExchangeService} from "../../core/services/exchange.service";
 import {Location} from "../../core/models/location.model";
 import {Dialog} from "primeng/dialog";
+import {ProgressSpinner} from "primeng/progressspinner";
 
 @Component({
     selector: 'app-publication-detail',
@@ -47,7 +48,8 @@ import {Dialog} from "primeng/dialog";
         NgForOf,
         Rating,
         Tooltip,
-        Dialog
+        Dialog,
+        ProgressSpinner
     ],
     animations: [
         trigger('fadeOutUp', [
@@ -95,6 +97,8 @@ export class PublicationComponent implements OnInit {
     errorNoAddLocation: boolean = false;
 
     userIsLogged: boolean = false;
+    loading: boolean = true;
+    firstLoad: boolean = true;
 
     ngOnInit(): void {
         this.route.params.subscribe(params => {
@@ -202,6 +206,7 @@ export class PublicationComponent implements OnInit {
     }
 
     loadBooksData() {
+        this.loading = true;
         this.as.loggedUser$.pipe(
             filter(user => !!user),
             switchMap((user: User) => {
@@ -234,9 +239,13 @@ export class PublicationComponent implements OnInit {
         ).subscribe({
             next: (response) => {
                 this.userBooks = response;
+                this.loading = false;
+                this.firstLoad ? (this.firstLoad = false) : null;
             },
             error: (err) => {
                 console.error("Error al obtener los libros:", err);
+                this.loading = false;
+                this.firstLoad ? (this.firstLoad = false) : null;
             }
         });
     }

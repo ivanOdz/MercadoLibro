@@ -194,12 +194,13 @@
 }
 
 .truncate-text {
-	white-space: nowrap;
 	overflow: hidden;
-	text-overflow: ellipsis;
 	width: 9vw;
+	font-size: medium;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
 }
-
 
 
 .text-empty {

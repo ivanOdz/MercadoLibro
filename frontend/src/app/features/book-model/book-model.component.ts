@@ -18,6 +18,7 @@ import {PaginatorComponent} from "../../shared/paginator/paginator.component";
 import {ScrollPanel} from "primeng/scrollpanel";
 import {SortComponent} from "../../shared/sort/sort.component";
 import {SnackbarService} from "../../core/services/snackbar.service";
+import {ProgressSpinner} from "primeng/progressspinner";
 
 @Component({
   selector: 'app-book-model',
@@ -39,6 +40,7 @@ import {SnackbarService} from "../../core/services/snackbar.service";
     ScrollPanel,
     RouterLink,
     SortComponent,
+    ProgressSpinner,
   ],
   templateUrl: './book-model.component.html',
   standalone: true,
@@ -61,6 +63,8 @@ export class BookModelComponent implements OnInit {
   pagination: Pagination | null = null;
   uploadBookModelUrl: string = "/books/add";
   resetPaginatorNumber: boolean = false;
+  loading: boolean = true;
+  firstLoad: boolean = true;
 
 
   constructor(private router: Router, private route: ActivatedRoute, private bms: BookModelService, private snackBarService: SnackbarService) {
@@ -135,6 +139,8 @@ export class BookModelComponent implements OnInit {
     ).subscribe({
       next: (response) => {
         this.bookModels = response.bookModels;
+        this.firstLoad ? this.firstLoad = false : null;
+        this.loading = false;
       },
       error: (err) => {
         this.snackBarService.showError('ERROR.GET_BOOKS');
