@@ -3,9 +3,11 @@ import {AuthGuard} from "../core/guards/auth.guard";
 import {UnauthorizedComponent} from "./errors/unauthorized/unauthorized.component";
 import {ForbiddenComponent} from "./errors/forbidden/forbidden.component";
 import {BadRequestComponent} from "./errors/bad-request/bad-request.component";
+import {InternalServerErrorComponent} from "./errors/internal-server-error/internal-server-error.component";
 
 export const errorRoutes: Routes = [
     { path: '400', component: BadRequestComponent, title: 'Bad Request' },
     { path: '401', component: UnauthorizedComponent, title: 'Unauthorized' },
     { path: '403', component: ForbiddenComponent, title: 'Forbidden' },
+    { path: '500', component: InternalServerErrorComponent, title: 'Internal Server Error' },
 ];

@@ -38,9 +38,7 @@ export class BookService {
             map(response => {
                 const linkHeader = response.headers.get('Link');
                 let pagination = new Pagination(linkHeader);
-                console.log("Paginación de books:", pagination);
                 const books: Book[] = response.body?.map((book: any) => new Book(book)) || [];
-                console.log("Libros obtenidos:", books);
                 return { books: books, pagination: pagination, headers: response.headers };
             }),
             catchError(error => {

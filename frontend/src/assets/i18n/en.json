@@ -345,7 +345,7 @@
     "ADD_EXCHANGE": "Exchange solicited successfully!",
     "ACCEPT_EXCHANGE": "Exchange accepted successfully!",
     "CREATE_BOOK": "Book created successfully!",
-    "CREATE_PUBLICATION": "Publication created successfully!",
+    "CREATE_PUBLICATION": "Publication created successfully!"
   },
   "400": {
     "TITLE": "400 - Bad Request",
@@ -368,6 +368,12 @@
   "404": {
     "TITLE": "404 - Page not found",
     "MESSAGE": "Sorry, we couldn’t find the page you were looking for.",
+    "REDIRECT_TEXT": "Go back to the ",
+    "REDIRECT_BUTTON": "home page"
+  },
+  "500": {
+    "TITLE": "500 - Internal Server Error",
+    "MESSAGE": "Sorry, there's been a problem. We are fixing it.",
     "REDIRECT_TEXT": "Go back to the ",
     "REDIRECT_BUTTON": "home page"
   },
