@@ -1,0 +1,12 @@
+
+
+:host ::ng-deep .language-select:not(.p-disabled).p-focus {
+    border-color: #e2d6c2;
+}
+
+
+
+:host ::ng-deep .language-select {
+    font-size: small;
+}
+

@@ -15,13 +15,14 @@
   },
   "NAVBAR": {
     "EXCHANGES": "Intercambios",
-    "PUBLICATIONS": "Publicaciones",
-    "PROFILE": "Perfil",
+    "PUBLICATIONS": "Explorar publicaciones",
+    "PROFILE": "Tu perfil",
     "MY_BOOKS": "Mis Libros",
     "MY_PUBLICATIONS": "Mis Publicaciones",
-    "FAVORITES": "Favoritos",
+    "FAVORITES": "Publicaciones favoritas",
     "LOGOUT": "Cerrar sesión",
-    "SEARCH": "Buscar publicaciones"
+    "SEARCH": "Buscar publicaciones",
+    "SIGN_IN": "Iniciar sesión"
   },
   "BOOK_FORM": {
     "BACK": "← Regresar",

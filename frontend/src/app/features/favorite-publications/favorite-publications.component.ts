@@ -7,7 +7,6 @@ import { ObservablePublicationData, PublicationData } from "../../core/models/ty
 import { TranslatePipe } from '@ngx-translate/core';
 import { User } from "../../core/models/user.model";
 import {Button} from "primeng/button";
-import {ProgressSpinner} from "primeng/progressspinner";
 import {Router} from "@angular/router";
 
 @Component({
@@ -15,7 +14,7 @@ import {Router} from "@angular/router";
 	templateUrl: './favorite-publications.component.html',
 	styleUrl: './favorite-publications.component.css',
 	standalone: true,
-    imports: [CardPageComponent, PublicationCardComponent, TranslatePipe, Button, ProgressSpinner]
+    imports: [CardPageComponent, PublicationCardComponent, TranslatePipe, Button]
 })
 export class FavoritePublicationsComponent implements OnInit {
 	

@@ -6,7 +6,6 @@ import { AuthService } from "../../core/services/auth.service";
 import { ObservablePublicationData, PublicationData } from "../../core/models/types";
 import { TranslatePipe } from '@ngx-translate/core';
 import { User } from "../../core/models/user.model";
-import {ProgressSpinner} from "primeng/progressspinner";
 import {Button} from "primeng/button";
 import {Router} from "@angular/router";
 
@@ -15,7 +14,7 @@ import {Router} from "@angular/router";
 	templateUrl: './my-publications.component.html',
 	styleUrls: ['./my-publications.component.css'],
 	standalone: true,
-	imports: [CardPageComponent, PublicationCardComponent, TranslatePipe, ProgressSpinner, Button]
+	imports: [CardPageComponent, PublicationCardComponent, TranslatePipe, Button]
 })
 export class MyPublicationsComponent implements OnInit {
 	

@@ -1,15 +1,14 @@
-import { Component, ViewChild } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import { MenubarModule } from 'primeng/menubar';
-import { TieredMenuModule } from 'primeng/tieredmenu';
 import { ButtonModule } from 'primeng/button';
 import { MenuItem } from 'primeng/api';
 import { LanguageSwitcherComponent } from '../language-switcher/language-switcher.component';
-import { TieredMenu } from 'primeng/tieredmenu';
 import {Router, RouterLink} from "@angular/router";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { AuthService } from "../../core/services/auth.service";
-import { NgOptimizedImage } from "@angular/common";
+import {NgIf, NgOptimizedImage} from "@angular/common";
 import {FormsModule} from "@angular/forms";
+import {TieredMenu, TieredMenuModule} from "primeng/tieredmenu";
 
 @Component({
     selector: 'app-navbar',
@@ -24,21 +23,39 @@ import {FormsModule} from "@angular/forms";
         RouterLink,
         TranslatePipe,
         NgOptimizedImage,
-        FormsModule
+        FormsModule,
+        NgIf
     ]
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit{
     searchQuery: string = '';
 
     @ViewChild('profileMenu') profileMenu!: TieredMenu;
     profileItems: MenuItem[] = [];
 
-    constructor(private authService: AuthService, private translate: TranslateService, private router: Router) {
-        this.translate.onLangChange.subscribe(() => this.loadProfileItems());
-        this.loadProfileItems();
+    isLoggedIn: boolean = false;
+
+    ngOnInit(): void {
+        this.authService.loggedUser$.subscribe(user => {
+            if (user) {
+                this.loadProfileItems({isLogged: true});
+                this.isLoggedIn = true;
+            }
+            else {
+                this.isLoggedIn = false;
+                this.loadProfileItems({isLogged: false});
+            }
+        });
     }
 
-    loadProfileItems() {
+    constructor(private authService: AuthService, private translate: TranslateService, private router: Router) {
+    }
+
+    loadProfileItems({isLogged}: { isLogged: boolean }) {
+        if(!isLogged){
+            return
+        }
+
         this.profileItems = [
             { label: this.translate.instant('NAVBAR.PROFILE'), routerLink: '/auth/profile' },
             { label: this.translate.instant('NAVBAR.MY_BOOKS'), routerLink: '/books' },
@@ -54,7 +71,7 @@ export class NavbarComponent {
         ];
     }
 
-    toggleProfileMenu(event: Event) {
+    toggleProfileMenu(event: MouseEvent) {
         this.profileMenu.toggle(event);
     }
 
@@ -63,13 +80,4 @@ export class NavbarComponent {
         this.router.navigateByUrl('/publications');
 
     }
-
-    search() {
-        if (this.searchQuery) {
-            this.router.navigate(['/publications'],
-                { queryParams: { search: this.searchQuery },
-                    queryParamsHandling: 'merge' });
-        }
-    }
-
 }
