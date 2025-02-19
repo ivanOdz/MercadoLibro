@@ -13,23 +13,19 @@ html {
     margin: 0;
     padding: 0;
 }
-.snackbar-large {
-    font-size: 1.5rem;
-    padding: 16px 32px;
-    min-width: 300px;
-    max-width: 600px;
-    width: auto;
-    text-align: center;
+
+.custom-snackbar-error {
+    background-color: rgb(214, 170, 170);
+    border-color: rgba(205, 128, 128, 0.9);
+    margin: 16px;
+}
+.custom-snackbar-success {
+    background-color: #aad6c2;
+    border-color: rgba(137, 189, 166, 0.9);
+    margin: 16px;
 }
 
-.snackbar-error {
-    background-color: #F2EBD8;
-    color: #333333;
-}
-
-.snack-bar-button {
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    transition: all 0.3s ease;
+::ng-deep .mat-mdc-snack-bar-container .mat-mdc-snack-bar-actions .mat-mdc-button.mat-mdc-snack-bar-action:hover {
+    background-color: transparent !important;
+    color: inherit !important;
 }

@@ -121,8 +121,10 @@ export class ExchangesComponent implements OnInit {
                         }
                     });
             },
-            () => this.snackBarService.showError('ERROR.CONFIRM_EXCHANGE'));
-
+            () => {
+                this.snackBarService.showError('ERROR.CONFIRM_EXCHANGE')
+                this.loadExchanges()
+            })
     }
 
     sendMessage() {
