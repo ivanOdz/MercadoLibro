@@ -427,7 +427,7 @@ public class PublicationJpaDao implements PublicationDao {
 
     private int getTotalResultsByBook(Long userId, String search, Genre genre, BookState state, Long locationId) {
         StringBuilder nativeQueryString = new StringBuilder(
-                "SELECT COUNT(*) " +
+                "SELECT COUNT(distinct p.publicationId) " +
                         "FROM publication p " +
                         "JOIN book b ON p.bookId = b.bookId " +
                         "JOIN book_model bm ON bm.bookModelId = b.bookModelId " +
@@ -480,7 +480,7 @@ public class PublicationJpaDao implements PublicationDao {
 
     private int getTotalResultsFavoritePublications(Long userId, String search, Genre genre, BookState state, Long locationId) {
         StringBuilder nativeQueryString = new StringBuilder(
-                "SELECT COUNT(*) " +
+                "SELECT COUNT(distinct p.publicationId) " +
                         "FROM favorite_publication fp " +
                         "JOIN publication p ON p.publicationId = fp.publicationId " +
                         "JOIN book b ON p.bookId = b.bookId " +

@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import {AuthGuard} from "../core/guards/auth.guard";
-import {NotFoundComponent} from "./errors/not-found/not-found.component";
 import {UnauthorizedComponent} from "./errors/unauthorized/unauthorized.component";
 import {ForbiddenComponent} from "./errors/forbidden/forbidden.component";
 import {BadRequestComponent} from "./errors/bad-request/bad-request.component";

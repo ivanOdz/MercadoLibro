@@ -54,14 +54,18 @@
             <br>
 		</div>
 
-        <p-scrollpanel [style]="{ width:'65vw', height: '62vh'}" >
+        <div style="height: 63vh;align-content: center;" *ngIf="loading">
+            <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
+        </div>
+
+        <p-scrollpanel *ngIf="!loading && books.length !==0" [style]="{ width:'65vw', height: '62vh'}" >
             <div class="books-grid">
                 <app-book-card data-cy="books" *ngFor="let book of books" [book]="book" [showOwner]="false" [showGenre]="true" [showState]="true"></app-book-card>
             </div>
-            <app-paginator [pagination]="pagination" [fetchMethod]="fetchBooks.bind(this)"></app-paginator>
         </p-scrollpanel>
+        <app-paginator *ngIf="!firstLoad && books.length !== 0" [pagination]="pagination" [fetchMethod]="fetchBooks.bind(this)"></app-paginator>
 
-		<div class="no-books" *ngIf="books.length === 0">
+		<div class="no-books" *ngIf="!loading && books.length === 0">
 		    <p>{{ 'BOOK_HOME.NO_RESULTS' | translate }}</p>
 		    <p>{{ 'BOOK_HOME.ADD_BOOKS' | translate }}</p>
 			<button class="add-book-btn" [routerLink]="uploadBookModelUrl" >{{ 'BOOK_HOME.ADD_BOOK_MODEL' | translate }}</button>

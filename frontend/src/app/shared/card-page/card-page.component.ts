@@ -1,4 +1,12 @@
-import { Component, Input, OnInit, TemplateRef, ViewChild, ElementRef, SimpleChanges } from '@angular/core';
+import {
+	Component,
+	Input,
+	OnInit,
+	TemplateRef,
+	ViewChild,
+	ElementRef,
+	ChangeDetectorRef
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -15,15 +23,16 @@ import { PaginatorComponent } from "../paginator/paginator.component";
 import { switchMap } from "rxjs";
 import { SortComponent } from "../sort/sort.component";
 import { ObservablePublicationData } from "../../core/models/types";
+import {ProgressSpinner} from "primeng/progressspinner";
 
 @Component({
 	selector: 'card-page',
 	templateUrl: './card-page.component.html',
 	styleUrl: './card-page.component.css',
 	standalone: true,
-    imports: [CommonModule, TranslatePipe, NavbarComponent, RouterModule, FilterListComponent,
-        InputGroup, InputGroupAddon, ButtonModule, InputText, FormsModule, SortComponent,
-		PaginatorComponent, ScrollPanelModule ]
+	imports: [CommonModule, TranslatePipe, NavbarComponent, RouterModule, FilterListComponent,
+		InputGroup, InputGroupAddon, ButtonModule, InputText, FormsModule, SortComponent,
+		PaginatorComponent, ScrollPanelModule, ProgressSpinner]
 
 })
 export class CardPageComponent implements OnInit {
@@ -36,11 +45,14 @@ export class CardPageComponent implements OnInit {
 	
 	@Input() items: any[] = []; 
 	@Input() cardTemplate!: TemplateRef<any>;
-	
+	@Input() emptyPageTemplate!: TemplateRef<any>;
+
 	@ViewChild('searchInput') searchInput!: ElementRef;
-	
-	constructor(private route: ActivatedRoute, private router: Router) { }
-	
+
+	loading: boolean = true;
+
+	constructor(private route: ActivatedRoute, private router: Router, private cdRef: ChangeDetectorRef) { }
+
 	conditionHeaders: Record<string, string> = {};
 	genreHeaders: Record<string, string> = {};
 	isSearchActive = false;
@@ -50,7 +62,8 @@ export class CardPageComponent implements OnInit {
 	genreFilterApplied: boolean = false;
 	totalResults: number = 0;
 	resetPaginatorNumber: boolean = false;
-	
+
+
 	currentFilters = {
 			state: '',
 			genre: '',
@@ -58,12 +71,15 @@ export class CardPageComponent implements OnInit {
 			page: 0,
 			sort: '',
 		};
-	
+
+	firstLoad: boolean = true;
+
 	ngOnInit() {
 		this.fetchItems(undefined, 0);
 	}
 	
 	fetchItems(url: string | undefined, page: number) {
+		this.loading = true;
 		this.currentFilters.page = page;
 		this.fetchMethod(this.currentFilters.state, this.currentFilters.genre, this.currentFilters.search, this.currentFilters.page, this.currentFilters.sort).pipe(
 			switchMap((response) => {
@@ -72,11 +88,15 @@ export class CardPageComponent implements OnInit {
 				this.genreHeaders = response.headers.genreHeaders;
 				this.items = response.publicationData;
 				this.totalResults = response.totalResults;
-				return [];
+				this.loading = false;
+				if(this.firstLoad) this.firstLoad = false;
+				return []
 			})
 		).subscribe({
 			next: (items) => {
 				this.items = items;
+				this.loading = false;
+				this.cdRef.detectChanges()
 			}
 		});
 	}

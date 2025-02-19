@@ -354,5 +354,40 @@
     "MESSAGE": "Lamentamos no encontrar la página que está buscando.",
     "REDIRECT_TEXT": "Vuelva a la ",
     "REDIRECT_BUTTON": "página principal."
+  },
+  "TITLE": {
+    "NOT_FOUND": "Not found",
+    "EXCHANGES": {
+      "MAIN": "Intercambios",
+      "REQUESTS": "Solicitudes de Intercambio",
+      "HISTORY": "Historial de Intercambios"
+    },
+    "HOME": "Inicio",
+    "PROFILE": "Perfil",
+    "BOOKS": {
+      "MY_BOOKS": "Mis Libros",
+      "ADD_BOOK": "Agregar Libro",
+      "LIBRARY": "Nuestra Biblioteca"
+    },
+    "AUTH": {
+      "LOGIN": "Iniciar sesión",
+      "REGISTER": "Registrarse",
+      "SUCCESS": "Registro exitoso",
+      "VERIFY": "Verificar cuenta",
+      "REQUEST_PASSWORD_CHANGE": "Solicitar cambio de contraseña",
+      "CHANGE_PASSWORD": "Cambiar contraseña"
+    },
+    "PUBLICATIONS": {
+      "MAIN": "Publicaciones",
+      "MY_PUBLICATIONS": "Mis Publicaciones",
+      "FAVORITES": "Publicaciones Favoritas",
+      "DETAIL": "Detalles de la Publicación",
+      "NO_FAV_PUBLICATIONS": "No tienes publicaciones favoritas. Agregala publicaciones a tus favoritos desde la página de publicaciones.",
+      "MARK_AS_FAVORITE": "Ir a publicaciones",
+      "NO_PUBLICATIONS": "No hay publicaciones aún. Crea una publicación desde la página de mis libros.",
+      "NO_MY_PUBLICATIONS": "No tienes publicaciones aún. Crea una publicación desde la página de mis libros.",
+      "CREATE_A_PUBLICATION": "Ir a mis libros"
+    }
   }
+
 }

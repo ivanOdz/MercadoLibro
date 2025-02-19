@@ -9,11 +9,12 @@ import {ProfileComponent} from "./profile/profile.component";
 import {AuthGuard} from "../core/guards/auth.guard";
 
 export const authRoutes: Routes = [
-    { path: 'login', component: AuthComponent, title: 'Login' },
-    { path: 'register', component: RegisterComponent, title: 'Register' },
-    { path: 'register/success', component: RegisterComponentSuccess , title: 'Success' },
-    { path: 'verify', component: VerifyComponent, title: 'Verify' },
-    { path: 'request-change-password', component: ForgotPasswordComponent, title: 'Request Password Change' },
-    { path: 'change-password', component: ChangePasswordComponent, title: 'Change Password' },
-    { path: 'profile', component: ProfileComponent, title: 'Profile', canActivate: [AuthGuard] },
+    { path: 'login', component: AuthComponent, data: { title: 'TITLE.AUTH.LOGIN' } },
+    { path: 'register', component: RegisterComponent, data: { title: 'TITLE.AUTH.REGISTER' } },
+    { path: 'register/success', component: RegisterComponentSuccess, data: { title: 'TITLE.AUTH.SUCCESS' } },
+    { path: 'verify', component: VerifyComponent, data: { title: 'TITLE.AUTH.VERIFY' } },
+    { path: 'request-change-password', component: ForgotPasswordComponent, data: { title: 'TITLE.AUTH.REQUEST_PASSWORD_CHANGE' } },
+    { path: 'change-password', component: ChangePasswordComponent, data: { title: 'TITLE.AUTH.CHANGE_PASSWORD' } },
+    { path: 'profile', component: ProfileComponent, data: { title: 'TITLE.PROFILE' }, canActivate: [AuthGuard] },
 ];
+

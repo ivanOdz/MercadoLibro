@@ -33,8 +33,8 @@
 .page-info {
     display: flex;
     align-items: center;
-    font-size: 16px;
-    font-weight: bold;
+    font-size: small;
+    font-weight: normal;
 }
 
 .page-number, .total-pages {

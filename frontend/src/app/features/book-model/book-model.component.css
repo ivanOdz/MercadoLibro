@@ -1,11 +1,15 @@
 .return-button {
-    width: 17%;
     flex-direction: row;
     display: flex;
     border-radius: 1rem;
     padding: 1rem;
     gap: 9%;
     cursor: pointer;
+    width: 15vw;
+    justify-self: start;
+    align-items: start;
+    justify-items: start;
+    font-size: smaller;
 }
 .return-button:hover {
     background: #aca28c29;
@@ -20,7 +24,6 @@
     grid-template-columns: 2fr 0.75fr;
     gap: 20px;
     padding: 5vh 5vh 1vh 5vh;
-    height: 91vh;
 }
 .book-models-grid {
     display: flex;

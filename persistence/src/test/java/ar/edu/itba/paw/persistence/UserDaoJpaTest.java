@@ -49,7 +49,7 @@ public class UserDaoJpaTest {
 	
 	@Test
 	public void testFindById() {
-		/*
+		
 		Optional<User> maybeUser = userDao.findById(UserConstants.ID_1);
 		
 		Assert.assertTrue(maybeUser.isPresent());
@@ -60,9 +60,9 @@ public class UserDaoJpaTest {
 		Assert.assertEquals(UserConstants.PASSWORD_1, maybeUser.get().getPassword());
 		Assert.assertEquals(UserConstants.LANGUAGE_1, maybeUser.get().getLanguage());
 		
-		Assert.assertNotEquals(UserConstants.NON_EXISTING_ID, maybeUser.get().getLanguage());*/
+		Assert.assertNotEquals(UserConstants.NON_EXISTING_ID, maybeUser.get().getLanguage());
 	}
-	/*
+	
 	@Test
 	public void testFindByIdNonExistent() {
 		
@@ -105,20 +105,6 @@ public class UserDaoJpaTest {
 	
 	@Test
 	@Rollback
-	public void testUpdateUsername() {
-		
-		final User user = em.merge(new User(UserConstants.ID_1, UserConstants.NAME_1, UserConstants.MAIL_1, UserConstants.PASSWORD_1, UserConstants.IMAGE_ID_1, UserConstants.VERIFICATION_CODE_1, UserConstants.IS_VERIFIED_1, UserConstants.LANGUAGE_1));
-		final String newUsername = "Mariano";
-		
-		userDao.updateUsername(user, newUsername);
-		em.flush();
-		
-		Assert.assertEquals(0, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "users", "userId = " + UserConstants.ID_1 + " AND userName = '" + UserConstants.NAME_1 + "'"));
-		Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "users", "userId = " + UserConstants.ID_1 + " AND userName = '" + newUsername + "'"));
-	}
-
-	@Test
-	@Rollback
 	public void testAddUserLocation() {
 		
 		final User user = em.merge(new User(UserConstants.ID_1, UserConstants.NAME_1, UserConstants.MAIL_1, UserConstants.PASSWORD_1, UserConstants.IMAGE_ID_1, UserConstants.VERIFICATION_CODE_1, UserConstants.IS_VERIFIED_1, UserConstants.LANGUAGE_1));
@@ -131,5 +117,20 @@ public class UserDaoJpaTest {
 		
 		Assert.assertEquals(locationsSize + 1, user.getUserLocations().size());
 		Assert.assertTrue(user.getUserLocations().contains(newLocation));
-	}*/
+	}
+	
+	@Test
+	@Rollback
+	public void testUpdateUsername() {
+		
+		final User user = em.merge(new User(UserConstants.ID_1, UserConstants.NAME_1, UserConstants.MAIL_1, UserConstants.PASSWORD_1, UserConstants.IMAGE_ID_1, UserConstants.VERIFICATION_CODE_1, UserConstants.IS_VERIFIED_1, UserConstants.LANGUAGE_1));
+		final String newUsername = "Mariano";
+		
+		userDao.updateUsername(user, newUsername);
+		em.flush();
+		
+		Assert.assertEquals(0, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "users", "userId = " + UserConstants.ID_1 + " AND userName = '" + UserConstants.NAME_1 + "'"));
+		Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "users", "userId = " + UserConstants.ID_1 + " AND userName = '" + newUsername + "'"));
+	}
+
 }

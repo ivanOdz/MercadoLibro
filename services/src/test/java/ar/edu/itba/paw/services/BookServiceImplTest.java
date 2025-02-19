@@ -105,12 +105,11 @@ public class BookServiceImplTest {
 		
 		bookServiceImpl.getBookById(BOOK_ID);
 	}
-	/*
-	@Test
+	
+	@Test (expected = BookNotFoundException.class)
 	public void testUpdateMissingBookState() {
 		
-		Book book = bookServiceImpl.updateBookState(BOOK_ID, BOOK_STATE);
-		Assert.assertNull(book);
-	}*/
+		bookServiceImpl.updateBook(BOOK_ID, BOOK_STATE);
+	}
 	
 }

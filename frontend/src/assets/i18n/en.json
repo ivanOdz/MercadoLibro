@@ -308,7 +308,6 @@
     "NO_SUCH_USER": "There is no user with this email",
     "ERROR_REGISTRATION": "There was an error registering your account",
     "ERROR_CHANGING_PASSWORD": "There was an error changing your password"
-
   },
   "ERROR": {
     "UPDATE_STATE": "Upsi! There was a problem changing the condition of the book.",
@@ -351,5 +350,39 @@
     "MESSAGE": "Sorry, we couldn’t find the page you were looking for.",
     "REDIRECT_TEXT": "Go back to the ",
     "REDIRECT_BUTTON": "home page"
+  },
+  "TITLE": {
+    "NOT_FOUND": "Not Found",
+    "EXCHANGES": {
+      "MAIN": "Exchanges",
+      "REQUESTS": "Exchange Requests",
+      "HISTORY": "Exchange History"
+    },
+    "HOME": "Home",
+    "PROFILE": "Profile",
+    "BOOKS": {
+      "MY_BOOKS": "My Books",
+      "ADD_BOOK": "Add Book",
+      "LIBRARY": "Our Library"
+    },
+    "AUTH": {
+      "LOGIN": "Login",
+      "REGISTER": "Register",
+      "SUCCESS": "Registration Successful",
+      "VERIFY": "Verify Account",
+      "REQUEST_PASSWORD_CHANGE": "Request Password Change",
+      "CHANGE_PASSWORD": "Change Password"
+    },
+    "PUBLICATIONS": {
+      "MAIN": "Publications",
+      "MY_PUBLICATIONS": "My Publications",
+      "FAVORITES": "Favorite Publications",
+      "DETAIL": "Publication Details",
+      "NO_FAV_PUBLICATIONS": "You don't have any favorite publications yet. Add one from the publications page.",
+      "MARK_AS_FAVORITE": "Go to publications",
+      "NO_PUBLICATIONS": "There aren't publications yet",
+      "NO_MY_PUBLICATIONS": "You don't have any publications yet",
+      "CREATE_A_PUBLICATION": "Create a publication"
+    }
   }
 }

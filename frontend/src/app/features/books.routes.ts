@@ -5,7 +5,7 @@ import {BookFormComponent} from "./book-form/book-form.component";
 import {BookModelComponent} from "./book-model/book-model.component";
 
 export const booksRoutes: Routes = [
-    { path: '', component: BookHomeComponent, canActivate: [AuthGuard], title: 'My books' },
-    { path: 'add', component: BookFormComponent, canActivate: [AuthGuard], title: 'Add book' },
-    { path: 'library', component: BookModelComponent, canActivate: [AuthGuard], title: 'Our library' }
+    { path: '', component: BookHomeComponent, canActivate: [AuthGuard], data: { title: 'TITLE.BOOKS.MY_BOOKS' } },
+    { path: 'add', component: BookFormComponent, canActivate: [AuthGuard], data: { title: 'TITLE.BOOKS.ADD_BOOK' } },
+    { path: 'library', component: BookModelComponent, canActivate: [AuthGuard], data: { title: 'TITLE.BOOKS.LIBRARY' } }
 ];
