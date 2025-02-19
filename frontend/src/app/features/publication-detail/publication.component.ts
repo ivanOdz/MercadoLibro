@@ -7,7 +7,7 @@ import { trigger, style, animate, transition } from '@angular/animations';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import {PrimeTemplate} from "primeng/api";
 import {ActivatedRoute, Router} from "@angular/router";
-import {NgForOf, NgIf, Location as AngularLocation, AsyncPipe} from "@angular/common";
+import {NgForOf, NgIf, Location as AngularLocation} from "@angular/common";
 import {Select} from "primeng/select";
 import {FormsModule} from "@angular/forms";
 import {environment} from "../../../environments/environment";
@@ -47,8 +47,7 @@ import {Dialog} from "primeng/dialog";
         NgForOf,
         Rating,
         Tooltip,
-        Dialog,
-        AsyncPipe
+        Dialog
     ],
     animations: [
         trigger('fadeOutUp', [

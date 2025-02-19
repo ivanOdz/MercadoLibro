@@ -6,7 +6,6 @@ import { AuthService } from "../../core/services/auth.service";
 import { NgIf } from "@angular/common";
 import { Router } from "@angular/router";
 import { TranslatePipe } from "@ngx-translate/core";
-import {PasswordDirective} from "primeng/password";
 import {LanguageService} from "../../core/services/language.service";
 
 @Component({
@@ -18,8 +17,7 @@ import {LanguageService} from "../../core/services/language.service";
     InputText,
     ReactiveFormsModule,
     NgIf,
-    TranslatePipe,
-    PasswordDirective
+    TranslatePipe
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
