@@ -27,6 +27,7 @@ import ar.edu.itba.paw.models.PaginatedResponse;
 import ar.edu.itba.paw.models.utils.ExchangeState;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import ar.edu.itba.paw.persistence.config.TestConfig;
+import ar.edu.itba.paw.persistence.constants.BookModelConstants;
 import ar.edu.itba.paw.persistence.constants.PublicationConstants;
 import ar.edu.itba.paw.persistence.constants.UserConstants;
 
@@ -105,12 +106,15 @@ public class ExchangeDaoJpaTest {
 		Date now = new Date();
 		
 		Exchange newExchange = exchangeDao.createExchange(PublicationConstants.ID_5, PublicationConstants.ID_6, newAcceptCode, new Timestamp(now.getTime()));
+		em.flush();
 		
 		Assert.assertNotNull(newExchange);
 		Assert.assertEquals(PublicationConstants.ID_5, newExchange.getOfferer().getPublicationId());
 		Assert.assertEquals(PublicationConstants.ID_6, newExchange.getRequester().getPublicationId());
 		Assert.assertEquals(newAcceptCode, newExchange.getAcceptCode());
 		Assert.assertEquals(now, newExchange.getExchangeStartDate());
+		
+		Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "exchange", "exchangeId = " + newExchange.getExchangeId() + " AND offererPubId = " + PublicationConstants.ID_5 + " AND requesterPubId = " + PublicationConstants.ID_6));
 	}
 	
 	@Test

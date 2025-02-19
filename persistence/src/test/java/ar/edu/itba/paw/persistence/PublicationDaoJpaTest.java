@@ -127,6 +127,7 @@ public class PublicationDaoJpaTest {
 		locations.add(location_2);
 		
 		final Publication newPublication = publicationDao.createPublication(book, user, locations, PublicationState.CURRENT);
+		em.flush();
 		
 		Assert.assertNotNull(newPublication);
 		Assert.assertNotNull(newPublication.getUser());
@@ -161,6 +162,8 @@ public class PublicationDaoJpaTest {
 		Assert.assertFalse(found_3);
 		Assert.assertTrue(found_1);
 		Assert.assertTrue(found_2);
+		
+		Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "publication", "publicationId = " + newPublication.getPublicationId() + "AND publicationState LIKE 'CURRENT'"));
 	}
 	
 	@Test

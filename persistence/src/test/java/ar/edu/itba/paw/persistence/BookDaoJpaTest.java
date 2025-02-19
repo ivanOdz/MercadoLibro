@@ -80,6 +80,8 @@ public class BookDaoJpaTest {
 		final User user = em.find(User.class, UserConstants.ID_4);
 		final BookState bookState = BookState.GOOD;
 		
+		Assert.assertEquals(0, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "book", "ownerId = " + user.getUserId() + " AND bookModelId = " + bookModel.getBookModelId()));
+		
 		Book newBook = bookDao.createBook(bookModel, user, bookState);
 		
 		Assert.assertNotNull(newBook);
@@ -87,6 +89,8 @@ public class BookDaoJpaTest {
 		Assert.assertEquals(bookState, newBook.getBookState());
 		Assert.assertEquals(bookModel, newBook.getBookModel());
 		Assert.assertEquals(user, newBook.getOwner());
+		
+		Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "book", "ownerId = " + newBook.getOwner().getUserId() + " AND bookModelId = " + bookModel.getBookModelId()));
 	}
 	
 	@Test

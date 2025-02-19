@@ -17,6 +17,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import ar.edu.itba.paw.interfaces.persistence.BookModelDao;
@@ -42,7 +43,7 @@ public class BookModelDaoJpaTest {
 	
 	@Autowired
 	private BookModelDao bookModelDao;
-	
+
 	@PersistenceContext
 	private EntityManager em;
     
@@ -123,6 +124,8 @@ public class BookModelDaoJpaTest {
 																		(int)BookModelConstants.NON_EXISTENT_WEIGHT
 																	);
 		
+		em.flush();
+		
 		Assert.assertNotNull(newBookModel);
 		Assert.assertTrue(BookModelConstants.ID_10 < newBookModel.getBookModelId());
 		Assert.assertEquals(BookModelConstants.NON_EXISTENT_ISBN, newBookModel.getIsbn());
@@ -137,6 +140,8 @@ public class BookModelDaoJpaTest {
 		Assert.assertEquals(BookDimension.valueOf(BookModelConstants.NON_EXISTENT_DIMENSION), newBookModel.getDimension());
 		Assert.assertEquals(BookModelConstants.NON_EXISTENT_PUBLICATION_YEAR.shortValue(), newBookModel.getPublicationYear().shortValue());
 		Assert.assertEquals(null, newBookModel.getImage());
+		
+		Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "book_model", "isbn = " + BookModelConstants.NON_EXISTENT_ISBN + " AND title = '" + BookModelConstants.NON_EXISTENT_TITLE + "'"));
 	}
 
 	@Test
@@ -144,9 +149,12 @@ public class BookModelDaoJpaTest {
 	public void testCreateAuthors() {
 		
 		BookModel bookModel = new BookModel();
+		bookModel.setBookModelId(BookModelConstants.ID_4);
+		
 		bookModel = bookModelDao.addAuthor(bookModel, BookModelConstants.NON_EXISTENT_AUTHOR_1);
 		bookModel = bookModelDao.addAuthor(bookModel, BookModelConstants.NON_EXISTENT_AUTHOR_2);
 		
+		em.flush();
 		Assert.assertNotNull(bookModel);
 		Assert.assertNotNull(bookModel.getAuthors());
 		
@@ -171,6 +179,9 @@ public class BookModelDaoJpaTest {
 		Assert.assertFalse(found_3);
 		Assert.assertTrue(found_1);
 		Assert.assertTrue(found_2);
+		
+		Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "author", "authorName = '" + BookModelConstants.NON_EXISTENT_AUTHOR_1 + "'"));
+		Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "author", "authorName = '" + BookModelConstants.NON_EXISTENT_AUTHOR_2 + "'"));
 	}
 
 	@Test

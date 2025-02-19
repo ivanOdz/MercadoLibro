@@ -15,6 +15,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import ar.edu.itba.paw.interfaces.persistence.UserReviewDao;
@@ -69,11 +70,14 @@ public class UserReviewDaoJpaTest {
 		final int rating = 3;
 		
 		UserReview newReview = userReviewDao.createOrUpdateUserReview(exchangeId, (long)offererUserId, (long)requesterUserId, description, rating);
+		em.flush();
 		
 		Assert.assertNotNull(newReview);
 		Assert.assertEquals(exchangeId, newReview.getExchange().getExchangeId());
 		Assert.assertEquals(offererUserId, newReview.getUserReviewId());
 		Assert.assertEquals(rating, newReview.getReviewRating());
 		Assert.assertEquals(description, newReview.getReviewDescription());
+		
+		Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "user_review", "exchangeId = " + newReview.getExchange().getExchangeId() + " AND reviewerId = " + newReview.getUserReviewId() + " AND userReviewRating = " + newReview.getReviewRating()));
 	}
 }

@@ -117,6 +117,8 @@ public class UserDaoJpaTest {
 		
 		Assert.assertEquals(locationsSize + 1, user.getUserLocations().size());
 		Assert.assertTrue(user.getUserLocations().contains(newLocation));
+		
+		Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "user_location", "userId = " + user.getUserId() + " AND locationId = " + newLocation.getLocationId()));
 	}
 	
 	@Test

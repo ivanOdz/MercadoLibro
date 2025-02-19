@@ -16,6 +16,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import ar.edu.itba.paw.interfaces.persistence.LocationDao;
@@ -89,7 +90,10 @@ public class LocationDaoJpaTest {
 		final String newLocationString = "newLocation";
 		
 		Location newLocation = locationDao.newLocation(newLocationString);
+		em.flush();
 		
 		Assert.assertEquals(newLocationString, newLocation.getLocationString());
+		
+		Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "location", "locationId = " + newLocation.getLocationId() + " AND locationString = '" + newLocationString + "'"));
 	}
 }
