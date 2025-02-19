@@ -210,14 +210,14 @@ public class ExchangeDaoJpaTest {
 																	+ message + "'"
 																));
 	}
-	/*
+	
 	@Test
 	public void testGetAllExchangesByUserId() {
 		
 		final int currentPage = 0;
 		final boolean isOfferer = offererPubId != UserConstants.ID_1;
-				
-		PaginatedResponse<Exchange, BasicMetadata> response = exchangeDao.getAllExchangesByUserId(UserConstants.ID_1, ExchangeState.valueOf(exchangeState), currentPage, isOfferer);
+		
+		PaginatedResponse<Exchange, BasicMetadata> response = exchangeDao.getAllExchangesByUserId(UserConstants.ID_1, ExchangeState.valueOf(exchangeState), currentPage, isOfferer, !isOfferer);
 		
 		Assert.assertNotNull(response);
 		Assert.assertNotNull(response.getMetadata());
@@ -237,5 +237,5 @@ public class ExchangeDaoJpaTest {
 		
 		Assert.assertTrue(found);
 	}
-	 */
+	
 }
