@@ -53,6 +53,9 @@ public class UserController {
     @Consumes(value = {VndType.APPLICATION_USER})
     public Response createUser(@Valid @NotNull final RegisterDTO registerDTO) {
         User user = us.createUser(registerDTO.getUsername(), registerDTO.getMail(), registerDTO.getPassword(), LocaleContextHolder.getLocale().toLanguageTag());
+        if(user == null) {
+            return Response.status(Response.Status.CONFLICT).build();
+        }
         return Response.created(uriInfo.getAbsolutePathBuilder().path(user.getUserId().toString()).build()).build();
     }
 

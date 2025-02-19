@@ -10,6 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from "@ngx-translate/core";
 import { LanguageService } from "../../core/services/language.service";
 import {Divider} from "primeng/divider";
+import {catchError, throwError} from "rxjs";
 
 @Component({
 	selector: 'app-auth',
@@ -48,15 +49,7 @@ export class AuthComponent {
 				});
 			},
 			error: (err) => {
-				if (err.status === 401) {
-					this.errorMessage = 'INCORRECT_CREDENTIALS';
-				} else if (err.status === 403) {
-					this.errorMessage = 'NO_PERMISSION';
-				} else if (err.status === 500) {
-					this.errorMessage = 'SERVER_ERROR';
-				} else {
-					this.errorMessage = 'UNEXPECTED_ERROR';
-				}
+				this.errorMessage = 'INCORRECT_CREDENTIALS';
 				this.error = true;
 				this.cdRef.detectChanges();
 			}

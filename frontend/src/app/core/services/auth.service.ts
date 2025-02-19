@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import { BehaviorSubject, Observable, tap, catchError, throwError, map } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../models/user.model';
 import { UserService } from './user.service';
 import {environment} from "../../../environments/environment";
 import {take} from "rxjs/operators";
+import {TranslateService} from "@ngx-translate/core";
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -23,7 +24,8 @@ export class AuthService {
       private http: HttpClient,
       private route: ActivatedRoute,
       private router: Router,
-      private userService: UserService
+      private userService: UserService,
+      private translate: TranslateService
   ) {
     this.loadRememberMe();
     this.restoreUser();
@@ -134,29 +136,6 @@ export class AuthService {
     );
   }
 
-
-  /*
-  .subscribe({
-    next: (headResponse) => {
-      const accessToken = headResponse.headers.get('accessToken');
-      const refreshToken = headResponse.headers.get('refreshToken');
-
-
-      if (accessToken && refreshToken) {
-          this.storeTokens(accessToken, refreshToken, headResponse.headers.get('userUrn'));
-          this.isAuthenticated.next(true);
-          const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-          this.router.navigateByUrl(returnUrl);
-      } else {
-          this.isAuthenticated.next(false);
-      }
-
-    },
-    error: () => {
-      this.isAuthenticated.next(false);
-    },
-  });
-  */
   logout() {
     sessionStorage.removeItem('accessToken');
     sessionStorage.removeItem('refreshToken');
@@ -174,6 +153,18 @@ export class AuthService {
   }
 
   register(email: string, username: string, password: string): Observable<string | null> {
-    return this.userService.registerUser(email, username, password);
+    return this.userService.registerUser(email, username, password).pipe(
+        catchError((error: any) => {
+          let errorMessage = "AUTH.ERROR_REGISTRATION";
+          if (error.status === 409) {
+            errorMessage = "PROFILE.USERNAME_ALREADY_EXISTS";
+          }
+          return throwError(() => ({
+            status: error.status,
+            message: errorMessage,
+            originalError: error,
+          }));
+        })
+    );
   }
 }

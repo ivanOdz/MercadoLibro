@@ -44,7 +44,14 @@ public class UserServiceImpl implements UserService {
 
         if(u.isPresent()) {
             LOGGER.warn("Attempted to create a user with an already registered email, associated to user id: {}", u.get().getUserId());
-            return u.get();
+            return null;
+        }
+
+        u = userDao.findByUsername(username);
+
+        if(u.isPresent()) {
+            LOGGER.warn("Attempted to create a user with an already existing username, associated to user id: {}", u.get().getUserId());
+            return null;
         }
         
         User user = userDao.createUser(username, mail, passwordEncoder.encode(password), language, generateVerificationCode());

@@ -26,6 +26,7 @@ export class RegisterComponent {
   isRegistered = false;
   loginForm: FormGroup;
   registrationError = false;
+  registrationMessage = 'AUTH.ERROR_REGISTRATION';
 
   constructor(
       private authService: AuthService,
@@ -56,8 +57,9 @@ export class RegisterComponent {
       next: () => {
         this.router.navigate(['/auth/register/success']);
       },
-      error: () => {
+      error: (err) => {
         this.registrationError = true
+        this.registrationMessage = err.message
         this.chRef.detectChanges()
       }
     });

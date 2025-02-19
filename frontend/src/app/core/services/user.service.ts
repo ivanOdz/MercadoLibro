@@ -8,12 +8,13 @@ import { Review } from "../models/review.model";
 import { TranslateService } from "@ngx-translate/core";
 import { Pagination } from "../models/pagination";
 import { environment } from "../../../environments/environment";
+import {SnackbarService} from "./snackbar.service";
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
     baseUrl = environment.production ? environment.productionUrl : environment.developmentUrl;
 
-    constructor(private http: HttpClient, private translate: TranslateService) {
+    constructor(private http: HttpClient, private translate: TranslateService, private snackBarService: SnackbarService) {
 
     }
 
@@ -22,8 +23,7 @@ export class UserService {
 
         // userUrl = '/users/{id}'
         return this.http.get<any>(`${userUrl}`, { headers }).pipe(
-//           tap((userData) => console.log('Respuesta de la API de user:', userData)),
-		   
+
             map((userData) => {
                 return new User(userData);
             })
@@ -41,8 +41,8 @@ export class UserService {
         }).pipe(
             // Retornamos la URL del header Location
             map(response => response.headers.get('Location')),
-            catchError((error) => {
-                return throwError(() => error);
+            catchError((error: HttpErrorResponse) => {
+                return throwError(() => new Error("AUTH.ERROR_REGISTRATION"));
             })
         );
     }
@@ -85,16 +85,14 @@ export class UserService {
             newUsername: newUsername
         };
 
-        console.log(body);
-
         return this.http.patch<void>(`${user.self}`, body, { headers }).pipe(
             catchError((error: HttpErrorResponse) => {
                 if (error.status === 409) {
                     const errorMessage = this.translate.instant("PROFILE.USERNAME_ALREADY_EXISTS");
                     return throwError(() => new Error(errorMessage));
                 }
-                const genericErrorMessage = this.translate.instant("PROFILE.UPDATE_ERROR");
-                return throwError(() => new Error(genericErrorMessage));
+                this.snackBarService.showError("PROFILE.UPDATE_ERROR");
+                return throwError(() => new Error(error.message));
             })
         );
     }
@@ -104,16 +102,19 @@ export class UserService {
             return EMPTY;
         }
 
-        const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.users.v1+json' });
+        const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.useers.v1+json' });
 
         const body = {
             newUsername: null,
             language: language
         };
 
-        console.log(body);
-
-        return this.http.patch<void>(`${user.self}`, body, { headers });
+        return this.http.patch<void>(`${user.self}`, body, { headers }).pipe(
+            catchError((error: HttpErrorResponse) => {
+                this.snackBarService.showError("ERROR.CHANGE_LANGUAGE");
+                return throwError(() => new Error(error.message));
+            })
+        );
     }
 
     getLocations(user: User): Observable<Location[]> {

@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import {filter, switchMap, map, take} from 'rxjs/operators';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { UserService } from './user.service';
+import {SnackbarService} from "./snackbar.service";
 
 @Injectable({
     providedIn: 'root'
@@ -12,7 +13,7 @@ export class LanguageService {
     private currentLanguageSubject = new BehaviorSubject<string>('en');
     currentLanguage$: Observable<string> = this.currentLanguageSubject.asObservable();
 
-    constructor(private translate: TranslateService, private authService: AuthService, private userService: UserService) {
+    constructor(private translate: TranslateService, private authService: AuthService, private userService: UserService, private snackBarService: SnackbarService) {
         this.translate.addLangs(['en', 'es']);
 
         this.authService.ready$.pipe(
@@ -39,11 +40,11 @@ export class LanguageService {
 
     setLanguage(lang: string, updateUser = true) {
         this.translate.use(lang);
-        this.currentLanguageSubject.next(lang);
 
         if (updateUser) {
             this.updateUserLanguage(lang);
         }
+        this.currentLanguageSubject.next(lang);
     }
 
     private updateUserLanguage(language: string) {
@@ -52,8 +53,7 @@ export class LanguageService {
             filter(user => user != null && user.language !== language), // Asegurarse de que el usuario está logueado
             switchMap(user => this.userService.updateLanguage(user, language))
         ).subscribe({
-            next: () => console.log(`Language updated to ${language}`),
-            error: (err) => console.error('Error updating language', err)
+            //error: (err) => this.snackBarService.showError("ERROR.CHANGE_LANGUAGE")
         });
     }
 

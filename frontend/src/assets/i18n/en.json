@@ -314,6 +314,7 @@
     "GET_BOOKS": "Upsi! There was a problem while getting your books.",
     "GET_BOOK": "Upsi! There was a problem getting your book.",
     "UPLOAD_BOOK": "Upsi! Your book could not be added, try again later.",
+    "UPLOAD_BOOK_MODEL": "Upsi! The book could not be added to our library, try again later.",
     "GET_EXCHANGE": "Upsi! There was a problem getting your exchange.",
     "GET_EXCHANGES": "Upsi! There was a problem while getting your exchanges.",
     "SEND_MESSAGE": "Upsi! There was a problem sending your message.",
@@ -331,7 +332,14 @@
     "DISLIKE": "Upsi! There was a problem disliking the publication.",
     "UPLOAD_PUBLICATION": "Upsi! Your publication could not be added, try again later.",
     "ADD_LOCATION": "Upsi! Your location could not be added, try again later.",
-    "UPLOAD_LOCATION": "Upsi! Your location could not be added, try again later."
+    "UPLOAD_LOCATION": "Upsi! Your location could not be added, try again later.",
+    "CHANGE_LANGUAGE": "Upsi! Language could not be changed, try again later."
+  },
+  "400": {
+    "TITLE": "400 - Bad Request",
+    "MESSAGE": "Sorry, you need to log in to continue.",
+    "REDIRECT_TEXT": "Let's go ",
+    "REDIRECT_BUTTON": "home."
   },
   "401": {
     "TITLE": "401 - Unauthorized",
@@ -384,5 +392,6 @@
       "NO_MY_PUBLICATIONS": "You don't have any publications yet",
       "CREATE_A_PUBLICATION": "Create a publication"
     }
-  }
+  },
+  "CLOSE": "Close"
 }
