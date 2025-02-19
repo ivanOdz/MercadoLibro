@@ -363,6 +363,12 @@
     "REDIRECT_TEXT": "Go back to the ",
     "REDIRECT_BUTTON": "home page"
   },
+  "500": {
+    "TITLE": "500 - Internal Server Error",
+    "MESSAGE": "Sorry, there's been a problem. We are fixing it.",
+    "REDIRECT_TEXT": "Go back to the ",
+    "REDIRECT_BUTTON": "home page"
+  },
   "TITLE": {
     "NOT_FOUND": "Not Found",
     "EXCHANGES": {

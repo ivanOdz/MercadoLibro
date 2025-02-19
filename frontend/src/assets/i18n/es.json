@@ -361,6 +361,12 @@
     "REDIRECT_TEXT": "Vuelva a la ",
     "REDIRECT_BUTTON": "página principal."
   },
+  "500": {
+    "TITLE": "500 - Error interno del servidor",
+    "MESSAGE": "Lo lamentamos, ocurrió un error pero lo estamos solucionando.",
+    "REDIRECT_TEXT": "Vuelva a la ",
+    "REDIRECT_BUTTON": "página principal."
+  },
   "CLOSE": "Cerrar",
   "TITLE": {
     "NOT_FOUND": "Not found",
