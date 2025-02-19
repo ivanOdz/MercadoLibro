@@ -48,7 +48,7 @@
     font-size: medium;
     font-weight: 700;
     color: #333;
-    height: 2.5rem;
+    height: auto;
     justify-items: center;
     align-content: center;
     overflow: hidden;

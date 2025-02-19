@@ -28,14 +28,14 @@
                                             <img [src]="!isRequester(card) ? getCover(card.offeredPub.book) : getCover(card.requestedPub.book)"
                                                  alt="Book Image"
                                                  class="book-image"/>
-                                            <p style="margin-bottom: 0">
+                                            <p  class="card-books-title" style="margin-bottom: 0">
                                                 {{!isRequester(card) ? card.offeredPub.book?.bookModel?.title : card.requestedPub.book?.bookModel?.title }}
                                             </p>
                                         </div>
                                         <i class="pi pi-arrow-right-arrow-left icon-card-active"></i>
                                         <div class="active-card-first-column-book-second">
                                             <img [src]="!isRequester(card) ? getCover(card.requestedPub.book) : getCover(card.offeredPub.book)" alt="Book Image" class="book-image"/>
-                                            <p style="margin-bottom: 0">
+                                            <p class="card-books-title" style="margin-bottom: 0">
                                                 {{ !isRequester(card) ? card.requestedPub.book?.bookModel?.title : card.offeredPub.book?.bookModel?.title }}
                                             </p>
                                         </div>
@@ -136,14 +136,14 @@
                                             <img [src]="!isRequester(card)? getCover(card.offeredPub.book) : getCover(card.requestedPub.book)"
                                                  alt="Book Image"
                                                  class="book-image"/>
-                                            <p style="margin-bottom: 0">
+                                            <p class="card-books-title" style="margin-bottom: 0">
                                                 {{ !isRequester(card) ? card.offeredPub.book?.bookModel?.title : card.requestedPub.book?.bookModel?.title }}
                                             </p>
                                         </div>
                                         <i class="pi pi-arrow-right-arrow-left icon-card-active"></i>
                                         <div class="active-card-first-column-book-second">
                                             <img [src]="!isRequester(card) ? getCover(card.requestedPub.book) : getCover(card.offeredPub.book)" alt="Book Image" class="book-image"/>
-                                            <p style="margin-bottom: 0">
+                                            <p class="card-books-title" style="margin-bottom: 0">
                                                 {{ !isRequester(card) ? card.requestedPub.book?.bookModel?.title : card.offeredPub.book?.bookModel?.title }}
                                             </p>
                                         </div>
