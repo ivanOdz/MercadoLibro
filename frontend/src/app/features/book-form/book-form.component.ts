@@ -138,8 +138,10 @@ export class BookFormComponent {
 	async submitForm() {
 		
 		this.bookModelForm.markAllAsTouched();
-		console.log('Estoy!');
-		
+		if (this.bookModelForm.invalid) {
+			return;
+		}
+
 		if (this.authors.length > 1)
 		{
 			this.authors.controls.forEach((control, index) => {
@@ -170,6 +172,7 @@ export class BookFormComponent {
 					this.bookService.uploadBook(this.bookUrl, response, rating, this.bookModelForm.value.condition, this.user, imageArray ).subscribe({
 						next: () => {
 							console.log('Upload of Book successful :)');
+							this.goBackToBooks();
 						},
 						error: (error) => {
 							console.error('Upload of Book failed', error);
