@@ -334,11 +334,12 @@
     "ADD_LOCATION": "Upsi! Your location could not be added, try again later.",
     "DELETE_LOCATION": "Upsi! Your location could not be deleted, try again later.",
     "UPLOAD_LOCATION": "Upsi! Your location could not be added, try again later.",
-    "CHANGE_LANGUAGE": "Upsi! Language could not be changed, try again later."
+    "CHANGE_LANGUAGE": "Upsi! Language could not be changed, try again later.",
+    "ADD_REVIEW": "Upsi! Your review could not be added, try again later."
   },
   "400": {
     "TITLE": "400 - Bad Request",
-    "MESSAGE": "Sorry, you need to log in to continue.",
+    "MESSAGE": "Sorry, something went wrong.",
     "REDIRECT_TEXT": "Let's go ",
     "REDIRECT_BUTTON": "home."
   },
