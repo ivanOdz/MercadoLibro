@@ -32,7 +32,7 @@ import {Pagination} from "../../core/models/pagination";
 
 @Component({
     selector: 'app-publication-detail',
-    templateUrl: `./publication.component.html`,
+    templateUrl: './publication.component.html',
     standalone: true,
     imports: [
         NavbarComponent,
@@ -225,6 +225,10 @@ export class PublicationComponent implements OnInit {
                     });
             }),
             switchMap(({ books, pagination }) => {
+                if(books.length === 0) {
+                    this.loading = false;
+                    this.userBooks = [];
+                }
                 this.pagination = pagination;
                 return forkJoin(
                     books.map(book =>
@@ -375,7 +379,7 @@ export class PublicationComponent implements OnInit {
     }
 
     redirectToBookModels() {
-//        this.router.navigate(['/book_models'])
+        this.router.navigate(['/books/library'])
     }
 
     redirectToProfile() {
