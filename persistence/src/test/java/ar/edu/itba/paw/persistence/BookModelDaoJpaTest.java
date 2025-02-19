@@ -56,7 +56,7 @@ public class BookModelDaoJpaTest {
 	
 	@Test
 	public void testGetBookModelByBookModelId() {
-		/*
+		
 		final Author author_1 = em.merge(new Author(AuthorConstants.ID_1, AuthorConstants.NAME_1));
 		final Author author_2 = em.merge(new Author(AuthorConstants.ID_2, AuthorConstants.NAME_2));
 		final List<Author> authors = new ArrayList<Author>();
@@ -72,12 +72,12 @@ public class BookModelDaoJpaTest {
 		Assert.assertEquals(BookModelConstants.EDITORIAL_1, maybeBookModel.get().getEditorial());
 		Assert.assertEquals(BookModelConstants.DESCRIPTION_1, maybeBookModel.get().getDescription());
 		Assert.assertEquals(Genre.fromString("genre." + BookModelConstants.GENRE_1), maybeBookModel.get().getGenre());
-		Assert.assertEquals((int)BookModelConstants.EDITION_1, maybeBookModel.get().getEdition());
-		Assert.assertEquals((int)BookModelConstants.WEIGHT_1, maybeBookModel.get().getWeight());
-		Assert.assertEquals((int)BookModelConstants.PAGES_1, maybeBookModel.get().getPages());
+		Assert.assertEquals(BookModelConstants.EDITION_1, maybeBookModel.get().getEdition());
+		Assert.assertEquals(BookModelConstants.WEIGHT_1, maybeBookModel.get().getWeight());
+		Assert.assertEquals(BookModelConstants.PAGES_1, maybeBookModel.get().getPages());
 		Assert.assertEquals(Language.valueOf(BookModelConstants.LANGUAGE_1), maybeBookModel.get().getBookLanguage());
 		Assert.assertEquals(BookDimension.valueOf(BookModelConstants.DIMENSION_1), maybeBookModel.get().getDimension());
-		Assert.assertEquals((short)(int)BookModelConstants.PUBLICATION_YEAR_1, maybeBookModel.get().getPublicationYear());
+		Assert.assertEquals(BookModelConstants.PUBLICATION_YEAR_1.shortValue(), maybeBookModel.get().getPublicationYear().shortValue());
 		Assert.assertEquals(null, maybeBookModel.get().getImage());
 		
 		Boolean found_1 = false;
@@ -100,18 +100,13 @@ public class BookModelDaoJpaTest {
 		
 		Assert.assertFalse(found_3);
 		Assert.assertTrue(found_1);
-		Assert.assertTrue(found_2);*/
+		Assert.assertTrue(found_2);
 	}
-	/*
+	
 	@Test
 	@Rollback
 	public void testCreateBookModel() {
 		
-		final Author author_1 = em.merge(new Author(AuthorConstants.NON_EXISTENT_ID_1, BookModelConstants.NON_EXISTENT_AUTHOR_1));
-		final Author author_2 = em.merge(new Author(AuthorConstants.NON_EXISTENT_ID_2, BookModelConstants.NON_EXISTENT_AUTHOR_2));
-		final List<Author> authors = new ArrayList<Author>();
-		authors.add(author_1);
-		authors.add(author_2);
 		
 		final BookModel newBookModel = bookModelDao.createBookModel(	BookModelConstants.NON_EXISTENT_ISBN,
 																		BookModelConstants.NON_EXISTENT_TITLE,
@@ -135,55 +130,31 @@ public class BookModelDaoJpaTest {
 		Assert.assertEquals(BookModelConstants.NON_EXISTENT_EDITORIAL, newBookModel.getEditorial());
 		Assert.assertEquals(BookModelConstants.NON_EXISTENT_DESCRIPTION, newBookModel.getDescription());
 		Assert.assertEquals(Genre.fromString("genre." + BookModelConstants.NON_EXISTENT_GENRE), newBookModel.getGenre());
-		Assert.assertEquals((int)BookModelConstants.NON_EXISTENT_EDITION, newBookModel.getEdition());
-		Assert.assertEquals((int)BookModelConstants.NON_EXISTENT_WEIGHT, newBookModel.getWeight());
-		Assert.assertEquals((int)BookModelConstants.NON_EXISTENT_PAGES, newBookModel.getPages());
+		Assert.assertEquals(BookModelConstants.NON_EXISTENT_EDITION, newBookModel.getEdition());
+		Assert.assertEquals(BookModelConstants.NON_EXISTENT_WEIGHT, newBookModel.getWeight());
+		Assert.assertEquals(BookModelConstants.NON_EXISTENT_PAGES, newBookModel.getPages());
 		Assert.assertEquals(Language.valueOf(BookModelConstants.NON_EXISTENT_LANGUAGE), newBookModel.getBookLanguage());
 		Assert.assertEquals(BookDimension.valueOf(BookModelConstants.NON_EXISTENT_DIMENSION), newBookModel.getDimension());
-		Assert.assertEquals((short)(int)BookModelConstants.NON_EXISTENT_PUBLICATION_YEAR, newBookModel.getPublicationYear());
+		Assert.assertEquals(BookModelConstants.NON_EXISTENT_PUBLICATION_YEAR.shortValue(), newBookModel.getPublicationYear().shortValue());
 		Assert.assertEquals(null, newBookModel.getImage());
-		
-		Boolean found_1 = false;
-		Boolean found_2 = false;
-		Boolean found_3 = false;
-		
-		for (Author author : newBookModel.getAuthors()) {
-			
-			if (author.getAuthorName().equals(BookModelConstants.NON_EXISTENT_AUTHOR_1)) {
-				found_1 = true;
-			}
-			else if (author.getAuthorName().equals(BookModelConstants.NON_EXISTENT_AUTHOR_2)) {
-				found_2 = true;
-			}
-			else {
-				found_3 = true;
-				break;
-			}
-		}
-		
-		Assert.assertFalse(found_3);
-		Assert.assertTrue(found_1);
-		Assert.assertTrue(found_2);
-	}*/
+	}
 
-	/*
 	@Test
 	@Rollback
 	public void testCreateAuthors() {
 		
-		final List<String> authorStrings = new ArrayList<String>();
-		authorStrings.add(BookModelConstants.NON_EXISTENT_AUTHOR_1);
-		authorStrings.add(BookModelConstants.NON_EXISTENT_AUTHOR_2);
+		BookModel bookModel = new BookModel();
+		bookModel = bookModelDao.addAuthor(bookModel, BookModelConstants.NON_EXISTENT_AUTHOR_1);
+		bookModel = bookModelDao.addAuthor(bookModel, BookModelConstants.NON_EXISTENT_AUTHOR_2);
 		
-		final List<Author> newAuthors = bookModelDao.createAuthors(authorStrings);
-		
-		Assert.assertNotNull(newAuthors);
+		Assert.assertNotNull(bookModel);
+		Assert.assertNotNull(bookModel.getAuthors());
 		
 		Boolean found_1 = false;
 		Boolean found_2 = false;
 		Boolean found_3 = false;
 		
-		for (Author author : newAuthors) {
+		for (Author author : bookModel.getAuthors()) {
 			
 			if (author.getAuthorName().equals(BookModelConstants.NON_EXISTENT_AUTHOR_1)) {
 				found_1 = true;
@@ -201,8 +172,7 @@ public class BookModelDaoJpaTest {
 		Assert.assertTrue(found_1);
 		Assert.assertTrue(found_2);
 	}
-	 */
-/*
+
 	@Test
 	public void testGetPaginatedBookModels() {
 		
@@ -340,5 +310,5 @@ public class BookModelDaoJpaTest {
 		Assert.assertEquals(2, genreMystery);
 		Assert.assertEquals(3, genreOther);
 		Assert.assertEquals(0, genreNonExistent);
-	}*/
+	}
 }
