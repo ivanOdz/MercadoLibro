@@ -243,11 +243,4 @@ describe('History Exchanges tests', () => {
         });
 
     });
-
-    // IMPLEMENT: reviews are not loaded yet just can be posted
-    it('should load a review correctly', () => {
-
-    });
-
-
 });

@@ -5,7 +5,8 @@
 	[showSearchBar]="false"
 	[displaySort]="false"
 	[displayGridStyle]="false"
-	[cardTemplate]="publicationsFav"
+	[cardTemplate]="publicationCardTemplate"
+    [emptyPageTemplate]="publicationsFav"
 ></card-page>
 
 <ng-template #publicationCardTemplate let-publication>
