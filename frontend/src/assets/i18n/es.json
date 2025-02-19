@@ -353,7 +353,12 @@
       "MAIN": "Publicaciones",
       "MY_PUBLICATIONS": "Mis Publicaciones",
       "FAVORITES": "Publicaciones Favoritas",
-      "DETAIL": "Detalles de la Publicación"
+      "DETAIL": "Detalles de la Publicación",
+      "NO_FAV_PUBLICATIONS": "No tienes publicaciones favoritas. Agregala publicaciones a tus favoritos desde la página de publicaciones.",
+      "MARK_AS_FAVORITE": "Ir a publicaciones",
+      "NO_PUBLICATIONS": "No hay publicaciones aún. Crea una publicación desde la página de mis libros.",
+      "NO_MY_PUBLICATIONS": "No tienes publicaciones aún. Crea una publicación desde la página de mis libros.",
+      "CREATE_A_PUBLICATION": "Ir a mis libros"
     }
   }
 

@@ -51,7 +51,7 @@
 		</div>
 	
 		<div class="content">
-			<p-scrollpanel class="scroll-panel" [style]="{ width:'65vw', height: '58vh'}">
+			<p-scrollpanel *ngIf="!loading && items.length !== 0" class="scroll-panel" [style]="{ width:'65vw', height: '58vh'}">
 	
 				<div [ngClass]="{ 'cards-grid': displayGridStyle, 'cards': !displayGridStyle }">
 					<ng-container *ngIf="cardTemplate">
@@ -62,8 +62,11 @@
 				
 			</p-scrollpanel>
 	        
-			<app-paginator [pagination]="pagination" [fetchMethod]="fetchItems.bind(this)" [reset]="resetPaginatorNumber"></app-paginator>
-		</div>
-        
+            <ng-template *ngIf="!loading  && items.length === 0" [ngTemplateOutlet]="emptyPageTemplate"></ng-template>
+            <div style="height: 64vh;align-content: center;" *ngIf="loading">
+                <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
+            </div>
+			<app-paginator *ngIf="!firstLoad && items.length !== 0" [pagination]="pagination" [fetchMethod]="fetchItems.bind(this)" [reset]="resetPaginatorNumber"></app-paginator>
+        </div>
 	</div>
 </div>

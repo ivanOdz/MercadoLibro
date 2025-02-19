@@ -6,8 +6,18 @@
 	[displaySort]="false"
 	[displayGridStyle]="false"
 	[cardTemplate]="publicationCardTemplate"
+    [emptyPageTemplate]="emptyMyPublications"
 ></card-page>
 
 <ng-template #publicationCardTemplate let-publication>
 	<publication-card data-cy="publications"  [publication]="publication" [loggedUser]="loggedUser" [showLikeHeart]="false" [showTrashCan]="true" [showIsMine]="false"></publication-card>
+</ng-template>
+
+
+
+<ng-template #emptyMyPublications>
+    <div class="section-empty">
+        <p class="text-empty">{{ 'PUBLICATIONS.NO_MY_PUBLICATIONS' | translate}}</p>
+        <p-button styleClass="empty-button" label="{{ 'PUBLICATIONS.CREATE_A_PUBLICATION' | translate}}" icon="pi pi-search" (click)="redirectToBooks()" />
+    </div>
 </ng-template>

@@ -349,7 +349,12 @@
       "MAIN": "Publications",
       "MY_PUBLICATIONS": "My Publications",
       "FAVORITES": "Favorite Publications",
-      "DETAIL": "Publication Details"
+      "DETAIL": "Publication Details",
+      "NO_FAV_PUBLICATIONS": "You don't have any favorite publications yet. Add one from the publications page.",
+      "MARK_AS_FAVORITE": "Go to publications",
+      "NO_PUBLICATIONS": "There aren't publications yet",
+      "NO_MY_PUBLICATIONS": "You don't have any publications yet",
+      "CREATE_A_PUBLICATION": "Create a publication"
     }
   }
 }

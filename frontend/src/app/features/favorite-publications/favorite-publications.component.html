@@ -5,9 +5,18 @@
 	[showSearchBar]="false"
 	[displaySort]="false"
 	[displayGridStyle]="false"
-	[cardTemplate]="publicationCardTemplate"
+	[cardTemplate]="publicationsFav"
 ></card-page>
 
 <ng-template #publicationCardTemplate let-publication>
 	<publication-card data-cy="publications" [publication]="publication" [loggedUser]="loggedUser" [showLikeHeart]="true"></publication-card>
 </ng-template>
+
+
+<ng-template #publicationsFav>
+    <div class="section-empty">
+        <p class="text-empty">{{ 'PUBLICATIONS.NO_FAV_PUBLICATIONS' | translate}}</p>
+        <p-button styleClass="empty-button" label="{{ 'PUBLICATIONS.MARK_AS_FAVORITE' | translate}}" icon="pi pi-search" (click)="redirectToPublications()" />
+    </div>
+</ng-template>
+

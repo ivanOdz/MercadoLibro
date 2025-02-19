@@ -11,3 +11,26 @@
 .add-book-btn:hover {
 	background-color: #d5c4a1;
 }
+
+
+.text-empty {
+	width: auto;
+	text-align: center;
+}
+
+
+
+:host ::ng-deep .p-button.empty-button {
+	color: black;
+	background: #b6ab89;
+	border: none;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	transform: scale(1);
+}
+
+
+.section-empty {
+	align-content: center;
+	justify-items: center;
+	height: 60vh;
+}
