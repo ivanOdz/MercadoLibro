@@ -158,6 +158,10 @@ export class BookHomeComponent implements OnInit {
 						this.pagination = response.pagination;
 					}),
 					switchMap((response) => {
+						if(response.books.length === 0) {
+							this.loading = false;
+							this.books = [];
+						}
 						return forkJoin(
 							response.books.map(book =>
 								this.bms.getBookModel(book.bookModel).pipe(
