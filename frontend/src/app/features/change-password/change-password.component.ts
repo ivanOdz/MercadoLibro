@@ -51,7 +51,7 @@ export class ChangePasswordComponent implements OnInit {
         {
             verificationCode: ['', [Validators.required]],
             password: ['', [Validators.required]],
-            confirmPassword: ['', [Validators.required]]
+            confirmPassword: ['', [Validators.required, this.passwordsMatchValidator]]
         },
         { validators: this.passwordsMatchValidator }
         );
@@ -88,7 +88,7 @@ export class ChangePasswordComponent implements OnInit {
 
   private passwordsMatchValidator(group: AbstractControl): ValidationErrors | null {
     const password = group.get('password')?.value;
-    const repeatPassword = group.get('repeatPassword')?.value;
+    const repeatPassword = group.get('confirmPassword')?.value;
     return password === repeatPassword ? null : { passwordsMismatch: true };
   }
 }

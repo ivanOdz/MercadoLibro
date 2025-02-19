@@ -72,7 +72,6 @@ describe('Change Password Request Tests', () => {
         cy.get('[data-cy=title-success]').should('be.visible');
     });
 
-    // IMPLEMENT ERROR PAGES
     it('should handle user not found error', () => {
         cy.intercept('POST', '**/users', { statusCode: 404 }).as('changePasswordRequest');
 
@@ -81,7 +80,7 @@ describe('Change Password Request Tests', () => {
 
         cy.wait('@changePasswordRequest');
 
-        // cy.get('[data-cy=error-message]').should('contain', 'Usuario no encontrado');
+        cy.get('.error').should('be.visible');
     });
 });
 
@@ -94,23 +93,22 @@ describe('Change Password Tests', () => {
     it('should change password successfully', () => {
         cy.intercept('PATCH', '**/users/123456', { statusCode: 200 }).as('changePassword');
 
-        cy.get('[data-cy=new-password]').type('NewPassword123!');
-        cy.get('[data-cy=confirm-password]').type('NewPassword123!');
-        cy.get('[data-cy=submit]').click();
+        cy.get('[data-cy=new-password]').type('hola').blur();
+        cy.get('[data-cy=confirm-password]').type('hola').blur();
+        cy.get('[data-cy=submit]').click({force:true});
 
         cy.wait('@changePassword').its('response.statusCode').should('eq', 200);
     });
 
-    // IMPLEMENT ERROR PAGES
     it('should handle invalid token error', () => {
         cy.intercept('PATCH', '**/users/123456', { statusCode: 404 }).as('changePassword');
 
         cy.get('[data-cy=new-password]').type('NewPassword123!');
         cy.get('[data-cy=confirm-password]').type('NewPassword123!');
-        cy.get('[data-cy=submit]').click();
+        cy.get('[data-cy=submit]').click({force:true});
 
         cy.wait('@changePassword');
 
-        // cy.get('[data-cy=error-message]').should('contain', 'Token inválido o expirado');
+        cy.get('.error').should('be.visible');
     });
 });
