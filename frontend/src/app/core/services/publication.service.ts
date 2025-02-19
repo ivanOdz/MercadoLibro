@@ -12,12 +12,13 @@ import {environment} from "../../../environments/environment";
 import {Location} from "../models/location.model";
 import {Pagination} from "../models/pagination";
 import { User } from "../../core/models/user.model";
+import {SnackbarService} from "./snackbar.service";
 
 @Injectable({ providedIn: 'root' })
 export class PublicationService {
     baseUrl = environment.production ? environment.productionUrl : environment.developmentUrl;
 
-    constructor(private http: HttpClient, private authService: AuthService, private bookService: BookService, private userService: UserService, private bookModelService: BookModelService){}
+    constructor(private http: HttpClient, private authService: AuthService, private bookService: BookService, private userService: UserService, private bookModelService: BookModelService, private snackBarService: SnackbarService){}
 
     // api call
     private getPublicationsByUrl(url: string): ObservablePublication {
@@ -175,20 +176,23 @@ export class PublicationService {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.publications.v1+json'});
 
         return this.http.get<any>(`${publicationUrl}`, {headers}).pipe(
-            tap((r) => console.log("Respuesta de la API con publications:", r))
+            catchError((error) => {
+                return throwError(() => new Error(error));
+            })
         );
     }
 
     getLocation(locationUrl: string) : Observable<Location[]> {
         return this.http.get<any>(`${locationUrl}`).pipe(
-            tap((r) => console.log("Respuesta de la API:", r))
+            catchError((error) => {
+                return throwError(() => new Error(error));
+            })
         );
     }
 
     getFavoritePublication(favoriteUrl: string, userUrl: string): Observable<FavoritePublication | null> {
         const userId = userUrl.split("/").pop();
         return this.http.get<FavoritePublication>(`${favoriteUrl.replace("{user_id}", <string>userId)}`).pipe(
-            tap((r) => console.log("Respuesta de la API:", r)),
             catchError((error) => {
                 if (error.status === 404) {
                     return of(null);
@@ -202,7 +206,10 @@ export class PublicationService {
 		const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.users.v1+json' });
 		
         return this.http.post(`${publication.favoriteEndpoint}`, user, { headers }).pipe(
-            tap(() => console.log("Publicación marcada como favorita"))
+            catchError((error) => {
+                this.snackBarService.showError('ERROR.LIKE');
+                return of(null);
+            })
         );
     }
 
@@ -210,7 +217,11 @@ export class PublicationService {
 		console.log("unlikePublication");
 		console.log(publication);
         return this.http.delete<void>(`${publication.favoritePublication?.self}`).pipe(
-            tap(() => publication.favoritePublication = null) // Después de eliminar, asigna null
+            tap(() => publication.favoritePublication = null), // Después de eliminar, asigna null
+            catchError((error) => {
+                this.snackBarService.showError('ERROR.UNLIKE');
+                return of(null);
+            })
         );
     }
 
@@ -239,13 +250,18 @@ export class PublicationService {
 
         let body = {
             userURN: userUrl,
-            bookURN: bookUrl,
+            bookURN: 'bookUrl',
             locationURN: selectedLocation?.self
         }
 
         return this.http.post(`${this.baseUrl}/publications`, body, {headers}).pipe(
-            tap((r) => {
-                console.log("Publicación creada:", r);
+            catchError((error) => {
+                this.snackBarService.showError('ERROR.UPLOAD_PUBLICATION');
+                if(error.status === 500) {
+                    return of(null);
+                } else {
+                    return throwError(() => error);
+                }
             })
         )
     }
@@ -262,6 +278,7 @@ export class PublicationService {
 
         return this.http.patch(publicationUrl, body, {headers}).pipe(
             catchError((error) => {
+                this.snackBarService.showError('ERROR.ADD_LOCATION');
                 return throwError(() => error);
             })
         );

@@ -127,7 +127,6 @@ export class RequestsComponent  implements OnInit {
             this.isLoading = false;
         }, (error) => {
             this.isLoading = false;
-            this.snackBarService.showError('ERROR.GET_EXCHANGES');
         });
     }
 

@@ -1,24 +1,26 @@
 import { Injectable } from "@angular/core";
 import {HttpClient, HttpHeaders, HttpParams, HttpResponse} from "@angular/common/http";
-import {catchError, Observable, of, tap} from "rxjs";
+import {catchError, Observable, of, tap, throwError} from "rxjs";
 import { BookModel } from "../models/bookModel.model";
 import {Pagination} from "../models/pagination";
 import {map} from "rxjs/operators";
+import {SnackbarService} from "./snackbar.service";
 
 @Injectable({ providedIn: 'root' })
 export class BookModelService {
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient, private snackBarService: SnackbarService) {}
 
     getBookModel(bookModelUrl: string) : Observable<BookModel> {
         const headers = new HttpHeaders({ 'Accept': 'application/vnd.book_models.v1+json' });
         return this.http.get<any>(`${bookModelUrl}`, {headers}).pipe(
-            //tap((r) => console.log("API response (Get) of Book Model:", r))
+            catchError((error) => {
+                return throwError(() => new Error(error));
+            })
         );
     }
 
     uploadBookModel(bookModelUrl: string, bookData: BookModel, cover: string | undefined): Observable<string> {
-        console.log('Book MODEL SERVICE:', cover);
         const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.book_models.v1+json' });
         const body = {
             isbn: bookData.isbn,
@@ -40,9 +42,12 @@ export class BookModelService {
             cover: cover,
             self: bookData.self
         }
-        console.log()
         return this.http.post(`${bookModelUrl}`, body, { headers, observe: 'response' }).pipe(
-            map(response => response.headers.get('Location') || '')
+            map(response => response.headers.get('Location') || ''),
+            catchError((error) => {
+                this.snackBarService.showError('ERROR.UPLOAD_BOOK_MODEL');
+                return throwError(() => new Error(error.message));
+            })
         );
     }
 
@@ -67,7 +72,6 @@ export class BookModelService {
                 return { bookModels, pagination, headers: response.headers };
             }),
             catchError(error => {
-                console.error("Error al obtener los modelos de libros:", error);
                 return of({ bookModels: [], pagination: new Pagination(null), headers: error.headers });
             })
         );

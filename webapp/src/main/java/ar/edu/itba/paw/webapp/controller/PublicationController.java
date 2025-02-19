@@ -50,6 +50,9 @@ public class PublicationController {
 
         PaginatedResponse<Publication, ItemFilterMetadata> publications = ps.getPaginatedPublications(search,
                 state, genre, sortType, currentPage, userId, favorites, locationId);
+        if(publications.getData().isEmpty()) {
+            return Response.noContent().build();
+        }
 
         List<PublicationDTO> publicationDTOList = publications.getData().stream()
                 .map(publication -> PublicationDTO.fromPublication(uriInfo, publication)).collect(Collectors.toList());
@@ -96,6 +99,9 @@ public class PublicationController {
     @Produces(value = {VndType.APPLICATION_PUBLICATION})
     public Response getPublication(@PathParam("publication_id") Long publicationId) {
         Publication publication = ps.getPublicationByPublicationId(publicationId);
+        if (publication == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
         PublicationDTO dto = PublicationDTO.fromPublication(uriInfo, publication);
         GenericEntity<PublicationDTO> genericEntity = new GenericEntity<PublicationDTO>(dto) {};
 
@@ -127,7 +133,9 @@ public class PublicationController {
     @Produces(value = {VndType.APPLICATION_FAVORITE_PUBLICATION})
     public Response getFavoritePublicationById(@PathParam("publication_id") Long publicationId, @PathParam("favorite_id") Long fpId){
         FavoritePublication fp = ps.getFavoritePublicationById(fpId);
-
+        if (fp == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
         FavoriteDTO dto = FavoriteDTO.fromFavoritePublication(uriInfo, fp);
         GenericEntity<FavoriteDTO> genericEntity = new GenericEntity<FavoriteDTO>(dto) {};
 
@@ -146,17 +154,12 @@ public class PublicationController {
         return Response.ok(genericEntity).build();
     }
 
-    // Authorization Required
-    // El usuario tiene que estar logueado y debe ser dueño de la publicacion
-    // Creo que este metodo se reemplaza por el de la location
-    // Este metodo añade una location existente a una publication
     @PATCH
     @Path("/{publication_id}")
     @Consumes(value = {VndType.APPLICATION_UPDATE_PUBLICATION})
     @PreAuthorize("@accessControl.publicationsModifyAccess(#publicationId)")
     public Response updatePublication(@PathParam("publication_id") Long publicationId, PublicationUpdateDTO publicationUpdateDTO) {
         ps.updatePublication(publicationId, publicationUpdateDTO.getLocationId());
-
         return Response.noContent().build();
     }
 
