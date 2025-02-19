@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.exceptions.ExchangeBadRequestException;
 import ar.edu.itba.paw.interfaces.persistence.ExchangeDao;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
@@ -87,18 +88,13 @@ public class ExchangeServiceImplTest {
         exchangeServiceImpl.exchange((int)exchange.getAcceptCode(), true);
 	}
 	 */
+
 	
-	/*@Test(expected = ExchangeNotFoundException.class)
-	public void testGetExchangeByAcceptCodeNotFoundException() {
-		
-		exchangeServiceImpl.getExchangeByAcceptCode(ACCEPT_CODE);
-	}
-	
-	@Test(expected = ExchangeNotFoundException.class)
+	@Test(expected = ExchangeBadRequestException.class)
 	public void testGetExchangeByIdNotFoundException() {
 		
 		exchangeServiceImpl.getExchangeById(EXCHANGE_ID_1);
-	}*/
+	}
 	
 	/*@Test(expected = ExchangeBadRequestException.class)
 	public void testcofirmRequesterBadRequestException() {

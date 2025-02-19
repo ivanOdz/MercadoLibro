@@ -65,15 +65,14 @@ public class PublicationServiceImplTest {
         publication.setPublicationState(PUBLICATION_STATE);
         publication.setPublicationId(PUBLICATION_ID);
         
-//when(bookService.getBookById(BOOK_ID)).thenReturn(book);
+        when(bookService.getBookById(BOOK_ID)).thenReturn(book);
         when(userService.findById(OWNER_ID)).thenReturn(user);
         when(locationService.findById(LOCATION_ID)).thenReturn(location);
         when(publicationDao.createPublication(book, user, locations, PUBLICATION_STATE)).thenReturn(publication);
 
-        // FIXME
-        //Publication publicationDetail = publicationDetailService.createPublication(BOOK_ID, user, LOCATION_ID);
+        Publication publicationDetail = publicationDetailService.createPublication(BOOK_ID, OWNER_ID, LOCATION_ID);
         
-        //Assert.assertNotNull(publicationDetail);
+        Assert.assertNotNull(publicationDetail);
     }
     
     @Test(expected = UserNotUnauthorizedException.class)
