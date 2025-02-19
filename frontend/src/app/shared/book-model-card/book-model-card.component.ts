@@ -26,16 +26,15 @@ export class BookModelCardComponent {
 
     @Input() bookModel!: BookModel;
     modalVisible: boolean = false;
-    bookImage!: string;
+    bookImage: string = '';
     defaultImage: string = './assets/book.jpg';
 
     ngOnInit() {
-        console.log(this.bookModel);
         this.bookImage = this.getBookImage();
     }
 
     protected getBookImage(): string {
-        return this.bookModel.cover ? this.getBaseUrl() + this.bookModel.cover : this.defaultImage;
+        return this.bookModel.cover ? this.bookModel.cover : this.defaultImage;
     }
 
     getBaseUrl() {
