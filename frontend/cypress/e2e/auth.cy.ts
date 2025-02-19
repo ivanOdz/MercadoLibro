@@ -29,8 +29,6 @@ describe('Authentication Tests', () => {
         });
     });
 
-
-    // FIXME: Manejo de errores
     it('should show an error on invalid login', () => {
         cy.intercept('HEAD', '**/book_models', (req) => {
             req.reply({
@@ -44,16 +42,7 @@ describe('Authentication Tests', () => {
 
         cy.wait('@loginRequest');
 
-        cy.get('[data-cy="username"]')
-            .then(() => {
-                cy.get('.error-message').should('be.visible')
-            });
-
-        cy.get('[data-cy="password"]')
-            .then(() => {
-                cy.get('.error-message')
-                    .should('be.visible')
-            });
+        cy.get('.error').should('be.visible');
     });
 
     it('should remember login credentials when Remember Me is checked', () => {

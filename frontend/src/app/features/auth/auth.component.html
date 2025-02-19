@@ -21,7 +21,7 @@
                 <a href="/auth/request-change-password" class="text-primary">{{ 'LOGIN.FORGOT_PASSWORD' | translate }}</a>
             </div>
 
-            <div style="text-align: start;font-size: small;" *ngIf="error" class="text-red-500 text-center mb-3">
+            <div style="text-align: start;font-size: small;" *ngIf="error" class="error text-red-500 text-center mb-3">
     	        <p>{{ 'AUTH.' + errorMessage | translate }}</p>
 	        </div>
 
