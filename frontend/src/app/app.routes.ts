@@ -4,22 +4,22 @@ export const routes: Routes = [
   {path: '', redirectTo: 'publications', pathMatch: 'full'},
   {
     path: 'publications',
-    title: 'Home',
+    data: { title: 'TITLE.HOME' },
     loadChildren: () => import('./features/publications.routes').then(m => m.publicationsRoutes)
   },
   {
     path: 'auth',
-    title: 'Auth',
+    data: { title: 'TITLE.AUTH' },
     loadChildren: () => import('./features/auth.routes').then(m => m.authRoutes)
   },
   {
     path: 'exchanges',
-    title: 'Exchanges',
+    data: { title: 'TITLE.EXCHANGES' },
     loadChildren: () => import('./features/exchanges.routes').then(m => m.exchangesRoutes)
   },
   {
     path: 'books',
-    title: 'Books',
+    data: { title: 'TITLE.BOOKS' },
     loadChildren: () => import('./features/books.routes').then(m => m.booksRoutes)
   },
   //Error Pages

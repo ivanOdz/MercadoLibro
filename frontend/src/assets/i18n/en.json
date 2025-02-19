@@ -308,7 +308,6 @@
     "NO_SUCH_USER": "There is no user with this email",
     "ERROR_REGISTRATION": "There was an error registering your account",
     "ERROR_CHANGING_PASSWORD": "There was an error changing your password"
-
   },
   "ERROR": {
     "UPDATE_STATE": "Upsi! There was a problem changing the condition of the book.",
@@ -323,5 +322,34 @@
     "UPDATE_EXCHANGE": "Upsi! There was a problem updating the state of your exchange.",
     "CONFIRM_EXCHANGE": "Upsi! There was a problem confirming your exchange.",
     "REJECT_EXCHANGE": "Upsi! There was a problem rejecting your exchange."
+  },
+  "TITLE": {
+    "NOT_FOUND": "Not Found",
+    "EXCHANGES": {
+      "MAIN": "Exchanges",
+      "REQUESTS": "Exchange Requests",
+      "HISTORY": "Exchange History"
+    },
+    "HOME": "Home",
+    "PROFILE": "Profile",
+    "BOOKS": {
+      "MY_BOOKS": "My Books",
+      "ADD_BOOK": "Add Book",
+      "LIBRARY": "Our Library"
+    },
+    "AUTH": {
+      "LOGIN": "Login",
+      "REGISTER": "Register",
+      "SUCCESS": "Registration Successful",
+      "VERIFY": "Verify Account",
+      "REQUEST_PASSWORD_CHANGE": "Request Password Change",
+      "CHANGE_PASSWORD": "Change Password"
+    },
+    "PUBLICATIONS": {
+      "MAIN": "Publications",
+      "MY_PUBLICATIONS": "My Publications",
+      "FAVORITES": "Favorite Publications",
+      "DETAIL": "Publication Details"
+    }
   }
 }

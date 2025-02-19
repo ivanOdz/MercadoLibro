@@ -326,5 +326,35 @@
     "UPDATE_EXCHANGE": "Upsi! Hubo un problema actualizando el estado de su intercambio.",
     "CONFIRM_EXCHANGE": "Upsi! Hubo un problema confirmando su intercambio.",
     "REJECT_EXCHANGE": "Upsi! Hubo un problema rechazando su intercambio."
+  },
+  "TITLE": {
+    "NOT_FOUND": "Not found",
+    "EXCHANGES": {
+      "MAIN": "Intercambios",
+      "REQUESTS": "Solicitudes de Intercambio",
+      "HISTORY": "Historial de Intercambios"
+    },
+    "HOME": "Inicio",
+    "PROFILE": "Perfil",
+    "BOOKS": {
+      "MY_BOOKS": "Mis Libros",
+      "ADD_BOOK": "Agregar Libro",
+      "LIBRARY": "Nuestra Biblioteca"
+    },
+    "AUTH": {
+      "LOGIN": "Iniciar sesión",
+      "REGISTER": "Registrarse",
+      "SUCCESS": "Registro exitoso",
+      "VERIFY": "Verificar cuenta",
+      "REQUEST_PASSWORD_CHANGE": "Solicitar cambio de contraseña",
+      "CHANGE_PASSWORD": "Cambiar contraseña"
+    },
+    "PUBLICATIONS": {
+      "MAIN": "Publicaciones",
+      "MY_PUBLICATIONS": "Mis Publicaciones",
+      "FAVORITES": "Publicaciones Favoritas",
+      "DETAIL": "Detalles de la Publicación"
+    }
   }
+
 }
