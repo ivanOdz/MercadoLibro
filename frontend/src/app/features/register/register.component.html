@@ -1,5 +1,7 @@
 <div class="flex align-items-center justify-content-center w-full h-full">
     <div class="surface-card p-4 shadow-2 border-round w-full sm:w-25rem">
+        <img src="./assets/mercado_libro.png" alt="image" width="50" height="50"/>
+
         <div class="text-center mb-4">
             <h2 style="font-weight: normal;justify-self: center" class="text-900">{{ 'AUTH.REGISTER' | translate }}</h2>
         </div>
@@ -34,6 +36,10 @@
                 <div class="error"  *ngIf="loginForm.hasError('passwordsMismatch') && loginForm.get('repeatPassword')?.touched">
                     <small>{{'AUTH.PASSWORDS_NOT_MATCH'|translate}}</small>
                 </div>
+            </div>
+
+            <div class="error" *ngIf="registrationError">
+                <small>{{'AUTH.ERROR_REGISTRATION' | translate}}</small>
             </div>
 
             <button data-cy="submit" pButton type="submit" [disabled]="!loginForm.valid" class="w-full">{{ 'AUTH.REGISTER' |translate }}</button>

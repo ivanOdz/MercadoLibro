@@ -200,3 +200,37 @@
 	width: 9vw;
 }
 
+
+
+.text-empty {
+	width: auto;
+	text-align: center;
+	padding: 1rem;
+}
+
+
+
+
+:host ::ng-deep .redirect-buttons {
+	background-color: #767676a1;
+	color: #ffffff;
+	box-shadow: 4px 6px 6px #0000001a;
+	border: none;
+	cursor: pointer;
+	height: 3rem;
+	width: 12rem;
+}
+
+
+:host ::ng-deep .redirect-buttons:not(.disabled):hover {
+	background-color: #8c7b5f;
+	transition: transform 0.2s;
+	transform: scale(1.1);
+	border: none;
+}
+:host ::ng-deep .redirect-buttons:not(.disabled):active {
+	background-color: #8c7b5f;
+	box-shadow: 4px 6px 6px #0000001a;
+	border: none;
+}
+

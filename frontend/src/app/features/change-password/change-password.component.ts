@@ -1,60 +1,94 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {UserService} from "../../core/services/user.service";
-import {Password} from "primeng/password";
-import {FormsModule} from "@angular/forms";
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators
+} from "@angular/forms";
 import {InputText} from "primeng/inputtext";
 import {ButtonDirective} from "primeng/button";
 import {LanguageService} from "../../core/services/language.service";
 import {TranslatePipe, TranslateService} from "@ngx-translate/core";
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-change-password',
   templateUrl: './change-password.component.html',
   standalone: true,
   imports: [
-    Password,
     FormsModule,
     InputText,
     ButtonDirective,
-    TranslatePipe
+    TranslatePipe,
+    NgIf,
+    ReactiveFormsModule
   ],
   styleUrls: ['./change-password.component.css']
 })
 export class ChangePasswordComponent implements OnInit {
   passwordCode: number | undefined;
-  newPassword: string = '';
-  confirmPassword: string = '';
-  errorMessage: string = '';
+
+  errorInChangePassword = false;
+
+  errorInvalidCode = false;
+
+  passwordForm: FormGroup;
 
   constructor(private userService: UserService,
               private router: Router,
               private route: ActivatedRoute,
               private translate: TranslateService,
+              private fb: FormBuilder,
+              private cRef: ChangeDetectorRef,
               private languageService: LanguageService // DO NOT DELETE! Translation would not work otherwise
-  ) {}
+  ) {
+    this.passwordForm = this.fb.group(
+        {
+            verificationCode: ['', [Validators.required]],
+            password: ['', [Validators.required]],
+            confirmPassword: ['', [Validators.required, this.passwordsMatchValidator]]
+        },
+        { validators: this.passwordsMatchValidator }
+        );
+  }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       this.passwordCode = params['verification_code'];
+      this.passwordForm.setValue({verificationCode: this.passwordCode, password: '', confirmPassword: ''});
       if (!this.passwordCode) {
-        this.errorMessage = this.translate.instant('AUTH.INVALID_CODE');
+        this.errorInvalidCode = true;
       }
     });
   }
 
   changePassword() {
-    if (this.newPassword === this.confirmPassword) {
-      this.userService.changePassword(this.passwordCode, this.newPassword).subscribe({
-        next: () => {
-          this.router.navigate(['/auth/login']);
-        },
-        error: (err) => {
-          console.error('Error al cambiar la contraseña:', err);
-        }
-      });
-    } else {
-      console.error('Las contraseñas no coinciden');
+    if (this.passwordForm.invalid) {
+        return;
     }
+
+    const {verificationCode, password} = this.passwordForm.value;
+
+    this.userService.changePassword(verificationCode, password).subscribe({
+      next: () => {
+        this.router.navigate(['/auth/login']);
+      },
+      error: () => {
+        this.errorInChangePassword = true;
+        this.cRef.detectChanges()
+      }
+    });
+  }
+
+
+  private passwordsMatchValidator(group: AbstractControl): ValidationErrors | null {
+    const password = group.get('password')?.value;
+    const repeatPassword = group.get('confirmPassword')?.value;
+    return password === repeatPassword ? null : { passwordsMismatch: true };
   }
 }

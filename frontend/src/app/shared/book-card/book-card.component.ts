@@ -160,4 +160,7 @@ export class BookCardComponent implements OnInit{
 		};
 	}
 
+    redirectToProfile() {
+        this.router.navigate(['/auth/profile'])
+    }
 }

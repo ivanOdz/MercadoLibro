@@ -18,11 +18,14 @@
 }
 
 .filter-label {
-    font-weight: bold;
+    font-weight: normal;
+    font-size: small;
 }
 
 .filter-count {
     color: #555;
+    font-size: small;
+    font-weight: normal;
 }
 
 :host ::ng-deep .p-card-body {

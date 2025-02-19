@@ -5,7 +5,6 @@ import { map } from "rxjs/operators";
 import { catchError, EMPTY, Observable, tap, throwError } from "rxjs";
 import { Location } from "../models/location.model";
 import { Review } from "../models/review.model";
-import {Exchange} from "../models/exchange.model";
 import { TranslateService } from "@ngx-translate/core";
 import { Pagination } from "../models/pagination";
 import { environment } from "../../../environments/environment";
@@ -41,7 +40,10 @@ export class UserService {
             observe: 'response'
         }).pipe(
             // Retornamos la URL del header Location
-            map(response => response.headers.get('Location'))
+            map(response => response.headers.get('Location')),
+            catchError((error) => {
+                return throwError(() => error);
+            })
         );
     }
 
@@ -49,13 +51,7 @@ export class UserService {
         const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.verification.code.v1+json' });
 
         return this.http.post<any>(`${this.baseUrl}/users`, {verificationCode} , { headers, observe: 'response' }).pipe(
-            tap((response) => {
-                if (response.status === 204) {
-                    console.log('Usuario verificado exitosamente');
-                }
-            }),
             catchError((error) => {
-                console.error('Error en la verificación del usuario', error);
                 return throwError(() => error);
             })
         );
@@ -66,9 +62,6 @@ export class UserService {
 
         return this.http.post<any>(`${this.baseUrl}/users`, { email }, { headers }).pipe(
             catchError(error => {
-                if (error.status === 404) {
-                    return EMPTY;
-                }
                 return throwError(() => error);
             })
         );
@@ -79,9 +72,6 @@ export class UserService {
 
         return this.http.patch<void>(`${this.baseUrl}/users/${passwordToken}`, {newPassword}, {headers}).pipe(
             catchError(error => {
-                if (error.status === 404) {
-                    return EMPTY;
-                }
                 return throwError(() => error);
             })
         );

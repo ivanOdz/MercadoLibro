@@ -1,10 +1,14 @@
 <div class="flex align-items-center justify-content-center w-full h-full">
     <div class="surface-card p-4 shadow-2 border-round w-full sm:w-25rem">
+        <img src="./assets/mercado_libro.png" alt="image" width="50" height="50"/>
         <!-- MENSAJE DE CONFIRMACIÓN (se muestra después del registro exitoso) -->
         <div class="text-center">
             <i class="pi pi-envelope text-primary text-4xl"></i>
             <h3 class="text-900 mt-3">{{ 'AUTH.REGISTER_SUCCESS' |translate }}</h3>
             <p class="text-600">{{ 'AUTH.REGISTER_SUCCESS_DESCRIPTION' |translate }}</p>
+        </div>
+        <div class="mt-2 text-center">
+            <a href="/auth/login" class="text-primary">{{ 'AUTH.RETURN_LOGIN' |translate}}</a>
         </div>
     </div>
 </div>

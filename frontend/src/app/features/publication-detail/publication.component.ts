@@ -7,7 +7,7 @@ import { trigger, style, animate, transition } from '@angular/animations';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import {PrimeTemplate} from "primeng/api";
 import {ActivatedRoute, Router} from "@angular/router";
-import {NgForOf, NgIf, Location as AngularLocation, AsyncPipe} from "@angular/common";
+import {NgForOf, NgIf, Location as AngularLocation} from "@angular/common";
 import {Select} from "primeng/select";
 import {FormsModule} from "@angular/forms";
 import {environment} from "../../../environments/environment";
@@ -15,7 +15,7 @@ import {Divider} from "primeng/divider";
 import {Paginator} from "primeng/paginator";
 import { BookData, PublicationData} from "../../core/models/types";
 import {PublicationService} from "../../core/services/publication.service";
-import {BehaviorSubject, catchError, filter, forkJoin, of, switchMap} from "rxjs";
+import {catchError, filter, forkJoin, of, switchMap} from "rxjs";
 import {map, tap} from "rxjs/operators";
 import {UserService} from "../../core/services/user.service";
 import {BookService} from "../../core/services/book.service";
@@ -47,8 +47,7 @@ import {Dialog} from "primeng/dialog";
         NgForOf,
         Rating,
         Tooltip,
-        Dialog,
-        AsyncPipe
+        Dialog
     ],
     animations: [
         trigger('fadeOutUp', [
