@@ -101,6 +101,24 @@
     border: none;
 }
 
+:host ::ng-deep .sign-in-button {
+    background: none;
+    color: #957a4f;
+    border: none;
+    cursor: pointer;
+    font-size: medium;
+}
+
+:host ::ng-deep .sign-in-button:not(.disabled):hover {
+    color: #2c250a;
+    background: none;
+    text-decoration: underline;
+    border: none;
+}
+:host ::ng-deep .sign-in-button:not(.disabled):active {
+
+}
+
 
 :host ::ng-deep .p-carousel-viewport  {
     text-align: center;

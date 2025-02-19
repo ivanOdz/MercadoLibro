@@ -179,7 +179,8 @@
     "NO_NEW_LOCATIONS": "You don't have any new locations to add",
     "YOURS": "Yours",
     "ELIMINATED": "Eliminated",
-    "NO_REVIEWS": "No rating available"
+    "NO_REVIEWS": "No rating available",
+    "SIGN_IN": "Sign in to request an exchange"
   },
   "BOOK_HOME": {
     "SEARCH": "Search in my books",
