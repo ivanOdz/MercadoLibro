@@ -17,6 +17,9 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
                 errorMessage = error.error.message;
             } else {
                 switch (error.status) {
+                    case 400:
+                        redirectUrl = "/error/400";
+                        break;
                     case 401:
                         if (!req.url.includes('/book_models')) {
                             redirectUrl = "/error/401";
@@ -27,6 +30,9 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
                         break;
                     case 404:
                         redirectUrl = "/error/404"; //como no existe va a mandar a la pagina de error 404
+                        break;
+                    case 500:
+                        redirectUrl = "/error/500";
                         break;
                 }
             }
