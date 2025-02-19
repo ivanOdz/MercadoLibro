@@ -344,7 +344,7 @@
     "CHANGE_LANGUAGE": "Ups! Language could not be changed, try again later.",
     "ADD_REVIEW": "Ups! Your review could not be added, try again later."
   },
-  "SUCESS": {
+  "SUCCESS": {
     "CONFIRM_EXCHANGE": "Exchange confirmed successfully!",
     "REJECT_EXCHANGE": "Exchange rejected successfully!",
     "ADD_EXCHANGE": "Exchange solicited successfully!",
