@@ -119,6 +119,7 @@ export class ExchangesComponent implements OnInit {
                         } else {
                             this.loadExchanges(); // stay in the same page
                         }
+                        this.snackBarService.showSuccess('SUCCESS.CONFIRM_EXCHANGE');
                     });
             },
             () => {

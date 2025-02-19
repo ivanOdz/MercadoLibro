@@ -9,7 +9,7 @@ export class SnackbarService {
     showError(message: string): void {
         this.translate.get(message).subscribe((translatedMessage: string) => {
             this.snackBar.open(translatedMessage, 'Cerrar', {
-                duration: 50000,
+                duration: 5000,
                 horizontalPosition: 'center',
                 verticalPosition: 'bottom',
                 panelClass: ['custom-snackbar-error'],

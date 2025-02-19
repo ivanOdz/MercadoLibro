@@ -11,7 +11,7 @@ import {AuthService} from "./auth.service";
 import {environment} from "../../../environments/environment";
 import {Location} from "../models/location.model";
 import {Pagination} from "../models/pagination";
-import { User } from "../../core/models/user.model";
+import { User } from "../models/user.model";
 import {SnackbarService} from "./snackbar.service";
 
 @Injectable({ providedIn: 'root' })
@@ -255,6 +255,9 @@ export class PublicationService {
         }
 
         return this.http.post(`${this.baseUrl}/publications`, body, {headers}).pipe(
+            tap(() => {
+                this.snackBarService.showSuccess('SUCCESS.CREATE_PUBLICATION');
+            }),
             catchError((error) => {
                 this.snackBarService.showError('ERROR.UPLOAD_PUBLICATION');
                 if(error.status === 500) {

@@ -157,6 +157,8 @@ export class RequestsComponent  implements OnInit {
         this.es.acceptExchange(this.exchangeData.exchange.self, this.exchangeData.exchange.accept_code, null).subscribe(
             () => {
                 this.router.navigate(['/exchanges']);
+                this.snackBarService.showSuccess('SUCCESS.ACCEPT_EXCHANGE');
+
             },
             () => this.snackBarService.showError('ERROR.CONFIRM_EXCHANGE'))
     }
@@ -173,7 +175,8 @@ export class RequestsComponent  implements OnInit {
         this.isLoading = true;
         this.es.rejectExchange(this.exchangeData.exchange.self, this.exchangeData.exchange.accept_code, null).subscribe(
             () => {
-                this.router.navigate(['/exchanges/history'], { queryParams: { selectedTab: 1 } });
+                this.loadExchanges();
+                this.snackBarService.showSuccess('SUCCESS.REJECT_EXCHANGE');
             },
             () =>  this.snackBarService.showError('ERROR.REJECT_EXCHANGE'))
     }

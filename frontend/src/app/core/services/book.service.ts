@@ -81,6 +81,9 @@ export class BookService {
         }
 
         return this.http.post(`${bookUrl}`, body, { headers, observe: 'response' }).pipe(
+            tap(() => {
+                this.snackBarService.showSuccess('SUCCESS.UPLOAD_BOOK');
+            }),
             catchError((error) => {
                 this.snackBarService.showError('ERROR.UPLOAD_BOOK');
                 return throwError(() => new Error(error.message));

@@ -29,6 +29,7 @@ import {Dialog} from "primeng/dialog";
 import {ProgressSpinner} from "primeng/progressspinner";
 import {PaginatorComponent} from "../../shared/paginator/paginator.component";
 import {Pagination} from "../../core/models/pagination";
+import {SnackbarService} from "../../core/services/snackbar.service";
 
 @Component({
     selector: 'app-publication-detail',
@@ -124,7 +125,8 @@ export class PublicationComponent implements OnInit {
                 private bs: BookService,
                 private bms: BookModelService,
 				private angularLocation: AngularLocation,
-                private cdRef: ChangeDetectorRef) {
+                private cdRef: ChangeDetectorRef,
+                private snackBarService: SnackbarService) {
     }
 
 
@@ -302,6 +304,7 @@ export class PublicationComponent implements OnInit {
         this.es.createExchange(exchangesUrn, this.userBooks[this.selectedBookIndex].self, this.selectedLocation.self, this.publication?.self).subscribe({
             next: () => {
                 this.router.navigate(['/exchanges/requests'], { queryParams: { selectedTab: 1 } });
+                this.snackBarService.showSuccess('SUCCESS.CONFIRM_EXCHANGE');
             }
         });
     }
