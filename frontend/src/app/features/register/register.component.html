@@ -36,6 +36,10 @@
                 </div>
             </div>
 
+            <div class="error" *ngIf="registrationError">
+                <small>{{'AUTH.ERROR_REGISTRATION' | translate}}</small>
+            </div>
+
             <button data-cy="submit" pButton type="submit" [disabled]="!loginForm.valid" class="w-full">{{ 'AUTH.REGISTER' |translate }}</button>
         </form>
         <div class="mt-2 text-center">

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {ChangeDetectorRef, Component} from '@angular/core';
 import { ButtonDirective } from "primeng/button";
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from "@angular/forms";
 import { InputText } from "primeng/inputtext";
@@ -27,11 +27,13 @@ import {LanguageService} from "../../core/services/language.service";
 export class RegisterComponent {
   isRegistered = false;
   loginForm: FormGroup;
+  registrationError = false;
 
   constructor(
       private authService: AuthService,
       private router: Router,
       private fb: FormBuilder,
+      private chRef: ChangeDetectorRef,
       private languageService: LanguageService // DO NOT DELETE! Translation would not work otherwise
   ) {
     this.loginForm = this.fb.group(
@@ -56,8 +58,9 @@ export class RegisterComponent {
       next: () => {
         this.router.navigate(['/auth/register/success']);
       },
-      error: (err) => {
-        console.error('Error al registrar:', err);
+      error: () => {
+        this.registrationError = true
+        this.chRef.detectChanges()
       }
     });
   }

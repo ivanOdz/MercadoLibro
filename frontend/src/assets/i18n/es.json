@@ -308,7 +308,9 @@
     "USERNAME_OBLIGATORY": "El nombre de usuario es obligatorio",
     "USERNAME_INVALID": "El nombre de usuario debe tener al menos 5 caracteres",
     "PASSWORD_OBLIGATORY": "La contraseña es obligatoria",
-    "PASSWORDS_NOT_MATCH": "Las contraseñas no coinciden"
+    "PASSWORDS_NOT_MATCH": "Las contraseñas no coinciden",
+    "NO_SUCH_USER": "No existe un usuario con ese mail",
+    "ERROR_REGISTRATION": "Hubo un error en el registro de la cuenta"
 
   },
   "ERROR": {
