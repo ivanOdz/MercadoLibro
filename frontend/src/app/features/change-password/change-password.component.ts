@@ -72,13 +72,13 @@ export class ChangePasswordComponent implements OnInit {
         return;
     }
 
-    const {verificationCode, password, confirmPassword} = this.passwordForm.value;
+    const {verificationCode, password} = this.passwordForm.value;
 
     this.userService.changePassword(verificationCode, password).subscribe({
       next: () => {
         this.router.navigate(['/auth/login']);
       },
-      error: (err) => {
+      error: () => {
         this.errorInChangePassword = true;
         this.cRef.detectChanges()
       }

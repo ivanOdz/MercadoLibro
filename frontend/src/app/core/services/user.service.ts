@@ -78,9 +78,6 @@ export class UserService {
 
         return this.http.patch<void>(`${this.baseUrl}/users/${passwordToken}`, {newPassword}, {headers}).pipe(
             catchError(error => {
-                if (error.status === 404) {
-                    return EMPTY;
-                }
                 return throwError(() => error);
             })
         );

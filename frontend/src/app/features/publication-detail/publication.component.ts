@@ -15,7 +15,7 @@ import {Divider} from "primeng/divider";
 import {Paginator} from "primeng/paginator";
 import { BookData, PublicationData} from "../../core/models/types";
 import {PublicationService} from "../../core/services/publication.service";
-import {BehaviorSubject, catchError, filter, forkJoin, of, switchMap} from "rxjs";
+import {catchError, filter, forkJoin, of, switchMap} from "rxjs";
 import {map, tap} from "rxjs/operators";
 import {UserService} from "../../core/services/user.service";
 import {BookService} from "../../core/services/book.service";

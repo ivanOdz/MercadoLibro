@@ -310,7 +310,8 @@
     "PASSWORD_OBLIGATORY": "La contraseña es obligatoria",
     "PASSWORDS_NOT_MATCH": "Las contraseñas no coinciden",
     "NO_SUCH_USER": "No existe un usuario con ese mail",
-    "ERROR_REGISTRATION": "Hubo un error en el registro de la cuenta"
+    "ERROR_REGISTRATION": "Hubo un error en el registro de la cuenta",
+    "ERROR_CHANGING_PASSWORD": "Hubo un error cambiando la contraseña"
 
   },
   "ERROR": {
