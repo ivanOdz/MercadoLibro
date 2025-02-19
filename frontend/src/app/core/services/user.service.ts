@@ -51,13 +51,7 @@ export class UserService {
         const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.verification.code.v1+json' });
 
         return this.http.post<any>(`${this.baseUrl}/users`, {verificationCode} , { headers, observe: 'response' }).pipe(
-            tap((response) => {
-                if (response.status === 204) {
-                    console.log('Usuario verificado exitosamente');
-                }
-            }),
             catchError((error) => {
-                console.error('Error en la verificación del usuario', error);
                 return throwError(() => error);
             })
         );
