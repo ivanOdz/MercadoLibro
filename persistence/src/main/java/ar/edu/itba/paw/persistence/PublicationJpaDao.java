@@ -480,7 +480,7 @@ public class PublicationJpaDao implements PublicationDao {
 
     private int getTotalResultsFavoritePublications(Long userId, String search, Genre genre, BookState state, Long locationId) {
         StringBuilder nativeQueryString = new StringBuilder(
-                "SELECT COUNT(distinct p.publicationId) " +
+                "SELECT COUNT(*) " +
                         "FROM favorite_publication fp " +
                         "JOIN publication p ON p.publicationId = fp.publicationId " +
                         "JOIN book b ON p.bookId = b.bookId " +

@@ -9,6 +9,7 @@ import {TranslatePipe} from "@ngx-translate/core";
     TranslatePipe
   ],
   templateUrl: './internal-server-error.component.html',
+  standalone: true,
   styleUrl: './internal-server-error.component.css'
 })
 export class InternalServerErrorComponent {
