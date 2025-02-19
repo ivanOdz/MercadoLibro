@@ -81,7 +81,7 @@ public class PublicationController {
     @Consumes(value = {VndType.APPLICATION_INPUT_PUBLICATION})
     @PreAuthorize("@accessControl.publicationsPostAccess(#publicationDTO)")
     public Response postPublication(final PublicationInputDTO publicationDTO) {
-        Publication publication = ps.createPublication(publicationDTO.getBookId(), publicationDTO.getUserId(), publicationDTO.getLocationId());
+        Publication publication = ps.createPublication(publicationDTO.getBookId(), publicationDTO.getUserId(), publicationDTO.getLocationId(), false);
         return Response.created(uriInfo.getAbsolutePathBuilder().path(publication.getPublicationId().toString()).build()).build();
     }
 

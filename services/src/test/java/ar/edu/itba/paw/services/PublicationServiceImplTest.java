@@ -70,7 +70,7 @@ public class PublicationServiceImplTest {
         when(locationService.findById(LOCATION_ID)).thenReturn(location);
         when(publicationDao.createPublication(book, user, locations, PUBLICATION_STATE)).thenReturn(publication);
 
-        Publication publicationDetail = publicationDetailService.createPublication(BOOK_ID, OWNER_ID, LOCATION_ID);
+        Publication publicationDetail = publicationDetailService.createPublication(BOOK_ID, OWNER_ID, LOCATION_ID, false);
         
         Assert.assertNotNull(publicationDetail);
     }

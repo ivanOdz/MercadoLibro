@@ -4,16 +4,13 @@ import ar.edu.itba.paw.models.Book;
 import ar.edu.itba.paw.models.User;
 import org.springframework.scheduling.annotation.Async;
 
-import java.util.Map;
 
 public interface EmailService {
     @Async
     void sendExchangeEmail(User requester, User offerer, Book bookRequested, Book bookOffered, boolean state);
 
-//    void sendExchangeEmail(final String receiver, Map<String, Object> variables, boolean state, String locale);
-
     @Async
-    void sendExchangeRequestEmail(User requester, User offerer, Book bookRequested, Book bookOffered,long acceptCode);
+    void sendExchangeRequestEmail(User requester, User offerer, Book bookRequested, Book bookOffered,long exchangeId, long acceptCode);
 
     @Async
     void sendVerificationEmail(User user);

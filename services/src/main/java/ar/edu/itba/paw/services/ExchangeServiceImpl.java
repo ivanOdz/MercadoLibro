@@ -6,7 +6,6 @@ import ar.edu.itba.paw.interfaces.persistence.ExchangeDao;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.utils.ExchangeState;
-import ar.edu.itba.paw.models.utils.PublicationState;
 import ar.edu.itba.paw.models.utils.pagination.BasicMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +42,7 @@ public class ExchangeServiceImpl implements ExchangeService {
     	Book b = bs.getBookById(bookId);
     	
         Long userId = b.getOwner().getUserId();
-        long requesterPubId = ps.createPublication(bookId, userId, locationId).getPublicationId();
+        long requesterPubId = ps.createPublication(bookId, userId, locationId, true).getPublicationId();
 
         Random random = new Random();
         int acceptCode = Math.abs(random.nextInt());
@@ -60,7 +59,7 @@ public class ExchangeServiceImpl implements ExchangeService {
             Book bookOffered = ex.getOfferer().getBook();
             Book bookRequested = ex.getRequester().getBook();
 
-            emailService.sendExchangeRequestEmail(requester, offerer, bookRequested, bookOffered, ex.getAcceptCode());
+            emailService.sendExchangeRequestEmail(requester, offerer, bookRequested, bookOffered, ex.getExchangeId(),ex.getAcceptCode() );
         }
         else {
             LOGGER.warn("Could not initialize exchange for book id {}", bookId);
@@ -104,7 +103,8 @@ public class ExchangeServiceImpl implements ExchangeService {
 
         emailService.sendExchangeEmail(requester, offerer, bookRequested, bookOffered, state);
 
-        ps.terminatePublication(exchange.getOfferer());
+
+        if(state) ps.terminatePublication(exchange.getOfferer());
         ps.terminatePublication(exchange.getRequester());
 
         LOGGER.info("Exchange of id: {} processed successfully", exchange.getExchangeId());
@@ -187,21 +187,6 @@ public class ExchangeServiceImpl implements ExchangeService {
         }
         return e.get();
     }
-
-    // exchanges where user is the publication owner
-//    @Override
-//    @Transactional(readOnly = true)
-//    public PaginatedResponse<Exchange, BasicMetadata> getExchangeOffererListByUserId(long userId, int currentPage, ExchangeState exchangeState) {
-//        return exchangeDao.getAllExchangesByUserId(userId, exchangeState, currentPage, true);
-//    }
-//
-//    // exchanges where user is the requester owner
-//    @Override
-//    @Transactional(readOnly = true)
-//    public PaginatedResponse<Exchange, BasicMetadata> getExchangeRequesterListByUserId(long userId, int currentPage, ExchangeState exchangeState) {
-//        return exchangeDao.getAllExchangesByUserId(userId, exchangeState, currentPage, false);
-//    }
-
 
     @Override
     public PaginatedResponse<Exchange, BasicMetadata> getExchanges(long userId, ExchangeState exchangeState, Boolean isOfferer, Boolean isRequester, int currentPage) {

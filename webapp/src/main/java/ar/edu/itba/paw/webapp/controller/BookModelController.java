@@ -53,7 +53,6 @@ public class BookModelController {
     }
 
 
-    // IMPLEMENT
     @GET
     @Path("/{id}")
     @Produces(value = {VndType.APPLICATION_BOOK_MODEL})

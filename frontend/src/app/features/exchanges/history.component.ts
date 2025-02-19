@@ -122,11 +122,13 @@ export class HistoryComponent implements OnInit {
             this.rejectedExchanges = rejectedExchanges;
             this.completedExchanges = completedExchanges;
             this.isLoading = false;
-            this.firstLoad ? this.firstLoad = false : null
+            this.firstLoadRejected && this.rejectedExchanges.length !==0 ? this.firstLoadRejected = false : null
+            this.firstLoadCompleted && this.completedExchanges.length !==0 ? this.firstLoadCompleted = false : null
 
         }, () => {
             this.isLoading = false;
-            this.firstLoad ? this.firstLoad = false : null
+            this.firstLoadRejected && this.rejectedExchanges.length !==0 ? this.firstLoadRejected = false : null
+            this.firstLoadCompleted && this.completedExchanges.length !==0 ? this.firstLoadCompleted = false : null
 
         });
     }
@@ -219,7 +221,8 @@ export class HistoryComponent implements OnInit {
 
     currentCompletedPage: number = 0;
     currentRejectedPage: number = 0;
-    firstLoad: boolean= true;
+    firstLoadCompleted: boolean= true;
+    firstLoadRejected: boolean= true;
 
     getCompleted(url: string) {
         this.loadExchanges(url, true);

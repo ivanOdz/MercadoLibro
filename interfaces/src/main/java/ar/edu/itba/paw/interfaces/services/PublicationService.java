@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface PublicationService {
 
-    Publication createPublication(Long bookId, Long userId, Long locationId);
+    Publication createPublication(Long bookId, Long userId, Long locationId, Boolean toExchange);
 
     void deletePublication(long publicationId);
 

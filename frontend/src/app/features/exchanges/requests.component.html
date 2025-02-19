@@ -11,7 +11,7 @@
             </p-tablist>
             <p-tabpanels>
                 <p-tabpanel [value]="0">
-                    <div  class="requests-main-section">
+                    <div *ngIf="offeredExchanges.length !==0 || (isLoading || !firstLoadOffered)"   class="requests-main-section">
                         <div style="grid-column: 1;" class="column-cards">
                             <div class="card-section" style="align-content: center;text-align: center" *ngIf="isLoading">
                                 <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
@@ -46,7 +46,7 @@
                                     </div>
                                 </div>
                             </p-scrollpanel>
-                            <app-paginator *ngIf="!firstLoad" [pagination]="paginationOffered" [fetchMethod]="getOffered.bind(this)"></app-paginator>
+                            <app-paginator *ngIf="!firstLoadOffered" [pagination]="paginationOffered" [fetchMethod]="getOffered.bind(this)"></app-paginator>
                         </div>
                         <div class="content-panel-w-tabs" style="align-content: center;text-align: center" *ngIf="isLoading">
                             <div class="empty-content-panel">
@@ -115,7 +115,7 @@
                     </div>
                 </p-tabpanel>
                 <p-tabpanel [value]="1">
-                    <div class="requests-main-section">
+                    <div *ngIf="requestedExchanges.length !==0 || isLoading || !firstLoadRequested" class="requests-main-section">
                         <div style="grid-column: 1;" class="column-cards">
                             <div class="card-section" style="align-content: center;text-align: center" *ngIf="isLoading">
                                 <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
@@ -149,7 +149,7 @@
                                     </div>
                                 </div>
                             </p-scrollpanel>
-                            <app-paginator  *ngIf="!firstLoad" [pagination]="paginationSolicited" [fetchMethod]="getSolicited.bind(this)"></app-paginator>
+                            <app-paginator  *ngIf="!firstLoadRequested" [pagination]="paginationSolicited" [fetchMethod]="getSolicited.bind(this)"></app-paginator>
                         </div>
                         <div class="content-panel-w-tabs" style="align-content: center;text-align: center" *ngIf="isLoading">
                             <div class="empty-content-panel">

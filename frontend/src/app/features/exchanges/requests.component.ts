@@ -52,11 +52,28 @@ export class RequestsComponent  implements OnInit {
     offeredExchanges: ExchangeData[] = [];
     requestedExchanges: ExchangeData[] = [];
 
+    exchangeId: string | null = null;
+    acceptCode: string | null = null;
+    state: string | null = null;
 
     constructor(private es: ExchangeService, private as: AuthService,
                 private router: Router, private translate: TranslateService,private route: ActivatedRoute, private snackBarService: SnackbarService) {}
 
     ngOnInit(): void {
+        this.route.queryParams.subscribe((params) => {
+            this.exchangeId = params['exchange_id'];
+            this.acceptCode = params['accept_code'];
+            this.state = params['state'];
+            if (this.exchangeId) {
+                this.exchangeData = {
+                    exchange: {
+                        self: `${environment.production ? environment.productionUrl : environment.developmentUrl}/exchanges/${this.exchangeId}`,
+                        accept_code: this.acceptCode
+                    }
+                } as unknown as ExchangeData
+                this.state === 'accepted' ? this.acceptExchange() : this.rejectExchange()
+            }
+        })
         this.isLoading = true;
         this.translate.onLangChange.subscribe(() => this.loadRequestVariablesNames());
         this.loadRequestVariablesNames();
@@ -120,17 +137,17 @@ export class RequestsComponent  implements OnInit {
             this.requestedExchanges = requesterExchanges;
             this.offeredExchanges = offeredExchanges;
             this.isLoading = false;
-            this.firstLoad ? this.firstLoad = false : null
+            this.firstLoadRequested && this.requestedExchanges.length !==0 ? this.firstLoadRequested = false : null
+            this.firstLoadOffered && this.offeredExchanges.length !==0 ? this.firstLoadOffered = false : null
         }, () => {
             this.isLoading = false;
-            this.firstLoad ? this.firstLoad = false : null
+            this.firstLoadRequested && this.requestedExchanges.length !==0 ? this.firstLoadRequested = false : null
+            this.firstLoadOffered && this.offeredExchanges.length !==0 ? this.firstLoadOffered = false : null
         });
     }
 
     acceptExchange(){
         this.acceptExchangeDialogVisible = false;
-
-
         if (!this.exchangeData) {
             this.snackBarService.showError('ERROR.CONFIRM_EXCHANGE');
             return;
@@ -240,7 +257,8 @@ export class RequestsComponent  implements OnInit {
 
     currentOfferedPage: number = 0;
     currentSolicitedPage: number = 0;
-    firstLoad: boolean= true;
+    firstLoadRequested: boolean= true;
+    firstLoadOffered: boolean= true;
 
     getOffered(url: string) {
         this.loadExchanges(url, true);
@@ -249,4 +267,5 @@ export class RequestsComponent  implements OnInit {
     getSolicited(url: string) {
         this.loadExchanges(url, false);
     }
+
 }

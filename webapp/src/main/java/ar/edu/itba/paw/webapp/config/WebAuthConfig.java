@@ -180,8 +180,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/api/publications/{publication_id:\\d+}/favorite")
                     .access(PUBLICATION_FAVORITE_ACCESS)
 
-                // IMPLEMENT: publication location endpoints
-
 
                 /*
                  * User controller
