@@ -11,9 +11,6 @@ import {Popover} from "primeng/popover";
 import {User} from "../../core/models/user.model";
 import {ExchangeService} from "../../core/services/exchange.service";
 import {UserService} from "../../core/services/user.service";
-import {PublicationService} from "../../core/services/publication.service";
-import {BookService} from "../../core/services/book.service";
-import {BookModelService} from "../../core/services/bookmodel.service";
 import {AuthService} from "../../core/services/auth.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {catchError, filter, forkJoin, of, switchMap} from "rxjs";
@@ -24,7 +21,6 @@ import {Pagination} from "../../core/models/pagination";
 import {TranslatePipe, TranslateService} from "@ngx-translate/core";
 import {ScrollPanelModule} from "primeng/scrollpanel";
 import {environment} from "../../../environments/environment";
-import {SnackbarService} from "../../core/services/snackbar.service";
 
 @Component({
     selector: 'exchanges-history',
@@ -60,9 +56,8 @@ export class HistoryComponent implements OnInit {
     rejectedExchanges: ExchangeData[] = [];
 
 
-    constructor(private es: ExchangeService, private us: UserService, private ps: PublicationService,
-                private bs: BookService, private bms: BookModelService, private as: AuthService,
-                private router: Router, private translate: TranslateService, private route: ActivatedRoute, private snackBarService: SnackbarService) {}
+    constructor(private es: ExchangeService, private us: UserService,private as: AuthService,
+                private router: Router, private translate: TranslateService, private route: ActivatedRoute) {}
 
     ngOnInit(): void {
         this.isLoading = true;
@@ -127,8 +122,12 @@ export class HistoryComponent implements OnInit {
             this.rejectedExchanges = rejectedExchanges;
             this.completedExchanges = completedExchanges;
             this.isLoading = false;
-        }, (error) => {
+            this.firstLoad ? this.firstLoad = false : null
+
+        }, () => {
             this.isLoading = false;
+            this.firstLoad ? this.firstLoad = false : null
+
         });
     }
 
@@ -141,7 +140,7 @@ export class HistoryComponent implements OnInit {
                 this.reviewValue = 0;
                 op.toggle($event);
             },
-            catchError(error => {
+            catchError(() => {
                 return of({ exchange: [], pagination: new Pagination(null) }); // Devuelve vacío en caso de error
             }));
         });
@@ -220,6 +219,7 @@ export class HistoryComponent implements OnInit {
 
     currentCompletedPage: number = 0;
     currentRejectedPage: number = 0;
+    firstLoad: boolean= true;
 
     getCompleted(url: string) {
         this.loadExchanges(url, true);

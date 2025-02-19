@@ -15,12 +15,13 @@
   },
   "NAVBAR": {
     "EXCHANGES": "Exchanges",
-    "PUBLICATIONS": "Publications",
+    "PUBLICATIONS": "Explore publications",
     "PROFILE": "Profile",
     "MY_BOOKS": "My Books",
     "MY_PUBLICATIONS": "My Publications",
-    "FAVORITES": "Favorites",
-    "LOGOUT": "Logout"
+    "FAVORITES": "Favorite publications",
+    "LOGOUT": "Log out",
+    "SIGN_IN": "Sign in"
   },
   "BOOK_FORM": {
     "BACK": "← Go Back",
@@ -178,7 +179,8 @@
     "NO_NEW_LOCATIONS": "You don't have any new locations to add",
     "YOURS": "Yours",
     "ELIMINATED": "Eliminated",
-    "NO_REVIEWS": "No rating available"
+    "NO_REVIEWS": "No rating available",
+    "SIGN_IN": "Sign in to request an exchange"
   },
   "BOOK_HOME": {
     "SEARCH": "Search in my books",

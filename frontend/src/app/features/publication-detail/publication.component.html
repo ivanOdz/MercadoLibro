@@ -2,15 +2,10 @@
 <div class="container">
     <div class="publication-detail-main-section" *ngIf="!exchangeSolicited" @fadeOutUp>
         <div class="publication-detail-header">
-<!--             <div class="return-button" (click)="goToPublications()"> -->
             <div class="return-button" (click)="goBack()">
                 <i class="pi pi-arrow-left return-icon"></i>
                 <p style="margin:0">{{ 'PUBLICATION_D.RETURN' | translate }}</p>
             </div>
-<!--             <div *ngIf="fromBooks" class="return-button" (click)="goToMyBooks()"> -->
-<!--                 <i class="pi pi-arrow-left return-icon"></i> -->
-<!--                 <p style="margin:0">{{ 'PUBLICATION_D.RETURN_BOOKS' | translate }}</p> -->
-<!--             </div> -->
         </div>
         <div class="publication-detail-card-section">
             <div class="publication-detail-card book-card">
@@ -32,13 +27,16 @@
                         <p>{{ 'PUBLICATION_D.YOUR_PUBLICATION' | translate }}</p>
                     </div>
                 </div>
+                <div style="grid-column: 3; align-content: center"  [hidden]="userIsLogged">
+                    <p-button icon="pi pi-sign-in" routerLink="/auth/login" [styleClass]="'sign-in-button'" label="{{ 'PUBLICATION_D.SIGN_IN' | translate }}"></p-button>
+                </div>
             </div>
             <div class="publication-detail-card book-details-card">
                 <div style="grid-column: 1;align-content: center;padding: 1rem;font-size: larger">
                     <p>{{ 'PUBLICATION_D.ADDITIONAL_DETAILS' | translate}}</p>
                 </div>
 
-                <div style="grid-column: 2">
+                <div style="grid-column: 2;gap: 2%;display: grid;">
                     <div class="detail-title">
                         <i class="pi pi-address-book" style="font-size: 1.25rem;"></i>
                         <p>{{ 'PUBLICATION_D.BOOK_CONDITION' | translate}}</p>

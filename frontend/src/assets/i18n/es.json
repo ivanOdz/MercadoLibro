@@ -15,13 +15,14 @@
   },
   "NAVBAR": {
     "EXCHANGES": "Intercambios",
-    "PUBLICATIONS": "Publicaciones",
-    "PROFILE": "Perfil",
+    "PUBLICATIONS": "Explorar publicaciones",
+    "PROFILE": "Tu perfil",
     "MY_BOOKS": "Mis Libros",
     "MY_PUBLICATIONS": "Mis Publicaciones",
-    "FAVORITES": "Favoritos",
+    "FAVORITES": "Publicaciones favoritas",
     "LOGOUT": "Cerrar sesión",
-    "SEARCH": "Buscar publicaciones"
+    "SEARCH": "Buscar publicaciones",
+    "SIGN_IN": "Iniciar sesión"
   },
   "BOOK_FORM": {
     "BACK": "← Regresar",
@@ -179,7 +180,8 @@
     "NO_NEW_LOCATIONS": "No hay nuevas ubicaciones para agregar",
     "YOURS": "Tuyo",
     "ELIMINATED": "Eliminada",
-    "NO_REVIEWS": "No tiene ratings aún"
+    "NO_REVIEWS": "No tiene ratings aún",
+    "SIGN_IN": "Inicia sesión para solicitar un intercambio"
   },
   "BOOK_HOME": {
     "SEARCH": "Buscar en mis libros",

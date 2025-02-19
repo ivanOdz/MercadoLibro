@@ -8,10 +8,6 @@ import {FormsModule} from "@angular/forms";
 import {Button} from "primeng/button";
 import {User} from "../../core/models/user.model";
 import {ExchangeService} from "../../core/services/exchange.service";
-import {UserService} from "../../core/services/user.service";
-import {PublicationService} from "../../core/services/publication.service";
-import {BookService} from "../../core/services/book.service";
-import {BookModelService} from "../../core/services/bookmodel.service";
 import {AuthService} from "../../core/services/auth.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {filter, forkJoin, of, switchMap} from "rxjs";
@@ -57,8 +53,7 @@ export class RequestsComponent  implements OnInit {
     requestedExchanges: ExchangeData[] = [];
 
 
-    constructor(private es: ExchangeService, private us: UserService, private ps: PublicationService,
-                private bs: BookService, private bms: BookModelService, private as: AuthService,
+    constructor(private es: ExchangeService, private as: AuthService,
                 private router: Router, private translate: TranslateService,private route: ActivatedRoute, private snackBarService: SnackbarService) {}
 
     ngOnInit(): void {
@@ -125,8 +120,10 @@ export class RequestsComponent  implements OnInit {
             this.requestedExchanges = requesterExchanges;
             this.offeredExchanges = offeredExchanges;
             this.isLoading = false;
-        }, (error) => {
+            this.firstLoad ? this.firstLoad = false : null
+        }, () => {
             this.isLoading = false;
+            this.firstLoad ? this.firstLoad = false : null
         });
     }
 
@@ -144,7 +141,7 @@ export class RequestsComponent  implements OnInit {
             () => {
                 this.router.navigate(['/exchanges']);
             },
-            (error) => this.snackBarService.showError('ERROR.CONFIRM_EXCHANGE'))
+            () => this.snackBarService.showError('ERROR.CONFIRM_EXCHANGE'))
     }
 
     rejectExchange(){
@@ -161,7 +158,7 @@ export class RequestsComponent  implements OnInit {
             () => {
                 this.router.navigate(['/exchanges/history'], { queryParams: { selectedTab: 1 } });
             },
-            (error) =>  this.snackBarService.showError('ERROR.REJECT_EXCHANGE'))
+            () =>  this.snackBarService.showError('ERROR.REJECT_EXCHANGE'))
     }
 
 
@@ -243,6 +240,7 @@ export class RequestsComponent  implements OnInit {
 
     currentOfferedPage: number = 0;
     currentSolicitedPage: number = 0;
+    firstLoad: boolean= true;
 
     getOffered(url: string) {
         this.loadExchanges(url, true);

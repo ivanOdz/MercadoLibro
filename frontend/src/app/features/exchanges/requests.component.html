@@ -11,7 +11,7 @@
             </p-tablist>
             <p-tabpanels>
                 <p-tabpanel [value]="0">
-                    <div *ngIf="offeredExchanges.length != 0 || isLoading" class="requests-main-section">
+                    <div  class="requests-main-section">
                         <div style="grid-column: 1;" class="column-cards">
                             <div class="card-section" style="align-content: center;text-align: center" *ngIf="isLoading">
                                 <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
@@ -28,14 +28,14 @@
                                             <img [src]="!isRequester(card) ? getCover(card.offeredPub.book) : getCover(card.requestedPub.book)"
                                                  alt="Book Image"
                                                  class="book-image"/>
-                                            <p style="margin-bottom: 0">
+                                            <p class="card-books-title" style="margin-bottom: 0">
                                             {{!isRequester(card) ? card.offeredPub.book?.bookModel?.title : card.requestedPub.book?.bookModel?.title }}
                                             </p>
                                         </div>
                                         <i class="pi pi-arrow-right-arrow-left icon-card-active"></i>
                                         <div class="active-card-first-column-book-second">
                                             <img [src]="!isRequester(card) ? getCover(card.requestedPub.book) : getCover(card.offeredPub.book)" alt="Book Image" class="book-image"/>
-                                            <p style="margin-bottom: 0">
+                                            <p class="card-books-title" style="margin-bottom: 0">
                                                 {{ !isRequester(card) ? card.requestedPub.book?.bookModel?.title : card.offeredPub.book?.bookModel?.title }}
                                             </p>
                                         </div>
@@ -45,8 +45,8 @@
                                         <p-button data-cy="accept-button" styleClass="exchange-accept-button" (click)="showAcceptDialog(card)">Aceptar</p-button>
                                     </div>
                                 </div>
-                                <app-paginator *ngIf="loggedUser" [pagination]="paginationOffered" [fetchMethod]="getOffered.bind(this)"></app-paginator>
                             </p-scrollpanel>
+                            <app-paginator *ngIf="!firstLoad" [pagination]="paginationOffered" [fetchMethod]="getOffered.bind(this)"></app-paginator>
                         </div>
                         <div class="content-panel-w-tabs" style="align-content: center;text-align: center" *ngIf="isLoading">
                             <div class="empty-content-panel">
@@ -115,7 +115,7 @@
                     </div>
                 </p-tabpanel>
                 <p-tabpanel [value]="1">
-                    <div *ngIf="requestedExchanges.length != 0 || isLoading" class="requests-main-section">
+                    <div class="requests-main-section">
                         <div style="grid-column: 1;" class="column-cards">
                             <div class="card-section" style="align-content: center;text-align: center" *ngIf="isLoading">
                                 <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
@@ -132,14 +132,14 @@
                                             <img [src]="!isRequester(card)? getCover(card.offeredPub.book) : getCover(card.requestedPub.book)"
                                                  alt="Book Image"
                                                  class="book-image"/>
-                                            <p style="margin-bottom: 0">
+                                            <p class="card-books-title" style="margin-bottom: 0">
                                                 {{ !isRequester(card) ? card.offeredPub.book?.bookModel?.title : card.requestedPub.book?.bookModel?.title }}
                                             </p>
                                         </div>
                                         <i class="pi pi-arrow-right-arrow-left icon-card-active"></i>
                                         <div class="active-card-first-column-book-second">
                                             <img [src]="!isRequester(card) ? getCover(card.requestedPub.book) : getCover(card.offeredPub.book)" alt="Book Image" class="book-image"/>
-                                            <p style="margin-bottom: 0">
+                                            <p class="card-books-title" style="margin-bottom: 0">
                                                 {{ !isRequester(card) ? card.requestedPub.book?.bookModel?.title : card.offeredPub.book?.bookModel?.title }}
                                             </p>
                                         </div>
@@ -148,8 +148,8 @@
                                         <span class="exchange-solicited-span">{{ 'EXCHANGES.SOLICITED_EXCHANGE_TAB' | translate }}</span>
                                     </div>
                                 </div>
-                                <app-paginator *ngIf="loggedUser" [pagination]="paginationSolicited" [fetchMethod]="getSolicited.bind(this)"></app-paginator>
                             </p-scrollpanel>
+                            <app-paginator  *ngIf="!firstLoad" [pagination]="paginationSolicited" [fetchMethod]="getSolicited.bind(this)"></app-paginator>
                         </div>
                         <div class="content-panel-w-tabs" style="align-content: center;text-align: center" *ngIf="isLoading">
                             <div class="empty-content-panel">

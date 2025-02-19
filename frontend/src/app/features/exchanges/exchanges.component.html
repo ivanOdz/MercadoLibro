@@ -3,7 +3,7 @@
     <exchanges-sidebar/>
     <div class="content">
         <p class="page-title">{{Title}}</p>
-        <div *ngIf="activeExchanges.length != 0 || isLoading"  class="main-section">
+        <div  class="main-section">
             <div style="grid-column: 1;" class="column-cards">
                 <div class="card-section" style="align-content: center;text-align: center" *ngIf="isLoading">
                     <p-progress-spinner strokeWidth="8" fill="transparent" animationDuration=".5s" [style]="{ width: '50px', height: '50px' }" />
@@ -21,14 +21,14 @@
                                      alt="Book Image"
                                      class="book-image"/>
 
-                                <p style="margin-bottom: 0">
+                                <p class="card-books-title" style="margin-bottom: 0">
                                     {{ !isRequester(card) ? card.offeredPub.book?.bookModel?.title : card.requestedPub.book?.bookModel?.title }}
                                 </p>
                             </div>
                             <i class="pi pi-arrow-right-arrow-left icon-card-active"></i>
                             <div class="active-card-first-column-book-second">
                                 <img [src]="!isRequester(card) ? getCover(card.requestedPub.book) : getCover(card.offeredPub.book)" alt="Book Image" class="book-image"/>
-                                <p style="margin-bottom: 0">
+                                <p class="card-books-title" style="margin-bottom: 0">
                                     {{ !isRequester(card) ? card.requestedPub.book?.bookModel?.title : card.offeredPub.book?.bookModel?.title }}
                                 </p>
                             </div>
@@ -43,8 +43,8 @@
                             </div>
                         </div>
                     </div>
-                <app-paginator [pagination]="pagination" [fetchMethod]="getActive.bind(this)"></app-paginator>
                 </p-scrollpanel>
+                <app-paginator *ngIf="!firstLoad" [pagination]="pagination" [fetchMethod]="getActive.bind(this)"></app-paginator>
             </div>
 
             <div class="content-panel" style="align-content: center;text-align: center" *ngIf="isLoading">

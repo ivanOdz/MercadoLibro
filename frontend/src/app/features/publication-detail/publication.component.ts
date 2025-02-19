@@ -6,7 +6,7 @@ import { Carousel } from 'primeng/carousel';
 import { trigger, style, animate, transition } from '@angular/animations';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import {PrimeTemplate} from "primeng/api";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {NgForOf, NgIf, Location as AngularLocation} from "@angular/common";
 import {Select} from "primeng/select";
 import {FormsModule} from "@angular/forms";
@@ -50,7 +50,8 @@ import {Pagination} from "../../core/models/pagination";
         Tooltip,
         Dialog,
         ProgressSpinner,
-        PaginatorComponent
+        PaginatorComponent,
+        RouterLink
     ],
     animations: [
         trigger('fadeOutUp', [

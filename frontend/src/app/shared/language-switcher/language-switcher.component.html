@@ -1,4 +1,4 @@
-<p-dropdown
+<p-dropdown [styleClass]="'language-select'"
         [options]="languages"
         [ngModel]="selectedLanguage$ | async"
         (ngModelChange)="changeLanguage($event)"

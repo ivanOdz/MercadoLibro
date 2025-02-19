@@ -75,7 +75,7 @@ export class ExchangesComponent implements OnInit {
                         this.pagination = response.pagination;
                     }),
                     map(response => response.exchange),
-                    catchError((error) => {
+                    catchError(() => {
                         return of([]); // Retorna un array vacío si hay error
                     })
                 );
@@ -87,9 +87,11 @@ export class ExchangesComponent implements OnInit {
             (activeExchanges) => {
                 this.activeExchanges = activeExchanges;
                 this.isLoading = false;
+                this.firstLoad ? this.firstLoad = false : null
             },
-            (error) => {
+            () => {
                 this.isLoading = false;
+                this.firstLoad ? this.firstLoad = false : null
             }
         );
     }
@@ -119,7 +121,7 @@ export class ExchangesComponent implements OnInit {
                         }
                     });
             },
-            (error) => this.snackBarService.showError('ERROR.CONFIRM_EXCHANGE'));
+            () => this.snackBarService.showError('ERROR.CONFIRM_EXCHANGE'));
 
     }
 
@@ -132,7 +134,7 @@ export class ExchangesComponent implements OnInit {
                             this.addMessage(message);
                         });
                 },
-                (error) => this.snackBarService.showError('ERROR.SEND_MESSAGE'));
+                () => this.snackBarService.showError('ERROR.SEND_MESSAGE'));
 
 
             this.newMessage = '';
@@ -280,6 +282,7 @@ export class ExchangesComponent implements OnInit {
 
 
     protected readonly environment = environment;
+    firstLoad: boolean= true;
 
 
     isValidDate(date: any): boolean {

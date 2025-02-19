@@ -109,3 +109,21 @@
     border: none;
 }
 
+:host ::ng-deep .sign-in-button {
+    background: #dbd5b9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+:host ::ng-deep .sign-in-button:not(.disabled):hover {
+    background-color: #8c7b5f;
+    transition: transform 0.2s;
+    transform: scale(1.1);
+    border: none;
+    color: white;
+}
+
+
+:host ::ng-deep .navbar-button {
+    font-size: small;
+}

@@ -10,14 +10,20 @@
 
     <ng-template pTemplate="end">
         <div class="p-menubar-end">
-            <p-button label="{{ 'NAVBAR.PUBLICATIONS' | translate }}" routerLink="/publications"></p-button>
-            <p-button label="{{ 'NAVBAR.EXCHANGES' | translate }}"  routerLink="/exchanges"></p-button>
+            <p-button [styleClass]="'navbar-button'" icon="pi pi-compass" label="{{ 'NAVBAR.PUBLICATIONS' | translate }}" routerLink="/publications"></p-button>
+            <p-button [styleClass]="'navbar-button'" icon="pi pi-arrow-right-arrow-left" label="{{ 'NAVBAR.EXCHANGES' | translate }}"  routerLink="/exchanges"></p-button>
 
-            <p-button
+            <p-button [styleClass]="'navbar-button'" *ngIf="isLoggedIn"
                     label="{{ 'NAVBAR.PROFILE' | translate }}"
-                    id="profile-button"
                     icon="pi pi-user"
                     (click)="toggleProfileMenu($event)">
+            </p-button>
+            <p-button *ngIf="!isLoggedIn"
+                    label="{{ 'NAVBAR.SIGN_IN' | translate }}"
+                    icon="pi pi-sign-in"
+                      routerLink="/auth/login"
+                    [styleClass]="'sign-in-button'"
+                >
             </p-button>
 
             <p-tieredMenu #profileMenu [model]="profileItems" [popup]="true"></p-tieredMenu>
