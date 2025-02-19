@@ -12,7 +12,6 @@ import {Select} from "primeng/select";
 import {FormsModule} from "@angular/forms";
 import {environment} from "../../../environments/environment";
 import {Divider} from "primeng/divider";
-import {Paginator} from "primeng/paginator";
 import { BookData, PublicationData} from "../../core/models/types";
 import {PublicationService} from "../../core/services/publication.service";
 import {catchError, filter, forkJoin, of, switchMap} from "rxjs";
@@ -28,6 +27,8 @@ import {ExchangeService} from "../../core/services/exchange.service";
 import {Location} from "../../core/models/location.model";
 import {Dialog} from "primeng/dialog";
 import {ProgressSpinner} from "primeng/progressspinner";
+import {PaginatorComponent} from "../../shared/paginator/paginator.component";
+import {Pagination} from "../../core/models/pagination";
 
 @Component({
     selector: 'app-publication-detail',
@@ -44,12 +45,12 @@ import {ProgressSpinner} from "primeng/progressspinner";
         Select,
         FormsModule,
         Divider,
-        Paginator,
         NgForOf,
         Rating,
         Tooltip,
         Dialog,
-        ProgressSpinner
+        ProgressSpinner,
+        PaginatorComponent
     ],
     animations: [
         trigger('fadeOutUp', [
@@ -82,6 +83,7 @@ export class PublicationComponent implements OnInit {
 
     userBooks: BookData[] = [];
     userLocations: Location[] = [];
+    pagination: Pagination | null= null;
 
     selectedLocation: Location | null = null;
     errorNoLocation: boolean = false;
@@ -205,22 +207,24 @@ export class PublicationComponent implements OnInit {
         }
     }
 
-    loadBooksData() {
+    loadBooksData(url: string | null = null) {
         this.loading = true;
         this.as.loggedUser$.pipe(
             filter(user => !!user),
             switchMap((user: User) => {
-                return this.bs.getBooks({
-                    booksUrl: user.books,
-                    state: '',
-                    genre: '',
-                    search: '',
-                    sort: '',
-                    available: true
-                });
+                return url
+                    ? this.bs.getBooksByUrl(url)
+                    : this.bs.getBooks({
+                        booksUrl: user.books,
+                        state: '',
+                        genre: '',
+                        search: '',
+                        sort: '',
+                        available: true
+                    });
             }),
             switchMap(({ books, pagination }) => {
-                // TODO: manejar la paginación más adelante
+                this.pagination = pagination;
                 return forkJoin(
                     books.map(book =>
                         this.bms.getBookModel(book.bookModel).pipe(
