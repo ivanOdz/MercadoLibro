@@ -222,13 +222,12 @@ public class PublicationDaoJpaTest {
 	@Test
 	public void testGetPaginatedPublications() {
 		
-		final Long userId = null;
-		final String search = PublicationConstants.BOOK_NAME_4;
+		final String search = "";
 		final BookState bookStateFilter = null;
 		final Genre genreFilter = null;
 		final String sortType = "sort.book.name.ascending";
 		final int currentPage = 0;
-		final User currentUser = em.find(User.class, UserConstants.ID_3);
+		final User currentUser = em.find(User.class, PublicationConstants.USER_ID_5);
 		
 		PaginatedResponse<Publication, ItemFilterMetadata> response = publicationDao.getPaginatedPublications(  search,
 																												bookStateFilter,
@@ -243,32 +242,73 @@ public class PublicationDaoJpaTest {
 		Assert.assertEquals(search, response.getMetadata().getSearch());
 		Assert.assertEquals(currentPage, response.getMetadata().getCurrentPage());
 		Assert.assertEquals(genreFilter, response.getMetadata().getGenreFilter());
-		Assert.assertNotNull(response.getData());/*
+		Assert.assertNotNull(response.getData());
 		Assert.assertTrue(response.getData().size() > 0);
 		
 		Boolean foundPublication = false;
 		
 		for (Publication publication : response.getData()) {
 			
-			if (publication.getPublicationId() == PublicationConstants.ID_4 && publication.getUser().getUserId() == PublicationConstants.USER_ID_4) {
+			if (publication.getPublicationId() == PublicationConstants.ID_5 && publication.getUser().getUserId() == PublicationConstants.USER_ID_5) {
 				foundPublication = true;
 				break;
 			}
 		}
 		
-		Assert.assertTrue(foundPublication);*/
+		Assert.assertTrue(foundPublication);
 	}
 	
-	/*
-	 * 	@Test
-	public void testGetPublicationCountByUserId() {
+	@Test
+	public void testGetPublicationCountByUserId1() {
 		
-		Assert.assertEquals(PublicationConstants.COUNT_USER_1, publicationDao.getPublicationCountByUserId(UserConstants.ID_1));
-		Assert.assertEquals(PublicationConstants.COUNT_USER_2, publicationDao.getPublicationCountByUserId(UserConstants.ID_2));
-		Assert.assertEquals(PublicationConstants.COUNT_USER_3, publicationDao.getPublicationCountByUserId(UserConstants.ID_3));
-		Assert.assertEquals(PublicationConstants.COUNT_USER_4, publicationDao.getPublicationCountByUserId(UserConstants.ID_4));
+		final String search = "";
+		final BookState bookStateFilter = null;
+		final Genre genreFilter = null;
+		final String sortType = "sort.book.name.ascending";
+		final int currentPage = 0;
+		final User currentUser = em.find(User.class, UserConstants.ID_1);
+		
+		PaginatedResponse<Publication, ItemFilterMetadata> response = publicationDao.getPaginatedPublications(  search,
+																												bookStateFilter,
+																												genreFilter,
+																												sortType,
+																												currentPage,
+																												currentUser,
+																												null
+																												);
+		Assert.assertNotNull(response);
+		Assert.assertNotNull(response.getMetadata());
+		Assert.assertEquals(search, response.getMetadata().getSearch());
+		Assert.assertEquals(currentPage, response.getMetadata().getCurrentPage());
+		Assert.assertEquals(genreFilter, response.getMetadata().getGenreFilter());
+		Assert.assertNotNull(response.getData());
+		Assert.assertEquals(response.getData().size(), PublicationConstants.COUNT_USER_1);
 	}
-	 */
 	
-// PaginatedResponse<Publication, BasicMetadata> getFavoritePublications(User user, String currentPage);
+	@Test
+	public void testGetPublicationCountByUserId2() {
+		
+		final String search = "";
+		final BookState bookStateFilter = null;
+		final Genre genreFilter = null;
+		final String sortType = "sort.book.name.ascending";
+		final int currentPage = 0;
+		final User currentUser = em.find(User.class, UserConstants.ID_2);
+		
+		PaginatedResponse<Publication, ItemFilterMetadata> response = publicationDao.getPaginatedPublications(  search,
+																												bookStateFilter,
+																												genreFilter,
+																												sortType,
+																												currentPage,
+																												currentUser,
+																												null
+																												);
+		Assert.assertNotNull(response);
+		Assert.assertNotNull(response.getMetadata());
+		Assert.assertEquals(search, response.getMetadata().getSearch());
+		Assert.assertEquals(currentPage, response.getMetadata().getCurrentPage());
+		Assert.assertEquals(genreFilter, response.getMetadata().getGenreFilter());
+		Assert.assertNotNull(response.getData());
+		Assert.assertEquals(response.getData().size(), PublicationConstants.COUNT_USER_2);
+	}
 }

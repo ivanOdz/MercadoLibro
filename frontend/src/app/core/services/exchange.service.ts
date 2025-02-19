@@ -103,8 +103,8 @@ export class ExchangeService {
     private updateExchange(exchangeUrl: string, acceptCode: number, requester: boolean | null, accepted: boolean | null): Observable<any> {
         const headers = new HttpHeaders({ 'Content-Type': 'application/vnd.exchanges.update.v1+json' });
         const body: any = {
-            acceptCode: 'acceptCode',
-            requester: 'requester',
+            acceptCode: acceptCode,
+            requester: requester,
             accepted: accepted
         };
         return this.http.patch<void>(`${exchangeUrl}`, body, { headers }).pipe(
